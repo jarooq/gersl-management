@@ -1,0 +1,1811 @@
+import React, { useState } from 'react';
+import { useProposals } from '../../contexts/ProposalsContext';
+import { usePartners } from '../../contexts/PartnersContext';
+import { useCBO } from '../../contexts/CBOContext';
+import { useHR } from '../../contexts/HRContext';
+import ProposalViewModal from './components/ProposalViewModal';
+import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
+import {
+  FileText,
+  Plus,
+  Search,
+  DollarSign,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Edit2,
+  Eye,
+  Trash2,
+  ArrowRight,
+  AlertCircle,
+  Target,
+  Calendar,
+  User,
+  Filter,
+  BarChart3,
+  FileEdit,
+  Send,
+  Shield,
+  Users2,
+  CheckSquare
+} from 'lucide-react';
+
+// AddProposalModal Component
+const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading }) => {
+  const [formData, setFormData] = useState({
+    proposalCode: '',
+    donorOrganization: '',
+    cboId: '',
+    cboName: '',
+    proposalTitle: '',
+    programmeArea: 'Education',
+    requestedBudget: '',
+    duration: '12 months',
+    targetBeneficiaries: '',
+    district: 'Colombo',
+    summary: '',
+
+    // GER Enhanced Fields
+    projectTier: 'Tier 1',
+    sectorTheme: 'Education',
+    startDate: '',
+    endDate: '',
+    problemStatement: '',
+    proposedSolution: '',
+    keyBeneficiariesDescription: '',
+    overallGoal: '',
+    needsAssessmentData: '',
+    strategicAlignment: '',
+
+    objectives: ['', '', ''],
+    keyActivities: ['', '', ''],
+
+    // MEAL Fields
+    resultsFramework: [],
+    beneficiaryBreakdown: {
+      directMale: '',
+      directFemale: '',
+      directChildren: '',
+      directPWD: '',
+      indirectTotal: ''
+    },
+
+    // Theory of Change
+    theoryOfChange: {
+      inputs: ['', ''],
+      activities: ['', ''],
+      outputs: ['', ''],
+      outcomes: ['', ''],
+      impact: '',
+      assumptions: ['', ''],
+      risks: ['', '']
+    },
+
+    // Budget Breakdown
+    budgetBreakdown: [],
+
+    // Safeguarding Compliance
+    safeguarding: {
+      dataProtection: false,
+      informedConsent: false,
+      childSafeguarding: false,
+      incidentReporting: false,
+      backgroundChecks: false,
+      codeOfConduct: false,
+      safeguardingFocalPerson: '',
+      cfmChannels: []
+    }
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleObjectiveChange = (index, value) => {
+    const newObjectives = [...formData.objectives];
+    newObjectives[index] = value;
+    setFormData({ ...formData, objectives: newObjectives });
+  };
+
+  const handleActivityChange = (index, value) => {
+    const newActivities = [...formData.keyActivities];
+    newActivities[index] = value;
+    setFormData({ ...formData, keyActivities: newActivities });
+  };
+
+  // MEAL - Results Framework handlers
+  const addIndicator = () => {
+    const newIndicator = {
+      id: `IND-${Date.now()}`,
+      level: 'Output',
+      indicator: '',
+      definition: '',
+      baseline: '',
+      target: '',
+      meansOfVerification: '',
+      disaggregation: []
+    };
+    setFormData({
+      ...formData,
+      resultsFramework: [...formData.resultsFramework, newIndicator]
+    });
+  };
+
+  const removeIndicator = (id) => {
+    setFormData({
+      ...formData,
+      resultsFramework: formData.resultsFramework.filter(ind => ind.id !== id)
+    });
+  };
+
+  const updateIndicator = (id, field, value) => {
+    setFormData({
+      ...formData,
+      resultsFramework: formData.resultsFramework.map(ind =>
+        ind.id === id ? { ...ind, [field]: value } : ind
+      )
+    });
+  };
+
+  const selectStandardIndicator = (id, selectedIndicator) => {
+    setFormData({
+      ...formData,
+      resultsFramework: formData.resultsFramework.map(ind =>
+        ind.id === id ? {
+          ...ind,
+          indicator: selectedIndicator.indicator,
+          definition: selectedIndicator.definition,
+          disaggregation: selectedIndicator.disaggregation,
+          meansOfVerification: selectedIndicator.mov
+        } : ind
+      )
+    });
+  };
+
+  // Beneficiary breakdown handler
+  const handleBeneficiaryChange = (field, value) => {
+    setFormData({
+      ...formData,
+      beneficiaryBreakdown: {
+        ...formData.beneficiaryBreakdown,
+        [field]: value
+      }
+    });
+  };
+
+  // Theory of Change handlers
+  const handleToCArrayChange = (category, index, value) => {
+    const newArray = [...formData.theoryOfChange[category]];
+    newArray[index] = value;
+    setFormData({
+      ...formData,
+      theoryOfChange: {
+        ...formData.theoryOfChange,
+        [category]: newArray
+      }
+    });
+  };
+
+  const addToCItem = (category) => {
+    setFormData({
+      ...formData,
+      theoryOfChange: {
+        ...formData.theoryOfChange,
+        [category]: [...formData.theoryOfChange[category], '']
+      }
+    });
+  };
+
+  const removeToCItem = (category, index) => {
+    const newArray = formData.theoryOfChange[category].filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      theoryOfChange: {
+        ...formData.theoryOfChange,
+        [category]: newArray
+      }
+    });
+  };
+
+  const handleToCImpactChange = (value) => {
+    setFormData({
+      ...formData,
+      theoryOfChange: {
+        ...formData.theoryOfChange,
+        impact: value
+      }
+    });
+  };
+
+  // Safeguarding handlers
+  const handleSafeguardingCheckbox = (field) => {
+    setFormData({
+      ...formData,
+      safeguarding: {
+        ...formData.safeguarding,
+        [field]: !formData.safeguarding[field]
+      }
+    });
+  };
+
+  const handleSafeguardingFocalPerson = (value) => {
+    setFormData({
+      ...formData,
+      safeguarding: {
+        ...formData.safeguarding,
+        safeguardingFocalPerson: value
+      }
+    });
+  };
+
+  const handleCFMChannelToggle = (channel) => {
+    const currentChannels = formData.safeguarding.cfmChannels;
+    const newChannels = currentChannels.includes(channel)
+      ? currentChannels.filter(c => c !== channel)
+      : [...currentChannels, channel];
+
+    setFormData({
+      ...formData,
+      safeguarding: {
+        ...formData.safeguarding,
+        cfmChannels: newChannels
+      }
+    });
+  };
+
+  // Budget Breakdown handlers
+  const addBudgetItem = () => {
+    const newItem = {
+      id: `BUD-${Date.now()}`,
+      category: 'Personnel',
+      description: '',
+      quantity: 1,
+      unitCost: 0,
+      totalCost: 0
+    };
+    setFormData({
+      ...formData,
+      budgetBreakdown: [...formData.budgetBreakdown, newItem]
+    });
+  };
+
+  const removeBudgetItem = (id) => {
+    setFormData({
+      ...formData,
+      budgetBreakdown: formData.budgetBreakdown.filter(item => item.id !== id)
+    });
+  };
+
+  const updateBudgetItem = (id, field, value) => {
+    const updatedItems = formData.budgetBreakdown.map(item => {
+      if (item.id === id) {
+        const updated = { ...item, [field]: value };
+        // Auto-calculate total cost
+        if (field === 'quantity' || field === 'unitCost') {
+          const qty = field === 'quantity' ? parseFloat(value) || 0 : parseFloat(item.quantity) || 0;
+          const cost = field === 'unitCost' ? parseFloat(value) || 0 : parseFloat(item.unitCost) || 0;
+          updated.totalCost = qty * cost;
+        }
+        return updated;
+      }
+      return item;
+    });
+
+    // Update total budget
+    const newTotalBudget = updatedItems.reduce((sum, item) => sum + (item.totalCost || 0), 0);
+
+    setFormData({
+      ...formData,
+      budgetBreakdown: updatedItems,
+      requestedBudget: newTotalBudget.toString()
+    });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-6 py-4 rounded-t-xl flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Add New Proposal</h2>
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition"
+          >
+            <Plus size={24} className="rotate-45" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleFormSubmit} className="p-6 space-y-6">
+          {error && (
+            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded flex items-center gap-2">
+              <CheckCircle size={20} />
+              {success}
+            </div>
+          )}
+
+          {/* Basic Information */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Basic Information</h3>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Proposal Code *</label>
+                <input
+                  type="text"
+                  name="proposalCode"
+                  required
+                  value={formData.proposalCode}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="PROP-2024-001"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">District</label>
+                <input
+                  type="text"
+                  name="district"
+                  value={formData.district}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="Colombo"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Donor Organization *</label>
+                <input
+                  type="text"
+                  name="donorOrganization"
+                  required
+                  value={formData.donorOrganization}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="UNICEF, World Bank, etc."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">CBO Partner</label>
+                <input
+                  type="text"
+                  name="cboName"
+                  value={formData.cboName}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="CBO Name (Optional)"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Proposal Title *</label>
+              <input
+                type="text"
+                name="proposalTitle"
+                required
+                value={formData.proposalTitle}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Enter proposal title..."
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Programme Area *</label>
+                <select
+                  name="programmeArea"
+                  value={formData.programmeArea}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="Education">Education</option>
+                  <option value="Health">Health</option>
+                  <option value="Livelihood">Livelihood</option>
+                  <option value="WASH">WASH</option>
+                  <option value="Protection">Protection</option>
+                  <option value="Women Empowerment">Women Empowerment</option>
+                  <option value="Youth Development">Youth Development</option>
+                  <option value="Disability Inclusion">Disability Inclusion</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Project Tier</label>
+                <select
+                  name="projectTier"
+                  value={formData.projectTier}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="Tier 1">Tier 1 (Comprehensive)</option>
+                  <option value="Tier 2">Tier 2 (Moderate)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Sector/Theme</label>
+                <input
+                  type="text"
+                  name="sectorTheme"
+                  value={formData.sectorTheme}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Budget (LKR) *</label>
+                <input
+                  type="number"
+                  name="requestedBudget"
+                  required
+                  value={formData.requestedBudget}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="2500000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Duration</label>
+                <select
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="6 months">6 months</option>
+                  <option value="9 months">9 months</option>
+                  <option value="12 months">12 months</option>
+                  <option value="15 months">15 months</option>
+                  <option value="18 months">18 months</option>
+                  <option value="24 months">24 months</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Target Beneficiaries *</label>
+                <input
+                  type="number"
+                  name="targetBeneficiaries"
+                  required
+                  value={formData.targetBeneficiaries}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="150"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Start Date</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">End Date</label>
+                <input
+                  type="date"
+                  name="endDate"
+                  value={formData.endDate}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Budget Breakdown - Collapsed by default with toggle */}
+          <details className="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+              <DollarSign className="h-5 w-5 text-green-600" />
+              Detailed Budget Breakdown (Optional - Click to expand)
+            </summary>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={addBudgetItem}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-semibold"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Line Item
+                </button>
+              </div>
+
+              {formData.budgetBreakdown.length === 0 ? (
+                <div className="text-center py-8 bg-white rounded-lg border-2 border-dashed border-gray-300">
+                  <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-500 text-sm">No budget items added yet.</p>
+                  <p className="text-gray-400 text-xs mt-1">Click "Add Line Item" to start building your budget breakdown.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100 border-b border-gray-200">
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Category</th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Description</th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Quantity</th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Unit Cost (LKR)</th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Total Cost (LKR)</th>
+                          <th className="px-3 py-2 text-center text-xs font-semibold text-gray-700">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {formData.budgetBreakdown.map((item, index) => (
+                          <tr key={item.id} className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                            <td className="px-3 py-2">
+                              <select
+                                value={item.category}
+                                onChange={(e) => updateBudgetItem(item.id, 'category', e.target.value)}
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              >
+                                <option value="Personnel">Personnel</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Materials">Materials</option>
+                                <option value="Activities">Activities</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Training">Training</option>
+                                <option value="Monitoring">Monitoring</option>
+                                <option value="Administrative">Administrative</option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </td>
+                            <td className="px-3 py-2">
+                              <input
+                                type="text"
+                                value={item.description}
+                                onChange={(e) => updateBudgetItem(item.id, 'description', e.target.value)}
+                                placeholder="Item description..."
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input
+                                type="number"
+                                value={item.quantity}
+                                onChange={(e) => updateBudgetItem(item.id, 'quantity', e.target.value)}
+                                min="1"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <input
+                                type="number"
+                                value={item.unitCost}
+                                onChange={(e) => updateBudgetItem(item.id, 'unitCost', e.target.value)}
+                                min="0"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              />
+                            </td>
+                            <td className="px-3 py-2">
+                              <span className="font-semibold text-green-700 text-sm">
+                                {item.totalCost.toLocaleString()}
+                              </span>
+                            </td>
+                            <td className="px-3 py-2 text-center">
+                              <button
+                                type="button"
+                                onClick={() => removeBudgetItem(item.id)}
+                                className="text-red-600 hover:text-red-800 transition"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Budget Summary */}
+                  <div className="mt-4 bg-green-50 rounded-lg p-4 border border-green-200">
+                    <div className="pt-3 border-t border-green-300">
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-gray-800">Total Budget:</span>
+                        <span className="text-2xl font-bold text-green-600">
+                          LKR {parseFloat(formData.requestedBudget || 0).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cost per beneficiary: LKR {formData.targetBeneficiaries > 0
+                          ? (parseFloat(formData.requestedBudget || 0) / parseInt(formData.targetBeneficiaries)).toLocaleString(undefined, {maximumFractionDigits: 2})
+                          : '0'}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </details>
+
+          {/* Executive Summary */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Executive Summary</h3>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Summary (250 words) *</label>
+              <textarea
+                name="summary"
+                required
+                rows="3"
+                value={formData.summary}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Brief project summary..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Overall Goal</label>
+              <input
+                type="text"
+                name="overallGoal"
+                value={formData.overallGoal}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Main project goal..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Problem Statement</label>
+              <textarea
+                name="problemStatement"
+                rows="3"
+                value={formData.problemStatement}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Describe the problem this project addresses..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Proposed Solution</label>
+              <textarea
+                name="proposedSolution"
+                rows="3"
+                value={formData.proposedSolution}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Describe your proposed solution approach..."
+              />
+            </div>
+          </div>
+
+          {/* Objectives */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Objectives</h3>
+            {[0, 1, 2].map(index => (
+              <div key={index}>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Objective {index + 1}</label>
+                <input
+                  type="text"
+                  value={formData.objectives[index]}
+                  onChange={(e) => handleObjectiveChange(index, e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder={`Enter objective ${index + 1}...`}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Key Activities */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Key Activities</h3>
+            {[0, 1, 2].map(index => (
+              <div key={index}>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Activity {index + 1}</label>
+                <input
+                  type="text"
+                  value={formData.keyActivities[index]}
+                  onChange={(e) => handleActivityChange(index, e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder={`Enter activity ${index + 1}...`}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* MEAL - Results Framework - Collapsed */}
+          <details className="space-y-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+              <Target className="text-blue-600" size={20} />
+              Results Framework (MEAL Indicators) - Optional
+            </summary>
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={addIndicator}
+                className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-semibold flex items-center gap-1"
+              >
+                <Plus size={16} />
+                Add Indicator
+              </button>
+
+              {formData.resultsFramework.length === 0 ? (
+                <div className="text-center py-6 text-gray-500 mt-4">
+                  <Target size={40} className="mx-auto mb-2 opacity-30" />
+                  <p className="text-sm">No indicators added yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4 mt-4">
+                  {formData.resultsFramework.map((indicator) => {
+                    const tierNum = formData.projectTier === 'Tier 1' ? 1 : 2;
+                    const programmeIndicators = getIndicatorsForProgramme(formData.programmeArea, tierNum, 'all');
+
+                    return (
+                      <div key={indicator.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1 grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-700 mb-1">Level</label>
+                              <select
+                                value={indicator.level}
+                                onChange={(e) => updateIndicator(indicator.id, 'level', e.target.value)}
+                                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="Activity">Activity</option>
+                                <option value="Output">Output</option>
+                                <option value="Outcome">Outcome</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-700 mb-1">Standard Indicator</label>
+                              <select
+                                onChange={(e) => {
+                                  const selected = programmeIndicators.find(ind => ind.indicator === e.target.value);
+                                  if (selected) selectStandardIndicator(indicator.id, selected);
+                                }}
+                                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select from bank...</option>
+                                {programmeIndicators
+                                  .filter(ind => ind.category === indicator.level.toLowerCase() + 's')
+                                  .map((ind, idx) => (
+                                    <option key={idx} value={ind.indicator}>{ind.indicator}</option>
+                                  ))}
+                              </select>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeIndicator(indicator.id)}
+                            className="ml-2 p-1.5 text-red-600 hover:bg-red-50 rounded transition"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-xs font-semibold text-gray-700 mb-1">Indicator Description</label>
+                            <input
+                              type="text"
+                              value={indicator.indicator}
+                              onChange={(e) => updateIndicator(indicator.id, 'indicator', e.target.value)}
+                              placeholder="e.g., # children receiving school kits/support"
+                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-700 mb-1">Baseline</label>
+                              <input
+                                type="text"
+                                value={indicator.baseline}
+                                onChange={(e) => updateIndicator(indicator.id, 'baseline', e.target.value)}
+                                placeholder="0"
+                                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-700 mb-1">Target</label>
+                              <input
+                                type="text"
+                                value={indicator.target}
+                                onChange={(e) => updateIndicator(indicator.id, 'target', e.target.value)}
+                                placeholder="100"
+                                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-700 mb-1">Means of Verification</label>
+                              <input
+                                type="text"
+                                value={indicator.meansOfVerification}
+                                onChange={(e) => updateIndicator(indicator.id, 'meansOfVerification', e.target.value)}
+                                placeholder="Distribution list"
+                                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </details>
+
+          {/* MEAL - Beneficiary Disaggregation - Collapsed */}
+          <details className="space-y-4 bg-green-50 p-4 rounded-lg border border-green-200">
+            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+              <Users2 className="text-green-600" size={20} />
+              Beneficiary Disaggregation Matrix - Optional
+            </summary>
+            <div className="mt-4">
+              <div className="grid grid-cols-5 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Direct Male</label>
+                  <input
+                    type="number"
+                    value={formData.beneficiaryBreakdown.directMale}
+                    onChange={(e) => handleBeneficiaryChange('directMale', e.target.value)}
+                    placeholder="0"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Direct Female</label>
+                  <input
+                    type="number"
+                    value={formData.beneficiaryBreakdown.directFemale}
+                    onChange={(e) => handleBeneficiaryChange('directFemale', e.target.value)}
+                    placeholder="0"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Direct Children</label>
+                  <input
+                    type="number"
+                    value={formData.beneficiaryBreakdown.directChildren}
+                    onChange={(e) => handleBeneficiaryChange('directChildren', e.target.value)}
+                    placeholder="0"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Direct PWD</label>
+                  <input
+                    type="number"
+                    value={formData.beneficiaryBreakdown.directPWD}
+                    onChange={(e) => handleBeneficiaryChange('directPWD', e.target.value)}
+                    placeholder="0"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Indirect Total</label>
+                  <input
+                    type="number"
+                    value={formData.beneficiaryBreakdown.indirectTotal}
+                    onChange={(e) => handleBeneficiaryChange('indirectTotal', e.target.value)}
+                    placeholder="0"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-white rounded p-3 border border-green-200 mt-4">
+                <div className="flex justify-between text-sm">
+                  <span className="font-semibold text-gray-700">Total Direct Beneficiaries:</span>
+                  <span className="font-bold text-green-700">
+                    {(parseInt(formData.beneficiaryBreakdown.directMale) || 0) +
+                     (parseInt(formData.beneficiaryBreakdown.directFemale) || 0) +
+                     (parseInt(formData.beneficiaryBreakdown.directChildren) || 0)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          {/* Theory of Change - Collapsed */}
+          <details className="space-y-4 bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+              <TrendingUp className="text-indigo-600" size={20} />
+              Theory of Change - Optional
+            </summary>
+            <div className="mt-4 space-y-4">
+              <p className="text-xs text-gray-600">
+                Map how your inputs lead to activities, outputs, outcomes, and ultimately impact.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Inputs */}
+                <div className="bg-white rounded-lg p-3 border border-indigo-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-semibold text-indigo-700">1. Inputs</label>
+                    <button
+                      type="button"
+                      onClick={() => addToCItem('inputs')}
+                      className="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                  {formData.theoryOfChange.inputs.map((input, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => handleToCArrayChange('inputs', index, e.target.value)}
+                        placeholder="e.g., Staff, budget"
+                        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      />
+                      {formData.theoryOfChange.inputs.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeToCItem('inputs', index)}
+                          className="text-red-600 hover:bg-red-50 p-1 rounded"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Activities */}
+                <div className="bg-white rounded-lg p-3 border border-indigo-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-semibold text-indigo-700">2. Activities</label>
+                    <button
+                      type="button"
+                      onClick={() => addToCItem('activities')}
+                      className="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                  {formData.theoryOfChange.activities.map((activity, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={activity}
+                        onChange={(e) => handleToCArrayChange('activities', index, e.target.value)}
+                        placeholder="e.g., Distribute kits"
+                        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      />
+                      {formData.theoryOfChange.activities.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeToCItem('activities', index)}
+                          className="text-red-600 hover:bg-red-50 p-1 rounded"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Outputs */}
+                <div className="bg-white rounded-lg p-3 border border-indigo-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-semibold text-indigo-700">3. Outputs</label>
+                    <button
+                      type="button"
+                      onClick={() => addToCItem('outputs')}
+                      className="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                  {formData.theoryOfChange.outputs.map((output, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={output}
+                        onChange={(e) => handleToCArrayChange('outputs', index, e.target.value)}
+                        placeholder="e.g., 150 children equipped"
+                        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      />
+                      {formData.theoryOfChange.outputs.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeToCItem('outputs', index)}
+                          className="text-red-600 hover:bg-red-50 p-1 rounded"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Outcomes */}
+                <div className="bg-white rounded-lg p-3 border border-indigo-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-semibold text-indigo-700">4. Outcomes</label>
+                    <button
+                      type="button"
+                      onClick={() => addToCItem('outcomes')}
+                      className="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                  {formData.theoryOfChange.outcomes.map((outcome, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={outcome}
+                        onChange={(e) => handleToCArrayChange('outcomes', index, e.target.value)}
+                        placeholder="e.g., Improved attendance"
+                        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      />
+                      {formData.theoryOfChange.outcomes.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeToCItem('outcomes', index)}
+                          className="text-red-600 hover:bg-red-50 p-1 rounded"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Impact */}
+              <div className="bg-white rounded-lg p-3 border border-indigo-200">
+                <label className="block text-sm font-semibold text-indigo-700 mb-2">5. Impact</label>
+                <textarea
+                  value={formData.theoryOfChange.impact}
+                  onChange={(e) => handleToCImpactChange(e.target.value)}
+                  rows="2"
+                  placeholder="e.g., Reduced inequality and improved outcomes"
+                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+          </details>
+
+          {/* Safeguarding Compliance - Collapsed */}
+          <details className="space-y-4 bg-red-50 p-4 rounded-lg border border-red-200">
+            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+              <CheckSquare className="text-red-600" size={20} />
+              Safeguarding Compliance Checklist - Optional
+            </summary>
+            <div className="mt-4 space-y-4">
+              {/* Compliance Checkboxes */}
+              <div className="grid grid-cols-2 gap-3">
+                <div
+                  onClick={() => handleSafeguardingCheckbox('dataProtection')}
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                    formData.safeguarding.dataProtection
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.safeguarding.dataProtection}
+                      onChange={() => {}}
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Data Protection</p>
+                      <p className="text-xs text-gray-600">Personal data encrypted, stored securely</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => handleSafeguardingCheckbox('informedConsent')}
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                    formData.safeguarding.informedConsent
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.safeguarding.informedConsent}
+                      onChange={() => {}}
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Informed Consent</p>
+                      <p className="text-xs text-gray-600">Written consent forms for beneficiaries</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => handleSafeguardingCheckbox('childSafeguarding')}
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                    formData.safeguarding.childSafeguarding
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.safeguarding.childSafeguarding}
+                      onChange={() => {}}
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Child Safeguarding</p>
+                      <p className="text-xs text-gray-600">Child protection policy in place</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => handleSafeguardingCheckbox('incidentReporting')}
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                    formData.safeguarding.incidentReporting
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.safeguarding.incidentReporting}
+                      onChange={() => {}}
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Incident Reporting</p>
+                      <p className="text-xs text-gray-600">Clear reporting mechanism</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => handleSafeguardingCheckbox('backgroundChecks')}
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                    formData.safeguarding.backgroundChecks
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.safeguarding.backgroundChecks}
+                      onChange={() => {}}
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Background Checks</p>
+                      <p className="text-xs text-gray-600">All staff screened</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => handleSafeguardingCheckbox('codeOfConduct')}
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                    formData.safeguarding.codeOfConduct
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.safeguarding.codeOfConduct}
+                      onChange={() => {}}
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Code of Conduct</p>
+                      <p className="text-xs text-gray-600">Staff signed code of conduct</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Safeguarding Focal Person */}
+              <div className="bg-white rounded-lg p-3 border border-red-200">
+                <label className="block text-sm font-semibold text-red-700 mb-2">Safeguarding Focal Person</label>
+                <input
+                  type="text"
+                  value={formData.safeguarding.safeguardingFocalPerson}
+                  onChange={(e) => handleSafeguardingFocalPerson(e.target.value)}
+                  placeholder="Name and contact of designated officer"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+
+              {/* CFM Channels */}
+              <div className="bg-white rounded-lg p-3 border border-red-200">
+                <label className="block text-sm font-semibold text-red-700 mb-2">Community Feedback Channels</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {['Hotline', 'WhatsApp', 'Email', 'Complaint Box', 'In-Person', 'SMS'].map(channel => (
+                    <div
+                      key={channel}
+                      onClick={() => handleCFMChannelToggle(channel)}
+                      className={`px-3 py-2 rounded-lg border-2 cursor-pointer transition text-center ${
+                        formData.safeguarding.cfmChannels.includes(channel)
+                          ? 'border-red-500 bg-red-50 text-red-700'
+                          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      }`}
+                    >
+                      <p className="text-xs font-semibold">{channel}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </details>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4 border-t">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Submitting...' : 'Submit Proposal'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const ProposalsPage = () => {
+  const {
+    proposals,
+    getStats,
+    deleteProposal
+  } = useProposals();
+
+  const { partners } = usePartners();
+  const { cbos } = useCBO();
+  const { staff } = useHR();
+
+  const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
+  const [filterPriority, setFilterPriority] = useState('All');
+  const [selectedProposal, setSelectedProposal] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const stats = getStats();
+
+  const handleSubmit = async (formDataToSubmit) => {
+    setError('');
+    setIsLoading(true);
+
+    // Clean up objectives and activities (remove empty ones)
+    const cleanData = {
+      ...formDataToSubmit,
+      requestedBudget: parseFloat(formDataToSubmit.requestedBudget),
+      targetBeneficiaries: parseInt(formDataToSubmit.targetBeneficiaries),
+      objectives: formDataToSubmit.objectives.filter(obj => obj.trim() !== ''),
+      keyActivities: formDataToSubmit.keyActivities.filter(act => act.trim() !== ''),
+      submittedBy: 'System User',
+      submitterRole: 'Proposal Manager',
+      // Convert beneficiary breakdown to numbers
+      beneficiaryBreakdown: {
+        directMale: parseInt(formDataToSubmit.beneficiaryBreakdown.directMale) || 0,
+        directFemale: parseInt(formDataToSubmit.beneficiaryBreakdown.directFemale) || 0,
+        directChildren: parseInt(formDataToSubmit.beneficiaryBreakdown.directChildren) || 0,
+        directPWD: parseInt(formDataToSubmit.beneficiaryBreakdown.directPWD) || 0,
+        indirectTotal: parseInt(formDataToSubmit.beneficiaryBreakdown.indirectTotal) || 0
+      },
+      // Clean up Theory of Change (remove empty entries)
+      theoryOfChange: {
+        inputs: formDataToSubmit.theoryOfChange.inputs.filter(item => item.trim() !== ''),
+        activities: formDataToSubmit.theoryOfChange.activities.filter(item => item.trim() !== ''),
+        outputs: formDataToSubmit.theoryOfChange.outputs.filter(item => item.trim() !== ''),
+        outcomes: formDataToSubmit.theoryOfChange.outcomes.filter(item => item.trim() !== ''),
+        impact: formDataToSubmit.theoryOfChange.impact,
+        assumptions: formDataToSubmit.theoryOfChange.assumptions.filter(item => item.trim() !== ''),
+        risks: formDataToSubmit.theoryOfChange.risks.filter(item => item.trim() !== '')
+      },
+      submissionDate: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch('http://localhost:3001/api/proposals', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(cleanData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess('Proposal created successfully!');
+        setTimeout(() => {
+          setShowAddModal(false);
+          setSuccess('');
+          window.location.reload();
+        }, 1500);
+      } else {
+        setError(data.message || 'Failed to create proposal');
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to create proposal');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Filter proposals
+  const filteredProposals = proposals.filter(proposal => {
+    const matchesSearch = proposal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         proposal.proposalCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         proposal.donor.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === 'All' || proposal.status === filterStatus;
+    const matchesPriority = filterPriority === 'All' || proposal.priority === filterPriority;
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Approved': return 'bg-green-100 text-green-700 border-green-200';
+      case 'Under Review': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'Submitted': return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'Draft': return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Rejected': return 'bg-red-100 text-red-700 border-red-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'Approved': return <CheckCircle size={14} className="text-green-600" />;
+      case 'Under Review': return <Clock size={14} className="text-blue-600" />;
+      case 'Submitted': return <Send size={14} className="text-purple-600" />;
+      case 'Draft': return <FileEdit size={14} className="text-gray-600" />;
+      case 'Rejected': return <XCircle size={14} className="text-red-600" />;
+      default: return <AlertCircle size={14} className="text-gray-600" />;
+    }
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'High': return 'text-red-600';
+      case 'Medium': return 'text-orange-600';
+      case 'Low': return 'text-blue-600';
+      default: return 'text-gray-600';
+    }
+  };
+
+  const statItems = [
+    {
+      title: 'Total Proposals',
+      value: stats.totalProposals,
+      icon: FileText,
+      gradient: 'from-indigo-500 to-purple-600',
+      change: `${stats.approvedProposals} approved`,
+      subtitle: 'proposals managed'
+    },
+    {
+      title: 'Budget Requested',
+      value: `${(stats.totalBudgetRequested / 1000000).toFixed(0)}M`,
+      icon: DollarSign,
+      gradient: 'from-green-500 to-emerald-600',
+      change: `${(stats.approvedBudget / 1000000).toFixed(1)}M approved`,
+      subtitle: 'LKR total'
+    },
+    {
+      title: 'Success Rate',
+      value: `${stats.successRate}%`,
+      icon: TrendingUp,
+      gradient: 'from-blue-500 to-cyan-600',
+      change: `${stats.approvedProposals}/${stats.approvedProposals + stats.rejectedProposals} approved`,
+      subtitle: 'approval rate'
+    },
+    {
+      title: 'Beneficiaries',
+      value: stats.totalBeneficiaries.toLocaleString(),
+      icon: Users,
+      gradient: 'from-orange-500 to-amber-600',
+      change: 'Projected reach',
+      subtitle: 'lives to impact'
+    }
+  ];
+
+  return (
+    <div className="space-y-4 animate-fade-in">
+      {/* Indigo Gradient Hero Banner */}
+      <div className="bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <FileText className="w-5 h-5 animate-pulse" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold mb-1">Proposal Management</h1>
+                <p className="text-indigo-100 text-sm">Managing {stats.totalProposals} proposals with {stats.successRate}% success rate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {statItems.map((stat, index) => (
+          <div
+            key={index}
+            className="stat-card group cursor-pointer animate-slide-up"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
+                <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
+                <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+              </div>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+                <stat.icon className="text-white" size={18} />
+              </div>
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+              <span className="text-xs font-medium text-gray-600">{stat.change}</span>
+              <ArrowRight size={14} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tabs Navigation */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+        <div className="border-b border-gray-200">
+          <div className="flex gap-1 p-1.5">
+            {[
+              { id: 'overview', label: 'All Proposals', icon: FileText },
+              { id: 'pipeline', label: 'Pipeline', icon: BarChart3 }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-700 text-white shadow-md'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <tab.icon size={18} />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* All Proposals Tab */}
+        {activeTab === 'overview' && (
+          <div className="p-6">
+            {/* Search and Filter Bar */}
+            <div className="mb-6 flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search proposals by title, code, or donor..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="input-modern pl-10 w-full"
+                />
+              </div>
+              <div className="flex gap-2">
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="input-modern"
+                >
+                  <option value="All">All Status</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                <select
+                  value={filterPriority}
+                  onChange={(e) => setFilterPriority(e.target.value)}
+                  className="input-modern"
+                >
+                  <option value="All">All Priority</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl font-semibold whitespace-nowrap"
+                >
+                  <Plus size={18} />
+                  Add Proposal
+                </button>
+              </div>
+            </div>
+
+            {/* Proposal Cards Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {filteredProposals.map((proposal, index) => (
+                <div
+                  key={proposal.id}
+                  className="card-modern group p-5 animate-slide-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex-1 mr-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                          {proposal.proposalCode}
+                        </span>
+                        <span className={`text-xs font-bold ${getPriorityColor(proposal.priority)}`}>
+                          {proposal.priority} Priority
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-base text-gray-900 leading-tight mb-1">{proposal.title}</h3>
+                      <p className="text-sm text-gray-600 font-medium mb-2">{proposal.donor}</p>
+
+                      {/* MEAL Badges - NEW */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {proposal.resultsFramework && proposal.resultsFramework.length > 0 && (
+                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-semibold flex items-center gap-1">
+                            <Target size={11} />
+                            {proposal.resultsFramework.length} Indicators
+                          </span>
+                        )}
+                        {proposal.beneficiaryBreakdown && (
+                          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-semibold flex items-center gap-1">
+                            <Users size={11} />
+                            {(proposal.beneficiaryBreakdown.directMale || 0) +
+                             (proposal.beneficiaryBreakdown.directFemale || 0) +
+                             (proposal.beneficiaryBreakdown.directChildren || 0)} Direct
+                          </span>
+                        )}
+                        {proposal.budgetBreakdown && proposal.budgetBreakdown.length > 0 && (
+                          <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-xs font-semibold flex items-center gap-1">
+                            <DollarSign size={11} />
+                            {proposal.budgetBreakdown.length} Budget Lines
+                          </span>
+                        )}
+                        {proposal.safeguarding && proposal.safeguarding.length > 0 && (
+                          <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-md text-xs font-semibold flex items-center gap-1">
+                            <Shield size={11} />
+                            Safeguarding ✓
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(proposal.status)} flex items-center gap-1 flex-shrink-0`}>
+                      {getStatusIcon(proposal.status)}
+                      {proposal.status}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                      <div className="w-6 h-6 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Target size={12} className="text-purple-500" />
+                      </div>
+                      <span className="font-medium">{proposal.programmeArea}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                      <div className="w-6 h-6 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <DollarSign size={12} className="text-green-500" />
+                      </div>
+                      <span className="font-medium">LKR {(proposal.budgetRequested / 1000000).toFixed(1)}M</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                      <div className="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Users size={12} className="text-blue-500" />
+                      </div>
+                      <span className="font-medium">{proposal.targetBeneficiaries.toLocaleString()} beneficiaries</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                      <div className="w-6 h-6 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Calendar size={12} className="text-orange-500" />
+                      </div>
+                      <span className="font-medium">{proposal.duration} months duration</span>
+                    </div>
+                  </div>
+
+                  {/* Lead Writer */}
+                  <div className="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <User size={14} className="text-indigo-600" />
+                      <p className="text-xs font-semibold text-indigo-700">Lead Writer: {proposal.leadWriter}</p>
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-3 gap-3 mb-3">
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Submitted</p>
+                        <p className="font-bold text-xs text-gray-900">
+                          {new Date(proposal.submissionDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Comments</p>
+                        <p className="font-bold text-xs text-gray-900">{proposal.comments}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Attachments</p>
+                        <p className="font-bold text-xs text-gray-900">{proposal.attachments}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedProposal(proposal);
+                          setShowViewModal(true);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95"
+                      >
+                        <Eye size={14} />
+                        {proposal.resultsFramework ? 'View MEAL Data' : 'View Details'}
+                      </button>
+                      <button className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95">
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => deleteProposal(proposal.id)}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all border border-red-200 hover:border-red-300 active:scale-95"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredProposals.length === 0 && (
+              <div className="text-center py-12">
+                <FileText className="mx-auto text-gray-300 mb-4" size={64} />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No proposals found</h3>
+                <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Pipeline Tab */}
+        {activeTab === 'pipeline' && (
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              {[
+                { status: 'Draft', color: 'gray', icon: FileEdit },
+                { status: 'Submitted', color: 'purple', icon: Send },
+                { status: 'Under Review', color: 'blue', icon: Clock },
+                { status: 'Approved', color: 'green', icon: CheckCircle },
+                { status: 'Rejected', color: 'red', icon: XCircle }
+              ].map((column, colIndex) => {
+                const columnProposals = proposals.filter(p => p.status === column.status);
+                return (
+                  <div
+                    key={column.status}
+                    className="animate-slide-up"
+                    style={{ animationDelay: `${colIndex * 0.1}s` }}
+                  >
+                    <div className={`bg-${column.color}-50 border border-${column.color}-200 rounded-lg p-3 mb-3`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <column.icon size={16} className={`text-${column.color}-600`} />
+                        <h3 className={`font-bold text-sm text-${column.color}-900`}>{column.status}</h3>
+                      </div>
+                      <p className="text-xs text-gray-600">{columnProposals.length} proposals</p>
+                    </div>
+                    <div className="space-y-2">
+                      {columnProposals.map((proposal, index) => (
+                        <div
+                          key={proposal.id}
+                          className="card-modern p-3 animate-slide-up"
+                          style={{ animationDelay: `${(colIndex * 0.1) + (index * 0.05)}s` }}
+                        >
+                          <h4 className="font-bold text-xs text-gray-900 mb-1 line-clamp-2">{proposal.title}</h4>
+                          <p className="text-xs text-gray-600 mb-2">{proposal.donor}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-green-600">
+                              LKR {(proposal.budgetRequested / 1000000).toFixed(1)}M
+                            </span>
+                            <span className={`text-xs font-bold ${getPriorityColor(proposal.priority)}`}>
+                              {proposal.priority}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                      {columnProposals.length === 0 && (
+                        <div className="text-center py-8">
+                          <p className="text-xs text-gray-400">No proposals</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Proposal View Modal */}
+      {showViewModal && selectedProposal && (
+        <ProposalViewModal
+          proposal={selectedProposal}
+          onClose={() => {
+            setShowViewModal(false);
+            setSelectedProposal(null);
+          }}
+        />
+      )}
+
+      {/* Add Proposal Modal */}
+      {showAddModal && (
+        <AddProposalModal
+          onClose={() => setShowAddModal(false)}
+          onSubmit={handleSubmit}
+          error={error}
+          success={success}
+          isLoading={isLoading}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ProposalsPage;

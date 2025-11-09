@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUCLEAR CLEAR - ALL DATA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #dc3545;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .danger-zone {
+            background: #ffe6e6;
+            border: 3px solid #dc3545;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .danger-zone h2 {
+            color: #dc3545;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .danger-zone ul {
+            text-align: left;
+            color: #721c24;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .big-button {
+            background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+            color: white;
+            border: none;
+            padding: 24px 48px;
+            font-size: 22px;
+            font-weight: 900;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.7);
+        }
+        .big-button:active {
+            transform: translateY(0);
+        }
+        .status {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 500px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .log-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 6px;
+            background: white;
+            border-left: 3px solid #dc3545;
+            font-size: 12px;
+        }
+        .log-item.cleared {
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .log-item.empty {
+            border-left-color: #6c757d;
+            color: #383d41;
+            opacity: 0.7;
+        }
+        .success {
+            background: #d4edda;
+            border: 3px solid #28a745;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            color: #155724;
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+        }
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #dc3545;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .count {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☢️ NUCLEAR CLEAR ☢️</h1>
+        <p class="subtitle">Complete browser data wipe for GERSL application</p>
+
+        <div class="danger-zone">
+            <h2>⚠️ EXTREME WARNING ⚠️</h2>
+            <p style="margin: 10px 0; font-weight: bold;">This will completely clear:</p>
+            <ul>
+                <li>✓ All localStorage data (including auth tokens - you will be logged out)</li>
+                <li>✓ All sessionStorage data</li>
+                <li>✓ All cookies for this domain</li>
+                <li>✓ All IndexedDB databases</li>
+                <li>✓ All cache storage</li>
+                <li>✓ Finance, HR, Orphan, Project, Partner data</li>
+                <li>✓ GPS attendance, leave requests, vehicle requests</li>
+                <li>✓ Settings, performance targets, benchmarks</li>
+            </ul>
+            <p style="margin-top: 15px; color: #dc3545; font-weight: bold; font-size: 16px;">
+                THIS CANNOT BE UNDONE!
+            </p>
+        </div>
+
+        <div id="status" class="status">
+            <div style="text-align: center; padding: 20px;">
+                <div class="loading"></div>
+                <p style="margin-top: 10px; color: #666;">Scanning browser storage...</p>
+            </div>
+        </div>
+
+        <button class="big-button" onclick="nuclearClear()">
+            💣 NUCLEAR CLEAR - WIPE EVERYTHING 💣
+        </button>
+
+        <div id="success" class="success"></div>
+
+        <p style="margin-top: 20px; color: #333; font-size: 13px; font-weight: bold;">
+            After clearing, you will be logged out and the page will reload to a fresh state.
+        </p>
+    </div>
+
+    <script>
+        function scanStorage() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<h3 style="margin-bottom: 10px; color: #dc3545; font-weight: bold;">Current Browser Storage:</h3>';
+
+            let totalItems = 0;
+
+            // localStorage
+            const localStorageKeys = Object.keys(localStorage);
+            if (localStorageKeys.length > 0) {
+                statusDiv.innerHTML += `<p style="font-weight: bold; margin: 15px 0 5px 0; color: #dc3545;">localStorage <span class="count">${localStorageKeys.length}</span></p>`;
+                localStorageKeys.forEach(key => {
+                    const data = localStorage.getItem(key);
+                    let size = 'Empty';
+                    try {
+                        if (data) {
+                            const parsed = JSON.parse(data);
+                            if (Array.isArray(parsed)) {
+                                size = `${parsed.length} items`;
+                            } else if (typeof parsed === 'object') {
+                                size = `${Object.keys(parsed).length} props`;
+                            } else {
+                                size = 'Has data';
+                            }
+                        }
+                    } catch {
+                        size = data ? 'Has data' : 'Empty';
+                    }
+                    statusDiv.innerHTML += `<div class="log-item">${key} → ${size}</div>`;
+                    totalItems++;
+                });
+            } else {
+                statusDiv.innerHTML += '<p style="color: #28a745; margin: 10px 0;">✓ localStorage is clean</p>';
+            }
+
+            // sessionStorage
+            const sessionStorageKeys = Object.keys(sessionStorage);
+            if (sessionStorageKeys.length > 0) {
+                statusDiv.innerHTML += `<p style="font-weight: bold; margin: 15px 0 5px 0; color: #dc3545;">sessionStorage <span class="count">${sessionStorageKeys.length}</span></p>`;
+                sessionStorageKeys.forEach(key => {
+                    statusDiv.innerHTML += `<div class="log-item">${key}</div>`;
+                    totalItems++;
+                });
+            } else {
+                statusDiv.innerHTML += '<p style="color: #28a745; margin: 10px 0;">✓ sessionStorage is clean</p>';
+            }
+
+            // Cookies
+            const cookies = document.cookie.split(';').filter(c => c.trim());
+            if (cookies.length > 0) {
+                statusDiv.innerHTML += `<p style="font-weight: bold; margin: 15px 0 5px 0; color: #dc3545;">Cookies <span class="count">${cookies.length}</span></p>`;
+                cookies.forEach(cookie => {
+                    const name = cookie.split('=')[0].trim();
+                    statusDiv.innerHTML += `<div class="log-item">${name}</div>`;
+                    totalItems++;
+                });
+            } else {
+                statusDiv.innerHTML += '<p style="color: #28a745; margin: 10px 0;">✓ No cookies found</p>';
+            }
+
+            if (totalItems === 0) {
+                document.getElementById('success').innerHTML = '✅ All browser storage is already clean!';
+                document.getElementById('success').style.display = 'block';
+            }
+
+            return totalItems;
+        }
+
+        async function nuclearClear() {
+            console.clear();
+            console.log('%c☢️ NUCLEAR CLEAR INITIATED', 'background: #dc3545; color: white; font-size: 28px; padding: 15px; font-weight: bold;');
+
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<h3 style="color: #dc3545; margin-bottom: 15px;">🔥 CLEARING IN PROGRESS...</h3>';
+
+            let cleared = 0;
+
+            // Clear localStorage
+            const localStorageKeys = Object.keys(localStorage);
+            if (localStorageKeys.length > 0) {
+                statusDiv.innerHTML += `<p style="font-weight: bold; color: #dc3545; margin-top: 10px;">Clearing localStorage (${localStorageKeys.length} keys)...</p>`;
+                localStorageKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                    statusDiv.innerHTML += `<div class="log-item cleared">✓ Cleared: ${key}</div>`;
+                    cleared++;
+                });
+                console.log(`%c✓ localStorage cleared: ${localStorageKeys.length} keys`, 'color: #28a745; font-weight: bold;');
+            }
+
+            // Clear sessionStorage
+            const sessionStorageKeys = Object.keys(sessionStorage);
+            if (sessionStorageKeys.length > 0) {
+                statusDiv.innerHTML += `<p style="font-weight: bold; color: #dc3545; margin-top: 10px;">Clearing sessionStorage (${sessionStorageKeys.length} keys)...</p>`;
+                sessionStorageKeys.forEach(key => {
+                    sessionStorage.removeItem(key);
+                    statusDiv.innerHTML += `<div class="log-item cleared">✓ Cleared: ${key}</div>`;
+                    cleared++;
+                });
+                console.log(`%c✓ sessionStorage cleared: ${sessionStorageKeys.length} keys`, 'color: #28a745; font-weight: bold;');
+            }
+
+            // Clear cookies
+            const cookies = document.cookie.split(';');
+            if (cookies.length > 0) {
+                statusDiv.innerHTML += `<p style="font-weight: bold; color: #dc3545; margin-top: 10px;">Clearing cookies (${cookies.length})...</p>`;
+                cookies.forEach(cookie => {
+                    const name = cookie.split('=')[0].trim();
+                    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+                    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' + window.location.hostname;
+                    statusDiv.innerHTML += `<div class="log-item cleared">✓ Cleared cookie: ${name}</div>`;
+                    cleared++;
+                });
+                console.log(`%c✓ Cookies cleared: ${cookies.length}`, 'color: #28a745; font-weight: bold;');
+            }
+
+            // Clear IndexedDB
+            try {
+                const databases = await indexedDB.databases();
+                if (databases && databases.length > 0) {
+                    statusDiv.innerHTML += `<p style="font-weight: bold; color: #dc3545; margin-top: 10px;">Clearing IndexedDB (${databases.length} databases)...</p>`;
+                    for (const db of databases) {
+                        indexedDB.deleteDatabase(db.name);
+                        statusDiv.innerHTML += `<div class="log-item cleared">✓ Deleted DB: ${db.name}</div>`;
+                        cleared++;
+                    }
+                    console.log(`%c✓ IndexedDB cleared: ${databases.length} databases`, 'color: #28a745; font-weight: bold;');
+                }
+            } catch (e) {
+                console.log('IndexedDB clearing skipped (not supported or empty)');
+            }
+
+            // Clear cache storage
+            try {
+                const cacheNames = await caches.keys();
+                if (cacheNames && cacheNames.length > 0) {
+                    statusDiv.innerHTML += `<p style="font-weight: bold; color: #dc3545; margin-top: 10px;">Clearing cache storage (${cacheNames.length} caches)...</p>`;
+                    for (const name of cacheNames) {
+                        await caches.delete(name);
+                        statusDiv.innerHTML += `<div class="log-item cleared">✓ Cleared cache: ${name}</div>`;
+                        cleared++;
+                    }
+                    console.log(`%c✓ Cache storage cleared: ${cacheNames.length} caches`, 'color: #28a745; font-weight: bold;');
+                }
+            } catch (e) {
+                console.log('Cache storage clearing skipped (not supported or empty)');
+            }
+
+            console.log(`%c✅ NUCLEAR CLEAR COMPLETE! Cleared ${cleared} items total`, 'background: #28a745; color: white; font-size: 20px; padding: 12px; font-weight: bold;');
+
+            const successDiv = document.getElementById('success');
+            successDiv.innerHTML = `✅ NUCLEAR CLEAR COMPLETE!<br><br>Cleared ${cleared} items from browser storage<br><br>Reloading in 3 seconds...`;
+            successDiv.style.display = 'block';
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        }
+
+        // Auto-scan on load
+        setTimeout(scanStorage, 500);
+
+        // Auto-refresh every 5 seconds
+        setInterval(scanStorage, 5000);
+    </script>
+</body>
+</html>

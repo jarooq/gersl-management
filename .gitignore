@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment Variables (CRITICAL - DO NOT COMMIT!)
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+server/.env
+server/.env.local
+
+# Database Files (CRITICAL - DO NOT COMMIT!)
+*.sqlite
+*.sqlite3
+*.db
+server/*.sqlite
+server/*.sqlite3
+server/*.db
+database.sqlite
+
+# Uploads and User Data
+uploads/
+server/uploads/
+public/uploads/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

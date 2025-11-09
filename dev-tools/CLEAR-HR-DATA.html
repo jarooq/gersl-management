@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLEAR HR DATA NOW</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #dc3545;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .big-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+        .big-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+        }
+        .big-button:active {
+            transform: translateY(0);
+        }
+        .status {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .status-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-item.found {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .status-item.empty {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            opacity: 0.6;
+        }
+        .key { font-weight: bold; color: #333; }
+        .value {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .value.has-data { color: #dc3545; font-weight: bold; }
+        .value.no-data { color: #28a745; }
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #856404;
+            font-size: 14px;
+        }
+        .success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #155724;
+            font-size: 16px;
+            display: none;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👥 HR DATA CLEANER</h1>
+        <p class="subtitle">This will clear all HR-related data from your browser</p>
+
+        <div class="warning">
+            <strong>⚠️ Warning:</strong> This will remove ALL HR data including staff, attendance, GPS check-ins, leave requests, vehicle requests, accommodation requests, and asset assignments. This action cannot be undone!
+        </div>
+
+        <div id="status" class="status">
+            <div style="text-align: center; padding: 20px;">
+                <div class="loading"></div>
+                <p style="margin-top: 10px; color: #666;">Checking localStorage...</p>
+            </div>
+        </div>
+
+        <button class="big-button" onclick="clearAllHRData()">
+            🔥 CLEAR ALL HR DATA NOW 🔥
+        </button>
+
+        <button class="big-button" style="background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);" onclick="checkStatus()">
+            🔄 Refresh Status
+        </button>
+
+        <div id="success" class="success"></div>
+
+        <p style="margin-top: 20px; color: #666; font-size: 12px;">
+            After clearing, the page will automatically reload to apply changes.
+        </p>
+    </div>
+
+    <script>
+        const KEYS_TO_CLEAR = [
+            'gersl_hr',
+            'gersl_staff',
+            'gersl_attendance',
+            'gersl_gps_attendance',
+            'gersl_leave_requests',
+            'gersl_vehicle_requests',
+            'gersl_accommodation_requests',
+            'gersl_asset_assignments',
+            'gersl_field_operations'
+        ];
+
+        function checkStatus() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '';
+
+            let foundCount = 0;
+
+            KEYS_TO_CLEAR.forEach(key => {
+                const data = localStorage.getItem(key);
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'status-item';
+
+                const keySpan = document.createElement('span');
+                keySpan.className = 'key';
+                keySpan.textContent = key;
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'value';
+
+                if (data && data !== '[]' && data !== '{}') {
+                    itemDiv.className += ' found';
+                    foundCount++;
+
+                    try {
+                        const parsed = JSON.parse(data);
+                        if (Array.isArray(parsed)) {
+                            valueSpan.textContent = `${parsed.length} items`;
+                        } else if (typeof parsed === 'object') {
+                            valueSpan.textContent = `${Object.keys(parsed).length} properties`;
+                        } else {
+                            valueSpan.textContent = 'HAS DATA';
+                        }
+                        valueSpan.className += ' has-data';
+                    } catch {
+                        valueSpan.textContent = 'HAS DATA';
+                        valueSpan.className += ' has-data';
+                    }
+                } else {
+                    itemDiv.className += ' empty';
+                    valueSpan.textContent = 'Empty';
+                    valueSpan.className += ' no-data';
+                }
+
+                itemDiv.appendChild(keySpan);
+                itemDiv.appendChild(valueSpan);
+                statusDiv.appendChild(itemDiv);
+            });
+
+            const successDiv = document.getElementById('success');
+            if (foundCount === 0) {
+                successDiv.innerHTML = '✅ All HR data is cleared! You can close this window.';
+                successDiv.style.display = 'block';
+            } else {
+                successDiv.style.display = 'none';
+            }
+        }
+
+        function clearAllHRData() {
+            console.clear();
+            console.log('%c🔥 CLEARING ALL HR DATA', 'background: #dc3545; color: white; font-size: 24px; padding: 10px; font-weight: bold;');
+
+            let cleared = 0;
+
+            KEYS_TO_CLEAR.forEach(key => {
+                const hadData = localStorage.getItem(key);
+                if (hadData) {
+                    console.log(`%c✓ Clearing: ${key}`, 'color: #ff6b35; font-weight: bold;');
+                    cleared++;
+                }
+                localStorage.removeItem(key);
+            });
+
+            // Also clear any other gersl_hr or gersl_staff related keys
+            const allKeys = Object.keys(localStorage);
+            allKeys.forEach(key => {
+                if ((key.toLowerCase().includes('gersl_hr') ||
+                     key.toLowerCase().includes('gersl_staff') ||
+                     key.toLowerCase().includes('attendance') ||
+                     key.toLowerCase().includes('vehicle') ||
+                     key.toLowerCase().includes('accommodation')) &&
+                    !KEYS_TO_CLEAR.includes(key)) {
+                    console.log(`%c✓ Clearing extra: ${key}`, 'color: #ff6b35; font-weight: bold;');
+                    localStorage.removeItem(key);
+                    cleared++;
+                }
+            });
+
+            console.log(`%c✅ CLEARED ${cleared} KEYS!`, 'background: #28a745; color: white; font-size: 18px; padding: 10px; font-weight: bold;');
+
+            const successDiv = document.getElementById('success');
+            successDiv.innerHTML = `✅ Successfully cleared ${cleared} localStorage keys!<br>Reloading in 2 seconds...`;
+            successDiv.style.display = 'block';
+
+            setTimeout(() => {
+                checkStatus();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }, 2000);
+        }
+
+        // Auto-check on load
+        setTimeout(checkStatus, 500);
+
+        // Auto-refresh every 3 seconds
+        setInterval(checkStatus, 3000);
+    </script>
+</body>
+</html>

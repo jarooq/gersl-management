@@ -1,0 +1,447 @@
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import PermissionRoute from '../components/common/PermissionRoute';
+import { PERMISSIONS } from '../utils/permissions';
+
+// Immediate imports (required for initial render)
+import Login from '../pages/Login';
+import MainLayout from '../components/layout/MainLayout';
+
+// Public Portal Pages (lazy-loaded)
+const PublicLayout = lazy(() => import('../public-portal/layouts/PublicLayout'));
+const HomePage = lazy(() => import('../public-portal/pages/HomePage'));
+const AboutPage = lazy(() => import('../public-portal/pages/AboutPage'));
+const CampaignsListPage = lazy(() => import('../public-portal/pages/CampaignsListPage'));
+const CampaignDetailPage = lazy(() => import('../public-portal/pages/CampaignDetailPage'));
+const CareersPage = lazy(() => import('../public-portal/pages/CareersPage'));
+const JobDetailPage = lazy(() => import('../public-portal/pages/JobDetailPage'));
+const TendersPage = lazy(() => import('../public-portal/pages/TendersPage'));
+const TenderDetailPage = lazy(() => import('../public-portal/pages/TenderDetailPage'));
+const ContactPage = lazy(() => import('../public-portal/pages/ContactPage'));
+const OrphansInNeedPage = lazy(() => import('../public-portal/pages/OrphansInNeedPage'));
+
+// Lazy-loaded page components (code splitting)
+const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'));
+const OrphansPage = lazy(() => import('../pages/Orphans/OrphansPage'));
+const ProjectsPage = lazy(() => import('../pages/Projects/ProjectsPage'));
+const FinancePage = lazy(() => import('../pages/Finance/FinancePage'));
+const HRPage = lazy(() => import('../pages/HR/HRPage'));
+const AttendancePage = lazy(() => import('../pages/HR/AttendancePage'));
+const OnboardingPage = lazy(() => import('../pages/HR/OnboardingPage'));
+const AppraisalPage = lazy(() => import('../pages/HR/AppraisalPage'));
+const ProposalsPage = lazy(() => import('../pages/Proposals/ProposalsPage'));
+const PartnersPage = lazy(() => import('../pages/Partners/PartnersPage'));
+const MEALPage = lazy(() => import('../pages/MEAL/MEALPage'));
+const SettingsPage = lazy(() => import('../pages/Settings/SettingsPage'));
+const SystemSettingsPage = lazy(() => import('../pages/SystemSettings/SystemSettingsPage'));
+const CBOPage = lazy(() => import('../pages/CBO/CBOPage'));
+const SocialMediaPage = lazy(() => import('../pages/SocialMedia/SocialMediaPage'));
+const SocialMediaSettings = lazy(() => import('../pages/SocialMedia/SocialMediaSettings'));
+const ReportsPage = lazy(() => import('../pages/Reports/ReportsPage'));
+const ActivitiesPage = lazy(() => import('../pages/Operations/ActivitiesPage'));
+const TasksPage = lazy(() => import('../pages/Operations/TasksPage'));
+const ApprovalsPage = lazy(() => import('../pages/Approvals/ApprovalsPage'));
+const CompliancePage = lazy(() => import('../pages/Compliance/CompliancePage'));
+const CampaignsPage = lazy(() => import('../pages/Campaigns/CampaignsPage'));
+const DonationsPage = lazy(() => import('../pages/Campaigns/DonationsPage'));
+const JobPostingsPage = lazy(() => import('../pages/Campaigns/JobPostingsPage'));
+const VendorCallsPage = lazy(() => import('../pages/Campaigns/VendorCallsPage'));
+
+// Loading component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+      <p className="text-gray-600 font-medium">Loading...</p>
+    </div>
+  </div>
+);
+
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  const { isLoggedIn, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+};
+
+const AppRouter = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes - No authentication required */}
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <HomePage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <AboutPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/campaigns"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <CampaignsListPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/campaigns/:id"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <CampaignDetailPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/careers"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <CareersPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/careers/:id"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <JobDetailPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/tenders"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <TendersPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/tenders/:id"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <TenderDetailPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <ContactPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/orphans-in-need"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <OrphansInNeedPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+
+        {/* Admin Login */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<Login />} />
+
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route
+            path="dashboard"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <Dashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="orphans"
+            element={
+              <PermissionRoute permission={PERMISSIONS.ORPHANS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <OrphansPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="projects"
+            element={
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <ProjectsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="operations/activities"
+            element={
+              <PermissionRoute permission={PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES}>
+                <Suspense fallback={<PageLoader />}>
+                  <ActivitiesPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="operations/tasks"
+            element={
+              <PermissionRoute permission={PERMISSIONS.OPERATIONS_VIEW_TASKS}>
+                <Suspense fallback={<PageLoader />}>
+                  <TasksPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="finance"
+            element={
+              <PermissionRoute permission={PERMISSIONS.FINANCE_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <FinancePage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="campaigns"
+            element={
+              <PermissionRoute permission={PERMISSIONS.CAMPAIGNS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <CampaignsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="donations"
+            element={
+              <PermissionRoute permission={PERMISSIONS.DONATIONS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <DonationsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="job-postings"
+            element={
+              <PermissionRoute permission={PERMISSIONS.JOB_POSTINGS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <JobPostingsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="vendor-calls"
+            element={
+              <PermissionRoute permission={PERMISSIONS.VENDOR_CALLS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <VendorCallsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route path="hr">
+            <Route
+              index
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_VIEW}>
+                  <Suspense fallback={<PageLoader />}>
+                    <HRPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="attendance"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
+                  <Suspense fallback={<PageLoader />}>
+                    <AttendancePage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="onboarding"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_MANAGE_ONBOARDING}>
+                  <Suspense fallback={<PageLoader />}>
+                    <OnboardingPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="appraisal"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_MANAGE_APPRAISALS}>
+                  <Suspense fallback={<PageLoader />}>
+                    <AppraisalPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+          </Route>
+          <Route
+            path="proposals"
+            element={
+              <PermissionRoute permission={PERMISSIONS.PROPOSALS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <ProposalsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="approvals"
+            element={
+              <PermissionRoute permission={PERMISSIONS.APPROVALS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <ApprovalsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="partners"
+            element={
+              <PermissionRoute permission={PERMISSIONS.PARTNERS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <PartnersPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="meal"
+            element={
+              <PermissionRoute permission={PERMISSIONS.MEAL_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <MEALPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="social-media"
+            element={
+              <PermissionRoute permission={PERMISSIONS.SOCIAL_MEDIA_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <SocialMediaPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="social-media/settings"
+            element={
+              <PermissionRoute permission={PERMISSIONS.SETTINGS_MANAGE}>
+                <Suspense fallback={<PageLoader />}>
+                  <SocialMediaSettings />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <PermissionRoute permission={PERMISSIONS.REPORTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <ReportsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="compliance"
+            element={
+              <PermissionRoute permission={PERMISSIONS.COMPLIANCE_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <CompliancePage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="cbo"
+            element={
+              <PermissionRoute permission={PERMISSIONS.CBO_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <CBOPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <PermissionRoute permission={PERMISSIONS.SETTINGS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <SystemSettingsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default AppRouter;

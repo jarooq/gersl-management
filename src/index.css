@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gray-50 text-foreground font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* Card styles */
+  .card-modern {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:border-gray-200;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-white border-2 border-gray-200 hover:border-blue-500 hover:text-blue-600 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  /* Input styles */
+  .input-modern {
+    @apply w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-white;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-white;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1;
+  }
+
+  /* Stat card */
+  .stat-card {
+    @apply bg-white rounded-xl p-6 shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Modal overlay */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-blue {
+    @apply bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700;
+  }
+
+  .gradient-purple {
+    @apply bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700;
+  }
+
+  .gradient-green {
+    @apply bg-gradient-to-br from-green-500 via-green-600 to-green-700;
+  }
+
+  .gradient-orange {
+    @apply bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700;
+  }
+}
+
+/* Print styles for financial reports */
+@media print {
+  @page {
+    margin: 1cm;
+    size: A4 portrait;
+  }
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the printable report and its header */
+  #printable-report,
+  #printable-report *,
+  .report-modal-content > div > div:first-child,
+  .report-modal-content > div > div:first-child * {
+    visibility: visible;
+  }
+
+  /* Position printable content */
+  #printable-report {
+    position: absolute;
+    left: 0;
+    top: 3cm;
+    width: 100%;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* Position header */
+  .report-modal-content > div > div:first-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Hide buttons */
+  button {
+    display: none !important;
+  }
+
+  /* Table styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+
+  /* Typography */
+  * {
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+  }
+
+  h3 { font-size: 14pt !important; }
+  h4 { font-size: 12pt !important; }
+
+  /* Print backgrounds */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

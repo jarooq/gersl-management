@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Finance Data - GERSL</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #856404;
+            font-size: 14px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #155724;
+            font-size: 14px;
+            display: none;
+        }
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #721c24;
+            font-size: 14px;
+            display: none;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #5a6268;
+        }
+        .data-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .data-item {
+            margin: 8px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .data-item.has-data {
+            border-left: 3px solid #dc3545;
+        }
+        .data-item.no-data {
+            border-left: 3px solid #28a745;
+            opacity: 0.6;
+        }
+        .key-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .key-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .status-found {
+            background: #dc3545;
+            color: white;
+        }
+        .status-empty {
+            background: #28a745;
+            color: white;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Clear Finance Data</h1>
+        <p class="subtitle">Remove all finance-related sample data from localStorage</p>
+
+        <div class="warning">
+            <strong>⚠️ This will clear:</strong>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>All expenses (including Child Protection Initiative)</li>
+                <li>Chart of Accounts</li>
+                <li>Payroll data</li>
+                <li>Budgets</li>
+                <li>Purchase Orders</li>
+                <li>Invoices & Bills</li>
+                <li>Journal Entries</li>
+                <li>Bank Transactions</li>
+                <li>Performance Targets</li>
+            </ul>
+        </div>
+
+        <div id="dataStatus" class="data-list">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Scanning localStorage...</p>
+            </div>
+        </div>
+
+        <div>
+            <button onclick="clearFinanceData()">🗑️ Clear All Finance Data</button>
+            <button class="secondary" onclick="checkData()">🔄 Refresh Status</button>
+        </div>
+
+        <div id="successMessage" class="success"></div>
+        <div id="errorMessage" class="error"></div>
+    </div>
+
+    <script>
+        // All finance and settings-related localStorage keys
+        const FINANCE_KEYS = [
+            'gersl_expenses',
+            'gersl_payroll',
+            'gersl_budgets',
+            'gersl_purchase_orders',
+            'gersl_invoices',
+            'gersl_bills',
+            'gersl_chart_of_accounts',
+            'gersl_journal_entries',
+            'gersl_bank_transactions',
+            'gersl_finance',
+            'gersl_settings'
+        ];
+
+        function checkData() {
+            const dataStatusDiv = document.getElementById('dataStatus');
+            dataStatusDiv.innerHTML = '';
+
+            let foundDataCount = 0;
+
+            FINANCE_KEYS.forEach(key => {
+                const data = localStorage.getItem(key);
+                const div = document.createElement('div');
+                div.className = 'data-item';
+
+                const keyName = document.createElement('span');
+                keyName.className = 'key-name';
+                keyName.textContent = key;
+
+                const status = document.createElement('span');
+                status.className = 'key-status';
+
+                if (data && data !== '[]' && data !== '{}') {
+                    foundDataCount++;
+                    div.className += ' has-data';
+                    status.className += ' status-found';
+
+                    try {
+                        const parsed = JSON.parse(data);
+                        let count = '';
+
+                        if (Array.isArray(parsed)) {
+                            count = `${parsed.length} items`;
+                        } else if (typeof parsed === 'object') {
+                            const keys = Object.keys(parsed);
+                            count = `${keys.length} properties`;
+                        }
+
+                        status.textContent = count || 'HAS DATA';
+                    } catch {
+                        status.textContent = 'HAS DATA';
+                    }
+                } else {
+                    div.className += ' no-data';
+                    status.className += ' status-empty';
+                    status.textContent = 'Empty';
+                }
+
+                div.appendChild(keyName);
+                div.appendChild(status);
+                dataStatusDiv.appendChild(div);
+            });
+
+            // Update messages
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            if (foundDataCount === 0) {
+                successMsg.textContent = '✅ All finance data is cleared! You can close this page.';
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+            } else {
+                successMsg.style.display = 'none';
+                errorMsg.textContent = `⚠️ Found ${foundDataCount} localStorage keys with data. Click "Clear All Finance Data" to remove.`;
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function clearFinanceData() {
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            try {
+                let clearedCount = 0;
+                let errors = [];
+
+                FINANCE_KEYS.forEach(key => {
+                    try {
+                        const hadData = localStorage.getItem(key);
+                        localStorage.removeItem(key);
+
+                        if (hadData) {
+                            clearedCount++;
+                            console.log(`✓ Cleared: ${key}`);
+                        }
+                    } catch (err) {
+                        errors.push(key);
+                        console.error(`✗ Failed to clear ${key}:`, err);
+                    }
+                });
+
+                // Force a localStorage update
+                localStorage.setItem('_temp_clear_marker', Date.now().toString());
+                localStorage.removeItem('_temp_clear_marker');
+
+                if (errors.length === 0) {
+                    successMsg.textContent = `✅ Successfully cleared ${clearedCount} localStorage keys! Refreshing in 2 seconds...`;
+                    successMsg.style.display = 'block';
+                    errorMsg.style.display = 'none';
+
+                    setTimeout(() => {
+                        checkData();
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    errorMsg.textContent = `⚠️ Cleared ${clearedCount} keys, but failed on: ${errors.join(', ')}`;
+                    errorMsg.style.display = 'block';
+                    checkData();
+                }
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                errorMsg.textContent = '❌ Error clearing data. Check console for details.';
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Auto-check on page load
+        setTimeout(checkData, 500);
+
+        // Auto-refresh every 3 seconds
+        setInterval(checkData, 3000);
+    </script>
+</body>
+</html>

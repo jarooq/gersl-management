@@ -1,0 +1,923 @@
+/**
+ * Role-Based Access Control (RBAC) System
+ * Defines permissions for different user roles
+ */
+
+// ============================================
+// PERMISSION DEFINITIONS
+// ============================================
+
+export const PERMISSIONS = {
+  // Dashboard
+  DASHBOARD_VIEW: 'dashboard:view',
+
+  // Orphan Management
+  ORPHANS_VIEW: 'orphans:view',
+  ORPHANS_CREATE: 'orphans:create',
+  ORPHANS_EDIT: 'orphans:edit',
+  ORPHANS_DELETE: 'orphans:delete',
+  ORPHANS_APPROVE: 'orphans:approve',
+  ORPHANS_ASSIGN_COORDINATOR: 'orphans:assign_coordinator',
+  ORPHANS_REGISTER_BENEFICIARY: 'orphans:register_beneficiary',
+  ORPHANS_SPONSORSHIP_MANAGE: 'orphans:sponsorship_manage',
+
+  // Project Management
+  PROJECTS_VIEW: 'projects:view',
+  PROJECTS_CREATE: 'projects:create',
+  PROJECTS_EDIT: 'projects:edit',
+  PROJECTS_DELETE: 'projects:delete',
+  PROJECTS_APPROVE: 'projects:approve',
+  PROJECTS_DIRECTOR_APPROVE: 'projects:director_approve',
+  PROJECTS_CEO_APPROVE: 'projects:ceo_approve',
+
+  // Finance Management
+  FINANCE_VIEW: 'finance:view',
+  FINANCE_CREATE_EXPENSE: 'finance:create_expense',
+  FINANCE_APPROVE_EXPENSE: 'finance:approve_expense',
+  FINANCE_DELETE_EXPENSE: 'finance:delete_expense',
+  FINANCE_VIEW_PAYROLL: 'finance:view_payroll',
+  FINANCE_PROCESS_PAYROLL: 'finance:process_payroll',
+  FINANCE_APPROVE_PO: 'finance:approve_po',
+  FINANCE_MANAGER_APPROVE: 'finance:manager_approve',
+  FINANCE_CEO_APPROVE: 'finance:ceo_approve',
+  FINANCE_RECONCILE_ACCOUNTS: 'finance:reconcile_accounts',
+  FINANCE_VIEW_REPORTS: 'finance:view_reports',
+
+  // HR Management
+  HR_VIEW: 'hr:view',
+  HR_CREATE: 'hr:create',
+  HR_EDIT: 'hr:edit',
+  HR_DELETE: 'hr:delete',
+  HR_APPROVE_LEAVE: 'hr:approve_leave',
+  HR_MANAGER_APPROVE_LEAVE: 'hr:manager_approve_leave',
+  HR_VIEW_SALARY: 'hr:view_salary',
+  HR_MANAGE_RECRUITMENT: 'hr:manage_recruitment',
+  HR_MANAGE_PERFORMANCE: 'hr:manage_performance',
+  HR_ATTENDANCE_MANAGE: 'hr:attendance_manage',
+  HR_ONBOARDING: 'hr:onboarding',
+  HR_APPRAISAL: 'hr:appraisal',
+  HR_VIEW_ATTENDANCE: 'hr:view_attendance',
+  HR_MANAGE_ONBOARDING: 'hr:manage_onboarding',
+  HR_MANAGE_APPRAISALS: 'hr:manage_appraisals',
+
+  // CBO Management
+  CBO_VIEW: 'cbo:view',
+  CBO_CREATE: 'cbo:create',
+  CBO_EDIT: 'cbo:edit',
+  CBO_DELETE: 'cbo:delete',
+  CBO_APPROVE_PROPOSAL: 'cbo:approve_proposal',
+  CBO_FUNDRAISING_REVIEW: 'cbo:fundraising_review',
+  CBO_PROGRAMME_MANAGER_APPROVE: 'cbo:programme_manager_approve',
+  CBO_DIRECTOR_APPROVE: 'cbo:director_approve',
+  CBO_CEO_APPROVE: 'cbo:ceo_approve',
+
+  // Partners Management
+  PARTNERS_VIEW: 'partners:view',
+  PARTNERS_CREATE: 'partners:create',
+  PARTNERS_EDIT: 'partners:edit',
+  PARTNERS_DELETE: 'partners:delete',
+
+  // Proposals Management
+  PROPOSALS_VIEW: 'proposals:view',
+  PROPOSALS_CREATE: 'proposals:create',
+  PROPOSALS_EDIT: 'proposals:edit',
+  PROPOSALS_DELETE: 'proposals:delete',
+  PROPOSALS_SUBMIT: 'proposals:submit',
+  PROPOSALS_APPROVE: 'proposals:approve',
+
+  // MEAL Management
+  MEAL_VIEW: 'meal:view',
+  MEAL_CREATE: 'meal:create',
+  MEAL_EDIT: 'meal:edit',
+  MEAL_DELETE: 'meal:delete',
+  MEAL_APPROVE: 'meal:approve',
+  MEAL_MONITORING: 'meal:monitoring',
+  MEAL_EVALUATION: 'meal:evaluation',
+
+  // Campaigns Management
+  CAMPAIGNS_VIEW: 'campaigns:view',
+  CAMPAIGNS_CREATE: 'campaigns:create',
+  CAMPAIGNS_EDIT: 'campaigns:edit',
+  CAMPAIGNS_DELETE: 'campaigns:delete',
+  CAMPAIGNS_APPROVE: 'campaigns:approve',
+  CAMPAIGNS_BUDGET_MANAGE: 'campaigns:budget_manage',
+
+  // Donations Management
+  DONATIONS_VIEW: 'donations:view',
+  DONATIONS_CREATE: 'donations:create',
+  DONATIONS_EDIT: 'donations:edit',
+  DONATIONS_DELETE: 'donations:delete',
+
+  // Social Media Management
+  SOCIAL_MEDIA_VIEW: 'social_media:view',
+  SOCIAL_MEDIA_CREATE: 'social_media:create',
+  SOCIAL_MEDIA_PUBLISH: 'social_media:publish',
+  SOCIAL_MEDIA_DELETE: 'social_media:delete',
+
+  // Job Postings Management
+  JOB_POSTINGS_VIEW: 'job_postings:view',
+  JOB_POSTINGS_CREATE: 'job_postings:create',
+  JOB_POSTINGS_EDIT: 'job_postings:edit',
+  JOB_POSTINGS_DELETE: 'job_postings:delete',
+
+  // Vendor Calls/Tenders Management
+  VENDOR_CALLS_VIEW: 'vendor_calls:view',
+  VENDOR_CALLS_CREATE: 'vendor_calls:create',
+  VENDOR_CALLS_EDIT: 'vendor_calls:edit',
+  VENDOR_CALLS_DELETE: 'vendor_calls:delete',
+
+  // Operations
+  OPERATIONS_VIEW_ACTIVITIES: 'operations:view_activities',
+  OPERATIONS_VIEW_TASKS: 'operations:view_tasks',
+
+  // Approvals
+  APPROVALS_VIEW: 'approvals:view',
+  APPROVALS_MANAGE: 'approvals:manage',
+
+  // Reports & Compliance
+  REPORTS_VIEW: 'reports:view',
+  REPORTS_GENERATE: 'reports:generate',
+  REPORTS_EXPORT: 'reports:export',
+  COMPLIANCE_VIEW: 'compliance:view',
+  COMPLIANCE_MANAGE: 'compliance:manage',
+
+  // System Settings
+  SETTINGS_VIEW: 'settings:view',
+  SETTINGS_MANAGE: 'settings:manage',
+  SETTINGS_ROLES_MANAGE: 'settings:roles_manage',
+  SYSTEM_SETTINGS: 'system:settings',
+
+  // User Management
+  USERS_VIEW: 'users:view',
+  USERS_CREATE: 'users:create',
+  USERS_EDIT: 'users:edit',
+  USERS_DELETE: 'users:delete',
+};
+
+// ============================================
+// ROLE PERMISSIONS MAPPING
+// ============================================
+
+export const ROLE_PERMISSIONS = {
+  // Level 0: System Administrator
+  'Admin': [
+    // Full access to everything
+    ...Object.values(PERMISSIONS),
+  ],
+
+  // Level 1: Governance
+  'BOD': [
+    // Board of Directors - Strategic oversight, view all modules
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_VIEW_REPORTS,
+    PERMISSIONS.HR_VIEW,
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.CAMPAIGNS_VIEW,
+    PERMISSIONS.DONATIONS_VIEW,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+    PERMISSIONS.REPORTS_EXPORT,
+    PERMISSIONS.COMPLIANCE_VIEW,
+    PERMISSIONS.SETTINGS_VIEW,
+  ],
+
+  // Level 2: Executive Leadership
+  'CEO': [
+    // CEO - Executive authority, can approve everything
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    // View all modules
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_APPROVE,
+    PERMISSIONS.ORPHANS_SPONSORSHIP_MANAGE,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CEO_APPROVE,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CEO_APPROVE,
+    PERMISSIONS.FINANCE_VIEW_REPORTS,
+    PERMISSIONS.FINANCE_VIEW_PAYROLL,
+
+    PERMISSIONS.HR_VIEW,
+    PERMISSIONS.HR_MANAGER_APPROVE_LEAVE,
+    PERMISSIONS.HR_VIEW_SALARY,
+
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.CBO_CEO_APPROVE,
+
+    PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.PARTNERS_CREATE,
+    PERMISSIONS.PARTNERS_EDIT,
+
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_APPROVE,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_APPROVE,
+
+    PERMISSIONS.CAMPAIGNS_VIEW,
+    PERMISSIONS.CAMPAIGNS_APPROVE,
+
+    PERMISSIONS.DONATIONS_VIEW,
+    PERMISSIONS.SOCIAL_MEDIA_VIEW,
+    PERMISSIONS.JOB_POSTINGS_VIEW,
+    PERMISSIONS.VENDOR_CALLS_VIEW,
+
+    PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES,
+    PERMISSIONS.OPERATIONS_VIEW_TASKS,
+
+    PERMISSIONS.APPROVALS_VIEW,
+    PERMISSIONS.APPROVALS_MANAGE,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+    PERMISSIONS.REPORTS_EXPORT,
+
+    PERMISSIONS.COMPLIANCE_VIEW,
+    PERMISSIONS.COMPLIANCE_MANAGE,
+
+    PERMISSIONS.SETTINGS_VIEW,
+    PERMISSIONS.SETTINGS_MANAGE,
+    PERMISSIONS.USERS_VIEW,
+  ],
+
+  // Level 3: Directors
+  'Director Programmes': [
+    // Director - Programme oversight and approval
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_APPROVE,
+    PERMISSIONS.ORPHANS_ASSIGN_COORDINATOR,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+    PERMISSIONS.PROJECTS_DIRECTOR_APPROVE,
+
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.CBO_DIRECTOR_APPROVE,
+
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_CREATE,
+    PERMISSIONS.PROPOSALS_EDIT,
+    PERMISSIONS.PROPOSALS_APPROVE,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_APPROVE,
+
+    PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES,
+    PERMISSIONS.OPERATIONS_VIEW_TASKS,
+
+    PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.FINANCE_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+    PERMISSIONS.REPORTS_EXPORT,
+
+    PERMISSIONS.SETTINGS_VIEW,
+  ],
+
+  // Level 4: Managers
+  'Programme Manager': [
+    // Programme Manager - Manages all programme activities
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_APPROVE,
+    PERMISSIONS.ORPHANS_ASSIGN_COORDINATOR,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+    PERMISSIONS.PROJECTS_APPROVE,
+
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.CBO_EDIT,
+    PERMISSIONS.CBO_PROGRAMME_MANAGER_APPROVE,
+
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_CREATE,
+    PERMISSIONS.PROPOSALS_EDIT,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+    PERMISSIONS.MEAL_APPROVE,
+
+    PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES,
+    PERMISSIONS.OPERATIONS_VIEW_TASKS,
+
+    PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_APPROVE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+    PERMISSIONS.REPORTS_EXPORT,
+
+    PERMISSIONS.APPROVALS_VIEW,
+  ],
+
+  'Finance Manager': [
+    // Finance Manager - Full finance management
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+    PERMISSIONS.FINANCE_APPROVE_EXPENSE,
+    PERMISSIONS.FINANCE_DELETE_EXPENSE,
+    PERMISSIONS.FINANCE_VIEW_PAYROLL,
+    PERMISSIONS.FINANCE_PROCESS_PAYROLL,
+    PERMISSIONS.FINANCE_APPROVE_PO,
+    PERMISSIONS.FINANCE_MANAGER_APPROVE,
+    PERMISSIONS.FINANCE_RECONCILE_ACCOUNTS,
+    PERMISSIONS.FINANCE_VIEW_REPORTS,
+
+    // View other modules for context
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.PARTNERS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+    PERMISSIONS.REPORTS_EXPORT,
+
+    PERMISSIONS.APPROVALS_VIEW,
+    PERMISSIONS.SETTINGS_VIEW,
+  ],
+
+  'Fundraising Manager': [
+    // Fundraising Manager - Manage fundraising and campaigns
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.CBO_FUNDRAISING_REVIEW,
+
+    PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.PARTNERS_CREATE,
+    PERMISSIONS.PARTNERS_EDIT,
+
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_CREATE,
+    PERMISSIONS.PROPOSALS_EDIT,
+
+    PERMISSIONS.CAMPAIGNS_VIEW,
+    PERMISSIONS.CAMPAIGNS_CREATE,
+    PERMISSIONS.CAMPAIGNS_EDIT,
+    PERMISSIONS.CAMPAIGNS_APPROVE,
+    PERMISSIONS.CAMPAIGNS_BUDGET_MANAGE,
+
+    PERMISSIONS.DONATIONS_VIEW,
+    PERMISSIONS.DONATIONS_CREATE,
+    PERMISSIONS.DONATIONS_EDIT,
+
+    PERMISSIONS.SOCIAL_MEDIA_VIEW,
+    PERMISSIONS.SOCIAL_MEDIA_CREATE,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.MEAL_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+
+    PERMISSIONS.APPROVALS_VIEW,
+  ],
+
+  'HR Manager': [
+    // HR Manager - Full HR management
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.HR_VIEW,
+    PERMISSIONS.HR_CREATE,
+    PERMISSIONS.HR_EDIT,
+    PERMISSIONS.HR_DELETE,
+    PERMISSIONS.HR_APPROVE_LEAVE,
+    PERMISSIONS.HR_MANAGER_APPROVE_LEAVE,
+    PERMISSIONS.HR_VIEW_SALARY,
+    PERMISSIONS.HR_MANAGE_RECRUITMENT,
+    PERMISSIONS.HR_MANAGE_PERFORMANCE,
+    PERMISSIONS.HR_ATTENDANCE_MANAGE,
+    PERMISSIONS.HR_ONBOARDING,
+    PERMISSIONS.HR_APPRAISAL,
+    PERMISSIONS.HR_VIEW_ATTENDANCE,
+    PERMISSIONS.HR_MANAGE_ONBOARDING,
+    PERMISSIONS.HR_MANAGE_APPRAISALS,
+
+    PERMISSIONS.JOB_POSTINGS_VIEW,
+    PERMISSIONS.JOB_POSTINGS_CREATE,
+    PERMISSIONS.JOB_POSTINGS_EDIT,
+    PERMISSIONS.JOB_POSTINGS_DELETE,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.ORPHANS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+
+    PERMISSIONS.APPROVALS_VIEW,
+    PERMISSIONS.SETTINGS_VIEW,
+    PERMISSIONS.USERS_VIEW,
+  ],
+
+  // Level 5: Officers
+  'Project Officer WASH': [
+    // Project Officer (WASH specialization)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+    PERMISSIONS.MEAL_MONITORING,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Project Officer Orphans': [
+    // Project Officer (Orphans specialization)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+    PERMISSIONS.ORPHANS_ASSIGN_COORDINATOR,
+    PERMISSIONS.ORPHANS_SPONSORSHIP_MANAGE,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Project Officer Livelihoods': [
+    // Project Officer (Livelihoods specialization)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Project Officer Infrastructure': [
+    // Project Officer (Infrastructure specialization)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.VENDOR_CALLS_VIEW,
+    PERMISSIONS.VENDOR_CALLS_CREATE,
+    PERMISSIONS.VENDOR_CALLS_EDIT,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Project Officer Education': [
+    // Project Officer (Education specialization)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Project Officer Women': [
+    // Project Officer (Women Development specialization)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Project Officer': [
+    // Generic Project Officer (for backward compatibility)
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Field Officer': [
+    // Field Officer - Field operations
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_EDIT,
+
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Finance Officer': [
+    // Finance Officer
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+    PERMISSIONS.FINANCE_VIEW_PAYROLL,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'HR Officer': [
+    // HR Officer
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.HR_VIEW,
+    PERMISSIONS.HR_CREATE,
+    PERMISSIONS.HR_EDIT,
+    PERMISSIONS.HR_APPROVE_LEAVE,
+    PERMISSIONS.HR_ATTENDANCE_MANAGE,
+    PERMISSIONS.HR_VIEW_ATTENDANCE,
+    PERMISSIONS.HR_ONBOARDING,
+    PERMISSIONS.HR_MANAGE_ONBOARDING,
+
+    PERMISSIONS.JOB_POSTINGS_VIEW,
+    PERMISSIONS.JOB_POSTINGS_CREATE,
+    PERMISSIONS.JOB_POSTINGS_EDIT,
+
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+
+    PERMISSIONS.USERS_VIEW,
+  ],
+
+  'MEAL Officer': [
+    // MEAL Officer - Monitoring, Evaluation, Accountability, Learning
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+    PERMISSIONS.MEAL_EDIT,
+    PERMISSIONS.MEAL_DELETE,
+    PERMISSIONS.MEAL_MONITORING,
+    PERMISSIONS.MEAL_EVALUATION,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.CBO_VIEW,
+    PERMISSIONS.FINANCE_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+    PERMISSIONS.REPORTS_EXPORT,
+  ],
+
+  'Media Production Officer': [
+    // Media Production Officer
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.SOCIAL_MEDIA_VIEW,
+    PERMISSIONS.SOCIAL_MEDIA_CREATE,
+    PERMISSIONS.SOCIAL_MEDIA_PUBLISH,
+
+    PERMISSIONS.CAMPAIGNS_VIEW,
+    PERMISSIONS.CAMPAIGNS_CREATE,
+    PERMISSIONS.CAMPAIGNS_EDIT,
+
+    PERMISSIONS.DONATIONS_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.ORPHANS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Media Officer': [
+    // Media Officer
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.SOCIAL_MEDIA_VIEW,
+    PERMISSIONS.SOCIAL_MEDIA_CREATE,
+
+    PERMISSIONS.CAMPAIGNS_VIEW,
+
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Accountant': [
+    // Accountant
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+    PERMISSIONS.FINANCE_VIEW_PAYROLL,
+    PERMISSIONS.FINANCE_RECONCILE_ACCOUNTS,
+
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_GENERATE,
+  ],
+
+  // Level 6: Assistants
+  'Project Assistant': [
+    // Project Assistant - Support project officers
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.FINANCE_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Finance Assistant': [
+    // Finance Assistant
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.FINANCE_VIEW,
+    PERMISSIONS.FINANCE_CREATE_EXPENSE,
+
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'Fundraising Assistant': [
+    // Fundraising Assistant
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.CAMPAIGNS_VIEW,
+    PERMISSIONS.CAMPAIGNS_CREATE,
+
+    PERMISSIONS.DONATIONS_VIEW,
+    PERMISSIONS.DONATIONS_CREATE,
+
+    PERMISSIONS.SOCIAL_MEDIA_VIEW,
+
+    PERMISSIONS.PARTNERS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'HR Assistant': [
+    // HR Assistant
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.HR_VIEW,
+    PERMISSIONS.HR_CREATE,
+    PERMISSIONS.HR_ATTENDANCE_MANAGE,
+    PERMISSIONS.HR_VIEW_ATTENDANCE,
+
+    PERMISSIONS.JOB_POSTINGS_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  // Level 7: Coordinators
+  'Orphan Coordinator': [
+    // Orphan Coordinator - Focused on orphan care
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_EDIT,
+
+    PERMISSIONS.PROJECTS_VIEW,
+
+    PERMISSIONS.MEAL_VIEW,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  // Guest (lowest level)
+  'Guest': [
+    // Read-only access to non-sensitive data
+    PERMISSIONS.DASHBOARD_VIEW,
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+};
+
+// ============================================
+// PERMISSION CHECKING FUNCTIONS
+// ============================================
+
+/**
+ * Check if a user has a specific permission
+ * @param {object} user - User object with role property
+ * @param {string} permission - Permission to check
+ * @returns {boolean} True if user has permission
+ */
+export const hasPermission = (user, permission) => {
+  if (!user || !user.role) return false;
+
+  const rolePermissions = ROLE_PERMISSIONS[user.role] || [];
+  return rolePermissions.includes(permission);
+};
+
+/**
+ * Check if user has any of the specified permissions
+ * @param {object} user - User object with role property
+ * @param {string[]} permissions - Array of permissions to check
+ * @returns {boolean} True if user has at least one permission
+ */
+export const hasAnyPermission = (user, permissions) => {
+  if (!user || !user.role) return false;
+
+  const rolePermissions = ROLE_PERMISSIONS[user.role] || [];
+  return permissions.some(permission => rolePermissions.includes(permission));
+};
+
+/**
+ * Check if user has all specified permissions
+ * @param {object} user - User object with role property
+ * @param {string[]} permissions - Array of permissions to check
+ * @returns {boolean} True if user has all permissions
+ */
+export const hasAllPermissions = (user, permissions) => {
+  if (!user || !user.role) return false;
+
+  const rolePermissions = ROLE_PERMISSIONS[user.role] || [];
+  return permissions.every(permission => rolePermissions.includes(permission));
+};
+
+/**
+ * Get all permissions for a user role
+ * @param {string} role - User role
+ * @returns {string[]} Array of permissions
+ */
+export const getPermissionsForRole = (role) => {
+  return ROLE_PERMISSIONS[role] || [];
+};
+
+/**
+ * Check if user is admin
+ * @param {object} user - User object
+ * @returns {boolean} True if user is admin
+ */
+export const isAdmin = (user) => {
+  return user?.role === 'Admin';
+};
+
+/**
+ * Check if user is CEO
+ * @param {object} user - User object
+ * @returns {boolean} True if user is CEO
+ */
+export const isCEO = (user) => {
+  return user?.role === 'CEO';
+};
+
+/**
+ * Check if user can approve (Admin or CEO)
+ * @param {object} user - User object
+ * @returns {boolean} True if user can approve high-level items
+ */
+export const canApprove = (user) => {
+  return isAdmin(user) || isCEO(user);
+};
+
+// ============================================
+// DEFAULT EXPORT
+// ============================================
+
+export default {
+  PERMISSIONS,
+  ROLE_PERMISSIONS,
+  hasPermission,
+  hasAnyPermission,
+  hasAllPermissions,
+  getPermissionsForRole,
+  isAdmin,
+  isCEO,
+  canApprove,
+};
