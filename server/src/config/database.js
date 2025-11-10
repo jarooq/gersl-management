@@ -26,6 +26,10 @@ const sequelize = useSQLite
         port: process.env.DB_PORT || 5432,
         dialect: 'postgres',
         logging: process.env.NODE_ENV === 'development' ? console.log : false,
+        dialectOptions: {
+          // Force IPv4 to avoid IPv6 connection issues on some hosts
+          family: 4
+        },
         pool: {
           max: 10,
           min: 0,
