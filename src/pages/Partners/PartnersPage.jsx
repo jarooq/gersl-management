@@ -3,6 +3,8 @@ import { usePartners } from '../../contexts/PartnersContext';
 import AddPartnerModal from './AddPartnerModal';
 import AddContributionModal from './AddContributionModal';
 import AddCommunicationModal from './AddCommunicationModal';
+import ViewPartnerModal from './ViewPartnerModal';
+import EditPartnerModal from './EditPartnerModal';
 import {
   HeartHandshake,
   Plus,
@@ -42,6 +44,7 @@ const PartnersPage = () => {
     communications,
     getStats,
     addPartner,
+    updatePartner,
     addContribution,
     addCommunication,
     deletePartner,
@@ -58,8 +61,22 @@ const PartnersPage = () => {
   const [showAddPartnerModal, setShowAddPartnerModal] = useState(false);
   const [showAddContributionModal, setShowAddContributionModal] = useState(false);
   const [showAddCommunicationModal, setShowAddCommunicationModal] = useState(false);
+  const [showViewPartnerModal, setShowViewPartnerModal] = useState(false);
+  const [showEditPartnerModal, setShowEditPartnerModal] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState(null);
 
   const stats = getStats();
+
+  // Handler functions
+  const handleViewPartner = (partner) => {
+    setSelectedPartner(partner);
+    setShowViewPartnerModal(true);
+  };
+
+  const handleEditPartner = (partner) => {
+    setSelectedPartner(partner);
+    setShowEditPartnerModal(true);
+  };
 
   // Filter partners
   const filteredPartners = partners.filter(partner => {
@@ -479,11 +496,17 @@ const PartnersPage = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-lg hover:from-red-700 hover:to-rose-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95">
+                      <button
+                        onClick={() => handleViewPartner(partner)}
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-lg hover:from-red-700 hover:to-rose-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95"
+                      >
                         <Eye size={14} />
                         View
                       </button>
-                      <button className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95">
+                      <button
+                        onClick={() => handleEditPartner(partner)}
+                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95"
+                      >
                         <Edit size={16} />
                       </button>
                       <button
@@ -699,6 +722,19 @@ const PartnersPage = () => {
         onClose={() => setShowAddCommunicationModal(false)}
         onAdd={addCommunication}
         partners={partners}
+      />
+
+      <ViewPartnerModal
+        isOpen={showViewPartnerModal}
+        onClose={() => setShowViewPartnerModal(false)}
+        partner={selectedPartner}
+      />
+
+      <EditPartnerModal
+        isOpen={showEditPartnerModal}
+        onClose={() => setShowEditPartnerModal(false)}
+        onUpdate={updatePartner}
+        partner={selectedPartner}
       />
     </div>
   );

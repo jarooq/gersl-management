@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 
 // AddProposalModal Component
-const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading }) => {
+const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partners }) => {
   const [formData, setFormData] = useState({
     proposalCode: '',
     donorOrganization: '',
@@ -372,15 +372,25 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Donor Organization *</label>
-                <input
-                  type="text"
+                <select
                   name="donorOrganization"
                   required
                   value={formData.donorOrganization}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="UNICEF, World Bank, etc."
-                />
+                >
+                  <option value="">Select a donor/partner...</option>
+                  {partners && partners.map(partner => (
+                    <option key={partner.id} value={partner.name}>
+                      {partner.name} ({partner.category})
+                    </option>
+                  ))}
+                </select>
+                {partners && partners.length === 0 && (
+                  <p className="text-xs text-orange-600 mt-1">
+                    No partners available. Please add partners in the Partners & Donors module first.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -1802,6 +1812,7 @@ const ProposalsPage = () => {
           error={error}
           success={success}
           isLoading={isLoading}
+          partners={partners}
         />
       )}
     </div>
