@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { usePartners } from '../../contexts/PartnersContext';
+import AddPartnerModal from './AddPartnerModal';
+import AddContributionModal from './AddContributionModal';
+import AddCommunicationModal from './AddCommunicationModal';
 import {
   HeartHandshake,
   Plus,
@@ -38,6 +41,9 @@ const PartnersPage = () => {
     contributions,
     communications,
     getStats,
+    addPartner,
+    addContribution,
+    addCommunication,
     deletePartner,
     deleteContribution,
     deleteCommunication
@@ -47,6 +53,11 @@ const PartnersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [filterCategory, setFilterCategory] = useState('All');
+
+  // Modal states
+  const [showAddPartnerModal, setShowAddPartnerModal] = useState(false);
+  const [showAddContributionModal, setShowAddContributionModal] = useState(false);
+  const [showAddCommunicationModal, setShowAddCommunicationModal] = useState(false);
 
   const stats = getStats();
 
@@ -140,6 +151,13 @@ const PartnersPage = () => {
                 <p className="text-red-100 text-sm">Building lasting relationships with {stats.activePartners} active partners</p>
               </div>
             </div>
+            <button
+              onClick={() => setShowAddPartnerModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-semibold transition-all border border-white/30 hover:border-white/50 shadow-lg hover:shadow-xl"
+            >
+              <Plus size={20} />
+              <span>Add Partner</span>
+            </button>
           </div>
         </div>
       </div>
@@ -493,6 +511,16 @@ const PartnersPage = () => {
         {/* Contributions Tab */}
         {activeTab === 'contributions' && (
           <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-gray-900">All Contributions</h3>
+              <button
+                onClick={() => setShowAddContributionModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                <Plus size={18} />
+                Add Contribution
+              </button>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -573,6 +601,16 @@ const PartnersPage = () => {
         {/* Communications Tab */}
         {activeTab === 'communications' && (
           <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-gray-900">Communication Log</h3>
+              <button
+                onClick={() => setShowAddCommunicationModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-700 text-white rounded-lg hover:from-blue-700 hover:to-cyan-800 font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                <Plus size={18} />
+                Log Communication
+              </button>
+            </div>
             <div className="space-y-3">
               {communications.sort((a, b) => new Date(b.date) - new Date(a.date)).map((comm, index) => (
                 <div
@@ -641,6 +679,27 @@ const PartnersPage = () => {
           </div>
         )}
       </div>
+
+      {/* Modals */}
+      <AddPartnerModal
+        isOpen={showAddPartnerModal}
+        onClose={() => setShowAddPartnerModal(false)}
+        onAdd={addPartner}
+      />
+
+      <AddContributionModal
+        isOpen={showAddContributionModal}
+        onClose={() => setShowAddContributionModal(false)}
+        onAdd={addContribution}
+        partners={partners}
+      />
+
+      <AddCommunicationModal
+        isOpen={showAddCommunicationModal}
+        onClose={() => setShowAddCommunicationModal(false)}
+        onAdd={addCommunication}
+        partners={partners}
+      />
     </div>
   );
 };
