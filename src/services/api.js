@@ -6,6 +6,15 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 const API_TIMEOUT = import.meta.env.VITE_API_TIMEOUT || 30000;
 
+// Log API URL for debugging (only in development)
+if (import.meta.env.DEV) {
+  console.log('🔗 API Base URL:', API_BASE_URL);
+  console.log('📝 Environment Variables:', {
+    VITE_API_URL: import.meta.env.VITE_API_URL,
+    VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL
+  });
+}
+
 // ============================================
 // TOKEN MANAGEMENT
 // ============================================
