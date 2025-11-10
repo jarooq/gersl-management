@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { ApprovalAPI } from '../../services/api';
 import {
   CheckCircle,
   XCircle,
@@ -37,15 +38,8 @@ const ApprovalsPage = () => {
   const fetchApprovals = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/approvals?status=${activeTab}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
-      const data = await response.json();
-      if (data.success) {
-        setApprovals(data.approvals || []);
-      }
+      const data = await ApprovalAPI.getAll({ status: activeTab });
+      setApprovals(data.approvals || data || []);
     } catch (error) {
       console.error('Error fetching approvals:', error);
     } finally {
@@ -56,31 +50,14 @@ const ApprovalsPage = () => {
   const handleApprovalAction = async (approvalId, action, comment) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/approvals/${approvalId}/${action}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify({
-          comment,
-          reviewedBy: currentUser.fullName,
-          reviewerRole: currentUser.role
-        })
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setShowDetailModal(false);
-        setSelectedApproval(null);
-        setComment('');
-        fetchApprovals();
-      } else {
-        alert(data.message || 'Action failed');
-      }
+      await ApprovalAPI.approve(approvalId, action, comment);
+      setShowDetailModal(false);
+      setSelectedApproval(null);
+      setComment('');
+      fetchApprovals();
     } catch (error) {
       console.error('Error processing approval:', error);
-      alert('Failed to process approval');
+      alert(error.message || 'Failed to process approval');
     } finally {
       setIsSubmitting(false);
     }

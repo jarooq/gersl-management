@@ -1366,7 +1366,7 @@ const ProposalsPage = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/proposals', {
+      const response = await fetch('/api/proposals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

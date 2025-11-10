@@ -637,6 +637,26 @@ export const UploadAPI = {
 };
 
 // ============================================
+// APPROVAL API
+// ============================================
+
+export const ApprovalAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/approvals?${queryString}`);
+    return data.data || data;
+  },
+
+  approve: async (id, action, remarks = '') => {
+    const data = await request(`/approvals/${id}/${action}`, {
+      method: 'POST',
+      body: JSON.stringify({ remarks }),
+    });
+    return data.data || data;
+  },
+};
+
+// ============================================
 // HEALTH CHECK
 // ============================================
 
@@ -661,6 +681,7 @@ const API = {
   Partner: PartnerAPI,
   MEAL: MEALAPI,
   Upload: UploadAPI,
+  Approval: ApprovalAPI,
   Health: HealthAPI,
   TokenManager,
 };

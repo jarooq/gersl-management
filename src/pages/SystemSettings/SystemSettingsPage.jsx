@@ -7,6 +7,7 @@ import {
 import { useSettings } from '../../contexts/SettingsContext';
 import { ROLES, HIERARCHY_LEVELS, getRoleName } from '../../config/roleHierarchy';
 import { ROLE_PERMISSIONS } from '../../utils/permissions';
+import { AuthAPI } from '../../services/api';
 
 const SystemSettingsPage = () => {
   const {
@@ -303,36 +304,23 @@ const UsersTab = ({ users, toggleUserStatus }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify(formData)
+      const data = await AuthAPI.register(formData);
+
+      setSuccess('User created successfully!');
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        fullName: '',
+        role: 'Guest',
+        department: '',
+        phone: ''
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setSuccess('User created successfully!');
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-          fullName: '',
-          role: 'Guest',
-          department: '',
-          phone: ''
-        });
-        setTimeout(() => {
-          setShowAddModal(false);
-          setSuccess('');
-          window.location.reload(); // Reload to fetch updated users
-        }, 1500);
-      } else {
-        setError(data.message || 'Failed to create user');
-      }
+      setTimeout(() => {
+        setShowAddModal(false);
+        setSuccess('');
+        window.location.reload(); // Reload to fetch updated users
+      }, 1500);
     } catch (err) {
       setError(err.message || 'Failed to create user');
     } finally {
