@@ -168,7 +168,9 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-// Start the server
-startServer();
+// Only start the server if not in serverless environment
+if (process.env.VERCEL !== '1') {
+  startServer();
+}
 
 export default app;
