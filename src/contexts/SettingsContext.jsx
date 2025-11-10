@@ -32,25 +32,24 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // TODO: Implement Users API endpoint on backend
-        // For now, using empty array until backend implements /api/users endpoint
-        // const response = await API.Users.getAll();
-        // const transformedUsers = response.map(user => ({
-        //   id: user.id,
-        //   username: user.username,
-        //   fullName: user.fullName,
-        //   email: user.email,
-        //   role: user.role,
-        //   status: user.status,
-        //   lastLogin: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never',
-        //   createdDate: new Date(user.createdAt).toISOString().split('T')[0],
-        //   permissions: [] // Backend handles permissions via role
-        // }));
-        // setUsers(transformedUsers);
-        setUsers([]); // Empty array until backend API is implemented
+        const response = await API.Users.getAll();
+        const transformedUsers = response.map(user => ({
+          id: user.id,
+          username: user.username,
+          fullName: user.fullName,
+          email: user.email,
+          role: user.role,
+          status: user.status || 'Active',
+          department: user.department || '',
+          phone: user.phone || '',
+          lastLogin: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never',
+          createdDate: new Date(user.createdAt).toISOString().split('T')[0],
+          permissions: [] // Backend handles permissions via role
+        }));
+        setUsers(transformedUsers);
       } catch (error) {
         console.error('Failed to fetch users:', error);
-        // Keep empty array on error
+        setUsers([]); // Keep empty array on error
       } finally {
         setLoading(false);
       }

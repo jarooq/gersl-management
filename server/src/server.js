@@ -12,6 +12,7 @@ import sequelize, { testConnection, syncDatabase } from './config/database.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
+import usersRoutes from './routes/users.routes.js';
 import orphanRoutes from './routes/orphan.routes.js';
 import projectRoutes from './routes/project.routes.js';
 import financeRoutes from './routes/finance.routes.js';
@@ -113,6 +114,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
 app.use('/api/orphans', orphanRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/finance', financeRoutes);

@@ -372,6 +372,35 @@ export const FinanceAPI = {
 };
 
 // ============================================
+// USERS API
+// ============================================
+
+export const UsersAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/users?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/users/${id}`);
+    return data.data;
+  },
+
+  update: async (id, userData) => {
+    const data = await request(`/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
+    return data.data;
+  },
+
+  delete: async (id) => {
+    await request(`/users/${id}`, { method: 'DELETE' });
+  },
+};
+
+// ============================================
 // HR API
 // ============================================
 
@@ -673,6 +702,7 @@ export const HealthAPI = {
 
 const API = {
   Auth: AuthAPI,
+  Users: UsersAPI,
   Orphan: OrphanAPI,
   Project: ProjectAPI,
   Finance: FinanceAPI,
