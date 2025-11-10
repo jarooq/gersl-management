@@ -1,0 +1,81 @@
+========================================
+VERCEL ENVIRONMENT VARIABLES
+Copy and paste these into Vercel Dashboard
+========================================
+
+Go to: https://vercel.com/gersls-projects/gersl-management/settings/environment-variables
+
+For each variable below:
+1. Click "Add New"
+2. Enter the NAME (left side)
+3. Enter the VALUE (right side)
+4. Select "Production" environment
+5. Click "Save"
+
+========================================
+
+NAME: NODE_ENV
+VALUE: production
+
+NAME: DB_USE_SQLITE
+VALUE: false
+
+NAME: DB_DIALECT
+VALUE: postgres
+
+NAME: DB_HOST
+VALUE: db.misihnasjvifnktfpylp.supabase.co
+
+NAME: DB_PORT
+VALUE: 5432
+
+NAME: DB_NAME
+VALUE: postgres
+
+NAME: DB_USER
+VALUE: postgres
+
+NAME: DB_PASSWORD
+VALUE: Ger@2025
+
+NAME: JWT_SECRET
+VALUE: WAwzcc0J/Q7ZI4VzhSjM/ilxZ6Q1J6dHhZ5BHSLxreg7Ef/jNg3gVzizgu8XzaLMPSQVZpuDrhQQJnSgyX3vPg==
+
+NAME: JWT_EXPIRE
+VALUE: 24h
+
+NAME: JWT_REFRESH_SECRET
+VALUE: J2l3tAdj3vhEcyUdr61TjQH5WzrlPJ6kSOpPV8jeO+vwsu96HHfUTC+EGVsiS0+Srfd/RUtiHBuHkJKS2wLz+w==
+
+NAME: JWT_REFRESH_EXPIRE
+VALUE: 7d
+
+NAME: CORS_ORIGIN
+VALUE: https://gersl-management.vercel.app
+
+NAME: FRONTEND_URL
+VALUE: https://gersl-management.vercel.app
+
+NAME: RATE_LIMIT_WINDOW
+VALUE: 15
+
+NAME: RATE_LIMIT_MAX_REQUESTS
+VALUE: 100
+
+========================================
+TOTAL: 17 environment variables
+========================================
+
+NOTE: These variables are already added via CLI, but you can verify them in the dashboard.
+If any are missing, add them using the format above.
+
+========================================
+FOR RENDER.COM (if switching from Vercel):
+========================================
+
+Same variables as above, PLUS add:
+
+NAME: PORT
+VALUE: 10000
+
+========================================
