@@ -49,6 +49,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://gersl-management-jarooqs-projects.vercel.app',
   'https://gersl-management.vercel.app',
+  'https://gersl-management-nu.vercel.app',
   process.env.CORS_ORIGIN,
   process.env.FRONTEND_URL
 ].filter(Boolean);
