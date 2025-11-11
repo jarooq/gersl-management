@@ -4,8 +4,8 @@
   publish = "dist"
 
 [functions]
-  node_bundler = "esbuild"
-  external_node_modules = ["pg", "pg-hstore", "sqlite3"]
+  node_bundler = "zisi"
+  included_files = ["server/**"]
 
 [[redirects]]
   from = "/api/*"
