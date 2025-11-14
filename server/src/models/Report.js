@@ -157,27 +157,27 @@ const Report = sequelize.define('Report', {
   indexes: [
     {
       name: 'reports_type_idx',
-      fields: ['reportType']
+      fields: ['report_type']
     },
     {
       name: 'reports_project_idx',
-      fields: ['projectId']
+      fields: ['project_id']
     },
     {
       name: 'reports_proposal_idx',
-      fields: ['proposalId']
+      fields: ['proposal_id']
     },
     {
       name: 'reports_created_by_idx',
-      fields: ['createdBy']
+      fields: ['created_by']
     },
     {
       name: 'reports_status_idx',
-      fields: ['generationStatus']
+      fields: ['generation_status']
     },
     {
       name: 'reports_created_at_idx',
-      fields: ['createdAt']
+      fields: ['created_at']
     }
   ]
 });
