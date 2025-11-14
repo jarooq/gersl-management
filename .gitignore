@@ -51,11 +51,23 @@ public/uploads/
 # Local Netlify folder
 .netlify
 
-# Deployment files
+# Deployment files and artifacts
 .vercel
 server/.vercel
 api/
 vercel.json
+.env.render
+.netlify
+Procfile
+deploy.sh
+setup-vercel-env.sh
+setup-vercel-backend.sh
+server/Procfile
+server/setup-vercel-backend.sh
+server/deploy-eb-fixed.sh
+.ebextensions/
+scripts/deploy-*.sh
+scripts/test-*.sh
 
 # Old deployment documentation (keep only DEPLOYMENT_GUIDE.md)
 DEPLOYMENT_*.md
@@ -67,3 +79,4 @@ FINAL_*.md
 REDEPLOY_*.md
 CREATE_ADMIN_USER.md
 QUICK_START.md
+RENDER_*.md
