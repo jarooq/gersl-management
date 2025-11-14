@@ -40,10 +40,18 @@
 
 ---
 
-## Step 1: Create New Supabase Project (5 minutes)
+## Step 1: Setup Supabase Database (5 minutes)
 
-### 1.1 Create Project
+### 1.1 Access Your Supabase Project
 
+**If you have Supabase via Vercel Marketplace** (Recommended):
+1. Go to your Vercel Dashboard: https://vercel.com/dashboard
+2. Click on **Integrations** → **Supabase**
+3. Select your project or click **"Add Integration"** if not already connected
+4. You'll be redirected to Supabase dashboard
+5. Your database credentials are automatically managed by Vercel
+
+**If creating a new standalone Supabase project**:
 1. Go to: https://supabase.com/dashboard
 2. Click **"New Project"**
 3. Fill in:
@@ -55,6 +63,13 @@
 
 ### 1.2 Get Database Credentials
 
+**If using Vercel Marketplace Supabase**:
+- Database credentials are already in your Vercel project environment variables
+- Go to Vercel → Your Project → **Settings** → **Environment Variables**
+- Look for variables starting with `SUPABASE_` or check the Supabase integration tab
+- You'll need to copy these for your Hostinger VPS backend
+
+**If using standalone Supabase**:
 1. Go to **Settings** → **Database**
 2. Copy these credentials (you'll need them):
    - **Host**: `aws-X-XX-XXXX-X.pooler.supabase.com`
