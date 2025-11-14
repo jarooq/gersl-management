@@ -1,10 +1,10 @@
 # GERSL Management System - Fresh Deployment Guide
 
-**Architecture**: Frontend (Vercel) + Backend (Railway) + Database (Supabase)
+**Architecture**: Frontend (Vercel) + Backend (Hostinger VPS) + Database (Supabase)
 
-**Total Cost**: ~$5/month (Railway only)
+**Total Cost**: Hostinger VPS cost (varies by plan)
 
-**Deployment Time**: ~30 minutes
+**Deployment Time**: ~45 minutes
 
 ---
 
@@ -18,7 +18,7 @@
          │
          ▼
 ┌──────────────────┐
-│  Railway ($5/mo) │  ← Backend (Node.js/Express)
+│ Hostinger VPS    │  ← Backend (Node.js/Express)
 │  Backend API     │
 └────────┬─────────┘
          │
@@ -35,7 +35,7 @@
 
 - GitHub account
 - Vercel account (free tier is fine)
-- Railway account (with credit card for $5/month plan)
+- Hostinger VPS or Cloud hosting with SSH access
 - Supabase account (free tier)
 
 ---
@@ -96,34 +96,57 @@ INSERT INTO users (
 
 ---
 
-## Step 2: Deploy Backend to Railway (10 minutes)
+## Step 2: Deploy Backend to Hostinger VPS (15 minutes)
 
-### 2.1 Sign Up for Railway
+### 2.1 Connect to Your Hostinger VPS
 
-1. Go to: https://railway.app
-2. Click **"Login with GitHub"**
-3. Authorize Railway
-4. Add payment method (required for deployment)
+```bash
+# SSH into your server
+ssh root@your-server-ip
+```
 
-### 2.2 Create New Project
+### 2.2 Install Node.js and PM2
 
-1. Click **"New Project"**
-2. Select **"Deploy from GitHub repo"**
-3. Choose: `jarooq/gersl-management`
-4. Railway will start building
+```bash
+# Update system
+apt update && apt upgrade -y
 
-### 2.3 Configure Root Directory
+# Install Node.js 20.x LTS
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs
 
-1. Click on your deployed service
-2. Go to **Settings** tab
-3. Under **Service Settings**:
-   - **Root Directory**: `server`
-   - **Start Command**: `npm start`
-   - Click **"Save"**
+# Verify installation
+node --version  # Should show v20.x
+npm --version
 
-### 2.4 Add Environment Variables
+# Install PM2 (Process Manager)
+npm install -g pm2
 
-Click **"Variables"** tab and add these:
+# Install Git
+apt install -y git
+```
+
+### 2.3 Clone and Setup Backend
+
+```bash
+# Create application directory
+mkdir -p /var/www
+cd /var/www
+
+# Clone your repository
+git clone https://github.com/jarooq/gersl-management.git
+cd gersl-management/server
+
+# Install dependencies
+npm install --production
+
+# Create logs directory
+mkdir -p logs
+```
+
+### 2.4 Create Environment File
+
+Create `/var/www/gersl-management/server/.env` with these variables:
 
 ```env
 # Server
@@ -153,29 +176,104 @@ FRONTEND_URL=https://your-frontend-url.vercel.app
 RATE_LIMIT_WINDOW=15
 RATE_LIMIT_MAX_REQUESTS=10000
 
-# AI Features (optional - use existing or generate new)
-GROQ_API_KEY=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
-GEMINI_API_KEY=AIzaSyDgi7QYCX5QRRwnlfSjo9c2MiZthRI8eNY
+# AI Features (optional)
+GROQ_API_KEY=your_groq_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 **Generate JWT Secrets:**
 ```bash
-# Run locally to generate secrets
+# Run on your VPS to generate secrets
 node -e "console.log('JWT_SECRET=' + require('crypto').randomBytes(64).toString('base64'))"
 node -e "console.log('JWT_REFRESH_SECRET=' + require('crypto').randomBytes(64).toString('base64'))"
 ```
 
-### 2.5 Get Railway Backend URL
-
-1. Go to **Settings** → **Networking**
-2. Click **"Generate Domain"**
-3. Copy the URL (e.g., `https://gersl-backend-production.up.railway.app`)
-4. **Save this URL** - you'll need it for frontend
-
-### 2.6 Test Backend
+### 2.5 Start Backend with PM2
 
 ```bash
-curl https://your-railway-url.up.railway.app/api/health
+# Navigate to server directory
+cd /var/www/gersl-management/server
+
+# Start application with PM2
+pm2 start ecosystem.config.cjs
+
+# Configure PM2 to start on boot
+pm2 startup
+pm2 save
+
+# Check status
+pm2 status
+pm2 logs gersl-backend
+```
+
+### 2.6 Configure Nginx Reverse Proxy
+
+```bash
+# Install Nginx
+apt install -y nginx
+
+# Create Nginx configuration
+nano /etc/nginx/sites-available/gersl-backend
+```
+
+Add this configuration:
+```nginx
+server {
+    listen 80;
+    server_name api.yourdomain.com;  # Or your VPS IP
+
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Enable the site:
+```bash
+# Create symbolic link
+ln -s /etc/nginx/sites-available/gersl-backend /etc/nginx/sites-enabled/
+
+# Test configuration
+nginx -t
+
+# Restart Nginx
+systemctl restart nginx
+
+# Enable Nginx on boot
+systemctl enable nginx
+```
+
+### 2.7 Setup SSL with Let's Encrypt (Optional but Recommended)
+
+```bash
+# Install Certbot
+apt install -y certbot python3-certbot-nginx
+
+# Get SSL certificate
+certbot --nginx -d api.yourdomain.com
+
+# Certbot will auto-renew. Test renewal:
+certbot renew --dry-run
+```
+
+### 2.8 Test Backend
+
+```bash
+# Test locally on VPS
+curl http://localhost:3001/api/health
+
+# Test through Nginx
+curl http://your-vps-ip/api/health
+# or if domain is configured:
+curl https://api.yourdomain.com/api/health
 ```
 
 Expected response:
@@ -190,16 +288,23 @@ Expected response:
 }
 ```
 
+### 2.9 Note Your Backend URL
+
+Save your backend URL for frontend configuration:
+- **With domain**: `https://api.yourdomain.com`
+- **With IP only**: `http://your-vps-ip` (not recommended for production)
+
 ---
 
 ## Step 3: Deploy Frontend to Vercel (10 minutes)
 
 ### 3.1 Prepare Environment Variables
 
-Create [.env.production](.env.production:1) in the root:
+Create `.env.production` in the root:
 
 ```env
-VITE_API_URL=https://your-railway-url.up.railway.app/api
+VITE_API_URL=https://api.yourdomain.com/api
+# Or if using IP: http://your-vps-ip/api
 ```
 
 ### 3.2 Deploy to Vercel
@@ -216,7 +321,7 @@ VITE_API_URL=https://your-railway-url.up.railway.app/api
    - **Output Directory**: `dist`
 5. Add Environment Variable:
    - **Key**: `VITE_API_URL`
-   - **Value**: `https://your-railway-url.up.railway.app/api`
+   - **Value**: `https://api.yourdomain.com/api` (or `http://your-vps-ip/api`)
 6. Click **"Deploy"**
 
 #### Option B: Using Vercel CLI
@@ -245,14 +350,28 @@ vercel --prod
 After deployment completes:
 - Copy your Vercel URL (e.g., `https://gersl-management.vercel.app`)
 
-### 3.4 Update Railway CORS
+### 3.4 Update Backend CORS
 
-Go back to Railway:
-1. Click **"Variables"** tab
-2. Update these variables:
-   - `CORS_ORIGIN=https://your-vercel-url.vercel.app`
-   - `FRONTEND_URL=https://your-vercel-url.vercel.app`
-3. Railway will auto-redeploy
+Go back to your Hostinger VPS:
+
+```bash
+# SSH into your server
+ssh root@your-server-ip
+
+# Edit environment file
+nano /var/www/gersl-management/server/.env
+```
+
+Update these lines:
+```env
+CORS_ORIGIN=https://your-vercel-url.vercel.app
+FRONTEND_URL=https://your-vercel-url.vercel.app
+```
+
+Restart backend:
+```bash
+pm2 restart gersl-backend
+```
 
 ---
 
@@ -271,31 +390,54 @@ Go back to Railway:
 
 ---
 
-## Step 5: Commit Clean Version to Git
+## Step 5: Useful PM2 Commands for Backend Management
 
 ```bash
-# Add all changes
-git add .
+# View logs
+pm2 logs gersl-backend
 
-# Commit
-git commit -m "Clean deployment setup: Vercel frontend + Railway backend + Supabase database
+# Check status
+pm2 status
 
-- Removed Vercel serverless backend (timeout issues)
-- Separated backend to Railway for reliability
-- All 13 database tables created in Supabase
-- Admin user configured
-- Fresh deployment documentation
+# Restart after code changes
+pm2 restart gersl-backend
 
-Architecture:
-- Frontend: Vercel (free)
-- Backend: Railway (~$5/month)
-- Database: Supabase (free)
-Total: ~$5/month
+# Stop backend
+pm2 stop gersl-backend
 
-🤖 Generated with Claude Code"
+# Start backend
+pm2 start gersl-backend
 
-# Push to GitHub
-git push origin main
+# View detailed info
+pm2 show gersl-backend
+
+# Monitor in real-time
+pm2 monit
+```
+
+## Step 6: Updating Your Backend Code
+
+When you need to update backend code:
+
+```bash
+# SSH into your server
+ssh root@your-server-ip
+
+# Navigate to project directory
+cd /var/www/gersl-management
+
+# Pull latest changes
+git pull origin main
+
+# Install any new dependencies
+cd server
+npm install --production
+
+# Restart the backend
+pm2 restart gersl-backend
+
+# Check logs for errors
+pm2 logs gersl-backend --lines 50
 ```
 
 ---
@@ -304,31 +446,35 @@ git push origin main
 
 ### Backend Health Check Fails
 
-**Check Railway Logs:**
-1. Go to Railway → Your Service → **Deployments**
-2. Click latest deployment
-3. View logs for errors
+**Check PM2 Logs:**
+```bash
+pm2 logs gersl-backend --lines 100
+```
 
 **Common Issues:**
-- Wrong Supabase credentials
+- Wrong Supabase credentials in `.env`
 - Missing environment variables
-- Port configuration
+- Port 3001 already in use
+- Node.js version mismatch
+- Missing dependencies (`npm install --production`)
 
 ### Frontend Can't Connect to Backend
 
 **Check:**
 1. `VITE_API_URL` is set correctly in Vercel
-2. CORS settings in Railway match frontend URL
-3. Railway service is running (green status)
-4. Backend health endpoint works: `curl https://your-railway-url/api/health`
+2. CORS settings in backend `.env` match frontend URL
+3. Backend is running: `pm2 status`
+4. Nginx is running: `systemctl status nginx`
+5. Firewall allows port 80/443: `ufw status`
+6. Backend health endpoint works: `curl http://localhost:3001/api/health`
 
 ### Can't Login
 
 **Verify:**
 1. Admin user exists in Supabase Users table
 2. Password hash is correct
-3. Backend logs show authentication attempts
-4. JWT secrets are set in Railway
+3. Backend logs show authentication attempts: `pm2 logs gersl-backend`
+4. JWT secrets are set in `/var/www/gersl-management/server/.env`
 
 **Reset Admin Password:**
 ```sql
@@ -347,25 +493,27 @@ WHERE username = 'admin';
 | Service | Plan | Cost |
 |---------|------|------|
 | Vercel | Free | $0/month |
-| Railway | Starter | ~$5/month |
+| Hostinger VPS | Varies | ~$4-15/month (depending on plan) |
 | Supabase | Free | $0/month |
-| **Total** | | **~$5/month** |
+| **Total** | | **~$4-15/month** |
 
 ---
 
 ## Architecture Benefits
 
-✅ **No Timeout Issues**: Railway runs traditional Node.js server
+✅ **No Timeout Issues**: Full VPS control with traditional Node.js server
 
-✅ **Better Performance**: No cold starts on backend
+✅ **Better Performance**: Dedicated resources, no cold starts
 
-✅ **Easier Debugging**: Full server logs in Railway
+✅ **Full Control**: SSH access, can configure anything
 
-✅ **Scalable**: Each component can scale independently
+✅ **Easier Debugging**: Direct access to logs via PM2
 
-✅ **Cost Effective**: Only $5/month total
+✅ **Scalable**: Can upgrade VPS resources as needed
 
-✅ **Professional Setup**: Industry-standard architecture
+✅ **Cost Effective**: Affordable VPS hosting
+
+✅ **Professional Setup**: Industry-standard architecture with Nginx reverse proxy
 
 ---
 
@@ -378,30 +526,39 @@ After deployment:
    - Update CORS settings in Railway
 
 2. **Monitoring**:
-   - Enable Railway metrics
+   - Use PM2 monitoring: `pm2 monit`
    - Set up Supabase alerts
+   - Consider installing monitoring tools (Netdata, Grafana)
 
 3. **Backups**:
    - Configure Supabase automatic backups
    - Export data regularly
 
 4. **Team Access**:
-   - Add team members in Vercel/Railway
+   - Add team members in Vercel
+   - Create SSH keys for additional developers
    - Create additional users in the app
+
+5. **Security**:
+   - Configure UFW firewall properly
+   - Keep system updated: `apt update && apt upgrade`
+   - Monitor PM2 logs for suspicious activity
+   - Regularly review Supabase database access logs
 
 ---
 
 ## Support
 
 If you encounter issues:
-1. Check Railway logs
-2. Check Vercel build logs
-3. Verify all environment variables
-4. Test backend health endpoint directly
-5. Check Supabase connection in backend logs
+1. Check PM2 logs: `pm2 logs gersl-backend --lines 100`
+2. Check Nginx logs: `tail -f /var/log/nginx/error.log`
+3. Check Vercel build logs in dashboard
+4. Verify all environment variables
+5. Test backend health endpoint: `curl http://localhost:3001/api/health`
+6. Check Supabase connection in backend logs
 
 ---
 
 **Deployment Date**: January 2025
-**Last Updated**: Fresh deployment guide
+**Last Updated**: Hostinger VPS deployment guide
 **Status**: Ready for production deployment
