@@ -5,19 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { rateLimit } from 'express-rate-limit';
 
-// Import routes
-import authRoutes from '../server/src/routes/auth.routes.js';
-import usersRoutes from '../server/src/routes/users.routes.js';
-import orphanRoutes from '../server/src/routes/orphan.routes.js';
-import partnersRoutes from '../server/src/routes/partners.routes.js';
-import projectRoutes from '../server/src/routes/project.routes.js';
-import proposalRoutes from '../server/src/routes/proposal.routes.js';
-import reportRoutes from '../server/src/routes/report.routes.js';
-import beneficiaryRoutes from '../server/src/routes/beneficiary.routes.js';
-import visitLogRoutes from '../server/src/routes/visitLog.routes.js';
-import beneficiarySupportRoutes from '../server/src/routes/beneficiarySupport.routes.js';
-import aiRoutes from '../server/src/routes/ai.routes.js';
-
+// Initialize Express app
 const app = express();
 
 // CORS Configuration
@@ -47,22 +35,84 @@ app.get('/api/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
-    platform: 'Vercel Serverless'
+    platform: 'Vercel Serverless',
+    database: {
+      host: process.env.DB_HOST || 'Not configured',
+      dialect: process.env.DB_DIALECT || 'Not configured'
+    }
   });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/orphans', orphanRoutes);
-app.use('/api/partners', partnersRoutes);
-app.use('/api/projects', projectRoutes);
-app.use('/api/proposals', proposalRoutes);
-app.use('/api/reports', reportRoutes);
-app.use('/api/beneficiaries', beneficiaryRoutes);
-app.use('/api/visit-logs', visitLogRoutes);
-app.use('/api/beneficiary-support', beneficiarySupportRoutes);
-app.use('/api/ai', aiRoutes);
+// Import and use routes
+let routesLoaded = false;
+let authRoutes, usersRoutes, orphanRoutes, partnersRoutes, projectRoutes;
+let proposalRoutes, reportRoutes, beneficiaryRoutes, visitLogRoutes;
+let beneficiarySupportRoutes, aiRoutes;
+
+async function loadRoutes() {
+  if (routesLoaded) return;
+
+  try {
+    const [auth, users, orphan, partners, project, proposal, report, beneficiary, visitLog, beneficiarySupport, ai] = await Promise.all([
+      import('../server/src/routes/auth.routes.js'),
+      import('../server/src/routes/users.routes.js'),
+      import('../server/src/routes/orphan.routes.js'),
+      import('../server/src/routes/partners.routes.js'),
+      import('../server/src/routes/project.routes.js'),
+      import('../server/src/routes/proposal.routes.js'),
+      import('../server/src/routes/report.routes.js'),
+      import('../server/src/routes/beneficiary.routes.js'),
+      import('../server/src/routes/visitLog.routes.js'),
+      import('../server/src/routes/beneficiarySupport.routes.js'),
+      import('../server/src/routes/ai.routes.js')
+    ]);
+
+    authRoutes = auth.default;
+    usersRoutes = users.default;
+    orphanRoutes = orphan.default;
+    partnersRoutes = partners.default;
+    projectRoutes = project.default;
+    proposalRoutes = proposal.default;
+    reportRoutes = report.default;
+    beneficiaryRoutes = beneficiary.default;
+    visitLogRoutes = visitLog.default;
+    beneficiarySupportRoutes = beneficiarySupport.default;
+    aiRoutes = ai.default;
+
+    app.use('/api/auth', authRoutes);
+    app.use('/api/users', usersRoutes);
+    app.use('/api/orphans', orphanRoutes);
+    app.use('/api/partners', partnersRoutes);
+    app.use('/api/projects', projectRoutes);
+    app.use('/api/proposals', proposalRoutes);
+    app.use('/api/reports', reportRoutes);
+    app.use('/api/beneficiaries', beneficiaryRoutes);
+    app.use('/api/visit-logs', visitLogRoutes);
+    app.use('/api/beneficiary-support', beneficiarySupportRoutes);
+    app.use('/api/ai', aiRoutes);
+
+    routesLoaded = true;
+  } catch (error) {
+    console.error('Error loading routes:', error);
+    throw error;
+  }
+}
+
+// Middleware to ensure routes are loaded
+app.use(async (req, res, next) => {
+  if (!routesLoaded && !req.path.includes('/health')) {
+    try {
+      await loadRoutes();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to initialize routes',
+        error: error.message
+      });
+    }
+  }
+  next();
+});
 
 // 404 handler
 app.use((req, res) => {
