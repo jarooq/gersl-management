@@ -1,0 +1,89 @@
+import express from 'express';
+import {
+  getAllOrphanNeeds,
+  getOrphanNeedById,
+  createOrphanNeed,
+  updateOrphanNeed,
+  approveOrphanNeed,
+  deleteOrphanNeed,
+  getNeedsSummary
+} from '../controllers/orphanNeed.controller.js';
+import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
+
+const router = express.Router();
+
+// All routes require authentication
+router.use(requireAuth);
+
+// ============================================
+// PUBLIC ROUTES (authenticated users)
+// ============================================
+
+// Get all orphan needs with filtering and pagination
+router.get('/', getAllOrphanNeeds);
+
+// Get needs summary/statistics
+router.get('/summary', getNeedsSummary);
+
+// Get single orphan need by ID
+router.get('/:id', getOrphanNeedById);
+
+// ============================================
+// PROTECTED ROUTES (specific roles)
+// ============================================
+
+// Create new orphan need
+// Orphan Coordinators, Project Officers, and admins can create needs
+router.post(
+  '/',
+  requireRole(
+    'Admin',
+    'CEO',
+    'Director Programmes',
+    'Programme Manager',
+    'Project Officer',
+    'Field Officer',
+    'Orphan Coordinator'
+  ),
+  createOrphanNeed
+);
+
+// Update orphan need
+router.put(
+  '/:id',
+  requireRole(
+    'Admin',
+    'CEO',
+    'Director Programmes',
+    'Programme Manager',
+    'Project Officer',
+    'Orphan Coordinator'
+  ),
+  updateOrphanNeed
+);
+
+// Approve/Reject orphan need
+router.put(
+  '/:id/approve',
+  requireRole(
+    'Admin',
+    'CEO',
+    'Director Programmes',
+    'Programme Manager'
+  ),
+  approveOrphanNeed
+);
+
+// Delete orphan need
+router.delete(
+  '/:id',
+  requireRole(
+    'Admin',
+    'CEO',
+    'Director Programmes',
+    'Programme Manager'
+  ),
+  deleteOrphanNeed
+);
+
+export default router;

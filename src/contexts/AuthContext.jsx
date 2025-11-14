@@ -19,29 +19,50 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored session and validate token
-    const initAuth = async () => {
-      const accessToken = TokenManager.getAccessToken();
-      const storedUser = localStorage.getItem('currentUser');
+    let isMounted = true;
 
-      if (accessToken && storedUser) {
-        try {
-          const user = JSON.parse(storedUser);
-          // Verify token is still valid by fetching current user
-          const userData = await API.Auth.getCurrentUser();
-          setCurrentUser(userData);
-          setIsLoggedIn(true);
-        } catch (error) {
-          console.error('Session invalid:', error);
-          // Clear invalid session
-          TokenManager.clearTokens();
+    // Check for stored session and validate token (now using httpOnly cookies)
+    const initAuth = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+
+        if (storedUser && isMounted) {
+          try {
+            const user = JSON.parse(storedUser);
+            // Verify session is still valid by fetching current user
+            // The httpOnly cookie will be sent automatically
+            const userData = await API.Auth.getCurrentUser();
+            if (isMounted) {
+              setCurrentUser(userData);
+              setIsLoggedIn(true);
+            }
+          } catch (error) {
+            // Session invalid or expired - silently clear without logging
+            // This is expected behavior when not logged in
+            if (isMounted) {
+              TokenManager.clearTokens();
+              localStorage.removeItem('currentUser');
+            }
+          }
+        }
+      } catch (error) {
+        // Handle any JSON parse errors
+        console.error('Auth initialization error:', error);
+        if (isMounted) {
           localStorage.removeItem('currentUser');
         }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
     };
 
     initAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = async (username, password) => {

@@ -39,13 +39,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   // Auto-detect which dropdown should be open based on current path
   const getInitialDropdown = () => {
-    if (location.pathname.startsWith('/admin/orphans') || location.pathname.startsWith('/admin/projects')) return 'program management';
+    if (location.pathname.startsWith('/admin/orphans')) return 'orphan care';
+    if (location.pathname.startsWith('/admin/partners') ||
+        location.pathname.startsWith('/admin/proposals')) return 'fund development';
     if (location.pathname.startsWith('/admin/operations') ||
+        location.pathname.startsWith('/admin/projects') ||
         location.pathname.startsWith('/admin/approvals') ||
         location.pathname.startsWith('/admin/compliance')) return 'operations';
-    if (location.pathname.startsWith('/admin/finance') ||
-        location.pathname.startsWith('/admin/partners') ||
-        location.pathname.startsWith('/admin/proposals')) return 'finance & funding';
+    if (location.pathname.startsWith('/admin/finance')) return 'finance';
     if (location.pathname.startsWith('/admin/campaigns') ||
         location.pathname.startsWith('/admin/donations') ||
         location.pathname.startsWith('/admin/job-postings') ||
@@ -63,14 +64,25 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
   const menuItems = [
     { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.DASHBOARD_VIEW },
     {
-      label: 'Program Management',
-      icon: Target,
+      label: 'Orphan Care',
+      icon: Baby,
       color: 'text-pink-600',
       bgColor: 'bg-pink-50',
       hasSubmenu: true,
       subItems: [
-        { path: '/admin/orphans', icon: Baby, label: 'Orphan Care', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.ORPHANS_VIEW },
-        { path: '/admin/projects', icon: FolderKanban, label: 'Projects', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.PROJECTS_VIEW },
+        { path: '/admin/orphans', icon: Baby, label: 'Orphan Management', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.ORPHANS_VIEW },
+      ]
+    },
+    { path: '/admin/beneficiaries', icon: Users, label: 'Beneficiaries', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.BENEFICIARIES_VIEW },
+    {
+      label: 'Fund Development',
+      icon: Award,
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
+      hasSubmenu: true,
+      subItems: [
+        { path: '/admin/partners', icon: HeartHandshake, label: 'Partners', color: 'text-emerald-600', bgColor: 'bg-emerald-50', permission: PERMISSIONS.PARTNERS_VIEW },
+        { path: '/admin/proposals', icon: FileText, label: 'Proposals', color: 'text-emerald-600', bgColor: 'bg-emerald-50', permission: PERMISSIONS.PROPOSALS_VIEW },
       ]
     },
     {
@@ -80,24 +92,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       bgColor: 'bg-purple-50',
       hasSubmenu: true,
       subItems: [
+        { path: '/admin/projects', icon: FolderKanban, label: 'Projects', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.PROJECTS_VIEW },
         { path: '/admin/operations/activities', icon: Target, label: 'Activities', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES },
         { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
         { path: '/admin/approvals', icon: CheckCircle, label: 'Approvals', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.APPROVALS_VIEW },
         { path: '/admin/compliance', icon: Shield, label: 'Compliance & Safeguarding', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.COMPLIANCE_VIEW },
       ]
     },
-    {
-      label: 'Finance & Funding',
-      icon: DollarSign,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
-      hasSubmenu: true,
-      subItems: [
-        { path: '/admin/finance', icon: DollarSign, label: 'Finance Overview', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.FINANCE_VIEW },
-        { path: '/admin/partners', icon: HeartHandshake, label: 'Partners', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.PARTNERS_VIEW },
-        { path: '/admin/proposals', icon: FileText, label: 'Proposals', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.PROPOSALS_VIEW },
-      ]
-    },
+    { path: '/admin/finance', icon: DollarSign, label: 'Finance', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.FINANCE_VIEW },
     {
       label: 'Public Engagement',
       icon: Megaphone,

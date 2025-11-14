@@ -4,7 +4,9 @@ import { usePartners } from '../../contexts/PartnersContext';
 import { useCBO } from '../../contexts/CBOContext';
 import { useHR } from '../../contexts/HRContext';
 import ProposalViewModal from './components/ProposalViewModal';
+import AIProposalAssistant from '../../components/proposals/AIProposalAssistant';
 import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
+import { SRI_LANKAN_ADMINISTRATIVE_DIVISIONS } from '../../data/sriLankanDivisions';
 import {
   FileText,
   Plus,
@@ -29,13 +31,52 @@ import {
   Send,
   Shield,
   Users2,
-  CheckSquare
+  CheckSquare,
+  Sparkles
 } from 'lucide-react';
 
 // AddProposalModal Component
-const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partners }) => {
-  const [formData, setFormData] = useState({
-    proposalCode: '',
+// Sri Lankan Districts
+const SRI_LANKAN_DISTRICTS = Object.keys(SRI_LANKAN_ADMINISTRATIVE_DIVISIONS).sort();
+
+// Programme Areas
+const PROGRAMME_AREAS = [
+  'Education',
+  'Health',
+  'Livelihood',
+  'WASH',
+  'Protection',
+  'Women Empowerment',
+  'Youth Development',
+  'Disability Inclusion',
+  'Orphans Care',
+  'Seasonal Projects',
+  'Infrastructure',
+  'General Projects'
+];
+
+// Currency options
+const CURRENCIES = [
+  { code: 'LKR', symbol: 'Rs', name: 'Sri Lankan Rupee' },
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar' },
+  { code: 'MYR', symbol: 'RM', name: 'Malaysian Ringgit' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+  { code: 'TRY', symbol: '₺', name: 'Turkish Lira' }
+];
+
+// Function to generate proposal code
+const generateProposalCode = () => {
+  const year = new Date().getFullYear();
+  const timestamp = Date.now().toString().slice(-6);
+  return `PROP-${year}-${timestamp}`;
+};
+
+const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partners, initialData }) => {
+  const defaultFormData = {
+    proposalCode: generateProposalCode(),
     donorOrganization: '',
     cboId: '',
     cboName: '',
@@ -85,6 +126,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
     // Budget Breakdown
     budgetBreakdown: [],
+    budgetCurrency: 'LKR',
 
     // Safeguarding Compliance
     safeguarding: {
@@ -97,7 +139,10 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
       safeguardingFocalPerson: '',
       cfmChannels: []
     }
-  });
+  };
+
+  // Initialize formData with initialData if provided (from AI), otherwise use defaults
+  const [formData, setFormData] = useState(initialData || defaultFormData);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -358,14 +403,17 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">District</label>
-                <input
-                  type="text"
+                <select
                   name="district"
                   value={formData.district}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Colombo"
-                />
+                >
+                  <option value="">Select District...</option>
+                  {SRI_LANKAN_DISTRICTS.map((district) => (
+                    <option key={district} value={district}>{district}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -428,14 +476,9 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
-                  <option value="Education">Education</option>
-                  <option value="Health">Health</option>
-                  <option value="Livelihood">Livelihood</option>
-                  <option value="WASH">WASH</option>
-                  <option value="Protection">Protection</option>
-                  <option value="Women Empowerment">Women Empowerment</option>
-                  <option value="Youth Development">Youth Development</option>
-                  <option value="Disability Inclusion">Disability Inclusion</option>
+                  {PROGRAMME_AREAS.map((area) => (
+                    <option key={area} value={area}>{area}</option>
+                  ))}
                 </select>
               </div>
 
@@ -550,6 +593,21 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   <Plus className="h-4 w-4" />
                   Add Line Item
                 </button>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-semibold text-gray-700">Currency:</label>
+                  <select
+                    name="budgetCurrency"
+                    value={formData.budgetCurrency}
+                    onChange={handleInputChange}
+                    className="px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                  >
+                    {CURRENCIES.map((currency) => (
+                      <option key={currency.code} value={currency.code}>
+                        {currency.code} ({currency.symbol}) - {currency.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {formData.budgetBreakdown.length === 0 ? (
@@ -567,8 +625,8 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                           <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Category</th>
                           <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Description</th>
                           <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Quantity</th>
-                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Unit Cost (LKR)</th>
-                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Total Cost (LKR)</th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Unit Cost ({formData.budgetCurrency})</th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Total Cost ({formData.budgetCurrency})</th>
                           <th className="px-3 py-2 text-center text-xs font-semibold text-gray-700">Action</th>
                         </tr>
                       </thead>
@@ -1325,25 +1383,142 @@ const ProposalsPage = () => {
   const [selectedProposal, setSelectedProposal] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [aiGeneratedFormData, setAiGeneratedFormData] = useState(null); // Store AI-generated data
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const stats = getStats();
 
+  const handleAIProposalGenerated = (aiGeneratedData) => {
+    console.log('=== AI PROPOSAL ACCEPTANCE ===');
+    console.log('AI Generated Data:', aiGeneratedData);
+
+    // Map AI-generated data to our form structure
+    const mappedData = {
+      proposalCode: generateProposalCode(),
+      donorOrganization: aiGeneratedData.donor || '',
+      cboId: '',
+      cboName: '',
+      proposalTitle: aiGeneratedData.title || '',
+      programmeArea: aiGeneratedData.programmeArea || 'Education',
+      requestedBudget: aiGeneratedData.budgetRequested || '',
+      duration: '12 months',
+      targetBeneficiaries: aiGeneratedData.targetBeneficiaries || '',
+      district: aiGeneratedData.district || 'Colombo',
+      summary: aiGeneratedData.summary || '',
+      projectTier: aiGeneratedData.projectTier || 'Tier 1',
+      sectorTheme: aiGeneratedData.sectorTheme || aiGeneratedData.programmeArea || 'Education',
+      startDate: aiGeneratedData.startDate || '',
+      endDate: aiGeneratedData.endDate || '',
+      problemStatement: aiGeneratedData.problemStatement || '',
+      proposedSolution: aiGeneratedData.proposedSolution || '',
+      keyBeneficiariesDescription: '',
+      overallGoal: aiGeneratedData.overallGoal || '',
+      needsAssessmentData: '',
+      strategicAlignment: aiGeneratedData.strategicAlignment || '',
+      objectives: aiGeneratedData.objectives || ['', '', ''],
+      keyActivities: aiGeneratedData.keyActivities || ['', '', ''],
+      resultsFramework: (aiGeneratedData.resultsFramework || []).map((item, index) => ({
+        id: `IND-${Date.now()}-${index}`,
+        level: 'Output',
+        indicator: item.indicator || '',
+        definition: '',
+        baseline: item.baseline || '',
+        target: item.target || '',
+        meansOfVerification: item.meansOfVerification || '',
+        disaggregation: []
+      })),
+      beneficiaryBreakdown: aiGeneratedData.beneficiaryBreakdown || {
+        directMale: '',
+        directFemale: '',
+        directChildren: '',
+        directPWD: '',
+        indirectTotal: ''
+      },
+      theoryOfChange: aiGeneratedData.theoryOfChange || {
+        inputs: ['', ''],
+        activities: ['', ''],
+        outputs: ['', ''],
+        outcomes: ['', ''],
+        impact: '',
+        assumptions: ['', ''],
+        risks: ['', '']
+      },
+      budgetBreakdown: (aiGeneratedData.budgetBreakdown || []).map((item, index) => ({
+        id: Date.now() + index,
+        category: item.category || 'Other',
+        description: item.description || item.justification || '',
+        quantity: 1,
+        unitCost: item.cost || 0,
+        totalCost: item.cost || 0
+      })),
+      safeguarding: aiGeneratedData.safeguarding || {
+        dataProtection: false,
+        informedConsent: false,
+        childSafeguarding: false,
+        incidentReporting: false,
+        backgroundChecks: false,
+        codeOfConduct: false,
+        safeguardingFocalPerson: '',
+        cfmChannels: []
+      }
+    };
+
+    console.log('Mapped Form Data:', mappedData);
+    console.log('Populating form and opening Add Proposal modal...');
+
+    // Close AI Assistant modal
+    setShowAIAssistant(false);
+
+    // Store the AI-generated data to pass to modal
+    setAiGeneratedFormData(mappedData);
+
+    // Open the Add Proposal modal so user can review and edit
+    setShowAddModal(true);
+  };
+
   const handleSubmit = async (formDataToSubmit) => {
+    console.log('=== HANDLE SUBMIT CALLED ===');
+    console.log('Form data received:', formDataToSubmit);
+
     setError('');
     setIsLoading(true);
 
-    // Clean up objectives and activities (remove empty ones)
+    // Map frontend field names to backend field names and clean up data
+    console.log('🔍 DEBUG - formDataToSubmit.proposalTitle:', formDataToSubmit.proposalTitle);
+    console.log('🔍 DEBUG - formDataToSubmit.donorOrganization:', formDataToSubmit.donorOrganization);
+
     const cleanData = {
-      ...formDataToSubmit,
-      requestedBudget: parseFloat(formDataToSubmit.requestedBudget),
+      // Map frontend field names to backend expected names
+      proposalCode: formDataToSubmit.proposalCode || '',
+      title: formDataToSubmit.proposalTitle,  // Frontend: proposalTitle → Backend: title
+      donor: formDataToSubmit.donorOrganization,  // Frontend: donorOrganization → Backend: donor
+      programmeArea: formDataToSubmit.programmeArea,
+      district: formDataToSubmit.district,
+      budgetRequested: parseFloat(formDataToSubmit.requestedBudget),  // Frontend: requestedBudget → Backend: budgetRequested
+      duration: formDataToSubmit.duration,
+      startDate: formDataToSubmit.startDate,
+      endDate: formDataToSubmit.endDate,
       targetBeneficiaries: parseInt(formDataToSubmit.targetBeneficiaries),
+      summary: formDataToSubmit.summary,
+      projectTier: formDataToSubmit.projectTier,
+      sectorTheme: formDataToSubmit.sectorTheme,
+      problemStatement: formDataToSubmit.problemStatement,
+      proposedSolution: formDataToSubmit.proposedSolution,
+      overallGoal: formDataToSubmit.overallGoal,
+      strategicAlignment: formDataToSubmit.strategicAlignment,
+      needsAssessmentData: formDataToSubmit.needsAssessmentData || '',
+      keyBeneficiariesDescription: formDataToSubmit.keyBeneficiariesDescription || '',
       objectives: formDataToSubmit.objectives.filter(obj => obj.trim() !== ''),
       keyActivities: formDataToSubmit.keyActivities.filter(act => act.trim() !== ''),
+      resultsFramework: formDataToSubmit.resultsFramework || [],
       submittedBy: 'System User',
       submitterRole: 'Proposal Manager',
+      cboId: formDataToSubmit.cboId || null,
+      cboName: formDataToSubmit.cboName || '',
       // Convert beneficiary breakdown to numbers
       beneficiaryBreakdown: {
         directMale: parseInt(formDataToSubmit.beneficiaryBreakdown.directMale) || 0,
@@ -1362,33 +1537,56 @@ const ProposalsPage = () => {
         assumptions: formDataToSubmit.theoryOfChange.assumptions.filter(item => item.trim() !== ''),
         risks: formDataToSubmit.theoryOfChange.risks.filter(item => item.trim() !== '')
       },
+      budgetBreakdown: formDataToSubmit.budgetBreakdown || [],
+      safeguarding: formDataToSubmit.safeguarding || {},
       submissionDate: new Date().toISOString()
     };
 
+    console.log('Cleaned data to submit:', cleanData);
+
     try {
-      const response = await fetch('/api/proposals', {
-        method: 'POST',
+      // Check if we're updating an existing proposal or creating a new one
+      const isEditMode = formDataToSubmit.id ? true : false;
+      const url = isEditMode
+        ? `http://localhost:3001/api/proposals/${formDataToSubmit.id}`
+        : 'http://localhost:3001/api/proposals';
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      console.log(`Sending ${method} to ${url}...`);
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
+        credentials: 'include',  // Include cookies for authentication
         body: JSON.stringify(cleanData)
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.success) {
-        setSuccess('Proposal created successfully!');
+        const successMessage = isEditMode ? 'Proposal updated successfully!' : 'Proposal created successfully!';
+        console.log(`✅ ${successMessage}`);
+        setSuccess(successMessage);
         setTimeout(() => {
           setShowAddModal(false);
+          setShowEditModal(false);
           setSuccess('');
+          console.log('Reloading page...');
           window.location.reload();
         }, 1500);
       } else {
-        setError(data.message || 'Failed to create proposal');
+        const errorMessage = isEditMode ? 'Failed to update proposal' : 'Failed to create proposal';
+        console.error(`❌ ${errorMessage}:`, data.message);
+        setError(data.message || errorMessage);
       }
     } catch (err) {
-      setError(err.message || 'Failed to create proposal');
+      const errorMessage = formDataToSubmit.id ? 'Failed to update proposal' : 'Failed to create proposal';
+      console.error(`❌ Error submitting proposal:`, err);
+      setError(err.message || errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -1580,6 +1778,13 @@ const ProposalsPage = () => {
                   <option value="Low">Low</option>
                 </select>
                 <button
+                  onClick={() => setShowAIAssistant(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl font-semibold whitespace-nowrap group"
+                >
+                  <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+                  AI Assistant
+                </button>
+                <button
                   onClick={() => setShowAddModal(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl font-semibold whitespace-nowrap"
                 >
@@ -1710,7 +1915,13 @@ const ProposalsPage = () => {
                         <Eye size={14} />
                         {proposal.resultsFramework ? 'View MEAL Data' : 'View Details'}
                       </button>
-                      <button className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95">
+                      <button
+                        onClick={() => {
+                          setSelectedProposal(proposal);
+                          setShowEditModal(true);
+                        }}
+                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95"
+                      >
                         <Edit2 size={16} />
                       </button>
                       <button
@@ -1801,18 +2012,55 @@ const ProposalsPage = () => {
             setShowViewModal(false);
             setSelectedProposal(null);
           }}
+          onUpdate={(updatedProposal) => {
+            // Update the selected proposal with new data
+            setSelectedProposal(updatedProposal);
+            // Optionally refresh the proposals list
+            // The context should handle this automatically
+          }}
         />
       )}
 
       {/* Add Proposal Modal */}
       {showAddModal && (
         <AddProposalModal
-          onClose={() => setShowAddModal(false)}
+          onClose={() => {
+            setShowAddModal(false);
+            setAiGeneratedFormData(null); // Clear AI data when modal closes
+          }}
           onSubmit={handleSubmit}
           error={error}
           success={success}
           isLoading={isLoading}
           partners={partners}
+          initialData={aiGeneratedFormData} // Pass AI-generated data to modal
+        />
+      )}
+
+      {/* Edit Proposal Modal */}
+      {showEditModal && selectedProposal && (
+        <AddProposalModal
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedProposal(null);
+          }}
+          onSubmit={handleSubmit}
+          error={error}
+          success={success}
+          isLoading={isLoading}
+          partners={partners}
+          initialData={selectedProposal} // Pass existing proposal data for editing
+          isEditMode={true}
+        />
+      )}
+
+      {/* AI Proposal Assistant Modal */}
+      {showAIAssistant && (
+        <AIProposalAssistant
+          isOpen={showAIAssistant}
+          onClose={() => setShowAIAssistant(false)}
+          onProposalGenerated={handleAIProposalGenerated}
+          currentProposal={null}
         />
       )}
     </div>

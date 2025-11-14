@@ -26,42 +26,312 @@ export const SettingsProvider = ({ children }) => {
 
   // User Management - fetch from backend
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch users from backend on mount
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await API.Users.getAll();
-        const transformedUsers = response.map(user => ({
-          id: user.id,
-          username: user.username,
-          fullName: user.fullName,
-          email: user.email,
-          role: user.role,
-          status: user.status || 'Active',
-          department: user.department || '',
-          phone: user.phone || '',
-          lastLogin: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never',
-          createdDate: new Date(user.createdAt).toISOString().split('T')[0],
-          permissions: [] // Backend handles permissions via role
-        }));
-        setUsers(transformedUsers);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-        setUsers([]); // Keep empty array on error
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  // Fetch users function - to be called when Settings page is accessed
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await API.Users.getAll();
+      const transformedUsers = response.map(user => ({
+        id: user.id,
+        username: user.username,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        status: user.status || 'Active',
+        department: user.department || '',
+        phone: user.phone || '',
+        lastLogin: user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never',
+        createdDate: new Date(user.createdAt).toISOString().split('T')[0],
+        permissions: [] // Backend handles permissions via role
+      }));
+      setUsers(transformedUsers);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+      setUsers([]); // Keep empty array on error
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Legacy mock data removed - now using real backend data
 
-  // Roles & Permissions
-  const [roles, setRoles] = useState([]);
+  // Roles & Permissions - Initialize with all organizational roles
+  const [roles, setRoles] = useState({
+    'Admin': {
+      orphans: { view: true, create: true, edit: true, delete: true, approve: true },
+      projects: { view: true, create: true, edit: true, delete: true, approve: true },
+      finance: { view: true, create: true, edit: true, delete: true, approve: true },
+      hr: { view: true, create: true, edit: true, delete: true, approve: true },
+      cbo: { view: true, create: true, edit: true, delete: true, approve: true },
+      partners: { view: true, create: true, edit: true, delete: true, approve: true },
+      proposals: { view: true, create: true, edit: true, delete: true, approve: true },
+      meal: { view: true, create: true, edit: true, delete: true, approve: true },
+      campaigns: { view: true, create: true, edit: true, delete: true, approve: true },
+      donations: { view: true, create: true, edit: true, delete: true, approve: true },
+      reports: { view: true, create: true, edit: true, delete: true, approve: true },
+      compliance: { view: true, create: true, edit: true, delete: true, approve: true },
+      settings: { view: true, create: true, edit: true, delete: true, approve: true },
+    },
+    'BOD': {
+      orphans: { view: true, create: false, edit: false, delete: false, approve: false },
+      projects: { view: true, create: false, edit: false, delete: false, approve: false },
+      finance: { view: true, create: false, edit: false, delete: false, approve: false },
+      hr: { view: true, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: true, create: false, edit: false, delete: false, approve: false },
+      partners: { view: true, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: true, create: false, edit: false, delete: false, approve: false },
+      meal: { view: true, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: true, create: false, edit: false, delete: false, approve: false },
+      donations: { view: true, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: true, create: false, edit: false, delete: false, approve: false },
+      settings: { view: true, create: false, edit: false, delete: false, approve: false },
+    },
+    'CEO': {
+      orphans: { view: true, create: false, edit: false, delete: false, approve: true },
+      projects: { view: true, create: false, edit: false, delete: false, approve: true },
+      finance: { view: true, create: false, edit: false, delete: false, approve: true },
+      hr: { view: true, create: false, edit: false, delete: false, approve: true },
+      cbo: { view: true, create: false, edit: false, delete: false, approve: true },
+      partners: { view: true, create: true, edit: true, delete: false, approve: false },
+      proposals: { view: true, create: false, edit: false, delete: false, approve: true },
+      meal: { view: true, create: false, edit: false, delete: false, approve: true },
+      campaigns: { view: true, create: false, edit: false, delete: false, approve: true },
+      donations: { view: true, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: true, edit: false, delete: false, approve: false },
+      compliance: { view: true, create: false, edit: true, delete: false, approve: false },
+      settings: { view: true, create: false, edit: true, delete: false, approve: false },
+    },
+    'Director Programmes': {
+      orphans: { view: true, create: true, edit: true, delete: false, approve: true },
+      projects: { view: true, create: true, edit: true, delete: false, approve: true },
+      finance: { view: true, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: true, create: false, edit: false, delete: false, approve: true },
+      partners: { view: true, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: true, create: true, edit: true, delete: false, approve: true },
+      meal: { view: true, create: false, edit: false, delete: false, approve: true },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: true, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: true, create: false, edit: false, delete: false, approve: false },
+    },
+    'Programme Manager': {
+      orphans: { view: true, create: true, edit: true, delete: false, approve: true },
+      projects: { view: true, create: true, edit: true, delete: false, approve: true },
+      finance: { view: true, create: false, edit: false, delete: false, approve: true },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: true, create: false, edit: true, delete: false, approve: true },
+      partners: { view: true, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: true, create: true, edit: true, delete: false, approve: false },
+      meal: { view: true, create: true, edit: true, delete: false, approve: true },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: true, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Finance Manager': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: true, create: false, edit: false, delete: false, approve: false },
+      finance: { view: true, create: true, edit: true, delete: true, approve: true },
+      hr: { view: true, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: true, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: true, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: true, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Finance Officer': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: true, create: false, edit: false, delete: false, approve: false },
+      finance: { view: true, create: true, edit: true, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: true, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Fundraising Manager': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: false, create: false, edit: false, delete: false, approve: false },
+      finance: { view: true, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: true, create: true, edit: true, delete: false, approve: false },
+      partners: { view: true, create: true, edit: true, delete: false, approve: false },
+      proposals: { view: true, create: true, edit: true, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: true, create: true, edit: true, delete: false, approve: false },
+      donations: { view: true, create: true, edit: true, delete: false, approve: false },
+      reports: { view: true, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'HR Manager': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: false, create: false, edit: false, delete: false, approve: false },
+      finance: { view: true, create: false, edit: false, delete: false, approve: false },
+      hr: { view: true, create: true, edit: true, delete: true, approve: true },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'HR Officer': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: false, create: false, edit: false, delete: false, approve: false },
+      finance: { view: false, create: false, edit: false, delete: false, approve: false },
+      hr: { view: true, create: true, edit: true, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: false, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Project Officer': {
+      orphans: { view: true, create: true, edit: true, delete: false, approve: false },
+      projects: { view: true, create: true, edit: true, delete: false, approve: false },
+      finance: { view: true, create: true, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: true, create: false, edit: false, delete: false, approve: false },
+      partners: { view: true, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: true, create: false, edit: false, delete: false, approve: false },
+      meal: { view: true, create: true, edit: true, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Field Officer': {
+      orphans: { view: true, create: false, edit: false, delete: false, approve: false },
+      projects: { view: true, create: false, edit: false, delete: false, approve: false },
+      finance: { view: false, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: true, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: true, create: true, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: false, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'MEAL Officer': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: true, create: false, edit: false, delete: false, approve: false },
+      finance: { view: false, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: true, create: true, edit: true, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: true, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Media Officer': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: false, create: false, edit: false, delete: false, approve: false },
+      finance: { view: false, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: true, create: true, edit: true, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: false, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Accountant': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: true, create: false, edit: false, delete: false, approve: false },
+      finance: { view: true, create: true, edit: true, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: true, create: false, edit: false, delete: false, approve: false },
+      reports: { view: true, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Orphan Coordinator': {
+      orphans: { view: true, create: true, edit: true, delete: false, approve: false },
+      projects: { view: false, create: false, edit: false, delete: false, approve: false },
+      finance: { view: false, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: false, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+    'Guest': {
+      orphans: { view: false, create: false, edit: false, delete: false, approve: false },
+      projects: { view: false, create: false, edit: false, delete: false, approve: false },
+      finance: { view: false, create: false, edit: false, delete: false, approve: false },
+      hr: { view: false, create: false, edit: false, delete: false, approve: false },
+      cbo: { view: false, create: false, edit: false, delete: false, approve: false },
+      partners: { view: false, create: false, edit: false, delete: false, approve: false },
+      proposals: { view: false, create: false, edit: false, delete: false, approve: false },
+      meal: { view: false, create: false, edit: false, delete: false, approve: false },
+      campaigns: { view: false, create: false, edit: false, delete: false, approve: false },
+      donations: { view: false, create: false, edit: false, delete: false, approve: false },
+      reports: { view: false, create: false, edit: false, delete: false, approve: false },
+      compliance: { view: false, create: false, edit: false, delete: false, approve: false },
+      settings: { view: false, create: false, edit: false, delete: false, approve: false },
+    },
+  });
+
+  // Permissions structure - defines available modules
+  const [permissions, setPermissions] = useState({
+    orphans: {},
+    projects: {},
+    finance: {},
+    hr: {},
+    cbo: {},
+    partners: {},
+    proposals: {},
+    meal: {},
+    campaigns: {},
+    donations: {},
+    reports: {},
+    compliance: {},
+    settings: {},
+  });
 
   // Notification Settings - Use defaults from constants
   const [notificationSettings, setNotificationSettings] = useState(DEFAULT_NOTIFICATION_SETTINGS);
@@ -125,25 +395,37 @@ export const SettingsProvider = ({ children }) => {
   }, [systemSettings, users, roles, notificationSettings, backupSettings, integrationSettings, appearanceSettings, securitySettings, performanceTargets]);
 
   // User Management Functions
-  const addUser = (userData) => {
-    const newUser = {
-      ...userData,
-      id: Math.max(...users.map(u => u.id), 0) + 1,
-      createdDate: new Date().toISOString().split('T')[0],
-      status: 'Active',
-      lastLogin: null
-    };
-    setUsers([...users, newUser]);
-    return newUser;
+  const addUser = async (userData) => {
+    try {
+      const newUser = await API.Users.create(userData);
+      // Refresh users list
+      await fetchUsers();
+      return newUser;
+    } catch (error) {
+      console.error('Failed to create user:', error);
+      throw error;
+    }
   };
 
-  const updateUser = (id, updates) => {
-    setUsers(users.map(u => u.id === id ? { ...u, ...updates } : u));
+  const updateUser = async (id, updates) => {
+    try {
+      await API.Users.update(id, updates);
+      // Refresh users list
+      await fetchUsers();
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      throw error;
+    }
   };
 
-  const deleteUser = (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+  const deleteUser = async (id) => {
+    try {
+      await API.Users.delete(id);
+      // Update local state immediately
       setUsers(users.filter(u => u.id !== id));
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      throw error;
     }
   };
 
@@ -201,7 +483,7 @@ export const SettingsProvider = ({ children }) => {
       totalUsers: users.length,
       activeUsers: users.filter(u => u.status === 'Active').length,
       inactiveUsers: users.filter(u => u.status === 'Inactive').length,
-      totalRoles: roles.length,
+      totalRoles: Object.keys(roles).length,
       emailEnabled: notificationSettings.emailNotifications,
       backupEnabled: backupSettings.autoBackup,
       twoFactorEnabled: securitySettings.twoFactorAuth
@@ -213,12 +495,14 @@ export const SettingsProvider = ({ children }) => {
     systemSettings,
     users,
     roles,
+    permissions,
     notificationSettings,
     backupSettings,
     integrationSettings,
     appearanceSettings,
     securitySettings,
     performanceTargets,
+    loading,
 
     // Setters
     setSystemSettings,
@@ -228,8 +512,11 @@ export const SettingsProvider = ({ children }) => {
     setAppearanceSettings,
     setSecuritySettings,
     setPerformanceTargets,
+    setRoles,
+    setPermissions,
 
     // User Methods
+    fetchUsers,
     addUser,
     updateUser,
     deleteUser,

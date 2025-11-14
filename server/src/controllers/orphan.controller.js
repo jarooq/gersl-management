@@ -345,3 +345,74 @@ export const getOrphansByCoordinator = asyncHandler(async (req, res) => {
     data: { orphans }
   });
 });
+
+// ============================================
+// BULK IMPORT
+// ============================================
+
+// @desc    Bulk import orphans from Excel/CSV
+// @route   POST /api/orphans/bulk-import
+// @access  Private (Create permission)
+export const bulkImportOrphans = asyncHandler(async (req, res) => {
+  const { orphans } = req.body;
+
+  if (!Array.isArray(orphans) || orphans.length === 0) {
+    throw new BadRequestError('No orphan data provided');
+  }
+
+  const results = {
+    total: orphans.length,
+    successful: 0,
+    failed: 0,
+    errors: []
+  };
+
+  const createdOrphans = [];
+
+  // Process each orphan
+  for (let i = 0; i < orphans.length; i++) {
+    try {
+      const orphanData = orphans[i];
+
+      // Set coordinator to current user if not specified
+      if (!orphanData.coordinatorId) {
+        orphanData.coordinatorId = req.user.id;
+      }
+
+      // Calculate age from date of birth
+      if (orphanData.dateOfBirth) {
+        const birthDate = new Date(orphanData.dateOfBirth);
+        const today = new Date();
+        orphanData.age = today.getFullYear() - birthDate.getFullYear();
+      }
+
+      // Set default status
+      if (!orphanData.status) {
+        orphanData.status = 'Pending';
+      }
+
+      // Set default approval status
+      if (!orphanData.approvalStatus) {
+        orphanData.approvalStatus = 'pending';
+      }
+
+      // Create orphan
+      const orphan = await Orphan.create(orphanData);
+      createdOrphans.push(orphan.id);
+      results.successful++;
+    } catch (error) {
+      results.failed++;
+      results.errors.push({
+        row: i + 1,
+        data: orphans[i],
+        error: error.message
+      });
+    }
+  }
+
+  res.status(201).json({
+    success: true,
+    message: `Bulk import completed: ${results.successful} successful, ${results.failed} failed`,
+    data: results
+  });
+});

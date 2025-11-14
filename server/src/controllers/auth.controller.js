@@ -4,6 +4,41 @@ import { User } from '../models/index.js';
 import { asyncHandler, AppError, BadRequestError, UnauthorizedError, ConflictError } from '../middleware/error.middleware.js';
 
 // ============================================
+// PASSWORD VALIDATION
+// ============================================
+const validatePassword = (password) => {
+  if (!password) {
+    throw new BadRequestError('Password is required');
+  }
+
+  if (password.length < 8) {
+    throw new BadRequestError('Password must be at least 8 characters long');
+  }
+
+  // Check for at least one lowercase letter
+  if (!/[a-z]/.test(password)) {
+    throw new BadRequestError('Password must contain at least one lowercase letter');
+  }
+
+  // Check for at least one uppercase letter
+  if (!/[A-Z]/.test(password)) {
+    throw new BadRequestError('Password must contain at least one uppercase letter');
+  }
+
+  // Check for at least one number
+  if (!/\d/.test(password)) {
+    throw new BadRequestError('Password must contain at least one number');
+  }
+
+  // Check for at least one special character
+  if (!/[!@#$%^&*(),.?":{}|<>_\-+=]/.test(password)) {
+    throw new BadRequestError('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>_-+=)');
+  }
+
+  return true;
+};
+
+// ============================================
 // GENERATE JWT TOKENS
 // ============================================
 const generateTokens = (userId) => {
@@ -23,10 +58,44 @@ const generateTokens = (userId) => {
 };
 
 // ============================================
+// SET AUTH COOKIES (httpOnly for security)
+// ============================================
+const setAuthCookies = (res, accessToken, refreshToken) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  // Access token cookie (24 hours)
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: isProduction, // Only HTTPS in production
+    sameSite: isProduction ? 'strict' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  });
+
+  // Refresh token cookie (7 days)
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  });
+};
+
+// ============================================
+// CLEAR AUTH COOKIES
+// ============================================
+const clearAuthCookies = (res) => {
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+};
+
+// ============================================
 // REGISTER NEW USER
 // ============================================
 export const register = asyncHandler(async (req, res) => {
   const { username, email, password, fullName, role = 'Guest' } = req.body;
+
+  // Validate password strength
+  validatePassword(password);
 
   // Check if user already exists
   const existingUser = await User.findOne({
@@ -62,13 +131,14 @@ export const register = asyncHandler(async (req, res) => {
   user.lastLogin = new Date();
   await user.save();
 
+  // Set httpOnly cookies
+  setAuthCookies(res, accessToken, refreshToken);
+
   res.status(201).json({
     success: true,
     message: 'User registered successfully',
     data: {
-      user: user.toJSON(),
-      accessToken,
-      refreshToken
+      user: user.toJSON()
     }
   });
 });
@@ -98,6 +168,12 @@ export const login = asyncHandler(async (req, res) => {
     throw new UnauthorizedError('Invalid credentials');
   }
 
+  // Check if account is locked
+  if (user.accountLockedUntil && new Date() < user.accountLockedUntil) {
+    const remainingMinutes = Math.ceil((user.accountLockedUntil - new Date()) / 60000);
+    throw new UnauthorizedError(`Account is temporarily locked due to too many failed login attempts. Please try again in ${remainingMinutes} minute(s).`);
+  }
+
   // Check if account is active
   if (user.status !== 'Active') {
     throw new UnauthorizedError('Account is not active. Please contact administrator.');
@@ -107,8 +183,23 @@ export const login = asyncHandler(async (req, res) => {
   const isPasswordValid = await user.comparePassword(password);
 
   if (!isPasswordValid) {
-    throw new UnauthorizedError('Invalid credentials');
+    // Increment failed login attempts
+    user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+
+    // Lock account after 5 failed attempts (15 minutes)
+    if (user.failedLoginAttempts >= 5) {
+      user.accountLockedUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+      await user.save();
+      throw new UnauthorizedError('Account locked due to too many failed login attempts. Please try again in 15 minutes.');
+    }
+
+    await user.save();
+    throw new UnauthorizedError(`Invalid credentials. ${5 - user.failedLoginAttempts} attempt(s) remaining before account lockout.`);
   }
+
+  // Reset failed login attempts on successful login
+  user.failedLoginAttempts = 0;
+  user.accountLockedUntil = null;
 
   // Generate tokens
   const { accessToken, refreshToken } = generateTokens(user.id);
@@ -118,13 +209,14 @@ export const login = asyncHandler(async (req, res) => {
   user.lastLogin = new Date();
   await user.save();
 
+  // Set httpOnly cookies
+  setAuthCookies(res, accessToken, refreshToken);
+
   res.json({
     success: true,
     message: 'Login successful',
     data: {
-      user: user.toJSON(),
-      accessToken,
-      refreshToken
+      user: user.toJSON()
     }
   });
 });
@@ -139,6 +231,9 @@ export const logout = asyncHandler(async (req, res) => {
   user.refreshToken = null;
   await user.save();
 
+  // Clear httpOnly cookies
+  clearAuthCookies(res);
+
   res.json({
     success: true,
     message: 'Logout successful'
@@ -149,17 +244,18 @@ export const logout = asyncHandler(async (req, res) => {
 // REFRESH ACCESS TOKEN
 // ============================================
 export const refreshToken = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  // Get refresh token from httpOnly cookie
+  const refreshTokenFromCookie = req.cookies.refreshToken;
 
-  if (!refreshToken) {
-    throw new BadRequestError('Refresh token is required');
+  if (!refreshTokenFromCookie) {
+    throw new UnauthorizedError('Refresh token is required');
   }
 
   // Verify refresh token
   let decoded;
   try {
     decoded = jwt.verify(
-      refreshToken,
+      refreshTokenFromCookie,
       process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET
     );
   } catch (error) {
@@ -169,7 +265,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
   // Find user
   const user = await User.findByPk(decoded.id);
 
-  if (!user || user.refreshToken !== refreshToken) {
+  if (!user || user.refreshToken !== refreshTokenFromCookie) {
     throw new UnauthorizedError('Invalid refresh token');
   }
 
@@ -184,10 +280,12 @@ export const refreshToken = asyncHandler(async (req, res) => {
   user.refreshToken = tokens.refreshToken;
   await user.save();
 
+  // Set new httpOnly cookies
+  setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
+
   res.json({
     success: true,
-    message: 'Token refreshed successfully',
-    data: tokens
+    message: 'Token refreshed successfully'
   });
 });
 
@@ -253,10 +351,8 @@ export const changePassword = asyncHandler(async (req, res) => {
     throw new UnauthorizedError('Current password is incorrect');
   }
 
-  // Check new password strength
-  if (newPassword.length < 6) {
-    throw new BadRequestError('New password must be at least 6 characters long');
-  }
+  // Validate new password strength
+  validatePassword(newPassword);
 
   // Update password (will be hashed by model hook)
   user.password = newPassword;
@@ -270,39 +366,110 @@ export const changePassword = asyncHandler(async (req, res) => {
 });
 
 // ============================================
-// REQUEST PASSWORD RESET (Placeholder)
+// REQUEST PASSWORD RESET
 // ============================================
 export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
+  if (!email) {
+    throw new BadRequestError('Email is required');
+  }
+
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    // Don't reveal if user exists
+    // Don't reveal if user exists (security best practice)
     return res.json({
       success: true,
       message: 'If an account with that email exists, a password reset link has been sent.'
     });
   }
 
-  // TODO: Generate reset token and send email
-  // For now, just return success
+  // Generate reset token (cryptographically secure random token)
+  const crypto = await import('crypto');
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  // Hash the token before storing (security best practice)
+  const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  // Set reset token and expiry (1 hour)
+  user.passwordResetToken = hashedToken;
+  user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  await user.save();
+
+  // Send password reset email
+  try {
+    const { sendPasswordResetEmail } = await import('../utils/emailService.js');
+    await sendPasswordResetEmail(user.email, user.username, resetToken);
+    console.log('✅ Password reset email sent to:', user.email);
+  } catch (emailError) {
+    console.error('❌ Failed to send password reset email:', emailError);
+    // Continue anyway - don't reveal email sending failures to user
+  }
+
+  // Only log in development mode
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔐 Password Reset Request');
+    console.log('User:', user.email);
+    console.log('Reset URL:', `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`);
+    console.log('Token expires:', user.passwordResetExpires);
+  }
+
   res.json({
     success: true,
-    message: 'Password reset functionality will be implemented soon.'
+    message: 'If an account with that email exists, a password reset link has been sent to your email.',
+    // REMOVE THIS IN PRODUCTION - only for development testing
+    ...(process.env.NODE_ENV === 'development' && {
+      resetToken,
+      note: 'Reset token provided for development only'
+    })
   });
 });
 
 // ============================================
-// RESET PASSWORD (Placeholder)
+// RESET PASSWORD
 // ============================================
 export const resetPassword = asyncHandler(async (req, res) => {
   const { token, newPassword } = req.body;
 
-  // TODO: Verify reset token and update password
+  if (!token || !newPassword) {
+    throw new BadRequestError('Token and new password are required');
+  }
+
+  // Validate new password strength
+  validatePassword(newPassword);
+
+  // Hash the provided token to compare with stored hash
+  const crypto = await import('crypto');
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  // Find user with matching reset token and check expiry
+  const user = await User.findOne({
+    where: {
+      passwordResetToken: hashedToken,
+    }
+  });
+
+  if (!user) {
+    throw new BadRequestError('Invalid or expired reset token');
+  }
+
+  // Check if token has expired
+  if (!user.passwordResetExpires || new Date() > user.passwordResetExpires) {
+    throw new BadRequestError('Reset token has expired. Please request a new one.');
+  }
+
+  // Update password (will be automatically hashed by beforeUpdate hook)
+  user.password = newPassword;
+  user.passwordResetToken = null;
+  user.passwordResetExpires = null;
+  // Clear refresh token to force re-login
+  user.refreshToken = null;
+
+  await user.save();
 
   res.json({
     success: true,
-    message: 'Password reset functionality will be implemented soon.'
+    message: 'Password has been reset successfully. Please login with your new password.'
   });
 });

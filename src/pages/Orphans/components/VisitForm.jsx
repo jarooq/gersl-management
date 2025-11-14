@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   X, Save, Calendar, User, Home, Heart, GraduationCap,
-  Activity, Package, Camera, FileText, AlertCircle, CheckCircle
+  Activity, Package, Camera, FileText, AlertCircle, CheckCircle, ClipboardList
 } from 'lucide-react';
 
 const VisitForm = ({ orphan, onClose, onSubmit }) => {
@@ -78,7 +78,10 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
     // Next Visit Planning
     nextVisitDate: '',
     nextVisitPurpose: '',
-    actionItems: ''
+    actionItems: '',
+
+    // Current Needs Identified
+    currentNeeds: []
   });
 
   const sections = [
@@ -88,6 +91,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
     { id: 'academic-progress', label: 'Academic Progress', icon: GraduationCap },
     { id: 'spiritual-dev', label: 'Spiritual Development', icon: Heart },
     { id: 'health-status', label: 'Health Status', icon: Activity },
+    { id: 'current-needs', label: 'Current Needs', icon: ClipboardList },
     { id: 'support-distribution', label: 'Support Distributed', icon: Package },
     { id: 'photos-docs', label: 'Photos & Docs', icon: Camera },
     { id: 'observations', label: 'Observations', icon: FileText }
@@ -113,6 +117,43 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
       supportDistributed: prev.supportDistributed.includes(supportType)
         ? prev.supportDistributed.filter(s => s !== supportType)
         : [...prev.supportDistributed, supportType]
+    }));
+  };
+
+  const [newNeed, setNewNeed] = useState({
+    needType: '',
+    needCategory: 'Education',
+    description: '',
+    quantity: 1,
+    estimatedCost: '',
+    urgency: 'Medium'
+  });
+
+  const addNeed = () => {
+    if (!newNeed.needType) {
+      alert('Please enter a need type');
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      currentNeeds: [...prev.currentNeeds, { ...newNeed, id: Date.now() }]
+    }));
+
+    setNewNeed({
+      needType: '',
+      needCategory: 'Education',
+      description: '',
+      quantity: 1,
+      estimatedCost: '',
+      urgency: 'Medium'
+    });
+  };
+
+  const removeNeed = (needId) => {
+    setFormData(prev => ({
+      ...prev,
+      currentNeeds: prev.currentNeeds.filter(n => n.id !== needId)
     }));
   };
 
@@ -705,6 +746,178 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
                 placeholder="Document any health concerns or observations..."
               ></textarea>
             </div>
+          </div>
+        );
+
+      case 'current-needs':
+        return (
+          <div className="space-y-4">
+            <SectionTitle icon={ClipboardList} title="Current Needs Identified During Visit" />
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <div className="flex gap-3">
+                <AlertCircle className="text-yellow-600 flex-shrink-0" size={20} />
+                <div>
+                  <p className="text-sm font-medium text-yellow-800 mb-1">Recording Orphan Needs</p>
+                  <p className="text-sm text-yellow-700">
+                    Document any needs or requirements identified during your visit (e.g., school supplies, medical items, clothing, household items). These will be saved for approval and tracking.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Add New Need Form */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+              <h4 className="font-semibold text-blue-900 mb-4">Add New Need</h4>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Need Type *
+                    </label>
+                    <input
+                      type="text"
+                      value={newNeed.needType}
+                      onChange={(e) => setNewNeed(prev => ({ ...prev, needType: e.target.value }))}
+                      className="input-field"
+                      placeholder="e.g., School books, Uniform, Medicine"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category *
+                    </label>
+                    <select
+                      value={newNeed.needCategory}
+                      onChange={(e) => setNewNeed(prev => ({ ...prev, needCategory: e.target.value }))}
+                      className="input-field"
+                    >
+                      <option value="Education">Education</option>
+                      <option value="Health">Health / Medical</option>
+                      <option value="Clothing">Clothing</option>
+                      <option value="Food">Food / Nutrition</option>
+                      <option value="Household">Household Items</option>
+                      <option value="Emergency">Emergency</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Quantity
+                    </label>
+                    <input
+                      type="number"
+                      value={newNeed.quantity}
+                      onChange={(e) => setNewNeed(prev => ({ ...prev, quantity: parseInt(e.target.value) || 1 }))}
+                      min="1"
+                      className="input-field"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Urgency *
+                    </label>
+                    <select
+                      value={newNeed.urgency}
+                      onChange={(e) => setNewNeed(prev => ({ ...prev, urgency: e.target.value }))}
+                      className="input-field"
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                      <option value="Critical">Critical / Urgent</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Estimated Cost (LKR)
+                  </label>
+                  <input
+                    type="number"
+                    value={newNeed.estimatedCost}
+                    onChange={(e) => setNewNeed(prev => ({ ...prev, estimatedCost: e.target.value }))}
+                    className="input-field"
+                    placeholder="Approximate cost if known"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description / Details
+                  </label>
+                  <textarea
+                    value={newNeed.description}
+                    onChange={(e) => setNewNeed(prev => ({ ...prev, description: e.target.value }))}
+                    rows="3"
+                    className="input-field"
+                    placeholder="Provide additional details about this need..."
+                  ></textarea>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addNeed}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+                >
+                  + Add Need to List
+                </button>
+              </div>
+            </div>
+
+            {/* Current Needs List */}
+            {formData.currentNeeds.length > 0 && (
+              <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Needs to be Recorded ({formData.currentNeeds.length})
+                </h4>
+
+                <div className="space-y-3">
+                  {formData.currentNeeds.map((need) => (
+                    <div
+                      key={need.id}
+                      className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-gray-900">{need.needType}</span>
+                          <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                            need.urgency === 'Critical' ? 'bg-red-100 text-red-700' :
+                            need.urgency === 'High' ? 'bg-orange-100 text-orange-700' :
+                            need.urgency === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-gray-100 text-gray-700'
+                          }`}>
+                            {need.urgency}
+                          </span>
+                          <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">
+                            {need.needCategory}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Qty: {need.quantity}
+                          {need.estimatedCost && ` • Est. Cost: LKR ${need.estimatedCost}`}
+                        </p>
+                        {need.description && (
+                          <p className="text-sm text-gray-500 mt-1">{need.description}</p>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeNeed(need.id)}
+                        className="text-red-600 hover:text-red-800 transition p-1"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         );
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import {
   createApprovalRequest,
@@ -10,6 +10,11 @@ import {
   canUserApprove,
   APPROVAL_STATUS,
 } from '../utils/approvalWorkflow';
+import {
+  handleProposalApprovalComplete,
+  handleProposalRejection,
+  handleProjectActivityApprovalComplete
+} from '../utils/workflowOrchestrator';
 
 const ApprovalContext = createContext(null);
 
@@ -25,6 +30,25 @@ export const ApprovalProvider = ({ children }) => {
   const { currentUser } = useAuth();
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Workflow completion callbacks
+  const [workflowCallbacks, setWorkflowCallbacks] = useState({
+    createProject: null,
+    updateProposal: null,
+    updateProject: null,
+    updateTask: null
+  });
+
+  /**
+   * Register workflow callbacks
+   * Called by parent components to register callback functions
+   */
+  const registerWorkflowCallbacks = useCallback((callbacks) => {
+    setWorkflowCallbacks(prev => ({
+      ...prev,
+      ...callbacks
+    }));
+  }, []);
 
   /**
    * Create a new approval request
@@ -52,6 +76,8 @@ export const ApprovalProvider = ({ children }) => {
       // For now, we'll just add it to local state
       setApprovals(prev => [...prev, workflow]);
 
+      console.log(`✅ Created approval workflow: ${workflow.id} (${workflow.typeName})`);
+
       return { success: true, workflow };
     } catch (error) {
       console.error('Create approval error:', error);
@@ -71,11 +97,12 @@ export const ApprovalProvider = ({ children }) => {
 
     try {
       setLoading(true);
+      let updatedWorkflow = null;
 
       setApprovals(prev => prev.map(workflow => {
         if (workflow.id === workflowId) {
           try {
-            return approveWorkflowStep(
+            updatedWorkflow = approveWorkflowStep(
               workflow,
               {
                 userId: currentUser.id,
@@ -84,6 +111,7 @@ export const ApprovalProvider = ({ children }) => {
               },
               comments
             );
+            return updatedWorkflow;
           } catch (error) {
             console.error('Approve error:', error);
             throw error;
@@ -92,6 +120,45 @@ export const ApprovalProvider = ({ children }) => {
         return workflow;
       }));
 
+      // Check if workflow is fully approved and trigger completion handlers
+      if (updatedWorkflow && updatedWorkflow.status === APPROVAL_STATUS.APPROVED) {
+        console.log(`🎉 Workflow fully approved: ${updatedWorkflow.id} (${updatedWorkflow.typeName})`);
+
+        // Handle proposal approval completion
+        if (updatedWorkflow.type === 'PROPOSAL_SUBMISSION') {
+          if (workflowCallbacks.createProject && workflowCallbacks.updateProposal) {
+            const result = await handleProposalApprovalComplete(
+              updatedWorkflow,
+              workflowCallbacks.createProject,
+              workflowCallbacks.updateProposal
+            );
+
+            if (result.success) {
+              console.log(`✅ Proposal ${updatedWorkflow.data.proposalCode} converted to project`);
+            } else {
+              console.warn(`⚠️ Failed to convert proposal to project:`, result.error || result.reason);
+            }
+          }
+        }
+
+        // Handle project activity approval completion
+        if (updatedWorkflow.type === 'PROJECT_ACTIVITY') {
+          if (workflowCallbacks.updateProject && workflowCallbacks.updateTask) {
+            const result = await handleProjectActivityApprovalComplete(
+              updatedWorkflow,
+              workflowCallbacks.updateProject,
+              workflowCallbacks.updateTask
+            );
+
+            if (result.success) {
+              console.log(`✅ Project activity ${updatedWorkflow.data.activityName} approved`);
+            } else {
+              console.warn(`⚠️ Failed to approve project activity:`, result.error || result.reason);
+            }
+          }
+        }
+      }
+
       return { success: true };
     } catch (error) {
       console.error('Approve workflow error:', error);
@@ -99,7 +166,7 @@ export const ApprovalProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [currentUser]);
+  }, [currentUser, workflowCallbacks]);
 
   /**
    * Reject a workflow
@@ -111,11 +178,12 @@ export const ApprovalProvider = ({ children }) => {
 
     try {
       setLoading(true);
+      let rejectedWorkflow = null;
 
       setApprovals(prev => prev.map(workflow => {
         if (workflow.id === workflowId) {
           try {
-            return rejectWorkflow(
+            rejectedWorkflow = rejectWorkflow(
               workflow,
               {
                 userId: currentUser.id,
@@ -124,6 +192,7 @@ export const ApprovalProvider = ({ children }) => {
               },
               reason
             );
+            return rejectedWorkflow;
           } catch (error) {
             console.error('Reject error:', error);
             throw error;
@@ -132,6 +201,22 @@ export const ApprovalProvider = ({ children }) => {
         return workflow;
       }));
 
+      // Handle proposal rejection
+      if (rejectedWorkflow && rejectedWorkflow.type === 'PROPOSAL_SUBMISSION') {
+        if (workflowCallbacks.updateProposal) {
+          const result = await handleProposalRejection(
+            rejectedWorkflow,
+            workflowCallbacks.updateProposal
+          );
+
+          if (result.success) {
+            console.log(`❌ Proposal ${rejectedWorkflow.data.proposalCode} rejected`);
+          } else {
+            console.warn(`⚠️ Failed to update rejected proposal:`, result.error || result.reason);
+          }
+        }
+      }
+
       return { success: true };
     } catch (error) {
       console.error('Reject workflow error:', error);
@@ -139,7 +224,7 @@ export const ApprovalProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [currentUser]);
+  }, [currentUser, workflowCallbacks]);
 
   /**
    * Cancel a workflow (initiator only)
@@ -247,6 +332,7 @@ export const ApprovalProvider = ({ children }) => {
     approve,
     reject,
     cancel,
+    registerWorkflowCallbacks,
     // Getters
     getAllApprovals,
     getPendingApprovals,

@@ -1,0 +1,1021 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { useBeneficiaries } from '../../contexts/BeneficiaryContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { hasPermission } from '../../utils/permissions';
+import { PERMISSIONS } from '../../utils/permissions';
+import BeneficiaryFormModal from '../../components/beneficiaries/BeneficiaryFormModal';
+import BeneficiaryListGenerator from '../../components/beneficiaries/BeneficiaryListGenerator';
+import BulkUploadModal from '../../components/common/BulkUploadModal';
+import {
+  Users,
+  UserPlus,
+  Search,
+  Filter,
+  MapPin,
+  Phone,
+  Calendar,
+  AlertTriangle,
+  TrendingUp,
+  Heart,
+  FileText,
+  X,
+  Eye,
+  Edit,
+  Trash2,
+  Download,
+  Grid3x3,
+  List,
+  CheckCircle,
+  Clock,
+  Activity,
+  DollarSign,
+  ClipboardList,
+  Upload
+} from 'lucide-react';
+import './BeneficiariesPage.css';
+
+const BeneficiariesPage = () => {
+  const { currentUser: user } = useAuth();
+  const {
+    beneficiaries,
+    loading,
+    pagination,
+    filters,
+    fetchBeneficiaries,
+    updateFilters,
+    clearFilters,
+    getBeneficiaryStats,
+    deleteBeneficiary,
+    getDistricts,
+    getDivisions,
+    bulkImportBeneficiaries
+  } = useBeneficiaries();
+
+  const [stats, setStats] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [districts, setDistricts] = useState([]);
+  const [divisions, setDivisions] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
+  const [viewMode, setViewMode] = useState('table'); // table or grid
+  const [showListGenerator, setShowListGenerator] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+
+  const canView = hasPermission(user, PERMISSIONS.BENEFICIARIES_VIEW);
+  const canCreate = hasPermission(user, PERMISSIONS.BENEFICIARIES_CREATE);
+  const canEdit = hasPermission(user, PERMISSIONS.BENEFICIARIES_EDIT);
+  const canDelete = hasPermission(user, PERMISSIONS.BENEFICIARIES_DELETE);
+
+  useEffect(() => {
+    if (canView) {
+      loadInitialData();
+    }
+  }, [canView]);
+
+  const loadInitialData = async () => {
+    try {
+      await fetchBeneficiaries();
+      const statsData = await getBeneficiaryStats();
+      setStats(statsData);
+      const districtList = await getDistricts();
+      setDistricts(districtList);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
+  };
+
+  const handleSearch = () => {
+    updateFilters({ search: searchTerm });
+    fetchBeneficiaries({ page: 1 });
+  };
+
+  const handleDistrictChange = async (district) => {
+    setSelectedDistrict(district);
+    updateFilters({ district, division: '' });
+    fetchBeneficiaries({ page: 1 });
+
+    if (district) {
+      const divisionList = await getDivisions(district);
+      setDivisions(divisionList);
+    } else {
+      setDivisions([]);
+    }
+  };
+
+  const handleFilterChange = (key, value) => {
+    updateFilters({ [key]: value });
+    fetchBeneficiaries({ page: 1 });
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setSelectedDistrict('');
+    setDivisions([]);
+    clearFilters();
+    fetchBeneficiaries({ page: 1 });
+  };
+
+  const handlePageChange = (newPage) => {
+    fetchBeneficiaries({ page: newPage });
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this beneficiary?')) {
+      try {
+        await deleteBeneficiary(id);
+        const statsData = await getBeneficiaryStats();
+        setStats(statsData);
+      } catch (error) {
+        console.error('Error deleting beneficiary:', error);
+      }
+    }
+  };
+
+  const handleViewDetails = (beneficiary) => {
+    setSelectedBeneficiary(beneficiary);
+  };
+
+  const handleEdit = (beneficiary) => {
+    setSelectedBeneficiary(beneficiary);
+    setShowEditModal(true);
+  };
+
+  const handleCloseModal = async () => {
+    setShowAddModal(false);
+    setShowEditModal(false);
+    setSelectedBeneficiary(null);
+    await fetchBeneficiaries();
+    const statsData = await getBeneficiaryStats();
+    setStats(statsData);
+  };
+
+  // Calculate additional analytics
+  const analytics = useMemo(() => {
+    if (!beneficiaries || beneficiaries.length === 0) return null;
+
+    // Age distribution
+    const age0to18 = beneficiaries.filter(b => {
+      const age = parseInt(b.age);
+      return !isNaN(age) && age >= 0 && age <= 18;
+    }).length;
+
+    const age19to35 = beneficiaries.filter(b => {
+      const age = parseInt(b.age);
+      return !isNaN(age) && age >= 19 && age <= 35;
+    }).length;
+
+    const age36to60 = beneficiaries.filter(b => {
+      const age = parseInt(b.age);
+      return !isNaN(age) && age >= 36 && age <= 60;
+    }).length;
+
+    const age60plus = beneficiaries.filter(b => {
+      const age = parseInt(b.age);
+      return !isNaN(age) && age > 60;
+    }).length;
+
+    // Support distribution by district (top 5)
+    const districtCounts = {};
+    beneficiaries.forEach(b => {
+      if (b.district) {
+        districtCounts[b.district] = (districtCounts[b.district] || 0) + 1;
+      }
+    });
+
+    const topDistricts = Object.entries(districtCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([district, count]) => ({
+        district,
+        count,
+        percentage: Math.round((count / beneficiaries.length) * 100)
+      }));
+
+    return {
+      ageGroups: [
+        { label: '0-18 Years', count: age0to18 },
+        { label: '19-35 Years', count: age19to35 },
+        { label: '36-60 Years', count: age36to60 },
+        { label: '60+ Years', count: age60plus }
+      ],
+      topDistricts
+    };
+  }, [beneficiaries]);
+
+  if (!canView) {
+    return (
+      <div className="beneficiaries-page">
+        <div className="no-permission">
+          <AlertTriangle size={48} />
+          <h2>Access Denied</h2>
+          <p>You do not have permission to view beneficiaries.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4 animate-fade-in">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <Users className="w-5 h-5 animate-pulse" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold mb-1">Beneficiary Management</h1>
+                <p className="text-blue-100 text-sm">Universal beneficiary database across all projects • Supporting {stats?.total_beneficiaries || 0} individuals</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowBulkUpload(true)}
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+              >
+                <Upload size={18} />
+                Bulk Upload
+              </button>
+              <button
+                onClick={() => setShowListGenerator(true)}
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+              >
+                <ClipboardList size={18} />
+                Generate List
+              </button>
+              <button
+                onClick={() => handleClearFilters()}
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+              >
+                <Download size={18} />
+                Export Data
+              </button>
+              {canCreate && (
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="btn-primary bg-white text-blue-600 hover:bg-blue-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                >
+                  <UserPlus size={18} />
+                  Register Beneficiary
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Statistics Cards */}
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              title: 'Total Beneficiaries',
+              value: stats.total_beneficiaries || 0,
+              icon: Users,
+              gradient: 'from-blue-500 to-cyan-600',
+              subtitle: 'registered individuals'
+            },
+            {
+              title: 'Active Beneficiaries',
+              value: stats.active_beneficiaries || 0,
+              icon: TrendingUp,
+              gradient: 'from-green-500 to-emerald-600',
+              subtitle: 'currently receiving support'
+            },
+            {
+              title: 'Vulnerable Cases',
+              value: stats.vulnerable_beneficiaries || 0,
+              icon: AlertTriangle,
+              gradient: 'from-orange-500 to-amber-600',
+              subtitle: 'require priority attention'
+            },
+            {
+              title: 'Districts Covered',
+              value: stats.districts_covered || 0,
+              icon: MapPin,
+              gradient: 'from-purple-500 to-indigo-600',
+              subtitle: 'geographic reach'
+            }
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="stat-card group cursor-pointer animate-slide-up"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
+                  <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+                </div>
+                <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+                  <stat.icon className="text-white" size={18} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Secondary Stats - Age & Type Breakdown */}
+      {beneficiaries && beneficiaries.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {(() => {
+            // Calculate real age distribution
+            const age0to18 = beneficiaries.filter(b => {
+              const age = parseInt(b.age);
+              return !isNaN(age) && age >= 0 && age <= 18;
+            }).length;
+
+            const age19to35 = beneficiaries.filter(b => {
+              const age = parseInt(b.age);
+              return !isNaN(age) && age >= 19 && age <= 35;
+            }).length;
+
+            const age36to60 = beneficiaries.filter(b => {
+              const age = parseInt(b.age);
+              return !isNaN(age) && age >= 36 && age <= 60;
+            }).length;
+
+            const age60plus = beneficiaries.filter(b => {
+              const age = parseInt(b.age);
+              return !isNaN(age) && age > 60;
+            }).length;
+
+            return [
+              {
+                title: 'Age 0-18 Years',
+                value: age0to18,
+                icon: Users,
+                gradient: 'from-blue-500 to-cyan-600',
+                change: 'Children & youth',
+                subtitle: 'youngest group'
+              },
+              {
+                title: 'Age 19-35 Years',
+                value: age19to35,
+                icon: Users,
+                gradient: 'from-green-500 to-emerald-600',
+                change: 'Young adults',
+                subtitle: 'working age'
+              },
+              {
+                title: 'Age 36-60 Years',
+                value: age36to60,
+                icon: Users,
+                gradient: 'from-orange-500 to-amber-600',
+                change: 'Middle-aged',
+                subtitle: 'prime working age'
+              },
+              {
+                title: 'Age 60+ Years',
+                value: age60plus,
+                icon: Heart,
+                gradient: 'from-purple-500 to-indigo-600',
+                change: 'Elderly',
+                subtitle: 'senior citizens'
+              }
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="stat-card group cursor-pointer animate-slide-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
+                    <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+                  </div>
+                  <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+                    <stat.icon className="text-white" size={18} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <span className="text-xs font-medium text-gray-600">{stat.change}</span>
+                </div>
+              </div>
+            ));
+          })()}
+        </div>
+      )}
+
+      {/* Analytics Charts */}
+      {analytics && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Geographic Distribution */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <MapPin className="text-purple-600" size={18} />
+                  Geographic Distribution
+                </h3>
+                <p className="text-xs text-gray-600 mt-0.5">Beneficiaries by district</p>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-bold text-gray-900">{stats?.districts_covered || 0}</div>
+                <div className="text-xs text-purple-600">Districts</div>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              {(() => {
+                if (!analytics.topDistricts || analytics.topDistricts.length === 0) {
+                  return (
+                    <div className="text-center py-8 text-gray-500 text-sm">
+                      No geographic data available
+                    </div>
+                  );
+                }
+
+                return analytics.topDistricts.map((item, index) => (
+                  <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-gray-700">{item.district}</span>
+                      <span className="text-xs font-bold text-gray-900">{item.count} beneficiaries</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                      <div className={`h-1.5 rounded-full transition-all duration-500 bg-gradient-to-r ${
+                        index === 0 ? 'from-purple-500 to-indigo-600' :
+                        index === 1 ? 'from-blue-500 to-cyan-600' :
+                        index === 2 ? 'from-green-500 to-emerald-600' :
+                        index === 3 ? 'from-orange-500 to-amber-600' :
+                        'from-pink-500 to-rose-600'
+                      }`} style={{ width: `${item.percentage}%` }}></div>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          {/* Beneficiary Type Distribution */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <Users className="text-blue-600" size={18} />
+                  Beneficiary Type Distribution
+                </h3>
+                <p className="text-xs text-gray-600 mt-0.5">Support categories</p>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              {(() => {
+                // Calculate beneficiary type distribution
+                const typeCounts = {};
+                beneficiaries.forEach(b => {
+                  if (b.beneficiary_type) {
+                    typeCounts[b.beneficiary_type] = (typeCounts[b.beneficiary_type] || 0) + 1;
+                  }
+                });
+
+                const topTypes = Object.entries(typeCounts)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 4);
+
+                if (topTypes.length === 0) {
+                  return (
+                    <div className="text-center py-8 text-gray-500 text-sm">
+                      No type data available
+                    </div>
+                  );
+                }
+
+                return topTypes.map(([type, count], index) => {
+                  const percentage = Math.round((count / beneficiaries.length) * 100);
+                  return (
+                    <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-gray-700">{type}</span>
+                        <span className="text-xs font-bold text-gray-900">{count} beneficiaries</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                        <div className={`h-1.5 rounded-full transition-all duration-500 bg-gradient-to-r ${
+                          index === 0 ? 'from-blue-500 to-cyan-600' :
+                          index === 1 ? 'from-green-500 to-emerald-600' :
+                          index === 2 ? 'from-orange-500 to-amber-600' :
+                          'from-purple-500 to-indigo-600'
+                        }`} style={{ width: `${percentage}%` }}></div>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </div>
+
+          {/* Support Value Distribution */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <DollarSign className="text-green-600" size={18} />
+                  Support Value Distribution
+                </h3>
+                <p className="text-xs text-gray-600 mt-0.5">Total support breakdown</p>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-bold text-green-600">
+                  LKR {(beneficiaries.reduce((sum, b) => sum + (b.total_value || 0), 0) / 1000000).toFixed(1)}M
+                </div>
+                <div className="text-xs text-gray-600">Total value</div>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              {(() => {
+                // Calculate support value ranges
+                const range1 = beneficiaries.filter(b => b.total_value > 0 && b.total_value < 50000).length;
+                const range2 = beneficiaries.filter(b => b.total_value >= 50000 && b.total_value < 100000).length;
+                const range3 = beneficiaries.filter(b => b.total_value >= 100000 && b.total_value < 200000).length;
+                const range4 = beneficiaries.filter(b => b.total_value >= 200000).length;
+                const totalWithSupport = range1 + range2 + range3 + range4;
+
+                if (totalWithSupport === 0) {
+                  return (
+                    <div className="text-center py-8 text-gray-500 text-sm">
+                      No support value data available
+                    </div>
+                  );
+                }
+
+                return [
+                  { range: 'LKR 0 - 50,000', count: range1, percent: Math.round((range1 / totalWithSupport) * 100), color: 'from-blue-500 to-cyan-600' },
+                  { range: 'LKR 50,000 - 100,000', count: range2, percent: Math.round((range2 / totalWithSupport) * 100), color: 'from-green-500 to-emerald-600' },
+                  { range: 'LKR 100,000 - 200,000', count: range3, percent: Math.round((range3 / totalWithSupport) * 100), color: 'from-orange-500 to-amber-600' },
+                  { range: 'LKR 200,000+', count: range4, percent: Math.round((range4 / totalWithSupport) * 100), color: 'from-purple-500 to-indigo-600' }
+                ].filter(item => item.count > 0).map((item, index) => (
+                  <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-gray-700">{item.range}</span>
+                      <span className="text-xs font-bold text-gray-900">{item.count} beneficiaries</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                      <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
+                        style={{ width: `${item.percent}%` }}></div>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          {/* Support Activity Status */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                  <Activity className="text-orange-600" size={18} />
+                  Support Activity Status
+                </h3>
+                <p className="text-xs text-gray-600 mt-0.5">Beneficiary engagement</p>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              {[
+                { status: 'Active Beneficiaries', count: stats?.active_beneficiaries || 0, color: 'bg-green-500' },
+                { status: 'Vulnerable Cases', count: stats?.vulnerable_beneficiaries || 0, color: 'bg-orange-500' },
+                { status: 'With Support History', count: beneficiaries.filter(b => b.total_supports > 0).length, color: 'bg-blue-500' },
+                { status: 'New Registrations', count: beneficiaries.filter(b => !b.total_supports || b.total_supports === 0).length, color: 'bg-purple-500' }
+              ].map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${item.color}`}></div>
+                    <span className="text-xs font-medium text-gray-700">{item.status}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-gray-900">{item.count} people</span>
+                    <span className="text-xs text-gray-600 bg-white px-1.5 py-0.5 rounded">
+                      {Math.round((item.count / (stats?.total_beneficiaries || 1)) * 100)}%
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Search and Filters */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-lg px-4 py-2 border border-gray-200">
+            <Search size={20} className="text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by name, NIC, or phone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              className="flex-1 bg-transparent border-none outline-none text-sm"
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Search
+            </button>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                showFilters
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <Filter size={18} />
+              Filters
+            </button>
+
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('table')}
+                className={`p-2 rounded transition-colors ${
+                  viewMode === 'table' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
+                }`}
+              >
+                <List size={18} className={viewMode === 'table' ? 'text-blue-600' : 'text-gray-600'} />
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded transition-colors ${
+                  viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
+                }`}
+              >
+                <Grid3x3 size={18} className={viewMode === 'grid' ? 'text-blue-600' : 'text-gray-600'} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Panel */}
+        {showFilters && (
+          <div className="mt-4 pt-4 border-t border-gray-200 animate-slide-down">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="form-group">
+                <label className="text-xs font-semibold text-gray-700 mb-2">District</label>
+                <select
+                  value={selectedDistrict}
+                  onChange={(e) => handleDistrictChange(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">All Districts</option>
+                  {districts.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="text-xs font-semibold text-gray-700 mb-2">Division</label>
+                <select
+                  value={filters.division}
+                  onChange={(e) => handleFilterChange('division', e.target.value)}
+                  disabled={!selectedDistrict}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">All Divisions</option>
+                  {divisions.map((division) => (
+                    <option key={division} value={division}>
+                      {division}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="text-xs font-semibold text-gray-700 mb-2">Vulnerability Status</label>
+                <select
+                  value={filters.isVulnerable}
+                  onChange={(e) => handleFilterChange('isVulnerable', e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">All</option>
+                  <option value="true">Vulnerable Only</option>
+                  <option value="false">Non-Vulnerable</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="text-xs font-semibold text-gray-700 mb-2">Status</label>
+                <select
+                  value={filters.isActive}
+                  onChange={(e) => handleFilterChange('isActive', e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                  <option value="">All</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={handleClearFilters}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X size={16} />
+                Clear All Filters
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Beneficiaries Content */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-600 text-sm">Loading beneficiaries...</p>
+          </div>
+        ) : beneficiaries.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+            <div className="bg-gray-100 p-6 rounded-full mb-4">
+              <Users className="w-12 h-12 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Beneficiaries Found</h3>
+            <p className="text-gray-500 text-sm mb-6">Try adjusting your search or filters.</p>
+            {canCreate && (
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <UserPlus size={20} />
+                Register First Beneficiary
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* Table View */}
+            {viewMode === 'table' && (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">NIC</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Location</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Support History</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {beneficiaries.map((beneficiary, index) => (
+                      <tr
+                        key={beneficiary.id}
+                        className="hover:bg-gray-50 transition-colors animate-slide-up"
+                        style={{ animationDelay: `${index * 0.03}s` }}
+                      >
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-900">{beneficiary.nic}</span>
+                            {beneficiary.is_vulnerable && (
+                              <span className="inline-flex items-center gap-1 text-xs text-orange-600 mt-1">
+                                <AlertTriangle size={12} />
+                                Vulnerable
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-900">{beneficiary.full_name}</span>
+                            <span className="text-xs text-gray-500">{beneficiary.gender || 'N/A'}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Phone size={14} />
+                            {beneficiary.primary_phone || 'N/A'}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <MapPin size={14} />
+                            {beneficiary.district && beneficiary.division
+                              ? `${beneficiary.division}, ${beneficiary.district}`
+                              : beneficiary.district || 'N/A'}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                              beneficiary.is_active
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-gray-100 text-gray-700'
+                            }`}
+                          >
+                            {beneficiary.is_active ? <CheckCircle size={12} /> : <Clock size={12} />}
+                            {beneficiary.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col gap-1 text-xs text-gray-600">
+                            <div className="flex items-center gap-1">
+                              <FileText size={12} />
+                              {beneficiary.total_supports || 0} supports
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <DollarSign size={12} />
+                              LKR {(beneficiary.total_value || 0).toLocaleString()}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleViewDetails(beneficiary)}
+                              className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                              title="View Details"
+                            >
+                              <Eye size={16} />
+                            </button>
+                            {canEdit && (
+                              <button
+                                onClick={() => handleEdit(beneficiary)}
+                                className="p-1.5 rounded-lg hover:bg-purple-50 text-purple-600 transition-colors"
+                                title="Edit"
+                              >
+                                <Edit size={16} />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button
+                                onClick={() => handleDelete(beneficiary.id)}
+                                className="p-1.5 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+                                title="Delete"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Grid View */}
+            {viewMode === 'grid' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                {beneficiaries.map((beneficiary, index) => (
+                  <div
+                    key={beneficiary.id}
+                    className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow animate-slide-up"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 text-sm mb-1">{beneficiary.full_name}</h3>
+                        <p className="text-xs text-gray-500">{beneficiary.nic}</p>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                          beneficiary.is_active
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        {beneficiary.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <Phone size={12} />
+                        {beneficiary.primary_phone || 'N/A'}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <MapPin size={12} />
+                        {beneficiary.district || 'N/A'}
+                      </div>
+                      {beneficiary.is_vulnerable && (
+                        <div className="flex items-center gap-2 text-xs text-orange-600">
+                          <AlertTriangle size={12} />
+                          Vulnerable Case
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="text-xs text-gray-600">
+                        <div>{beneficiary.total_supports || 0} supports</div>
+                        <div className="font-medium text-gray-900">LKR {(beneficiary.total_value || 0).toLocaleString()}</div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleViewDetails(beneficiary)}
+                          className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                          title="View"
+                        >
+                          <Eye size={16} />
+                        </button>
+                        {canEdit && (
+                          <button
+                            onClick={() => handleEdit(beneficiary)}
+                            className="p-1.5 rounded-lg hover:bg-purple-50 text-purple-600 transition-colors"
+                            title="Edit"
+                          >
+                            <Edit size={16} />
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(beneficiary.id)}
+                            className="p-1.5 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50">
+                <div className="text-sm text-gray-600">
+                  Showing page {pagination.currentPage} of {pagination.totalPages} ({pagination.totalRecords} total)
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(pagination.currentPage - 1)}
+                    disabled={pagination.currentPage === 1}
+                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(pagination.currentPage + 1)}
+                    disabled={pagination.currentPage === pagination.totalPages}
+                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Modals */}
+      <BeneficiaryFormModal
+        isOpen={showAddModal}
+        onClose={handleCloseModal}
+        beneficiary={null}
+      />
+
+      <BeneficiaryFormModal
+        isOpen={showEditModal}
+        onClose={handleCloseModal}
+        beneficiary={selectedBeneficiary}
+      />
+
+      {/* List Generator Modal */}
+      {showListGenerator && (
+        <BeneficiaryListGenerator
+          beneficiaries={beneficiaries || []}
+          onClose={() => setShowListGenerator(false)}
+        />
+      )}
+
+      {/* Bulk Upload Modal */}
+      {showBulkUpload && (
+        <BulkUploadModal
+          isOpen={showBulkUpload}
+          onClose={() => setShowBulkUpload(false)}
+          type="beneficiaries"
+          title="Bulk Upload Beneficiaries"
+          onUpload={async (validData, progressCallback) => {
+            await bulkImportBeneficiaries(validData, progressCallback);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+export default BeneficiariesPage;

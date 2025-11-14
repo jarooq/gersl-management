@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SRI_LANKA_DISTRICTS } from '../constants/sriLankaDistricts';
+import { OrphanAPI } from '../services/api';
 
 const OrphanContext = createContext(null);
 
@@ -13,59 +14,90 @@ export const useOrphans = () => {
 
 export const OrphanProvider = ({ children }) => {
   const [orphans, setOrphans] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [pendingOrphans, setPendingOrphans] = useState([]);
-
   const [selectedOrphan, setSelectedOrphan] = useState(null);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem('gersl_orphans');
-    if (stored) {
-      try {
-        setOrphans(JSON.parse(stored));
-      } catch (error) {
-        console.error('Error loading orphans:', error);
-      }
-    }
-  }, []);
+  // Fetch orphans function - will be called by OrphansPage when user is authenticated
 
-  // Save to localStorage when orphans change
-  useEffect(() => {
-    localStorage.setItem('gersl_orphans', JSON.stringify(orphans));
-  }, [orphans]);
+  const fetchOrphans = async () => {
+    try {
+      setLoading(true);
+      const data = await OrphanAPI.getAll();
+      setOrphans(data.orphans || []);
+    } catch (error) {
+      console.error('Error fetching orphans:', error);
+      setOrphans([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // CRUD Operations
-  const addOrphan = (orphanData) => {
-    const newOrphan = {
-      ...orphanData,
-      id: Math.max(...orphans.map(o => o.id), 0) + 1,
-      registrationDate: new Date().toISOString().split('T')[0],
-      visits: [],
-      totalStipendPaid: 0,
-      status: "Active",
-      // Sponsorship fields
-      sponsorshipStatus: 'Not Sponsored',
-      sponsorId: null,
-      sponsorshipStartDate: null,
-      sponsorshipEndDate: null,
-      sponsorshipType: null,
-      monthlyStipend: orphanData.stipendAmount || 5000
-    };
-    setOrphans([...orphans, newOrphan]);
-    return newOrphan;
+  const addOrphan = async (orphanData) => {
+    try {
+      // Call backend API to create orphan
+      const createdOrphan = await OrphanAPI.create(orphanData);
+
+      // Add to local state
+      setOrphans([...orphans, createdOrphan]);
+
+      // Refresh the full list to ensure consistency
+      await fetchOrphans();
+
+      return createdOrphan;
+    } catch (error) {
+      console.error('Error creating orphan:', error);
+      throw error;
+    }
   };
 
-  const updateOrphan = (id, updates) => {
-    setOrphans(orphans.map(o => o.id === id ? { ...o, ...updates } : o));
+  const updateOrphan = async (id, updates) => {
+    try {
+      // Call backend API to update orphan
+      const updatedOrphan = await OrphanAPI.update(id, updates);
+
+      // Update local state
+      setOrphans(orphans.map(o => o.id === id ? updatedOrphan : o));
+
+      return updatedOrphan;
+    } catch (error) {
+      console.error('Error updating orphan:', error);
+      throw error;
+    }
   };
 
-  const deleteOrphan = (id) => {
+  const deleteOrphan = async (id) => {
     if (window.confirm('Are you sure you want to delete this orphan?')) {
-      setOrphans(orphans.filter(o => o.id !== id));
-      if (selectedOrphan?.id === id) {
-        setSelectedOrphan(null);
+      try {
+        // Call backend API to delete orphan
+        await OrphanAPI.delete(id);
+
+        // Remove from local state
+        setOrphans(orphans.filter(o => o.id !== id));
+
+        if (selectedOrphan?.id === id) {
+          setSelectedOrphan(null);
+        }
+      } catch (error) {
+        console.error('Error deleting orphan:', error);
+        throw error;
       }
+    }
+  };
+
+  const bulkImportOrphans = async (orphansData, progressCallback) => {
+    try {
+      // Call backend API with progress tracking
+      const result = await OrphanAPI.bulkImport(orphansData);
+
+      // Refresh the full list after bulk import
+      await fetchOrphans();
+
+      return result;
+    } catch (error) {
+      console.error('Error bulk importing orphans:', error);
+      throw error;
     }
   };
 
@@ -197,10 +229,13 @@ export const OrphanProvider = ({ children }) => {
     orphans,
     pendingOrphans,
     selectedOrphan,
+    loading,
     setSelectedOrphan,
+    fetchOrphans,
     addOrphan,
     updateOrphan,
     deleteOrphan,
+    bulkImportOrphans,
     addVisit,
     approvePendingOrphan,
     rejectPendingOrphan,

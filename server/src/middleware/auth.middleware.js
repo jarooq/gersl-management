@@ -6,11 +6,16 @@ import { User } from '../models/index.js';
 // ============================================
 export const verifyToken = async (req, res, next) => {
   try {
-    // Get token from header
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith('Bearer ')
-      ? authHeader.substring(7)
-      : null;
+    // Get token from httpOnly cookie first, fallback to header for backward compatibility
+    let token = req.cookies.accessToken;
+
+    if (!token) {
+      // Fallback to Authorization header
+      const authHeader = req.headers.authorization;
+      token = authHeader && authHeader.startsWith('Bearer ')
+        ? authHeader.substring(7)
+        : null;
+    }
 
     if (!token) {
       return res.status(401).json({
@@ -148,6 +153,9 @@ const PERMISSIONS = {
 
   // Report permissions
   REPORTS_VIEW: 'reports:view',
+  REPORTS_CREATE: 'reports:create',
+  REPORTS_EDIT: 'reports:edit',
+  REPORTS_DELETE: 'reports:delete',
   REPORTS_EXPORT: 'reports:export',
 
   // Settings permissions
@@ -158,7 +166,13 @@ const PERMISSIONS = {
   USERS_VIEW: 'users:view',
   USERS_CREATE: 'users:create',
   USERS_EDIT: 'users:edit',
-  USERS_DELETE: 'users:delete'
+  USERS_DELETE: 'users:delete',
+
+  // Beneficiary permissions
+  BENEFICIARIES_VIEW: 'beneficiaries:view',
+  BENEFICIARIES_CREATE: 'beneficiaries:create',
+  BENEFICIARIES_EDIT: 'beneficiaries:edit',
+  BENEFICIARIES_DELETE: 'beneficiaries:delete'
 };
 
 // Role to permissions mapping (matching frontend)
@@ -168,6 +182,10 @@ const ROLE_PERMISSIONS = {
   'CEO': [
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_APPROVE,
+    PERMISSIONS.BENEFICIARIES_VIEW,
+    PERMISSIONS.BENEFICIARIES_CREATE,
+    PERMISSIONS.BENEFICIARIES_EDIT,
+    PERMISSIONS.BENEFICIARIES_DELETE,
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.PROJECTS_CREATE,
     PERMISSIONS.PROJECTS_EDIT,
@@ -187,6 +205,10 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_CREATE,
     PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.BENEFICIARIES_VIEW,
+    PERMISSIONS.BENEFICIARIES_CREATE,
+    PERMISSIONS.BENEFICIARIES_EDIT,
+    PERMISSIONS.BENEFICIARIES_DELETE,
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.PROJECTS_CREATE,
     PERMISSIONS.PROJECTS_EDIT,
@@ -207,6 +229,7 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.FINANCE_EDIT,
     PERMISSIONS.FINANCE_DELETE,
     PERMISSIONS.FINANCE_APPROVE,
+    PERMISSIONS.BENEFICIARIES_VIEW,
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_EXPORT
@@ -331,10 +354,15 @@ export const requireAdmin = requireRole('Admin');
 // ============================================
 export const optionalAuth = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith('Bearer ')
-      ? authHeader.substring(7)
-      : null;
+    // Get token from cookie first, fallback to header
+    let token = req.cookies.accessToken;
+
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      token = authHeader && authHeader.startsWith('Bearer ')
+        ? authHeader.substring(7)
+        : null;
+    }
 
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);

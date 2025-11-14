@@ -113,6 +113,26 @@ const User = sequelize.define('User', {
   refreshToken: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  passwordResetToken: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    comment: 'Token for password reset requests'
+  },
+  passwordResetExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    comment: 'Expiration time for password reset token (1 hour)'
+  },
+  failedLoginAttempts: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    comment: 'Number of consecutive failed login attempts'
+  },
+  accountLockedUntil: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    comment: 'Account locked until this timestamp after too many failed attempts'
   }
 }, {
   tableName: 'users',
@@ -142,6 +162,10 @@ User.prototype.toJSON = function() {
   const values = Object.assign({}, this.get());
   delete values.password;
   delete values.refreshToken;
+  delete values.passwordResetToken;
+  delete values.passwordResetExpires;
+  delete values.failedLoginAttempts;
+  delete values.accountLockedUntil;
   return values;
 };
 

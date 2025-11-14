@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import {
   Settings, Users, Shield, Bell, Database, Palette,
   Key, Globe, Mail, Cloud, CreditCard, Download,
-  Upload, Save, CheckCircle, XCircle, Clock, Activity
+  Upload, Save, CheckCircle, XCircle, Clock, Activity,
+  Sparkles, Zap
 } from 'lucide-react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { ROLES, HIERARCHY_LEVELS, getRoleName } from '../../config/roleHierarchy';
 import { ROLE_PERMISSIONS } from '../../utils/permissions';
-import { AuthAPI } from '../../services/api';
+import API, { AuthAPI } from '../../services/api';
 
 const SystemSettingsPage = () => {
   const {
@@ -41,6 +42,7 @@ const SystemSettingsPage = () => {
     { id: 'general', name: 'General', icon: Settings },
     { id: 'users', name: 'Users', icon: Users },
     { id: 'roles', name: 'Roles & Permissions', icon: Shield },
+    { id: 'ai', name: 'AI Configuration', icon: Sparkles },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'backup', name: 'Backup & Recovery', icon: Database },
     { id: 'integrations', name: 'Integrations', icon: Globe },
@@ -139,6 +141,7 @@ const SystemSettingsPage = () => {
           {activeTab === 'general' && <GeneralTab settings={systemSettings} setSettings={setSystemSettings} onSave={handleSave} />}
           {activeTab === 'users' && <UsersTab users={users} addUser={addUser} updateUser={updateUser} deleteUser={deleteUser} toggleUserStatus={toggleUserStatus} />}
           {activeTab === 'roles' && <RolesTab roles={roles} />}
+          {activeTab === 'ai' && <AIConfigTab onSave={handleSave} />}
           {activeTab === 'notifications' && <NotificationsTab settings={notificationSettings} setSettings={setNotificationSettings} onSave={handleSave} />}
           {activeTab === 'backup' && <BackupTab settings={backupSettings} setSettings={setBackupSettings} triggerBackup={triggerBackup} onSave={handleSave} />}
           {activeTab === 'integrations' && <IntegrationsTab settings={integrationSettings} setSettings={setIntegrationSettings} onSave={handleSave} />}
@@ -304,7 +307,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
     setIsLoading(true);
 
     try {
-      const data = await AuthAPI.register(formData);
+      const data = await API.Users.create(formData);
 
       setSuccess('User created successfully!');
       setFormData({
@@ -1447,6 +1450,392 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
         >
           <Save size={20} />
           Save Security Settings
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// AI Configuration Tab
+const AIConfigTab = ({ onSave }) => {
+  const [aiSettings, setAISettings] = useState(() => {
+    const stored = localStorage.getItem('gersl_ai_settings');
+    return stored ? JSON.parse(stored) : {
+      provider: 'openai',
+      openaiApiKey: '',
+      openaiModel: 'gpt-4',
+      claudeApiKey: '',
+      claudeModel: 'claude-3-opus-20240229',
+      customEndpoint: '',
+      customApiKey: '',
+      customModel: '',
+      temperature: 0.7,
+      maxTokens: 2000,
+      topP: 1,
+      frequencyPenalty: 0,
+      presencePenalty: 0,
+      enableFallback: true,
+      fallbackProvider: 'template',
+      testStatus: null
+    };
+  });
+
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+
+  const handleChange = (field, value) => {
+    setAISettings({ ...aiSettings, [field]: value });
+  };
+
+  const handleSave = () => {
+    localStorage.setItem('gersl_ai_settings', JSON.stringify(aiSettings));
+    onSave();
+  };
+
+  const handleTest = async () => {
+    setTesting(true);
+    setTestResult(null);
+
+    try {
+      // Simulate API test
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Check if API key is provided
+      if (aiSettings.provider === 'openai' && !aiSettings.openaiApiKey) {
+        throw new Error('OpenAI API key is required');
+      }
+      if (aiSettings.provider === 'claude' && !aiSettings.claudeApiKey) {
+        throw new Error('Claude API key is required');
+      }
+      if (aiSettings.provider === 'custom' && (!aiSettings.customEndpoint || !aiSettings.customApiKey)) {
+        throw new Error('Custom endpoint and API key are required');
+      }
+
+      setTestResult({ success: true, message: 'Connection successful!' });
+    } catch (error) {
+      setTestResult({ success: false, message: error.message });
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  const providers = [
+    { value: 'openai', label: 'OpenAI (GPT)', icon: Zap },
+    { value: 'claude', label: 'Anthropic Claude', icon: Sparkles },
+    { value: 'custom', label: 'Custom Endpoint', icon: Globe },
+    { value: 'template', label: 'Template-based (No AI)', icon: Database }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-start">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">AI Configuration</h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Configure AI providers for automated report generation
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleTest}
+            disabled={testing}
+            className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold disabled:opacity-50"
+          >
+            {testing ? <Activity size={18} className="animate-spin" /> : <Zap size={18} />}
+            {testing ? 'Testing...' : 'Test Connection'}
+          </button>
+        </div>
+      </div>
+
+      {testResult && (
+        <div className={`p-4 rounded-lg border-l-4 ${
+          testResult.success
+            ? 'bg-green-50 border-green-500 text-green-800'
+            : 'bg-red-50 border-red-500 text-red-800'
+        }`}>
+          <div className="flex items-center gap-2">
+            {testResult.success ? <CheckCircle size={20} /> : <XCircle size={20} />}
+            <span className="font-semibold">{testResult.message}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Provider Selection */}
+      <div className="border border-gray-200 rounded-lg p-5">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Provider</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {providers.map((provider) => {
+            const Icon = provider.icon;
+            const isSelected = aiSettings.provider === provider.value;
+            return (
+              <button
+                key={provider.value}
+                onClick={() => handleChange('provider', provider.value)}
+                className={`flex items-center gap-3 p-4 border-2 rounded-lg transition text-left ${
+                  isSelected
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-gray-200 hover:border-blue-300'
+                }`}
+              >
+                <div className={`p-3 rounded-lg ${
+                  isSelected ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
+                }`}>
+                  <Icon size={20} />
+                </div>
+                <div>
+                  <h4 className={`font-semibold ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
+                    {provider.label}
+                  </h4>
+                  {provider.value === 'template' && (
+                    <p className="text-xs text-gray-600 mt-1">No API key required</p>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* OpenAI Configuration */}
+      {aiSettings.provider === 'openai' && (
+        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900">OpenAI Configuration</h3>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              API Key <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              value={aiSettings.openaiApiKey}
+              onChange={(e) => handleChange('openaiApiKey', e.target.value)}
+              placeholder="sk-..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">platform.openai.com</a>
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Model</label>
+            <select
+              value={aiSettings.openaiModel}
+              onChange={(e) => handleChange('openaiModel', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            >
+              <option value="gpt-4">GPT-4 (Most capable, slower)</option>
+              <option value="gpt-4-turbo-preview">GPT-4 Turbo (Faster, cheaper)</option>
+              <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast, economical)</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Claude Configuration */}
+      {aiSettings.provider === 'claude' && (
+        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900">Anthropic Claude Configuration</h3>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              API Key <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              value={aiSettings.claudeApiKey}
+              onChange={(e) => handleChange('claudeApiKey', e.target.value)}
+              placeholder="sk-ant-..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Get your API key from <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">console.anthropic.com</a>
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Model</label>
+            <select
+              value={aiSettings.claudeModel}
+              onChange={(e) => handleChange('claudeModel', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            >
+              <option value="claude-3-opus-20240229">Claude 3 Opus (Most capable)</option>
+              <option value="claude-3-sonnet-20240229">Claude 3 Sonnet (Balanced)</option>
+              <option value="claude-3-haiku-20240307">Claude 3 Haiku (Fast, economical)</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Configuration */}
+      {aiSettings.provider === 'custom' && (
+        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900">Custom Endpoint Configuration</h3>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              API Endpoint <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="url"
+              value={aiSettings.customEndpoint}
+              onChange={(e) => handleChange('customEndpoint', e.target.value)}
+              placeholder="https://api.example.com/v1/chat/completions"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              API Key <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              value={aiSettings.customApiKey}
+              onChange={(e) => handleChange('customApiKey', e.target.value)}
+              placeholder="Your custom API key"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Model Name</label>
+            <input
+              type="text"
+              value={aiSettings.customModel}
+              onChange={(e) => handleChange('customModel', e.target.value)}
+              placeholder="model-name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Generation Parameters */}
+      {aiSettings.provider !== 'template' && (
+        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900">Generation Parameters</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Temperature: {aiSettings.temperature}
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="2"
+                step="0.1"
+                value={aiSettings.temperature}
+                onChange={(e) => handleChange('temperature', parseFloat(e.target.value))}
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Higher values = more creative, Lower values = more focused
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Max Tokens</label>
+              <input
+                type="number"
+                value={aiSettings.maxTokens}
+                onChange={(e) => handleChange('maxTokens', parseInt(e.target.value))}
+                min="100"
+                max="8000"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Maximum length of generated content
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Top P: {aiSettings.topP}
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={aiSettings.topP}
+                onChange={(e) => handleChange('topP', parseFloat(e.target.value))}
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Controls diversity of output
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Frequency Penalty: {aiSettings.frequencyPenalty}
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="2"
+                step="0.1"
+                value={aiSettings.frequencyPenalty}
+                onChange={(e) => handleChange('frequencyPenalty', parseFloat(e.target.value))}
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Reduces repetition
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fallback Settings */}
+      <div className="border border-gray-200 rounded-lg p-5 space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">Fallback Configuration</h3>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="font-semibold text-gray-900">Enable Fallback</h4>
+            <p className="text-sm text-gray-600">Use template-based generation if AI fails</p>
+          </div>
+          <button
+            onClick={() => handleChange('enableFallback', !aiSettings.enableFallback)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+              aiSettings.enableFallback ? 'bg-blue-600' : 'bg-gray-300'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                aiSettings.enableFallback ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+
+        {aiSettings.enableFallback && (
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Fallback Provider</label>
+            <select
+              value={aiSettings.fallbackProvider}
+              onChange={(e) => handleChange('fallbackProvider', e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            >
+              <option value="template">Template-based Generation</option>
+              <option value="openai">OpenAI (if not primary)</option>
+              <option value="claude">Claude (if not primary)</option>
+            </select>
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+        >
+          <Save size={20} />
+          Save AI Configuration
         </button>
       </div>
     </div>

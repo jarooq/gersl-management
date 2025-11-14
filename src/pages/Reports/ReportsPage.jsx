@@ -14,7 +14,11 @@ import { usePartners } from '../../contexts/PartnersContext';
 import { useMEAL } from '../../contexts/MEALContext';
 import { useCompliance } from '../../contexts/ComplianceContext';
 import { useGrantReceivables } from '../../contexts/GrantReceivablesContext';
+import { useReports } from '../../contexts/ReportContext';
+import { useProposals } from '../../contexts/ProposalsContext';
 import { exportReport } from '../../utils/reportExport';
+import ReportGenerator from '../../components/reports/ReportGenerator';
+import ReportsList from '../../components/reports/ReportsList';
 
 const ReportsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -25,10 +29,15 @@ const ReportsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFormat, setSelectedFormat] = useState('PDF');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProposal, setSelectedProposal] = useState(null);
+  const [sourceType, setSourceType] = useState('project');
 
   // Context data
   const finance = useFinance();
   const projects = useProjects();
+  const aiReports = useReports();
+  const proposals = useProposals();
   const orphans = useOrphans();
   const hr = useHR();
   const partners = usePartners();
@@ -401,6 +410,7 @@ const ReportsPage = () => {
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'catalog', label: 'Report Catalog', icon: FileBarChart },
               { id: 'reports', label: 'Generated Reports', icon: FileText },
+              { id: 'ai-reports', label: 'AI Reports', icon: Zap },
               { id: 'scheduled', label: 'Scheduled', icon: Calendar }
             ].map(tab => (
               <button
@@ -759,6 +769,163 @@ const ReportsPage = () => {
                     ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* AI Reports Tab */}
+          {activeTab === 'ai-reports' && (
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border-2 border-purple-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center">
+                    <Zap size={24} className="text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">AI-Powered Report Generation</h2>
+                    <p className="text-sm text-gray-600">Generate professional narrative reports using AI</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 mb-4">
+                  Create comprehensive donor reports, progress reports, completion reports, and more with AI assistance.
+                  Reports are generated based on your project or proposal data and can be exported in multiple formats.
+                </p>
+                <div className="flex gap-2">
+                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">7 Report Types</span>
+                  <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold">AI-Powered</span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">5 Export Formats</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Source Selection */}
+                <div className="lg:col-span-1">
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Source</h3>
+
+                    {/* Source Type Toggle */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Source Type
+                      </label>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            setSourceType('project');
+                            setSelectedProposal(null);
+                          }}
+                          className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
+                            sourceType === 'project'
+                              ? 'bg-indigo-600 text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          Project
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSourceType('proposal');
+                            setSelectedProject(null);
+                          }}
+                          className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
+                            sourceType === 'proposal'
+                              ? 'bg-indigo-600 text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          Proposal
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Project Selection */}
+                    {sourceType === 'project' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Select Project
+                        </label>
+                        {projects.projects && projects.projects.length > 0 ? (
+                          <div className="space-y-2 max-h-96 overflow-y-auto">
+                            {projects.projects.map((project) => (
+                              <div
+                                key={project.id}
+                                onClick={() => setSelectedProject(project)}
+                                className={`p-3 border rounded cursor-pointer transition-colors ${
+                                  selectedProject?.id === project.id
+                                    ? 'border-indigo-600 bg-indigo-50'
+                                    : 'border-gray-200 hover:border-indigo-300'
+                                }`}
+                              >
+                                <p className="font-medium text-sm text-gray-800">{project.name}</p>
+                                {project.donor && (
+                                  <p className="text-xs text-gray-600 mt-1">{project.donor}</p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-500 text-center py-4">
+                            No projects available
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Proposal Selection */}
+                    {sourceType === 'proposal' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Select Proposal
+                        </label>
+                        {proposals.proposals && proposals.proposals.length > 0 ? (
+                          <div className="space-y-2 max-h-96 overflow-y-auto">
+                            {proposals.proposals.map((proposal) => (
+                              <div
+                                key={proposal.id}
+                                onClick={() => setSelectedProposal(proposal)}
+                                className={`p-3 border rounded cursor-pointer transition-colors ${
+                                  selectedProposal?.id === proposal.id
+                                    ? 'border-indigo-600 bg-indigo-50'
+                                    : 'border-gray-200 hover:border-indigo-300'
+                                }`}
+                              >
+                                <p className="font-medium text-sm text-gray-800">{proposal.title}</p>
+                                {proposal.donor && (
+                                  <p className="text-xs text-gray-600 mt-1">{proposal.donor}</p>
+                                )}
+                                <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded ${
+                                  proposal.status === 'Approved' ? 'bg-green-100 text-green-700' :
+                                  proposal.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                  'bg-gray-100 text-gray-700'
+                                }`}>
+                                  {proposal.status}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-500 text-center py-4">
+                            No proposals available
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Report Generator */}
+                <div className="lg:col-span-2">
+                  <ReportGenerator
+                    project={selectedProject}
+                    proposal={selectedProposal}
+                    onReportGenerated={() => {}}
+                  />
+                </div>
+              </div>
+
+              {/* Generated AI Reports */}
+              <div>
+                <ReportsList />
+              </div>
             </div>
           )}
 

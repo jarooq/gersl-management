@@ -7,6 +7,8 @@ import {
 import { useOrphans } from '../../../contexts/OrphanContext';
 import AssignCoordinatorModal from './AssignCoordinatorModal';
 import AssignDonorModal from './AssignDonorModal';
+import VisitsTab from './VisitsTab';
+import ReportsTab from './ReportsTab';
 
 const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
   const [activeTab, setActiveTab] = useState('personal');
@@ -23,6 +25,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
     { id: 'social', label: 'Social & Living', icon: Home },
     { id: 'health', label: 'Health', icon: Stethoscope },
     { id: 'visits', label: 'Visit Log', icon: Calendar },
+    { id: 'reports', label: 'Reports', icon: FileText },
     { id: 'support', label: 'Support Log', icon: Package }
   ];
 
@@ -711,7 +714,8 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
           {activeTab === 'education' && <EducationTab orphan={orphan} />}
           {activeTab === 'social' && <SocialTab orphan={orphan} />}
           {activeTab === 'health' && <HealthTab orphan={orphan} />}
-          {activeTab === 'visits' && <VisitsTab orphan={orphan} onAddVisit={onAddVisit} />}
+          {activeTab === 'visits' && <VisitsTab orphan={orphan} />}
+          {activeTab === 'reports' && <ReportsTab orphan={orphan} />}
           {activeTab === 'support' && <SupportLogTab orphan={orphan} onAssignPartner={handleAssignDonor} />}
         </div>
 
@@ -989,74 +993,6 @@ const HealthTab = ({ orphan }) => (
   </div>
 );
 
-// Visit Log Tab
-const VisitsTab = ({ orphan, onAddVisit }) => (
-  <div className="space-y-6">
-    <div className="flex justify-between items-center">
-      <SectionHeader icon={Calendar} title={`Visit History (${orphan.visits?.length || 0} visits)`} />
-      <button
-        onClick={() => onAddVisit(orphan)}
-        className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-lg hover:from-pink-600 hover:to-rose-700 transition text-sm font-semibold shadow-md"
-      >
-        Add Visit
-      </button>
-    </div>
-
-    {orphan.visits && orphan.visits.length > 0 ? (
-      <div className="space-y-4">
-        {orphan.visits.map((visit, index) => (
-          <div key={visit.id || index} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <p className="font-bold text-lg text-gray-900">{visit.date}</p>
-                <p className="text-sm text-gray-600">Coordinator: {visit.coordinator}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1.5 bg-pink-100 text-pink-800 rounded-full text-xs font-bold">
-                  {visit.photos || 0} photos
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              <VisitMetric label="Academic" value={visit.academic} color="blue" />
-              <VisitMetric label="Attendance" value={`${visit.attendance}%`} color="green" />
-              <VisitMetric label="Spiritual" value={visit.spiritual} color="purple" />
-              <VisitMetric label="Health" value={visit.health} color="red" />
-            </div>
-
-            {visit.socialBehavior && (
-              <div className="mb-3">
-                <p className="text-xs text-gray-500 uppercase mb-1">Social Behavior</p>
-                <p className="text-sm font-semibold text-gray-900">{visit.socialBehavior}</p>
-              </div>
-            )}
-
-            {visit.remarks && (
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <p className="text-xs text-gray-500 uppercase mb-2">Remarks</p>
-                <p className="text-sm text-gray-700">{visit.remarks}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div className="text-center py-16 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-        <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-        <p className="text-gray-900 font-semibold mb-1">No visits recorded yet</p>
-        <p className="text-gray-500 text-sm mb-4">Start tracking visits to monitor progress</p>
-        <button
-          onClick={() => onAddVisit(orphan)}
-          className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition text-sm font-semibold"
-        >
-          Add First Visit
-        </button>
-      </div>
-    )}
-  </div>
-);
-
 // Support Log Tab
 const SupportLogTab = ({ orphan, onAssignPartner }) => {
   // Get partner-wise support data
@@ -1315,21 +1251,5 @@ const InfoField = ({ label, value, icon: Icon, fullWidth = false }) => (
     </div>
   </div>
 );
-
-const VisitMetric = ({ label, value, color = 'blue' }) => {
-  const colorClasses = {
-    blue: 'bg-blue-50 text-blue-700 border-blue-200',
-    green: 'bg-green-50 text-green-700 border-green-200',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200',
-    red: 'bg-red-50 text-red-700 border-red-200'
-  };
-
-  return (
-    <div className={`text-center p-3 rounded-lg border ${colorClasses[color]}`}>
-      <p className="text-xs font-medium mb-1">{label}</p>
-      <p className="text-lg font-bold">{value}</p>
-    </div>
-  );
-};
 
 export default OrphanProfile;

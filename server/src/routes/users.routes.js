@@ -1,4 +1,5 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import { requireAuth, requireAdmin } from '../middleware/auth.middleware.js';
 import User from '../models/User.js';
 
@@ -7,6 +8,101 @@ const router = express.Router();
 // ============================================
 // USER MANAGEMENT ROUTES
 // ============================================
+
+// @route   POST /api/users
+// @desc    Create new user
+// @access  Private (Admin only)
+router.post('/', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const { username, email, password, fullName, role, status, department, phone } = req.body;
+
+    // Validation
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username, email, and password are required'
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [{ email }, { username }]
+      }
+    });
+
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.status(409).json({
+          success: false,
+          message: 'Email already registered'
+        });
+      }
+      if (existingUser.username === username) {
+        return res.status(409).json({
+          success: false,
+          message: 'Username already taken'
+        });
+      }
+    }
+
+    // Store plain password before hashing (for email)
+    const plainPassword = password;
+
+    // Create user
+    const user = await User.create({
+      username,
+      email,
+      password, // Will be hashed by User model beforeCreate hook
+      fullName,
+      role: role || 'Guest',
+      status: status || 'Active',
+      department: department || null,  // Set to null if not provided (ENUM field)
+      phone: phone || null
+    });
+
+    // Send welcome email with credentials
+    try {
+      const { sendNewUserEmail } = await import('../utils/emailService.js');
+      await sendNewUserEmail(user.email, user.username, plainPassword);
+      console.log('✅ Welcome email sent to:', user.email);
+    } catch (emailError) {
+      console.error('❌ Failed to send welcome email:', emailError);
+      // Continue anyway - user was created successfully
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully. Welcome email sent with login credentials.',
+      data: {
+        id: user.id,
+        username: user.username,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        department: user.department,
+        phone: user.phone
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error creating user:');
+    console.error('Error message:', error.message);
+    console.error('Error name:', error.name);
+    if (error.parent) {
+      console.error('Database error:', error.parent.message);
+    }
+    if (error.errors) {
+      console.error('Validation errors:', error.errors.map(e => e.message));
+    }
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create user',
+      error: error.message,
+      details: error.errors ? error.errors.map(e => e.message) : undefined
+    });
+  }
+});
 
 // @route   GET /api/users
 // @desc    Get all users

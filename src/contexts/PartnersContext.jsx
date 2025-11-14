@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import API from '../services/api';
 
 const PartnersContext = createContext();
 
@@ -12,34 +13,84 @@ export const usePartners = () => {
 
 export const PartnersProvider = ({ children }) => {
   const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch partners from backend - only when user is authenticated
+  // Removed automatic loading to prevent 401 errors when not logged in
+  // Data will be loaded by pages when they mount
+  // useEffect(() => {
+  //   const fetchPartners = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const data = await API.Partner.getAll();
+  //       setPartners(data.partners || []);
+  //       setError(null);
+  //     } catch (err) {
+  //       console.error('Error fetching partners:', err);
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //
+  //   fetchPartners();
+  // }, []);
+
+  // Manual fetch function for pages to call
+  const fetchPartners = async () => {
+    try {
+      setLoading(true);
+      const data = await API.Partner.getAll();
+      setPartners(data.partners || []);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching partners:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [contributions, setContributions] = useState([]);
 
   const [communications, setCommunications] = useState([]);
 
   // CRUD Operations for Partners
-  const addPartner = (partnerData) => {
-    const newPartner = {
-      ...partnerData,
-      id: partners.length + 1,
-      partnerCode: `PTR${String(partners.length + 1).padStart(3, '0')}`,
-      totalContributions: 0,
-      lastContribution: null
-    };
-    setPartners([...partners, newPartner]);
-    return newPartner;
+  const addPartner = async (partnerData) => {
+    try {
+      const newPartner = await API.Partner.create(partnerData);
+      setPartners([...partners, newPartner]);
+      return newPartner;
+    } catch (err) {
+      console.error('Error adding partner:', err);
+      throw err;
+    }
   };
 
-  const updatePartner = (id, updatedData) => {
-    setPartners(partners.map(partner =>
-      partner.id === id ? { ...partner, ...updatedData } : partner
-    ));
+  const updatePartner = async (id, updatedData) => {
+    try {
+      const updatedPartner = await API.Partner.update(id, updatedData);
+      setPartners(partners.map(partner =>
+        partner.id === id ? updatedPartner : partner
+      ));
+      return updatedPartner;
+    } catch (err) {
+      console.error('Error updating partner:', err);
+      throw err;
+    }
   };
 
-  const deletePartner = (id) => {
-    setPartners(partners.filter(partner => partner.id !== id));
-    setContributions(contributions.filter(contribution => contribution.partnerId !== id));
-    setCommunications(communications.filter(comm => comm.partnerId !== id));
+  const deletePartner = async (id) => {
+    try {
+      await API.Partner.delete(id);
+      setPartners(partners.filter(partner => partner.id !== id));
+      setContributions(contributions.filter(contribution => contribution.partnerId !== id));
+      setCommunications(communications.filter(comm => comm.partnerId !== id));
+    } catch (err) {
+      console.error('Error deleting partner:', err);
+      throw err;
+    }
   };
 
   // Contribution Operations
@@ -154,6 +205,9 @@ export const PartnersProvider = ({ children }) => {
     partners,
     contributions,
     communications,
+    loading,
+    error,
+    fetchPartners,
     addPartner,
     updatePartner,
     deletePartner,

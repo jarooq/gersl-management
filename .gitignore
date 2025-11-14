@@ -47,3 +47,6 @@ public/uploads/
 *.sln
 *.sw?
 .vercel
+
+# Local Netlify folder
+.netlify

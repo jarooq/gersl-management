@@ -781,12 +781,13 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/proposals', {
+      const response = await fetch('http://localhost:3001/api/proposals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
+        credentials: 'include',  // Include cookies for authentication
         body: JSON.stringify({
           ...formData,
           budgetRequested: parseFloat(formData.budgetRequested),

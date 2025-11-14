@@ -3,32 +3,33 @@
 // ============================================
 // Centralized API communication with backend
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-const API_TIMEOUT = import.meta.env.VITE_API_TIMEOUT || 30000;
+// Use environment variable for API URL, fallback to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_TIMEOUT = 30000;
 
-// Log API URL for debugging (only in development)
+// Log API URL for debugging (development only)
 if (import.meta.env.DEV) {
   console.log('🔗 API Base URL:', API_BASE_URL);
-  console.log('📝 Environment Variables:', {
-    VITE_API_URL: import.meta.env.VITE_API_URL,
-    VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL
-  });
+  console.log('📝 Environment:', import.meta.env.MODE);
+  console.log('📝 VITE_API_URL:', import.meta.env.VITE_API_URL);
 }
 
 // ============================================
-// TOKEN MANAGEMENT
+// TOKEN MANAGEMENT (DEPRECATED - Now using httpOnly cookies)
 // ============================================
+// NOTE: Tokens are now stored in httpOnly cookies for security.
+// This TokenManager is kept for backward compatibility only.
+// To fully remove localStorage tokens, users should logout and login again.
 
 export const TokenManager = {
-  getAccessToken: () => localStorage.getItem('accessToken'),
-  getRefreshToken: () => localStorage.getItem('refreshToken'),
+  getAccessToken: () => null, // Tokens now in httpOnly cookies
+  getRefreshToken: () => null, // Tokens now in httpOnly cookies
   setTokens: (accessToken, refreshToken) => {
-    localStorage.setItem('accessToken', accessToken);
-    if (refreshToken) {
-      localStorage.setItem('refreshToken', refreshToken);
-    }
+    // No-op: Tokens are set via httpOnly cookies by the backend
+    console.warn('⚠️ TokenManager.setTokens is deprecated. Tokens are now managed via httpOnly cookies.');
   },
   clearTokens: () => {
+    // Clear localStorage for backward compatibility
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('currentUser');
@@ -71,6 +72,17 @@ const handleResponse = async (response) => {
   if (!response.ok) {
     const message = data?.message || 'An error occurred';
     const errors = data?.errors || null;
+
+    // Only log errors that aren't expected 404s for disabled features
+    if (!(response.status === 404 && response.url.includes('orphan-needs'))) {
+      console.error('❌ API Error:', {
+        url: response.url,
+        status: response.status,
+        message,
+        errors
+      });
+    }
+
     throw new APIError(message, response.status, errors);
   }
 
@@ -79,20 +91,16 @@ const handleResponse = async (response) => {
 
 const request = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
-  const accessToken = TokenManager.getAccessToken();
 
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
 
-  if (accessToken) {
-    headers.Authorization = `Bearer ${accessToken}`;
-  }
-
   const config = {
     ...options,
     headers,
+    credentials: 'include', // Include httpOnly cookies in requests
   };
 
   try {
@@ -100,13 +108,11 @@ const request = async (endpoint, options = {}) => {
     return await handleResponse(response);
   } catch (error) {
     // Handle token expiration
-    if (error.status === 401 && accessToken) {
-      // Try to refresh token
+    if (error.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/refresh')) {
+      // Try to refresh token (only if not already on login/refresh endpoints)
       try {
         await AuthAPI.refreshToken();
         // Retry original request
-        const newToken = TokenManager.getAccessToken();
-        config.headers.Authorization = `Bearer ${newToken}`;
         const retryResponse = await fetchWithTimeout(url, config);
         return await handleResponse(retryResponse);
       } catch (refreshError) {
@@ -130,7 +136,9 @@ export const AuthAPI = {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
-    TokenManager.setTokens(data.data.accessToken, data.data.refreshToken);
+    // Tokens are now set via httpOnly cookies by the backend
+    // Clear any old localStorage tokens for migration
+    TokenManager.clearTokens();
     return data.data;
   },
 
@@ -139,7 +147,9 @@ export const AuthAPI = {
       method: 'POST',
       body: JSON.stringify(userData),
     });
-    TokenManager.setTokens(data.data.accessToken, data.data.refreshToken);
+    // Tokens are now set via httpOnly cookies by the backend
+    // Clear any old localStorage tokens for migration
+    TokenManager.clearTokens();
     return data.data;
   },
 
@@ -147,24 +157,17 @@ export const AuthAPI = {
     try {
       await request('/auth/logout', { method: 'POST' });
     } finally {
+      // Clear any old localStorage tokens
       TokenManager.clearTokens();
     }
   },
 
   refreshToken: async () => {
-    const refreshToken = TokenManager.getRefreshToken();
-    if (!refreshToken) {
-      throw new Error('No refresh token available');
-    }
-
+    // Refresh token is now read from httpOnly cookie by the backend
     const data = await request('/auth/refresh', {
       method: 'POST',
-      body: JSON.stringify({ refreshToken }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
-    TokenManager.setTokens(data.data.accessToken, data.data.refreshToken);
+    // Tokens are refreshed in httpOnly cookies by the backend
     return data.data;
   },
 
@@ -243,6 +246,14 @@ export const OrphanAPI = {
   getByCoordinator: async (coordinatorId) => {
     const data = await request(`/orphans/coordinator/${coordinatorId}`);
     return data.data.orphans;
+  },
+
+  bulkImport: async (orphansData) => {
+    const data = await request('/orphans/bulk-import', {
+      method: 'POST',
+      body: JSON.stringify({ orphans: orphansData }),
+    });
+    return data.data;
   },
 };
 
@@ -384,6 +395,14 @@ export const UsersAPI = {
 
   getById: async (id) => {
     const data = await request(`/users/${id}`);
+    return data.data;
+  },
+
+  create: async (userData) => {
+    const data = await request(`/users`, {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
     return data.data;
   },
 
@@ -581,6 +600,160 @@ export const MEALAPI = {
 };
 
 // ============================================
+// VISIT LOG API
+// ============================================
+
+export const VisitLogAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/visit-logs?${queryString}`);
+    return data.data;
+  },
+
+  getByOrphan: async (orphanId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/visit-logs/orphan/${orphanId}?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/visit-logs/${id}`);
+    return data.data;
+  },
+
+  create: async (visitLogData) => {
+    const data = await request('/visit-logs', {
+      method: 'POST',
+      body: JSON.stringify(visitLogData),
+    });
+    return data.data;
+  },
+
+  update: async (id, visitLogData) => {
+    const data = await request(`/visit-logs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(visitLogData),
+    });
+    return data.data;
+  },
+
+  delete: async (id) => {
+    await request(`/visit-logs/${id}`, { method: 'DELETE' });
+  },
+
+  getByDateRange: async (orphanId, startDate, endDate) => {
+    const params = new URLSearchParams({ startDate, endDate }).toString();
+    const data = await request(`/visit-logs/range/${orphanId}?${params}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// ORPHAN REPORT API
+// ============================================
+
+export const OrphanReportAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/orphan-reports?${queryString}`);
+    return data.data;
+  },
+
+  getByOrphan: async (orphanId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/orphan-reports/orphan/${orphanId}?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/orphan-reports/${id}`);
+    return data.data;
+  },
+
+  create: async (reportData) => {
+    const data = await request('/orphan-reports', {
+      method: 'POST',
+      body: JSON.stringify(reportData),
+    });
+    return data.data;
+  },
+
+  update: async (id, reportData) => {
+    const data = await request(`/orphan-reports/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(reportData),
+    });
+    return data.data;
+  },
+
+  delete: async (id) => {
+    await request(`/orphan-reports/${id}`, { method: 'DELETE' });
+  },
+
+  generateReport: async (id) => {
+    const data = await request(`/orphan-reports/${id}/generate`, {
+      method: 'POST',
+    });
+    return data.data;
+  },
+
+  downloadPDF: async (id) => {
+    const data = await request(`/orphan-reports/${id}/pdf`);
+    return data.data;
+  },
+};
+
+// ============================================
+// ORPHAN NEED API
+// ============================================
+
+export const OrphanNeedAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/orphan-needs?${queryString}`);
+    return data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/orphan-needs/${id}`);
+    return data.data;
+  },
+
+  getSummary: async () => {
+    const data = await request('/orphan-needs/summary');
+    return data.data;
+  },
+
+  create: async (needData) => {
+    const data = await request('/orphan-needs', {
+      method: 'POST',
+      body: JSON.stringify(needData),
+    });
+    return data.data;
+  },
+
+  update: async (id, needData) => {
+    const data = await request(`/orphan-needs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(needData),
+    });
+    return data.data;
+  },
+
+  approve: async (id, approved) => {
+    const data = await request(`/orphan-needs/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ approved }),
+    });
+    return data.data;
+  },
+
+  delete: async (id) => {
+    await request(`/orphan-needs/${id}`, { method: 'DELETE' });
+  },
+};
+
+// ============================================
 // UPLOAD API
 // ============================================
 
@@ -689,10 +862,205 @@ export const ApprovalAPI = {
 // HEALTH CHECK
 // ============================================
 
+export const BeneficiaryAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/beneficiaries?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/beneficiaries/${id}`);
+    return data.data;
+  },
+
+  checkDuplicate: async (nic) => {
+    const data = await request(`/beneficiaries/check-duplicate?nic=${nic}`);
+    return data.data;
+  },
+
+  create: async (beneficiaryData) => {
+    const data = await request('/beneficiaries', {
+      method: 'POST',
+      body: JSON.stringify(beneficiaryData),
+    });
+    return data.data.beneficiary;
+  },
+
+  update: async (id, beneficiaryData) => {
+    const data = await request(`/beneficiaries/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(beneficiaryData),
+    });
+    return data.data.beneficiary;
+  },
+
+  delete: async (id) => {
+    await request(`/beneficiaries/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/beneficiaries/stats?${queryString}`);
+    return data.data;
+  },
+
+  getDistricts: async () => {
+    const data = await request('/beneficiaries/districts');
+    return data.data.districts;
+  },
+
+  getDivisions: async (district) => {
+    const data = await request(`/beneficiaries/divisions?district=${district}`);
+    return data.data.divisions;
+  },
+
+  getGNDivisions: async (dsDivision) => {
+    const data = await request(`/beneficiaries/gn-divisions?ds_division=${dsDivision}`);
+    return data.data.gn_divisions;
+  },
+
+  bulkImport: async (beneficiariesData) => {
+    const data = await request('/beneficiaries/bulk-import', {
+      method: 'POST',
+      body: JSON.stringify({ beneficiaries: beneficiariesData }),
+    });
+    return data.data;
+  },
+};
+
+// ============================================
+// BENEFICIARY SUPPORT API
+// ============================================
+
+export const BeneficiarySupportAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/beneficiary-support?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/beneficiary-support/${id}`);
+    return data.data.support;
+  },
+
+  getBeneficiaryHistory: async (beneficiaryId) => {
+    const data = await request(`/beneficiary-support/beneficiary/${beneficiaryId}`);
+    return data.data;
+  },
+
+  create: async (supportData) => {
+    const data = await request('/beneficiary-support', {
+      method: 'POST',
+      body: JSON.stringify(supportData),
+    });
+    return data.data.support;
+  },
+
+  update: async (id, supportData) => {
+    const data = await request(`/beneficiary-support/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(supportData),
+    });
+    return data.data.support;
+  },
+
+  delete: async (id) => {
+    await request(`/beneficiary-support/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/beneficiary-support/stats?${queryString}`);
+    return data.data;
+  },
+
+  generateReport: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/beneficiary-support/report?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// HEALTH CHECK API
+// ============================================
+
 export const HealthAPI = {
   check: async () => {
     const response = await fetch(`${API_BASE_URL.replace('/api', '')}/health`);
     return await response.json();
+  },
+};
+
+// ============================================
+// AI PROPOSAL ASSISTANT API
+// ============================================
+
+export const AIAPI = {
+  checkStatus: async () => {
+    return await request('/ai/status');
+  },
+
+  generateProposal: async (idea) => {
+    return await request('/ai/generate-proposal', {
+      method: 'POST',
+      body: JSON.stringify({ idea }),
+    });
+  },
+};
+
+// ============================================
+// PROPOSAL API
+// ============================================
+
+export const ProposalAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/proposals?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/proposals/${id}`);
+    return data.data.proposal;
+  },
+
+  create: async (proposalData) => {
+    const data = await request('/proposals', {
+      method: 'POST',
+      body: JSON.stringify(proposalData),
+    });
+    return data.data.proposal;
+  },
+
+  update: async (id, proposalData) => {
+    const data = await request(`/proposals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(proposalData),
+    });
+    return data.data.proposal;
+  },
+
+  delete: async (id) => {
+    await request(`/proposals/${id}`, { method: 'DELETE' });
+  },
+
+  updateStatus: async (id, status, comments = '') => {
+    const data = await request(`/proposals/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, comments }),
+    });
+    return data.data.proposal;
+  },
+
+  linkProject: async (id, projectId) => {
+    const data = await request(`/proposals/${id}/link-project`, {
+      method: 'PATCH',
+      body: JSON.stringify({ projectId }),
+    });
+    return data.data.proposal;
   },
 };
 
@@ -704,6 +1072,9 @@ const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
   Orphan: OrphanAPI,
+  OrphanNeed: OrphanNeedAPI,
+  VisitLog: VisitLogAPI,
+  OrphanReport: OrphanReportAPI,
   Project: ProjectAPI,
   Finance: FinanceAPI,
   HR: HRAPI,
@@ -713,6 +1084,10 @@ const API = {
   Upload: UploadAPI,
   Approval: ApprovalAPI,
   Health: HealthAPI,
+  Beneficiary: BeneficiaryAPI,
+  BeneficiarySupport: BeneficiarySupportAPI,
+  AI: AIAPI,
+  Proposal: ProposalAPI,
   TokenManager,
 };
 

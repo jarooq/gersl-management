@@ -12,6 +12,7 @@ import {
   Upload,
   FileText
 } from 'lucide-react';
+import { getDSDivisionsByDistrict, getGNDivisionsByDSDivision, getAllDistricts } from '../../../data/sriLankanDivisions';
 
 const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
   const { addOrphan, updateOrphan, orphans } = useOrphans();
@@ -93,6 +94,8 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
 
   const [errors, setErrors] = useState({});
   const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
+  const [divisions, setDivisions] = useState([]);
+  const [gnDivisions, setGNDivisions] = useState([]);
 
   // Auto-generate Orphan ID when form opens (for add mode) or populate data (for edit mode)
   useEffect(() => {
@@ -168,12 +171,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
     }
   }, [isOpen, orphans, isEditMode, orphanToEdit]);
 
-  const districts = [
-    'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Trincomalee', 'Batticaloa', 'Ampara',
-    'Puttalam', 'Kurunegala', 'Anuradhapura', 'Polonnaruwa', 'Badulla', 'Ratnapura',
-    'Kegalle', 'Gampaha', 'Kalutara', 'Matara', 'Hambantota', 'Vavuniya', 'Mullaitivu',
-    'Kilinochchi', 'Mannar', 'Matale', 'Nuwara Eliya', 'Monaragala'
-  ];
+  const districts = getAllDistricts();
 
   const grades = [
     'Pre-School', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5',
@@ -199,6 +197,40 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
     // Clear error when field is updated
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleDistrictChange = (e) => {
+    const district = e.target.value;
+    setFormData({
+      ...formData,
+      district,
+      dsDivision: '',
+      gnDivision: ''
+    });
+    const dsDivisionList = getDSDivisionsByDistrict(district);
+    setDivisions(dsDivisionList);
+    setGNDivisions([]);
+
+    // Clear error when field is updated
+    if (errors.district) {
+      setErrors(prev => ({ ...prev, district: '' }));
+    }
+  };
+
+  const handleDSDivisionChange = (e) => {
+    const dsDivision = e.target.value;
+    setFormData({
+      ...formData,
+      dsDivision,
+      gnDivision: ''
+    });
+    const gnDivisionList = getGNDivisionsByDSDivision(formData.district, dsDivision);
+    setGNDivisions(gnDivisionList);
+
+    // Clear error when field is updated
+    if (errors.dsDivision) {
+      setErrors(prev => ({ ...prev, dsDivision: '' }));
     }
   };
 
@@ -410,7 +442,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   <select
                     name="district"
                     value={formData.district}
-                    onChange={handleChange}
+                    onChange={handleDistrictChange}
                     className={`input-modern ${errors.district ? 'border-red-500' : ''}`}
                   >
                     <option value="">Select District</option>
@@ -443,26 +475,34 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">DS Division</label>
+                  <select
+                    name="dsDivision"
+                    value={formData.dsDivision}
+                    onChange={handleDSDivisionChange}
+                    disabled={!formData.district}
+                    className="input-modern disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  >
+                    <option value="">Select DS Division</option>
+                    {divisions.map(division => (
+                      <option key={division} value={division}>{division}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">GN Division</label>
-                  <input
-                    type="text"
+                  <select
                     name="gnDivision"
                     value={formData.gnDivision}
                     onChange={handleChange}
-                    className="input-modern"
-                    placeholder="Enter GN Division"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">DS Division</label>
-                  <input
-                    type="text"
-                    name="dsDivision"
-                    value={formData.dsDivision}
-                    onChange={handleChange}
-                    className="input-modern"
-                    placeholder="Enter DS Division"
-                  />
+                    disabled={!formData.dsDivision}
+                    className="input-modern disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  >
+                    <option value="">Select GN Division</option>
+                    {gnDivisions.map(gnDivision => (
+                      <option key={gnDivision} value={gnDivision}>{gnDivision}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>

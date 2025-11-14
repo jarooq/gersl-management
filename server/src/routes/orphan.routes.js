@@ -7,7 +7,8 @@ import {
   deleteOrphan,
   approveOrphan,
   getOrphanStats,
-  getOrphansByCoordinator
+  getOrphansByCoordinator,
+  bulkImportOrphans
 } from '../controllers/orphan.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
@@ -63,6 +64,17 @@ router.post(
   requirePermission(PERMISSIONS.ORPHANS_CREATE),
   sanitizeBody,
   createOrphan
+);
+
+// @route   POST /api/orphans/bulk-import
+// @desc    Bulk import orphans from Excel/CSV
+// @access  Private (Create permission)
+router.post(
+  '/bulk-import',
+  requireAuth,
+  requirePermission(PERMISSIONS.ORPHANS_CREATE),
+  sanitizeBody,
+  bulkImportOrphans
 );
 
 // @route   GET /api/orphans/:id

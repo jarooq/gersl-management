@@ -14,7 +14,9 @@ import sequelize, { testConnection, syncDatabase } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
 import usersRoutes from './routes/users.routes.js';
 import orphanRoutes from './routes/orphan.routes.js';
+// import orphanNeedRoutes from './routes/orphanNeed.routes.js'; // Temporarily disabled
 import projectRoutes from './routes/project.routes.js';
+import proposalRoutes from './routes/proposal.routes.js';
 import financeRoutes from './routes/finance.routes.js';
 import hrRoutes from './routes/hr.routes.js';
 import cboRoutes from './routes/cbo.routes.js';
@@ -22,6 +24,11 @@ import partnerRoutes from './routes/partner.routes.js';
 import mealRoutes from './routes/meal.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import approvalRoutes from './routes/approvalRoutes.js';
+import reportRoutes from './routes/report.routes.js';
+import visitLogRoutes from './routes/visitLog.routes.js';
+import beneficiaryRoutes from './routes/beneficiary.routes.js';
+import beneficiarySupportRoutes from './routes/beneficiarySupport.routes.js';
+import aiRoutes from './routes/ai.routes.js';
 
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
@@ -46,6 +53,7 @@ app.use(helmet({
 // CORS configuration - Allow multiple origins
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://localhost:5174',
   'http://localhost:3000',
   'https://gersl-management-jarooqs-projects.vercel.app',
   'https://gersl-management.vercel.app',
@@ -117,7 +125,9 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/orphans', orphanRoutes);
+// app.use('/api/orphan-needs', orphanNeedRoutes); // Temporarily disabled
 app.use('/api/projects', projectRoutes);
+app.use('/api/proposals', proposalRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/hr', hrRoutes);
 app.use('/api/cbo', cboRoutes);
@@ -125,6 +135,11 @@ app.use('/api/partners', partnerRoutes);
 app.use('/api/meal', mealRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/approvals', approvalRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/visit-logs', visitLogRoutes);
+app.use('/api/beneficiaries', beneficiaryRoutes);
+app.use('/api/beneficiary-support', beneficiarySupportRoutes);
+app.use('/api/ai', aiRoutes);
 
 // 404 handler
 app.use(notFound);
@@ -147,7 +162,8 @@ const startServer = async () => {
     }
 
     // Sync database in development
-    if (process.env.NODE_ENV === 'development') {
+    // Temporarily disabled to skip sync issues - tables already exist in DB
+    if (process.env.NODE_ENV === 'development' && process.env.ENABLE_DB_SYNC === 'true') {
       await syncDatabase({ alter: true });
     }
 

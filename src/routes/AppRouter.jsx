@@ -47,6 +47,7 @@ const CampaignsPage = lazy(() => import('../pages/Campaigns/CampaignsPage'));
 const DonationsPage = lazy(() => import('../pages/Campaigns/DonationsPage'));
 const JobPostingsPage = lazy(() => import('../pages/Campaigns/JobPostingsPage'));
 const VendorCallsPage = lazy(() => import('../pages/Campaigns/VendorCallsPage'));
+const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 
 // Loading component
 const PageLoader = () => (
@@ -210,6 +211,16 @@ const AppRouter = () => {
               <PermissionRoute permission={PERMISSIONS.ORPHANS_VIEW}>
                 <Suspense fallback={<PageLoader />}>
                   <OrphansPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="beneficiaries"
+            element={
+              <PermissionRoute permission={PERMISSIONS.BENEFICIARIES_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <BeneficiariesPage />
                 </Suspense>
               </PermissionRoute>
             }
@@ -430,6 +441,16 @@ const AppRouter = () => {
             path="settings"
             element={
               <PermissionRoute permission={PERMISSIONS.SETTINGS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <SettingsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="system-settings"
+            element={
+              <PermissionRoute permission={PERMISSIONS.SETTINGS_MANAGE}>
                 <Suspense fallback={<PageLoader />}>
                   <SystemSettingsPage />
                 </Suspense>

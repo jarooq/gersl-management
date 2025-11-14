@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { OrphanProvider } from './contexts/OrphanContext';
 import { ProjectProvider } from './contexts/ProjectContext';
@@ -16,45 +16,62 @@ import { DeferredRevenueProvider } from './contexts/DeferredRevenueContext';
 import { CampaignProvider } from './contexts/CampaignContext';
 import { SponsorshipProvider } from './contexts/SponsorshipContext';
 import { ApprovalProvider } from './contexts/ApprovalContext';
+import { NotificationProvider } from './contexts/NotificationContext';
+import { ReportProvider } from './contexts/ReportContext';
+import { BeneficiaryProvider } from './contexts/BeneficiaryContext';
+import WorkflowIntegration from './components/workflow/WorkflowIntegration';
 import AppRouter from './routes/AppRouter';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import { initAnalytics } from './utils/analytics';
 
 function App() {
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
   return (
     <ErrorBoundary>
       <AuthProvider>
         <OrphanProvider>
-          <ProjectProvider>
-            <FinanceProvider>
-              <GrantReceivablesProvider>
-                <FixedAssetsProvider>
-                  <DeferredRevenueProvider>
-                    <HRProvider>
-                    <PartnersProvider>
-                      <ProposalsProvider>
-                        <MEALProvider>
-                          <ComplianceProvider>
-                            <SettingsProvider>
-                              <CBOProvider>
-                                <CampaignProvider>
-                                  <SponsorshipProvider>
-                                    <ApprovalProvider>
-                                      <AppRouter />
-                                    </ApprovalProvider>
-                                  </SponsorshipProvider>
-                                </CampaignProvider>
-                              </CBOProvider>
-                            </SettingsProvider>
-                          </ComplianceProvider>
-                        </MEALProvider>
-                      </ProposalsProvider>
-                    </PartnersProvider>
-                  </HRProvider>
-                </DeferredRevenueProvider>
-              </FixedAssetsProvider>
-            </GrantReceivablesProvider>
-          </FinanceProvider>
+          <BeneficiaryProvider>
+            <ProjectProvider>
+              <NotificationProvider>
+                <ReportProvider>
+                <FinanceProvider>
+                  <GrantReceivablesProvider>
+                    <FixedAssetsProvider>
+                      <DeferredRevenueProvider>
+                        <HRProvider>
+                        <PartnersProvider>
+                          <ProposalsProvider>
+                            <MEALProvider>
+                              <ComplianceProvider>
+                                <SettingsProvider>
+                                  <CBOProvider>
+                                    <CampaignProvider>
+                                      <SponsorshipProvider>
+                                        <ApprovalProvider>
+                                          <WorkflowIntegration>
+                                            <AppRouter />
+                                          </WorkflowIntegration>
+                                        </ApprovalProvider>
+                                      </SponsorshipProvider>
+                                    </CampaignProvider>
+                                  </CBOProvider>
+                                </SettingsProvider>
+                              </ComplianceProvider>
+                            </MEALProvider>
+                          </ProposalsProvider>
+                        </PartnersProvider>
+                      </HRProvider>
+                    </DeferredRevenueProvider>
+                  </FixedAssetsProvider>
+                </GrantReceivablesProvider>
+              </FinanceProvider>
+              </ReportProvider>
+            </NotificationProvider>
           </ProjectProvider>
+          </BeneficiaryProvider>
         </OrphanProvider>
       </AuthProvider>
     </ErrorBoundary>

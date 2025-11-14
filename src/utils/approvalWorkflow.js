@@ -116,8 +116,7 @@ export const APPROVAL_TYPES = {
     name: 'Proposal Submission',
     levels: [
       { role: 'FUNDRAISING_MANAGER', threshold: 0 },
-      { role: 'DIRECTOR_PROGRAMMES', threshold: 50000 },
-      { role: 'CEO', threshold: 100000 },
+      { role: 'CEO', threshold: 0 }, // All proposals require CEO approval after Fundraising Manager
     ],
     approvalType: 'proposals',
   },

@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Plus, Heart, Sparkles, BarChart3, PieChart, LineChart, TrendingUp,
-  MapPin, Users, Calendar, Baby, Wallet, AlertCircle, CheckCircle, Clock } from 'lucide-react';
+  MapPin, Users, Calendar, Baby, Wallet, AlertCircle, CheckCircle, Clock, ClipboardList, Upload } from 'lucide-react';
 import { useOrphans } from '../../contexts/OrphanContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { useCBO } from '../../contexts/CBOContext';
@@ -13,6 +13,9 @@ import OrphanFilters from './components/OrphanFilters';
 import VisitForm from './components/VisitForm';
 import StatsCards from './components/StatsCards';
 import AddOrphanForm from './components/AddOrphanForm';
+import NeedsReport from './components/NeedsReport';
+import BulkUploadModal from '../../components/common/BulkUploadModal';
+import { OrphanNeedAPI } from '../../services/api';
 
 const OrphansPage = () => {
   const {
@@ -23,11 +26,28 @@ const OrphansPage = () => {
     getOrphansByDistrict,
     getOrphansByStatus,
     getStats,
-    getDistricts
+    getDistricts,
+    fetchOrphans,
+    bulkImportOrphans
   } = useOrphans();
+
+  // Fetch orphans when component mounts
+  useEffect(() => {
+    fetchOrphans();
+  }, []);
 
   const { cbos } = useCBO();
   const { projects } = useProjects();
+
+  // Performance targets for orphan care metrics
+  const performanceTargets = {
+    orphanCare: {
+      regularVisitsTarget: 80,
+      healthCheckupsTarget: 90,
+      educationSupportTarget: 95,
+      familySupportTarget: 85
+    }
+  };
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterDistrict, setFilterDistrict] = useState('All');
@@ -38,6 +58,8 @@ const OrphansPage = () => {
   const [visitOrphan, setVisitOrphan] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [orphanToEdit, setOrphanToEdit] = useState(null);
+  const [showNeedsReport, setShowNeedsReport] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   const baseStats = getStats();
   const districts = getDistricts();
@@ -104,12 +126,35 @@ const OrphansPage = () => {
     setShowVisitForm(true);
   };
 
-  const handleVisitSubmit = (orphanId, visitData) => {
-    addVisit(orphanId, visitData);
-    // Refresh selected orphan if viewing profile
-    if (selectedOrphan?.id === orphanId) {
-      const updated = orphans.find(o => o.id === orphanId);
-      setSelectedOrphan(updated);
+  const handleVisitSubmit = async (orphanId, visitData) => {
+    try {
+      // Save visit data
+      addVisit(orphanId, visitData);
+
+      // Save any recorded needs to the database
+      if (visitData.currentNeeds && visitData.currentNeeds.length > 0) {
+        for (const need of visitData.currentNeeds) {
+          await OrphanNeedAPI.create({
+            orphanId: orphanId,
+            needType: need.needType,
+            needCategory: need.needCategory,
+            description: need.description,
+            quantity: need.quantity,
+            estimatedCost: need.estimatedCost || null,
+            urgency: need.urgency
+          });
+        }
+        console.log(`✅ ${visitData.currentNeeds.length} need(s) recorded for orphan ${orphanId}`);
+      }
+
+      // Refresh selected orphan if viewing profile
+      if (selectedOrphan?.id === orphanId) {
+        const updated = orphans.find(o => o.id === orphanId);
+        setSelectedOrphan(updated);
+      }
+    } catch (error) {
+      console.error('Error saving visit or needs:', error);
+      alert('Visit saved, but there was an error recording some needs. Please check the needs list.');
     }
   };
 
@@ -130,16 +175,32 @@ const OrphansPage = () => {
                 <p className="text-pink-100 text-sm">Supporting {stats.totalOrphans} children with love and care</p>
               </div>
             </div>
-            <button
-              onClick={() => {
-                setOrphanToEdit(null);
-                setShowAddForm(true);
-              }}
-              className="btn-primary bg-white text-pink-600 hover:bg-pink-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
-            >
-              <Plus size={18} />
-              Add Orphan
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowBulkUpload(true)}
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+              >
+                <Upload size={18} />
+                Bulk Upload
+              </button>
+              <button
+                onClick={() => setShowNeedsReport(true)}
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+              >
+                <ClipboardList size={18} />
+                Needs Report
+              </button>
+              <button
+                onClick={() => {
+                  setOrphanToEdit(null);
+                  setShowAddForm(true);
+                }}
+                className="btn-primary bg-white text-pink-600 hover:bg-pink-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+              >
+                <Plus size={18} />
+                Add Orphan
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -555,6 +616,24 @@ const OrphansPage = () => {
         }}
         orphanToEdit={orphanToEdit}
       />
+
+      {/* Needs Report Modal */}
+      {showNeedsReport && (
+        <NeedsReport onClose={() => setShowNeedsReport(false)} />
+      )}
+
+      {/* Bulk Upload Modal */}
+      {showBulkUpload && (
+        <BulkUploadModal
+          isOpen={showBulkUpload}
+          onClose={() => setShowBulkUpload(false)}
+          type="orphans"
+          title="Bulk Upload Orphans"
+          onUpload={async (validData, progressCallback) => {
+            await bulkImportOrphans(validData, progressCallback);
+          }}
+        />
+      )}
     </div>
   );
 };

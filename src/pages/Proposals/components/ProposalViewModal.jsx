@@ -2,13 +2,244 @@ import React, { useState } from 'react';
 import {
   X, Calendar, DollarSign, Users, Target, MapPin, Building2,
   CheckCircle, AlertCircle, BarChart3, Users2, Shield, FileText,
-  TrendingUp, MessageSquare
+  TrendingUp, MessageSquare, ArrowRight, Loader, Send, Eye, ThumbsUp, ThumbsDown, XCircle
 } from 'lucide-react';
+import { useAuth } from '../../../contexts/AuthContext';
+import API from '../../../services/api';
 
-const ProposalViewModal = ({ proposal, onClose }) => {
+const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const [converting, setConverting] = useState(false);
+  const [conversionSuccess, setConversionSuccess] = useState(false);
+  const [conversionError, setConversionError] = useState('');
+  const [workflowLoading, setWorkflowLoading] = useState(false);
+  const [workflowError, setWorkflowError] = useState('');
+  const [workflowSuccess, setWorkflowSuccess] = useState('');
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [workflowAction, setWorkflowAction] = useState(null);
+  const [comments, setComments] = useState('');
 
   if (!proposal) return null;
+
+  /**
+   * Convert proposal to project
+   * Maps all proposal data to project structure and creates project via API
+   */
+  const handleConvertToProject = async () => {
+    setConverting(true);
+    setConversionError('');
+    setConversionSuccess(false);
+
+    try {
+      // Map proposal data to project data structure
+      const projectData = {
+        // Basic Information
+        projectCode: proposal.proposalCode.replace('PROP', 'PROJ'),
+        projectName: proposal.title,
+        donor: proposal.donor,
+        programmeArea: proposal.programmeArea,
+        district: proposal.district || 'Colombo',
+
+        // Dates
+        startDate: proposal.startDate || new Date().toISOString().split('T')[0],
+        endDate: proposal.endDate || null,
+
+        // Budget & Beneficiaries
+        totalBudget: parseFloat(proposal.budgetRequested),
+        targetBeneficiaries: parseInt(proposal.targetBeneficiaries),
+
+        // Status
+        status: 'Planning',
+        phase: 'Design',
+
+        // Description
+        description: proposal.summary || '',
+
+        // GER Enhanced Fields
+        projectTier: proposal.projectTier || 'Tier 1',
+        sectorTheme: proposal.sectorTheme || proposal.programmeArea,
+        problemStatement: proposal.problemStatement || '',
+        proposedSolution: proposal.proposedSolution || '',
+        overallGoal: proposal.overallGoal || '',
+        strategicAlignment: proposal.strategicAlignment || '',
+
+        // Objectives & Activities
+        objectives: proposal.objectives || [],
+        keyActivities: proposal.keyActivities || [],
+
+        // MEAL Data
+        resultsFramework: proposal.resultsFramework || [],
+        beneficiaryBreakdown: proposal.beneficiaryBreakdown || {
+          directMale: 0,
+          directFemale: 0,
+          directChildren: 0,
+          directPWD: 0,
+          indirectTotal: 0
+        },
+
+        // Theory of Change
+        theoryOfChange: proposal.theoryOfChange || {
+          inputs: [],
+          activities: [],
+          outputs: [],
+          outcomes: [],
+          impact: '',
+          assumptions: [],
+          risks: []
+        },
+
+        // Budget Breakdown
+        budgetBreakdown: proposal.budgetBreakdown || [],
+
+        // Safeguarding
+        safeguarding: proposal.safeguarding || {
+          dataProtection: false,
+          informedConsent: false,
+          childSafeguarding: false,
+          incidentReporting: false,
+          backgroundChecks: false,
+          codeOfConduct: false,
+          safeguardingFocalPerson: '',
+          cfmChannels: []
+        },
+
+        // Metadata
+        convertedFromProposal: true,
+        proposalId: proposal.id,
+        proposalCode: proposal.proposalCode
+      };
+
+      // Create project via API
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch('http://localhost:3001/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(projectData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setConversionSuccess(true);
+        console.log('✅ Proposal converted to project:', result.data.project);
+
+        // Show success message for 2 seconds, then close modal
+        setTimeout(() => {
+          onClose();
+          // Optionally navigate to projects page or show the new project
+          window.location.href = '/projects';
+        }, 2000);
+      } else {
+        throw new Error(result.message || 'Failed to convert proposal to project');
+      }
+    } catch (error) {
+      console.error('❌ Error converting proposal:', error);
+      setConversionError(error.message);
+    } finally {
+      setConverting(false);
+    }
+  };
+
+  /**
+   * Handle workflow status change
+   */
+  const handleStatusChange = async (newStatus, requiresComment = false) => {
+    if (requiresComment) {
+      // Show comment modal for actions that need comments
+      setWorkflowAction({ status: newStatus });
+      setShowCommentModal(true);
+      return;
+    }
+
+    // Direct status change without comment
+    await executeStatusChange(newStatus, '');
+  };
+
+  /**
+   * Execute status change with API call
+   */
+  const executeStatusChange = async (newStatus, comment) => {
+    setWorkflowLoading(true);
+    setWorkflowError('');
+    setWorkflowSuccess('');
+
+    try {
+      const updatedProposal = await API.Proposal.updateStatus(proposal.id, newStatus, comment);
+      setWorkflowSuccess(`Proposal status updated to "${newStatus}"`);
+
+      // Notify parent component to refresh
+      if (onUpdate) {
+        onUpdate(updatedProposal);
+      }
+
+      // Close comment modal if open
+      setShowCommentModal(false);
+      setComments('');
+
+      // Auto-close success message after 3 seconds
+      setTimeout(() => {
+        setWorkflowSuccess('');
+      }, 3000);
+    } catch (error) {
+      console.error('Error updating proposal status:', error);
+      setWorkflowError(error.message || 'Failed to update proposal status');
+    } finally {
+      setWorkflowLoading(false);
+    }
+  };
+
+  /**
+   * Submit comment and execute workflow action
+   */
+  const handleCommentSubmit = () => {
+    if (workflowAction) {
+      executeStatusChange(workflowAction.status, comments);
+    }
+  };
+
+  // Debug logging
+  console.log('ProposalViewModal Debug:', {
+    currentUser,
+    userRole: currentUser?.role,
+    proposalStatus: proposal.status,
+    hasCurrentUser: !!currentUser
+  });
+
+  // Permission checks based on user role and proposal status
+  // Roles that can submit proposals for approval
+  const canSubmitRoles = [
+    'Admin',
+    'Programme Manager',
+    'Director Programmes',
+    'Project Officer WASH',
+    'Project Officer Education',
+    'Project Officer Health',
+    'Project Officer Food Security'
+  ];
+
+  const canSubmitForApproval = currentUser &&
+    proposal.status === 'Draft' &&
+    canSubmitRoles.includes(currentUser.role);
+
+  const canReview = currentUser &&
+    currentUser.role === 'CEO' &&
+    ['Submitted', 'Under Review'].includes(proposal.status);
+
+  const canSubmitToDonor = currentUser &&
+    currentUser.role === 'Fundraising Manager' &&
+    proposal.status === 'Approved';
+
+  const canMarkDonorDecision = currentUser &&
+    currentUser.role === 'Fundraising Manager' &&
+    proposal.status === 'Submitted to Donor';
+
+  const canConvertToProject = currentUser &&
+    currentUser.role === 'Fundraising Manager' &&
+    proposal.status === 'Donor Approved';
 
   const totalDirectBeneficiaries = (
     (proposal.beneficiaryBreakdown?.directMale || 0) +
@@ -354,18 +585,284 @@ const ProposalViewModal = ({ proposal, onClose }) => {
           )}
         </div>
 
+        {/* Workflow Actions Section - Always show */}
+        <div className="border-t border-gray-200 p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <MessageSquare size={20} className="text-indigo-600" />
+            Workflow Actions
+          </h3>
+
+            {/* Workflow Success/Error Messages */}
+            {workflowSuccess && (
+              <div className="mb-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-center gap-3">
+                <CheckCircle size={24} className="text-green-600" />
+                <p className="text-sm text-green-700">{workflowSuccess}</p>
+              </div>
+            )}
+
+            {workflowError && (
+              <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg flex items-center gap-3">
+                <AlertCircle size={24} className="text-red-600" />
+                <p className="text-sm text-red-700">{workflowError}</p>
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3">
+              {/* Staff: Submit for CEO Approval */}
+              {canSubmitForApproval && (
+                <button
+                  onClick={() => handleStatusChange('Submitted')}
+                  disabled={workflowLoading}
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {workflowLoading ? (
+                    <Loader size={20} className="animate-spin" />
+                  ) : (
+                    <Send size={20} />
+                  )}
+                  Submit for CEO Approval
+                </button>
+              )}
+
+              {/* CEO: Review Actions */}
+              {canReview && (
+                <>
+                  <button
+                    onClick={() => handleStatusChange('Under Review')}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {workflowLoading ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      <Eye size={20} />
+                    )}
+                    Set Under Review
+                  </button>
+
+                  <button
+                    onClick={() => handleStatusChange('Approved', true)}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {workflowLoading ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      <ThumbsUp size={20} />
+                    )}
+                    Approve Proposal
+                  </button>
+
+                  <button
+                    onClick={() => handleStatusChange('Rejected', true)}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {workflowLoading ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      <XCircle size={20} />
+                    )}
+                    Reject Proposal
+                  </button>
+                </>
+              )}
+
+              {/* Fundraising Manager: Submit to Donor */}
+              {canSubmitToDonor && (
+                <button
+                  onClick={() => handleStatusChange('Submitted to Donor')}
+                  disabled={workflowLoading}
+                  className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {workflowLoading ? (
+                    <Loader size={20} className="animate-spin" />
+                  ) : (
+                    <Send size={20} />
+                  )}
+                  Submit to Donor
+                </button>
+              )}
+
+              {/* Fundraising Manager: Mark Donor Decision */}
+              {canMarkDonorDecision && (
+                <>
+                  <button
+                    onClick={() => handleStatusChange('Donor Approved')}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {workflowLoading ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      <ThumbsUp size={20} />
+                    )}
+                    Mark Donor Approved
+                  </button>
+
+                  <button
+                    onClick={() => handleStatusChange('Donor Rejected', true)}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {workflowLoading ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      <ThumbsDown size={20} />
+                    )}
+                    Mark Donor Rejected
+                  </button>
+                </>
+              )}
+
+              {/* No actions available message */}
+              {!canSubmitForApproval && !canReview && !canSubmitToDonor && !canMarkDonorDecision && (
+                <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg">
+                  <p className="text-sm text-yellow-800">
+                    <strong>No workflow actions available.</strong>
+                    {currentUser ? (
+                      <>
+                        <br />
+                        Current status: <strong>{proposal.status}</strong>
+                        <br />
+                        Your role: <strong>{currentUser.role}</strong>
+                        <br />
+                        {proposal.status === 'Draft' && (
+                          <span>This proposal needs to be submitted for approval by Admin, Programme Manager, Director Programmes, or Project Officers.</span>
+                        )}
+                        {['Submitted', 'Under Review'].includes(proposal.status) && (
+                          <span>This proposal is awaiting CEO review.</span>
+                        )}
+                        {proposal.status === 'Approved' && (
+                          <span>This proposal needs to be submitted to donor by Fundraising Manager.</span>
+                        )}
+                        {proposal.status === 'Submitted to Donor' && (
+                          <span>Awaiting donor decision from Fundraising Manager.</span>
+                        )}
+                        {proposal.status === 'Donor Approved' && (
+                          <span>This proposal can be converted to a project by Fundraising Manager.</span>
+                        )}
+                      </>
+                    ) : (
+                      <span>Please log in to perform workflow actions.</span>
+                    )}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
         {/* Footer Actions */}
         <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl">
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
-            >
-              Close
-            </button>
+          {/* Success Message */}
+          {conversionSuccess && (
+            <div className="mb-3 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-center gap-3">
+              <CheckCircle size={24} className="text-green-600" />
+              <div>
+                <p className="font-bold text-green-900">Conversion Successful!</p>
+                <p className="text-sm text-green-700">Proposal converted to project. Redirecting to Projects page...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {conversionError && (
+            <div className="mb-3 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg flex items-center gap-3">
+              <AlertCircle size={24} className="text-red-600" />
+              <div>
+                <p className="font-bold text-red-900">Conversion Failed</p>
+                <p className="text-sm text-red-700">{conversionError}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center gap-3">
+            <div className="text-sm text-gray-600">
+              {proposal.status === 'Donor Approved' && canConvertToProject && (
+                <p className="flex items-center gap-2 text-green-700">
+                  <CheckCircle size={16} />
+                  This proposal is donor-approved and ready for conversion
+                </p>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                disabled={converting || workflowLoading}
+              >
+                Close
+              </button>
+              {canConvertToProject && !conversionSuccess && (
+                <button
+                  onClick={handleConvertToProject}
+                  disabled={converting || workflowLoading}
+                  className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 transition font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {converting ? (
+                    <>
+                      <Loader size={20} className="animate-spin" />
+                      Converting...
+                    </>
+                  ) : (
+                    <>
+                      <ArrowRight size={20} />
+                      Convert to Project
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Comment Modal */}
+      {showCommentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+              Add Comments
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Please provide comments for this action (optional):
+            </p>
+            <textarea
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 min-h-[120px]"
+              placeholder="Enter your comments here..."
+            />
+            <div className="flex justify-end gap-3 mt-4">
+              <button
+                onClick={() => {
+                  setShowCommentModal(false);
+                  setComments('');
+                  setWorkflowAction(null);
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+                disabled={workflowLoading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCommentSubmit}
+                disabled={workflowLoading}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {workflowLoading ? (
+                  <>
+                    <Loader size={16} className="animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
