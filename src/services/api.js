@@ -2546,4 +2546,290 @@ const API = {
   TokenManager,
 };
 
+// ============================================
+// SAFEGUARDING POLICY API
+// ============================================
+
+export const SafeguardingPolicyAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/policies?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/compliance/policies/${id}`);
+    return data.data.policy;
+  },
+
+  create: async (policyData) => {
+    const data = await request('/compliance/policies', {
+      method: 'POST',
+      body: JSON.stringify(policyData),
+    });
+    return data.data.policy;
+  },
+
+  update: async (id, policyData) => {
+    const data = await request(`/compliance/policies/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(policyData),
+    });
+    return data.data.policy;
+  },
+
+  delete: async (id) => {
+    await request(`/compliance/policies/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  acknowledge: async (id, userId, userName) => {
+    const data = await request(`/compliance/policies/${id}/acknowledge`, {
+      method: 'POST',
+      body: JSON.stringify({ userId, userName }),
+    });
+    return data.data.policy;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/policies/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// SAFEGUARDING INCIDENT API
+// ============================================
+
+export const SafeguardingIncidentAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/incidents?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/compliance/incidents/${id}`);
+    return data.data.incident;
+  },
+
+  create: async (incidentData) => {
+    const data = await request('/compliance/incidents', {
+      method: 'POST',
+      body: JSON.stringify(incidentData),
+    });
+    return data.data.incident;
+  },
+
+  update: async (id, incidentData) => {
+    const data = await request(`/compliance/incidents/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(incidentData),
+    });
+    return data.data.incident;
+  },
+
+  delete: async (id) => {
+    await request(`/compliance/incidents/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  assign: async (id, assignedTo) => {
+    const data = await request(`/compliance/incidents/${id}/assign`, {
+      method: 'PUT',
+      body: JSON.stringify({ assignedTo }),
+    });
+    return data.data.incident;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/incidents/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// BACKGROUND CHECK API
+// ============================================
+
+export const BackgroundCheckAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/background-checks?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/compliance/background-checks/${id}`);
+    return data.data.backgroundCheck;
+  },
+
+  create: async (checkData) => {
+    const data = await request('/compliance/background-checks', {
+      method: 'POST',
+      body: JSON.stringify(checkData),
+    });
+    return data.data.backgroundCheck;
+  },
+
+  update: async (id, checkData) => {
+    const data = await request(`/compliance/background-checks/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(checkData),
+    });
+    return data.data.backgroundCheck;
+  },
+
+  delete: async (id) => {
+    await request(`/compliance/background-checks/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  getExpiring: async (days = 30) => {
+    const data = await request(`/compliance/background-checks/expiring?days=${days}`);
+    return data.data.checks;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/background-checks/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// COMPLIANCE TRAINING API
+// ============================================
+
+export const ComplianceTrainingAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/training?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/compliance/training/${id}`);
+    return data.data.training;
+  },
+
+  create: async (trainingData) => {
+    const data = await request('/compliance/training', {
+      method: 'POST',
+      body: JSON.stringify(trainingData),
+    });
+    return data.data.training;
+  },
+
+  update: async (id, trainingData) => {
+    const data = await request(`/compliance/training/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(trainingData),
+    });
+    return data.data.training;
+  },
+
+  delete: async (id) => {
+    await request(`/compliance/training/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  addAttendee: async (id, attendee) => {
+    const data = await request(`/compliance/training/${id}/attendees`, {
+      method: 'POST',
+      body: JSON.stringify({ attendee }),
+    });
+    return data.data.training;
+  },
+
+  markAttendance: async (id, staffId, attended) => {
+    const data = await request(`/compliance/training/${id}/attendance`, {
+      method: 'PUT',
+      body: JSON.stringify({ staffId, attended }),
+    });
+    return data.data.training;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/training/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// DATA PROTECTION API
+// ============================================
+
+export const DataProtectionAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/data-protection?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/compliance/data-protection/${id}`);
+    return data.data.record;
+  },
+
+  create: async (recordData) => {
+    const data = await request('/compliance/data-protection', {
+      method: 'POST',
+      body: JSON.stringify(recordData),
+    });
+    return data.data.record;
+  },
+
+  update: async (id, recordData) => {
+    const data = await request(`/compliance/data-protection/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(recordData),
+    });
+    return data.data.record;
+  },
+
+  delete: async (id) => {
+    await request(`/compliance/data-protection/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  getConsentRecords: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/data-protection/consent?${queryString}`);
+    return data.data.records;
+  },
+
+  getDataAccessRequests: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/data-protection/data-access-requests?${queryString}`);
+    return data.data;
+  },
+
+  getDataBreaches: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/data-protection/data-breaches?${queryString}`);
+    return data.data.breaches;
+  },
+
+  getAuditRecords: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/data-protection/audits?${queryString}`);
+    return data.data;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance/data-protection/stats?${queryString}`);
+    return data.data;
+  },
+};
+
 export default API;
