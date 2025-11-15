@@ -30,6 +30,26 @@ import beneficiaryRoutes from './routes/beneficiary.routes.js';
 import beneficiarySupportRoutes from './routes/beneficiarySupport.routes.js';
 import aiRoutes from './routes/ai.routes.js';
 
+// New feature routes
+import campaignRoutes from './routes/campaign.routes.js';
+import donationRoutes from './routes/donation.routes.js';
+import invoiceRoutes from './routes/invoice.routes.js';
+import billRoutes from './routes/bill.routes.js';
+import purchaseOrderRoutes from './routes/purchaseOrder.routes.js';
+import chartOfAccountsRoutes from './routes/chartOfAccounts.routes.js';
+import journalEntryRoutes from './routes/journalEntry.routes.js';
+import bankAccountRoutes from './routes/bankAccount.routes.js';
+import bankTransactionRoutes from './routes/bankTransaction.routes.js';
+import budgetRoutes from './routes/budget.routes.js';
+import payrollRoutes from './routes/payroll.routes.js';
+import grantReceivableRoutes from './routes/grantReceivable.routes.js';
+import fixedAssetRoutes from './routes/fixedAsset.routes.js';
+import jobPostingRoutes from './routes/jobPosting.routes.js';
+import vendorCallRoutes from './routes/vendorCall.routes.js';
+import socialMediaRoutes from './routes/socialMedia.routes.js';
+import complianceRoutes from './routes/compliance.routes.js';
+import attendanceRoutes from './routes/attendance.routes.js';
+
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
 import { notFound } from './middleware/notFound.middleware.js';
@@ -43,6 +63,9 @@ const PORT = process.env.PORT || 3000;
 // ============================================
 // MIDDLEWARE
 // ============================================
+
+// Trust proxy - Required for rate limiting behind Nginx/reverse proxy
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet({
@@ -58,6 +81,7 @@ const allowedOrigins = [
   'https://gersl-management-jarooqs-projects.vercel.app',
   'https://gersl-management.vercel.app',
   'https://gersl-management-nu.vercel.app',
+  'https://erp-globalehsan.org', // Production frontend
   process.env.CORS_ORIGIN,
   process.env.FRONTEND_URL
 ].filter(Boolean);
@@ -140,6 +164,26 @@ app.use('/api/visit-logs', visitLogRoutes);
 app.use('/api/beneficiaries', beneficiaryRoutes);
 app.use('/api/beneficiary-support', beneficiarySupportRoutes);
 app.use('/api/ai', aiRoutes);
+
+// New feature routes
+app.use('/api/campaigns', campaignRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/bills', billRoutes);
+app.use('/api/purchase-orders', purchaseOrderRoutes);
+app.use('/api/chart-of-accounts', chartOfAccountsRoutes);
+app.use('/api/journal-entries', journalEntryRoutes);
+app.use('/api/bank-accounts', bankAccountRoutes);
+app.use('/api/bank-transactions', bankTransactionRoutes);
+app.use('/api/budgets', budgetRoutes);
+app.use('/api/payroll', payrollRoutes);
+app.use('/api/grant-receivables', grantReceivableRoutes);
+app.use('/api/fixed-assets', fixedAssetRoutes);
+app.use('/api/job-postings', jobPostingRoutes);
+app.use('/api/vendor-calls', vendorCallRoutes);
+app.use('/api/social-media', socialMediaRoutes);
+app.use('/api/compliance', complianceRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 // 404 handler
 app.use(notFound);

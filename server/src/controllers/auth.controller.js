@@ -67,7 +67,8 @@ const setAuthCookies = (res, accessToken, refreshToken) => {
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: isProduction, // Only HTTPS in production
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: 'none', // Allow cross-site cookies for API
+    domain: isProduction ? '.erp-globalehsan.org' : undefined,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   });
 
@@ -75,7 +76,8 @@ const setAuthCookies = (res, accessToken, refreshToken) => {
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: 'none', // Allow cross-site cookies for API
+    domain: isProduction ? '.erp-globalehsan.org' : undefined,
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 };
@@ -215,6 +217,9 @@ export const login = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Login successful',
+    accessToken, // Include tokens in response for frontend
+    refreshToken, // Include tokens in response for frontend
+    user: user.toJSON(), // Also return user directly for compatibility
     data: {
       user: user.toJSON()
     }

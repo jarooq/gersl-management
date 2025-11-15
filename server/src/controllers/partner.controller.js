@@ -67,6 +67,12 @@ export const getPartnerById = asyncHandler(async (req, res) => {
 export const createPartner = asyncHandler(async (req, res) => {
   const partnerData = req.body;
 
+  // Map partnershipStartDate to partnershipStart if provided
+  if (partnerData.partnershipStartDate) {
+    partnerData.partnershipStart = partnerData.partnershipStartDate;
+    delete partnerData.partnershipStartDate;
+  }
+
   const partner = await Partner.create(partnerData);
 
   res.status(201).json({
@@ -82,6 +88,12 @@ export const createPartner = asyncHandler(async (req, res) => {
 export const updatePartner = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
+
+  // Map partnershipStartDate to partnershipStart if provided
+  if (updateData.partnershipStartDate) {
+    updateData.partnershipStart = updateData.partnershipStartDate;
+    delete updateData.partnershipStartDate;
+  }
 
   const partner = await Partner.findByPk(id);
 
