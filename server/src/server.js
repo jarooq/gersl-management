@@ -26,8 +26,7 @@ import uploadRoutes from './routes/upload.routes.js';
 import approvalRoutes from './routes/approvalRoutes.js';
 import reportRoutes from './routes/report.routes.js';
 import visitLogRoutes from './routes/visitLog.routes.js';
-import beneficiaryRoutes from './routes/beneficiary.routes.js';
-import beneficiarySupportRoutes from './routes/beneficiarySupport.routes.js';
+import beneficiaryRoutes from './routes/beneficiaries.routes.js';
 import aiRoutes from './routes/ai.routes.js';
 
 // New feature routes
@@ -49,6 +48,8 @@ import vendorCallRoutes from './routes/vendorCall.routes.js';
 import socialMediaRoutes from './routes/socialMedia.routes.js';
 import complianceRoutes from './routes/compliance.routes.js';
 import attendanceRoutes from './routes/attendance.routes.js';
+import hrOnboardingRoutes from './routes/hr-onboarding.routes.js';
+import hrAppraisalRoutes from './routes/hr-appraisal.routes.js';
 
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
@@ -162,7 +163,6 @@ app.use('/api/approvals', approvalRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/visit-logs', visitLogRoutes);
 app.use('/api/beneficiaries', beneficiaryRoutes);
-app.use('/api/beneficiary-support', beneficiarySupportRoutes);
 app.use('/api/ai', aiRoutes);
 
 // New feature routes
@@ -184,6 +184,8 @@ app.use('/api/vendor-calls', vendorCallRoutes);
 app.use('/api/social-media', socialMediaRoutes);
 app.use('/api/compliance', complianceRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/api/hr/onboarding', hrOnboardingRoutes);
+app.use('/api/hr/appraisal', hrAppraisalRoutes);
 
 // 404 handler
 app.use(notFound);
