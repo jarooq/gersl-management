@@ -382,4 +382,8 @@ export const optionalAuth = async (req, res, next) => {
   }
 };
 
+// Aliases for consistent naming across codebase
+export const protect = requireAuth;
+export const authorize = requireRole;
+
 export { PERMISSIONS, ROLE_PERMISSIONS };

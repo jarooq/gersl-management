@@ -1,4 +1,4 @@
-import { ValidationError } from 'sequelize';
+import { ValidationError as SequelizeValidationError } from 'sequelize';
 
 // ============================================
 // ERROR HANDLER MIDDLEWARE
@@ -13,7 +13,7 @@ export const errorHandler = (err, req, res, next) => {
   });
 
   // Sequelize validation error
-  if (err instanceof ValidationError) {
+  if (err instanceof SequelizeValidationError) {
     return res.status(400).json({
       success: false,
       message: 'Validation error',
@@ -144,5 +144,11 @@ export class NotFoundError extends AppError {
 export class ConflictError extends AppError {
   constructor(message = 'Conflict') {
     super(message, 409);
+  }
+}
+
+export class ValidationError extends AppError {
+  constructor(message = 'Validation Error', errors = null) {
+    super(message, 400, errors);
   }
 }
