@@ -602,6 +602,365 @@ export const HRAppraisalAPI = {
 };
 
 // ============================================
+// CBO VOLUNTEER API
+// ============================================
+
+export const CBOVolunteerAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/volunteers?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/cbo/volunteers/${id}`);
+    return data.data.volunteer;
+  },
+
+  getByCBO: async (cboPartnerId) => {
+    const data = await request(`/cbo/volunteers/cbo/${cboPartnerId}`);
+    return data.data.volunteers;
+  },
+
+  create: async (volunteerData) => {
+    const data = await request('/cbo/volunteers', {
+      method: 'POST',
+      body: JSON.stringify(volunteerData),
+    });
+    return data.data.volunteer;
+  },
+
+  update: async (id, volunteerData) => {
+    const data = await request(`/cbo/volunteers/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(volunteerData),
+    });
+    return data.data.volunteer;
+  },
+
+  delete: async (id) => {
+    await request(`/cbo/volunteers/${id}`, { method: 'DELETE' });
+  },
+
+  search: async (query) => {
+    const data = await request(`/cbo/volunteers/search?query=${encodeURIComponent(query)}`);
+    return data.data.volunteers;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/volunteers/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// CBO ACTIVITY API
+// ============================================
+
+export const CBOActivityAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/activities?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/cbo/activities/${id}`);
+    return data.data.activity;
+  },
+
+  getByCBO: async (cboPartnerId) => {
+    const data = await request(`/cbo/activities/cbo/${cboPartnerId}`);
+    return data.data.activities;
+  },
+
+  create: async (activityData) => {
+    const data = await request('/cbo/activities', {
+      method: 'POST',
+      body: JSON.stringify(activityData),
+    });
+    return data.data.activity;
+  },
+
+  update: async (id, activityData) => {
+    const data = await request(`/cbo/activities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(activityData),
+    });
+    return data.data.activity;
+  },
+
+  delete: async (id) => {
+    await request(`/cbo/activities/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/activities/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// CBO DUE DILIGENCE API
+// ============================================
+
+export const CBODueDiligenceAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/due-diligence?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/cbo/due-diligence/${id}`);
+    return data.data.assessment;
+  },
+
+  getByCBO: async (cboPartnerId) => {
+    const data = await request(`/cbo/due-diligence/cbo/${cboPartnerId}`);
+    return data.data.assessments;
+  },
+
+  create: async (assessmentData) => {
+    const data = await request('/cbo/due-diligence', {
+      method: 'POST',
+      body: JSON.stringify(assessmentData),
+    });
+    return data.data.assessment;
+  },
+
+  update: async (id, assessmentData) => {
+    const data = await request(`/cbo/due-diligence/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(assessmentData),
+    });
+    return data.data.assessment;
+  },
+
+  submit: async (id) => {
+    const data = await request(`/cbo/due-diligence/${id}/submit`, {
+      method: 'PUT',
+    });
+    return data.data.assessment;
+  },
+
+  approve: async (id) => {
+    const data = await request(`/cbo/due-diligence/${id}/approve`, {
+      method: 'PUT',
+    });
+    return data.data.assessment;
+  },
+
+  reject: async (id) => {
+    const data = await request(`/cbo/due-diligence/${id}/reject`, {
+      method: 'PUT',
+    });
+    return data.data.assessment;
+  },
+
+  delete: async (id) => {
+    await request(`/cbo/due-diligence/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/due-diligence/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// CBO PROPOSAL API
+// ============================================
+
+export const CBOProposalAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/proposals?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/cbo/proposals/${id}`);
+    return data.data.proposal;
+  },
+
+  getByCBO: async (cboPartnerId) => {
+    const data = await request(`/cbo/proposals/cbo/${cboPartnerId}`);
+    return data.data.proposals;
+  },
+
+  create: async (proposalData) => {
+    const data = await request('/cbo/proposals', {
+      method: 'POST',
+      body: JSON.stringify(proposalData),
+    });
+    return data.data.proposal;
+  },
+
+  update: async (id, proposalData) => {
+    const data = await request(`/cbo/proposals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(proposalData),
+    });
+    return data.data.proposal;
+  },
+
+  // Fundraising workflow
+  fundraisingApprove: async (id, score, comments, reviewer) => {
+    const data = await request(`/cbo/proposals/${id}/fundraising/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ score, comments, reviewer }),
+    });
+    return data.data.proposal;
+  },
+
+  fundraisingReject: async (id, score, comments, reviewer) => {
+    const data = await request(`/cbo/proposals/${id}/fundraising/reject`, {
+      method: 'PUT',
+      body: JSON.stringify({ score, comments, reviewer }),
+    });
+    return data.data.proposal;
+  },
+
+  // CEO workflow
+  ceoApprove: async (id, comments, approver, approvedBudget) => {
+    const data = await request(`/cbo/proposals/${id}/ceo/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ comments, approver, approvedBudget }),
+    });
+    return data.data.proposal;
+  },
+
+  ceoReject: async (id, comments, approver) => {
+    const data = await request(`/cbo/proposals/${id}/ceo/reject`, {
+      method: 'PUT',
+      body: JSON.stringify({ comments, approver }),
+    });
+    return data.data.proposal;
+  },
+
+  // Donor workflow
+  donorApprove: async (id, donorName, approvedBudget) => {
+    const data = await request(`/cbo/proposals/${id}/donor/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ donorName, approvedBudget }),
+    });
+    return data.data.proposal;
+  },
+
+  donorReject: async (id, donorName) => {
+    const data = await request(`/cbo/proposals/${id}/donor/reject`, {
+      method: 'PUT',
+      body: JSON.stringify({ donorName }),
+    });
+    return data.data.proposal;
+  },
+
+  delete: async (id) => {
+    await request(`/cbo/proposals/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/proposals/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// CBO PROJECT API
+// ============================================
+
+export const CBOProjectAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/projects?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/cbo/projects/${id}`);
+    return data.data.project;
+  },
+
+  getByCBO: async (cboPartnerId) => {
+    const data = await request(`/cbo/projects/cbo/${cboPartnerId}`);
+    return data.data.projects;
+  },
+
+  create: async (projectData) => {
+    const data = await request('/cbo/projects', {
+      method: 'POST',
+      body: JSON.stringify(projectData),
+    });
+    return data.data.project;
+  },
+
+  update: async (id, projectData) => {
+    const data = await request(`/cbo/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(projectData),
+    });
+    return data.data.project;
+  },
+
+  updateProgress: async (id, spent, progress, actualBeneficiaries) => {
+    const data = await request(`/cbo/projects/${id}/progress`, {
+      method: 'PUT',
+      body: JSON.stringify({ spent, progress, actualBeneficiaries }),
+    });
+    return data.data.project;
+  },
+
+  // Issue management
+  addIssue: async (id, issue) => {
+    const data = await request(`/cbo/projects/${id}/issues`, {
+      method: 'POST',
+      body: JSON.stringify({ issue }),
+    });
+    return data.data.project;
+  },
+
+  updateIssue: async (id, issueId, updates) => {
+    const data = await request(`/cbo/projects/${id}/issues/${issueId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return data.data.project;
+  },
+
+  // CFM Feedback
+  addCFMFeedback: async (id, feedback) => {
+    const data = await request(`/cbo/projects/${id}/cfm-feedback`, {
+      method: 'POST',
+      body: JSON.stringify({ feedback }),
+    });
+    return data.data.project;
+  },
+
+  updateCFMFeedback: async (id, feedbackId, updates) => {
+    const data = await request(`/cbo/projects/${id}/cfm-feedback/${feedbackId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return data.data.project;
+  },
+
+  delete: async (id) => {
+    await request(`/cbo/projects/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/cbo/projects/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
 // CBO API
 // ============================================
 
