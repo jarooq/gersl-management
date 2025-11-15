@@ -55,6 +55,11 @@ import cboActivityRoutes from './routes/cbo-activity.routes.js';
 import cboDueDiligenceRoutes from './routes/cbo-due-diligence.routes.js';
 import cboProposalRoutes from './routes/cbo-proposal.routes.js';
 import cboProjectRoutes from './routes/cbo-project.routes.js';
+import safeguardingPolicyRoutes from './routes/safeguarding-policy.routes.js';
+import safeguardingIncidentRoutes from './routes/safeguarding-incident.routes.js';
+import backgroundCheckRoutes from './routes/background-check.routes.js';
+import complianceTrainingRoutes from './routes/compliance-training.routes.js';
+import dataProtectionRoutes from './routes/data-protection.routes.js';
 
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
@@ -196,6 +201,13 @@ app.use('/api/cbo/activities', cboActivityRoutes);
 app.use('/api/cbo/due-diligence', cboDueDiligenceRoutes);
 app.use('/api/cbo/proposals', cboProposalRoutes);
 app.use('/api/cbo/projects', cboProjectRoutes);
+
+// Compliance module routes
+app.use('/api/compliance/policies', safeguardingPolicyRoutes);
+app.use('/api/compliance/incidents', safeguardingIncidentRoutes);
+app.use('/api/compliance/background-checks', backgroundCheckRoutes);
+app.use('/api/compliance/training', complianceTrainingRoutes);
+app.use('/api/compliance/data-protection', dataProtectionRoutes);
 
 // 404 handler
 app.use(notFound);

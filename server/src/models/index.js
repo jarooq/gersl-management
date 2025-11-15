@@ -2207,6 +2207,164 @@ const ComplianceDocument = sequelize.define('ComplianceDocument', {
 });
 
 // ============================================
+// SAFEGUARDING POLICY MODEL
+// ============================================
+const SafeguardingPolicy = sequelize.define('SafeguardingPolicy', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  policyName: { type: DataTypes.STRING(200), allowNull: false, field: 'policy_name' },
+  version: { type: DataTypes.STRING(20), allowNull: false },
+  category: { type: DataTypes.STRING(100), allowNull: false },
+  description: { type: DataTypes.TEXT },
+  effectiveDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'effective_date' },
+  reviewDate: { type: DataTypes.DATEONLY, field: 'review_date' },
+  status: { type: DataTypes.ENUM('Active', 'Archived', 'Draft'), defaultValue: 'Draft' },
+  documentUrl: { type: DataTypes.STRING(500), field: 'document_url' },
+  approvedBy: { type: DataTypes.STRING(100), field: 'approved_by' },
+  approvalDate: { type: DataTypes.DATEONLY, field: 'approval_date' },
+  acknowledgedBy: { type: DataTypes.JSON, defaultValue: [], field: 'acknowledged_by' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'safeguarding_policies',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// SAFEGUARDING INCIDENT MODEL
+// ============================================
+const SafeguardingIncident = sequelize.define('SafeguardingIncident', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  incidentCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'incident_code' },
+  incidentType: { type: DataTypes.STRING(100), allowNull: false, field: 'incident_type' },
+  severity: { type: DataTypes.ENUM('Low', 'Medium', 'High', 'Critical'), allowNull: false },
+  reportedDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'reported_date' },
+  incidentDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'incident_date' },
+  location: { type: DataTypes.STRING(200) },
+  reportedBy: { type: DataTypes.STRING(100), allowNull: false, field: 'reported_by' },
+  personInvolved: { type: DataTypes.STRING(100), field: 'person_involved' },
+  description: { type: DataTypes.TEXT, allowNull: false },
+  immediateAction: { type: DataTypes.TEXT, field: 'immediate_action' },
+  status: { type: DataTypes.ENUM('Under Investigation', 'In Progress', 'Resolved', 'Closed'), defaultValue: 'Under Investigation' },
+  investigationNotes: { type: DataTypes.TEXT, field: 'investigation_notes' },
+  actionTaken: { type: DataTypes.TEXT, field: 'action_taken' },
+  assignedTo: { type: DataTypes.STRING(100), field: 'assigned_to' },
+  resolvedDate: { type: DataTypes.DATEONLY, field: 'resolved_date' },
+  closedDate: { type: DataTypes.DATEONLY, field: 'closed_date' },
+  followUpRequired: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'follow_up_required' },
+  followUpDate: { type: DataTypes.DATEONLY, field: 'follow_up_date' },
+  confidential: { type: DataTypes.BOOLEAN, defaultValue: true },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'safeguarding_incidents',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// BACKGROUND CHECK MODEL
+// ============================================
+const BackgroundCheck = sequelize.define('BackgroundCheck', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  staffId: { type: DataTypes.INTEGER, references: { model: 'staff', key: 'id' }, field: 'staff_id' },
+  staffName: { type: DataTypes.STRING(100), allowNull: false, field: 'staff_name' },
+  position: { type: DataTypes.STRING(100), allowNull: false },
+  checkType: { type: DataTypes.STRING(100), allowNull: false, field: 'check_type' },
+  requestedDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'requested_date' },
+  completedDate: { type: DataTypes.DATEONLY, field: 'completed_date' },
+  expiryDate: { type: DataTypes.DATEONLY, field: 'expiry_date' },
+  status: { type: DataTypes.ENUM('Pending', 'In Progress', 'Completed', 'Valid', 'Expired', 'Renewal Required'), defaultValue: 'Pending' },
+  result: { type: DataTypes.ENUM('Clear', 'Concerns Identified', 'Not Cleared'), field: 'result' },
+  referenceNumber: { type: DataTypes.STRING(100), field: 'reference_number' },
+  provider: { type: DataTypes.STRING(100) },
+  certificateUrl: { type: DataTypes.STRING(500), field: 'certificate_url' },
+  renewalDue: { type: DataTypes.INTEGER, field: 'renewal_due' },
+  notes: { type: DataTypes.TEXT },
+  verifiedBy: { type: DataTypes.STRING(100), field: 'verified_by' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'background_checks',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// COMPLIANCE TRAINING MODEL
+// ============================================
+const ComplianceTraining = sequelize.define('ComplianceTraining', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  trainingName: { type: DataTypes.STRING(200), allowNull: false, field: 'training_name' },
+  trainingType: { type: DataTypes.STRING(100), allowNull: false, field: 'training_type' },
+  description: { type: DataTypes.TEXT },
+  trainingDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'training_date' },
+  duration: { type: DataTypes.INTEGER },
+  trainer: { type: DataTypes.STRING(100) },
+  attendees: { type: DataTypes.JSON, defaultValue: [] },
+  totalAttendees: { type: DataTypes.INTEGER, defaultValue: 0, field: 'total_attendees' },
+  certificateIssued: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'certificate_issued' },
+  expiryMonths: { type: DataTypes.INTEGER, field: 'expiry_months' },
+  materials: { type: DataTypes.JSON, defaultValue: [] },
+  evaluationScore: { type: DataTypes.DECIMAL(5, 2), field: 'evaluation_score' },
+  feedback: { type: DataTypes.TEXT },
+  status: { type: DataTypes.ENUM('Scheduled', 'Completed', 'Cancelled'), defaultValue: 'Scheduled' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'compliance_trainings',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// DATA PROTECTION RECORD MODEL
+// ============================================
+const DataProtectionRecord = sequelize.define('DataProtectionRecord', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  recordType: { type: DataTypes.ENUM('Consent', 'Data Access Request', 'Data Breach', 'Audit'), allowNull: false, field: 'record_type' },
+  recordCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'record_code' },
+  title: { type: DataTypes.STRING(200), allowNull: false },
+  description: { type: DataTypes.TEXT },
+  recordDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'record_date' },
+  status: { type: DataTypes.STRING(50), defaultValue: 'Open' },
+
+  // Consent specific fields
+  dataSubject: { type: DataTypes.STRING(100), field: 'data_subject' },
+  consentType: { type: DataTypes.STRING(100), field: 'consent_type' },
+  consentGiven: { type: DataTypes.BOOLEAN, field: 'consent_given' },
+  consentDate: { type: DataTypes.DATEONLY, field: 'consent_date' },
+  consentWithdrawnDate: { type: DataTypes.DATEONLY, field: 'consent_withdrawn_date' },
+
+  // Data Access Request specific fields
+  requesterName: { type: DataTypes.STRING(100), field: 'requester_name' },
+  requestDate: { type: DataTypes.DATEONLY, field: 'request_date' },
+  responseDeadline: { type: DataTypes.DATEONLY, field: 'response_deadline' },
+  responseDate: { type: DataTypes.DATEONLY, field: 'response_date' },
+
+  // Data Breach specific fields
+  breachType: { type: DataTypes.STRING(100), field: 'breach_type' },
+  breachDate: { type: DataTypes.DATEONLY, field: 'breach_date' },
+  dataAffected: { type: DataTypes.TEXT, field: 'data_affected' },
+  individualsAffected: { type: DataTypes.INTEGER, field: 'individuals_affected' },
+  breachReportedToAuthority: { type: DataTypes.BOOLEAN, field: 'breach_reported_to_authority' },
+  authorityNotificationDate: { type: DataTypes.DATEONLY, field: 'authority_notification_date' },
+  remediationSteps: { type: DataTypes.TEXT, field: 'remediation_steps' },
+
+  // Audit specific fields
+  auditDate: { type: DataTypes.DATEONLY, field: 'audit_date' },
+  auditor: { type: DataTypes.STRING(100) },
+  findings: { type: DataTypes.TEXT },
+  recommendations: { type: DataTypes.TEXT },
+  nextAuditDate: { type: DataTypes.DATEONLY, field: 'next_audit_date' },
+
+  assignedTo: { type: DataTypes.STRING(100), field: 'assigned_to' },
+  completedDate: { type: DataTypes.DATEONLY, field: 'completed_date' },
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'data_protection_records',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
 // ATTENDANCE MODEL
 // ============================================
 const Attendance = sequelize.define('Attendance', {
@@ -2652,6 +2810,11 @@ export {
   SocialMediaPost,
   SocialMediaEngagement,
   ComplianceDocument,
+  SafeguardingPolicy,
+  SafeguardingIncident,
+  BackgroundCheck,
+  ComplianceTraining,
+  DataProtectionRecord,
   Attendance,
   LeaveRequest,
   Invoice,
@@ -2702,6 +2865,11 @@ export default {
   SocialMediaPost,
   SocialMediaEngagement,
   ComplianceDocument,
+  SafeguardingPolicy,
+  SafeguardingIncident,
+  BackgroundCheck,
+  ComplianceTraining,
+  DataProtectionRecord,
   Attendance,
   LeaveRequest,
   Invoice,
