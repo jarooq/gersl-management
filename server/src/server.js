@@ -50,6 +50,11 @@ import complianceRoutes from './routes/compliance.routes.js';
 import attendanceRoutes from './routes/attendance.routes.js';
 import hrOnboardingRoutes from './routes/hr-onboarding.routes.js';
 import hrAppraisalRoutes from './routes/hr-appraisal.routes.js';
+import cboVolunteerRoutes from './routes/cbo-volunteer.routes.js';
+import cboActivityRoutes from './routes/cbo-activity.routes.js';
+import cboDueDiligenceRoutes from './routes/cbo-due-diligence.routes.js';
+import cboProposalRoutes from './routes/cbo-proposal.routes.js';
+import cboProjectRoutes from './routes/cbo-project.routes.js';
 
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
@@ -186,6 +191,11 @@ app.use('/api/compliance', complianceRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/hr/onboarding', hrOnboardingRoutes);
 app.use('/api/hr/appraisal', hrAppraisalRoutes);
+app.use('/api/cbo/volunteers', cboVolunteerRoutes);
+app.use('/api/cbo/activities', cboActivityRoutes);
+app.use('/api/cbo/due-diligence', cboDueDiligenceRoutes);
+app.use('/api/cbo/proposals', cboProposalRoutes);
+app.use('/api/cbo/projects', cboProjectRoutes);
 
 // 404 handler
 app.use(notFound);

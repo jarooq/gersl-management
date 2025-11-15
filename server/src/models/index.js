@@ -556,6 +556,469 @@ const CBOPartner = sequelize.define('CBOPartner', {
 });
 
 // ============================================
+// CBO VOLUNTEER MODEL
+// ============================================
+const CBOVolunteer = sequelize.define('CBOVolunteer', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  fullName: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  cboAffiliation: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  cboPartnerId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'cbo_partners',
+      key: 'id'
+    }
+  },
+  district: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING(100)
+  },
+  phone: {
+    type: DataTypes.STRING(20)
+  },
+  skills: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  joinedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  hoursContributed: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  projectsParticipated: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  rating: {
+    type: DataTypes.DECIMAL(2, 1)
+  },
+  status: {
+    type: DataTypes.ENUM('Active', 'Inactive', 'Pending Orientation'),
+    defaultValue: 'Pending Orientation'
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'cbo_volunteers',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// CBO ACTIVITY MODEL
+// ============================================
+const CBOActivity = sequelize.define('CBOActivity', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  activityName: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  description: {
+    type: DataTypes.TEXT
+  },
+  activityType: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  cboPartnerId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'cbo_partners',
+      key: 'id'
+    }
+  },
+  activityDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  location: {
+    type: DataTypes.STRING(200)
+  },
+  participants: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  volunteersInvolved: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  budget: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  actualCost: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  status: {
+    type: DataTypes.ENUM('Upcoming', 'In Progress', 'Completed', 'Cancelled'),
+    defaultValue: 'Upcoming'
+  },
+  outcomes: {
+    type: DataTypes.TEXT
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'cbo_activities',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// CBO DUE DILIGENCE MODEL
+// ============================================
+const CBODueDiligence = sequelize.define('CBODueDiligence', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  cboPartnerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'cbo_partners',
+      key: 'id'
+    }
+  },
+  assessmentDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  assessor: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  overallScore: {
+    type: DataTypes.DECIMAL(5, 2)
+  },
+  financialScore: {
+    type: DataTypes.DECIMAL(5, 2)
+  },
+  governanceScore: {
+    type: DataTypes.DECIMAL(5, 2)
+  },
+  technicalScore: {
+    type: DataTypes.DECIMAL(5, 2)
+  },
+  safeguardingScore: {
+    type: DataTypes.DECIMAL(5, 2)
+  },
+  findings: {
+    type: DataTypes.TEXT
+  },
+  recommendations: {
+    type: DataTypes.TEXT
+  },
+  riskLevel: {
+    type: DataTypes.ENUM('Low', 'Medium', 'High', 'Critical'),
+    defaultValue: 'Medium'
+  },
+  status: {
+    type: DataTypes.ENUM('Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected'),
+    defaultValue: 'Draft'
+  },
+  approvedBy: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
+  approvalDate: {
+    type: DataTypes.DATEONLY
+  },
+  nextAssessmentDate: {
+    type: DataTypes.DATEONLY
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'cbo_due_diligence',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// CBO PROPOSAL MODEL
+// ============================================
+const CBOProposal = sequelize.define('CBOProposal', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  cboPartnerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'cbo_partners',
+      key: 'id'
+    }
+  },
+  proposalTitle: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  programmeArea: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  district: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  duration: {
+    type: DataTypes.STRING(50)
+  },
+  requestedBudget: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: false
+  },
+  approvedBudget: {
+    type: DataTypes.DECIMAL(12, 2)
+  },
+  targetBeneficiaries: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  objectives: {
+    type: DataTypes.TEXT
+  },
+  activities: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  expectedOutcomes: {
+    type: DataTypes.TEXT
+  },
+  submissionDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  submittedBy: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.ENUM(
+      'Submitted',
+      'CEO Approval',
+      'Donor Pending',
+      'Donor Approved - Ready for Conversion',
+      'Rejected by Fundraising',
+      'Rejected by CEO',
+      'Rejected by Donor',
+      'Converted to Project'
+    ),
+    defaultValue: 'Submitted'
+  },
+  workflowStage: {
+    type: DataTypes.ENUM('fundraising', 'ceo', 'donor', 'approved', 'converted'),
+    defaultValue: 'fundraising'
+  },
+  fundraisingStatus: {
+    type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
+    defaultValue: 'Pending'
+  },
+  fundraisingReviewer: {
+    type: DataTypes.STRING(100)
+  },
+  fundraisingReviewDate: {
+    type: DataTypes.DATEONLY
+  },
+  fundraisingScore: {
+    type: DataTypes.DECIMAL(5, 2)
+  },
+  fundraisingComments: {
+    type: DataTypes.TEXT
+  },
+  ceoStatus: {
+    type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
+    defaultValue: 'Pending'
+  },
+  ceoApprover: {
+    type: DataTypes.STRING(100)
+  },
+  ceoApprovalDate: {
+    type: DataTypes.DATEONLY
+  },
+  ceoComments: {
+    type: DataTypes.TEXT
+  },
+  donorStatus: {
+    type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
+    defaultValue: 'Pending'
+  },
+  donorName: {
+    type: DataTypes.STRING(200)
+  },
+  donorApprovalDate: {
+    type: DataTypes.DATEONLY
+  },
+  convertedToProject: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'cbo_projects',
+      key: 'id'
+    }
+  },
+  projectStartDate: {
+    type: DataTypes.DATEONLY
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'cbo_proposals',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// CBO PROJECT MODEL
+// ============================================
+const CBOProject = sequelize.define('CBOProject', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  cboPartnerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'cbo_partners',
+      key: 'id'
+    }
+  },
+  projectTitle: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  programmeArea: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  district: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  startDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  endDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  budget: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: false
+  },
+  spent: {
+    type: DataTypes.DECIMAL(12, 2),
+    defaultValue: 0
+  },
+  progress: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  status: {
+    type: DataTypes.ENUM('Active', 'Completed', 'On Hold', 'Cancelled'),
+    defaultValue: 'Active'
+  },
+  targetBeneficiaries: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  actualBeneficiaries: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  projectManager: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  gerslFocalPerson: {
+    type: DataTypes.STRING(100)
+  },
+  lastReportDate: {
+    type: DataTypes.DATEONLY
+  },
+  nextReportDue: {
+    type: DataTypes.DATEONLY
+  },
+  milestones: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  issues: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  cfmFeedback: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'cbo_projects',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
 // PARTNER MODEL
 // ============================================
 const Partner = sequelize.define('Partner', {
@@ -625,6 +1088,585 @@ const Partner = sequelize.define('Partner', {
   }
 }, {
   tableName: 'partners',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// PARTNER CONTRIBUTION MODEL
+// ============================================
+const PartnerContribution = sequelize.define('PartnerContribution', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  partnerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'partner_id',
+    references: {
+      model: 'partners',
+      key: 'id'
+    }
+  },
+  contributionType: {
+    type: DataTypes.ENUM('Financial', 'In-Kind', 'Technical', 'Other'),
+    allowNull: false,
+    field: 'contribution_type'
+  },
+  amount: {
+    type: DataTypes.DECIMAL(12, 2),
+    defaultValue: 0
+  },
+  currency: {
+    type: DataTypes.STRING(10),
+    defaultValue: 'LKR'
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  contributionDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'contribution_date'
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    field: 'project_id',
+    references: {
+      model: 'projects',
+      key: 'id'
+    }
+  },
+  receiptNumber: {
+    type: DataTypes.STRING(100),
+    field: 'receipt_number'
+  },
+  status: {
+    type: DataTypes.ENUM('Pledged', 'Received', 'Pending'),
+    defaultValue: 'Pending'
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'partner_contributions',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// PARTNER COMMUNICATION MODEL
+// ============================================
+const PartnerCommunication = sequelize.define('PartnerCommunication', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  partnerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'partner_id',
+    references: {
+      model: 'partners',
+      key: 'id'
+    }
+  },
+  communicationType: {
+    type: DataTypes.ENUM('Email', 'Phone', 'Meeting', 'Video Call', 'Other'),
+    allowNull: false,
+    field: 'communication_type'
+  },
+  subject: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  details: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  communicationDate: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'communication_date'
+  },
+  followUpRequired: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'follow_up_required'
+  },
+  followUpDate: {
+    type: DataTypes.DATEONLY,
+    field: 'follow_up_date'
+  },
+  status: {
+    type: DataTypes.ENUM('Completed', 'Pending', 'Follow-up Required'),
+    defaultValue: 'Completed'
+  },
+  attachments: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'partner_communications',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// BENEFICIARY MODEL
+// ============================================
+const Beneficiary = sequelize.define('Beneficiary', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  fullName: {
+    type: DataTypes.STRING(200),
+    allowNull: false,
+    field: 'full_name'
+  },
+  beneficiaryId: {
+    type: DataTypes.STRING(50),
+    unique: true,
+    allowNull: false,
+    field: 'beneficiary_id'
+  },
+  dateOfBirth: {
+    type: DataTypes.DATEONLY,
+    field: 'date_of_birth'
+  },
+  age: {
+    type: DataTypes.INTEGER
+  },
+  gender: {
+    type: DataTypes.ENUM('Male', 'Female', 'Other'),
+    allowNull: false
+  },
+  nic: {
+    type: DataTypes.STRING(20),
+    field: 'nic'
+  },
+  contactNumber: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    field: 'contact_number'
+  },
+  email: {
+    type: DataTypes.STRING(100)
+  },
+  address: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  province: {
+    type: DataTypes.STRING(100)
+  },
+  district: {
+    type: DataTypes.STRING(100)
+  },
+  dsDivision: {
+    type: DataTypes.STRING(150),
+    field: 'ds_division'
+  },
+  gnDivision: {
+    type: DataTypes.STRING(150),
+    field: 'gn_division'
+  },
+  category: {
+    type: DataTypes.ENUM('Individual', 'Family', 'Community', 'Institution'),
+    allowNull: false,
+    defaultValue: 'Individual'
+  },
+  beneficiaryType: {
+    type: DataTypes.STRING(100),
+    field: 'beneficiary_type'
+  },
+  vulnerabilityScore: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    field: 'vulnerability_score'
+  },
+  status: {
+    type: DataTypes.ENUM('Active', 'Inactive', 'Graduated', 'Suspended'),
+    defaultValue: 'Active'
+  },
+  registrationDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'registration_date'
+  },
+  exitDate: {
+    type: DataTypes.DATEONLY,
+    field: 'exit_date'
+  },
+  exitReason: {
+    type: DataTypes.TEXT,
+    field: 'exit_reason'
+  },
+  householdSize: {
+    type: DataTypes.INTEGER,
+    field: 'household_size'
+  },
+  monthlyIncome: {
+    type: DataTypes.DECIMAL(10, 2),
+    field: 'monthly_income'
+  },
+  employmentStatus: {
+    type: DataTypes.STRING(100),
+    field: 'employment_status'
+  },
+  educationLevel: {
+    type: DataTypes.STRING(100),
+    field: 'education_level'
+  },
+  healthStatus: {
+    type: DataTypes.STRING(100),
+    field: 'health_status'
+  },
+  disabilities: {
+    type: DataTypes.TEXT
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  photoUrl: {
+    type: DataTypes.TEXT,
+    field: 'photo_url'
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'beneficiaries',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// BENEFICIARY SUPPORT MODEL
+// ============================================
+const BeneficiarySupport = sequelize.define('BeneficiarySupport', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  beneficiaryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'beneficiary_id',
+    references: {
+      model: 'beneficiaries',
+      key: 'id'
+    }
+  },
+  supportType: {
+    type: DataTypes.ENUM('Financial', 'Material', 'Service', 'Training', 'Healthcare', 'Education', 'Other'),
+    allowNull: false,
+    field: 'support_type'
+  },
+  supportCategory: {
+    type: DataTypes.STRING(100),
+    field: 'support_category'
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  amount: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  currency: {
+    type: DataTypes.STRING(10),
+    defaultValue: 'LKR'
+  },
+  quantity: {
+    type: DataTypes.INTEGER
+  },
+  unit: {
+    type: DataTypes.STRING(50)
+  },
+  providedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'provided_date'
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    field: 'project_id',
+    references: {
+      model: 'projects',
+      key: 'id'
+    }
+  },
+  partnerId: {
+    type: DataTypes.INTEGER,
+    field: 'partner_id',
+    references: {
+      model: 'partners',
+      key: 'id'
+    }
+  },
+  status: {
+    type: DataTypes.ENUM('Planned', 'In Progress', 'Completed', 'Cancelled'),
+    defaultValue: 'Planned'
+  },
+  deliveryMethod: {
+    type: DataTypes.STRING(100),
+    field: 'delivery_method'
+  },
+  receiptNumber: {
+    type: DataTypes.STRING(100),
+    field: 'receipt_number'
+  },
+  verificationStatus: {
+    type: DataTypes.ENUM('Pending', 'Verified', 'Not Verified'),
+    defaultValue: 'Pending',
+    field: 'verification_status'
+  },
+  verifiedBy: {
+    type: DataTypes.INTEGER,
+    field: 'verified_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
+  verifiedDate: {
+    type: DataTypes.DATEONLY,
+    field: 'verified_date'
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  attachments: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'beneficiary_support',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// ONBOARDING RECORD MODEL
+// ============================================
+const OnboardingRecord = sequelize.define('OnboardingRecord', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'staff_id',
+    references: {
+      model: 'staff',
+      key: 'id'
+    }
+  },
+  onboardingDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'onboarding_date'
+  },
+  completionDate: {
+    type: DataTypes.DATEONLY,
+    field: 'completion_date'
+  },
+  status: {
+    type: DataTypes.ENUM('Not Started', 'In Progress', 'Completed', 'On Hold'),
+    defaultValue: 'Not Started'
+  },
+  progress: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+      max: 100
+    }
+  },
+  assignedTo: {
+    type: DataTypes.INTEGER,
+    field: 'assigned_to',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
+  checklist: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  documents: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'onboarding_records',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// APPRAISAL RECORD MODEL
+// ============================================
+const AppraisalRecord = sequelize.define('AppraisalRecord', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'staff_id',
+    references: {
+      model: 'staff',
+      key: 'id'
+    }
+  },
+  appraisalPeriod: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    field: 'appraisal_period'
+  },
+  appraisalDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'appraisal_date'
+  },
+  appraisalType: {
+    type: DataTypes.ENUM('Probation', 'Annual', 'Mid-Year', 'Project-Based'),
+    allowNull: false,
+    field: 'appraisal_type'
+  },
+  appraiser: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
+  reviewer: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
+  overallRating: {
+    type: DataTypes.DECIMAL(3, 2),
+    field: 'overall_rating',
+    validate: {
+      min: 0,
+      max: 5
+    }
+  },
+  performanceRatings: {
+    type: DataTypes.JSON,
+    defaultValue: {},
+    field: 'performance_ratings'
+  },
+  strengths: {
+    type: DataTypes.TEXT
+  },
+  areasOfImprovement: {
+    type: DataTypes.TEXT,
+    field: 'areas_of_improvement'
+  },
+  goals: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  trainingNeeds: {
+    type: DataTypes.JSON,
+    defaultValue: [],
+    field: 'training_needs'
+  },
+  employeeComments: {
+    type: DataTypes.TEXT,
+    field: 'employee_comments'
+  },
+  appraiserComments: {
+    type: DataTypes.TEXT,
+    field: 'appraiser_comments'
+  },
+  reviewerComments: {
+    type: DataTypes.TEXT,
+    field: 'reviewer_comments'
+  },
+  status: {
+    type: DataTypes.ENUM('Draft', 'Submitted', 'Under Review', 'Completed', 'Acknowledged'),
+    defaultValue: 'Draft'
+  },
+  submittedDate: {
+    type: DataTypes.DATEONLY,
+    field: 'submitted_date'
+  },
+  acknowledgedDate: {
+    type: DataTypes.DATEONLY,
+    field: 'acknowledged_date'
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: 'appraisal_records',
   timestamps: true,
   underscored: true
 });
@@ -1537,6 +2579,41 @@ GrantReceipt.belongsTo(BankAccount, { as: 'bankAccount', foreignKey: 'bankAccoun
 GrantReceipt.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 
 FixedAsset.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+// Partner module associations
+Partner.hasMany(PartnerContribution, { as: 'contributions', foreignKey: 'partnerId' });
+Partner.hasMany(PartnerCommunication, { as: 'communications', foreignKey: 'partnerId' });
+
+PartnerContribution.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
+PartnerContribution.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+PartnerContribution.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+PartnerCommunication.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
+PartnerCommunication.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+// Beneficiary module associations
+Beneficiary.hasMany(BeneficiarySupport, { as: 'supports', foreignKey: 'beneficiaryId' });
+Beneficiary.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+BeneficiarySupport.belongsTo(Beneficiary, { as: 'beneficiary', foreignKey: 'beneficiaryId' });
+BeneficiarySupport.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+BeneficiarySupport.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
+BeneficiarySupport.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+BeneficiarySupport.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
+
+// HR module associations
+Staff.hasMany(OnboardingRecord, { as: 'onboardingRecords', foreignKey: 'staffId' });
+Staff.hasMany(AppraisalRecord, { as: 'appraisalRecords', foreignKey: 'staffId' });
+
+OnboardingRecord.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
+OnboardingRecord.belongsTo(User, { as: 'assignee', foreignKey: 'assignedTo' });
+OnboardingRecord.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+AppraisalRecord.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
+AppraisalRecord.belongsTo(User, { as: 'appraiserUser', foreignKey: 'appraiser' });
+AppraisalRecord.belongsTo(User, { as: 'reviewerUser', foreignKey: 'reviewer' });
+AppraisalRecord.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
 // ============================================
 // EXPORTS
 // ============================================
@@ -1548,7 +2625,18 @@ export {
   Expense,
   Staff,
   CBOPartner,
+  CBOVolunteer,
+  CBOActivity,
+  CBODueDiligence,
+  CBOProposal,
+  CBOProject,
   Partner,
+  PartnerContribution,
+  PartnerCommunication,
+  Beneficiary,
+  BeneficiarySupport,
+  OnboardingRecord,
+  AppraisalRecord,
   Indicator,
   Report,
   Proposal,
@@ -1587,7 +2675,18 @@ export default {
   Expense,
   Staff,
   CBOPartner,
+  CBOVolunteer,
+  CBOActivity,
+  CBODueDiligence,
+  CBOProposal,
+  CBOProject,
   Partner,
+  PartnerContribution,
+  PartnerCommunication,
+  Beneficiary,
+  BeneficiarySupport,
+  OnboardingRecord,
+  AppraisalRecord,
   Indicator,
   Report,
   Proposal,
