@@ -1929,6 +1929,95 @@ const Indicator = sequelize.define('Indicator', {
 });
 
 // ============================================
+// EVALUATION MODEL
+// ============================================
+const Evaluation = sequelize.define('Evaluation', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  evaluationCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'evaluation_code' },
+  title: { type: DataTypes.STRING(200), allowNull: false },
+  type: { type: DataTypes.ENUM('Baseline', 'Midterm', 'Endline', 'Impact'), allowNull: false },
+  projectId: { type: DataTypes.INTEGER, references: { model: 'projects', key: 'id' }, field: 'project_id' },
+  projectName: { type: DataTypes.STRING(200), field: 'project_name' },
+  evaluator: { type: DataTypes.STRING(100), allowNull: false },
+  startDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'start_date' },
+  endDate: { type: DataTypes.DATEONLY, field: 'end_date' },
+  status: { type: DataTypes.ENUM('Planned', 'In Progress', 'Completed', 'Cancelled'), defaultValue: 'Planned' },
+  methodology: { type: DataTypes.TEXT },
+  objectives: { type: DataTypes.JSON, defaultValue: [] },
+  findings: { type: DataTypes.TEXT },
+  recommendations: { type: DataTypes.TEXT },
+  reportStatus: { type: DataTypes.ENUM('Pending', 'Draft', 'Final', 'Published'), defaultValue: 'Pending', field: 'report_status' },
+  reportUrl: { type: DataTypes.STRING(500), field: 'report_url' },
+  attachments: { type: DataTypes.INTEGER, defaultValue: 0 },
+  budget: { type: DataTypes.DECIMAL(12, 2) },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'evaluations',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// LEARNING EVENT MODEL
+// ============================================
+const LearningEvent = sequelize.define('LearningEvent', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  eventCode: { type: DataTypes.STRING(50), unique: true, field: 'event_code' },
+  title: { type: DataTypes.STRING(200), allowNull: false },
+  type: { type: DataTypes.ENUM('Workshop', 'Training', 'Webinar', 'Conference', 'Community of Practice', 'Lesson Learned Session'), allowNull: false },
+  eventDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'event_date' },
+  facilitator: { type: DataTypes.STRING(100) },
+  participants: { type: DataTypes.JSON, defaultValue: [] },
+  totalParticipants: { type: DataTypes.INTEGER, defaultValue: 0, field: 'total_participants' },
+  description: { type: DataTypes.TEXT },
+  keyLearnings: { type: DataTypes.TEXT, field: 'key_learnings' },
+  actionPoints: { type: DataTypes.JSON, defaultValue: [], field: 'action_points' },
+  status: { type: DataTypes.ENUM('Scheduled', 'Completed', 'Cancelled'), defaultValue: 'Scheduled' },
+  venue: { type: DataTypes.STRING(200) },
+  duration: { type: DataTypes.INTEGER },
+  materials: { type: DataTypes.JSON, defaultValue: [] },
+  followUpRequired: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'follow_up_required' },
+  followUpDate: { type: DataTypes.DATEONLY, field: 'follow_up_date' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'learning_events',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// COMPLAINT/FEEDBACK MODEL
+// ============================================
+const Complaint = sequelize.define('Complaint', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  ticketNumber: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'ticket_number' },
+  submittedDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'submitted_date' },
+  complainantName: { type: DataTypes.STRING(100), field: 'complainant_name' },
+  contactMethod: { type: DataTypes.ENUM('Phone', 'Email', 'In-Person', 'Online Form', 'Letter'), field: 'contact_method' },
+  contactDetails: { type: DataTypes.STRING(200), field: 'contact_details' },
+  category: { type: DataTypes.ENUM('Service Quality', 'Staff Behavior', 'Project Implementation', 'Finance', 'Safeguarding', 'Other'), allowNull: false },
+  priority: { type: DataTypes.ENUM('Low', 'Medium', 'High', 'Critical'), defaultValue: 'Medium' },
+  description: { type: DataTypes.TEXT, allowNull: false },
+  projectId: { type: DataTypes.INTEGER, references: { model: 'projects', key: 'id' }, field: 'project_id' },
+  projectName: { type: DataTypes.STRING(200), field: 'project_name' },
+  status: { type: DataTypes.ENUM('Open', 'Under Investigation', 'In Progress', 'Resolved', 'Closed'), defaultValue: 'Open' },
+  assignedTo: { type: DataTypes.STRING(100), field: 'assigned_to' },
+  investigationNotes: { type: DataTypes.TEXT, field: 'investigation_notes' },
+  resolution: { type: DataTypes.TEXT },
+  resolvedDate: { type: DataTypes.DATEONLY, field: 'resolved_date' },
+  closedDate: { type: DataTypes.DATEONLY, field: 'closed_date' },
+  satisfactionRating: { type: DataTypes.INTEGER, field: 'satisfaction_rating' },
+  followUpRequired: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'follow_up_required' },
+  followUpDate: { type: DataTypes.DATEONLY, field: 'follow_up_date' },
+  confidential: { type: DataTypes.BOOLEAN, defaultValue: false },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'complaints',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
 // ASSOCIATIONS
 // ============================================
 
@@ -2796,6 +2885,9 @@ export {
   OnboardingRecord,
   AppraisalRecord,
   Indicator,
+  Evaluation,
+  LearningEvent,
+  Complaint,
   Report,
   Proposal,
   OrphanVisitLog,
@@ -2851,6 +2943,9 @@ export default {
   OnboardingRecord,
   AppraisalRecord,
   Indicator,
+  Evaluation,
+  LearningEvent,
+  Complaint,
   Report,
   Proposal,
   OrphanVisitLog,

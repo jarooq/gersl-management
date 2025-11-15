@@ -60,6 +60,9 @@ import safeguardingIncidentRoutes from './routes/safeguarding-incident.routes.js
 import backgroundCheckRoutes from './routes/background-check.routes.js';
 import complianceTrainingRoutes from './routes/compliance-training.routes.js';
 import dataProtectionRoutes from './routes/data-protection.routes.js';
+import evaluationRoutes from './routes/evaluation.routes.js';
+import learningEventRoutes from './routes/learning-event.routes.js';
+import complaintRoutes from './routes/complaint.routes.js';
 
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
@@ -168,6 +171,9 @@ app.use('/api/hr', hrRoutes);
 app.use('/api/cbo', cboRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/meal', mealRoutes);
+app.use('/api/meal/evaluations', evaluationRoutes);
+app.use('/api/meal/learning-events', learningEventRoutes);
+app.use('/api/meal/complaints', complaintRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/approvals', approvalRoutes);
 app.use('/api/reports', reportRoutes);

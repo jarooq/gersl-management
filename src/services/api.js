@@ -1152,6 +1152,150 @@ export const MEALAPI = {
 };
 
 // ============================================
+// EVALUATION API
+// ============================================
+
+export const EvaluationAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/meal/evaluations?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/meal/evaluations/${id}`);
+    return data.data.evaluation;
+  },
+
+  create: async (evaluationData) => {
+    const data = await request('/meal/evaluations', {
+      method: 'POST',
+      body: JSON.stringify(evaluationData),
+    });
+    return data.data.evaluation;
+  },
+
+  update: async (id, evaluationData) => {
+    const data = await request(`/meal/evaluations/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(evaluationData),
+    });
+    return data.data.evaluation;
+  },
+
+  delete: async (id) => {
+    await request(`/meal/evaluations/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/meal/evaluations/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// LEARNING EVENT API
+// ============================================
+
+export const LearningEventAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/meal/learning-events?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/meal/learning-events/${id}`);
+    return data.data.learningEvent;
+  },
+
+  create: async (learningEventData) => {
+    const data = await request('/meal/learning-events', {
+      method: 'POST',
+      body: JSON.stringify(learningEventData),
+    });
+    return data.data.learningEvent;
+  },
+
+  update: async (id, learningEventData) => {
+    const data = await request(`/meal/learning-events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(learningEventData),
+    });
+    return data.data.learningEvent;
+  },
+
+  delete: async (id) => {
+    await request(`/meal/learning-events/${id}`, { method: 'DELETE' });
+  },
+
+  addParticipant: async (id, participant) => {
+    const data = await request(`/meal/learning-events/${id}/participants`, {
+      method: 'POST',
+      body: JSON.stringify({ participant }),
+    });
+    return data.data.learningEvent;
+  },
+
+  getStats: async () => {
+    const data = await request('/meal/learning-events/stats');
+    return data.data;
+  },
+};
+
+// ============================================
+// COMPLAINT API
+// ============================================
+
+export const ComplaintAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/meal/complaints?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/meal/complaints/${id}`);
+    return data.data.complaint;
+  },
+
+  create: async (complaintData) => {
+    const data = await request('/meal/complaints', {
+      method: 'POST',
+      body: JSON.stringify(complaintData),
+    });
+    return data.data.complaint;
+  },
+
+  update: async (id, complaintData) => {
+    const data = await request(`/meal/complaints/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(complaintData),
+    });
+    return data.data.complaint;
+  },
+
+  delete: async (id) => {
+    await request(`/meal/complaints/${id}`, { method: 'DELETE' });
+  },
+
+  assign: async (id, assignedTo) => {
+    const data = await request(`/meal/complaints/${id}/assign`, {
+      method: 'PUT',
+      body: JSON.stringify({ assignedTo }),
+    });
+    return data.data.complaint;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/meal/complaints/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
 // VISIT LOG API
 // ============================================
 
