@@ -9,7 +9,7 @@ import {
   deleteOnboardingRecord,
   getOnboardingStats
 } from '../controllers/hr-onboarding.controller.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
