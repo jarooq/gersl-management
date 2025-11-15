@@ -1,6 +1,5 @@
 import { AppraisalRecord, Staff, User } from '../models/index.js';
-import { asyncHandler } from '../utils/asyncHandler.js';
-import { NotFoundError, ValidationError } from '../utils/errors.js';
+import { asyncHandler, NotFoundError, ValidationError } from '../middleware/error.middleware.js';
 import { Op } from 'sequelize';
 
 // ============================================
