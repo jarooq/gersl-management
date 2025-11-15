@@ -3,8 +3,10 @@
 // ============================================
 // Centralized API communication with backend
 
-// Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Use environment variable for API URL, fallback to relative path for production
+// In production (Vercel), relative /api goes through our serverless proxy
+// In development, use localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
 const API_TIMEOUT = 30000;
 
 // Log API URL for debugging (development only)
@@ -22,14 +24,17 @@ if (import.meta.env.DEV) {
 // To fully remove localStorage tokens, users should logout and login again.
 
 export const TokenManager = {
-  getAccessToken: () => null, // Tokens now in httpOnly cookies
-  getRefreshToken: () => null, // Tokens now in httpOnly cookies
+  getAccessToken: () => localStorage.getItem('accessToken'),
+  getRefreshToken: () => localStorage.getItem('refreshToken'),
   setTokens: (accessToken, refreshToken) => {
-    // No-op: Tokens are set via httpOnly cookies by the backend
-    console.warn('⚠️ TokenManager.setTokens is deprecated. Tokens are now managed via httpOnly cookies.');
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+    }
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
   },
   clearTokens: () => {
-    // Clear localStorage for backward compatibility
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('currentUser');
@@ -97,6 +102,12 @@ const request = async (endpoint, options = {}) => {
     ...options.headers,
   };
 
+  // Add Authorization header if token exists
+  const token = TokenManager.getAccessToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const config = {
     ...options,
     headers,
@@ -109,17 +120,28 @@ const request = async (endpoint, options = {}) => {
   } catch (error) {
     // Handle token expiration
     if (error.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/refresh')) {
-      // Try to refresh token (only if not already on login/refresh endpoints)
-      try {
-        await AuthAPI.refreshToken();
-        // Retry original request
-        const retryResponse = await fetchWithTimeout(url, config);
-        return await handleResponse(retryResponse);
-      } catch (refreshError) {
-        // Refresh failed, logout
+      // Only try to refresh if we have a refresh token
+      const refreshToken = TokenManager.getRefreshToken();
+      if (refreshToken) {
+        try {
+          await AuthAPI.refreshToken();
+          // Retry original request with new token
+          const newToken = TokenManager.getAccessToken();
+          if (newToken) {
+            config.headers['Authorization'] = `Bearer ${newToken}`;
+          }
+          const retryResponse = await fetchWithTimeout(url, config);
+          return await handleResponse(retryResponse);
+        } catch (refreshError) {
+          // Refresh failed, clear tokens and redirect to login
+          TokenManager.clearTokens();
+          window.location.href = '/login';
+          throw refreshError;
+        }
+      } else {
+        // No refresh token available, just clear and throw
         TokenManager.clearTokens();
-        window.location.href = '/login';
-        throw refreshError;
+        throw error;
       }
     }
     throw error;
@@ -136,10 +158,11 @@ export const AuthAPI = {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
-    // Tokens are now set via httpOnly cookies by the backend
-    // Clear any old localStorage tokens for migration
-    TokenManager.clearTokens();
-    return data.data;
+    // Store tokens in localStorage - tokens are at root level of response
+    if (data.accessToken && data.refreshToken) {
+      TokenManager.setTokens(data.accessToken, data.refreshToken);
+    }
+    return data;
   },
 
   register: async (userData) => {
@@ -147,9 +170,8 @@ export const AuthAPI = {
       method: 'POST',
       body: JSON.stringify(userData),
     });
-    // Tokens are now set via httpOnly cookies by the backend
-    // Clear any old localStorage tokens for migration
-    TokenManager.clearTokens();
+    // Note: register response doesn't include tokens at root level, they're in cookies only
+    // User data is in data.data
     return data.data;
   },
 
@@ -463,6 +485,123 @@ export const HRAPI = {
 };
 
 // ============================================
+// HR ONBOARDING API
+// ============================================
+
+export const HROnboardingAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/hr/onboarding?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/hr/onboarding/${id}`);
+    return data.data.record;
+  },
+
+  getByStaff: async (staffId) => {
+    const data = await request(`/hr/onboarding/staff/${staffId}`);
+    return data.data.records;
+  },
+
+  create: async (recordData) => {
+    const data = await request('/hr/onboarding', {
+      method: 'POST',
+      body: JSON.stringify(recordData),
+    });
+    return data.data.record;
+  },
+
+  update: async (id, recordData) => {
+    const data = await request(`/hr/onboarding/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(recordData),
+    });
+    return data.data.record;
+  },
+
+  updateProgress: async (id, progress) => {
+    const data = await request(`/hr/onboarding/${id}/progress`, {
+      method: 'PUT',
+      body: JSON.stringify({ progress }),
+    });
+    return data.data.record;
+  },
+
+  delete: async (id) => {
+    await request(`/hr/onboarding/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async () => {
+    const data = await request('/hr/onboarding/stats');
+    return data.data;
+  },
+};
+
+// ============================================
+// HR APPRAISAL API
+// ============================================
+
+export const HRAppraisalAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/hr/appraisal?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/hr/appraisal/${id}`);
+    return data.data.record;
+  },
+
+  getByStaff: async (staffId) => {
+    const data = await request(`/hr/appraisal/staff/${staffId}`);
+    return data.data.records;
+  },
+
+  create: async (recordData) => {
+    const data = await request('/hr/appraisal', {
+      method: 'POST',
+      body: JSON.stringify(recordData),
+    });
+    return data.data.record;
+  },
+
+  update: async (id, recordData) => {
+    const data = await request(`/hr/appraisal/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(recordData),
+    });
+    return data.data.record;
+  },
+
+  submit: async (id) => {
+    const data = await request(`/hr/appraisal/${id}/submit`, {
+      method: 'PUT',
+    });
+    return data.data.record;
+  },
+
+  acknowledge: async (id, employeeComments) => {
+    const data = await request(`/hr/appraisal/${id}/acknowledge`, {
+      method: 'PUT',
+      body: JSON.stringify({ employeeComments }),
+    });
+    return data.data.record;
+  },
+
+  delete: async (id) => {
+    await request(`/hr/appraisal/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async () => {
+    const data = await request('/hr/appraisal/stats');
+    return data.data;
+  },
+};
+
+// ============================================
 // CBO API
 // ============================================
 
@@ -545,6 +684,60 @@ export const PartnerAPI = {
     const queryString = new URLSearchParams(params).toString();
     const data = await request(`/partners/stats?${queryString}`);
     return data.data;
+  },
+
+  // Contribution operations
+  getContributions: async (partnerId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/partners/${partnerId}/contributions?${queryString}`);
+    return data.data;
+  },
+
+  createContribution: async (partnerId, contributionData) => {
+    const data = await request(`/partners/${partnerId}/contributions`, {
+      method: 'POST',
+      body: JSON.stringify(contributionData),
+    });
+    return data.data.contribution;
+  },
+
+  updateContribution: async (id, contributionData) => {
+    const data = await request(`/partners/contributions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(contributionData),
+    });
+    return data.data.contribution;
+  },
+
+  deleteContribution: async (id) => {
+    await request(`/partners/contributions/${id}`, { method: 'DELETE' });
+  },
+
+  // Communication operations
+  getCommunications: async (partnerId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/partners/${partnerId}/communications?${queryString}`);
+    return data.data;
+  },
+
+  createCommunication: async (partnerId, communicationData) => {
+    const data = await request(`/partners/${partnerId}/communications`, {
+      method: 'POST',
+      body: JSON.stringify(communicationData),
+    });
+    return data.data.communication;
+  },
+
+  updateCommunication: async (id, communicationData) => {
+    const data = await request(`/partners/communications/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(communicationData),
+    });
+    return data.data.communication;
+  },
+
+  deleteCommunication: async (id) => {
+    await request(`/partners/communications/${id}`, { method: 'DELETE' });
   },
 };
 
@@ -1065,6 +1258,888 @@ export const ProposalAPI = {
 };
 
 // ============================================
+// CAMPAIGN API
+// ============================================
+
+export const CampaignAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/campaigns?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/campaigns/${id}`);
+    return data.data.campaign;
+  },
+
+  create: async (campaignData) => {
+    const data = await request('/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(campaignData),
+    });
+    return data.data.campaign;
+  },
+
+  update: async (id, campaignData) => {
+    const data = await request(`/campaigns/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(campaignData),
+    });
+    return data.data.campaign;
+  },
+
+  delete: async (id) => {
+    await request(`/campaigns/${id}`, { method: 'DELETE' });
+  },
+
+  approve: async (id, approvalStatus, remarks = '') => {
+    const data = await request(`/campaigns/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ approvalStatus, remarks }),
+    });
+    return data.data.campaign;
+  },
+
+  getStats: async () => {
+    const data = await request('/campaigns/stats');
+    return data.data;
+  },
+};
+
+// ============================================
+// DONATION API
+// ============================================
+
+export const DonationAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/donations?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/donations/${id}`);
+    return data.data.donation;
+  },
+
+  create: async (donationData) => {
+    const data = await request('/donations', {
+      method: 'POST',
+      body: JSON.stringify(donationData),
+    });
+    return data.data.donation;
+  },
+
+  update: async (id, donationData) => {
+    const data = await request(`/donations/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(donationData),
+    });
+    return data.data.donation;
+  },
+
+  delete: async (id) => {
+    await request(`/donations/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/donations/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// INVOICE API
+// ============================================
+
+export const InvoiceAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/invoices?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/invoices/${id}`);
+    return data.data.invoice;
+  },
+
+  create: async (invoiceData) => {
+    const data = await request('/invoices', {
+      method: 'POST',
+      body: JSON.stringify(invoiceData),
+    });
+    return data.data.invoice;
+  },
+
+  update: async (id, invoiceData) => {
+    const data = await request(`/invoices/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(invoiceData),
+    });
+    return data.data.invoice;
+  },
+
+  delete: async (id) => {
+    await request(`/invoices/${id}`, { method: 'DELETE' });
+  },
+
+  markAsPaid: async (id, paymentData) => {
+    const data = await request(`/invoices/${id}/paid`, {
+      method: 'PUT',
+      body: JSON.stringify(paymentData),
+    });
+    return data.data.invoice;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/invoices/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// BILL API
+// ============================================
+
+export const BillAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/bills?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/bills/${id}`);
+    return data.data.bill;
+  },
+
+  create: async (billData) => {
+    const data = await request('/bills', {
+      method: 'POST',
+      body: JSON.stringify(billData),
+    });
+    return data.data.bill;
+  },
+
+  update: async (id, billData) => {
+    const data = await request(`/bills/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(billData),
+    });
+    return data.data.bill;
+  },
+
+  delete: async (id) => {
+    await request(`/bills/${id}`, { method: 'DELETE' });
+  },
+
+  markAsPaid: async (id, paymentData) => {
+    const data = await request(`/bills/${id}/paid`, {
+      method: 'PUT',
+      body: JSON.stringify(paymentData),
+    });
+    return data.data.bill;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/bills/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// PURCHASE ORDER API
+// ============================================
+
+export const PurchaseOrderAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/purchase-orders?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/purchase-orders/${id}`);
+    return data.data.purchaseOrder;
+  },
+
+  create: async (poData) => {
+    const data = await request('/purchase-orders', {
+      method: 'POST',
+      body: JSON.stringify(poData),
+    });
+    return data.data.purchaseOrder;
+  },
+
+  update: async (id, poData) => {
+    const data = await request(`/purchase-orders/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(poData),
+    });
+    return data.data.purchaseOrder;
+  },
+
+  delete: async (id) => {
+    await request(`/purchase-orders/${id}`, { method: 'DELETE' });
+  },
+
+  approve: async (id, approvalStatus, remarks = '') => {
+    const data = await request(`/purchase-orders/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ approvalStatus, remarks }),
+    });
+    return data.data.purchaseOrder;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/purchase-orders/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// CHART OF ACCOUNTS API
+// ============================================
+
+export const ChartOfAccountsAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/chart-of-accounts?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/chart-of-accounts/${id}`);
+    return data.data.account;
+  },
+
+  create: async (accountData) => {
+    const data = await request('/chart-of-accounts', {
+      method: 'POST',
+      body: JSON.stringify(accountData),
+    });
+    return data.data.account;
+  },
+
+  update: async (id, accountData) => {
+    const data = await request(`/chart-of-accounts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(accountData),
+    });
+    return data.data.account;
+  },
+
+  delete: async (id) => {
+    await request(`/chart-of-accounts/${id}`, { method: 'DELETE' });
+  },
+};
+
+// ============================================
+// JOURNAL ENTRY API
+// ============================================
+
+export const JournalEntryAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/journal-entries?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/journal-entries/${id}`);
+    return data.data.entry;
+  },
+
+  create: async (entryData) => {
+    const data = await request('/journal-entries', {
+      method: 'POST',
+      body: JSON.stringify(entryData),
+    });
+    return data.data.entry;
+  },
+
+  update: async (id, entryData) => {
+    const data = await request(`/journal-entries/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(entryData),
+    });
+    return data.data.entry;
+  },
+
+  delete: async (id) => {
+    await request(`/journal-entries/${id}`, { method: 'DELETE' });
+  },
+
+  post: async (id) => {
+    const data = await request(`/journal-entries/${id}/post`, {
+      method: 'PUT',
+    });
+    return data.data.entry;
+  },
+};
+
+// ============================================
+// BANK ACCOUNT API
+// ============================================
+
+export const BankAccountAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/bank-accounts?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/bank-accounts/${id}`);
+    return data.data.account;
+  },
+
+  create: async (accountData) => {
+    const data = await request('/bank-accounts', {
+      method: 'POST',
+      body: JSON.stringify(accountData),
+    });
+    return data.data.account;
+  },
+
+  update: async (id, accountData) => {
+    const data = await request(`/bank-accounts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(accountData),
+    });
+    return data.data.account;
+  },
+
+  delete: async (id) => {
+    await request(`/bank-accounts/${id}`, { method: 'DELETE' });
+  },
+};
+
+// ============================================
+// BANK TRANSACTION API
+// ============================================
+
+export const BankTransactionAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/bank-transactions?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/bank-transactions/${id}`);
+    return data.data.transaction;
+  },
+
+  create: async (transactionData) => {
+    const data = await request('/bank-transactions', {
+      method: 'POST',
+      body: JSON.stringify(transactionData),
+    });
+    return data.data.transaction;
+  },
+
+  update: async (id, transactionData) => {
+    const data = await request(`/bank-transactions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(transactionData),
+    });
+    return data.data.transaction;
+  },
+
+  delete: async (id) => {
+    await request(`/bank-transactions/${id}`, { method: 'DELETE' });
+  },
+
+  reconcile: async (id, reconciled = true) => {
+    const data = await request(`/bank-transactions/${id}/reconcile`, {
+      method: 'PUT',
+      body: JSON.stringify({ reconciled }),
+    });
+    return data.data.transaction;
+  },
+};
+
+// ============================================
+// BUDGET API
+// ============================================
+
+export const BudgetAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/budgets?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/budgets/${id}`);
+    return data.data.budget;
+  },
+
+  create: async (budgetData) => {
+    const data = await request('/budgets', {
+      method: 'POST',
+      body: JSON.stringify(budgetData),
+    });
+    return data.data.budget;
+  },
+
+  update: async (id, budgetData) => {
+    const data = await request(`/budgets/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(budgetData),
+    });
+    return data.data.budget;
+  },
+
+  delete: async (id) => {
+    await request(`/budgets/${id}`, { method: 'DELETE' });
+  },
+
+  approve: async (id, approvalStatus, remarks = '') => {
+    const data = await request(`/budgets/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ approvalStatus, remarks }),
+    });
+    return data.data.budget;
+  },
+};
+
+// ============================================
+// PAYROLL API
+// ============================================
+
+export const PayrollAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/payroll?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/payroll/${id}`);
+    return data.data.payroll;
+  },
+
+  create: async (payrollData) => {
+    const data = await request('/payroll', {
+      method: 'POST',
+      body: JSON.stringify(payrollData),
+    });
+    return data.data.payroll;
+  },
+
+  update: async (id, payrollData) => {
+    const data = await request(`/payroll/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payrollData),
+    });
+    return data.data.payroll;
+  },
+
+  delete: async (id) => {
+    await request(`/payroll/${id}`, { method: 'DELETE' });
+  },
+
+  process: async (id) => {
+    const data = await request(`/payroll/${id}/process`, {
+      method: 'PUT',
+    });
+    return data.data.payroll;
+  },
+};
+
+// ============================================
+// GRANT RECEIVABLE API
+// ============================================
+
+export const GrantReceivableAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/grant-receivables?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/grant-receivables/${id}`);
+    return data.data.grant;
+  },
+
+  create: async (grantData) => {
+    const data = await request('/grant-receivables', {
+      method: 'POST',
+      body: JSON.stringify(grantData),
+    });
+    return data.data.grant;
+  },
+
+  update: async (id, grantData) => {
+    const data = await request(`/grant-receivables/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(grantData),
+    });
+    return data.data.grant;
+  },
+
+  delete: async (id) => {
+    await request(`/grant-receivables/${id}`, { method: 'DELETE' });
+  },
+
+  recordReceipt: async (id, receiptData) => {
+    const data = await request(`/grant-receivables/${id}/receipt`, {
+      method: 'POST',
+      body: JSON.stringify(receiptData),
+    });
+    return data.data.grant;
+  },
+};
+
+// ============================================
+// FIXED ASSET API
+// ============================================
+
+export const FixedAssetAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/fixed-assets?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/fixed-assets/${id}`);
+    return data.data.asset;
+  },
+
+  create: async (assetData) => {
+    const data = await request('/fixed-assets', {
+      method: 'POST',
+      body: JSON.stringify(assetData),
+    });
+    return data.data.asset;
+  },
+
+  update: async (id, assetData) => {
+    const data = await request(`/fixed-assets/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(assetData),
+    });
+    return data.data.asset;
+  },
+
+  delete: async (id) => {
+    await request(`/fixed-assets/${id}`, { method: 'DELETE' });
+  },
+
+  depreciate: async (id, depreciationData) => {
+    const data = await request(`/fixed-assets/${id}/depreciate`, {
+      method: 'POST',
+      body: JSON.stringify(depreciationData),
+    });
+    return data.data.asset;
+  },
+
+  dispose: async (id, disposalData) => {
+    const data = await request(`/fixed-assets/${id}/dispose`, {
+      method: 'PUT',
+      body: JSON.stringify(disposalData),
+    });
+    return data.data.asset;
+  },
+};
+
+// ============================================
+// JOB POSTING API
+// ============================================
+
+export const JobPostingAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/job-postings?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/job-postings/${id}`);
+    return data.data.jobPosting;
+  },
+
+  create: async (jobData) => {
+    const data = await request('/job-postings', {
+      method: 'POST',
+      body: JSON.stringify(jobData),
+    });
+    return data.data.jobPosting;
+  },
+
+  update: async (id, jobData) => {
+    const data = await request(`/job-postings/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(jobData),
+    });
+    return data.data.jobPosting;
+  },
+
+  delete: async (id) => {
+    await request(`/job-postings/${id}`, { method: 'DELETE' });
+  },
+
+  apply: async (id, applicationData) => {
+    const data = await request(`/job-postings/${id}/apply`, {
+      method: 'POST',
+      body: JSON.stringify(applicationData),
+    });
+    return data.data.application;
+  },
+};
+
+// ============================================
+// VENDOR CALL API
+// ============================================
+
+export const VendorCallAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/vendor-calls?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/vendor-calls/${id}`);
+    return data.data.vendorCall;
+  },
+
+  create: async (callData) => {
+    const data = await request('/vendor-calls', {
+      method: 'POST',
+      body: JSON.stringify(callData),
+    });
+    return data.data.vendorCall;
+  },
+
+  update: async (id, callData) => {
+    const data = await request(`/vendor-calls/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(callData),
+    });
+    return data.data.vendorCall;
+  },
+
+  delete: async (id) => {
+    await request(`/vendor-calls/${id}`, { method: 'DELETE' });
+  },
+
+  submit: async (id, submissionData) => {
+    const data = await request(`/vendor-calls/${id}/submit`, {
+      method: 'POST',
+      body: JSON.stringify(submissionData),
+    });
+    return data.data.submission;
+  },
+};
+
+// ============================================
+// SOCIAL MEDIA API
+// ============================================
+
+export const SocialMediaAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/social-media?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/social-media/${id}`);
+    return data.data.post;
+  },
+
+  create: async (postData) => {
+    const data = await request('/social-media', {
+      method: 'POST',
+      body: JSON.stringify(postData),
+    });
+    return data.data.post;
+  },
+
+  update: async (id, postData) => {
+    const data = await request(`/social-media/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(postData),
+    });
+    return data.data.post;
+  },
+
+  delete: async (id) => {
+    await request(`/social-media/${id}`, { method: 'DELETE' });
+  },
+
+  publish: async (id) => {
+    const data = await request(`/social-media/${id}/publish`, {
+      method: 'PUT',
+    });
+    return data.data.post;
+  },
+
+  getEngagement: async (postId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/social-media/${postId}/engagement?${queryString}`);
+    return data.data;
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/social-media/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// COMPLIANCE API
+// ============================================
+
+export const ComplianceAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/compliance?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/compliance/${id}`);
+    return data.data.document;
+  },
+
+  create: async (documentData) => {
+    const data = await request('/compliance', {
+      method: 'POST',
+      body: JSON.stringify(documentData),
+    });
+    return data.data.document;
+  },
+
+  update: async (id, documentData) => {
+    const data = await request(`/compliance/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(documentData),
+    });
+    return data.data.document;
+  },
+
+  delete: async (id) => {
+    await request(`/compliance/${id}`, { method: 'DELETE' });
+  },
+
+  submit: async (id) => {
+    const data = await request(`/compliance/${id}/submit`, {
+      method: 'PUT',
+    });
+    return data.data.document;
+  },
+
+  approve: async (id, approvalStatus, remarks = '') => {
+    const data = await request(`/compliance/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ approvalStatus, remarks }),
+    });
+    return data.data.document;
+  },
+};
+
+// ============================================
+// ATTENDANCE API
+// ============================================
+
+export const AttendanceAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/attendance?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/attendance/${id}`);
+    return data.data.attendance;
+  },
+
+  create: async (attendanceData) => {
+    const data = await request('/attendance', {
+      method: 'POST',
+      body: JSON.stringify(attendanceData),
+    });
+    return data.data.attendance;
+  },
+
+  update: async (id, attendanceData) => {
+    const data = await request(`/attendance/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(attendanceData),
+    });
+    return data.data.attendance;
+  },
+
+  delete: async (id) => {
+    await request(`/attendance/${id}`, { method: 'DELETE' });
+  },
+
+  getStats: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/attendance/stats?${queryString}`);
+    return data.data;
+  },
+};
+
+// ============================================
+// LEAVE REQUEST API
+// ============================================
+
+export const LeaveRequestAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/leave-requests?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/leave-requests/${id}`);
+    return data.data.leaveRequest;
+  },
+
+  create: async (leaveData) => {
+    const data = await request('/leave-requests', {
+      method: 'POST',
+      body: JSON.stringify(leaveData),
+    });
+    return data.data.leaveRequest;
+  },
+
+  update: async (id, leaveData) => {
+    const data = await request(`/leave-requests/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(leaveData),
+    });
+    return data.data.leaveRequest;
+  },
+
+  delete: async (id) => {
+    await request(`/leave-requests/${id}`, { method: 'DELETE' });
+  },
+
+  approve: async (id, approvalStatus, remarks = '') => {
+    const data = await request(`/leave-requests/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ approvalStatus, remarks }),
+    });
+    return data.data.leaveRequest;
+  },
+};
+
+// ============================================
 // EXPORT DEFAULT API OBJECT
 // ============================================
 
@@ -1088,6 +2163,27 @@ const API = {
   BeneficiarySupport: BeneficiarySupportAPI,
   AI: AIAPI,
   Proposal: ProposalAPI,
+  // New Finance APIs
+  Campaign: CampaignAPI,
+  Donation: DonationAPI,
+  Invoice: InvoiceAPI,
+  Bill: BillAPI,
+  PurchaseOrder: PurchaseOrderAPI,
+  ChartOfAccounts: ChartOfAccountsAPI,
+  JournalEntry: JournalEntryAPI,
+  BankAccount: BankAccountAPI,
+  BankTransaction: BankTransactionAPI,
+  Budget: BudgetAPI,
+  Payroll: PayrollAPI,
+  GrantReceivable: GrantReceivableAPI,
+  FixedAsset: FixedAssetAPI,
+  // Public/Campaign APIs
+  JobPosting: JobPostingAPI,
+  VendorCall: VendorCallAPI,
+  SocialMedia: SocialMediaAPI,
+  Compliance: ComplianceAPI,
+  Attendance: AttendanceAPI,
+  LeaveRequest: LeaveRequestAPI,
   TokenManager,
 };
 

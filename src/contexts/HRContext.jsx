@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import API from '../services/api';
+import * as APIServices from '../services/api';
 
 const HRContext = createContext();
 
@@ -12,22 +14,75 @@ export const useHR = () => {
 
 export const HRProvider = ({ children }) => {
   const [staff, setStaff] = useState([]);
-
   const [attendance, setAttendance] = useState([]);
-
   const [leaveRequests, setLeaveRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [onboardingRecords, setOnboardingRecords] = useState([]);
-
   const [appraisalRecords, setAppraisalRecords] = useState([]);
-
   const [gpsAttendance, setGpsAttendance] = useState([]);
-
   const [assetCheckouts, setAssetCheckouts] = useState([]);
-
   const [vehicleRequests, setVehicleRequests] = useState([]);
-
   const [accommodationRequests, setAccommodationRequests] = useState([]);
+
+  // Load HR data from backend on mount
+  useEffect(() => {
+    const loadHRData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [
+          attendanceRes,
+          leaveRes,
+          onboardingRes,
+          appraisalRes
+        ] = await Promise.allSettled([
+          API.Attendance.getAll(),
+          API.LeaveRequest.getAll(),
+          APIServices.HROnboardingAPI.getAll(),
+          APIServices.HRAppraisalAPI.getAll()
+        ]);
+
+        // Set attendance data
+        if (attendanceRes.status === 'fulfilled') {
+          setAttendance(attendanceRes.value.attendance || []);
+        } else {
+          console.error('Error loading attendance:', attendanceRes.reason);
+        }
+
+        // Set leave requests data
+        if (leaveRes.status === 'fulfilled') {
+          setLeaveRequests(leaveRes.value.leaveRequests || []);
+        } else {
+          console.error('Error loading leave requests:', leaveRes.reason);
+        }
+
+        // Set onboarding records data
+        if (onboardingRes.status === 'fulfilled') {
+          setOnboardingRecords(onboardingRes.value.records || []);
+        } else {
+          console.error('Error loading onboarding records:', onboardingRes.reason);
+        }
+
+        // Set appraisal records data
+        if (appraisalRes.status === 'fulfilled') {
+          setAppraisalRecords(appraisalRes.value.records || []);
+        } else {
+          console.error('Error loading appraisal records:', appraisalRes.reason);
+        }
+
+      } catch (err) {
+        console.error('Error loading HR data:', err);
+        setError(err.message || 'Failed to load HR data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHRData();
+  }, []);
 
   // Staff CRUD operations
   const addStaff = (staffData) => {
@@ -48,132 +103,182 @@ export const HRProvider = ({ children }) => {
   };
 
   // Attendance operations
-  const checkIn = (employeeId) => {
-    const today = new Date().toISOString().split('T')[0];
-    const now = new Date().toTimeString().slice(0, 5);
+  const checkIn = async (employeeId) => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
 
-    const existingAttendance = attendance.find(
-      a => a.employeeId === employeeId && a.date === today
-    );
+      const existingAttendance = attendance.find(
+        a => a.employeeId === employeeId && a.date === today
+      );
 
-    if (existingAttendance) {
-      return { success: false, message: 'Already checked in today' };
+      if (existingAttendance) {
+        return { success: false, message: 'Already checked in today' };
+      }
+
+      const newAttendance = await API.Attendance.create({
+        employeeId,
+        status: 'Present'
+      });
+
+      setAttendance([...attendance, newAttendance]);
+      return { success: true, message: 'Checked in successfully' };
+    } catch (err) {
+      console.error('Error checking in:', err);
+      return { success: false, message: 'Failed to check in' };
     }
-
-    const newAttendance = {
-      id: Math.max(...attendance.map(a => a.id), 0) + 1,
-      employeeId,
-      date: today,
-      checkIn: now,
-      checkOut: null,
-      status: 'Present'
-    };
-
-    setAttendance([...attendance, newAttendance]);
-    return { success: true, message: 'Checked in successfully' };
   };
 
-  const checkOut = (employeeId) => {
-    const today = new Date().toISOString().split('T')[0];
-    const now = new Date().toTimeString().slice(0, 5);
+  const checkOut = async (employeeId) => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
 
-    const updated = attendance.map(a =>
-      a.employeeId === employeeId && a.date === today && !a.checkOut
-        ? { ...a, checkOut: now }
-        : a
-    );
+      const todayAttendance = attendance.find(
+        a => a.employeeId === employeeId && a.date === today && !a.checkOut
+      );
 
-    setAttendance(updated);
-    return { success: true, message: 'Checked out successfully' };
+      if (!todayAttendance) {
+        return { success: false, message: 'No check-in found for today' };
+      }
+
+      const updated = await API.Attendance.update(todayAttendance.id, {
+        checkOut: new Date().toTimeString().slice(0, 5)
+      });
+
+      setAttendance(attendance.map(a =>
+        a.id === todayAttendance.id ? updated : a
+      ));
+
+      return { success: true, message: 'Checked out successfully' };
+    } catch (err) {
+      console.error('Error checking out:', err);
+      return { success: false, message: 'Failed to check out' };
+    }
   };
 
   // Leave operations
-  const applyLeave = (leaveData) => {
-    const employee = staff.find(s => s.id === leaveData.employeeId);
-    const newLeave = {
-      ...leaveData,
-      id: Math.max(...leaveRequests.map(l => l.id), 0) + 1,
-      employeeName: employee.fullName,
-      status: 'Pending',
-      appliedDate: new Date().toISOString().split('T')[0],
-      approvedBy: null,
-      approvedDate: null
-    };
-    setLeaveRequests([...leaveRequests, newLeave]);
-  };
-
-  const approveLeave = (id, approverName) => {
-    setLeaveRequests(leaveRequests.map(l =>
-      l.id === id
-        ? { ...l, status: 'Approved', approvedBy: approverName, approvedDate: new Date().toISOString().split('T')[0] }
-        : l
-    ));
-
-    // Deduct from leave balance
-    const leave = leaveRequests.find(l => l.id === id);
-    if (leave) {
-      updateStaff(leave.employeeId, {
-        leaveBalance: staff.find(s => s.id === leave.employeeId).leaveBalance - leave.days
+  const applyLeave = async (leaveData) => {
+    try {
+      const newLeave = await API.LeaveRequest.create({
+        ...leaveData,
+        status: 'Pending'
       });
+      setLeaveRequests([...leaveRequests, newLeave]);
+      return newLeave;
+    } catch (err) {
+      console.error('Error applying leave:', err);
+      throw err;
     }
   };
 
-  const rejectLeave = (id, approverName) => {
-    setLeaveRequests(leaveRequests.map(l =>
-      l.id === id
-        ? { ...l, status: 'Rejected', approvedBy: approverName, approvedDate: new Date().toISOString().split('T')[0] }
-        : l
-    ));
+  const approveLeave = async (id, approverName, remarks = '') => {
+    try {
+      const approved = await API.LeaveRequest.approve(id, 'Approved', remarks);
+      setLeaveRequests(leaveRequests.map(l =>
+        l.id === id ? approved : l
+      ));
+      return approved;
+    } catch (err) {
+      console.error('Error approving leave:', err);
+      throw err;
+    }
+  };
+
+  const rejectLeave = async (id, approverName, remarks = '') => {
+    try {
+      const rejected = await API.LeaveRequest.approve(id, 'Rejected', remarks);
+      setLeaveRequests(leaveRequests.map(l =>
+        l.id === id ? rejected : l
+      ));
+      return rejected;
+    } catch (err) {
+      console.error('Error rejecting leave:', err);
+      throw err;
+    }
   };
 
   // Onboarding operations
-  const addOnboarding = (onboardingData) => {
-    const employee = staff.find(s => s.id === onboardingData.employeeId);
-    const newOnboarding = {
-      ...onboardingData,
-      id: Math.max(...onboardingRecords.map(o => o.id), 0) + 1,
-      employeeName: employee?.fullName || 'Unknown',
-      department: employee?.department || 'Unknown',
-      startDate: onboardingData.startDate || new Date().toISOString().split('T')[0],
-      progress: 0,
-      status: 'In Progress'
-    };
-    setOnboardingRecords([...onboardingRecords, newOnboarding]);
+  const addOnboarding = async (onboardingData) => {
+    try {
+      const preparedData = {
+        ...onboardingData,
+        staffId: onboardingData.employeeId || onboardingData.staffId,
+        onboardingDate: onboardingData.startDate || new Date().toISOString().split('T')[0],
+        status: onboardingData.status || 'Not Started',
+        progress: onboardingData.progress || 0
+      };
+
+      const newOnboarding = await APIServices.HROnboardingAPI.create(preparedData);
+      setOnboardingRecords([...onboardingRecords, newOnboarding]);
+      return newOnboarding;
+    } catch (err) {
+      console.error('Error adding onboarding record:', err);
+      throw err;
+    }
   };
 
-  const updateOnboarding = (id, updatedData) => {
-    setOnboardingRecords(onboardingRecords.map(o =>
-      o.id === id ? { ...o, ...updatedData } : o
-    ));
+  const updateOnboarding = async (id, updatedData) => {
+    try {
+      const updatedOnboarding = await APIServices.HROnboardingAPI.update(id, updatedData);
+      setOnboardingRecords(onboardingRecords.map(o =>
+        o.id === id ? updatedOnboarding : o
+      ));
+      return updatedOnboarding;
+    } catch (err) {
+      console.error('Error updating onboarding record:', err);
+      throw err;
+    }
   };
 
-  const deleteOnboarding = (id) => {
-    setOnboardingRecords(onboardingRecords.filter(o => o.id !== id));
+  const deleteOnboarding = async (id) => {
+    try {
+      await APIServices.HROnboardingAPI.delete(id);
+      setOnboardingRecords(onboardingRecords.filter(o => o.id !== id));
+    } catch (err) {
+      console.error('Error deleting onboarding record:', err);
+      throw err;
+    }
   };
 
   // Appraisal operations
-  const addAppraisal = (appraisalData) => {
-    const employee = staff.find(s => s.id === appraisalData.employeeId);
-    const newAppraisal = {
-      ...appraisalData,
-      id: Math.max(...appraisalRecords.map(a => a.id), 0) + 1,
-      employeeName: employee?.fullName || 'Unknown',
-      department: employee?.department || 'Unknown',
-      position: employee?.position || 'Unknown',
-      status: 'Pending',
-      createdDate: new Date().toISOString().split('T')[0]
-    };
-    setAppraisalRecords([...appraisalRecords, newAppraisal]);
+  const addAppraisal = async (appraisalData) => {
+    try {
+      const preparedData = {
+        ...appraisalData,
+        staffId: appraisalData.employeeId || appraisalData.staffId,
+        appraisalDate: appraisalData.appraisalDate || new Date().toISOString().split('T')[0],
+        status: appraisalData.status || 'Draft'
+      };
+
+      const newAppraisal = await APIServices.HRAppraisalAPI.create(preparedData);
+      setAppraisalRecords([...appraisalRecords, newAppraisal]);
+      return newAppraisal;
+    } catch (err) {
+      console.error('Error adding appraisal record:', err);
+      throw err;
+    }
   };
 
-  const updateAppraisal = (id, updatedData) => {
-    setAppraisalRecords(appraisalRecords.map(a =>
-      a.id === id ? { ...a, ...updatedData } : a
-    ));
+  const updateAppraisal = async (id, updatedData) => {
+    try {
+      const updatedAppraisal = await APIServices.HRAppraisalAPI.update(id, updatedData);
+      setAppraisalRecords(appraisalRecords.map(a =>
+        a.id === id ? updatedAppraisal : a
+      ));
+      return updatedAppraisal;
+    } catch (err) {
+      console.error('Error updating appraisal record:', err);
+      throw err;
+    }
   };
 
-  const deleteAppraisal = (id) => {
-    setAppraisalRecords(appraisalRecords.filter(a => a.id !== id));
+  const deleteAppraisal = async (id) => {
+    try {
+      await APIServices.HRAppraisalAPI.delete(id);
+      setAppraisalRecords(appraisalRecords.filter(a => a.id !== id));
+    } catch (err) {
+      console.error('Error deleting appraisal record:', err);
+      throw err;
+    }
   };
 
   // GPS Attendance operations
@@ -338,6 +443,8 @@ export const HRProvider = ({ children }) => {
     assetCheckouts,
     vehicleRequests,
     accommodationRequests,
+    loading,
+    error,
     addStaff,
     updateStaff,
     deleteStaff,
