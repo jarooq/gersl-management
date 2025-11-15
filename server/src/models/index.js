@@ -1253,90 +1253,6 @@ Attendance.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 LeaveRequest.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
 LeaveRequest.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 
-// ============================================
-// EXPORTS
-// ============================================
-
-export {
-  User,
-  Orphan,
-  Project,
-  Expense,
-  Staff,
-  CBOPartner,
-  Partner,
-  Indicator,
-  Report,
-  Proposal,
-  OrphanVisitLog,
-  OrphanProgressRating,
-  GeneratedOrphanReport,
-  Campaign,
-  Donation,
-  JobPosting,
-  JobApplication,
-  VendorCall,
-  VendorSubmission,
-  SocialMediaPost,
-  SocialMediaEngagement,
-  ComplianceDocument,
-  Attendance,
-  LeaveRequest,
-  Invoice,
-  Bill,
-  PurchaseOrder,
-  ChartOfAccounts,
-  JournalEntry,
-  BankAccount,
-  BankTransaction,
-  Budget,
-  Payroll,
-  GrantReceivable,
-  GrantReceipt,
-  FixedAsset
-};
-
-export default {
-  User,
-  Orphan,
-  Project,
-  Expense,
-  Staff,
-  CBOPartner,
-  Partner,
-  Indicator,
-  Report,
-  Proposal,
-  OrphanVisitLog,
-  OrphanProgressRating,
-  GeneratedOrphanReport,
-  Campaign,
-  Donation,
-  JobPosting,
-  JobApplication,
-  VendorCall,
-  VendorSubmission,
-  SocialMediaPost,
-  SocialMediaEngagement,
-  ComplianceDocument,
-  Attendance,
-  LeaveRequest,
-  Invoice,
-  Bill,
-  PurchaseOrder,
-  ChartOfAccounts,
-  JournalEntry,
-  BankAccount,
-  BankTransaction,
-  Budget,
-  Payroll,
-  GrantReceivable,
-  GrantReceipt,
-  FixedAsset,
-  sequelize
-};
-
-// ============================================
 // FINANCE MODELS
 // ============================================
 
@@ -1621,3 +1537,85 @@ GrantReceipt.belongsTo(BankAccount, { as: 'bankAccount', foreignKey: 'bankAccoun
 GrantReceipt.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 
 FixedAsset.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+// ============================================
+// EXPORTS
+// ============================================
+
+export {
+  User,
+  Orphan,
+  Project,
+  Expense,
+  Staff,
+  CBOPartner,
+  Partner,
+  Indicator,
+  Report,
+  Proposal,
+  OrphanVisitLog,
+  OrphanProgressRating,
+  GeneratedOrphanReport,
+  Campaign,
+  Donation,
+  JobPosting,
+  JobApplication,
+  VendorCall,
+  VendorSubmission,
+  SocialMediaPost,
+  SocialMediaEngagement,
+  ComplianceDocument,
+  Attendance,
+  LeaveRequest,
+  Invoice,
+  Bill,
+  PurchaseOrder,
+  ChartOfAccounts,
+  JournalEntry,
+  BankAccount,
+  BankTransaction,
+  Budget,
+  Payroll,
+  GrantReceivable,
+  GrantReceipt,
+  FixedAsset
+};
+
+export default {
+  User,
+  Orphan,
+  Project,
+  Expense,
+  Staff,
+  CBOPartner,
+  Partner,
+  Indicator,
+  Report,
+  Proposal,
+  OrphanVisitLog,
+  OrphanProgressRating,
+  GeneratedOrphanReport,
+  Campaign,
+  Donation,
+  JobPosting,
+  JobApplication,
+  VendorCall,
+  VendorSubmission,
+  SocialMediaPost,
+  SocialMediaEngagement,
+  ComplianceDocument,
+  Attendance,
+  LeaveRequest,
+  Invoice,
+  Bill,
+  PurchaseOrder,
+  ChartOfAccounts,
+  JournalEntry,
+  BankAccount,
+  BankTransaction,
+  Budget,
+  Payroll,
+  GrantReceivable,
+  GrantReceipt,
+  FixedAsset,
+  sequelize
+};
