@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import API, { TokenManager } from '../services/api';
-import { ROLE_PERMISSIONS, hasPermission as checkPermission } from '../utils/permissions';
 import { getRoleInfo, canApprove as roleCanApprove, isSubordinate, canAccessUserData } from '../config/roleHierarchy';
 
 const AuthContext = createContext(null);
@@ -21,29 +20,34 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let isMounted = true;
 
-    // Check for stored session and validate token (now using httpOnly cookies)
+    // Check for stored session and validate token
     const initAuth = async () => {
       try {
         const storedUser = localStorage.getItem('currentUser');
+        const token = TokenManager.getAccessToken();
 
-        if (storedUser && isMounted) {
+        // Only validate session if we have both user data AND a valid token
+        if (storedUser && token && isMounted) {
           try {
             const user = JSON.parse(storedUser);
             // Verify session is still valid by fetching current user
-            // The httpOnly cookie will be sent automatically
             const userData = await API.Auth.getCurrentUser();
             if (isMounted) {
               setCurrentUser(userData);
               setIsLoggedIn(true);
             }
           } catch (error) {
-            // Session invalid or expired - silently clear without logging
-            // This is expected behavior when not logged in
+            // Session invalid or expired - silently clear
+            console.log('Session validation failed, clearing stored data');
             if (isMounted) {
               TokenManager.clearTokens();
               localStorage.removeItem('currentUser');
             }
           }
+        } else if (storedUser && !token) {
+          // Have user data but no token - clear stale data
+          console.log('Found user data without token, clearing stale session');
+          localStorage.removeItem('currentUser');
         }
       } catch (error) {
         // Handle any JSON parse errors
@@ -151,34 +155,79 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * Check if current user has a specific permission
-   * @param {string} permission - Permission to check (e.g., 'orphans:create')
+   * @param {string} permission - Permission key to check (e.g., 'orphans:create')
    * @returns {boolean}
    */
   const hasPermission = (permission) => {
-    if (!currentUser) return false;
-    return checkPermission(currentUser, permission);
+    console.log('🔍 hasPermission called for:', permission);
+    console.log('🔍 currentUser:', currentUser);
+
+    if (!currentUser) {
+      console.log('❌ No currentUser - returning false');
+      return false;
+    }
+
+    console.log('🔍 currentUser.permissions:', currentUser.permissions);
+    console.log('🔍 Is array?', Array.isArray(currentUser.permissions));
+
+    // Use database permissions from user object
+    if (currentUser.permissions && Array.isArray(currentUser.permissions)) {
+      console.log('✅ Permissions array exists with', currentUser.permissions.length, 'items');
+
+      // Check for wildcard permission (admin has all permissions)
+      const hasWildcard = currentUser.permissions.some(p => p.permissionKey === '*');
+      console.log('🔍 Has wildcard (*)?', hasWildcard);
+
+      if (hasWildcard) {
+        console.log('✅ WILDCARD FOUND - GRANTING ACCESS');
+        return true;
+      }
+
+      const hasSpecific = currentUser.permissions.some(p => p.permissionKey === permission);
+      console.log('🔍 Has specific permission?', hasSpecific);
+      return hasSpecific;
+    }
+
+    console.log('❌ No permissions array - returning false');
+    return false;
   };
 
   /**
    * Check if current user has any of the specified permissions
-   * @param {string[]} permissions - Array of permissions to check
+   * @param {string[]} permissions - Array of permission keys to check
    * @returns {boolean} - True if user has at least one of the permissions
    */
   const hasAnyPermission = (permissions) => {
     if (!currentUser) return false;
     if (!Array.isArray(permissions)) return false;
-    return permissions.some(permission => checkPermission(currentUser, permission));
+
+    // Use database permissions from user object
+    if (currentUser.permissions && Array.isArray(currentUser.permissions)) {
+      return permissions.some(permission =>
+        currentUser.permissions.some(p => p.permissionKey === permission)
+      );
+    }
+
+    return false;
   };
 
   /**
    * Check if current user has all of the specified permissions
-   * @param {string[]} permissions - Array of permissions to check
+   * @param {string[]} permissions - Array of permission keys to check
    * @returns {boolean} - True if user has all permissions
    */
   const hasAllPermissions = (permissions) => {
     if (!currentUser) return false;
     if (!Array.isArray(permissions)) return false;
-    return permissions.every(permission => checkPermission(currentUser, permission));
+
+    // Use database permissions from user object
+    if (currentUser.permissions && Array.isArray(currentUser.permissions)) {
+      return permissions.every(permission =>
+        currentUser.permissions.some(p => p.permissionKey === permission)
+      );
+    }
+
+    return false;
   };
 
   /**
@@ -249,13 +298,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * Get all permissions for the current user's role
-   * @returns {string[]} - Array of permission strings
+   * Get all permissions for the current user
+   * @returns {string[]} - Array of permission keys
    */
   const getUserPermissions = () => {
     if (!currentUser) return [];
-    const roleKey = currentUser.role.toUpperCase().replace(/\s+/g, '_');
-    return ROLE_PERMISSIONS[roleKey] || [];
+
+    // Use database permissions from user object
+    if (currentUser.permissions && Array.isArray(currentUser.permissions)) {
+      return currentUser.permissions.map(p => p.permissionKey);
+    }
+
+    return [];
   };
 
   /**

@@ -6,6 +6,7 @@ import {
   ComplianceTrainingAPI,
   DataProtectionAPI
 } from '../services/api';
+import { useAuth } from './AuthContext';
 
 const ComplianceContext = createContext(null);
 
@@ -18,6 +19,8 @@ export const useCompliance = () => {
 };
 
 export const ComplianceProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   // State
   const [policies, setPolicies] = useState([]);
   const [incidents, setIncidents] = useState([]);
@@ -35,6 +38,10 @@ export const ComplianceProvider = ({ children }) => {
 
   // Load all compliance data from database
   useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+
     const loadData = async () => {
       try {
         setLoading(true);
@@ -106,7 +113,7 @@ export const ComplianceProvider = ({ children }) => {
     };
 
     loadData();
-  }, []);
+    }, [isLoggedIn]);
 
   // ============================================
   // POLICY MANAGEMENT

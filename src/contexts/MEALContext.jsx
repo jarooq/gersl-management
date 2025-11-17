@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MEALAPI, EvaluationAPI, LearningEventAPI, ComplaintAPI } from '../services/api';
+import { useAuth } from './AuthContext';
 
 const MEALContext = createContext();
 
@@ -12,6 +13,8 @@ export const useMEAL = () => {
 };
 
 export const MEALProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   const [indicators, setIndicators] = useState([]);
   const [evaluations, setEvaluations] = useState([]);
   const [learningEvents, setLearningEvents] = useState([]);
@@ -21,6 +24,10 @@ export const MEALProvider = ({ children }) => {
 
   // Fetch all MEAL data from database on mount
   useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+
     const fetchAllData = async () => {
       try {
         setLoading(true);
@@ -71,7 +78,7 @@ export const MEALProvider = ({ children }) => {
     };
 
     fetchAllData();
-  }, []);
+    }, [isLoggedIn]);
 
   // ============================================
   // INDICATOR OPERATIONS (Database)

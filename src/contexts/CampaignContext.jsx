@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import API from '../services/api';
+import { useAuth } from './AuthContext';
 
 const CampaignContext = createContext();
 
@@ -11,121 +13,12 @@ export const useCampaign = () => {
 };
 
 export const CampaignProvider = ({ children }) => {
-  // Campaign Management State - Sample data for demonstration
-  const [campaigns, setCampaigns] = useState([
-    {
-      id: 'CAMP-001',
-      name: 'Education for All',
-      description: 'Provide quality education and school supplies to underprivileged children in rural communities',
-      category: 'Education',
-      targetAmount: 50000,
-      raisedAmount: 32500,
-      status: 'Active',
-      startDate: '2025-01-01',
-      endDate: '2025-12-31',
-      createdDate: '2024-12-15',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-20'
-    },
-    {
-      id: 'CAMP-002',
-      name: 'Clean Water Initiative',
-      description: 'Build wells and provide clean drinking water to communities in need',
-      category: 'Health',
-      targetAmount: 75000,
-      raisedAmount: 45000,
-      status: 'Active',
-      startDate: '2025-01-15',
-      endDate: '2025-11-30',
-      createdDate: '2024-12-20',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-22'
-    },
-    {
-      id: 'CAMP-003',
-      name: 'Orphan Care Program',
-      description: 'Comprehensive support including education, healthcare, and shelter for orphaned children',
-      category: 'Orphan Care',
-      targetAmount: 100000,
-      raisedAmount: 68000,
-      status: 'Active',
-      startDate: '2025-01-01',
-      endDate: '2025-12-31',
-      createdDate: '2024-12-10',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-15'
-    },
-    {
-      id: 'CAMP-004',
-      name: 'Emergency Relief Fund',
-      description: 'Rapid response to natural disasters and humanitarian emergencies',
-      category: 'Emergency',
-      targetAmount: 150000,
-      raisedAmount: 92000,
-      status: 'Active',
-      startDate: '2025-01-01',
-      endDate: '2025-12-31',
-      createdDate: '2024-12-01',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-05'
-    },
-    {
-      id: 'CAMP-005',
-      name: 'Medical Aid Campaign',
-      description: 'Provide essential medical supplies and healthcare services to underserved areas',
-      category: 'Health',
-      targetAmount: 60000,
-      raisedAmount: 38000,
-      status: 'Active',
-      startDate: '2025-02-01',
-      endDate: '2025-10-31',
-      createdDate: '2024-12-18',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-20'
-    },
-    {
-      id: 'CAMP-006',
-      name: 'Food Security Project',
-      description: 'Fight hunger by providing nutritious meals and food supplies to families in need',
-      category: 'Food Security',
-      targetAmount: 80000,
-      raisedAmount: 55000,
-      status: 'Active',
-      startDate: '2025-01-10',
-      endDate: '2025-12-15',
-      createdDate: '2024-12-12',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-17'
-    },
-    {
-      id: 'CAMP-007',
-      name: 'Women Empowerment',
-      description: 'Skills training and microfinance support for women entrepreneurs',
-      category: 'Livelihood',
-      targetAmount: 45000,
-      raisedAmount: 28000,
-      status: 'Active',
-      startDate: '2025-02-01',
-      endDate: '2025-11-30',
-      createdDate: '2024-12-22',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-25'
-    },
-    {
-      id: 'CAMP-008',
-      name: 'Youth Development',
-      description: 'Mentorship programs and vocational training for underprivileged youth',
-      category: 'Education',
-      targetAmount: 55000,
-      raisedAmount: 35000,
-      status: 'Active',
-      startDate: '2025-01-20',
-      endDate: '2025-12-20',
-      createdDate: '2024-12-08',
-      approvedBy: 'Admin',
-      approvalDate: '2024-12-12'
-    }
-  ]);
+  const { isLoggedIn } = useAuth();
+
+  // State
+  const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Donations State
   const [donations, setDonations] = useState([]);
@@ -133,266 +26,252 @@ export const CampaignProvider = ({ children }) => {
   // Donors State
   const [donors, setDonors] = useState([]);
 
-  // Job Postings State (for Call for Vacancy) - Sample data
-  const [jobPostings, setJobPostings] = useState([
-    {
-      id: 1,
-      title: 'Project Manager - Community Development',
-      department: 'Programs',
-      location: 'Colombo',
-      employmentType: 'Full-time',
-      salaryRange: 'LKR 80,000 - 120,000',
-      description: 'Lead community development projects and coordinate with stakeholders to deliver impactful programs for underprivileged communities.',
-      requirements: [
-        "Bachelor's degree in Social Sciences, Development Studies, or related field",
-        '3+ years experience in project management',
-        'Strong communication and leadership skills',
-        'Experience working with NGOs or community organizations'
-      ],
-      responsibilities: [
-        'Plan and execute community development projects',
-        'Coordinate with team members and partners',
-        'Monitor project progress and report outcomes',
-        'Manage project budgets and resources'
-      ],
-      postedDate: '2025-01-15',
-      applicationDeadline: '2025-02-28',
-      status: 'Open'
-    },
-    {
-      id: 2,
-      title: 'Finance Officer',
-      department: 'Finance',
-      location: 'Colombo',
-      employmentType: 'Full-time',
-      salaryRange: 'LKR 60,000 - 90,000',
-      description: 'Manage financial operations, budgeting, and reporting for our organization.',
-      requirements: [
-        'Degree in Accounting, Finance or related field',
-        '2+ years accounting experience',
-        'Proficiency in accounting software',
-        'Strong analytical skills'
-      ],
-      responsibilities: [
-        'Maintain financial records and reports',
-        'Process invoices and payments',
-        'Prepare budget reports',
-        'Ensure compliance with financial regulations'
-      ],
-      postedDate: '2025-01-20',
-      applicationDeadline: '2025-03-15',
-      status: 'Open'
-    },
-    {
-      id: 3,
-      title: 'Field Coordinator',
-      department: 'Operations',
-      location: 'Jaffna',
-      employmentType: 'Full-time',
-      salaryRange: 'LKR 50,000 - 75,000',
-      description: 'Coordinate field activities and support program implementation in Northern Province.',
-      requirements: [
-        "Bachelor's degree in any field",
-        'Experience in field operations',
-        'Fluency in Tamil and English',
-        'Strong interpersonal skills'
-      ],
-      responsibilities: [
-        'Coordinate field activities',
-        'Support program implementation',
-        'Conduct community outreach',
-        'Report on field activities'
-      ],
-      postedDate: '2025-01-10',
-      applicationDeadline: '2025-02-20',
-      status: 'Open'
-    }
-  ]);
+  // Job Postings State (for Call for Vacancy)
+  const [jobPostings, setJobPostings] = useState([]);
 
-  // Vendor Calls State (for Call for Vendors) - Sample data
-  const [vendorCalls, setVendorCalls] = useState([
-    {
-      id: 1,
-      title: 'Supply of Educational Materials',
-      referenceNumber: 'TENDER-2025-001',
-      category: 'Office Supplies',
-      description: 'Supply of notebooks, pens, pencils, and other educational materials for 500 students',
-      estimatedValue: 250000,
-      publishDate: '2025-01-15',
-      submissionDeadline: '2025-02-15',
-      requirements: ['Valid business registration', 'Tax compliance certificate', 'Sample products'],
-      status: 'Active'
-    },
-    {
-      id: 2,
-      title: 'Construction of Water Wells',
-      referenceNumber: 'TENDER-2025-002',
-      category: 'Construction',
-      description: 'Construction of 5 water wells in rural communities including drilling and installation of hand pumps',
-      estimatedValue: 1500000,
-      publishDate: '2025-01-20',
-      submissionDeadline: '2025-03-01',
-      requirements: ['Previous construction experience', 'Relevant licenses', 'Equipment availability'],
-      status: 'Active'
-    },
-    {
-      id: 3,
-      title: 'IT Equipment Procurement',
-      referenceNumber: 'TENDER-2025-003',
-      category: 'IT Equipment',
-      description: 'Supply of computers, printers, and networking equipment for office operations',
-      estimatedValue: 800000,
-      publishDate: '2025-01-25',
-      submissionDeadline: '2025-02-25',
-      requirements: ['Authorized dealer certificate', 'Warranty terms', 'Technical support capability'],
-      status: 'Active'
+  // Vendor Calls State (for Call for Vendors)
+  const [vendorCalls, setVendorCalls] = useState([]);
+
+  // Load data from backend on mount
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
     }
-  ]);
+
+    const loadCampaignData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [
+          campaignsRes,
+          donationsRes,
+          jobsRes,
+          vendorsRes
+        ] = await Promise.allSettled([
+          API.Campaign.getAll(),
+          API.Donation.getAll(),
+          API.JobPosting.getAll(),
+          API.VendorCall.getAll()
+        ]);
+
+        // Set campaigns data
+        if (campaignsRes.status === 'fulfilled') {
+          setCampaigns(campaignsRes.value.campaigns || []);
+        } else {
+          console.error('Error loading campaigns:', campaignsRes.reason);
+        }
+
+        // Set donations data
+        if (donationsRes.status === 'fulfilled') {
+          setDonations(donationsRes.value.donations || []);
+        } else {
+          console.error('Error loading donations:', donationsRes.reason);
+        }
+
+        // Set job postings data
+        if (jobsRes.status === 'fulfilled') {
+          setJobPostings(jobsRes.value.jobPostings || []);
+        } else {
+          console.error('Error loading job postings:', jobsRes.reason);
+        }
+
+        // Set vendor calls data
+        if (vendorsRes.status === 'fulfilled') {
+          setVendorCalls(vendorsRes.value.vendorCalls || []);
+        } else {
+          console.error('Error loading vendor calls:', vendorsRes.reason);
+        }
+
+      } catch (err) {
+        console.error('Error loading campaign data:', err);
+        setError(err.message || 'Failed to load campaign data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCampaignData();
+    }, [isLoggedIn]);
 
   // Campaign CRUD Operations
-  const addCampaign = (campaignData) => {
-    const newCampaign = {
-      ...campaignData,
-      id: `CAMP-${String(campaigns.length + 1).padStart(3, '0')}`,
-      raisedAmount: 0,
-      createdDate: new Date().toISOString().split('T')[0],
-      status: 'Pending Approval'
-    };
-    setCampaigns([...campaigns, newCampaign]);
-    return newCampaign;
+  const addCampaign = async (campaignData) => {
+    try {
+      const newCampaign = await API.Campaign.create(campaignData);
+      setCampaigns([...campaigns, newCampaign]);
+      return newCampaign;
+    } catch (err) {
+      console.error('Error adding campaign:', err);
+      throw err;
+    }
   };
 
-  const updateCampaign = (id, updatedData) => {
-    setCampaigns(campaigns.map(campaign =>
-      campaign.id === id ? { ...campaign, ...updatedData } : campaign
-    ));
+  const updateCampaign = async (id, updatedData) => {
+    try {
+      const updated = await API.Campaign.update(id, updatedData);
+      setCampaigns(campaigns.map(campaign =>
+        campaign.id === id ? updated : campaign
+      ));
+      return updated;
+    } catch (err) {
+      console.error('Error updating campaign:', err);
+      throw err;
+    }
   };
 
-  const deleteCampaign = (id) => {
-    setCampaigns(campaigns.filter(campaign => campaign.id !== id));
+  const deleteCampaign = async (id) => {
+    try {
+      await API.Campaign.delete(id);
+      setCampaigns(campaigns.filter(campaign => campaign.id !== id));
+    } catch (err) {
+      console.error('Error deleting campaign:', err);
+      throw err;
+    }
   };
 
-  const approveCampaign = (id, approver) => {
-    updateCampaign(id, {
-      status: 'Active',
-      approvedBy: approver,
-      approvalDate: new Date().toISOString().split('T')[0]
-    });
+  const approveCampaign = async (id, approvalStatus, remarks = '') => {
+    try {
+      const approved = await API.Campaign.approve(id, approvalStatus, remarks);
+      setCampaigns(campaigns.map(campaign =>
+        campaign.id === id ? approved : campaign
+      ));
+      return approved;
+    } catch (err) {
+      console.error('Error approving campaign:', err);
+      throw err;
+    }
   };
 
-  const closeCampaign = (id) => {
-    updateCampaign(id, { status: 'Closed' });
+  const closeCampaign = async (id) => {
+    try {
+      return await updateCampaign(id, { status: 'Closed' });
+    } catch (err) {
+      console.error('Error closing campaign:', err);
+      throw err;
+    }
   };
 
-  const completeCampaign = (id) => {
-    updateCampaign(id, { status: 'Completed' });
+  const completeCampaign = async (id) => {
+    try {
+      return await updateCampaign(id, { status: 'Completed' });
+    } catch (err) {
+      console.error('Error completing campaign:', err);
+      throw err;
+    }
   };
 
   // Donation Operations
-  const addDonation = (donationData) => {
-    const newDonation = {
-      ...donationData,
-      id: `DON-${String(donations.length + 1).padStart(3, '0')}`,
-      date: new Date().toISOString().split('T')[0],
-      receiptNumber: `RCP-${String(donations.length + 1).padStart(3, '0')}`,
-      status: 'Completed'
-    };
-    setDonations([...donations, newDonation]);
+  const addDonation = async (donationData) => {
+    try {
+      const newDonation = await API.Donation.create(donationData);
+      setDonations([...donations, newDonation]);
 
-    // Update campaign raised amount
-    const campaign = campaigns.find(c => c.id === donationData.campaignId);
-    if (campaign) {
-      updateCampaign(campaign.id, {
-        raisedAmount: campaign.raisedAmount + donationData.amount
-      });
+      // Reload campaigns to get updated raised amounts
+      const campaignsRes = await API.Campaign.getAll();
+      if (campaignsRes.campaigns) {
+        setCampaigns(campaignsRes.campaigns);
+      }
+
+      return newDonation;
+    } catch (err) {
+      console.error('Error adding donation:', err);
+      throw err;
     }
-
-    // Update or create donor
-    const existingDonor = donors.find(d => d.email === donationData.email);
-    if (existingDonor) {
-      updateDonor(existingDonor.id, {
-        totalDonations: existingDonor.totalDonations + donationData.amount,
-        donationCount: existingDonor.donationCount + 1,
-        lastDonationDate: newDonation.date
-      });
-    } else {
-      addDonor({
-        name: donationData.donorName,
-        email: donationData.email,
-        phone: donationData.phone || '',
-        address: '',
-        totalDonations: donationData.amount,
-        donationCount: 1,
-        firstDonationDate: newDonation.date,
-        lastDonationDate: newDonation.date,
-        preferences: { newsletter: false, taxReceipt: true },
-        status: 'Active'
-      });
-    }
-
-    return newDonation;
   };
 
   // Donor Operations
-  const addDonor = (donorData) => {
-    const newDonor = {
-      ...donorData,
-      id: `DONOR-${String(donors.length + 1).padStart(3, '0')}`
-    };
-    setDonors([...donors, newDonor]);
-    return newDonor;
+  const addDonor = async (donorData) => {
+    try {
+      // Note: Donor API might not exist yet, handle gracefully
+      const newDonor = {
+        ...donorData,
+        id: `DONOR-${String(donors.length + 1).padStart(3, '0')}`
+      };
+      setDonors([...donors, newDonor]);
+      return newDonor;
+    } catch (err) {
+      console.error('Error adding donor:', err);
+      throw err;
+    }
   };
 
-  const updateDonor = (id, updatedData) => {
-    setDonors(donors.map(donor =>
-      donor.id === id ? { ...donor, ...updatedData } : donor
-    ));
+  const updateDonor = async (id, updatedData) => {
+    try {
+      setDonors(donors.map(donor =>
+        donor.id === id ? { ...donor, ...updatedData } : donor
+      ));
+    } catch (err) {
+      console.error('Error updating donor:', err);
+      throw err;
+    }
   };
 
   // Job Posting Operations
-  const addJobPosting = (jobData) => {
-    const newJob = {
-      ...jobData,
-      id: `JOB-${String(jobPostings.length + 1).padStart(3, '0')}`,
-      postedDate: new Date().toISOString().split('T')[0],
-      applicants: 0,
-      status: 'Open'
-    };
-    setJobPostings([...jobPostings, newJob]);
-    return newJob;
+  const addJobPosting = async (jobData) => {
+    try {
+      const newJob = await API.JobPosting.create(jobData);
+      setJobPostings([...jobPostings, newJob]);
+      return newJob;
+    } catch (err) {
+      console.error('Error adding job posting:', err);
+      throw err;
+    }
   };
 
-  const updateJobPosting = (id, updatedData) => {
-    setJobPostings(jobPostings.map(job =>
-      job.id === id ? { ...job, ...updatedData } : job
-    ));
+  const updateJobPosting = async (id, updatedData) => {
+    try {
+      const updated = await API.JobPosting.update(id, updatedData);
+      setJobPostings(jobPostings.map(job =>
+        job.id === id ? updated : job
+      ));
+      return updated;
+    } catch (err) {
+      console.error('Error updating job posting:', err);
+      throw err;
+    }
   };
 
-  const closeJobPosting = (id) => {
-    updateJobPosting(id, { status: 'Closed' });
+  const closeJobPosting = async (id) => {
+    try {
+      return await updateJobPosting(id, { status: 'Closed' });
+    } catch (err) {
+      console.error('Error closing job posting:', err);
+      throw err;
+    }
   };
 
   // Vendor Call Operations
-  const addVendorCall = (vendorData) => {
-    const newVendorCall = {
-      ...vendorData,
-      id: `VENDOR-${String(vendorCalls.length + 1).padStart(3, '0')}`,
-      createdDate: new Date().toISOString().split('T')[0],
-      bids: 0,
-      status: 'Open'
-    };
-    setVendorCalls([...vendorCalls, newVendorCall]);
-    return newVendorCall;
+  const addVendorCall = async (vendorData) => {
+    try {
+      const newVendorCall = await API.VendorCall.create(vendorData);
+      setVendorCalls([...vendorCalls, newVendorCall]);
+      return newVendorCall;
+    } catch (err) {
+      console.error('Error adding vendor call:', err);
+      throw err;
+    }
   };
 
-  const updateVendorCall = (id, updatedData) => {
-    setVendorCalls(vendorCalls.map(vendor =>
-      vendor.id === id ? { ...vendor, ...updatedData } : vendor
-    ));
+  const updateVendorCall = async (id, updatedData) => {
+    try {
+      const updated = await API.VendorCall.update(id, updatedData);
+      setVendorCalls(vendorCalls.map(vendor =>
+        vendor.id === id ? updated : vendor
+      ));
+      return updated;
+    } catch (err) {
+      console.error('Error updating vendor call:', err);
+      throw err;
+    }
   };
 
-  const closeVendorCall = (id) => {
-    updateVendorCall(id, { status: 'Closed' });
+  const closeVendorCall = async (id) => {
+    try {
+      return await updateVendorCall(id, { status: 'Closed' });
+    } catch (err) {
+      console.error('Error closing vendor call:', err);
+      throw err;
+    }
   };
 
   // Statistics and Analytics
@@ -432,6 +311,8 @@ export const CampaignProvider = ({ children }) => {
     donors,
     jobPostings,
     vendorCalls,
+    loading,
+    error,
 
     // Campaign Operations
     addCampaign,

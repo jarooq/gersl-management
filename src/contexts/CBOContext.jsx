@@ -8,6 +8,7 @@ import {
   CBOProjectAPI,
   CBOAPI
 } from '../services/api';
+import { useAuth } from './AuthContext';
 
 const CBOContext = createContext(null);
 
@@ -20,6 +21,8 @@ export const useCBO = () => {
 };
 
 export const CBOProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   // CBO Partners
   const [cboPartners, setCBOPartners] = useState([]);
 
@@ -39,10 +42,22 @@ export const CBOProvider = ({ children }) => {
   const [cboProjects, setCBOProjects] = useState([]);
 
   // Loading state
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  // Load data from database
+  // Load data from database only when authenticated
   useEffect(() => {
+    if (!isLoggedIn) {
+      // Clear data when logged out
+      setCBOPartners([]);
+      setVolunteers([]);
+      setActivities([]);
+      setDueDiligence([]);
+      setCBOProposals([]);
+      setCBOProjects([]);
+      setLoading(false);
+      return;
+    }
+
     const loadData = async () => {
       try {
         setLoading(true);
@@ -106,7 +121,7 @@ export const CBOProvider = ({ children }) => {
     };
 
     loadData();
-  }, []);
+  }, [isLoggedIn]);
 
   // ============================================
   // CBO CRUD Operations
