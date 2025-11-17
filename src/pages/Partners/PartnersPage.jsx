@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePartners } from '../../contexts/PartnersContext';
 import AddPartnerModal from './AddPartnerModal';
 import AddContributionModal from './AddContributionModal';
@@ -42,7 +42,10 @@ const PartnersPage = () => {
     partners,
     contributions,
     communications,
+    loading,
+    error,
     getStats,
+    fetchPartners,
     addPartner,
     updatePartner,
     addContribution,
@@ -65,7 +68,20 @@ const PartnersPage = () => {
   const [showEditPartnerModal, setShowEditPartnerModal] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState(null);
 
-  const stats = getStats();
+  // Fetch partners on component mount
+  useEffect(() => {
+    fetchPartners();
+  }, [fetchPartners]);
+
+  // Safe stats calculation - only if we have data
+  const stats = partners ? getStats() : {
+    totalPartners: 0,
+    activePartners: 0,
+    totalContributions: 0,
+    partnerTypes: 0,
+    avgContribution: 0,
+    pendingFollowUps: 0
+  };
 
   // Handler functions
   const handleViewPartner = (partner) => {
@@ -78,15 +94,15 @@ const PartnersPage = () => {
     setShowEditPartnerModal(true);
   };
 
-  // Filter partners
-  const filteredPartners = partners.filter(partner => {
-    const matchesSearch = partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         partner.contactPerson.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         partner.partnerCode.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filter partners - ensure partners is an array before filtering
+  const filteredPartners = (partners && Array.isArray(partners)) ? partners.filter(partner => {
+    const matchesSearch = (partner.name && partner.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         (partner.contactPerson && partner.contactPerson.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         (partner.partnerCode && partner.partnerCode.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesStatus = filterStatus === 'All' || partner.status === filterStatus;
     const matchesCategory = filterCategory === 'All' || partner.category === filterCategory;
     return matchesSearch && matchesStatus && matchesCategory;
-  });
+  }) : [];
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -119,23 +135,23 @@ const PartnersPage = () => {
   const statItems = [
     {
       title: 'Total Partners',
-      value: stats.totalPartners,
+      value: stats.totalPartners || 0,
       icon: Building2,
       gradient: 'from-red-500 to-rose-600',
-      change: `${stats.activePartners} active`,
+      change: `${stats.activePartners || 0} active`,
       subtitle: 'partnerships managed'
     },
     {
       title: 'Total Contributions',
-      value: `${(stats.totalContributions / 1000000).toFixed(1)}M`,
+      value: `${((stats.totalContributions || 0) / 1000000).toFixed(1)}M`,
       icon: DollarSign,
       gradient: 'from-green-500 to-emerald-600',
-      change: `LKR ${(stats.avgContribution / 1000).toFixed(0)}K avg`,
+      change: `LKR ${((stats.avgContribution || 0) / 1000).toFixed(0)}K avg`,
       subtitle: 'in funding received'
     },
     {
       title: 'Partner Types',
-      value: stats.partnerTypes,
+      value: stats.partnerTypes || 0,
       icon: Users,
       gradient: 'from-blue-500 to-cyan-600',
       change: 'Diverse network',
@@ -143,13 +159,46 @@ const PartnersPage = () => {
     },
     {
       title: 'Pending Follow-ups',
-      value: stats.pendingFollowUps,
+      value: stats.pendingFollowUps || 0,
       icon: MessageSquare,
       gradient: 'from-orange-500 to-amber-600',
       change: 'Next 7 days',
       subtitle: 'communications due'
     }
   ];
+
+  // Show loading state
+  if (loading && partners.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading partners...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error && partners.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <HeartHandshake className="w-8 h-8 text-red-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Partners</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => fetchPartners()}
+            className="px-6 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -470,23 +519,39 @@ const PartnersPage = () => {
                   </div>
 
                   {/* Focus Areas */}
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold text-gray-600 mb-2">Focus Areas</p>
-                    <div className="flex flex-wrap gap-1">
-                      {partner.focusAreas.slice(0, 3).map((area, idx) => (
-                        <span key={idx} className="px-2 py-1 bg-red-50 text-red-600 rounded-md text-xs font-medium border border-red-100">
-                          {area}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  {(() => {
+                    // Parse focusAreas if it's a JSON string, otherwise use as array
+                    let focusAreasArray = [];
+                    try {
+                      if (typeof partner.focusAreas === 'string') {
+                        focusAreasArray = JSON.parse(partner.focusAreas);
+                      } else if (Array.isArray(partner.focusAreas)) {
+                        focusAreasArray = partner.focusAreas;
+                      }
+                    } catch (e) {
+                      focusAreasArray = [];
+                    }
+
+                    return focusAreasArray && focusAreasArray.length > 0 && (
+                      <div className="mb-4">
+                        <p className="text-xs font-semibold text-gray-600 mb-2">Focus Areas</p>
+                        <div className="flex flex-wrap gap-1">
+                          {focusAreasArray.slice(0, 3).map((area, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-red-50 text-red-600 rounded-md text-xs font-medium border border-red-100">
+                              {area}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Stats */}
                   <div className="pt-4 border-t border-gray-200">
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Total Contributions</p>
-                        <p className="font-bold text-sm text-gray-900">LKR {(partner.totalContributions / 1000000).toFixed(1)}M</p>
+                        <p className="font-bold text-sm text-gray-900">LKR {((partner.totalContributions || 0) / 1000000).toFixed(1)}M</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Last Contribution</p>

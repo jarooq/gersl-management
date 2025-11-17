@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Building2, Mail, Phone, Globe, MapPin, Calendar, Target, Briefcase, Heart, DollarSign } from 'lucide-react';
+import { X, Building2, Mail, Phone, Globe, MapPin, Calendar, Target, Briefcase, Heart, DollarSign, Image } from 'lucide-react';
 
 const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
   if (!isOpen || !partner) return null;
@@ -10,8 +10,20 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-red-600 to-rose-700 text-white p-6 rounded-t-xl flex items-center justify-between z-10">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-bold">
-              {partner.name.charAt(0)}
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-bold overflow-hidden">
+              {partner.logo ? (
+                <img
+                  src={partner.logo}
+                  alt={`${partner.name} logo`}
+                  className="w-full h-full object-contain p-2"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.innerHTML = partner.name.charAt(0);
+                  }}
+                />
+              ) : (
+                partner.name.charAt(0)
+              )}
             </div>
             <div>
               <h2 className="text-2xl font-bold">{partner.name}</h2>
@@ -158,18 +170,32 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
                   Focus Areas
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {partner.focusAreas.length > 0 ? (
-                    partner.focusAreas.map((area, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-lg text-sm font-semibold border border-purple-300"
-                      >
-                        {area}
-                      </span>
-                    ))
-                  ) : (
-                    <p className="text-sm text-gray-500 italic">No focus areas specified</p>
-                  )}
+                  {(() => {
+                    // Parse focusAreas if it's a JSON string, otherwise use as array
+                    let focusAreasArray = [];
+                    try {
+                      if (typeof partner.focusAreas === 'string') {
+                        focusAreasArray = JSON.parse(partner.focusAreas);
+                      } else if (Array.isArray(partner.focusAreas)) {
+                        focusAreasArray = partner.focusAreas;
+                      }
+                    } catch (e) {
+                      focusAreasArray = [];
+                    }
+
+                    return focusAreasArray.length > 0 ? (
+                      focusAreasArray.map((area, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-lg text-sm font-semibold border border-purple-300"
+                        >
+                          {area}
+                        </span>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500 italic">No focus areas specified</p>
+                    );
+                  })()}
                 </div>
               </div>
 

@@ -14,13 +14,15 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
     address: '',
     website: '',
     focusAreas: [],
-    partnershipStartDate: '',
+    partnershipStart: '',
     status: 'Active',
     notes: ''
   });
 
   const [focusAreaInput, setFocusAreaInput] = useState('');
   const [logoPreview, setLogoPreview] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const categories = [
     'Major Donor',
@@ -110,27 +112,39 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
     setLogoPreview('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onAdd(formData);
-    setFormData({
-      name: '',
-      logo: '',
-      category: 'Strategic Partner',
-      type: 'International NGO',
-      contactPerson: '',
-      email: '',
-      phone: '',
-      country: '',
-      address: '',
-      website: '',
-      focusAreas: [],
-      partnershipStartDate: '',
-      status: 'Active',
-      notes: ''
-    });
-    setLogoPreview('');
-    onClose();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await onAdd(formData);
+
+      // Reset form only after successful submission
+      setFormData({
+        name: '',
+        logo: '',
+        category: 'Strategic Partner',
+        type: 'International NGO',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        country: '',
+        address: '',
+        website: '',
+        focusAreas: [],
+        partnershipStart: '',
+        status: 'Active',
+        notes: ''
+      });
+      setLogoPreview('');
+      onClose();
+    } catch (err) {
+      setError(err.message || 'Failed to add partner. Please try again.');
+      console.error('Error adding partner:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -317,8 +331,8 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                   </label>
                   <input
                     type="date"
-                    name="partnershipStartDate"
-                    value={formData.partnershipStartDate}
+                    name="partnershipStart"
+                    value={formData.partnershipStart}
                     onChange={handleChange}
                     className="input-modern w-full"
                   />
@@ -525,20 +539,29 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
             </div>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-lg hover:from-red-700 hover:to-rose-800 font-semibold shadow-lg hover:shadow-xl transition-all"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-lg hover:from-red-700 hover:to-rose-800 font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add Partner
+              {isSubmitting ? 'Adding...' : 'Add Partner'}
             </button>
           </div>
         </form>

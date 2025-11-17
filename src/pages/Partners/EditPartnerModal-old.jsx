@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, Building2, Save, Image, Upload } from 'lucide-react';
+import { X, Building2, Save } from 'lucide-react';
 
 const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
   const [formData, setFormData] = useState({
     name: '',
-    logo: '',
     category: 'Strategic Partner',
     type: 'International NGO',
     contactPerson: '',
@@ -20,7 +19,6 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
   });
 
   const [customFocusArea, setCustomFocusArea] = useState('');
-  const [logoPreview, setLogoPreview] = useState('');
 
   useEffect(() => {
     if (partner && isOpen) {
@@ -38,7 +36,6 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
       setFormData({
         name: partner.name || '',
-        logo: partner.logo || '',
         category: partner.category || 'Strategic Partner',
         type: partner.type || 'International NGO',
         contactPerson: partner.contactPerson || '',
@@ -52,7 +49,6 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
         status: partner.status || 'Active',
         notes: partner.notes || ''
       });
-      setLogoPreview(partner.logo || '');
     }
   }, [partner, isOpen]);
 
@@ -122,37 +118,6 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
     }));
   };
 
-  const handleLogoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload an image file');
-        return;
-      }
-
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File size should be less than 2MB');
-        return;
-      }
-
-      // Convert to base64 for preview and storage
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        setFormData(prev => ({ ...prev, logo: base64String }));
-        setLogoPreview(base64String);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const clearLogo = () => {
-    setFormData(prev => ({ ...prev, logo: '' }));
-    setLogoPreview('');
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdate(partner.id, formData);
@@ -205,81 +170,6 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                     className="input-modern w-full"
                     placeholder="e.g., UNICEF, World Bank"
                   />
-                </div>
-
-                {/* Logo Section */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                    <Image size={16} className="text-blue-600" />
-                    Partner Logo
-                  </label>
-
-                  {/* Logo Preview */}
-                  {(logoPreview || formData.logo) && (
-                    <div className="mb-3 flex items-center gap-3">
-                      <div className="w-24 h-24 rounded-lg border-2 border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
-                        <img
-                          src={logoPreview || formData.logo}
-                          alt="Partner logo preview"
-                          className="max-w-full max-h-full object-contain"
-                          onError={(e) => {
-                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23f3f4f6" width="100" height="100"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%239ca3af" font-size="12"%3ENo Image%3C/text%3E%3C/svg%3E';
-                          }}
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={clearLogo}
-                        className="px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                      >
-                        Remove Logo
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Upload Option */}
-                  <div className="mb-3">
-                    <label className="block text-xs font-medium text-gray-600 mb-2">
-                      Upload Logo
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <label className="flex-1 cursor-pointer">
-                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all">
-                          <Upload size={18} className="text-gray-400" />
-                          <span className="text-sm text-gray-600">Click to upload or drag image</span>
-                        </div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleLogoUpload}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                    <p className="mt-1 text-xs text-gray-500">Supports: JPG, PNG, GIF (max 2MB)</p>
-                  </div>
-
-                  {/* OR Divider */}
-                  <div className="flex items-center gap-3 my-3">
-                    <div className="flex-1 h-px bg-gray-200"></div>
-                    <span className="text-xs text-gray-400 font-medium">OR</span>
-                    <div className="flex-1 h-px bg-gray-200"></div>
-                  </div>
-
-                  {/* URL Option */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-2">
-                      Logo URL
-                    </label>
-                    <input
-                      type="url"
-                      name="logo"
-                      value={formData.logo}
-                      onChange={handleChange}
-                      className="input-modern w-full text-sm"
-                      placeholder="https://example.com/logo.png"
-                    />
-                  </div>
                 </div>
 
                 <div>
@@ -463,7 +353,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                       onClick={() => toggleFocusArea(area)}
                       className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                         formData.focusAreas.includes(area)
-                          ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-md'
+                          ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white shadow-md'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
                       }`}
                     >
@@ -502,13 +392,13 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                       {formData.focusAreas.map((area, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium border border-blue-200 flex items-center gap-2"
+                          className="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm font-medium border border-red-200 flex items-center gap-2"
                         >
                           {area}
                           <button
                             type="button"
                             onClick={() => removeFocusArea(area)}
-                            className="text-blue-600 hover:text-blue-800 font-bold"
+                            className="text-red-600 hover:text-red-800 font-bold"
                           >
                             ×
                           </button>
