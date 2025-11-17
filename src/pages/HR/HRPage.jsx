@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHR } from '../../contexts/HRContext';
+import API from '../../services/api';
 import {
   Users, UserPlus, Clock, Calendar, TrendingUp, CheckCircle,
   XCircle, AlertCircle, ArrowRight, LogIn, LogOut, FileText,
@@ -79,8 +80,34 @@ const HRPage = () => {
     joiningDate: '',
     salary: '',
     leaveBalance: 21,
-    status: 'Active'
+    status: 'Active',
+    // User account credentials
+    username: '',
+    password: '',
+    userRole: '', // Will be selected from dropdown
+    userStatus: 'Active'
   });
+
+  // Roles state for dynamic dropdown
+  const [roles, setRoles] = useState([]);
+
+  // Load roles from database on mount
+  useEffect(() => {
+    const loadRoles = async () => {
+      try {
+        const rolesData = await API.Roles.getAll();
+        setRoles(rolesData.roles || []);
+      } catch (error) {
+        console.error('Error loading roles:', error);
+        // Fallback to default roles if API fails
+        setRoles([
+          { id: 1, name: 'Staff' },
+          { id: 2, name: 'Admin' }
+        ]);
+      }
+    };
+    loadRoles();
+  }, []);
 
   // Onboarding form state
   const [onboardingForm, setOnboardingForm] = useState({
@@ -231,33 +258,54 @@ const HRPage = () => {
   }, [leaveRequests]);
 
   // Handle Add Staff
-  const handleAddStaff = () => {
+  const handleAddStaff = async () => {
     if (!staffForm.fullName || !staffForm.email || !staffForm.department || !staffForm.position) {
       alert('Please fill in all required fields');
       return;
     }
 
-    addStaff({
+    // Validate user credentials
+    if (!staffForm.username || !staffForm.password) {
+      alert('Please provide username and password for user account');
+      return;
+    }
+
+    // Validate user role
+    if (!staffForm.userRole) {
+      alert('Please select a user role');
+      return;
+    }
+
+    // Call backend to create staff and user account
+    const result = await addStaff({
       ...staffForm,
-      salary: parseFloat(staffForm.salary) || 0,
-      bankAccount: null // Will be added separately
+      salary: parseFloat(staffForm.salary) || 0
     });
 
-    // Reset form
-    setStaffForm({
-      fullName: '',
-      email: '',
-      phone: '',
-      department: '',
-      position: '',
-      joiningDate: '',
-      salary: '',
-      leaveBalance: 21,
-      status: 'Active'
-    });
+    if (result.success) {
+      // Reset form
+      setStaffForm({
+        fullName: '',
+        email: '',
+        phone: '',
+        department: '',
+        position: '',
+        joiningDate: '',
+        salary: '',
+        leaveBalance: 21,
+        status: 'Active',
+        // User account credentials
+        username: '',
+        password: '',
+        userRole: '', // Reset to empty to show "Select Role" placeholder
+        userStatus: 'Active'
+      });
 
-    setShowAddStaffModal(false);
-    alert('Staff member added successfully!');
+      setShowAddStaffModal(false);
+      alert('✅ Staff member and user account created successfully!\n\nThe staff member can now log in with their credentials.');
+    } else {
+      alert('❌ Error: ' + result.message);
+    }
   };
 
   // Handle Add Onboarding
@@ -1909,13 +1957,18 @@ const HRPage = () => {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Position <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       value={staffForm.position}
                       onChange={(e) => setStaffForm({ ...staffForm, position: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                      placeholder="Program Manager"
-                    />
+                    >
+                      <option value="">Select Position</option>
+                      {roles.map(role => (
+                        <option key={role.id} value={role.name}>
+                          {role.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
@@ -1969,6 +2022,83 @@ const HRPage = () => {
                       <option value="On Leave">On Leave</option>
                       <option value="Inactive">Inactive</option>
                     </select>
+                  </div>
+                </div>
+
+                {/* User Account Settings Section */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <UserPlus size={18} className="text-blue-600" />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-800">User Account Settings</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Create login credentials for this staff member to access the system
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Username <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={staffForm.username}
+                        onChange={(e) => setStaffForm({ ...staffForm, username: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="john.doe"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">This will be used for logging in</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Password <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={staffForm.password}
+                        onChange={(e) => setStaffForm({ ...staffForm, password: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="••••••••"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Minimum 8 characters</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        User Role <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={staffForm.userRole}
+                        onChange={(e) => setStaffForm({ ...staffForm, userRole: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Select Role</option>
+                        {roles.map(role => (
+                          <option key={role.id} value={role.name}>
+                            {role.name}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">Determines system access level</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Account Status
+                      </label>
+                      <select
+                        value={staffForm.userStatus}
+                        onChange={(e) => setStaffForm({ ...staffForm, userStatus: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">Can be changed later</p>
+                    </div>
                   </div>
                 </div>
               </div>
