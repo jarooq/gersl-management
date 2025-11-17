@@ -77,10 +77,10 @@ const generateProposalCode = () => {
 const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partners, initialData }) => {
   const defaultFormData = {
     proposalCode: generateProposalCode(),
-    donorOrganization: '',
+    donor: '',
     cboId: '',
     cboName: '',
-    proposalTitle: '',
+    title: '',
     programmeArea: 'Education',
     requestedBudget: '',
     duration: '12 months',
@@ -421,9 +421,9 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Donor Organization *</label>
                 <select
-                  name="donorOrganization"
+                  name="donor"
                   required
-                  value={formData.donorOrganization}
+                  value={formData.donor}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
@@ -458,9 +458,9 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
               <label className="block text-sm font-semibold text-gray-700 mb-1">Proposal Title *</label>
               <input
                 type="text"
-                name="proposalTitle"
+                name="title"
                 required
-                value={formData.proposalTitle}
+                value={formData.title}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Enter proposal title..."
@@ -1399,10 +1399,10 @@ const ProposalsPage = () => {
     // Map AI-generated data to our form structure
     const mappedData = {
       proposalCode: generateProposalCode(),
-      donorOrganization: aiGeneratedData.donor || '',
+      donor: aiGeneratedData.donor || '',
       cboId: '',
       cboName: '',
-      proposalTitle: aiGeneratedData.title || '',
+      title: aiGeneratedData.title || '',
       programmeArea: aiGeneratedData.programmeArea || 'Education',
       requestedBudget: aiGeneratedData.budgetRequested || '',
       duration: '12 months',
@@ -1488,14 +1488,14 @@ const ProposalsPage = () => {
     setIsLoading(true);
 
     // Map frontend field names to backend field names and clean up data
-    console.log('🔍 DEBUG - formDataToSubmit.proposalTitle:', formDataToSubmit.proposalTitle);
-    console.log('🔍 DEBUG - formDataToSubmit.donorOrganization:', formDataToSubmit.donorOrganization);
+    console.log('🔍 DEBUG - formDataToSubmit.title:', formDataToSubmit.title);
+    console.log('🔍 DEBUG - formDataToSubmit.donor:', formDataToSubmit.donor);
 
     const cleanData = {
       // Map frontend field names to backend expected names
       proposalCode: formDataToSubmit.proposalCode || '',
-      title: formDataToSubmit.proposalTitle,  // Frontend: proposalTitle → Backend: title
-      donor: formDataToSubmit.donorOrganization,  // Frontend: donorOrganization → Backend: donor
+      title: formDataToSubmit.title,  // Frontend: title → Backend: title
+      donor: formDataToSubmit.donor,  // Frontend: donor → Backend: donor
       programmeArea: formDataToSubmit.programmeArea,
       district: formDataToSubmit.district,
       budgetRequested: parseFloat(formDataToSubmit.requestedBudget),  // Frontend: requestedBudget → Backend: budgetRequested
@@ -1545,19 +1545,22 @@ const ProposalsPage = () => {
     console.log('Cleaned data to submit:', cleanData);
 
     try {
+      // Use environment variable for API URL
+      const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
+
       // Check if we're updating an existing proposal or creating a new one
       const isEditMode = formDataToSubmit.id ? true : false;
       const url = isEditMode
-        ? `http://localhost:3001/api/proposals/${formDataToSubmit.id}`
-        : 'http://localhost:3001/api/proposals';
+        ? `${API_BASE_URL}/proposals/${formDataToSubmit.id}`
+        : `${API_BASE_URL}/proposals`;
       const method = isEditMode ? 'PUT' : 'POST';
 
       console.log(`Sending ${method} to ${url}...`);
       const response = await fetch(url, {
         method: method,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          'Content-Type': 'application/json'
+          // No Authorization header needed - using httpOnly cookies
         },
         credentials: 'include',  // Include cookies for authentication
         body: JSON.stringify(cleanData)

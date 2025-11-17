@@ -30,6 +30,8 @@ const HRPage = lazy(() => import('../pages/HR/HRPage'));
 const AttendancePage = lazy(() => import('../pages/HR/AttendancePage'));
 const OnboardingPage = lazy(() => import('../pages/HR/OnboardingPage'));
 const AppraisalPage = lazy(() => import('../pages/HR/AppraisalPage'));
+const ContractManagementPage = lazy(() => import('../pages/HR/ContractManagementPage'));
+const PayrollPage = lazy(() => import('../pages/HR/PayrollPage'));
 const ProposalsPage = lazy(() => import('../pages/Proposals/ProposalsPage'));
 const PartnersPage = lazy(() => import('../pages/Partners/PartnersPage'));
 const MEALPage = lazy(() => import('../pages/MEAL/MEALPage'));
@@ -48,6 +50,8 @@ const DonationsPage = lazy(() => import('../pages/Campaigns/DonationsPage'));
 const JobPostingsPage = lazy(() => import('../pages/Campaigns/JobPostingsPage'));
 const VendorCallsPage = lazy(() => import('../pages/Campaigns/VendorCallsPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
+const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
+const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
 
 // Loading component
 const PageLoader = () => (
@@ -216,6 +220,26 @@ const AppRouter = () => {
             }
           />
           <Route
+            path="coordinators"
+            element={
+              <PermissionRoute permission={PERMISSIONS.ORPHANS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <CoordinatorsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="coordinators/:id"
+            element={
+              <PermissionRoute permission={PERMISSIONS.ORPHANS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <CoordinatorDetailsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
             path="beneficiaries"
             element={
               <PermissionRoute permission={PERMISSIONS.BENEFICIARIES_VIEW}>
@@ -342,6 +366,26 @@ const AppRouter = () => {
                 <PermissionRoute permission={PERMISSIONS.HR_MANAGE_APPRAISALS}>
                   <Suspense fallback={<PageLoader />}>
                     <AppraisalPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="contracts"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_MANAGE_CONTRACTS}>
+                  <Suspense fallback={<PageLoader />}>
+                    <ContractManagementPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="payroll"
+              element={
+                <PermissionRoute permission={PERMISSIONS.FINANCE_VIEW_PAYROLL}>
+                  <Suspense fallback={<PageLoader />}>
+                    <PayrollPage />
                   </Suspense>
                 </PermissionRoute>
               }

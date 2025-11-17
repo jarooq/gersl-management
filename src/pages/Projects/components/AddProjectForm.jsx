@@ -6,13 +6,13 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     // Basic Information
     projectCode: '',
-    projectName: '',
+    name: '',
     donor: '',
     programmeArea: 'Education',
-    district: 'Colombo',
+    location: 'Colombo',
     startDate: '',
     endDate: '',
-    totalBudget: '',
+    budget: '',
     targetBeneficiaries: '',
     description: '',
     status: 'Planning',
@@ -157,7 +157,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
     // Convert and prepare data for submission
     const projectData = {
       ...formData,
-      totalBudget: parseFloat(formData.totalBudget) || 0,
+      totalBudget: parseFloat(formData.budget) || 0,
       targetBeneficiaries: parseInt(formData.targetBeneficiaries) || 0,
       beneficiaryBreakdown: {
         directMale: parseInt(formData.beneficiaryBreakdown.directMale) || 0,
@@ -188,13 +188,13 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
   const handleClose = () => {
     setFormData({
       projectCode: '',
-      projectName: '',
+      name: '',
       donor: '',
       programmeArea: 'Education',
-      district: 'Colombo',
+      location: 'Colombo',
       startDate: '',
       endDate: '',
-      totalBudget: '',
+      budget: '',
       targetBeneficiaries: '',
       description: '',
       status: 'Planning',
@@ -358,8 +358,8 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                 </label>
                 <input
                   type="text"
-                  name="projectName"
-                  value={formData.projectName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -412,8 +412,8 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     District *
                   </label>
                   <select
-                    name="district"
-                    value={formData.district}
+                    name="location"
+                    value={formData.location}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -486,8 +486,8 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   </label>
                   <input
                     type="number"
-                    name="totalBudget"
-                    value={formData.totalBudget}
+                    name="budget"
+                    value={formData.budget}
                     onChange={handleChange}
                     required
                     min="0"

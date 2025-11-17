@@ -111,8 +111,9 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
       };
 
       // Create project via API
+      const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/api/projects', {
+      const response = await fetch(`${API_BASE_URL}/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

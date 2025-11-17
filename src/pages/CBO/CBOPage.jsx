@@ -781,7 +781,8 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/proposals', {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
+      const response = await fetch(`${API_BASE_URL}/proposals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

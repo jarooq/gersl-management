@@ -28,18 +28,25 @@ import {
   TrendingUp,
   Megaphone,
   Store,
-  X
+  X,
+  UserCheck,
+  Wallet
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const location = useLocation();
-  const { hasPermission, hasAnyPermission } = useAuth();
+  const { hasPermission, hasAnyPermission, currentUser } = useAuth();
+
+  console.log('🔍 SIDEBAR - currentUser:', currentUser);
+  console.log('🔍 SIDEBAR - currentUser.role:', currentUser?.role);
+  console.log('🔍 SIDEBAR - currentUser.permissions:', currentUser?.permissions);
 
   // Auto-detect which dropdown should be open based on current path
   const getInitialDropdown = () => {
-    if (location.pathname.startsWith('/admin/orphans')) return 'orphan care';
+    if (location.pathname.startsWith('/admin/orphans') ||
+        location.pathname.startsWith('/admin/coordinators')) return 'orphan care';
     if (location.pathname.startsWith('/admin/partners') ||
         location.pathname.startsWith('/admin/proposals')) return 'fund development';
     if (location.pathname.startsWith('/admin/operations') ||
@@ -71,6 +78,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       hasSubmenu: true,
       subItems: [
         { path: '/admin/orphans', icon: Baby, label: 'Orphan Management', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.ORPHANS_VIEW },
+        { path: '/admin/coordinators', icon: UserCheck, label: 'Coordinators', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.ORPHANS_VIEW },
       ]
     },
     { path: '/admin/beneficiaries', icon: Users, label: 'Beneficiaries', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.BENEFICIARIES_VIEW },
@@ -124,6 +132,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
         { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
+        { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_CONTRACTS },
+        { path: '/admin/hr/payroll', icon: Wallet, label: 'Payroll', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.FINANCE_VIEW_PAYROLL },
       ]
     },
     { path: '/admin/cbo', icon: Users2, label: 'CBO Partners', color: 'text-indigo-600', bgColor: 'bg-indigo-50', permission: PERMISSIONS.CBO_VIEW },
@@ -133,8 +143,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     { path: '/admin/settings', icon: Settings, label: 'Settings', color: 'text-gray-600', bgColor: 'bg-gray-50', permission: PERMISSIONS.SETTINGS_VIEW },
   ];
 
+  // TEMPORARY: Show all menu items for Admin users to test
+  const isAdmin = currentUser?.role === 'Admin';
+
+  console.log('🔍 SIDEBAR - isAdmin:', isAdmin);
+  console.log('🔍 SIDEBAR - Will filter menu items:', !isAdmin);
+
   // Filter menu items based on user permissions
-  const filteredMenuItems = menuItems.filter((item) => {
+  const filteredMenuItems = isAdmin ? menuItems : menuItems.filter((item) => {
     if (item.hasSubmenu) {
       // Filter sub-items and only show the parent if at least one sub-item is accessible
       const accessibleSubItems = item.subItems.filter((subItem) =>
