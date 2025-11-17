@@ -97,8 +97,9 @@ const handleResponse = async (response) => {
 const request = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // Build headers object - skip Content-Type if body is FormData (browser will set it)
   const headers = {
-    'Content-Type': 'application/json',
+    ...(!(options.body instanceof FormData) && { 'Content-Type': 'application/json' }),
     ...options.headers,
   };
 
@@ -232,9 +233,10 @@ export const OrphanAPI = {
   },
 
   create: async (orphanData) => {
+    // Support both FormData (for file uploads) and JSON objects
     const data = await request('/orphans', {
       method: 'POST',
-      body: JSON.stringify(orphanData),
+      body: orphanData instanceof FormData ? orphanData : JSON.stringify(orphanData),
     });
     return data.data.orphan;
   },
@@ -598,6 +600,50 @@ export const HRAppraisalAPI = {
   getStats: async () => {
     const data = await request('/hr/appraisal/stats');
     return data.data;
+  },
+};
+
+// ============================================
+// PAYROLL API
+// ============================================
+
+export const PayrollAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/payroll?${queryString}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/payroll/${id}`);
+    return data.data.payroll;
+  },
+
+  create: async (payrollData) => {
+    const data = await request('/payroll', {
+      method: 'POST',
+      body: JSON.stringify(payrollData),
+    });
+    return data.data.payroll;
+  },
+
+  update: async (id, payrollData) => {
+    const data = await request(`/payroll/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payrollData),
+    });
+    return data.data.payroll;
+  },
+
+  process: async (id) => {
+    const data = await request(`/payroll/${id}/process`, {
+      method: 'PUT',
+    });
+    return data.data.payroll;
+  },
+
+  delete: async (id) => {
+    await request(`/payroll/${id}`, { method: 'DELETE' });
   },
 };
 
@@ -2213,51 +2259,6 @@ export const BudgetAPI = {
     return data.data.budget;
   },
 };
-
-// ============================================
-// PAYROLL API
-// ============================================
-
-export const PayrollAPI = {
-  getAll: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/payroll?${queryString}`);
-    return data.data;
-  },
-
-  getById: async (id) => {
-    const data = await request(`/payroll/${id}`);
-    return data.data.payroll;
-  },
-
-  create: async (payrollData) => {
-    const data = await request('/payroll', {
-      method: 'POST',
-      body: JSON.stringify(payrollData),
-    });
-    return data.data.payroll;
-  },
-
-  update: async (id, payrollData) => {
-    const data = await request(`/payroll/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(payrollData),
-    });
-    return data.data.payroll;
-  },
-
-  delete: async (id) => {
-    await request(`/payroll/${id}`, { method: 'DELETE' });
-  },
-
-  process: async (id) => {
-    const data = await request(`/payroll/${id}/process`, {
-      method: 'PUT',
-    });
-    return data.data.payroll;
-  },
-};
-
 // ============================================
 // GRANT RECEIVABLE API
 // ============================================
@@ -2604,17 +2605,17 @@ export const AttendanceAPI = {
 export const LeaveRequestAPI = {
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/leave-requests?${queryString}`);
+    const data = await request(`/attendance/leave/requests?${queryString}`);
     return data.data;
   },
 
   getById: async (id) => {
-    const data = await request(`/leave-requests/${id}`);
+    const data = await request(`/attendance/leave/requests/${id}`);
     return data.data.leaveRequest;
   },
 
   create: async (leaveData) => {
-    const data = await request('/leave-requests', {
+    const data = await request('/attendance/leave/requests', {
       method: 'POST',
       body: JSON.stringify(leaveData),
     });
@@ -2622,7 +2623,7 @@ export const LeaveRequestAPI = {
   },
 
   update: async (id, leaveData) => {
-    const data = await request(`/leave-requests/${id}`, {
+    const data = await request(`/attendance/leave/requests/${id}`, {
       method: 'PUT',
       body: JSON.stringify(leaveData),
     });
@@ -2630,11 +2631,11 @@ export const LeaveRequestAPI = {
   },
 
   delete: async (id) => {
-    await request(`/leave-requests/${id}`, { method: 'DELETE' });
+    await request(`/attendance/leave/requests/${id}`, { method: 'DELETE' });
   },
 
   approve: async (id, approvalStatus, remarks = '') => {
-    const data = await request(`/leave-requests/${id}/approve`, {
+    const data = await request(`/attendance/leave/requests/${id}/approve`, {
       method: 'PUT',
       body: JSON.stringify({ approvalStatus, remarks }),
     });
@@ -2646,9 +2647,67 @@ export const LeaveRequestAPI = {
 // EXPORT DEFAULT API OBJECT
 // ============================================
 
+// ============================================
+// ROLES API
+// ============================================
+
+const RolesAPI = {
+  getAll: async () => {
+    const data = await request('/roles');
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/roles/${id}`);
+    return data.data;
+  },
+
+  create: async (roleData) => {
+    const data = await request('/roles', {
+      method: 'POST',
+      body: JSON.stringify(roleData),
+    });
+    return data.data;
+  },
+
+  update: async (id, roleData) => {
+    const data = await request(`/roles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(roleData),
+    });
+    return data;
+  },
+
+  delete: async (id) => {
+    const data = await request(`/roles/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  assignPermissions: async (id, permission_ids) => {
+    const data = await request(`/roles/${id}/permissions`, {
+      method: 'PUT',
+      body: JSON.stringify({ permission_ids }),
+    });
+    return data;
+  },
+
+  getAllPermissions: async () => {
+    const data = await request('/roles/permissions/all');
+    return data.data;
+  },
+
+  getStats: async () => {
+    const data = await request('/roles/stats');
+    return data.data;
+  },
+};
+
 const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
+  Roles: RolesAPI,
   Orphan: OrphanAPI,
   OrphanNeed: OrphanNeedAPI,
   VisitLog: VisitLogAPI,
@@ -2973,6 +3032,167 @@ export const DataProtectionAPI = {
     const queryString = new URLSearchParams(params).toString();
     const data = await request(`/compliance/data-protection/stats?${queryString}`);
     return data.data;
+  },
+};
+
+// ============================================
+// HR CONTRACT MANAGEMENT API
+// ============================================
+
+API.HRContract = {
+  // ===== EMPLOYMENT AGREEMENTS =====
+  createAgreement: async (agreementData) => {
+    const data = await request('/hr/contracts/agreements', {
+      method: 'POST',
+      body: JSON.stringify(agreementData),
+    });
+    return data.data;
+  },
+
+  getAllAgreements: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/hr/contracts/agreements?${queryString}`);
+    return data.data;
+  },
+
+  getAgreementById: async (id) => {
+    const data = await request(`/hr/contracts/agreements/${id}`);
+    return data.data.agreement;
+  },
+
+  signAgreement: async (id, signData) => {
+    const data = await request(`/hr/contracts/agreements/${id}/sign`, {
+      method: 'PUT',
+      body: JSON.stringify(signData),
+    });
+    return data.data.agreement;
+  },
+
+  // ===== CONTRACT RENEWALS =====
+  getExpiringContracts: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/hr/contracts/renewals/expiring?${queryString}`);
+    return data.data;
+  },
+
+  createRenewal: async (renewalData) => {
+    const data = await request('/hr/contracts/renewals', {
+      method: 'POST',
+      body: JSON.stringify(renewalData),
+    });
+    return data.data;
+  },
+
+  approveRenewal: async (id, approvalData) => {
+    const data = await request(`/hr/contracts/renewals/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify(approvalData),
+    });
+    return data.data.renewal;
+  },
+
+  // ===== TERMINATIONS =====
+  getAllTerminations: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/hr/contracts/terminations?${queryString}`);
+    return data.data;
+  },
+
+  createTermination: async (terminationData) => {
+    const data = await request('/hr/contracts/terminations', {
+      method: 'POST',
+      body: JSON.stringify(terminationData),
+    });
+    return data.data;
+  },
+
+  approveTermination: async (id, approvalData) => {
+    const data = await request(`/hr/contracts/terminations/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify(approvalData),
+    });
+    return data.data.termination;
+  },
+
+  // ===== RESIGNATIONS =====
+  getAllResignations: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/hr/contracts/resignations?${queryString}`);
+    return data.data;
+  },
+
+  submitResignation: async (resignationData) => {
+    const data = await request('/hr/contracts/resignations', {
+      method: 'POST',
+      body: JSON.stringify(resignationData),
+    });
+    return data.data;
+  },
+
+  acceptResignation: async (id, acceptanceData) => {
+    const data = await request(`/hr/contracts/resignations/${id}/accept`, {
+      method: 'PUT',
+      body: JSON.stringify(acceptanceData),
+    });
+    return data.data.resignation;
+  },
+
+  // ===== JOB DESCRIPTION GENERATOR =====
+  generateJobDescription: async (jobDetails) => {
+    const data = await request('/hr/contracts/job-description/generate', {
+      method: 'POST',
+      body: JSON.stringify(jobDetails),
+    });
+    return data.data;
+  },
+
+  // ===== INTEGRATED STAFF CREATION =====
+  createStaffWithAgreement: async (staffData) => {
+    const data = await request('/hr/contracts/staff/create-with-agreement', {
+      method: 'POST',
+      body: JSON.stringify(staffData),
+    });
+    return data.data;
+  },
+
+  // ===== COORDINATORS API =====
+  Coordinators: {
+    getAll: async (params = {}) => {
+      const queryString = new URLSearchParams(params).toString();
+      const endpoint = queryString ? `/coordinators?${queryString}` : '/coordinators';
+      const data = await request(endpoint);
+      return data;
+    },
+
+    getById: async (id) => {
+      const data = await request(`/coordinators/${id}`);
+      return data;
+    },
+
+    getStats: async (id, period = 'monthly') => {
+      const data = await request(`/coordinators/${id}/stats?period=${period}`);
+      return data;
+    },
+
+    getAssignedOrphans: async (id) => {
+      const data = await request(`/coordinators/${id}/orphans`);
+      return data;
+    },
+
+    assignOrphan: async (coordinatorId, orphanId) => {
+      const data = await request(`/coordinators/${coordinatorId}/assign-orphan`, {
+        method: 'POST',
+        body: JSON.stringify({ orphanId }),
+      });
+      return data;
+    },
+
+    unassignOrphan: async (coordinatorId, orphanId) => {
+      const data = await request(`/coordinators/${coordinatorId}/orphans/${orphanId}`, {
+        method: 'DELETE',
+      });
+      return data;
+    },
   },
 };
 

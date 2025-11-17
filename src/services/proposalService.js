@@ -3,7 +3,10 @@
 // ============================================
 // Centralized API communication for proposals
 
-const API_BASE_URL = 'http://localhost:3001/api';
+// Use environment variable for API URL, fallback to relative path for production
+// In production (Vercel), relative /api goes through our serverless proxy
+// In development, use localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
 const API_TIMEOUT = 30000;
 
 class APIError extends Error {
