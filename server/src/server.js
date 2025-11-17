@@ -28,6 +28,7 @@ import reportRoutes from './routes/report.routes.js';
 import visitLogRoutes from './routes/visitLog.routes.js';
 import beneficiaryRoutes from './routes/beneficiaries.routes.js';
 import aiRoutes from './routes/ai.routes.js';
+import coordinatorRoutes from './routes/coordinator.routes.js';
 
 // New feature routes
 import campaignRoutes from './routes/campaign.routes.js';
@@ -42,6 +43,7 @@ import bankTransactionRoutes from './routes/bankTransaction.routes.js';
 import budgetRoutes from './routes/budget.routes.js';
 import payrollRoutes from './routes/payroll.routes.js';
 import grantReceivableRoutes from './routes/grantReceivable.routes.js';
+import grantReceiptRoutes from './routes/grantReceipt.routes.js';
 import fixedAssetRoutes from './routes/fixedAsset.routes.js';
 import jobPostingRoutes from './routes/jobPosting.routes.js';
 import vendorCallRoutes from './routes/vendorCall.routes.js';
@@ -63,6 +65,22 @@ import dataProtectionRoutes from './routes/data-protection.routes.js';
 import evaluationRoutes from './routes/evaluation.routes.js';
 import learningEventRoutes from './routes/learning-event.routes.js';
 import complaintRoutes from './routes/complaint.routes.js';
+
+// New missing Finance routes
+import budgetCategoryRoutes from './routes/budgetCategory.routes.js';
+import donorRoutes from './routes/donor.routes.js';
+import payableRoutes from './routes/payable.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import financialReportRoutes from './routes/financialReport.routes.js';
+
+// Procurement module routes
+import procurementRoutes from './routes/procurement.routes.js';
+
+// Roles & Permissions routes
+import roleRoutes from './routes/role.routes.js';
+
+// HR Contract Management routes
+import contractRoutes from './routes/contract.routes.js';
 
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
@@ -95,7 +113,8 @@ const allowedOrigins = [
   'https://gersl-management-jarooqs-projects.vercel.app',
   'https://gersl-management.vercel.app',
   'https://gersl-management-nu.vercel.app',
-  'https://erp-globalehsan.org', // Production frontend
+  'https://erp-globalehsan.org', // Production frontend (CloudFront)
+  'http://gersl-management-frontend.s3-website-us-east-1.amazonaws.com', // S3 direct access
   process.env.CORS_ORIGIN,
   process.env.FRONTEND_URL
 ].filter(Boolean);
@@ -167,19 +186,31 @@ app.use('/api/orphans', orphanRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/proposals', proposalRoutes);
 app.use('/api/finance', financeRoutes);
+// HR specific routes must come BEFORE general /api/hr route
+app.use('/api/hr/onboarding', hrOnboardingRoutes);
+app.use('/api/hr/appraisal', hrAppraisalRoutes);
+app.use('/api/hr/contracts', contractRoutes);
 app.use('/api/hr', hrRoutes);
+// CBO specific routes must come BEFORE general /api/cbo route
+app.use('/api/cbo/volunteers', cboVolunteerRoutes);
+app.use('/api/cbo/activities', cboActivityRoutes);
+app.use('/api/cbo/due-diligence', cboDueDiligenceRoutes);
+app.use('/api/cbo/proposals', cboProposalRoutes);
+app.use('/api/cbo/projects', cboProjectRoutes);
 app.use('/api/cbo', cboRoutes);
 app.use('/api/partners', partnerRoutes);
-app.use('/api/meal', mealRoutes);
+// MEAL specific routes must come BEFORE general /api/meal route
 app.use('/api/meal/evaluations', evaluationRoutes);
 app.use('/api/meal/learning-events', learningEventRoutes);
 app.use('/api/meal/complaints', complaintRoutes);
+app.use('/api/meal', mealRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/approvals', approvalRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/visit-logs', visitLogRoutes);
 app.use('/api/beneficiaries', beneficiaryRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/coordinators', coordinatorRoutes);
 
 // New feature routes
 app.use('/api/campaigns', campaignRoutes);
@@ -194,26 +225,32 @@ app.use('/api/bank-transactions', bankTransactionRoutes);
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/payroll', payrollRoutes);
 app.use('/api/grant-receivables', grantReceivableRoutes);
+app.use('/api/grant-receipts', grantReceiptRoutes);
 app.use('/api/fixed-assets', fixedAssetRoutes);
 app.use('/api/job-postings', jobPostingRoutes);
 app.use('/api/vendor-calls', vendorCallRoutes);
 app.use('/api/social-media', socialMediaRoutes);
-app.use('/api/compliance', complianceRoutes);
-app.use('/api/attendance', attendanceRoutes);
-app.use('/api/hr/onboarding', hrOnboardingRoutes);
-app.use('/api/hr/appraisal', hrAppraisalRoutes);
-app.use('/api/cbo/volunteers', cboVolunteerRoutes);
-app.use('/api/cbo/activities', cboActivityRoutes);
-app.use('/api/cbo/due-diligence', cboDueDiligenceRoutes);
-app.use('/api/cbo/proposals', cboProposalRoutes);
-app.use('/api/cbo/projects', cboProjectRoutes);
-
-// Compliance module routes
+// Compliance specific routes must come BEFORE general /api/compliance route
 app.use('/api/compliance/policies', safeguardingPolicyRoutes);
 app.use('/api/compliance/incidents', safeguardingIncidentRoutes);
 app.use('/api/compliance/background-checks', backgroundCheckRoutes);
 app.use('/api/compliance/training', complianceTrainingRoutes);
 app.use('/api/compliance/data-protection', dataProtectionRoutes);
+app.use('/api/compliance', complianceRoutes);
+app.use('/api/attendance', attendanceRoutes);
+
+// New Finance module routes
+app.use('/api/budget-categories', budgetCategoryRoutes);
+app.use('/api/donors', donorRoutes);
+app.use('/api/payables', payableRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/financial-reports', financialReportRoutes);
+
+// Procurement module routes
+app.use('/api/procurement', procurementRoutes);
+
+// Roles & Permissions routes
+app.use('/api/roles', roleRoutes);
 
 // 404 handler
 app.use(notFound);

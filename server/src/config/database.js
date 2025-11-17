@@ -25,6 +25,7 @@ const sequelize = useSQLite
       dialect: 'postgres',
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       dialectOptions: {
+        family: 4, // Force IPv4 to avoid IPv6 connection issues
         ssl: process.env.NODE_ENV === 'production' ? {
           require: true,
           rejectUnauthorized: false
