@@ -114,6 +114,46 @@ export const createOrphan = asyncHandler(async (req, res) => {
     orphanData.age = today.getFullYear() - birthDate.getFullYear();
   }
 
+  // Process uploaded files
+  const photos = [];
+  const documents = [];
+
+  if (req.files) {
+    // Profile photo goes into photos array
+    if (req.files.profilePhoto && req.files.profilePhoto[0]) {
+      photos.push(`/uploads/orphans/${req.files.profilePhoto[0].filename}`);
+    }
+
+    // All other documents go into documents array
+    const docFields = ['birthCertificate', 'deathCertificate', 'guardianNICDoc', 'schoolLetter', 'drawingLetter', 'otherDoc1', 'otherDoc2'];
+    docFields.forEach(field => {
+      if (req.files[field] && req.files[field][0]) {
+        documents.push({
+          type: field,
+          url: `/uploads/orphans/${req.files[field][0].filename}`,
+          filename: req.files[field][0].originalname,
+          uploadedAt: new Date()
+        });
+      }
+    });
+  }
+
+  // Add files to orphan data
+  if (photos.length > 0) {
+    orphanData.photos = JSON.stringify(photos);
+  }
+  if (documents.length > 0) {
+    orphanData.documents = JSON.stringify(documents);
+  }
+
+  // Clean numeric fields - remove empty strings
+  const numericFields = ['age', 'latitude', 'longitude', 'motherMonthlyIncome', 'treatmentCost', 'stipendAmount', 'totalStipendPaid'];
+  numericFields.forEach(field => {
+    if (orphanData[field] === '' || orphanData[field] === null) {
+      delete orphanData[field];
+    }
+  });
+
   // Create orphan
   const orphan = await Orphan.create(orphanData);
 
@@ -140,7 +180,7 @@ export const createOrphan = asyncHandler(async (req, res) => {
 // ============================================
 export const updateOrphan = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const updateData = req.body;
+  const updateData = { ...req.body };
 
   const orphan = await Orphan.findByPk(id);
 
@@ -156,6 +196,55 @@ export const updateOrphan = asyncHandler(async (req, res) => {
   if (!canEdit) {
     throw new BadRequestError('You do not have permission to update this orphan');
   }
+
+  // Handle profile photo upload
+  if (req.files?.profilePhoto) {
+    const existingPhotos = orphan.photos ?
+      (typeof orphan.photos === 'string' ? JSON.parse(orphan.photos) : orphan.photos) : [];
+    const newPhoto = `/uploads/orphans/${req.files.profilePhoto[0].filename}`;
+    updateData.photos = JSON.stringify([newPhoto, ...existingPhotos]);
+  }
+
+  // Handle document uploads
+  if (req.files) {
+    let existingDocuments = [];
+    try {
+      if (orphan.documents) {
+        existingDocuments = typeof orphan.documents === 'string'
+          ? JSON.parse(orphan.documents)
+          : orphan.documents;
+      }
+    } catch (error) {
+      console.error('Error parsing existing documents:', error);
+    }
+
+    const newDocuments = [];
+    const docFields = ['birthCertificate', 'deathCertificate', 'guardianNICDoc', 'schoolLetter', 'drawingLetter', 'otherDoc1', 'otherDoc2'];
+
+    docFields.forEach(field => {
+      if (req.files[field] && req.files[field][0]) {
+        newDocuments.push({
+          type: field,
+          url: `/uploads/orphans/${req.files[field][0].filename}`,
+          filename: req.files[field][0].originalname,
+          uploadedAt: new Date()
+        });
+      }
+    });
+
+    if (newDocuments.length > 0) {
+      const allDocuments = [...existingDocuments, ...newDocuments];
+      updateData.documents = JSON.stringify(allDocuments);
+    }
+  }
+
+  // Clean numeric fields - remove empty strings
+  const numericFields = ['age', 'latitude', 'longitude', 'motherMonthlyIncome', 'treatmentCost', 'stipendAmount', 'totalStipendPaid'];
+  numericFields.forEach(field => {
+    if (updateData[field] === '' || updateData[field] === null) {
+      delete updateData[field];
+    }
+  });
 
   // Update orphan
   await orphan.update(updateData);
@@ -343,6 +432,76 @@ export const getOrphansByCoordinator = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     data: { orphans }
+  });
+});
+
+// ============================================
+// UPLOAD DOCUMENTS
+// ============================================
+
+// @desc    Upload additional documents for orphan
+// @route   POST /api/orphans/:id/documents
+// @access  Private (Edit permission)
+export const uploadDocuments = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const orphan = await Orphan.findByPk(id);
+
+  if (!orphan) {
+    throw new NotFoundError('Orphan not found');
+  }
+
+  // Get existing documents
+  let existingDocuments = [];
+  try {
+    if (orphan.documents) {
+      existingDocuments = typeof orphan.documents === 'string'
+        ? JSON.parse(orphan.documents)
+        : orphan.documents;
+    }
+  } catch (error) {
+    console.error('Error parsing existing documents:', error);
+  }
+
+  // Process uploaded files
+  const newDocuments = [];
+
+  if (req.files) {
+    const docFields = ['birthCertificate', 'deathCertificate', 'guardianNICDoc', 'schoolLetter', 'drawingLetter', 'otherDoc1', 'otherDoc2'];
+    docFields.forEach(field => {
+      if (req.files[field] && req.files[field][0]) {
+        newDocuments.push({
+          type: field,
+          url: `/uploads/orphans/${req.files[field][0].filename}`,
+          filename: req.files[field][0].originalname,
+          uploadedAt: new Date()
+        });
+      }
+    });
+  }
+
+  // Merge with existing documents
+  const allDocuments = [...existingDocuments, ...newDocuments];
+
+  // Update orphan with new documents
+  orphan.documents = JSON.stringify(allDocuments);
+  await orphan.save();
+
+  // Fetch updated orphan with associations
+  const updatedOrphan = await Orphan.findByPk(id, {
+    include: [
+      {
+        model: User,
+        as: 'coordinator',
+        attributes: ['id', 'fullName', 'username']
+      }
+    ]
+  });
+
+  res.json({
+    success: true,
+    message: `${newDocuments.length} document(s) uploaded successfully`,
+    data: { orphan: updatedOrphan }
   });
 });
 

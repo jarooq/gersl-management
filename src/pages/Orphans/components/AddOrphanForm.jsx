@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOrphans } from '../../../contexts/OrphanContext';
+import { useHR } from '../../../contexts/HRContext';
 import {
   X,
   User,
@@ -16,6 +17,7 @@ import { getDSDivisionsByDistrict, getGNDivisionsByDSDivision, getAllDistricts }
 
 const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
   const { addOrphan, updateOrphan, orphans } = useOrphans();
+  const { staff } = useHR();
   const isEditMode = !!orphanToEdit;
   const [formData, setFormData] = useState({
     // Personal Information
@@ -23,6 +25,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
     fullName: '',
     dateOfBirth: '',
     age: '',
+    gender: 'Male',
 
     // Location Information
     district: '',
@@ -31,6 +34,9 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
     dsDivision: '',
     latitude: '',
     longitude: '',
+
+    // Coordinator Assignment
+    coordinatorId: '',
 
     // Guardian Information
     guardianName: '',
@@ -97,6 +103,11 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
   const [divisions, setDivisions] = useState([]);
   const [gnDivisions, setGNDivisions] = useState([]);
 
+  // Filter staff for coordinators - using role from users table
+  const coordinators = (staff || []).filter(s =>
+    s.status === 'Active' && s.role === 'Orphan Coordinator'
+  );
+
   // Auto-generate Orphan ID when form opens (for add mode) or populate data (for edit mode)
   useEffect(() => {
     if (isOpen) {
@@ -113,6 +124,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
           dsDivision: orphanToEdit.dsDivision || '',
           latitude: orphanToEdit.latitude?.toString() || '',
           longitude: orphanToEdit.longitude?.toString() || '',
+          coordinatorId: orphanToEdit.coordinatorId?.toString() || '',
           guardianName: orphanToEdit.guardianName || '',
           guardianNIC: orphanToEdit.guardianNIC || '',
           contactNumber: orphanToEdit.contactNumber || '',
@@ -286,47 +298,60 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
       return;
     }
 
+    // Create FormData for file upload support (both create and update)
+    const formDataToSend = new FormData();
+
+    // Add all text fields to FormData
+    Object.keys(formData).forEach(key => {
+      const value = formData[key];
+
+      // Skip file fields (they'll be added separately)
+      const fileFields = ['profilePhoto', 'birthCertificate', 'deathCertificate', 'guardianNICDoc', 'schoolLetter', 'drawingLetter', 'otherDoc1', 'otherDoc2'];
+      if (fileFields.includes(key)) {
+        // Add file if it exists
+        if (value && value instanceof File) {
+          formDataToSend.append(key, value);
+        }
+        return;
+      }
+
+      // Add non-null, non-file values to FormData
+      if (value !== null && value !== '') {
+        formDataToSend.append(key, value);
+      }
+    });
+
+    // Add numeric fields with proper conversion - only add if they have values
+    if (formData.age) {
+      formDataToSend.set('age', parseInt(formData.age) || 0);
+    }
+    if (formData.latitude) {
+      formDataToSend.set('latitude', parseFloat(formData.latitude));
+    }
+    if (formData.longitude) {
+      formDataToSend.set('longitude', parseFloat(formData.longitude));
+    }
+    if (formData.motherMonthlyIncome) {
+      formDataToSend.set('motherMonthlyIncome', parseFloat(formData.motherMonthlyIncome));
+    }
+    if (formData.treatmentCost) {
+      formDataToSend.set('treatmentCost', parseFloat(formData.treatmentCost));
+    }
+
     if (isEditMode) {
       // Update existing orphan
-      const orphanData = {
-        ...orphanToEdit,
-        ...formData,
-        age: parseInt(formData.age) || 0,
-        latitude: parseFloat(formData.latitude) || 0,
-        longitude: parseFloat(formData.longitude) || 0,
-      };
-      updateOrphan(orphanToEdit.id, orphanData);
+      updateOrphan(orphanToEdit.id, formDataToSend);
     } else {
-      // Prepare new orphan data with default values
-      const orphanData = {
-        ...formData,
-        age: parseInt(formData.age) || 0,
-        attendance: parseFloat(formData.attendance) || 0,
-        latitude: parseFloat(formData.latitude) || 0,
-        longitude: parseFloat(formData.longitude) || 0,
-        // Default values for support & financial fields
-        stipendAmount: 5000,
-        coordinator: 'Not Assigned',
-        // Default values for status fields
-        status: 'Active',
-        approvalStatus: 'Pending',
-        healthStatus: 'Good',
-        registrationDate: new Date().toISOString().split('T')[0],
-        lastVisitDate: null,
-        totalStipendPaid: 0,
-        documents: {
-          birthCertificate: 'pending',
-          deathCertificate: 'pending',
-          schoolLetter: 'pending',
-          nicCopy: 'pending',
-          guardianNIC: 'pending',
-          proofOfResidence: 'pending',
-          bankStatement: 'pending',
-          photos: 'pending'
-        },
-        visits: []
-      };
-      addOrphan(orphanData);
+      // Add default values for new orphan
+      formDataToSend.set('stipendAmount', 5000);
+      formDataToSend.set('coordinator', 'Not Assigned');
+      formDataToSend.set('status', 'Active');
+      formDataToSend.set('approvalStatus', 'Pending');
+      formDataToSend.set('healthStatus', 'Good');
+      formDataToSend.set('registrationDate', new Date().toISOString().split('T')[0]);
+      formDataToSend.set('totalStipendPaid', 0);
+
+      addOrphan(formDataToSend);
     }
 
     onClose();
@@ -424,6 +449,21 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     placeholder="Auto-calculated"
                     readOnly
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Gender <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="input-modern"
+                    required
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -527,6 +567,27 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     className="input-modern"
                     placeholder="e.g., 79.8612"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Assign Coordinator
+                  </label>
+                  <select
+                    name="coordinatorId"
+                    value={formData.coordinatorId}
+                    onChange={handleChange}
+                    className="input-modern"
+                  >
+                    <option value="">Select Coordinator (Optional)</option>
+                    {coordinators.map(coordinator => (
+                      <option key={coordinator.id} value={coordinator.id}>
+                        {coordinator.fullName} - {coordinator.position}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Assign a field coordinator to this orphan for regular visits and monitoring
+                  </p>
                 </div>
               </div>
             </div>

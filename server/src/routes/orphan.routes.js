@@ -12,6 +12,7 @@ import {
 } from '../controllers/orphan.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
+import { uploadFields, setUploadPath } from '../middleware/upload.middleware.js';
 
 const router = express.Router();
 
@@ -62,7 +63,17 @@ router.post(
   '/',
   requireAuth,
   requirePermission(PERMISSIONS.ORPHANS_CREATE),
-  sanitizeBody,
+  setUploadPath('orphans'),
+  uploadFields([
+    { name: 'profilePhoto', maxCount: 1 },
+    { name: 'birthCertificate', maxCount: 1 },
+    { name: 'deathCertificate', maxCount: 1 },
+    { name: 'guardianNICDoc', maxCount: 1 },
+    { name: 'schoolLetter', maxCount: 1 },
+    { name: 'drawingLetter', maxCount: 1 },
+    { name: 'otherDoc1', maxCount: 1 },
+    { name: 'otherDoc2', maxCount: 1 }
+  ]),
   createOrphan
 );
 
@@ -96,8 +107,46 @@ router.put(
   requireAuth,
   requirePermission(PERMISSIONS.ORPHANS_EDIT),
   validateId(),
-  sanitizeBody,
+  setUploadPath('orphans'),
+  uploadFields([
+    { name: 'profilePhoto', maxCount: 1 },
+    { name: 'birthCertificate', maxCount: 1 },
+    { name: 'deathCertificate', maxCount: 1 },
+    { name: 'guardianNICDoc', maxCount: 1 },
+    { name: 'schoolLetter', maxCount: 1 },
+    { name: 'drawingLetter', maxCount: 1 },
+    { name: 'otherDoc1', maxCount: 1 },
+    { name: 'otherDoc2', maxCount: 1 }
+  ]),
   updateOrphan
+);
+
+// @route   POST /api/orphans/:id/documents
+// @desc    Upload additional documents for orphan
+// @access  Private (Edit permission)
+router.post(
+  '/:id/documents',
+  requireAuth,
+  requirePermission(PERMISSIONS.ORPHANS_EDIT),
+  validateId(),
+  setUploadPath('orphans'),
+  uploadFields([
+    { name: 'birthCertificate', maxCount: 1 },
+    { name: 'deathCertificate', maxCount: 1 },
+    { name: 'guardianNICDoc', maxCount: 1 },
+    { name: 'schoolLetter', maxCount: 1 },
+    { name: 'drawingLetter', maxCount: 1 },
+    { name: 'otherDoc1', maxCount: 1 },
+    { name: 'otherDoc2', maxCount: 1 }
+  ]),
+  async (req, res, next) => {
+    try {
+      const { uploadDocuments } = await import('../controllers/orphan.controller.js');
+      await uploadDocuments(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 // @route   DELETE /api/orphans/:id

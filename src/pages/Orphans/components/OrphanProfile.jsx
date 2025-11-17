@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import {
   User, MapPin, Phone, Calendar, GraduationCap, Heart,
   Home, Users, FileText, Activity, X, Hash, Stethoscope, Upload,
-  UserPlus, DollarSign, Printer, FileDown, BookOpen, Package, Building2, Briefcase
+  UserPlus, DollarSign, Printer, FileDown, BookOpen, Package, Building2, Briefcase, FolderOpen
 } from 'lucide-react';
 import { useOrphans } from '../../../contexts/OrphanContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import AssignCoordinatorModal from './AssignCoordinatorModal';
 import AssignDonorModal from './AssignDonorModal';
 import VisitsTab from './VisitsTab';
@@ -15,8 +16,52 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
   const [showCoordinatorModal, setShowCoordinatorModal] = useState(false);
   const [showDonorModal, setShowDonorModal] = useState(false);
   const { assignCoordinator, assignDonor } = useOrphans();
+  const { hasPermission } = useAuth();
 
   if (!orphan) return null;
+
+  // Helper function to get profile photo URL
+  const getProfilePhotoUrl = () => {
+    try {
+      console.log('OrphanProfile - Raw orphan.photos:', orphan.photos, typeof orphan.photos);
+
+      if (!orphan.photos) {
+        console.log('OrphanProfile - No photos field');
+        return null;
+      }
+
+      let photos = orphan.photos;
+
+      // If it's a string, try to parse it
+      if (typeof photos === 'string') {
+        try {
+          photos = JSON.parse(photos);
+          console.log('OrphanProfile - Parsed from string:', photos);
+        } catch (e) {
+          console.error('OrphanProfile - Failed to parse photos string:', e);
+          return null;
+        }
+      }
+
+      console.log('OrphanProfile - Photos after parsing:', photos, Array.isArray(photos));
+
+      if (Array.isArray(photos) && photos.length > 0) {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const photoUrl = `${API_URL}${photos[0]}`;
+        console.log('OrphanProfile - Final photo URL:', photoUrl);
+        return photoUrl;
+      } else {
+        console.log('OrphanProfile - Photos is not an array or is empty');
+      }
+    } catch (error) {
+      console.error('OrphanProfile - Error in getProfilePhotoUrl:', error);
+    }
+    console.log('OrphanProfile - Returning null');
+    return null;
+  };
+
+  const profilePhotoUrl = getProfilePhotoUrl();
+  const photoInitial = orphan.fullName?.charAt(0).toUpperCase() || 'O';
 
   const tabs = [
     { id: 'personal', label: 'Personal Info', icon: User },
@@ -24,6 +69,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
     { id: 'education', label: 'Education', icon: GraduationCap },
     { id: 'social', label: 'Social & Living', icon: Home },
     { id: 'health', label: 'Health', icon: Stethoscope },
+    { id: 'documents', label: 'Documents', icon: FolderOpen },
     { id: 'visits', label: 'Visit Log', icon: Calendar },
     { id: 'reports', label: 'Reports', icon: FileText },
     { id: 'support', label: 'Support Log', icon: Package }
@@ -37,9 +83,12 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
     setShowDonorModal(true);
   };
 
-  const handleCoordinatorAssign = (orphanId, coordinator) => {
-    assignCoordinator(orphanId, coordinator);
-    setShowCoordinatorModal(false);
+  const handleCoordinatorAssign = async (orphanId, coordinator) => {
+    const result = await assignCoordinator(orphanId, coordinator);
+    if (result?.success) {
+      setShowCoordinatorModal(false);
+      alert('Coordinator assigned successfully!');
+    }
   };
 
   const handleDonorAssign = (orphanId, assignmentData) => {
@@ -663,8 +712,22 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
         <div className="bg-gradient-to-r from-pink-500 to-rose-600 text-white p-6 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white text-pink-600 rounded-full flex items-center justify-center text-2xl font-bold">
-                {orphan.fullName?.charAt(0) || 'O'}
+              {profilePhotoUrl ? (
+                <img
+                  src={profilePhotoUrl}
+                  alt={orphan.fullName}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div
+                className="w-16 h-16 bg-white text-pink-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg"
+                style={{ display: profilePhotoUrl ? 'none' : 'flex' }}
+              >
+                {photoInitial}
               </div>
               <div>
                 <h2 className="text-2xl font-bold">{orphan.fullName}</h2>
@@ -714,6 +777,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
           {activeTab === 'education' && <EducationTab orphan={orphan} />}
           {activeTab === 'social' && <SocialTab orphan={orphan} />}
           {activeTab === 'health' && <HealthTab orphan={orphan} />}
+          {activeTab === 'documents' && <DocumentsTab orphan={orphan} />}
           {activeTab === 'visits' && <VisitsTab orphan={orphan} />}
           {activeTab === 'reports' && <ReportsTab orphan={orphan} />}
           {activeTab === 'support' && <SupportLogTab orphan={orphan} onAssignPartner={handleAssignDonor} />}
@@ -722,22 +786,26 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
         {/* Footer */}
         <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-            <button
-              onClick={handleAssignCoordinator}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
-            >
-              <UserPlus size={16} />
-              <span className="hidden sm:inline">Assign Coordinator</span>
-              <span className="sm:hidden">Coordinator</span>
-            </button>
-            <button
-              onClick={handleAssignDonor}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
-            >
-              <DollarSign size={16} />
-              <span className="hidden sm:inline">Assign Partner</span>
-              <span className="sm:hidden">Partner</span>
-            </button>
+            {hasPermission('orphans:edit') && (
+              <button
+                onClick={handleAssignCoordinator}
+                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
+              >
+                <UserPlus size={16} />
+                <span className="hidden sm:inline">Assign Coordinator</span>
+                <span className="sm:hidden">Coordinator</span>
+              </button>
+            )}
+            {hasPermission('orphans:edit') && (
+              <button
+                onClick={handleAssignDonor}
+                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
+              >
+                <DollarSign size={16} />
+                <span className="hidden sm:inline">Assign Partner</span>
+                <span className="sm:hidden">Partner</span>
+              </button>
+            )}
             <button
               onClick={handleSupportRegister}
               className="flex items-center justify-center gap-1.5 px-3 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
@@ -992,6 +1060,119 @@ const HealthTab = ({ orphan }) => (
     </div>
   </div>
 );
+
+// Documents Tab
+const DocumentsTab = ({ orphan }) => {
+  // Helper function to parse documents JSON
+  const getDocuments = () => {
+    try {
+      if (orphan.documents) {
+        const docs = typeof orphan.documents === 'string' ? JSON.parse(orphan.documents) : orphan.documents;
+        if (Array.isArray(docs)) {
+          return docs;
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing documents:', error);
+    }
+    return [];
+  };
+
+  // Helper function to get document type label
+  const getDocumentTypeLabel = (type) => {
+    const labels = {
+      'birthCertificate': 'Birth Certificate',
+      'deathCertificate': 'Death Certificate',
+      'guardianNICDoc': 'Guardian NIC Document',
+      'schoolLetter': 'School Letter',
+      'drawingLetter': 'Drawing Letter',
+      'otherDoc1': 'Other Document 1',
+      'otherDoc2': 'Other Document 2'
+    };
+    return labels[type] || 'Document';
+  };
+
+  // Helper function to get document icon based on filename
+  const getDocumentIcon = (filename) => {
+    if (filename.toLowerCase().endsWith('.pdf')) return FileText;
+    if (filename.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/)) return Upload;
+    return FileDown;
+  };
+
+  // Helper function to get file extension
+  const getFileExtension = (filename) => {
+    const ext = filename.split('.').pop().toUpperCase();
+    return ext;
+  };
+
+  // Helper function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
+  const documents = getDocuments();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  // Helper function to handle document download/view
+  const handleDocumentClick = (docUrl) => {
+    const fullUrl = `${API_URL}${docUrl}`;
+    window.open(fullUrl, '_blank');
+  };
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={FolderOpen} title="Uploaded Documents" />
+
+      {documents.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+          <FolderOpen size={48} className="mx-auto text-gray-400 mb-3" />
+          <p className="text-gray-500 font-medium">No documents uploaded yet</p>
+          <p className="text-gray-400 text-sm mt-1">Documents uploaded during orphan registration will appear here</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {documents.map((doc, index) => {
+            const DocIcon = getDocumentIcon(doc.filename || doc.url);
+            const typeLabel = getDocumentTypeLabel(doc.type);
+            const fileExt = getFileExtension(doc.filename || doc.url);
+
+            return (
+              <div
+                key={index}
+                onClick={() => handleDocumentClick(doc.url)}
+                className="bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
+                    <DocIcon size={24} className="text-blue-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-gray-900 truncate">{typeLabel}</h4>
+                    <p className="text-xs text-gray-500 mt-1 truncate">{doc.filename}</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-gray-100 rounded text-gray-600 font-medium">
+                        {fileExt}
+                      </span>
+                      <span className="ml-2">• {formatDate(doc.uploadedAt)}</span>
+                    </p>
+                  </div>
+                  <FileDown size={18} className="text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100">
+                  <button className="text-xs text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                    View/Download
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Support Log Tab
 const SupportLogTab = ({ orphan, onAssignPartner }) => {
