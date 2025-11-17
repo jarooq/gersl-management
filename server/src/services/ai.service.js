@@ -131,8 +131,6 @@ export const generateProposalFromIdea = async (userIdea) => {
         console.log('⚠️ Groq JSON validation failed, attempting to fix failed_generation...');
         const generatedText = errorData.error.failed_generation;
 
-        // Continue to the JSON parsing section below
-        // We'll handle this by setting data.choices manually
         const data = {
           choices: [{
             message: {
@@ -141,7 +139,6 @@ export const generateProposalFromIdea = async (userIdea) => {
           }]
         };
 
-        // Jump to JSON processing
         return processGroqResponse(data);
       }
 
@@ -178,8 +175,7 @@ function processGroqResponse(data) {
     jsonText = jsonMatch[0];
   }
 
-  // Fix common JSON syntax errors from Groq
-  // Fix theoryOfChange closing bracket (common Groq error: closes object with ] instead of })
+  // Fix common JSON syntax errors
   jsonText = jsonText.replace(/("risks":\s*\[[\s\S]*?\])\s*\]\s*,\s*("budgetBreakdown":)/g, '$1\n  },\n  $2');
 
   const proposalData = JSON.parse(jsonText);
@@ -191,6 +187,444 @@ function processGroqResponse(data) {
   return proposalData;
 }
 
+/**
+ * ==========================================
+ * HR DOCUMENT GENERATION FUNCTIONS
+ * ==========================================
+ */
+
+/**
+ * Generate a job description using AI
+ */
+export const generateJobDescription = async (jobDetails) => {
+  const { position, department, level, responsibilities, qualifications } = jobDetails;
+  const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    throw new Error('AI service not configured. Please set GROQ_API_KEY');
+  }
+
+  const prompt = `Generate a professional job description for the following position in Sri Lanka:
+
+Position: ${position}
+Department: ${department}
+Level: ${level || 'Mid-Level'}
+
+${responsibilities ? `Key Responsibilities:\n${responsibilities}` : ''}
+${qualifications ? `Required Qualifications:\n${qualifications}` : ''}
+
+Please create a comprehensive job description that includes:
+1. Position Overview
+2. Key Responsibilities (5-7 bullet points)
+3. Required Qualifications and Skills
+4. Preferred Qualifications
+5. Working Conditions
+
+Format it professionally and make it suitable for posting on job boards in Sri Lanka.`;
+
+  try {
+    const response = await fetch(GROQ_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert HR professional specializing in job descriptions. Write clear, professional content.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'llama-3.1-8b-instant',
+        temperature: 0.7,
+        max_tokens: 2000
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(`AI failed: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (error) {
+    console.error('Job Description Generation Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Generate an employment agreement compliant with Sri Lankan Labour Law
+ */
+export const generateEmploymentAgreement = async (employmentDetails) => {
+  const {
+    staffName,
+    position,
+    department,
+    salary,
+    employmentType,
+    startDate,
+    contractDuration,
+    probationPeriod = 3,
+    workingHours = 8,
+    workingDays = 5,
+    organizationName = 'Global Ehsan Relief (Pvt) Ltd',
+    organizationAddress = 'Sri Lanka'
+  } = employmentDetails;
+
+  const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    throw new Error('AI service not configured. Please set GROQ_API_KEY');
+  }
+
+  const prompt = `Generate a comprehensive employment agreement for a private sector employee in Sri Lanka, compliant with Sri Lankan Labour Law.
+
+EMPLOYEE DETAILS:
+- Name: ${staffName}
+- Position: ${position}
+- Department: ${department}
+- Employment Type: ${employmentType}
+- Basic Salary: LKR ${salary} per month
+- Start Date: ${startDate}
+${contractDuration ? `- Contract Duration: ${contractDuration} months` : ''}
+- Probation Period: ${probationPeriod} months
+- Working Hours: ${workingHours} hours per day
+- Working Days: ${workingDays} days per week
+
+ORGANIZATION:
+- Name: ${organizationName}
+- Address: ${organizationAddress}
+
+MANDATORY REQUIREMENTS (Sri Lankan Labour Law - Private Sector):
+
+1. LEAVE ENTITLEMENTS:
+   - Annual Leave: 14 days per year (after completing 1 year of service)
+   - Casual Leave: 7 days per year
+   - Sick Leave: 7 days per year
+   - Maternity Leave: 84 days (12 weeks) for female employees
+   - Public Holidays: As per Sri Lankan Government declarations
+
+2. EPF/ETF CONTRIBUTIONS:
+   - Employee EPF Contribution: 8% of basic salary
+   - Employer EPF Contribution: 12% of basic salary
+   - Employer ETF Contribution: 3% of basic salary
+
+3. NOTICE PERIODS:
+   - Probation Period: 2 weeks notice by either party
+   - After Probation: ${employmentType === 'Contract' ? '1 month notice or as per contract end date' : '2 months notice by either party'}
+
+4. TERMINATION CLAUSES:
+   - Grounds for termination
+   - Notice requirements
+   - Final settlement procedures
+
+5. GRATUITY:
+   - Payable after 5 years of continuous service
+   - Calculation: (Last drawn salary × years of service) / 2
+
+6. WORKING HOURS & OVERTIME:
+   - Normal working hours: ${workingHours} hours per day
+   - Overtime rates as per Sri Lankan labour regulations
+   - Rest days and public holiday work compensation
+
+7. CONFIDENTIALITY & NON-DISCLOSURE
+
+8. CODE OF CONDUCT & DISCIPLINARY PROCEDURES
+
+9. PROBATION REVIEW PROCESS
+
+${contractDuration ? `10. CONTRACT RENEWAL TERMS:
+   - Contract expires after ${contractDuration} months
+   - Renewal subject to performance and mutual agreement
+   - Notice for non-renewal: 1 month before expiry` : ''}
+
+Please generate a formal, legally sound employment agreement in professional language that includes all these clauses with proper legal formatting. Use numbered sections and subsections for clarity.`;
+
+  try {
+    const response = await fetch(GROQ_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert legal advisor specializing in Sri Lankan employment law. Write formal, legally sound documents.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'llama-3.1-8b-instant',
+        temperature: 0.5,
+        max_tokens: 4000
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(`AI failed: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (error) {
+    console.error('Employment Agreement Generation Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Generate a contract renewal letter
+ */
+export const generateContractRenewal = async (renewalDetails) => {
+  const {
+    staffName,
+    position,
+    currentContractEndDate,
+    newContractDuration,
+    newSalary,
+    performanceHighlights
+  } = renewalDetails;
+
+  const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    throw new Error('AI service not configured. Please set GROQ_API_KEY');
+  }
+
+  const prompt = `Generate a professional contract renewal letter for an employee in Sri Lanka.
+
+DETAILS:
+- Employee Name: ${staffName}
+- Position: ${position}
+- Current Contract End Date: ${currentContractEndDate}
+- New Contract Duration: ${newContractDuration} months
+- New Salary: LKR ${newSalary} per month
+${performanceHighlights ? `- Performance Highlights: ${performanceHighlights}` : ''}
+
+The letter should:
+1. Express appreciation for the employee's contributions
+2. Confirm the contract renewal terms
+3. State the new salary (if changed)
+4. Outline the new contract period
+5. Include standard employment terms reference
+6. Request confirmation of acceptance
+7. Be formal and professional
+
+Format as a business letter with proper structure.`;
+
+  try {
+    const response = await fetch(GROQ_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert HR professional. Write formal, professional business correspondence.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'llama-3.1-8b-instant',
+        temperature: 0.6,
+        max_tokens: 1500
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(`AI failed: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (error) {
+    console.error('Contract Renewal Generation Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Generate a termination letter
+ */
+export const generateTerminationLetter = async (terminationDetails) => {
+  const {
+    staffName,
+    position,
+    terminationDate,
+    reason,
+    noticePeriod,
+    finalWorkingDay,
+    gratuityPayable = false,
+    leaveEncashment = 0
+  } = terminationDetails;
+
+  const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    throw new Error('AI service not configured. Please set GROQ_API_KEY');
+  }
+
+  const prompt = `Generate a professional termination letter compliant with Sri Lankan Labour Law.
+
+DETAILS:
+- Employee Name: ${staffName}
+- Position: ${position}
+- Termination Date: ${terminationDate}
+- Reason: ${reason}
+- Notice Period: ${noticePeriod}
+- Final Working Day: ${finalWorkingDay}
+- Gratuity Payable: ${gratuityPayable ? 'Yes' : 'No'}
+- Leave Encashment: ${leaveEncashment} days
+
+The letter should:
+1. Clearly state the termination decision
+2. Provide the reason (if applicable)
+3. Outline the notice period served
+4. Detail final settlement components (salary, leave encashment, gratuity)
+5. Mention return of company property
+6. Include EPF/ETF final contribution details
+7. Maintain a respectful and professional tone
+8. Be legally compliant with Sri Lankan labour regulations
+
+Format as a formal business letter.`;
+
+  try {
+    const response = await fetch(GROQ_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert legal advisor specializing in Sri Lankan employment law. Write formal, legally sound documents.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'llama-3.1-8b-instant',
+        temperature: 0.5,
+        max_tokens: 2000
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(`AI failed: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (error) {
+    console.error('Termination Letter Generation Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Generate a resignation acceptance letter
+ */
+export const generateResignationAcceptance = async (resignationDetails) => {
+  const {
+    staffName,
+    position,
+    resignationDate,
+    noticeRequirement,
+    finalWorkingDay,
+    acknowledgment
+  } = resignationDetails;
+
+  const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    throw new Error('AI service not configured. Please set GROQ_API_KEY');
+  }
+
+  const prompt = `Generate a professional resignation acceptance letter for Sri Lanka.
+
+DETAILS:
+- Employee Name: ${staffName}
+- Position: ${position}
+- Resignation Received: ${resignationDate}
+- Notice Requirement: ${noticeRequirement}
+- Final Working Day: ${finalWorkingDay}
+${acknowledgment ? `- Special Acknowledgment: ${acknowledgment}` : ''}
+
+The letter should:
+1. Acknowledge receipt of resignation
+2. Accept the resignation formally
+3. Confirm notice period and final working day
+4. Express appreciation for service
+5. Outline exit procedures (handover, clearance, final settlement)
+6. Wish them well for future endeavors
+7. Maintain a positive and professional tone
+
+Format as a formal business letter.`;
+
+  try {
+    const response = await fetch(GROQ_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert HR professional. Write formal, professional business correspondence.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        model: 'llama-3.1-8b-instant',
+        temperature: 0.6,
+        max_tokens: 1500
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(`AI failed: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (error) {
+    console.error('Resignation Acceptance Generation Error:', error);
+    throw error;
+  }
+};
+
 export default {
-  generateProposalFromIdea
+  generateProposalFromIdea,
+  generateJobDescription,
+  generateEmploymentAgreement,
+  generateContractRenewal,
+  generateTerminationLetter,
+  generateResignationAcceptance
 };

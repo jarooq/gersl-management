@@ -435,21 +435,16 @@ const Staff = sequelize.define('Staff', {
   },
   fullName: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: false,
+    field: 'full_name'
   },
   email: {
     type: DataTypes.STRING(100),
-    allowNull: false,
-    unique: true
+    allowNull: true
   },
   phone: {
     type: DataTypes.STRING(20),
-    allowNull: false
-  },
-  nic: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    unique: true
+    allowNull: true
   },
   position: {
     type: DataTypes.STRING(100),
@@ -457,33 +452,603 @@ const Staff = sequelize.define('Staff', {
   },
   department: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: true
+  },
+  salary: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true
+  },
+  joinDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'hire_date'
+  },
+  status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Active'
+  },
+  employmentType: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Full-Time',
+    field: 'employment_type'
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'user_id'
+  }
+}, {
+  tableName: 'staff',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// EMPLOYMENT AGREEMENT MODEL
+// ============================================
+const EmploymentAgreement = sequelize.define('EmploymentAgreement', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'staff',
+      key: 'id'
+    },
+    field: 'staff_id'
+  },
+  agreementType: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+    defaultValue: 'Initial',
+    field: 'agreement_type',
+    comment: 'Initial, Renewal, Amendment'
+  },
+  contractType: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+    defaultValue: 'Permanent',
+    field: 'contract_type',
+    comment: 'Permanent, Contract, Part-Time'
+  },
+  contractDuration: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'contract_duration',
+    comment: 'Duration in months for contract employees'
+  },
+  startDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'start_date'
+  },
+  endDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'end_date',
+    comment: 'For contract employees only'
+  },
+  probationPeriod: {
+    type: DataTypes.INTEGER,
+    defaultValue: 3,
+    field: 'probation_period',
+    comment: 'Probation period in months'
   },
   salary: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   },
-  joinDate: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
+  workingHours: {
+    type: DataTypes.INTEGER,
+    defaultValue: 8,
+    field: 'working_hours'
+  },
+  workingDays: {
+    type: DataTypes.INTEGER,
+    defaultValue: 5,
+    field: 'working_days'
+  },
+  annualLeave: {
+    type: DataTypes.INTEGER,
+    defaultValue: 14,
+    field: 'annual_leave',
+    comment: 'Annual leave days per year'
+  },
+  casualLeave: {
+    type: DataTypes.INTEGER,
+    defaultValue: 7,
+    field: 'casual_leave',
+    comment: 'Casual leave days per year'
+  },
+  sickLeave: {
+    type: DataTypes.INTEGER,
+    defaultValue: 7,
+    field: 'sick_leave',
+    comment: 'Sick leave days per year'
+  },
+  noticePeriod: {
+    type: DataTypes.INTEGER,
+    defaultValue: 60,
+    field: 'notice_period',
+    comment: 'Notice period in days'
+  },
+  documentContent: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+    field: 'document_content',
+    comment: 'AI-generated agreement content'
   },
   status: {
-    type: DataTypes.ENUM('Active', 'On Leave', 'Inactive', 'Resigned'),
-    defaultValue: 'Active'
+    type: DataTypes.STRING(50),
+    defaultValue: 'Draft',
+    comment: 'Draft, Active, Expired, Terminated'
   },
-  employmentType: {
-    type: DataTypes.ENUM('Full-Time', 'Part-Time', 'Contract', 'Volunteer'),
-    defaultValue: 'Full-Time'
+  signedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'signed_date'
   },
-  userId: {
+  signedBy: {
     type: DataTypes.INTEGER,
+    allowNull: true,
     references: {
       model: 'users',
       key: 'id'
-    }
+    },
+    field: 'signed_by'
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
-  tableName: 'staff',
+  tableName: 'employment_agreements',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// CONTRACT RENEWAL MODEL
+// ============================================
+const ContractRenewal = sequelize.define('ContractRenewal', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'staff',
+      key: 'id'
+    },
+    field: 'staff_id'
+  },
+  previousAgreementId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'employment_agreements',
+      key: 'id'
+    },
+    field: 'previous_agreement_id'
+  },
+  newAgreementId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'employment_agreements',
+      key: 'id'
+    },
+    field: 'new_agreement_id'
+  },
+  currentContractEndDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'current_contract_end_date'
+  },
+  renewalStartDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'renewal_start_date'
+  },
+  renewalEndDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'renewal_end_date'
+  },
+  newContractDuration: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'new_contract_duration',
+    comment: 'Duration in months'
+  },
+  previousSalary: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+    field: 'previous_salary'
+  },
+  newSalary: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+    field: 'new_salary'
+  },
+  salaryIncrease: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true,
+    field: 'salary_increase',
+    comment: 'Percentage increase'
+  },
+  performanceHighlights: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'performance_highlights'
+  },
+  renewalLetter: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'renewal_letter',
+    comment: 'AI-generated renewal letter'
+  },
+  status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Pending',
+    comment: 'Pending, Accepted, Declined, Cancelled'
+  },
+  requestedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'requested_by'
+  },
+  approvedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'approved_by'
+  },
+  approvedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'approved_date'
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  }
+}, {
+  tableName: 'contract_renewals',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// TERMINATION MODEL
+// ============================================
+const Termination = sequelize.define('Termination', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'staff',
+      key: 'id'
+    },
+    field: 'staff_id'
+  },
+  terminationType: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+    field: 'termination_type',
+    comment: 'Voluntary Resignation, Termination with Cause, Termination without Cause, End of Contract, Retirement'
+  },
+  terminationDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'termination_date'
+  },
+  noticeDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'notice_date'
+  },
+  noticePeriod: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'notice_period',
+    comment: 'Notice period in days'
+  },
+  finalWorkingDay: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'final_working_day'
+  },
+  reason: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  reasonCategory: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    field: 'reason_category',
+    comment: 'Performance, Misconduct, Redundancy, Personal, Contract End, Other'
+  },
+  exitInterview: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'exit_interview'
+  },
+  exitInterviewDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'exit_interview_date'
+  },
+  exitInterviewNotes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'exit_interview_notes'
+  },
+  leaveEncashment: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    field: 'leave_encashment',
+    comment: 'Days of leave to encash'
+  },
+  leaveEncashmentAmount: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0,
+    field: 'leave_encashment_amount'
+  },
+  gratuityEligible: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'gratuity_eligible'
+  },
+  gratuityAmount: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0,
+    field: 'gratuity_amount'
+  },
+  epfFinalContribution: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0,
+    field: 'epf_final_contribution'
+  },
+  etfFinalContribution: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0,
+    field: 'etf_final_contribution'
+  },
+  finalSettlementAmount: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0,
+    field: 'final_settlement_amount'
+  },
+  finalSettlementPaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'final_settlement_paid'
+  },
+  finalSettlementDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'final_settlement_date'
+  },
+  terminationLetter: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'termination_letter',
+    comment: 'AI-generated termination letter'
+  },
+  clearanceStatus: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Pending',
+    field: 'clearance_status',
+    comment: 'Pending, Completed'
+  },
+  clearanceNotes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'clearance_notes'
+  },
+  initiatedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'initiated_by'
+  },
+  approvedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'approved_by'
+  },
+  approvedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'approved_date'
+  },
+  status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Draft',
+    comment: 'Draft, Pending Approval, Approved, Completed, Cancelled'
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  }
+}, {
+  tableName: 'terminations',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// RESIGNATION MODEL
+// ============================================
+const Resignation = sequelize.define('Resignation', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'staff',
+      key: 'id'
+    },
+    field: 'staff_id'
+  },
+  resignationDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'resignation_date'
+  },
+  noticeRequirement: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'notice_requirement',
+    comment: 'Required notice period in days (usually 60 days)'
+  },
+  noticeServed: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'notice_served',
+    comment: 'Actual notice served in days'
+  },
+  proposedLastDay: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'proposed_last_day'
+  },
+  finalWorkingDay: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'final_working_day',
+    comment: 'Approved final working day'
+  },
+  reason: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  reasonCategory: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    field: 'reason_category',
+    comment: 'Better Opportunity, Personal Reasons, Relocation, Health, Education, Other'
+  },
+  newEmployer: {
+    type: DataTypes.STRING(200),
+    allowNull: true,
+    field: 'new_employer'
+  },
+  newPosition: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    field: 'new_position'
+  },
+  counterOfferMade: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'counter_offer_made'
+  },
+  counterOfferDetails: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'counter_offer_details'
+  },
+  counterOfferAccepted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'counter_offer_accepted'
+  },
+  handoverPlan: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'handover_plan'
+  },
+  handoverCompletedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'handover_completed_date'
+  },
+  acknowledgment: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    comment: 'Special acknowledgment for resignation acceptance letter'
+  },
+  acceptanceLetter: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'acceptance_letter',
+    comment: 'AI-generated resignation acceptance letter'
+  },
+  status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Submitted',
+    comment: 'Submitted, Under Review, Accepted, Withdrawn, Completed'
+  },
+  reviewedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'reviewed_by'
+  },
+  reviewedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'reviewed_date'
+  },
+  acceptedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'users',
+      key: 'id'
+    },
+    field: 'accepted_by'
+  },
+  acceptedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'accepted_date'
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  }
+}, {
+  tableName: 'resignations',
   timestamps: true,
   underscored: true
 });
@@ -1027,6 +1592,11 @@ const Partner = sequelize.define('Partner', {
     primaryKey: true,
     autoIncrement: true
   },
+  partnerCode: {
+    type: DataTypes.STRING(50),
+    unique: true,
+    field: 'partner_code'
+  },
   name: {
     type: DataTypes.STRING(200),
     allowNull: false
@@ -1082,6 +1652,10 @@ const Partner = sequelize.define('Partner', {
     type: DataTypes.DECIMAL(12, 2),
     defaultValue: 0,
     field: 'total_contributions'
+  },
+  lastContribution: {
+    type: DataTypes.DATEONLY,
+    field: 'last_contribution'
   },
   notes: {
     type: DataTypes.TEXT
@@ -2046,6 +2620,14 @@ Project.belongsTo(User, { as: 'manager', foreignKey: 'managerId' });
 Project.hasMany(Expense, { as: 'expenses', foreignKey: 'projectId' });
 Project.hasMany(Indicator, { as: 'indicators', foreignKey: 'projectId' });
 Project.hasMany(Report, { as: 'reports', foreignKey: 'projectId' });
+Project.hasMany(Evaluation, { as: 'evaluations', foreignKey: 'projectId' });
+Project.hasMany(Complaint, { as: 'complaints', foreignKey: 'projectId' });
+
+// Evaluation associations
+Evaluation.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+
+// Complaint associations
+Complaint.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 
 // Expense associations
 Expense.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
@@ -2053,6 +2635,31 @@ Expense.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 
 // Staff associations
 Staff.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+Staff.hasMany(EmploymentAgreement, { as: 'agreements', foreignKey: 'staffId' });
+Staff.hasMany(ContractRenewal, { as: 'renewals', foreignKey: 'staffId' });
+Staff.hasMany(Termination, { as: 'terminations', foreignKey: 'staffId' });
+Staff.hasMany(Resignation, { as: 'resignations', foreignKey: 'staffId' });
+
+// Employment Agreement associations
+EmploymentAgreement.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
+EmploymentAgreement.belongsTo(User, { as: 'signer', foreignKey: 'signedBy' });
+
+// Contract Renewal associations
+ContractRenewal.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
+ContractRenewal.belongsTo(EmploymentAgreement, { as: 'previousAgreement', foreignKey: 'previousAgreementId' });
+ContractRenewal.belongsTo(EmploymentAgreement, { as: 'newAgreement', foreignKey: 'newAgreementId' });
+ContractRenewal.belongsTo(User, { as: 'requester', foreignKey: 'requestedBy' });
+ContractRenewal.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+
+// Termination associations
+Termination.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
+Termination.belongsTo(User, { as: 'initiator', foreignKey: 'initiatedBy' });
+Termination.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+
+// Resignation associations
+Resignation.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
+Resignation.belongsTo(User, { as: 'reviewer', foreignKey: 'reviewedBy' });
+Resignation.belongsTo(User, { as: 'acceptor', foreignKey: 'acceptedBy' });
 
 // Indicator associations
 Indicator.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
@@ -2786,6 +3393,171 @@ const FixedAsset = sequelize.define('FixedAsset', {
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, { tableName: 'fixed_assets', timestamps: true, underscored: true });
 
+// ============================================
+// NEW FINANCE MODELS
+// ============================================
+
+const BudgetCategory = sequelize.define('BudgetCategory', {
+  categoryCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'category_code' },
+  categoryName: { type: DataTypes.STRING(200), allowNull: false, field: 'category_name' },
+  parentCategoryId: { type: DataTypes.INTEGER, references: { model: 'budget_categories', key: 'id' }, field: 'parent_category_id' },
+  description: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'budget_categories', timestamps: true, underscored: true });
+
+const Donor = sequelize.define('Donor', {
+  donorName: { type: DataTypes.STRING(200), allowNull: false, field: 'donor_name' },
+  donorType: { type: DataTypes.STRING(50), field: 'donor_type' }, // Individual, Corporate, Foundation, Government
+  contactPerson: { type: DataTypes.STRING(100), field: 'contact_person' },
+  email: { type: DataTypes.STRING(100) },
+  phone: { type: DataTypes.STRING(20) },
+  address: { type: DataTypes.TEXT },
+  taxId: { type: DataTypes.STRING(50), field: 'tax_id' },
+  website: { type: DataTypes.STRING(200) },
+  notes: { type: DataTypes.TEXT },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Active' }, // Active, Inactive
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'donors', timestamps: true, underscored: true });
+
+const Payable = sequelize.define('Payable', {
+  vendorId: { type: DataTypes.INTEGER, references: { model: 'partners', key: 'id' }, field: 'vendor_id' },
+  invoiceNumber: { type: DataTypes.STRING(100), field: 'invoice_number' },
+  invoiceDate: { type: DataTypes.DATEONLY, field: 'invoice_date' },
+  dueDate: { type: DataTypes.DATEONLY, field: 'due_date' },
+  amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
+  amountPaid: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_paid' },
+  amountRemaining: { type: DataTypes.DECIMAL(15, 2), field: 'amount_remaining' },
+  currency: { type: DataTypes.STRING(3), defaultValue: 'LKR' },
+  description: { type: DataTypes.TEXT },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Partially Paid, Paid, Overdue
+  paymentDate: { type: DataTypes.DATEONLY, field: 'payment_date' },
+  paymentMethod: { type: DataTypes.STRING(50), field: 'payment_method' },
+  paymentReference: { type: DataTypes.STRING(100), field: 'payment_reference' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'payables', timestamps: true, underscored: true });
+
+const Payment = sequelize.define('Payment', {
+  paymentNumber: { type: DataTypes.STRING(100), unique: true, field: 'payment_number' },
+  paymentDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'payment_date' },
+  payeeId: { type: DataTypes.INTEGER, references: { model: 'partners', key: 'id' }, field: 'payee_id' },
+  payeeName: { type: DataTypes.STRING(200), field: 'payee_name' },
+  amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
+  currency: { type: DataTypes.STRING(3), defaultValue: 'LKR' },
+  paymentMethod: { type: DataTypes.STRING(50), allowNull: false, field: 'payment_method' }, // Cash, Check, Bank Transfer, etc.
+  referenceNumber: { type: DataTypes.STRING(100), field: 'reference_number' },
+  description: { type: DataTypes.TEXT },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Completed' }, // Completed, Voided, Pending
+  voidedAt: { type: DataTypes.DATE, field: 'voided_at' },
+  voidedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'voided_by' },
+  voidReason: { type: DataTypes.TEXT, field: 'void_reason' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'payments', timestamps: true, underscored: true });
+
+const FinancialReport = sequelize.define('FinancialReport', {
+  reportName: { type: DataTypes.STRING(200), allowNull: false, field: 'report_name' },
+  reportType: { type: DataTypes.STRING(50), allowNull: false, field: 'report_type' }, // Balance Sheet, Income Statement, Cash Flow
+  reportDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'report_date' },
+  periodStart: { type: DataTypes.DATEONLY, field: 'period_start' },
+  periodEnd: { type: DataTypes.DATEONLY, field: 'period_end' },
+  reportData: { type: DataTypes.JSONB, field: 'report_data' }, // Stores the generated report data
+  notes: { type: DataTypes.TEXT },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Draft' }, // Draft, Generated, Published
+  publishedAt: { type: DataTypes.DATE, field: 'published_at' },
+  publishedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'published_by' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'financial_reports', timestamps: true, underscored: true });
+
+// ============================================
+// PROCUREMENT MODELS
+// ============================================
+
+const PurchaseRequisition = sequelize.define('PurchaseRequisition', {
+  requisitionNumber: { type: DataTypes.STRING(50), unique: true, field: 'requisition_number' },
+  title: { type: DataTypes.STRING(200), allowNull: false },
+  description: { type: DataTypes.TEXT },
+  items: { type: DataTypes.JSONB }, // Array of items with qty, description, estimated cost
+  requestedBy: { type: DataTypes.STRING(100), allowNull: false, field: 'requested_by' },
+  department: { type: DataTypes.STRING(100) },
+  urgency: { type: DataTypes.STRING(20), defaultValue: 'Normal' }, // Low, Normal, High, Urgent
+  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Approved, Rejected, Converted
+  approvedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'approved_by' },
+  approvedAt: { type: DataTypes.DATE, field: 'approved_at' },
+  approvalNotes: { type: DataTypes.TEXT, field: 'approval_notes' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'purchase_requisitions', timestamps: true, underscored: true });
+
+const Vendor = sequelize.define('Vendor', {
+  vendorName: { type: DataTypes.STRING(200), allowNull: false, field: 'vendor_name' },
+  vendorType: { type: DataTypes.STRING(50), field: 'vendor_type' }, // Supplier, Contractor, Service Provider
+  contactPerson: { type: DataTypes.STRING(100), field: 'contact_person' },
+  email: { type: DataTypes.STRING(100) },
+  phone: { type: DataTypes.STRING(20) },
+  address: { type: DataTypes.TEXT },
+  taxId: { type: DataTypes.STRING(50), field: 'tax_id' },
+  paymentTerms: { type: DataTypes.STRING(100), field: 'payment_terms' },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Active' }, // Active, Inactive, Blacklisted
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'vendors', timestamps: true, underscored: true });
+
+const InventoryItem = sequelize.define('InventoryItem', {
+  itemCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'item_code' },
+  itemName: { type: DataTypes.STRING(200), allowNull: false, field: 'item_name' },
+  category: { type: DataTypes.STRING(100), allowNull: false },
+  quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
+  unit: { type: DataTypes.STRING(20) }, // pcs, kg, liters, etc.
+  unitCost: { type: DataTypes.DECIMAL(10, 2), field: 'unit_cost' },
+  reorderLevel: { type: DataTypes.INTEGER, field: 'reorder_level' },
+  location: { type: DataTypes.STRING(100) },
+  lastAdjustmentDate: { type: DataTypes.DATE, field: 'last_adjustment_date' },
+  lastAdjustmentReason: { type: DataTypes.TEXT, field: 'last_adjustment_reason' },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'inventory_items', timestamps: true, underscored: true });
+
+const Asset = sequelize.define('Asset', {
+  assetTag: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'asset_tag' },
+  assetName: { type: DataTypes.STRING(200), allowNull: false, field: 'asset_name' },
+  category: { type: DataTypes.STRING(100), allowNull: false },
+  purchaseDate: { type: DataTypes.DATEONLY, field: 'purchase_date' },
+  purchaseCost: { type: DataTypes.DECIMAL(15, 2), field: 'purchase_cost' },
+  vendorId: { type: DataTypes.INTEGER, references: { model: 'vendors', key: 'id' }, field: 'vendor_id' },
+  assignedTo: { type: DataTypes.STRING(100), field: 'assigned_to' },
+  assignmentDate: { type: DataTypes.DATEONLY, field: 'assignment_date' },
+  assignmentNotes: { type: DataTypes.TEXT, field: 'assignment_notes' },
+  location: { type: DataTypes.STRING(100) },
+  warrantyExpiry: { type: DataTypes.DATEONLY, field: 'warranty_expiry' },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Active' }, // Active, Assigned, Under Repair, Disposed
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'assets', timestamps: true, underscored: true });
+
+// ============================================
+// ROLES & PERMISSIONS MODELS
+// ============================================
+
+const Role = sequelize.define('Role', {
+  name: { type: DataTypes.STRING(100), unique: true, allowNull: false },
+  description: { type: DataTypes.TEXT },
+  isSystemRole: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'is_system_role' },
+  isActive: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_active' }
+}, { tableName: 'roles', timestamps: true, underscored: true });
+
+const Permission = sequelize.define('Permission', {
+  permissionName: { type: DataTypes.STRING(100), allowNull: false, field: 'permission_name' },
+  permissionKey: { type: DataTypes.STRING(100), unique: true, allowNull: false, field: 'permission_key' },
+  module: { type: DataTypes.STRING(50) }, // Finance, HR, Projects, etc.
+  description: { type: DataTypes.TEXT }
+  // Note: createdBy removed - permissions are system-defined, not user-created
+}, { tableName: 'permissions', timestamps: false, underscored: true }); // timestamps disabled - table doesn't have created_at/updated_at
+
+// Many-to-Many relationship for Roles and Permissions
+const RolePermission = sequelize.define('RolePermission', {
+  roleId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'roles', key: 'id' }, field: 'role_id' },
+  permissionId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'permissions', key: 'id' }, field: 'permission_id' }
+}, { tableName: 'role_permissions', timestamps: false, underscored: true }); // timestamps disabled - table only has created_at, not updated_at
+
+Role.belongsToMany(Permission, { through: RolePermission, as: 'permissions', foreignKey: 'roleId' });
+Permission.belongsToMany(Role, { through: RolePermission, as: 'roles', foreignKey: 'permissionId' });
+
 // Finance Model Associations
 Invoice.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 Invoice.belongsTo(Proposal, { as: 'proposal', foreignKey: 'proposalId' });
@@ -2861,6 +3633,77 @@ AppraisalRecord.belongsTo(User, { as: 'appraiserUser', foreignKey: 'appraiser' }
 AppraisalRecord.belongsTo(User, { as: 'reviewerUser', foreignKey: 'reviewer' });
 AppraisalRecord.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 
+// CBO Partner associations (with both 'partner' and 'cboPartner' aliases)
+CBOPartner.hasMany(CBOActivity, { foreignKey: 'cboPartnerId', as: 'activities' });
+CBOActivity.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'partner' });
+CBOActivity.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'cboPartner' });
+
+CBOPartner.hasMany(CBOProject, { foreignKey: 'cboPartnerId', as: 'projects' });
+CBOProject.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'partner' });
+CBOProject.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'cboPartner' });
+
+CBOPartner.hasMany(CBOVolunteer, { foreignKey: 'cboPartnerId', as: 'volunteers' });
+CBOVolunteer.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'partner' });
+CBOVolunteer.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'cboPartner' });
+
+CBOPartner.hasMany(CBODueDiligence, { foreignKey: 'cboPartnerId', as: 'dueDiligence' });
+CBODueDiligence.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'partner' });
+CBODueDiligence.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'cboPartner' });
+
+CBOPartner.hasMany(CBOProposal, { foreignKey: 'cboPartnerId', as: 'proposals' });
+CBOProposal.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'partner' });
+CBOProposal.belongsTo(CBOPartner, { foreignKey: 'cboPartnerId', as: 'cboPartner' });
+
+// User → Complaint association
+User.hasMany(Complaint, { foreignKey: 'assignedTo', as: 'assignedComplaints' });
+Complaint.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignee' });
+
+// User → ComplianceTraining associations (with both 'user' and 'creator' aliases)
+User.hasMany(ComplianceTraining, { foreignKey: 'userId', as: 'trainings' });
+ComplianceTraining.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+ComplianceTraining.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+// User → SafeguardingIncident associations (with both 'reporter' and 'creator' aliases)
+User.hasMany(SafeguardingIncident, { foreignKey: 'reportedBy', as: 'reportedIncidents' });
+SafeguardingIncident.belongsTo(User, { foreignKey: 'reportedBy', as: 'reporter' });
+SafeguardingIncident.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+// User → SafeguardingPolicy associations (with both 'approver' and 'creator' aliases)
+User.hasMany(SafeguardingPolicy, { foreignKey: 'approvedBy', as: 'approvedPolicies' });
+SafeguardingPolicy.belongsTo(User, { foreignKey: 'approvedBy', as: 'approver' });
+SafeguardingPolicy.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+// Staff → BackgroundCheck association
+Staff.hasMany(BackgroundCheck, { foreignKey: 'staffId', as: 'backgroundChecks' });
+BackgroundCheck.belongsTo(Staff, { foreignKey: 'staffId', as: 'staff' });
+
+// User → BackgroundCheck association (for creator)
+User.hasMany(BackgroundCheck, { foreignKey: 'createdBy', as: 'createdBackgroundChecks' });
+BackgroundCheck.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+// User → CBO model associations (for creator)
+User.hasMany(CBOActivity, { foreignKey: 'createdBy', as: 'createdCBOActivities' });
+CBOActivity.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+User.hasMany(CBOVolunteer, { foreignKey: 'createdBy', as: 'createdCBOVolunteers' });
+CBOVolunteer.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+User.hasMany(CBODueDiligence, { foreignKey: 'createdBy', as: 'createdCBODueDiligence' });
+CBODueDiligence.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+CBODueDiligence.belongsTo(User, { foreignKey: 'approvedBy', as: 'approver' }); // Dual alias for controller compatibility
+
+User.hasMany(CBOProject, { foreignKey: 'createdBy', as: 'createdCBOProjects' });
+CBOProject.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
+// CBOProject ↔ CBOProposal association
+CBOProject.hasMany(CBOProposal, { foreignKey: 'cboProjectId', as: 'proposals' });
+CBOProposal.belongsTo(CBOProject, { foreignKey: 'cboProjectId', as: 'cboProject' });
+CBOProposal.belongsTo(CBOProject, { foreignKey: 'cboProjectId', as: 'project' }); // Dual alias for controller compatibility
+
+// User ↔ CBOProposal association
+User.hasMany(CBOProposal, { foreignKey: 'createdBy', as: 'createdCBOProposals' });
+CBOProposal.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
+
 // ============================================
 // EXPORTS
 // ============================================
@@ -2871,64 +3714,10 @@ export {
   Project,
   Expense,
   Staff,
-  CBOPartner,
-  CBOVolunteer,
-  CBOActivity,
-  CBODueDiligence,
-  CBOProposal,
-  CBOProject,
-  Partner,
-  PartnerContribution,
-  PartnerCommunication,
-  Beneficiary,
-  BeneficiarySupport,
-  OnboardingRecord,
-  AppraisalRecord,
-  Indicator,
-  Evaluation,
-  LearningEvent,
-  Complaint,
-  Report,
-  Proposal,
-  OrphanVisitLog,
-  OrphanProgressRating,
-  GeneratedOrphanReport,
-  Campaign,
-  Donation,
-  JobPosting,
-  JobApplication,
-  VendorCall,
-  VendorSubmission,
-  SocialMediaPost,
-  SocialMediaEngagement,
-  ComplianceDocument,
-  SafeguardingPolicy,
-  SafeguardingIncident,
-  BackgroundCheck,
-  ComplianceTraining,
-  DataProtectionRecord,
-  Attendance,
-  LeaveRequest,
-  Invoice,
-  Bill,
-  PurchaseOrder,
-  ChartOfAccounts,
-  JournalEntry,
-  BankAccount,
-  BankTransaction,
-  Budget,
-  Payroll,
-  GrantReceivable,
-  GrantReceipt,
-  FixedAsset
-};
-
-export default {
-  User,
-  Orphan,
-  Project,
-  Expense,
-  Staff,
+  EmploymentAgreement,
+  ContractRenewal,
+  Termination,
+  Resignation,
   CBOPartner,
   CBOVolunteer,
   CBOActivity,
@@ -2979,5 +3768,91 @@ export default {
   GrantReceivable,
   GrantReceipt,
   FixedAsset,
+  BudgetCategory,
+  Donor,
+  Payable,
+  Payment,
+  FinancialReport,
+  PurchaseRequisition,
+  Vendor,
+  InventoryItem,
+  Asset,
+  Role,
+  Permission,
+  RolePermission
+};
+
+export default {
+  User,
+  Orphan,
+  Project,
+  Expense,
+  Staff,
+  EmploymentAgreement,
+  ContractRenewal,
+  Termination,
+  Resignation,
+  CBOPartner,
+  CBOVolunteer,
+  CBOActivity,
+  CBODueDiligence,
+  CBOProposal,
+  CBOProject,
+  Partner,
+  PartnerContribution,
+  PartnerCommunication,
+  Beneficiary,
+  BeneficiarySupport,
+  OnboardingRecord,
+  AppraisalRecord,
+  Indicator,
+  Evaluation,
+  LearningEvent,
+  Complaint,
+  Report,
+  Proposal,
+  OrphanVisitLog,
+  OrphanProgressRating,
+  GeneratedOrphanReport,
+  Campaign,
+  Donation,
+  JobPosting,
+  JobApplication,
+  VendorCall,
+  VendorSubmission,
+  SocialMediaPost,
+  SocialMediaEngagement,
+  ComplianceDocument,
+  SafeguardingPolicy,
+  SafeguardingIncident,
+  BackgroundCheck,
+  ComplianceTraining,
+  DataProtectionRecord,
+  Attendance,
+  LeaveRequest,
+  Invoice,
+  Bill,
+  PurchaseOrder,
+  ChartOfAccounts,
+  JournalEntry,
+  BankAccount,
+  BankTransaction,
+  Budget,
+  Payroll,
+  GrantReceivable,
+  GrantReceipt,
+  FixedAsset,
+  BudgetCategory,
+  Donor,
+  Payable,
+  Payment,
+  FinancialReport,
+  PurchaseRequisition,
+  Vendor,
+  InventoryItem,
+  Asset,
+  Role,
+  Permission,
+  RolePermission,
   sequelize
 };
