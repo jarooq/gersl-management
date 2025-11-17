@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
-import { Staff, User } from '../models/index.js';
-import { asyncHandler, NotFoundError } from '../middleware/error.middleware.js';
+import { Staff, User, Role } from '../models/index.js';
+import { asyncHandler, NotFoundError, BadRequestError, ConflictError } from '../middleware/error.middleware.js';
+import sequelize from '../config/database.js';
 
 // ============================================
 // GET ALL STAFF
@@ -77,28 +78,105 @@ export const getStaffById = asyncHandler(async (req, res) => {
 });
 
 // ============================================
-// CREATE STAFF
+// CREATE STAFF (with automatic user account creation)
 // ============================================
 export const createStaff = asyncHandler(async (req, res) => {
-  const staffData = req.body;
+  const {
+    // Staff data
+    fullName, email, phone, department, position, joiningDate,
+    salary, leaveBalance, employmentType, contractEndDate,
+    // User account data
+    username, password, userRole = 'Staff', userStatus = 'Active'
+  } = req.body;
 
-  const staff = await Staff.create(staffData);
+  // Validate required user fields
+  if (!username || !password) {
+    throw new BadRequestError('Username and password are required to create user account');
+  }
 
-  const createdStaff = await Staff.findByPk(staff.id, {
-    include: [
-      {
-        model: User,
-        as: 'user',
-        attributes: ['id', 'username', 'role']
+  // Check if user with email or username already exists
+  const existingUser = await User.findOne({
+    where: {
+      [Op.or]: [{ email }, { username }]
+    }
+  });
+
+  if (existingUser) {
+    if (existingUser.email === email) {
+      throw new ConflictError('Email already registered');
+    }
+    if (existingUser.username === username) {
+      throw new ConflictError('Username already taken');
+    }
+  }
+
+  // Find the role (for linking)
+  const role = await Role.findOne({ where: { name: userRole } });
+  const roleId = role ? role.id : null;
+
+  // Use transaction to ensure both staff and user are created together
+  const transaction = await sequelize.transaction();
+
+  try {
+    // 1. Create user account first
+    const user = await User.create({
+      username,
+      email,
+      password, // Will be hashed by User model hook
+      fullName,
+      phone,
+      role: userRole,
+      roleId,
+      status: userStatus,
+      department
+    }, { transaction });
+
+    // 2. Create staff record linked to user
+    const staff = await Staff.create({
+      fullName,
+      email,
+      phone,
+      department,
+      position,
+      joinDate: joiningDate,
+      salary,
+      employmentType: employmentType || 'Full-Time',
+      status: 'Active',
+      userId: user.id
+    }, { transaction });
+
+    // Commit transaction
+    await transaction.commit();
+
+    // Fetch created staff with user data
+    const createdStaff = await Staff.findByPk(staff.id, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'username', 'role', 'email', 'status']
+        }
+      ]
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Staff member and user account created successfully',
+      data: {
+        staff: createdStaff,
+        userCredentials: {
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          message: 'User account has been created. The staff member can now log in with their credentials.'
+        }
       }
-    ]
-  });
-
-  res.status(201).json({
-    success: true,
-    message: 'Staff member created successfully',
-    data: { staff: createdStaff }
-  });
+    });
+  } catch (error) {
+    // Rollback transaction on error
+    await transaction.rollback();
+    throw error;
+  }
 });
 
 // ============================================

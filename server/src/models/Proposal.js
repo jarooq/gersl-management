@@ -12,60 +12,77 @@ const Proposal = sequelize.define('Proposal', {
   proposalCode: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true
+    unique: true,
+    field: 'proposal_code'
   },
   title: {
     type: DataTypes.STRING(500),
-    allowNull: false
+    allowNull: false,
+    field: 'proposal_title'
   },
   donor: {
     type: DataTypes.STRING(200),
-    allowNull: false
+    allowNull: false,
+    field: 'donor_name'
   },
   programmeArea: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: false,
+    field: 'project_area'
   },
   district: {
-    type: DataTypes.STRING(100)
+    type: DataTypes.STRING(100),
+    field: 'district'
   },
 
   // Financial
   budgetRequested: {
     type: DataTypes.DECIMAL(15, 2),
-    allowNull: false
+    allowNull: false,
+    field: 'requested_amount'
+  },
+  totalBudget: {
+    type: DataTypes.DECIMAL(15, 2),
+    field: 'total_budget'
   },
 
   // Timeline
   duration: {
-    type: DataTypes.STRING(50)
+    type: DataTypes.STRING(50),
+    field: 'duration'
   },
   startDate: {
-    type: DataTypes.DATEONLY
+    type: DataTypes.DATEONLY,
+    field: 'start_date'
   },
   endDate: {
-    type: DataTypes.DATEONLY
+    type: DataTypes.DATEONLY,
+    field: 'end_date'
   },
 
   // Beneficiaries
   targetBeneficiaries: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    field: 'target_beneficiaries'
   },
 
   // Status & Priority
   status: {
     type: DataTypes.ENUM('Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Submitted to Donor', 'Donor Approved', 'Donor Rejected'),
-    defaultValue: 'Draft'
+    defaultValue: 'Draft',
+    field: 'status'
   },
   priority: {
     type: DataTypes.ENUM('High', 'Medium', 'Low'),
-    defaultValue: 'Medium'
+    defaultValue: 'Medium',
+    field: 'priority'
   },
 
   // Description
   summary: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
+    field: 'narrative'
   },
 
   // GER Enhanced Fields

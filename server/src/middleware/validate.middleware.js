@@ -81,11 +81,11 @@ export const validatePagination = (req, res, next) => {
   const limit = parseInt(req.query.limit) || 10;
 
   if (page < 1) {
-    throw BadRequestError('Page number must be greater than 0');
+    throw new BadRequestError('Page number must be greater than 0');
   }
 
   if (limit < 1 || limit > 100) {
-    throw BadRequestError('Limit must be between 1 and 100');
+    throw new BadRequestError('Limit must be between 1 and 100');
   }
 
   req.pagination = {

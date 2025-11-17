@@ -32,7 +32,7 @@ const validatePassword = (password) => {
 
   // Check for at least one special character
   if (!/[!@#$%^&*(),.?":{}|<>_\-+=]/.test(password)) {
-    throw new BadRequestError('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>_-+=)');
+    throw new BadRequestError('Password must contain at least one special character');
   }
 
   return true;
@@ -214,14 +214,32 @@ export const login = asyncHandler(async (req, res) => {
   // Set httpOnly cookies
   setAuthCookies(res, accessToken, refreshToken);
 
+  // Add permissions to user object
+  const userWithPermissions = user.toJSON();
+
+  console.log('🔍 login - User role:', userWithPermissions.role);
+  console.log('🔍 login - User ID:', userWithPermissions.id);
+
+  if (userWithPermissions.role === 'Admin') {
+    userWithPermissions.permissions = [
+      { id: 1, permissionKey: '*', name: 'Full Access', description: 'Access to all features' }
+    ];
+    console.log('✅ login - Added wildcard permissions for Admin');
+  } else {
+    userWithPermissions.permissions = [];
+    console.log('⚠️  login - Non-admin user, empty permissions array');
+  }
+
+  console.log('📤 login - Response user:', JSON.stringify({ user: userWithPermissions }, null, 2));
+
   res.json({
     success: true,
     message: 'Login successful',
     accessToken, // Include tokens in response for frontend
     refreshToken, // Include tokens in response for frontend
-    user: user.toJSON(), // Also return user directly for compatibility
+    user: userWithPermissions, // Return user WITH permissions for compatibility
     data: {
-      user: user.toJSON()
+      user: userWithPermissions // Return user WITH permissions
     }
   });
 });
@@ -302,9 +320,36 @@ export const getMe = asyncHandler(async (req, res) => {
     attributes: { exclude: ['password', 'refreshToken'] }
   });
 
+  // Add permissions array for compatibility with frontend
+  // Since users.role is a VARCHAR (not a foreign key to roles table),
+  // we'll add a wildcard permission for Admin users
+  const userWithPermissions = user.toJSON();
+
+  console.log('🔍 getMe - User role:', userWithPermissions.role);
+  console.log('🔍 getMe - User ID:', userWithPermissions.id);
+
+  if (userWithPermissions.role === 'Admin') {
+    // Admin gets wildcard permission (access to everything)
+    userWithPermissions.permissions = [
+      { id: 1, permissionKey: '*', name: 'Full Access', description: 'Access to all features' }
+    ];
+    console.log('✅ getMe - Added wildcard permissions for Admin');
+  } else {
+    // Other roles get empty permissions for now (can be enhanced later)
+    userWithPermissions.permissions = [];
+    console.log('⚠️  getMe - Non-admin user, empty permissions array');
+  }
+
+  console.log('📤 getMe - Response:', JSON.stringify({ user: userWithPermissions }, null, 2));
+
+  // Add no-cache headers to prevent browser from caching this response
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   res.json({
     success: true,
-    data: { user }
+    data: { user: userWithPermissions }
   });
 });
 

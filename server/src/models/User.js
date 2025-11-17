@@ -166,6 +166,24 @@ User.prototype.toJSON = function() {
   delete values.passwordResetExpires;
   delete values.failedLoginAttempts;
   delete values.accountLockedUntil;
+
+  // Assign permissions based on role
+  if (values.role === 'Admin') {
+    // Admin gets all permissions
+    values.permissions = [{permissionKey: '*'}];
+  } else if (values.role === 'Orphan Coordinator') {
+    // Orphan Coordinators have limited permissions - cannot assign coordinators or donors
+    values.permissions = [
+      {permissionKey: 'dashboard:view'},
+      {permissionKey: 'orphans:view'},
+      {permissionKey: 'orphans:edit'},
+      {permissionKey: 'orphans:create'}
+      // Note: Does NOT include 'orphans:assign_coordinator'
+    ];
+  } else {
+    values.permissions = [];
+  }
+
   return values;
 };
 
