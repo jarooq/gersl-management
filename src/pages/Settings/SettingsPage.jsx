@@ -6,21 +6,31 @@ import {
 import { useSettings } from '../../contexts/SettingsContext';
 import { PERMISSIONS, ROLE_PERMISSIONS } from '../../utils/permissions';
 import UserFormModal from '../../components/settings/UserFormModal';
+import AddRoleModal from '../../components/settings/AddRoleModal';
+import EditRoleModal from '../../components/settings/EditRoleModal';
+import DeleteRoleModal from '../../components/settings/DeleteRoleModal';
+import API from '../../services/api';
 
 const SettingsPage = () => {
-  const { users, roles, permissions, addUser, updateUser, deleteUser, updateRole, systemSettings, fetchUsers } = useSettings();
+  const { users, roles, permissions, addUser, updateUser, deleteUser, updateRole, systemSettings, fetchUsers, fetchRoles, fetchPermissions } = useSettings();
 
-  // Fetch users when component mounts
+  // Fetch users, roles, and permissions when component mounts
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
+    fetchPermissions();
   }, []);
 
   const [activeTab, setActiveTab] = useState('users');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState('All');
   const [showAddUserForm, setShowAddUserForm] = useState(false);
+  const [showAddRoleModal, setShowAddRoleModal] = useState(false);
+  const [showEditRoleModal, setShowEditRoleModal] = useState(false);
+  const [showDeleteRoleModal, setShowDeleteRoleModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
+  const [roleToDelete, setRoleToDelete] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
@@ -200,6 +210,11 @@ const SettingsPage = () => {
               editingRole={editingRole}
               setEditingRole={setEditingRole}
               updateRole={updateRole}
+              setShowAddRoleModal={setShowAddRoleModal}
+              setShowEditRoleModal={setShowEditRoleModal}
+              setShowDeleteRoleModal={setShowDeleteRoleModal}
+              setRoleToDelete={setRoleToDelete}
+              fetchRoles={fetchRoles}
             />
           )}
 
@@ -223,6 +238,46 @@ const SettingsPage = () => {
         onSubmit={handleUpdateUser}
         user={editingUser}
         isLoading={isSubmitting}
+      />
+
+      {/* Add Role Modal */}
+      <AddRoleModal
+        isOpen={showAddRoleModal}
+        onClose={() => setShowAddRoleModal(false)}
+        onSuccess={() => {
+          fetchRoles(); // Refresh roles list
+        }}
+      />
+
+      {/* Edit Role Modal */}
+      <EditRoleModal
+        isOpen={showEditRoleModal}
+        onClose={() => {
+          setShowEditRoleModal(false);
+          setEditingRole(null);
+        }}
+        role={editingRole}
+        onSuccess={() => {
+          fetchRoles(); // Refresh roles list
+        }}
+        onDelete={(role) => {
+          setShowEditRoleModal(false);
+          setRoleToDelete(role);
+          setShowDeleteRoleModal(true);
+        }}
+      />
+
+      {/* Delete Role Modal */}
+      <DeleteRoleModal
+        isOpen={showDeleteRoleModal}
+        onClose={() => {
+          setShowDeleteRoleModal(false);
+          setRoleToDelete(null);
+        }}
+        role={roleToDelete}
+        onSuccess={() => {
+          fetchRoles(); // Refresh roles list
+        }}
       />
     </div>
   );
@@ -351,38 +406,45 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
 };
 
 // Roles Tab Component - Beautiful UI from commit 264cb97
-const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole }) => {
-  const [selectedRole, setSelectedRole] = useState('Admin');
+const RolesTab = ({
+  roles,
+  permissions,
+  editingRole,
+  setEditingRole,
+  updateRole,
+  setShowAddRoleModal,
+  setShowEditRoleModal,
+  setShowDeleteRoleModal,
+  setRoleToDelete,
+  fetchRoles
+}) => {
+  const [selectedRole, setSelectedRole] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedPermissions, setEditedPermissions] = useState([]);
-  const [showAddRoleModal, setShowAddRoleModal] = useState(false);
 
-  // Group permissions by module
-  const permissionGroups = {
-    'Dashboard': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('DASHBOARD')),
-    'Orphans': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('ORPHANS')),
-    'Beneficiaries': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('BENEFICIARIES')),
-    'Projects': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('PROJECTS')),
-    'Finance': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('FINANCE')),
-    'HR': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('HR')),
-    'CBO': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('CBO')),
-    'Partners': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('PARTNERS')),
-    'Proposals': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('PROPOSALS')),
-    'MEAL': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('MEAL')),
-    'Campaigns': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('CAMPAIGNS')),
-    'Donations': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('DONATIONS')),
-    'Social Media': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('SOCIAL_MEDIA')),
-    'Job Postings': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('JOB_POSTINGS')),
-    'Vendor Calls': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('VENDOR_CALLS')),
-    'Operations': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('OPERATIONS')),
-    'Approvals': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('APPROVALS')),
-    'Reports': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('REPORTS') || key.startsWith('COMPLIANCE')),
-    'Settings': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('SETTINGS') || key.startsWith('SYSTEM')),
-    'Users': Object.entries(PERMISSIONS || {}).filter(([key]) => key.startsWith('USERS')),
-  };
+  // Set initial selected role when roles load
+  React.useEffect(() => {
+    if (roles && roles.length > 0 && !selectedRole) {
+      setSelectedRole(roles[0]);
+    }
+  }, [roles]);
+
+  // Group permissions from database by module
+  const permissionGroups = React.useMemo(() => {
+    if (!permissions || !permissions.grouped_permissions) return {};
+    return permissions.grouped_permissions;
+  }, [permissions]);
+
+  // Get all permissions as a flat array
+  const allPermissions = React.useMemo(() => {
+    if (!permissions || !permissions.permissions) return [];
+    return permissions.permissions;
+  }, [permissions]);
 
   const getCurrentPermissions = () => {
-    return ROLE_PERMISSIONS?.[selectedRole] || [];
+    if (!selectedRole) return [];
+    // selectedRole.permissions is an array of permission objects from database
+    return selectedRole.permissions || [];
   };
 
   const handleEditClick = () => {
@@ -395,34 +457,65 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
     setEditedPermissions([]);
   };
 
-  const handleSavePermissions = () => {
-    // In a real app, this would save to backend
-    if (ROLE_PERMISSIONS) {
-      ROLE_PERMISSIONS[selectedRole] = editedPermissions;
+  const handleSavePermissions = async () => {
+    if (!selectedRole) return;
+
+    try {
+      // Extract permission IDs from the edited permissions array
+      const permissionIds = editedPermissions.map(perm =>
+        typeof perm === 'object' ? perm.id : perm
+      );
+
+      // Call backend API to save permissions
+      await API.Roles.assignPermissions(selectedRole.id, permissionIds);
+
+      // Refresh roles list from parent to get updated data
+      if (fetchRoles) {
+        await fetchRoles();
+      }
+
+      // Update local state - reload the role with new permissions
+      const updatedRole = await API.Roles.getById(selectedRole.id);
+      setSelectedRole(updatedRole.role);
+
+      setIsEditing(false);
+
+      // Show success message
+      alert(`Permissions updated successfully for ${selectedRole.name}!`);
+    } catch (error) {
+      console.error('Failed to save permissions:', error);
+      alert(`Failed to save permissions: ${error.message || 'Unknown error'}`);
     }
-    setIsEditing(false);
-    alert(`Permissions updated for ${selectedRole}!\n\nNote: In production, this would be saved to the database.`);
   };
 
   const togglePermission = (permission) => {
-    if (editedPermissions.includes(permission)) {
-      setEditedPermissions(editedPermissions.filter(p => p !== permission));
+    // Check if permission already in editedPermissions by comparing IDs
+    const isSelected = editedPermissions.some(p => p.id === permission.id);
+
+    if (isSelected) {
+      setEditedPermissions(editedPermissions.filter(p => p.id !== permission.id));
     } else {
       setEditedPermissions([...editedPermissions, permission]);
     }
   };
 
   const toggleAllInGroup = (groupPermissions) => {
-    const allPermissionValues = groupPermissions.map(([, value]) => value);
-    const allSelected = allPermissionValues.every(p => editedPermissions.includes(p));
+    // groupPermissions is an array of permission objects from database
+    const allSelected = groupPermissions.every(perm =>
+      editedPermissions.some(p => p.id === perm.id)
+    );
 
     if (allSelected) {
-      setEditedPermissions(editedPermissions.filter(p => !allPermissionValues.includes(p)));
+      // Remove all permissions in this group
+      setEditedPermissions(editedPermissions.filter(p =>
+        !groupPermissions.some(gp => gp.id === p.id)
+      ));
     } else {
+      // Add all permissions in this group
       const newPermissions = [...editedPermissions];
-      allPermissionValues.forEach(p => {
-        if (!newPermissions.includes(p)) {
-          newPermissions.push(p);
+      groupPermissions.forEach(perm => {
+        if (!newPermissions.some(p => p.id === perm.id)) {
+          newPermissions.push(perm);
         }
       });
       setEditedPermissions(newPermissions);
@@ -437,10 +530,12 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
   };
 
   const getPermissionColor = (permission) => {
-    if (permission.includes('DELETE')) return 'text-red-600';
-    if (permission.includes('APPROVE')) return 'text-green-600';
-    if (permission.includes('CREATE') || permission.includes('EDIT')) return 'text-blue-600';
-    if (permission.includes('VIEW')) return 'text-gray-600';
+    if (!permission) return 'text-gray-600';
+    const permissionStr = String(permission).toUpperCase();
+    if (permissionStr.includes('DELETE')) return 'text-red-600';
+    if (permissionStr.includes('APPROVE')) return 'text-green-600';
+    if (permissionStr.includes('CREATE') || permissionStr.includes('EDIT')) return 'text-blue-600';
+    if (permissionStr.includes('VIEW')) return 'text-gray-600';
     return 'text-purple-600';
   };
 
@@ -463,7 +558,7 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
             </p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold">{Object.keys(ROLE_PERMISSIONS || {}).length}</div>
+            <div className="text-3xl font-bold">{roles?.length || 0}</div>
             <div className="text-sm text-purple-200">Total Roles</div>
           </div>
         </div>
@@ -485,34 +580,84 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
             </div>
 
             <div className="space-y-1 max-h-[600px] overflow-y-auto">
-              {Object.keys(ROLE_PERMISSIONS || {}).map((role) => {
-                const permCount = ROLE_PERMISSIONS?.[role]?.length || 0;
+              {(roles || []).map((role) => {
+                const permCount = role.permissions?.length || 0;
 
                 return (
-                  <button
-                    key={role}
-                    onClick={() => {
-                      setSelectedRole(role);
-                      setIsEditing(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      selectedRole === role
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-lg'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Shield size={16} />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold truncate">{role}</div>
-                        <div className={`text-xs ${selectedRole === role ? 'text-purple-200' : 'text-gray-500'}`}>
-                          {permCount} permissions
+                  <div key={role.id} className="relative group">
+                    <div
+                      onClick={() => {
+                        setSelectedRole(role);
+                        setIsEditing(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-all cursor-pointer ${
+                        selectedRole?.id === role.id
+                          ? 'bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-lg'
+                          : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Shield size={16} />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold truncate flex items-center gap-2">
+                            {role.name}
+                            {role.is_system_role && (
+                              <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                selectedRole?.id === role.id ? 'bg-white bg-opacity-20 text-white' : 'bg-purple-100 text-purple-600'
+                              }`}>
+                                SYSTEM
+                              </span>
+                            )}
+                          </div>
+                          <div className={`text-xs ${selectedRole?.id === role.id ? 'text-purple-200' : 'text-gray-500'}`}>
+                            {permCount} permissions
+                          </div>
+                        </div>
+
+                        {/* Edit/Delete buttons */}
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingRole(role);
+                              setShowEditRoleModal(true);
+                            }}
+                            className={`p-1.5 rounded hover:bg-opacity-20 hover:bg-white transition-colors ${
+                              selectedRole?.id === role.id ? 'text-white' : 'text-indigo-600'
+                            }`}
+                            title="Edit Role"
+                          >
+                            <Edit2 size={14} />
+                          </button>
+
+                          {!role.is_system_role && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setRoleToDelete(role);
+                                setShowDeleteRoleModal(true);
+                              }}
+                              className={`p-1.5 rounded hover:bg-opacity-20 hover:bg-white transition-colors ${
+                                selectedRole?.id === role.id ? 'text-white' : 'text-red-600'
+                              }`}
+                              title="Delete Role"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
-                  </button>
+                  </div>
                 );
               })}
+
+              {(!roles || roles.length === 0) && (
+                <div className="text-center py-8 text-gray-500">
+                  <Shield className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">No roles found</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -521,18 +666,23 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
         <div className="lg:col-span-3">
           <div className="bg-white rounded-xl shadow-lg p-6">
             {/* Role Header */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  {selectedRole}
-                  {selectedRole === 'Admin' && (
-                    <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">SUPER USER</span>
+            {selectedRole ? (
+              <>
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    {selectedRole?.name || selectedRole}
+                    {selectedRole?.is_system_role && (
+                      <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">SYSTEM ROLE</span>
+                    )}
+                  </h3>
+                  {selectedRole?.description && (
+                    <p className="text-sm text-gray-600 mt-1">{selectedRole.description}</p>
                   )}
-                </h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  {getActivePermissions().length} permissions assigned
-                </p>
-              </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {selectedRole?.permissions?.length || 0} permissions assigned
+                  </p>
+                </div>
 
               <div className="flex gap-2">
                 {!isEditing ? (
@@ -567,11 +717,15 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
             {/* Permissions Grid */}
             <div className="space-y-6 max-h-[700px] overflow-y-auto pr-2">
               {Object.entries(permissionGroups).map(([groupName, groupPermissions]) => {
-                if (groupPermissions.length === 0) return null;
+                if (!groupPermissions || groupPermissions.length === 0) return null;
 
                 const activePerms = getActivePermissions();
-                const allSelected = groupPermissions.every(([, value]) => activePerms.includes(value));
-                const someSelected = groupPermissions.some(([, value]) => activePerms.includes(value));
+                const allSelected = groupPermissions.every(perm =>
+                  activePerms.some(p => p.id === perm.id)
+                );
+                const someSelected = groupPermissions.some(perm =>
+                  activePerms.some(p => p.id === perm.id)
+                );
 
                 return (
                   <div key={groupName} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200">
@@ -581,7 +735,7 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
                         <div className={`w-2 h-2 rounded-full ${someSelected ? 'bg-green-500' : 'bg-gray-300'}`} />
                         {groupName}
                         <span className="text-xs font-normal text-gray-500">
-                          ({groupPermissions.filter(([, value]) => activePerms.includes(value)).length}/{groupPermissions.length})
+                          ({groupPermissions.filter(perm => activePerms.some(p => p.id === perm.id)).length}/{groupPermissions.length})
                         </span>
                       </h4>
                       {isEditing && (
@@ -600,12 +754,17 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
 
                     {/* Permissions List */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {groupPermissions.map(([key, value]) => {
-                        const hasPermission = activePerms.includes(value);
+                      {groupPermissions.map((permission, index) => {
+                        const hasPermission = activePerms.some(p => p.id === permission.id);
+
+                        // Debug log for first permission in each group
+                        if (index === 0) {
+                          console.log(`Permission object in ${groupName}:`, permission);
+                        }
 
                         return (
                           <div
-                            key={value}
+                            key={permission.id}
                             className={`flex items-center gap-3 px-4 py-2 rounded-lg border transition-all ${
                               hasPermission
                                 ? 'bg-green-50 border-green-200'
@@ -616,14 +775,14 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
                               <input
                                 type="checkbox"
                                 checked={hasPermission}
-                                onChange={() => togglePermission(value)}
+                                onChange={() => togglePermission(permission)}
                                 className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
                               />
                             ) : (
                               hasPermission && <CheckCircle size={16} className="text-green-600" />
                             )}
-                            <span className={`text-sm font-medium ${getPermissionColor(value)}`}>
-                              {formatPermissionName(key)}
+                            <span className={`text-sm font-medium ${getPermissionColor(permission.permissionKey)}`}>
+                              {permission.permissionName || permission.permission_name || 'Unknown Permission'}
                             </span>
                           </div>
                         );
@@ -633,6 +792,14 @@ const RolesTab = ({ roles, permissions, editingRole, setEditingRole, updateRole 
                 );
               })}
             </div>
+            </>
+            ) : (
+              <div className="text-center py-16">
+                <Shield className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a Role</h3>
+                <p className="text-gray-500">Choose a role from the list to view and manage its permissions</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
