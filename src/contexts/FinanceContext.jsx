@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import API from '../services/api';
+import { useAuth } from './AuthContext';
 
 const FinanceContext = createContext(null);
 
@@ -11,270 +13,342 @@ export const useFinance = () => {
 };
 
 export const FinanceProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   const [expenses, setExpenses] = useState([]);
-
   const [payrollData, setPayrollData] = useState([]);
-
   const [budgets, setBudgets] = useState([]);
-
   const [purchaseOrders, setPurchaseOrders] = useState([]);
-
   const [invoices, setInvoices] = useState([]);
-
   const [bills, setBills] = useState([]);
-
   const [chartOfAccounts, setChartOfAccounts] = useState([]);
-
   const [journalEntries, setJournalEntries] = useState([]);
-
   const [bankTransactions, setBankTransactions] = useState([]);
 
-  // Load from localStorage
-  useEffect(() => {
-    const storedExpenses = localStorage.getItem('gersl_expenses');
-    const storedPayroll = localStorage.getItem('gersl_payroll');
-    const storedBudgets = localStorage.getItem('gersl_budgets');
-    const storedPOs = localStorage.getItem('gersl_purchase_orders');
-    const storedInvoices = localStorage.getItem('gersl_invoices');
-    const storedBills = localStorage.getItem('gersl_bills');
-    const storedChartOfAccounts = localStorage.getItem('gersl_chart_of_accounts');
-    const storedJournalEntries = localStorage.getItem('gersl_journal_entries');
-    const storedBankTransactions = localStorage.getItem('gersl_bank_transactions');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    if (storedExpenses) {
-      try { setExpenses(JSON.parse(storedExpenses)); } catch (e) {}
+  // Load data from API
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
     }
-    if (storedPayroll) {
-      try { setPayrollData(JSON.parse(storedPayroll)); } catch (e) {}
-    }
-    if (storedBudgets) {
-      try { setBudgets(JSON.parse(storedBudgets)); } catch (e) {}
-    }
-    if (storedPOs) {
-      try { setPurchaseOrders(JSON.parse(storedPOs)); } catch (e) {}
-    }
-    if (storedInvoices) {
-      try { setInvoices(JSON.parse(storedInvoices)); } catch (e) {}
-    }
-    if (storedBills) {
-      try { setBills(JSON.parse(storedBills)); } catch (e) {}
-    }
-    if (storedChartOfAccounts) {
-      try { setChartOfAccounts(JSON.parse(storedChartOfAccounts)); } catch (e) {}
-    }
-    if (storedJournalEntries) {
-      try { setJournalEntries(JSON.parse(storedJournalEntries)); } catch (e) {}
-    }
-    if (storedBankTransactions) {
-      try { setBankTransactions(JSON.parse(storedBankTransactions)); } catch (e) {}
-    }
-  }, []);
 
-  // Save to localStorage
-  useEffect(() => {
-    localStorage.setItem('gersl_expenses', JSON.stringify(expenses));
-  }, [expenses]);
+    const loadFinanceData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  useEffect(() => {
-    localStorage.setItem('gersl_payroll', JSON.stringify(payrollData));
-  }, [payrollData]);
+        // Load all finance data in parallel
+        const [
+          expensesData,
+          payrollResponse,
+          budgetsResponse,
+          posResponse,
+          invoicesResponse,
+          billsResponse,
+          accountsResponse,
+          entriesResponse,
+          transactionsResponse
+        ] = await Promise.allSettled([
+          API.Finance.getAll(),
+          API.Payroll.getAll(),
+          API.Budget.getAll(),
+          API.PurchaseOrder.getAll(),
+          API.Invoice.getAll(),
+          API.Bill.getAll(),
+          API.ChartOfAccounts.getAll(),
+          API.JournalEntry.getAll(),
+          API.BankTransaction.getAll()
+        ]);
 
-  useEffect(() => {
-    localStorage.setItem('gersl_budgets', JSON.stringify(budgets));
-  }, [budgets]);
+        // Set data if successful, otherwise keep empty arrays
+        if (expensesData.status === 'fulfilled') setExpenses(expensesData.value.expenses || []);
+        if (payrollResponse.status === 'fulfilled') setPayrollData(payrollResponse.value.payroll || []);
+        if (budgetsResponse.status === 'fulfilled') setBudgets(budgetsResponse.value.budgets || []);
+        if (posResponse.status === 'fulfilled') setPurchaseOrders(posResponse.value.purchaseOrders || []);
+        if (invoicesResponse.status === 'fulfilled') setInvoices(invoicesResponse.value.invoices || []);
+        if (billsResponse.status === 'fulfilled') setBills(billsResponse.value.bills || []);
+        if (accountsResponse.status === 'fulfilled') setChartOfAccounts(accountsResponse.value.accounts || []);
+        if (entriesResponse.status === 'fulfilled') setJournalEntries(entriesResponse.value.entries || []);
+        if (transactionsResponse.status === 'fulfilled') setBankTransactions(transactionsResponse.value.transactions || []);
 
-  useEffect(() => {
-    localStorage.setItem('gersl_purchase_orders', JSON.stringify(purchaseOrders));
-  }, [purchaseOrders]);
+      } catch (err) {
+        console.error('Error loading finance data:', err);
+        setError(err.message || 'Failed to load finance data');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    localStorage.setItem('gersl_invoices', JSON.stringify(invoices));
-  }, [invoices]);
-
-  useEffect(() => {
-    localStorage.setItem('gersl_bills', JSON.stringify(bills));
-  }, [bills]);
-
-  useEffect(() => {
-    localStorage.setItem('gersl_chart_of_accounts', JSON.stringify(chartOfAccounts));
-  }, [chartOfAccounts]);
-
-  useEffect(() => {
-    localStorage.setItem('gersl_journal_entries', JSON.stringify(journalEntries));
-  }, [journalEntries]);
-
-  useEffect(() => {
-    localStorage.setItem('gersl_bank_transactions', JSON.stringify(bankTransactions));
-  }, [bankTransactions]);
+    loadFinanceData();
+    }, [isLoggedIn]);
 
   // Expense Management
-  const addExpense = (expenseData) => {
-    const newExpense = {
-      ...expenseData,
-      id: Math.max(...expenses.map(e => e.id), 0) + 1,
-      date: new Date().toISOString().split('T')[0]
-    };
-    setExpenses([...expenses, newExpense]);
-    return newExpense;
+  const addExpense = async (expenseData) => {
+    try {
+      const newExpense = await API.Finance.create(expenseData);
+      setExpenses([...expenses, newExpense]);
+      return newExpense;
+    } catch (err) {
+      console.error('Error adding expense:', err);
+      throw err;
+    }
   };
 
-  const updateExpense = (id, updates) => {
-    setExpenses(expenses.map(e => e.id === id ? { ...e, ...updates } : e));
+  const updateExpense = async (id, updates) => {
+    try {
+      const updatedExpense = await API.Finance.update(id, updates);
+      setExpenses(expenses.map(e => e.id === id ? updatedExpense : e));
+      return updatedExpense;
+    } catch (err) {
+      console.error('Error updating expense:', err);
+      throw err;
+    }
   };
 
-  const deleteExpense = (id) => {
+  const deleteExpense = async (id) => {
     if (window.confirm('Are you sure you want to delete this expense?')) {
-      setExpenses(expenses.filter(e => e.id !== id));
+      try {
+        await API.Finance.delete(id);
+        setExpenses(expenses.filter(e => e.id !== id));
+      } catch (err) {
+        console.error('Error deleting expense:', err);
+        throw err;
+      }
     }
   };
 
   // Payroll Management
-  const updatePayroll = (id, updates) => {
-    setPayrollData(payrollData.map(p => p.id === id ? { ...p, ...updates } : p));
+  const updatePayroll = async (id, updates) => {
+    try {
+      const updatedPayroll = await API.Payroll.update(id, updates);
+      setPayrollData(payrollData.map(p => p.id === id ? updatedPayroll : p));
+      return updatedPayroll;
+    } catch (err) {
+      console.error('Error updating payroll:', err);
+      throw err;
+    }
   };
 
-  const processPayroll = (id) => {
-    updatePayroll(id, { status: 'Processed' });
+  const processPayroll = async (id) => {
+    try {
+      const processedPayroll = await API.Payroll.process(id);
+      setPayrollData(payrollData.map(p => p.id === id ? processedPayroll : p));
+      return processedPayroll;
+    } catch (err) {
+      console.error('Error processing payroll:', err);
+      throw err;
+    }
   };
 
   // Purchase Order Management
-  const addPurchaseOrder = (poData) => {
-    const newPO = {
-      ...poData,
-      id: Math.max(...purchaseOrders.map(po => po.id), 0) + 1,
-      poNumber: `PO-2025-${String(purchaseOrders.length + 1).padStart(3, '0')}`,
-      requestDate: new Date().toISOString().split('T')[0],
-      status: 'Pending'
-    };
-    setPurchaseOrders([...purchaseOrders, newPO]);
-    return newPO;
+  const addPurchaseOrder = async (poData) => {
+    try {
+      const newPO = await API.PurchaseOrder.create(poData);
+      setPurchaseOrders([...purchaseOrders, newPO]);
+      return newPO;
+    } catch (err) {
+      console.error('Error adding purchase order:', err);
+      throw err;
+    }
   };
 
-  const approvePurchaseOrder = (id, approver) => {
-    setPurchaseOrders(purchaseOrders.map(po =>
-      po.id === id ? {
-        ...po,
-        status: po.status === 'Pending' ? 'Pending CEO Approval' : 'Approved',
-        approvedBy: approver,
-        approvalDate: new Date().toISOString().split('T')[0]
-      } : po
-    ));
+  const approvePurchaseOrder = async (id, approvalStatus, remarks = '') => {
+    try {
+      const approvedPO = await API.PurchaseOrder.approve(id, approvalStatus, remarks);
+      setPurchaseOrders(purchaseOrders.map(po => po.id === id ? approvedPO : po));
+      return approvedPO;
+    } catch (err) {
+      console.error('Error approving purchase order:', err);
+      throw err;
+    }
   };
 
-  const deletePurchaseOrder = (id) => {
+  const deletePurchaseOrder = async (id) => {
     if (window.confirm('Are you sure you want to delete this purchase order?')) {
-      setPurchaseOrders(purchaseOrders.filter(po => po.id !== id));
+      try {
+        await API.PurchaseOrder.delete(id);
+        setPurchaseOrders(purchaseOrders.filter(po => po.id !== id));
+      } catch (err) {
+        console.error('Error deleting purchase order:', err);
+        throw err;
+      }
     }
   };
 
   // Invoice Management
-  const addInvoice = (invoiceData) => {
-    const newInvoice = {
-      ...invoiceData,
-      id: Math.max(...invoices.map(inv => inv.id), 0) + 1,
-      invoiceNo: `INV-${new Date().getFullYear()}-${String(invoices.length + 1).padStart(3, '0')}`,
-      issued: new Date().toISOString().split('T')[0],
-      status: 'Pending'
-    };
-    setInvoices([...invoices, newInvoice]);
-    return newInvoice;
+  const addInvoice = async (invoiceData) => {
+    try {
+      const newInvoice = await API.Invoice.create(invoiceData);
+      setInvoices([...invoices, newInvoice]);
+      return newInvoice;
+    } catch (err) {
+      console.error('Error adding invoice:', err);
+      throw err;
+    }
   };
 
-  const updateInvoice = (id, updates) => {
-    setInvoices(invoices.map(inv => inv.id === id ? { ...inv, ...updates } : inv));
+  const updateInvoice = async (id, updates) => {
+    try {
+      const updatedInvoice = await API.Invoice.update(id, updates);
+      setInvoices(invoices.map(inv => inv.id === id ? updatedInvoice : inv));
+      return updatedInvoice;
+    } catch (err) {
+      console.error('Error updating invoice:', err);
+      throw err;
+    }
   };
 
-  const deleteInvoice = (id) => {
+  const deleteInvoice = async (id) => {
     if (window.confirm('Are you sure you want to delete this invoice?')) {
-      setInvoices(invoices.filter(inv => inv.id !== id));
+      try {
+        await API.Invoice.delete(id);
+        setInvoices(invoices.filter(inv => inv.id !== id));
+      } catch (err) {
+        console.error('Error deleting invoice:', err);
+        throw err;
+      }
     }
   };
 
   // Bill Management
-  const addBill = (billData) => {
-    const newBill = {
-      ...billData,
-      id: Math.max(...bills.map(b => b.id), 0) + 1,
-      billNo: `BILL-${String(bills.length + 1).padStart(3, '0')}`,
-      received: new Date().toISOString().split('T')[0],
-      status: 'Pending'
-    };
-    setBills([...bills, newBill]);
-    return newBill;
+  const addBill = async (billData) => {
+    try {
+      const newBill = await API.Bill.create(billData);
+      setBills([...bills, newBill]);
+      return newBill;
+    } catch (err) {
+      console.error('Error adding bill:', err);
+      throw err;
+    }
   };
 
-  const updateBill = (id, updates) => {
-    setBills(bills.map(bill => bill.id === id ? { ...bill, ...updates } : bill));
+  const updateBill = async (id, updates) => {
+    try {
+      const updatedBill = await API.Bill.update(id, updates);
+      setBills(bills.map(bill => bill.id === id ? updatedBill : bill));
+      return updatedBill;
+    } catch (err) {
+      console.error('Error updating bill:', err);
+      throw err;
+    }
   };
 
-  const deleteBill = (id) => {
+  const deleteBill = async (id) => {
     if (window.confirm('Are you sure you want to delete this bill?')) {
-      setBills(bills.filter(bill => bill.id !== id));
+      try {
+        await API.Bill.delete(id);
+        setBills(bills.filter(bill => bill.id !== id));
+      } catch (err) {
+        console.error('Error deleting bill:', err);
+        throw err;
+      }
     }
   };
 
   // Chart of Accounts Management
-  const addAccount = (accountData) => {
-    const newAccount = {
-      ...accountData,
-      id: Math.max(...chartOfAccounts.map(acc => acc.id), 0) + 1,
-      balance: accountData.balance || 0
-    };
-    setChartOfAccounts([...chartOfAccounts, newAccount]);
-    return newAccount;
+  const addAccount = async (accountData) => {
+    try {
+      const newAccount = await API.ChartOfAccounts.create(accountData);
+      setChartOfAccounts([...chartOfAccounts, newAccount]);
+      return newAccount;
+    } catch (err) {
+      console.error('Error adding account:', err);
+      throw err;
+    }
   };
 
-  const updateAccount = (id, updates) => {
-    setChartOfAccounts(chartOfAccounts.map(acc => acc.id === id ? { ...acc, ...updates } : acc));
+  const updateAccount = async (id, updates) => {
+    try {
+      const updatedAccount = await API.ChartOfAccounts.update(id, updates);
+      setChartOfAccounts(chartOfAccounts.map(acc => acc.id === id ? updatedAccount : acc));
+      return updatedAccount;
+    } catch (err) {
+      console.error('Error updating account:', err);
+      throw err;
+    }
   };
 
-  const deleteAccount = (id) => {
+  const deleteAccount = async (id) => {
     if (window.confirm('Are you sure you want to delete this account?')) {
-      setChartOfAccounts(chartOfAccounts.filter(acc => acc.id !== id));
+      try {
+        await API.ChartOfAccounts.delete(id);
+        setChartOfAccounts(chartOfAccounts.filter(acc => acc.id !== id));
+      } catch (err) {
+        console.error('Error deleting account:', err);
+        throw err;
+      }
     }
   };
 
   // Journal Entry Management
-  const addJournalEntry = (entryData) => {
-    const newEntry = {
-      ...entryData,
-      id: Math.max(...journalEntries.map(je => je.id), 0) + 1,
-      entryNo: `JE-${new Date().getFullYear()}-${String(journalEntries.length + 1).padStart(3, '0')}`,
-      date: new Date().toISOString().split('T')[0],
-      status: 'Posted'
-    };
-    setJournalEntries([...journalEntries, newEntry]);
-    return newEntry;
+  const addJournalEntry = async (entryData) => {
+    try {
+      const newEntry = await API.JournalEntry.create(entryData);
+      setJournalEntries([...journalEntries, newEntry]);
+      return newEntry;
+    } catch (err) {
+      console.error('Error adding journal entry:', err);
+      throw err;
+    }
   };
 
-  const updateJournalEntry = (id, updates) => {
-    setJournalEntries(journalEntries.map(je => je.id === id ? { ...je, ...updates } : je));
+  const updateJournalEntry = async (id, updates) => {
+    try {
+      const updatedEntry = await API.JournalEntry.update(id, updates);
+      setJournalEntries(journalEntries.map(je => je.id === id ? updatedEntry : je));
+      return updatedEntry;
+    } catch (err) {
+      console.error('Error updating journal entry:', err);
+      throw err;
+    }
   };
 
-  const deleteJournalEntry = (id) => {
+  const deleteJournalEntry = async (id) => {
     if (window.confirm('Are you sure you want to delete this journal entry?')) {
-      setJournalEntries(journalEntries.filter(je => je.id !== id));
+      try {
+        await API.JournalEntry.delete(id);
+        setJournalEntries(journalEntries.filter(je => je.id !== id));
+      } catch (err) {
+        console.error('Error deleting journal entry:', err);
+        throw err;
+      }
     }
   };
 
   // Bank Transaction Management
-  const addBankTransaction = (transactionData) => {
-    const newTransaction = {
-      ...transactionData,
-      id: Math.max(...bankTransactions.map(bt => bt.id), 0) + 1,
-      date: new Date().toISOString().split('T')[0]
-    };
-    setBankTransactions([...bankTransactions, newTransaction]);
-    return newTransaction;
+  const addBankTransaction = async (transactionData) => {
+    try {
+      const newTransaction = await API.BankTransaction.create(transactionData);
+      setBankTransactions([...bankTransactions, newTransaction]);
+      return newTransaction;
+    } catch (err) {
+      console.error('Error adding bank transaction:', err);
+      throw err;
+    }
   };
 
-  const updateBankTransaction = (id, updates) => {
-    setBankTransactions(bankTransactions.map(bt => bt.id === id ? { ...bt, ...updates } : bt));
+  const updateBankTransaction = async (id, updates) => {
+    try {
+      const updatedTransaction = await API.BankTransaction.update(id, updates);
+      setBankTransactions(bankTransactions.map(bt => bt.id === id ? updatedTransaction : bt));
+      return updatedTransaction;
+    } catch (err) {
+      console.error('Error updating bank transaction:', err);
+      throw err;
+    }
   };
 
-  const deleteBankTransaction = (id) => {
+  const deleteBankTransaction = async (id) => {
     if (window.confirm('Are you sure you want to delete this transaction?')) {
-      setBankTransactions(bankTransactions.filter(bt => bt.id !== id));
+      try {
+        await API.BankTransaction.delete(id);
+        setBankTransactions(bankTransactions.filter(bt => bt.id !== id));
+      } catch (err) {
+        console.error('Error deleting bank transaction:', err);
+        throw err;
+      }
     }
   };
 
@@ -585,6 +659,7 @@ export const FinanceProvider = ({ children }) => {
   };
 
   const value = {
+    // Data
     expenses,
     payrollData,
     budgets,
@@ -594,33 +669,45 @@ export const FinanceProvider = ({ children }) => {
     chartOfAccounts,
     journalEntries,
     bankTransactions,
+    // State
+    loading,
+    error,
+    // Expense Management
     addExpense,
     updateExpense,
     deleteExpense,
+    // Payroll Management
     updatePayroll,
     processPayroll,
+    // Purchase Order Management
     addPurchaseOrder,
     approvePurchaseOrder,
     deletePurchaseOrder,
+    // Invoice Management
     addInvoice,
     updateInvoice,
     deleteInvoice,
+    // Bill Management
     addBill,
     updateBill,
     deleteBill,
+    // Chart of Accounts Management
     addAccount,
     updateAccount,
     deleteAccount,
+    // Journal Entry Management
     addJournalEntry,
     updateJournalEntry,
     deleteJournalEntry,
+    // Bank Transaction Management
     addBankTransaction,
     updateBankTransaction,
     deleteBankTransaction,
+    // Stats and Analytics
     getStats,
     getExpensesByCategory,
     getExpensesByProject,
-    // MEAL Integration Methods - NEW
+    // MEAL Integration Methods
     getCostPerBeneficiary,
     getIndicatorLinkedExpenses,
     getMEALActivityCosts,

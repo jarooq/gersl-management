@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SRI_LANKA_DISTRICTS } from '../constants/sriLankaDistricts';
 import { OrphanAPI } from '../services/api';
+import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 const OrphanContext = createContext(null);
 
@@ -13,6 +15,8 @@ export const useOrphans = () => {
 };
 
 export const OrphanProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   const [orphans, setOrphans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pendingOrphans, setPendingOrphans] = useState([]);
@@ -186,14 +190,37 @@ export const OrphanProvider = ({ children }) => {
   };
 
   // Assign coordinator to orphan
-  const assignCoordinator = (orphanId, coordinator) => {
-    const updatedOrphans = orphans.map(orphan =>
-      orphan.id === orphanId
-        ? { ...orphan, assignedCoordinator: coordinator }
-        : orphan
-    );
-    setOrphans(updatedOrphans);
-    localStorage.setItem('orphans', JSON.stringify(updatedOrphans));
+  const assignCoordinator = async (orphanId, coordinator) => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const token = localStorage.getItem('accessToken');
+
+      // Make API call to assign coordinator
+      const response = await axios.post(
+        `${API_URL}/coordinators/${coordinator.id}/assign-orphan`,
+        { orphanId: orphanId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.success) {
+        // Update local state after successful API call
+        const updatedOrphans = orphans.map(orphan =>
+          orphan.id === orphanId
+            ? { ...orphan, assignedCoordinator: coordinator, coordinator_id: coordinator.id }
+            : orphan
+        );
+        setOrphans(updatedOrphans);
+        localStorage.setItem('orphans', JSON.stringify(updatedOrphans));
+
+        // Show success message
+        console.log('✅ Coordinator assigned successfully');
+        return { success: true, message: 'Coordinator assigned successfully' };
+      }
+    } catch (error) {
+      console.error('Error assigning coordinator:', error);
+      alert('Failed to assign coordinator: ' + (error.response?.data?.error || error.message));
+      return { success: false, error: error.message };
+    }
   };
 
   // Assign donor/partner to orphan (supports multiple partners)

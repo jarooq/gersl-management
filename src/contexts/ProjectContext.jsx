@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { createProjectActivityApprovalWorkflow } from '../utils/workflowOrchestrator';
+import * as API from '../services/api';
+import { useAuth } from './AuthContext';
 
 const ProjectContext = createContext(null);
 
@@ -12,73 +14,101 @@ export const useProjects = () => {
 };
 
 export const ProjectProvider = ({ children }) => {
-  const [projects, setProjects] = useState([]);
+  const { isLoggedIn } = useAuth();
 
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // Load from localStorage
+  // Fetch projects from API on mount
   useEffect(() => {
-    const stored = localStorage.getItem('gersl_projects');
-    if (stored) {
-      try {
-        setProjects(JSON.parse(stored));
-      } catch (error) {
-        console.error('Error loading projects:', error);
-      }
+    if (!isLoggedIn) {
+      return;
     }
-  }, []);
 
-  // Save to localStorage
-  useEffect(() => {
-    localStorage.setItem('gersl_projects', JSON.stringify(projects));
-  }, [projects]);
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await API.ProjectAPI.getAll();
+        setProjects(data.projects || []);
+      } catch (err) {
+        console.error('Error loading projects:', err);
+        setError(err.message || 'Failed to load projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+    }, [isLoggedIn]);
 
   // CRUD Operations
-  const addProject = (projectData) => {
-    const newProject = {
-      ...projectData,
-      id: Math.max(...projects.map(p => p.id), 0) + 1,
-      progress: 0,
-      spent: 0,
-      beneficiaries: 0,
-      tasks: [],
-      status: "Planning",
-      // MEAL Data
-      resultsFramework: projectData.resultsFramework || [],
-      beneficiaryBreakdown: projectData.beneficiaryBreakdown || {
-        directMale: 0,
-        directFemale: 0,
-        directChildren: 0,
-        directPWD: 0,
-        indirectTotal: 0
-      },
-      theoryOfChange: projectData.theoryOfChange || {
-        inputs: [],
-        activities: [],
-        outputs: [],
-        outcomes: [],
-        impact: '',
-        assumptions: [],
-        risks: []
-      },
-      cfmLog: [],
-      fieldMonitoring: [],
-      learningLog: [],
-      indicatorProgress: []
-    };
-    setProjects([...projects, newProject]);
-    return newProject;
+  const addProject = async (projectData) => {
+    try {
+      const preparedData = {
+        ...projectData,
+        progress: 0,
+        spent: 0,
+        beneficiaries: 0,
+        tasks: [],
+        status: "Planning",
+        // MEAL Data
+        resultsFramework: projectData.resultsFramework || [],
+        beneficiaryBreakdown: projectData.beneficiaryBreakdown || {
+          directMale: 0,
+          directFemale: 0,
+          directChildren: 0,
+          directPWD: 0,
+          indirectTotal: 0
+        },
+        theoryOfChange: projectData.theoryOfChange || {
+          inputs: [],
+          activities: [],
+          outputs: [],
+          outcomes: [],
+          impact: '',
+          assumptions: [],
+          risks: []
+        },
+        cfmLog: [],
+        fieldMonitoring: [],
+        learningLog: [],
+        indicatorProgress: []
+      };
+
+      const newProject = await API.ProjectAPI.create(preparedData);
+      setProjects([...projects, newProject]);
+      return newProject;
+    } catch (err) {
+      console.error('Error adding project:', err);
+      throw err;
+    }
   };
 
-  const updateProject = (id, updates) => {
-    setProjects(projects.map(p => p.id === id ? { ...p, ...updates } : p));
+  const updateProject = async (id, updates) => {
+    try {
+      const updatedProject = await API.ProjectAPI.update(id, updates);
+      setProjects(projects.map(p => p.id === id ? updatedProject : p));
+      return updatedProject;
+    } catch (err) {
+      console.error('Error updating project:', err);
+      throw err;
+    }
   };
 
-  const deleteProject = (id) => {
+  const deleteProject = async (id) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      setProjects(projects.filter(p => p.id !== id));
-      if (selectedProject?.id === id) {
-        setSelectedProject(null);
+      try {
+        await API.ProjectAPI.delete(id);
+        setProjects(projects.filter(p => p.id !== id));
+        if (selectedProject?.id === id) {
+          setSelectedProject(null);
+        }
+      } catch (err) {
+        console.error('Error deleting project:', err);
+        throw err;
       }
     }
   };
@@ -1031,6 +1061,8 @@ export const ProjectProvider = ({ children }) => {
 
   const value = {
     projects,
+    loading,
+    error,
     selectedProject,
     setSelectedProject,
     addProject,

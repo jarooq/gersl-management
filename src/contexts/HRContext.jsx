@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import API from '../services/api';
+import { useAuth } from './AuthContext';
 import * as APIServices from '../services/api';
 
 const HRContext = createContext();
@@ -13,6 +14,8 @@ export const useHR = () => {
 };
 
 export const HRProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   const [staff, setStaff] = useState([]);
   const [attendance, setAttendance] = useState([]);
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -26,72 +29,99 @@ export const HRProvider = ({ children }) => {
   const [vehicleRequests, setVehicleRequests] = useState([]);
   const [accommodationRequests, setAccommodationRequests] = useState([]);
 
-  // Load HR data from backend on mount
-  useEffect(() => {
-    const loadHRData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  // Load HR data from backend - memoized with useCallback
+  const loadHRData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        const [
-          attendanceRes,
-          leaveRes,
-          onboardingRes,
-          appraisalRes
-        ] = await Promise.allSettled([
-          API.Attendance.getAll(),
-          API.LeaveRequest.getAll(),
-          APIServices.HROnboardingAPI.getAll(),
-          APIServices.HRAppraisalAPI.getAll()
-        ]);
+      const [
+        staffRes,
+        attendanceRes,
+        leaveRes,
+        onboardingRes,
+        appraisalRes
+      ] = await Promise.allSettled([
+        APIServices.HRAPI.getAll({ limit: 100 }), // Get all staff (API max limit is 100)
+        API.Attendance.getAll(),
+        API.LeaveRequest.getAll(),
+        APIServices.HROnboardingAPI.getAll(),
+        APIServices.HRAppraisalAPI.getAll()
+      ]);
 
-        // Set attendance data
-        if (attendanceRes.status === 'fulfilled') {
-          setAttendance(attendanceRes.value.attendance || []);
-        } else {
-          console.error('Error loading attendance:', attendanceRes.reason);
-        }
-
-        // Set leave requests data
-        if (leaveRes.status === 'fulfilled') {
-          setLeaveRequests(leaveRes.value.leaveRequests || []);
-        } else {
-          console.error('Error loading leave requests:', leaveRes.reason);
-        }
-
-        // Set onboarding records data
-        if (onboardingRes.status === 'fulfilled') {
-          setOnboardingRecords(onboardingRes.value.records || []);
-        } else {
-          console.error('Error loading onboarding records:', onboardingRes.reason);
-        }
-
-        // Set appraisal records data
-        if (appraisalRes.status === 'fulfilled') {
-          setAppraisalRecords(appraisalRes.value.records || []);
-        } else {
-          console.error('Error loading appraisal records:', appraisalRes.reason);
-        }
-
-      } catch (err) {
-        console.error('Error loading HR data:', err);
-        setError(err.message || 'Failed to load HR data');
-      } finally {
-        setLoading(false);
+      // Set staff data
+      if (staffRes.status === 'fulfilled') {
+        // Handle different response structures
+        // Backend returns { staff: [...], pagination: {...} }
+        const staffData = staffRes.value?.staff || staffRes.value?.data || (Array.isArray(staffRes.value) ? staffRes.value : []);
+        console.log('Staff data loaded:', staffData?.length || 0, 'staff members');
+        setStaff(staffData);
+      } else {
+        console.error('Error loading staff:', staffRes.reason);
       }
-    };
 
+      // Set attendance data
+      if (attendanceRes.status === 'fulfilled') {
+        setAttendance(attendanceRes.value.attendance || []);
+      } else {
+        console.error('Error loading attendance:', attendanceRes.reason);
+      }
+
+      // Set leave requests data
+      if (leaveRes.status === 'fulfilled') {
+        setLeaveRequests(leaveRes.value.leaveRequests || []);
+      } else {
+        console.error('Error loading leave requests:', leaveRes.reason);
+      }
+
+      // Set onboarding records data
+      if (onboardingRes.status === 'fulfilled') {
+        setOnboardingRecords(onboardingRes.value.records || []);
+      } else {
+        console.error('Error loading onboarding records:', onboardingRes.reason);
+      }
+
+      // Set appraisal records data
+      if (appraisalRes.status === 'fulfilled') {
+        setAppraisalRecords(appraisalRes.value.records || []);
+      } else {
+        console.error('Error loading appraisal records:', appraisalRes.reason);
+      }
+
+    } catch (err) {
+      console.error('Error loading HR data:', err);
+      setError(err.message || 'Failed to load HR data');
+    } finally {
+      setLoading(false);
+    }
+  }, []); // Empty dependency array - function never changes
+
+  // Load data on mount
+  useEffect(() => {
     loadHRData();
-  }, []);
+  }, [loadHRData]);
 
   // Staff CRUD operations
-  const addStaff = (staffData) => {
-    const newStaff = {
-      ...staffData,
-      id: Math.max(...staff.map(s => s.id), 0) + 1,
-      employeeId: `EMP${String(staff.length + 1).padStart(3, '0')}`
-    };
-    setStaff([...staff, newStaff]);
+  const addStaff = async (staffData) => {
+    try {
+      // Call backend API to create staff and user account
+      const createdStaff = await APIServices.HRAPI.create(staffData);
+
+      // Update local state with the new staff member
+      setStaff(prevStaff => [...prevStaff, createdStaff]);
+
+      return {
+        success: true,
+        message: 'Staff member and user account created successfully',
+        data: createdStaff
+      };
+    } catch (error) {
+      console.error('Error creating staff:', error);
+      return {
+        success: false,
+        message: error.message || 'Failed to create staff member'
+      };
+    }
   };
 
   const updateStaff = (id, updatedData) => {
@@ -445,6 +475,7 @@ export const HRProvider = ({ children }) => {
     accommodationRequests,
     loading,
     error,
+    loadHRData, // Export loadHRData function
     addStaff,
     updateStaff,
     deleteStaff,

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import API from '../services/api';
+import { useAuth } from './AuthContext';
 
 const PartnersContext = createContext();
 
@@ -12,30 +13,36 @@ export const usePartners = () => {
 };
 
 export const PartnersProvider = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Fetch partners from backend - only when user is authenticated
-  // Removed automatic loading to prevent 401 errors when not logged in
-  // Data will be loaded by pages when they mount
-  // useEffect(() => {
-  //   const fetchPartners = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const data = await API.Partner.getAll();
-  //       setPartners(data.partners || []);
-  //       setError(null);
-  //     } catch (err) {
-  //       console.error('Error fetching partners:', err);
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //
-  //   fetchPartners();
-  // }, []);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setPartners([]);
+      setLoading(false);
+      return;
+    }
+
+    const fetchPartners = async () => {
+      try {
+        setLoading(true);
+        const data = await API.Partner.getAll();
+        setPartners(data.partners || []);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching partners:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPartners();
+  }, [isLoggedIn]);
 
   // Manual fetch function for pages to call
   const fetchPartners = async () => {
@@ -94,75 +101,121 @@ export const PartnersProvider = ({ children }) => {
   };
 
   // Contribution Operations
-  const addContribution = (contributionData) => {
-    const newContribution = {
-      ...contributionData,
-      id: contributions.length + 1,
-      status: 'Received',
-      receiptNumber: `RCT-${new Date().getFullYear()}-${String(contributions.length + 1).padStart(4, '0')}`
-    };
-    setContributions([...contributions, newContribution]);
-
-    // Update partner's total contributions and last contribution date
-    const partner = partners.find(p => p.id === contributionData.partnerId);
-    if (partner) {
-      updatePartner(partner.id, {
-        totalContributions: partner.totalContributions + contributionData.amount,
-        lastContribution: contributionData.date
-      });
+  const fetchContributions = async (partnerId) => {
+    try {
+      const data = await API.PartnerAPI.getContributions(partnerId);
+      setContributions(data.contributions || []);
+      return data.contributions || [];
+    } catch (err) {
+      console.error('Error fetching contributions:', err);
+      throw err;
     }
-
-    return newContribution;
   };
 
-  const updateContribution = (id, updatedData) => {
-    setContributions(contributions.map(contribution =>
-      contribution.id === id ? { ...contribution, ...updatedData } : contribution
-    ));
+  const addContribution = async (partnerId, contributionData) => {
+    try {
+      const newContribution = await API.PartnerAPI.createContribution(partnerId, contributionData);
+      setContributions([...contributions, newContribution]);
+
+      // Refresh partner data to get updated totals
+      await fetchPartners();
+
+      return newContribution;
+    } catch (err) {
+      console.error('Error adding contribution:', err);
+      throw err;
+    }
   };
 
-  const deleteContribution = (id) => {
-    const contribution = contributions.find(c => c.id === id);
-    if (contribution) {
-      const partner = partners.find(p => p.id === contribution.partnerId);
-      if (partner) {
-        updatePartner(partner.id, {
-          totalContributions: partner.totalContributions - contribution.amount
-        });
-      }
+  const updateContribution = async (id, updatedData) => {
+    try {
+      const updated = await API.PartnerAPI.updateContribution(id, updatedData);
+      setContributions(contributions.map(contribution =>
+        contribution.id === id ? updated : contribution
+      ));
+
+      // Refresh partner data to get updated totals
+      await fetchPartners();
+
+      return updated;
+    } catch (err) {
+      console.error('Error updating contribution:', err);
+      throw err;
     }
-    setContributions(contributions.filter(contribution => contribution.id !== id));
+  };
+
+  const deleteContribution = async (id) => {
+    try {
+      await API.PartnerAPI.deleteContribution(id);
+      setContributions(contributions.filter(contribution => contribution.id !== id));
+
+      // Refresh partner data to get updated totals
+      await fetchPartners();
+    } catch (err) {
+      console.error('Error deleting contribution:', err);
+      throw err;
+    }
   };
 
   // Communication Operations
-  const addCommunication = (communicationData) => {
-    const newCommunication = {
-      ...communicationData,
-      id: communications.length + 1,
-      date: new Date().toISOString().split('T')[0]
-    };
-    setCommunications([...communications, newCommunication]);
-    return newCommunication;
+  const fetchCommunications = async (partnerId) => {
+    try {
+      const data = await API.PartnerAPI.getCommunications(partnerId);
+      setCommunications(data.communications || []);
+      return data.communications || [];
+    } catch (err) {
+      console.error('Error fetching communications:', err);
+      throw err;
+    }
   };
 
-  const updateCommunication = (id, updatedData) => {
-    setCommunications(communications.map(comm =>
-      comm.id === id ? { ...comm, ...updatedData } : comm
-    ));
+  const addCommunication = async (partnerId, communicationData) => {
+    try {
+      const newCommunication = await API.PartnerAPI.createCommunication(partnerId, communicationData);
+      setCommunications([...communications, newCommunication]);
+      return newCommunication;
+    } catch (err) {
+      console.error('Error adding communication:', err);
+      throw err;
+    }
   };
 
-  const deleteCommunication = (id) => {
-    setCommunications(communications.filter(comm => comm.id !== id));
+  const updateCommunication = async (id, updatedData) => {
+    try {
+      const updated = await API.PartnerAPI.updateCommunication(id, updatedData);
+      setCommunications(communications.map(comm =>
+        comm.id === id ? updated : comm
+      ));
+      return updated;
+    } catch (err) {
+      console.error('Error updating communication:', err);
+      throw err;
+    }
   };
 
-  // Get Stats
+  const deleteCommunication = async (id) => {
+    try {
+      await API.PartnerAPI.deleteCommunication(id);
+      setCommunications(communications.filter(comm => comm.id !== id));
+    } catch (err) {
+      console.error('Error deleting communication:', err);
+      throw err;
+    }
+  };
+
+  // Get Stats - ensure arrays exist before processing
   const getStats = () => {
-    const activePartners = partners.filter(p => p.status === 'Active').length;
-    const totalPartners = partners.length;
-    const totalContributionsAmount = contributions.reduce((sum, c) => sum + c.amount, 0);
+    // Ensure partners and other arrays are defined
+    const safePartners = Array.isArray(partners) ? partners : [];
+    const safeContributions = Array.isArray(contributions) ? contributions : [];
+    const safeCommunications = Array.isArray(communications) ? communications : [];
+
+    const activePartners = safePartners.filter(p => p.status === 'Active').length;
+    const totalPartners = safePartners.length;
+    const totalContributionsAmount = safeContributions.reduce((sum, c) => sum + (parseFloat(c.amount) || 0), 0);
 
     // Count unique partner types
-    const partnerTypes = [...new Set(partners.map(p => p.type))].length;
+    const partnerTypes = [...new Set(safePartners.map(p => p.type).filter(Boolean))].length;
 
     // Calculate average contribution per partner
     const avgContribution = totalPartners > 0 ? Math.round(totalContributionsAmount / totalPartners) : 0;
@@ -170,7 +223,7 @@ export const PartnersProvider = ({ children }) => {
     // Get pending follow-ups (next follow-up within 7 days)
     const today = new Date();
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const pendingFollowUps = communications.filter(comm => {
+    const pendingFollowUps = safeCommunications.filter(comm => {
       if (!comm.nextFollowUp) return false;
       const followUpDate = new Date(comm.nextFollowUp);
       return followUpDate >= today && followUpDate <= nextWeek;
@@ -179,9 +232,9 @@ export const PartnersProvider = ({ children }) => {
     return {
       totalPartners,
       activePartners,
-      totalContributions: totalContributionsAmount,
+      totalContributions: totalContributionsAmount || 0,
       partnerTypes,
-      avgContribution,
+      avgContribution: avgContribution || 0,
       pendingFollowUps
     };
   };
@@ -211,9 +264,11 @@ export const PartnersProvider = ({ children }) => {
     addPartner,
     updatePartner,
     deletePartner,
+    fetchContributions,
     addContribution,
     updateContribution,
     deleteContribution,
+    fetchCommunications,
     addCommunication,
     updateCommunication,
     deleteCommunication,
