@@ -9,8 +9,15 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
   const [supportType, setSupportType] = useState('');
 
   // Get partners and proposals from contexts
-  const { partners: allPartners } = usePartners();
+  const { partners: allPartners, fetchPartners } = usePartners();
   const { proposals } = useProposals();
+
+  // Fetch partners when modal opens
+  useEffect(() => {
+    if (isOpen && fetchPartners) {
+      fetchPartners();
+    }
+  }, [isOpen, fetchPartners]);
 
   // Filter active partners only
   const partners = allPartners.filter(p => p.status === 'Active');
@@ -69,6 +76,20 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
 
   // Get selected partner object
   const partnerObj = partners.find(p => p.id === parseInt(selectedPartner));
+
+  // Ensure focusAreas is an array
+  if (partnerObj && partnerObj.focusAreas) {
+    if (typeof partnerObj.focusAreas === 'string') {
+      try {
+        partnerObj.focusAreas = JSON.parse(partnerObj.focusAreas);
+      } catch (e) {
+        partnerObj.focusAreas = partnerObj.focusAreas.split(',').map(s => s.trim());
+      }
+    }
+    if (!Array.isArray(partnerObj.focusAreas)) {
+      partnerObj.focusAreas = [];
+    }
+  }
 
   // Get orphan projects for selected partner
   const availableProjects = partnerObj ? getProjectsForPartner(partnerObj.id) : [];

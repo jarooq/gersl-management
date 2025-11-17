@@ -19,16 +19,63 @@ const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
     }
   };
 
+  // Helper function to get profile photo URL
+  const getProfilePhotoUrl = () => {
+    try {
+      if (!orphan.photos) {
+        return null;
+      }
+
+      let photos = orphan.photos;
+
+      // If it's a string, try to parse it
+      if (typeof photos === 'string') {
+        try {
+          photos = JSON.parse(photos);
+        } catch (e) {
+          console.error('OrphanCard - Failed to parse photos string:', e);
+          return null;
+        }
+      }
+
+      if (Array.isArray(photos) && photos.length > 0) {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        return `${API_URL}${photos[0]}`;
+      }
+    } catch (error) {
+      console.error('OrphanCard - Error in getProfilePhotoUrl:', error);
+    }
+    return null;
+  };
+
+  // Handle both fullName and name fields
+  const displayName = orphan.fullName || orphan.name || orphan.full_name || 'Unknown';
+  const profilePhotoUrl = getProfilePhotoUrl();
+
   return (
     <div className="card-modern group">
       <div className="p-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-600 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-105 transition-transform">
-              {orphan.fullName.charAt(0)}
+            {profilePhotoUrl ? (
+              <img
+                src={profilePhotoUrl}
+                alt={displayName}
+                className="w-14 h-14 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div
+              className="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-600 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-105 transition-transform"
+              style={{ display: profilePhotoUrl ? 'none' : 'flex' }}
+            >
+              {displayName.charAt(0)}
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-lg text-gray-900 leading-tight">{orphan.fullName}</h3>
+              <h3 className="font-bold text-lg text-gray-900 leading-tight">{displayName}</h3>
               <p className="text-sm text-gray-500 font-medium">{orphan.age} years old</p>
             </div>
           </div>

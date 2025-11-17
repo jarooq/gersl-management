@@ -786,7 +786,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
         {/* Footer */}
         <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-            {hasPermission('orphans:edit') && (
+            {hasPermission('orphans:assign_coordinator') && (
               <button
                 onClick={handleAssignCoordinator}
                 className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
@@ -796,7 +796,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
                 <span className="sm:hidden">Coordinator</span>
               </button>
             )}
-            {hasPermission('orphans:edit') && (
+            {hasPermission('orphans:assign_coordinator') && (
               <button
                 onClick={handleAssignDonor}
                 className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-semibold shadow-sm hover:shadow-md"
