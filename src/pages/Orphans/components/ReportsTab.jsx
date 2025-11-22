@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { FileText, Plus, Calendar, Download, Eye, Trash2, Loader, TrendingUp, Image as ImageIcon, Mail, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import OrphanReportWizard from './OrphanReportWizard';
 import { OrphanReportAPI } from '../../../services/api';
+import { generateOrphanReportPDF } from '../../../utils/orphanReportPdfGenerator';
 
 const ReportsTab = ({ orphan }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showWizard, setShowWizard] = useState(false);
+  const [previewReport, setPreviewReport] = useState(null);
 
   useEffect(() => {
     if (orphan?.id) {
@@ -43,8 +45,16 @@ const ReportsTab = ({ orphan }) => {
 
   const handleDownloadReport = async (reportId) => {
     try {
-      // TODO: Implement PDF download
-      alert('PDF download will be implemented');
+      // Find the report in the list
+      const report = reports.find(r => r.id === reportId);
+      if (!report) {
+        alert('Report not found');
+        return;
+      }
+
+      // Generate and download PDF
+      await generateOrphanReportPDF(report, orphan);
+      console.log('✅ PDF generated successfully');
     } catch (error) {
       console.error('Error downloading report:', error);
       alert('Failed to download report. Please try again.');
@@ -89,6 +99,7 @@ const ReportsTab = ({ orphan }) => {
               report={report}
               onDelete={handleDeleteReport}
               onDownload={handleDownloadReport}
+              onPreview={setPreviewReport}
             />
           ))}
         </div>
@@ -119,11 +130,20 @@ const ReportsTab = ({ orphan }) => {
           }}
         />
       )}
+
+      {/* Preview Modal */}
+      {previewReport && (
+        <ReportPreviewModal
+          report={previewReport}
+          orphan={orphan}
+          onClose={() => setPreviewReport(null)}
+        />
+      )}
     </div>
   );
 };
 
-const ReportCard = ({ report, onDelete, onDownload }) => {
+const ReportCard = ({ report, onDelete, onDownload, onPreview }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -257,7 +277,7 @@ const ReportCard = ({ report, onDelete, onDownload }) => {
           </button>
         )}
         <button
-          onClick={() => {/* TODO: Implement preview */}}
+          onClick={() => onPreview(report)}
           className="flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium"
         >
           <Eye size={14} />
@@ -269,6 +289,188 @@ const ReportCard = ({ report, onDelete, onDownload }) => {
         >
           <Trash2 size={14} />
         </button>
+      </div>
+    </div>
+  );
+};
+
+const ReportPreviewModal = ({ report, orphan, onClose }) => {
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getReportTypeLabel = (type) => {
+    switch (type) {
+      case 'monthly':
+        return 'Monthly Report';
+      case 'quarterly':
+        return 'Quarterly Report';
+      case 'annual':
+        return 'Annual Report';
+      case 'custom':
+        return 'Custom Report';
+      default:
+        return 'Progress Report';
+    }
+  };
+
+  const orphanName = `${orphan.firstName || ''} ${orphan.middleName || ''} ${orphan.lastName || ''}`.trim() || 'Orphan';
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        {/* Header */}
+        <div className="sticky top-0 bg-gradient-to-r from-pink-600 to-blue-600 text-white p-6 rounded-t-xl">
+          <div className="flex justify-between items-start">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">{getReportTypeLabel(report.reportType)}</h2>
+              <p className="text-pink-100">Preview - {orphanName}</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Orphan Information */}
+          <div className="bg-gradient-to-br from-pink-50 to-blue-50 rounded-xl p-5 border-2 border-pink-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <div className="w-2 h-8 bg-pink-600 rounded"></div>
+              Orphan Information
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Full Name</p>
+                <p className="font-semibold text-gray-900">{orphanName}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Orphan Code</p>
+                <p className="font-semibold text-gray-900">{orphan.orphanCode || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Age</p>
+                <p className="font-semibold text-gray-900">{orphan.age || 'N/A'} years</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Gender</p>
+                <p className="font-semibold text-gray-900">{orphan.gender || 'N/A'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Report Period */}
+          <div className="bg-blue-50 rounded-xl p-5 border-2 border-blue-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Calendar className="text-blue-600" size={20} />
+              Report Period
+            </h3>
+            <p className="text-gray-700">
+              {formatDate(report.reportPeriodStart)} - {formatDate(report.reportPeriodEnd)}
+            </p>
+          </div>
+
+          {/* Partner Info */}
+          {report.partner && (
+            <div className="bg-green-50 rounded-xl p-5 border-2 border-green-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <Mail className="text-green-600" size={20} />
+                Recipient Partner
+              </h3>
+              <p className="font-semibold text-gray-900">{report.partner.name}</p>
+              {report.partner.email && (
+                <p className="text-sm text-gray-600">{report.partner.email}</p>
+              )}
+            </div>
+          )}
+
+          {/* AI Summary */}
+          {report.aiGeneratedSummary && (
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-5 border-2 border-purple-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <TrendingUp className="text-purple-600" size={20} />
+                Progress Summary
+              </h3>
+              <p className="text-gray-700 leading-relaxed">{report.aiGeneratedSummary}</p>
+            </div>
+          )}
+
+          {/* Media Attachments */}
+          {(report.selectedPhotos?.length > 0 || report.selectedDrawings?.length > 0 || report.selectedLetters?.length > 0) && (
+            <div className="bg-gray-50 rounded-xl p-5 border-2 border-gray-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <ImageIcon className="text-gray-600" size={20} />
+                Attachments
+              </h3>
+              <div className="space-y-2">
+                {report.selectedPhotos?.length > 0 && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <ImageIcon size={16} className="text-blue-600" />
+                    <span>{report.selectedPhotos.length} photograph(s)</span>
+                  </div>
+                )}
+                {report.selectedDrawings?.length > 0 && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <ImageIcon size={16} className="text-purple-600" />
+                    <span>{report.selectedDrawings.length} drawing(s)</span>
+                  </div>
+                )}
+                {report.selectedLetters?.length > 0 && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <Mail size={16} className="text-green-600" />
+                    <span>{report.selectedLetters.length} letter(s)</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Additional Notes */}
+          {report.notes && (
+            <div className="bg-yellow-50 rounded-xl p-5 border-2 border-yellow-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Additional Notes</h3>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{report.notes}</p>
+            </div>
+          )}
+
+          {/* Report Metadata */}
+          <div className="bg-gray-100 rounded-xl p-5">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-gray-600">Generated by</p>
+                <p className="font-semibold text-gray-900">
+                  {report.generator?.fullName || report.generator?.username || 'N/A'}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600">Created on</p>
+                <p className="font-semibold text-gray-900">{formatDate(report.createdAt)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="sticky bottom-0 bg-gray-50 p-6 rounded-b-xl border-t-2 border-gray-200 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
