@@ -58,10 +58,18 @@ const handleResponse = async (response) => {
 const request = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // Get authentication token from localStorage
+  const token = localStorage.getItem('accessToken');
+
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
+
+  // Add Authorization header if token exists
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
   const config = {
     ...options,
@@ -143,6 +151,14 @@ export const fetchProposalStats = async () => {
   return await request('/proposals/stats');
 };
 
+// Convert proposal to project atomically
+export const convertProposalToProject = async (id, conversionData) => {
+  return await request(`/proposals/${id}/convert`, {
+    method: 'POST',
+    body: JSON.stringify(conversionData)
+  });
+};
+
 export default {
   fetchProposals,
   fetchProposalById,
@@ -151,5 +167,6 @@ export default {
   deleteProposal,
   updateProposalStatus,
   linkProposalToProject,
-  fetchProposalStats
+  fetchProposalStats,
+  convertProposalToProject
 };

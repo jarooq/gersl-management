@@ -71,25 +71,14 @@ server/deploy-eb-fixed.sh
 scripts/deploy-*.sh
 scripts/test-*.sh
 
-# Old deployment documentation (keep only essential deployment files)
-DEPLOYMENT_*.md
-!DEPLOYMENT_GUIDE.md
-!DEPLOYMENT_README.md
-VERCEL_*.md
-SUPABASE_*.md
-RAILWAY_*.md
-FINAL_*.md
-!FINAL_DEPLOYMENT_CHECKLIST.md
-REDEPLOY_*.md
-CREATE_ADMIN_USER.md
-QUICK_START.md
-!VPS_QUICK_START.md
-!GET_SUPABASE_CREDENTIALS.md
-RENDER_*.md
-
-# Keep VPS deployment scripts
-!deploy-vps.sh
-!setup-nginx.sh
+# All deployment scripts and documentation (not needed for local dev)
+*.sh
+*.exp
+*.txt
+!README.md
+*.md
+!README.md
+*.sql
 
 # Connection configuration (contains sensitive credentials)
 connection-config.json

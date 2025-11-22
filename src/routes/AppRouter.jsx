@@ -23,6 +23,8 @@ const OrphansInNeedPage = lazy(() => import('../public-portal/pages/OrphansInNee
 
 // Lazy-loaded page components (code splitting)
 const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'));
+const StaffDashboard = lazy(() => import('../pages/Dashboard/StaffDashboard'));
+const ExecutiveDashboard = lazy(() => import('../pages/Dashboard/ExecutiveDashboard'));
 const OrphansPage = lazy(() => import('../pages/Orphans/OrphansPage'));
 const ProjectsPage = lazy(() => import('../pages/Projects/ProjectsPage'));
 const FinancePage = lazy(() => import('../pages/Finance/FinancePage'));
@@ -43,6 +45,7 @@ const SocialMediaSettings = lazy(() => import('../pages/SocialMedia/SocialMediaS
 const ReportsPage = lazy(() => import('../pages/Reports/ReportsPage'));
 const ActivitiesPage = lazy(() => import('../pages/Operations/ActivitiesPage'));
 const TasksPage = lazy(() => import('../pages/Operations/TasksPage'));
+const MyTasksPage = lazy(() => import('../pages/Operations/MyTasksPage'));
 const ApprovalsPage = lazy(() => import('../pages/Approvals/ApprovalsPage'));
 const CompliancePage = lazy(() => import('../pages/Compliance/CompliancePage'));
 const CampaignsPage = lazy(() => import('../pages/Campaigns/CampaignsPage'));
@@ -210,6 +213,22 @@ const AppRouter = () => {
             }
           />
           <Route
+            path="my-dashboard"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <StaffDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="executive-dashboard"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ExecutiveDashboard />
+              </Suspense>
+            }
+          />
+          <Route
             path="orphans"
             element={
               <PermissionRoute permission={PERMISSIONS.ORPHANS_VIEW}>
@@ -275,6 +294,16 @@ const AppRouter = () => {
               <PermissionRoute permission={PERMISSIONS.OPERATIONS_VIEW_TASKS}>
                 <Suspense fallback={<PageLoader />}>
                   <TasksPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="operations/my-tasks"
+            element={
+              <PermissionRoute permission={PERMISSIONS.OPERATIONS_VIEW_TASKS}>
+                <Suspense fallback={<PageLoader />}>
+                  <MyTasksPage />
                 </Suspense>
               </PermissionRoute>
             }

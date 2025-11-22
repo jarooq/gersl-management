@@ -1,103 +1,153 @@
 # GERSL Management System
 
-**Version**: 1.0.0  
-**Status**: ✅ Production Ready  
-**Last Updated**: November 9, 2025
+A comprehensive NGO management ERP system for Global Ehsan Relief and Services Limited.
 
-A comprehensive management system for GERSL organization with RBAC, 19+ modules, and modern security.
+## Tech Stack
 
----
+- **Frontend**: React 19 + Vite + Tailwind CSS
+- **Backend**: Express.js + Node.js
+- **Database**: PostgreSQL (Supabase Cloud)
+- **Authentication**: JWT
 
-## 🚀 Quick Start
+## Prerequisites
 
-### Admin Credentials
-```
-URL: http://localhost:5173/login
-Username: admin
-Password: Ger@2025
-```
+- Node.js 18+ and npm
+- Git
 
-### Start Development
+## Local Development Setup
+
+### 1. Clone the repository
+
 ```bash
-# Backend
-cd server && node src/server.js
+git clone <repository-url>
+cd gersl-management
+```
 
-# Frontend (new terminal)
+### 2. Install dependencies
+
+**Frontend:**
+```bash
+npm install
+```
+
+**Backend:**
+```bash
+cd server
+npm install
+cd ..
+```
+
+### 3. Environment Configuration
+
+The environment files are already configured for local development:
+
+- **Frontend**: `.env` (points to `http://localhost:3001/api`)
+- **Backend**: `server/.env` (configured for Supabase database)
+
+**Note**: Database credentials are already set up. The app uses Supabase PostgreSQL - no local database setup needed.
+
+### 4. Start Development Servers
+
+**Option A: Run both servers separately**
+
+Terminal 1 - Backend:
+```bash
+cd server
 npm run dev
 ```
 
-📚 **Full Guide**: [QUICK_START.md](QUICK_START.md)
-
----
-
-## 📋 Documentation
-
-### Deployment Guides
-- [⚡ QUICK_DEPLOYMENT.md](QUICK_DEPLOYMENT.md) - **Quick start deployment** (20-30 min)
-- [SUPABASE_VERCEL_DEPLOYMENT.md](SUPABASE_VERCEL_DEPLOYMENT.md) - Detailed Supabase + Vercel guide
-- [DEPLOYMENT_READY_SUMMARY.md](DEPLOYMENT_READY_SUMMARY.md) - Final deployment report
-- [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md) - Pre-deployment checklist
-
-### Setup & Configuration
-- [QUICK_START.md](QUICK_START.md) - Development & deployment guide
-- [SOCIAL_MEDIA_INTEGRATION_GUIDE.md](SOCIAL_MEDIA_INTEGRATION_GUIDE.md) - Social media setup
-
----
-
-## 🎯 Features
-
-✅ Dashboard • Orphan Care • Projects • Finance • HR (Onboarding, Appraisal, Attendance)  
-✅ CBO Partners • Donors • Proposals • MEAL • Campaigns • Donations  
-✅ Social Media • Job Postings • Vendor Calls • Operations • Approvals  
-✅ Compliance • Reports • Settings
-
-🔐 **Security**: RBAC (17 roles, 150+ permissions), JWT, Bcrypt, Rate Limiting, CORS, Helmet
-
----
-
-## 🛠️ Tech Stack
-
-**Frontend**: React 19, Vite 7, Tailwind CSS, React Router v6  
-**Backend**: Node.js, Express, Sequelize, SQLite/PostgreSQL, JWT  
-**Security**: Helmet, CORS, Rate Limiting, Bcrypt
-
----
-
-## 🚀 Deployment
-
-### Recommended: Supabase + Vercel
+Terminal 2 - Frontend:
 ```bash
-# Follow the step-by-step guide
-See SUPABASE_VERCEL_DEPLOYMENT.md
+npm run dev
 ```
 
-### Alternative: Traditional VPS
-```bash
-# Quick deploy
-./deploy.sh
+**Option B: Run both servers in background**
 
-# Manual
-npm run build              # Build frontend
-cd server && npm install --production
-pm2 start src/server.js --name gersl-backend
+```bash
+# Start backend
+cd server && npm run dev &
+
+# Start frontend
+npm run dev
 ```
 
-📚 **Deployment Guides**:
-- [Supabase + Vercel](SUPABASE_VERCEL_DEPLOYMENT.md) - Cloud deployment (Recommended)
-- [Traditional VPS](DEPLOYMENT_READY_SUMMARY.md) - Self-hosted deployment
+### 5. Access the Application
 
----
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3001/api
 
-## 📊 Status
+## Default Login Credentials
 
-✅ All 19 modules working  
-✅ Production build tested  
-✅ Security configured  
-✅ Admin password: Ger@2025  
-✅ Documentation complete
+Check with your system administrator for default credentials.
 
-⚠️ **Before Production**: Update .env, enable HTTPS, migrate to PostgreSQL
+## Project Structure
 
----
+```
+gersl-management/
+├── src/                    # Frontend source
+│   ├── components/         # React components
+│   ├── pages/             # Page components (20+ modules)
+│   ├── contexts/          # Context providers
+│   ├── services/          # API services
+│   └── utils/             # Utilities
+├── server/                # Backend source
+│   ├── src/
+│   │   ├── controllers/   # Business logic
+│   │   ├── models/        # Database models
+│   │   ├── routes/        # API routes
+│   │   └── middleware/    # Middleware
+│   └── migrations/        # Database migrations
+└── public/                # Static assets
+```
 
-**Ready to Deploy!** 🚀 See documentation for next steps.
+## Key Features
+
+- Orphan Care Management
+- Project Management
+- Finance & Budgeting
+- HR & Payroll
+- Proposals & Grants
+- MEAL Framework
+- Workflow & Approvals
+- Task Management
+- Notifications
+- CBO Management
+- Compliance & Safeguarding
+- Reports & Analytics
+
+## Development Notes
+
+- The database is hosted on Supabase (cloud PostgreSQL)
+- All tables are pre-created - no need to run migrations for initial setup
+- The app uses JWT authentication with role-based permissions
+- Frontend uses React 19 with Vite for fast HMR
+- Backend uses Express.js with Sequelize ORM
+
+## Troubleshooting
+
+**Backend won't start:**
+- Check if port 3001 is available: `lsof -i :3001`
+- Verify database connection in `server/.env`
+
+**Frontend won't start:**
+- Check if port 5173 is available: `lsof -i :5173`
+- Clear Vite cache: `rm -rf node_modules/.vite`
+
+**Database connection issues:**
+- Verify Supabase credentials in `server/.env`
+- Check internet connection (database is cloud-hosted)
+
+## Available Scripts
+
+**Frontend:**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+
+**Backend:**
+- `npm run dev` - Start with nodemon (auto-reload)
+- `npm start` - Start production server
+
+## Support
+
+For issues or questions, contact the development team.
