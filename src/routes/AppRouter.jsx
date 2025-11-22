@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import PermissionRoute from '../components/common/PermissionRoute';
 import { PERMISSIONS } from '../utils/permissions';
+import CommandPalette from '../components/common/CommandPalette';
 
 // Immediate imports (required for initial render)
 import Login from '../pages/Login';
@@ -84,7 +85,7 @@ const ProtectedRoute = ({ children }) => {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 };
 
-const AppRouter = () => {
+const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
   return (
     <BrowserRouter>
       <Routes>
@@ -534,6 +535,12 @@ const AppRouter = () => {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {/* Command Palette - Rendered inside Router context */}
+      <CommandPalette
+        isOpen={showCommandPalette}
+        onClose={() => setShowCommandPalette(false)}
+      />
     </BrowserRouter>
   );
 };

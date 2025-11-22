@@ -25,7 +25,6 @@ import { BeneficiaryProvider } from './contexts/BeneficiaryContext';
 import WorkflowIntegration from './components/workflow/WorkflowIntegration';
 import AppRouter from './routes/AppRouter';
 import ErrorBoundary from './components/common/ErrorBoundary';
-import CommandPalette from './components/common/CommandPalette';
 import { initAnalytics } from './utils/analytics';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -86,10 +85,9 @@ function App() {
                                         <SponsorshipProvider>
                                           <ApprovalProvider>
                                             <WorkflowIntegration>
-                                              <AppRouter />
-                                              <CommandPalette
-                                                isOpen={showCommandPalette}
-                                                onClose={() => setShowCommandPalette(false)}
+                                              <AppRouter
+                                                showCommandPalette={showCommandPalette}
+                                                setShowCommandPalette={setShowCommandPalette}
                                               />
                                               <ToastContainer
                                                 position="top-right"
