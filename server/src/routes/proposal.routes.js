@@ -7,7 +7,8 @@ import {
   deleteProposal,
   updateProposalStatus,
   linkProposalToProject,
-  getProposalStats
+  getProposalStats,
+  convertProposalToProject
 } from '../controllers/proposal.controller.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
@@ -29,5 +30,8 @@ router.delete('/:id', deleteProposal);
 // Special operations
 router.patch('/:id/status', updateProposalStatus);
 router.patch('/:id/link-project', linkProposalToProject);
+
+// Atomic conversion endpoint
+router.post('/:id/convert', convertProposalToProject);
 
 export default router;

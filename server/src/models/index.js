@@ -3,6 +3,12 @@ import sequelize from '../config/database.js';
 import User from './User.js';
 import Report from './Report.js';
 import Proposal from './Proposal.js';
+import Approval from './Approval.js';
+import Task from './Task.js';
+import TaskAttachment from './TaskAttachment.js';
+import Notification from './Notification.js';
+import TaskBeneficiary from './TaskBeneficiary.js';
+import AggregateDistribution from './AggregateDistribution.js';
 // import OrphanNeed from './OrphanNeed.js'; // Temporarily disabled - table already exists in Supabase
 
 // ============================================
@@ -3705,6 +3711,58 @@ User.hasMany(CBOProposal, { foreignKey: 'createdBy', as: 'createdCBOProposals' }
 CBOProposal.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
 
 // ============================================
+// WORKFLOW SYSTEM ASSOCIATIONS
+// ============================================
+
+// APPROVAL RELATIONSHIPS
+Approval.belongsTo(User, { as: 'initiator', foreignKey: 'initiatedBy' });
+User.hasMany(Approval, { as: 'initiatedApprovals', foreignKey: 'initiatedBy' });
+
+// TASK RELATIONSHIPS
+Task.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+Task.belongsTo(User, { as: 'assignee', foreignKey: 'assignedTo' });
+Task.belongsTo(User, { as: 'assigner', foreignKey: 'assignedBy' });
+Task.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+
+// Reverse relationships
+Project.hasMany(Task, { as: 'tasks', foreignKey: 'projectId' });
+User.hasMany(Task, { as: 'assignedTasks', foreignKey: 'assignedTo' });
+User.hasMany(Task, { as: 'createdTasks', foreignKey: 'assignedBy' });
+
+// TASK BENEFICIARY RELATIONSHIPS (for Individual Distribution mode)
+Task.hasMany(TaskBeneficiary, { as: 'taskBeneficiaries', foreignKey: 'taskId' });
+TaskBeneficiary.belongsTo(Task, { as: 'task', foreignKey: 'taskId' });
+
+Beneficiary.hasMany(TaskBeneficiary, { as: 'taskBeneficiaries', foreignKey: 'beneficiaryId' });
+TaskBeneficiary.belongsTo(Beneficiary, { as: 'beneficiary', foreignKey: 'beneficiaryId' });
+
+TaskBeneficiary.belongsTo(User, { as: 'selector', foreignKey: 'selectedBy' });
+TaskBeneficiary.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
+
+// Link to BeneficiarySupport for full history tracking
+TaskBeneficiary.belongsTo(BeneficiarySupport, { as: 'supportRecord', foreignKey: 'supportRecordId' });
+BeneficiarySupport.hasOne(TaskBeneficiary, { as: 'taskBeneficiary', foreignKey: 'supportRecordId' });
+
+// TASK ATTACHMENT RELATIONSHIPS
+Task.hasMany(TaskAttachment, { as: 'attachments', foreignKey: 'taskId' });
+TaskAttachment.belongsTo(Task, { as: 'task', foreignKey: 'taskId' });
+TaskAttachment.belongsTo(User, { as: 'uploader', foreignKey: 'uploadedBy' });
+
+// AGGREGATE DISTRIBUTION RELATIONSHIPS (for Aggregate Distribution mode)
+Task.hasOne(AggregateDistribution, { as: 'aggregateDistribution', foreignKey: 'taskId' });
+AggregateDistribution.belongsTo(Task, { as: 'task', foreignKey: 'taskId' });
+
+AggregateDistribution.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+Project.hasMany(AggregateDistribution, { as: 'aggregateDistributions', foreignKey: 'projectId' });
+
+AggregateDistribution.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
+AggregateDistribution.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+// NOTIFICATION RELATIONSHIPS
+Notification.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+User.hasMany(Notification, { as: 'notifications', foreignKey: 'userId' });
+
+// ============================================
 // EXPORTS
 // ============================================
 
@@ -3779,7 +3837,14 @@ export {
   Asset,
   Role,
   Permission,
-  RolePermission
+  RolePermission,
+  Approval,
+  Task,
+  TaskAttachment,
+  TaskBeneficiary,
+  AggregateDistribution,
+  Notification,
+  sequelize
 };
 
 export default {
@@ -3854,5 +3919,11 @@ export default {
   Role,
   Permission,
   RolePermission,
+  Approval,
+  Task,
+  TaskAttachment,
+  TaskBeneficiary,
+  AggregateDistribution,
+  Notification,
   sequelize
 };

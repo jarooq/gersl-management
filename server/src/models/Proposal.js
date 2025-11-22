@@ -31,7 +31,8 @@ const Proposal = sequelize.define('Proposal', {
     field: 'project_area'
   },
   district: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.JSON,
+    defaultValue: [],
     field: 'district'
   },
 
@@ -177,7 +178,7 @@ const Proposal = sequelize.define('Proposal', {
     type: DataTypes.STRING(200)
   },
   submittedBy: {
-    type: DataTypes.STRING(200)
+    type: DataTypes.INTEGER  // User ID who submitted
   },
   submitterRole: {
     type: DataTypes.STRING(100)
@@ -188,8 +189,7 @@ const Proposal = sequelize.define('Proposal', {
 
   // Metadata
   comments: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
+    type: DataTypes.TEXT  // Comment text content
   },
   attachments: {
     type: DataTypes.INTEGER,

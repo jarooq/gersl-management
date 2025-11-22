@@ -214,23 +214,59 @@ export const login = asyncHandler(async (req, res) => {
   // Set httpOnly cookies
   setAuthCookies(res, accessToken, refreshToken);
 
-  // Add permissions to user object
+  // Load permissions from database based on user's role
   const userWithPermissions = user.toJSON();
 
   console.log('🔍 login - User role:', userWithPermissions.role);
   console.log('🔍 login - User ID:', userWithPermissions.id);
 
-  if (userWithPermissions.role === 'Admin') {
-    userWithPermissions.permissions = [
-      { id: 1, permissionKey: '*', name: 'Full Access', description: 'Access to all features' }
-    ];
-    console.log('✅ login - Added wildcard permissions for Admin');
-  } else {
-    userWithPermissions.permissions = [];
-    console.log('⚠️  login - Non-admin user, empty permissions array');
+  try {
+    // Query to get role permissions from database
+    const rolePermissions = await user.sequelize.query(`
+      SELECT p.id, p.permission_key as "permissionKey", p.permission_name as "name", p.description
+      FROM roles r
+      JOIN role_permissions rp ON r.id = rp.role_id
+      JOIN permissions p ON rp.permission_id = p.id
+      WHERE r.name = :roleName
+      AND r.is_active = true
+    `, {
+      replacements: { roleName: userWithPermissions.role },
+      type: user.sequelize.QueryTypes.SELECT
+    });
+
+    userWithPermissions.permissions = rolePermissions || [];
+    console.log(`✅ login - Loaded ${rolePermissions?.length || 0} permissions from database for ${userWithPermissions.role}`);
+
+    // If Admin has no permissions in database, add wildcard permission
+    if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
+      console.log('⚠️ login - Admin has no permissions in DB, adding wildcard (*)');
+      userWithPermissions.permissions = [{
+        id: 0,
+        permissionKey: '*',
+        name: 'All Permissions',
+        description: 'Full system access'
+      }];
+    }
+
+    if (rolePermissions?.length > 0) {
+      console.log('📋 login - First few permissions:', rolePermissions.slice(0, 5).map(p => p.permissionKey));
+    }
+  } catch (error) {
+    console.error('❌ login - Error loading permissions from database:', error);
+    // Fallback: If Admin, give wildcard permission
+    if (userWithPermissions.role === 'Admin') {
+      userWithPermissions.permissions = [{
+        id: 0,
+        permissionKey: '*',
+        name: 'All Permissions',
+        description: 'Full system access'
+      }];
+    } else {
+      userWithPermissions.permissions = [];
+    }
   }
 
-  console.log('📤 login - Response user:', JSON.stringify({ user: userWithPermissions }, null, 2));
+  console.log('📤 login - Response user permissions count:', userWithPermissions.permissions.length);
 
   res.json({
     success: true,
@@ -328,16 +364,50 @@ export const getMe = asyncHandler(async (req, res) => {
   console.log('🔍 getMe - User role:', userWithPermissions.role);
   console.log('🔍 getMe - User ID:', userWithPermissions.id);
 
-  if (userWithPermissions.role === 'Admin') {
-    // Admin gets wildcard permission (access to everything)
-    userWithPermissions.permissions = [
-      { id: 1, permissionKey: '*', name: 'Full Access', description: 'Access to all features' }
-    ];
-    console.log('✅ getMe - Added wildcard permissions for Admin');
-  } else {
-    // Other roles get empty permissions for now (can be enhanced later)
-    userWithPermissions.permissions = [];
-    console.log('⚠️  getMe - Non-admin user, empty permissions array');
+  try {
+    // Query to get role permissions from database
+    const rolePermissions = await user.sequelize.query(`
+      SELECT p.id, p.permission_key as "permissionKey", p.permission_name as "name", p.description
+      FROM roles r
+      JOIN role_permissions rp ON r.id = rp.role_id
+      JOIN permissions p ON rp.permission_id = p.id
+      WHERE r.name = :roleName
+      AND r.is_active = true
+    `, {
+      replacements: { roleName: userWithPermissions.role },
+      type: user.sequelize.QueryTypes.SELECT
+    });
+
+    userWithPermissions.permissions = rolePermissions || [];
+    console.log(`✅ getMe - Loaded ${rolePermissions?.length || 0} permissions from database for ${userWithPermissions.role}`);
+
+    // If Admin has no permissions in database, add wildcard permission
+    if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
+      console.log('⚠️ getMe - Admin has no permissions in DB, adding wildcard (*)');
+      userWithPermissions.permissions = [{
+        id: 0,
+        permissionKey: '*',
+        name: 'All Permissions',
+        description: 'Full system access'
+      }];
+    }
+
+    if (rolePermissions?.length > 0) {
+      console.log('📋 getMe - First few permissions:', rolePermissions.slice(0, 5).map(p => p.permissionKey));
+    }
+  } catch (error) {
+    console.error('❌ getMe - Error loading permissions from database:', error);
+    // Fallback: If Admin, give wildcard permission
+    if (userWithPermissions.role === 'Admin') {
+      userWithPermissions.permissions = [{
+        id: 0,
+        permissionKey: '*',
+        name: 'All Permissions',
+        description: 'Full system access'
+      }];
+    } else {
+      userWithPermissions.permissions = [];
+    }
   }
 
   console.log('📤 getMe - Response:', JSON.stringify({ user: userWithPermissions }, null, 2));

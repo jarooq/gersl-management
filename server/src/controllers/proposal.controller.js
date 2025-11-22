@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
-import { Proposal, User, Project } from '../models/index.js';
+import { Proposal, User, Project, Indicator, Approval, Notification } from '../models/index.js';
 import { Op } from 'sequelize';
+import sequelize from '../config/database.js';
 
 /**
  * @desc    Get all proposals
@@ -104,8 +105,9 @@ export const getProposalById = asyncHandler(async (req, res) => {
 export const createProposal = asyncHandler(async (req, res) => {
   const proposalData = req.body;
 
-  // Set created by from authenticated user
+  // Set created by and submitted by from authenticated user
   proposalData.createdBy = req.user.id;
+  proposalData.submittedBy = req.user.id;
 
   // Auto-generate proposal code if not provided
   if (!proposalData.proposalCode) {
@@ -221,7 +223,19 @@ export const updateProposalStatus = asyncHandler(async (req, res) => {
     throw new Error('Proposal not found');
   }
 
-  if (!['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected'].includes(status)) {
+  // Valid proposal statuses including donor workflow statuses
+  const validStatuses = [
+    'Draft',
+    'Submitted',
+    'Under Review',
+    'Approved',
+    'Rejected',
+    'Submitted to Donor',
+    'Donor Approved',
+    'Donor Rejected'
+  ];
+
+  if (!validStatuses.includes(status)) {
     res.status(400);
     throw new Error('Invalid status');
   }
@@ -313,4 +327,285 @@ export const getProposalStats = asyncHandler(async (req, res) => {
       successRate
     }
   });
+});
+
+/**
+ * @desc    Convert proposal to project atomically
+ * @route   POST /api/proposals/:id/convert
+ * @access  Private
+ */
+export const convertProposalToProject = asyncHandler(async (req, res) => {
+  const proposalId = req.params.id;
+  const { projectManagerId, approvalChain } = req.body;
+
+  // Start transaction for atomic operation
+  const transaction = await sequelize.transaction();
+
+  try {
+    // 1. Fetch proposal with validations
+    const proposal = await Proposal.findByPk(proposalId, { transaction });
+
+    if (!proposal) {
+      await transaction.rollback();
+      res.status(404);
+      throw new Error('Proposal not found');
+    }
+
+    // Validate proposal status - must be donor approved
+    if (proposal.status !== 'Donor Approved') {
+      await transaction.rollback();
+      res.status(400);
+      throw new Error(`Cannot convert proposal with status "${proposal.status}". Proposal must be "Donor Approved".`);
+    }
+
+    // Check if already converted
+    if (proposal.linkedProjectId) {
+      await transaction.rollback();
+      res.status(400);
+      throw new Error('Proposal has already been converted to a project');
+    }
+
+    // 2. Generate project code
+    const year = new Date().getFullYear();
+    const projectCount = await Project.count({
+      where: {
+        projectCode: {
+          [Op.like]: `PROJ-${year}-%`
+        }
+      },
+      transaction
+    });
+    const projectCode = `PROJ-${year}-${String(projectCount + 1).padStart(3, '0')}`;
+
+    // 3. Create project using RAW SQL to bypass Sequelize field mapping issue
+    console.log('🔍 Creating project with title:', proposal.title);
+
+    const [projectResult] = await sequelize.query(`
+      INSERT INTO projects (
+        project_name,
+        name,
+        project_code,
+        description,
+        start_date,
+        end_date,
+        status,
+        phase,
+        budget,
+        spent,
+        funding_source,
+        donor,
+        programme_area,
+        manager_id,
+        location,
+        target_beneficiaries,
+        beneficiaries,
+        progress,
+        project_tier,
+        sector_theme,
+        problem_statement,
+        proposed_solution,
+        overall_goal,
+        strategic_alignment,
+        objectives,
+        key_activities,
+        results_framework,
+        beneficiary_breakdown,
+        theory_of_change,
+        budget_breakdown,
+        proposal_id,
+        created_by,
+        created_at,
+        updated_at
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+        $21, $22, $23, $24, $25, $26, $27, $28, $29, $30,
+        $31, $32, NOW(), NOW()
+      )
+      RETURNING id, project_name, project_code
+    `, {
+      bind: [
+        proposal.title, // $1 - project_name
+        proposal.title, // $2 - name
+        projectCode, // $3
+        proposal.summary || '', // $4
+        proposal.startDate, // $5
+        proposal.endDate, // $6
+        'Planning', // $7
+        'Initiation', // $8
+        proposal.budgetRequested, // $9
+        0, // $10 - spent
+        proposal.donor, // $11
+        proposal.donor, // $12
+        proposal.programmeArea, // $13
+        projectManagerId || req.user.id, // $14
+        Array.isArray(proposal.district) ? proposal.district.join(', ') : '', // $15
+        proposal.targetBeneficiaries, // $16
+        0, // $17 - beneficiaries
+        0, // $18 - progress
+        proposal.projectTier, // $19
+        proposal.sectorTheme, // $20
+        proposal.problemStatement, // $21
+        proposal.proposedSolution, // $22
+        proposal.overallGoal, // $23
+        proposal.strategicAlignment, // $24
+        JSON.stringify(proposal.objectives || []), // $25
+        JSON.stringify(proposal.keyActivities || []), // $26
+        JSON.stringify(proposal.resultsFramework || []), // $27
+        JSON.stringify(proposal.beneficiaryBreakdown || {}), // $28
+        JSON.stringify(proposal.theoryOfChange || {}), // $29
+        JSON.stringify(proposal.budgetBreakdown || {}), // $30
+        proposal.id, // $31
+        req.user.id // $32
+      ],
+      type: sequelize.QueryTypes.INSERT,
+      transaction
+    });
+
+    const project = {
+      id: projectResult[0].id,
+      projectName: projectResult[0].project_name,
+      projectCode: projectResult[0].project_code
+    };
+
+    console.log('✅ Project created with ID:', project.id);
+
+    // 4. Update proposal with project link
+    await proposal.update({
+      linkedProjectId: project.id,
+      linkedProjectCode: projectCode,
+      convertedToProjectDate: new Date(),
+      lastEditedBy: req.user.id
+    }, { transaction });
+
+    // 5. Create MEAL indicators from results framework
+    const resultsFramework = proposal.resultsFramework || [];
+    const indicators = [];
+
+    for (let i = 0; i < resultsFramework.length; i++) {
+      const indicator = resultsFramework[i];
+      if (indicator.name) {
+        const indicatorCode = `${projectCode}-IND-${String(i + 1).padStart(3, '0')}`;
+
+        const createdIndicator = await Indicator.create({
+          projectId: project.id,
+          code: indicatorCode,
+          name: indicator.name || indicator.indicator,
+          description: indicator.description || '',
+          type: indicator.type || 'Output',
+          category: indicator.category || '',
+          unit: indicator.unit || 'Number',
+          baseline: indicator.baseline || 0,
+          target: indicator.target || 0,
+          current: 0,
+          status: 'On Track',
+          frequency: indicator.frequency || 'Quarterly',
+          dataSource: indicator.dataSource || indicator.meansOfVerification || '',
+          collectionMethod: indicator.collectionMethod || '',
+          responsiblePerson: indicator.responsiblePerson || '',
+          disaggregation: indicator.disaggregation || {}
+        }, { transaction });
+
+        indicators.push(createdIndicator);
+      }
+    }
+
+    // 6. Create approval workflow for project initiation (if approval chain provided)
+    let approval = null;
+    if (approvalChain && approvalChain.length > 0) {
+      approval = await Approval.create({
+        type: 'PROJECT_INITIATION',
+        entityType: 'project',
+        entityId: project.id,
+        amount: project.budget,
+        approvalChain,
+        currentLevel: 0,
+        status: 'pending',
+        initiatedBy: req.user.id,
+        initiatedAt: new Date(),
+        metadata: {
+          projectCode,
+          projectName: project.projectName,
+          proposalCode: proposal.proposalCode,
+          convertedFrom: 'proposal'
+        }
+      }, { transaction });
+
+      // Create notification for first approver
+      const firstApprover = approvalChain[0];
+      if (firstApprover.userId) {
+        await Notification.create({
+          userId: firstApprover.userId,
+          type: 'approval_request',
+          title: 'New Project Approval Required',
+          message: `Project "${project.projectName}" (${projectCode}) requires your approval for initiation.`,
+          relatedEntityType: 'approval',
+          relatedEntityId: approval.id,
+          priority: 'High',
+          read: false,
+          actionUrl: `/approvals/${approval.id}`,
+          deliveryMethod: 'in_app',
+          deliveredAt: new Date()
+        }, { transaction });
+      }
+    }
+
+    // 7. Create notification for project manager
+    if (projectManagerId && projectManagerId !== req.user.id) {
+      await Notification.create({
+        userId: projectManagerId,
+        type: 'project_assignment',
+        title: 'New Project Assignment',
+        message: `You have been assigned as project manager for "${project.projectName}" (${projectCode}).`,
+        relatedEntityType: 'project',
+        relatedEntityId: project.id,
+        priority: 'High',
+        read: false,
+        actionUrl: `/projects/${project.id}`,
+        deliveryMethod: 'in_app',
+        deliveredAt: new Date()
+      }, { transaction });
+    }
+
+    // Commit transaction - all operations successful
+    await transaction.commit();
+
+    // 8. Fetch full project with relationships (after transaction commit)
+    let fullProject;
+    try {
+      fullProject = await Project.findByPk(project.id, {
+        include: [
+          {
+            model: User,
+            as: 'creator',
+            attributes: ['id', 'username', 'fullName', 'email']
+          }
+        ]
+      });
+    } catch (fetchError) {
+      // If fetch fails, use the basic project data we already have
+      console.warn('Could not fetch full project details, using basic data:', fetchError.message);
+      fullProject = project;
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Proposal converted to project successfully',
+      data: {
+        project: fullProject,
+        proposal,
+        indicatorsCreated: indicators.length,
+        approvalCreated: approval ? true : false,
+        approvalId: approval?.id
+      }
+    });
+
+  } catch (error) {
+    // Rollback transaction only if it hasn't been committed
+    if (!transaction.finished) {
+      await transaction.rollback();
+    }
+    console.error('Error converting proposal to project:', error);
+    throw error;
+  }
 });
