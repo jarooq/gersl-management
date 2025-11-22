@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { OrphanProvider } from './contexts/OrphanContext';
 import { CoordinatorProvider } from './contexts/CoordinatorContext';
@@ -8,6 +8,7 @@ import { HRProvider } from './contexts/HRContext';
 import { PartnersProvider } from './contexts/PartnersContext';
 import { ProposalsProvider } from './contexts/ProposalsContext';
 import { MEALProvider } from './contexts/MEALContext';
+import './styles/mobile-enhancements.css';
 import { ComplianceProvider } from './contexts/ComplianceContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { CBOProvider } from './contexts/CBOContext';
@@ -24,14 +25,46 @@ import { BeneficiaryProvider } from './contexts/BeneficiaryContext';
 import WorkflowIntegration from './components/workflow/WorkflowIntegration';
 import AppRouter from './routes/AppRouter';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import CommandPalette from './components/common/CommandPalette';
+import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
 import { initAnalytics } from './utils/analytics';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+
   useEffect(() => {
     initAnalytics();
   }, []);
+
+  // Global keyboard shortcuts handlers
+  const handleCommandPalette = useCallback(() => {
+    setShowCommandPalette(prev => !prev);
+  }, []);
+
+  const handleEscape = useCallback(() => {
+    // Close command palette if open
+    if (showCommandPalette) {
+      setShowCommandPalette(false);
+    }
+  }, [showCommandPalette]);
+
+  const handleFocusSearch = useCallback(() => {
+    // Focus the search input in the current page
+    const searchInput = document.querySelector('input[type="search"], input[placeholder*="Search" i]');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.select();
+    }
+  }, []);
+
+  // Initialize keyboard shortcuts with custom handlers
+  useKeyboardShortcuts({
+    onCommandPalette: handleCommandPalette,
+    onEscape: handleEscape,
+    onFocusSearch: handleFocusSearch,
+  });
 
   return (
     <ErrorBoundary>
@@ -59,6 +92,10 @@ function App() {
                                           <ApprovalProvider>
                                             <WorkflowIntegration>
                                               <AppRouter />
+                                              <CommandPalette
+                                                isOpen={showCommandPalette}
+                                                onClose={() => setShowCommandPalette(false)}
+                                              />
                                               <ToastContainer
                                                 position="top-right"
                                                 autoClose={3000}

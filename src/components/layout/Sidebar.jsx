@@ -70,6 +70,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   const menuItems = [
     { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.DASHBOARD_VIEW },
+    { path: '/admin/my-dashboard', icon: Activity, label: 'My Dashboard', color: 'text-indigo-600', bgColor: 'bg-indigo-50' },
     {
       label: 'Orphan Care',
       icon: Baby,
@@ -102,7 +103,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       subItems: [
         { path: '/admin/projects', icon: FolderKanban, label: 'Projects', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.PROJECTS_VIEW },
         { path: '/admin/operations/activities', icon: Target, label: 'Activities', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES },
-        { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
+        { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'All Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
+        { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
         { path: '/admin/approvals', icon: CheckCircle, label: 'Approvals', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.APPROVALS_VIEW },
         { path: '/admin/compliance', icon: Shield, label: 'Compliance & Safeguarding', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.COMPLIANCE_VIEW },
       ]
@@ -143,14 +145,24 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     { path: '/admin/settings', icon: Settings, label: 'Settings', color: 'text-gray-600', bgColor: 'bg-gray-50', permission: PERMISSIONS.SETTINGS_VIEW },
   ];
 
-  // TEMPORARY: Show all menu items for Admin users to test
-  const isAdmin = currentUser?.role === 'Admin';
+  // If no user is logged in, show empty menu
+  if (!currentUser) {
+    console.log('⚠️ SIDEBAR - No currentUser, showing empty menu');
+    return null; // Don't render sidebar if not logged in
+  }
 
-  console.log('🔍 SIDEBAR - isAdmin:', isAdmin);
-  console.log('🔍 SIDEBAR - Will filter menu items:', !isAdmin);
+  // Check if user has wildcard permission (grants access to everything)
+  // Ensure permissions is an array before calling .some()
+  const hasWildcardPermission = Array.isArray(currentUser.permissions) &&
+    currentUser.permissions.some(p => p.permissionKey === '*');
+
+  console.log('🔍 SIDEBAR - currentUser.permissions:', currentUser?.permissions?.length || 0, 'permissions');
+  console.log('🔍 SIDEBAR - hasWildcardPermission:', hasWildcardPermission);
+  console.log('🔍 SIDEBAR - Will filter menu items:', !hasWildcardPermission);
 
   // Filter menu items based on user permissions
-  const filteredMenuItems = isAdmin ? menuItems : menuItems.filter((item) => {
+  // If user has wildcard permission (*), show all items
+  const filteredMenuItems = hasWildcardPermission ? menuItems : menuItems.filter((item) => {
     if (item.hasSubmenu) {
       // Filter sub-items and only show the parent if at least one sub-item is accessible
       const accessibleSubItems = item.subItems.filter((subItem) =>

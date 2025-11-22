@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Bell, LogOut, Menu, X, Search, Heart } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import NotificationBell from '../notifications/NotificationBell';
 
 const Navbar = ({ toggleSidebar }) => {
   const { currentUser, logout } = useAuth();
@@ -46,42 +47,7 @@ const Navbar = ({ toggleSidebar }) => {
           {/* Right - User actions */}
           <div className="flex items-center gap-3">
             {/* Notifications */}
-            <div className="relative">
-              <button
-                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <Bell size={20} className="text-gray-600" />
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-semibold animate-pulse">
-                  3
-                </span>
-              </button>
-
-              {/* Notifications Dropdown */}
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden animate-slide-down">
-                  <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                    <h3 className="font-semibold text-gray-900">Notifications</h3>
-                  </div>
-                  <div className="max-h-96 overflow-y-auto">
-                    {notifications.map((notif) => (
-                      <div
-                        key={notif.id}
-                        className="px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
-                      >
-                        <p className="text-sm text-gray-900">{notif.message}</p>
-                        <p className="text-xs text-gray-500 mt-1">{notif.time}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 text-center">
-                    <button className="text-xs text-blue-600 hover:text-blue-700 font-medium">
-                      View all notifications
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <NotificationBell />
 
             {/* User Profile */}
             <div className="hidden md:flex items-center gap-3 pl-3 border-l border-gray-200">

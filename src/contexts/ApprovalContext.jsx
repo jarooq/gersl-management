@@ -1,20 +1,14 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import {
-  createApprovalRequest,
-  approveWorkflowStep,
-  rejectWorkflow,
-  cancelWorkflow,
-  getPendingApprovalsForUser,
-  getApprovalSummary,
-  canUserApprove,
-  APPROVAL_STATUS,
-} from '../utils/approvalWorkflow';
-import {
-  handleProposalApprovalComplete,
-  handleProposalRejection,
-  handleProjectActivityApprovalComplete
-} from '../utils/workflowOrchestrator';
+import * as approvalService from '../services/approvalService';
+
+// Approval status constants
+export const APPROVAL_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  CANCELLED: 'cancelled'
+};
 
 const ApprovalContext = createContext(null);
 
@@ -30,58 +24,96 @@ export const ApprovalProvider = ({ children }) => {
   const { currentUser } = useAuth();
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  // Workflow completion callbacks
-  const [workflowCallbacks, setWorkflowCallbacks] = useState({
-    createProject: null,
-    updateProposal: null,
-    updateProject: null,
-    updateTask: null
-  });
+  const [error, setError] = useState(null);
 
   /**
-   * Register workflow callbacks
-   * Called by parent components to register callback functions
+   * Fetch all approvals from database
    */
-  const registerWorkflowCallbacks = useCallback((callbacks) => {
-    setWorkflowCallbacks(prev => ({
-      ...prev,
-      ...callbacks
-    }));
+  const fetchApprovals = useCallback(async (filters = {}) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await approvalService.fetchApprovals(filters);
+
+      if (result.success) {
+        setApprovals(result.data.approvals || []);
+        return { success: true, data: result.data };
+      }
+
+      throw new Error(result.message || 'Failed to fetch approvals');
+    } catch (err) {
+      console.error('Error fetching approvals:', err);
+      setError(err.message);
+      return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  /**
+   * Fetch pending approvals for current user
+   */
+  const fetchPendingApprovals = useCallback(async () => {
+    if (!currentUser) return { success: false, message: 'User not authenticated' };
+
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await approvalService.fetchPendingApprovals();
+
+      if (result.success) {
+        return { success: true, data: result.data.approvals || [] };
+      }
+
+      throw new Error(result.message || 'Failed to fetch pending approvals');
+    } catch (err) {
+      console.error('Error fetching pending approvals:', err);
+      setError(err.message);
+      return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
+  }, [currentUser]);
 
   /**
    * Create a new approval request
    */
-  const createApproval = useCallback(async ({ type, amount, data }) => {
+  const createApproval = useCallback(async ({ type, entityType, entityId, amount, approvalChain, metadata }) => {
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
     try {
       setLoading(true);
+      setError(null);
 
-      const workflow = createApprovalRequest({
+      const approvalData = {
         type,
-        initiatorRole: currentUser.role,
-        amount,
-        data: {
-          ...data,
+        entityType,
+        entityId,
+        amount: amount || null,
+        approvalChain: approvalChain || [],
+        metadata: {
+          ...metadata,
           initiatorId: currentUser.id,
           initiatorName: currentUser.fullName,
         },
-      });
+      };
 
-      // In a real app, this would make an API call to save the approval
-      // For now, we'll just add it to local state
-      setApprovals(prev => [...prev, workflow]);
+      const result = await approvalService.createApproval(approvalData);
 
-      console.log(`✅ Created approval workflow: ${workflow.id} (${workflow.typeName})`);
+      if (result.success) {
+        // Add to local state
+        setApprovals(prev => [...prev, result.data.approval]);
+        console.log(`✅ Created approval workflow: ${result.data.approval.id} (${type})`);
+        return { success: true, approval: result.data.approval };
+      }
 
-      return { success: true, workflow };
-    } catch (error) {
-      console.error('Create approval error:', error);
-      return { success: false, message: error.message };
+      throw new Error(result.message || 'Failed to create approval');
+    } catch (err) {
+      console.error('Create approval error:', err);
+      setError(err.message);
+      return { success: false, message: err.message };
     } finally {
       setLoading(false);
     }
@@ -90,173 +122,78 @@ export const ApprovalProvider = ({ children }) => {
   /**
    * Approve a workflow step
    */
-  const approve = useCallback(async (workflowId, comments = null) => {
+  const approve = useCallback(async (approvalId, comment = '') => {
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
     try {
       setLoading(true);
-      let updatedWorkflow = null;
+      setError(null);
 
-      setApprovals(prev => prev.map(workflow => {
-        if (workflow.id === workflowId) {
-          try {
-            updatedWorkflow = approveWorkflowStep(
-              workflow,
-              {
-                userId: currentUser.id,
-                userName: currentUser.fullName,
-                userRole: currentUser.role,
-              },
-              comments
-            );
-            return updatedWorkflow;
-          } catch (error) {
-            console.error('Approve error:', error);
-            throw error;
-          }
-        }
-        return workflow;
-      }));
+      const result = await approvalService.approveApproval(approvalId, comment, currentUser.role);
 
-      // Check if workflow is fully approved and trigger completion handlers
-      if (updatedWorkflow && updatedWorkflow.status === APPROVAL_STATUS.APPROVED) {
-        console.log(`🎉 Workflow fully approved: ${updatedWorkflow.id} (${updatedWorkflow.typeName})`);
+      if (result.success) {
+        // Update local state
+        setApprovals(prev => prev.map(approval =>
+          approval.id === approvalId ? result.data.approval : approval
+        ));
 
-        // Handle proposal approval completion
-        if (updatedWorkflow.type === 'PROPOSAL_SUBMISSION') {
-          if (workflowCallbacks.createProject && workflowCallbacks.updateProposal) {
-            const result = await handleProposalApprovalComplete(
-              updatedWorkflow,
-              workflowCallbacks.createProject,
-              workflowCallbacks.updateProposal
-            );
+        console.log(`✅ Approval workflow step approved: ${approvalId}`);
 
-            if (result.success) {
-              console.log(`✅ Proposal ${updatedWorkflow.data.proposalCode} converted to project`);
-            } else {
-              console.warn(`⚠️ Failed to convert proposal to project:`, result.error || result.reason);
-            }
-          }
-        }
+        // Refresh approvals to get latest state
+        await fetchApprovals();
 
-        // Handle project activity approval completion
-        if (updatedWorkflow.type === 'PROJECT_ACTIVITY') {
-          if (workflowCallbacks.updateProject && workflowCallbacks.updateTask) {
-            const result = await handleProjectActivityApprovalComplete(
-              updatedWorkflow,
-              workflowCallbacks.updateProject,
-              workflowCallbacks.updateTask
-            );
-
-            if (result.success) {
-              console.log(`✅ Project activity ${updatedWorkflow.data.activityName} approved`);
-            } else {
-              console.warn(`⚠️ Failed to approve project activity:`, result.error || result.reason);
-            }
-          }
-        }
+        return { success: true, approval: result.data.approval };
       }
 
-      return { success: true };
-    } catch (error) {
-      console.error('Approve workflow error:', error);
-      return { success: false, message: error.message };
+      throw new Error(result.message || 'Failed to approve');
+    } catch (err) {
+      console.error('Approve workflow error:', err);
+      setError(err.message);
+      return { success: false, message: err.message };
     } finally {
       setLoading(false);
     }
-  }, [currentUser, workflowCallbacks]);
+  }, [currentUser, fetchApprovals]);
 
   /**
    * Reject a workflow
    */
-  const reject = useCallback(async (workflowId, reason) => {
+  const reject = useCallback(async (approvalId, reason = '') => {
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
     try {
       setLoading(true);
-      let rejectedWorkflow = null;
+      setError(null);
 
-      setApprovals(prev => prev.map(workflow => {
-        if (workflow.id === workflowId) {
-          try {
-            rejectedWorkflow = rejectWorkflow(
-              workflow,
-              {
-                userId: currentUser.id,
-                userName: currentUser.fullName,
-                userRole: currentUser.role,
-              },
-              reason
-            );
-            return rejectedWorkflow;
-          } catch (error) {
-            console.error('Reject error:', error);
-            throw error;
-          }
-        }
-        return workflow;
-      }));
+      const result = await approvalService.rejectApproval(approvalId, reason, currentUser.role);
 
-      // Handle proposal rejection
-      if (rejectedWorkflow && rejectedWorkflow.type === 'PROPOSAL_SUBMISSION') {
-        if (workflowCallbacks.updateProposal) {
-          const result = await handleProposalRejection(
-            rejectedWorkflow,
-            workflowCallbacks.updateProposal
-          );
+      if (result.success) {
+        // Update local state
+        setApprovals(prev => prev.map(approval =>
+          approval.id === approvalId ? result.data.approval : approval
+        ));
 
-          if (result.success) {
-            console.log(`❌ Proposal ${rejectedWorkflow.data.proposalCode} rejected`);
-          } else {
-            console.warn(`⚠️ Failed to update rejected proposal:`, result.error || result.reason);
-          }
-        }
+        console.log(`❌ Approval workflow rejected: ${approvalId}`);
+
+        // Refresh approvals to get latest state
+        await fetchApprovals();
+
+        return { success: true, approval: result.data.approval };
       }
 
-      return { success: true };
-    } catch (error) {
-      console.error('Reject workflow error:', error);
-      return { success: false, message: error.message };
+      throw new Error(result.message || 'Failed to reject');
+    } catch (err) {
+      console.error('Reject workflow error:', err);
+      setError(err.message);
+      return { success: false, message: err.message };
     } finally {
       setLoading(false);
     }
-  }, [currentUser, workflowCallbacks]);
-
-  /**
-   * Cancel a workflow (initiator only)
-   */
-  const cancel = useCallback(async (workflowId) => {
-    if (!currentUser) {
-      throw new Error('User not authenticated');
-    }
-
-    try {
-      setLoading(true);
-
-      setApprovals(prev => prev.map(workflow => {
-        if (workflow.id === workflowId) {
-          try {
-            return cancelWorkflow(workflow, currentUser.role);
-          } catch (error) {
-            console.error('Cancel error:', error);
-            throw error;
-          }
-        }
-        return workflow;
-      }));
-
-      return { success: true };
-    } catch (error) {
-      console.error('Cancel workflow error:', error);
-      return { success: false, message: error.message };
-    } finally {
-      setLoading(false);
-    }
-  }, [currentUser]);
+  }, [currentUser, fetchApprovals]);
 
   /**
    * Get all approvals
@@ -266,11 +203,15 @@ export const ApprovalProvider = ({ children }) => {
   }, [approvals]);
 
   /**
-   * Get pending approvals for current user
+   * Get pending approvals for current user (from local state)
    */
   const getPendingApprovals = useCallback(() => {
     if (!currentUser) return [];
-    return getPendingApprovalsForUser(approvals, currentUser.role);
+    return approvals.filter(approval =>
+      approval.status === APPROVAL_STATUS.PENDING &&
+      approval.approvalChain &&
+      approval.approvalChain[approval.currentLevel]?.userId === currentUser.id
+    );
   }, [approvals, currentUser]);
 
   /**
@@ -290,57 +231,60 @@ export const ApprovalProvider = ({ children }) => {
   /**
    * Get approval by ID
    */
-  const getApprovalById = useCallback((id) => {
-    return approvals.find(approval => approval.id === id);
-  }, [approvals]);
+  const getApprovalById = useCallback(async (id) => {
+    try {
+      const result = await approvalService.fetchApprovalById(id);
+      if (result.success) {
+        return result.data.approval;
+      }
+      return null;
+    } catch (err) {
+      console.error('Error fetching approval by ID:', err);
+      return null;
+    }
+  }, []);
 
   /**
-   * Check if user can approve a specific workflow
+   * Get approval statistics
    */
-  const canApprove = useCallback((workflowId) => {
-    if (!currentUser) return false;
-
-    const workflow = approvals.find(a => a.id === workflowId);
-    if (!workflow) return false;
-
-    return canUserApprove(workflow, currentUser.role, currentUser.id);
-  }, [approvals, currentUser]);
-
-  /**
-   * Get summary for a workflow
-   */
-  const getSummary = useCallback((workflowId) => {
-    const workflow = approvals.find(a => a.id === workflowId);
-    if (!workflow) return null;
-
-    return getApprovalSummary(workflow);
-  }, [approvals]);
+  const getStats = useCallback(async () => {
+    try {
+      const result = await approvalService.fetchApprovalStats();
+      if (result.success) {
+        return result.data;
+      }
+      return null;
+    } catch (err) {
+      console.error('Error fetching approval stats:', err);
+      return null;
+    }
+  }, []);
 
   /**
    * Get pending approvals count
    */
   const getPendingApprovalsCount = useCallback(() => {
     if (!currentUser) return 0;
-    return getPendingApprovalsForUser(approvals, currentUser.role).length;
-  }, [approvals, currentUser]);
+    return getPendingApprovals().length;
+  }, [currentUser, getPendingApprovals]);
 
   const value = {
     approvals,
     loading,
+    error,
     // Actions
     createApproval,
     approve,
     reject,
-    cancel,
-    registerWorkflowCallbacks,
+    fetchApprovals,
+    fetchPendingApprovals,
     // Getters
     getAllApprovals,
     getPendingApprovals,
     getApprovalsByStatus,
     getApprovalsByType,
     getApprovalById,
-    canApprove,
-    getSummary,
+    getStats,
     getPendingApprovalsCount,
     // Constants
     APPROVAL_STATUS,
