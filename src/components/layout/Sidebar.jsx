@@ -30,7 +30,8 @@ import {
   Store,
   X,
   UserCheck,
-  Wallet
+  Wallet,
+  Activity
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
