@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import {
   X, Calendar, DollarSign, Users, Target, MapPin, Building2,
   CheckCircle, AlertCircle, BarChart3, Users2, Shield, FileText,
-  TrendingUp, MessageSquare, ArrowRight, Loader, Send, Eye, ThumbsUp, ThumbsDown, XCircle
+  TrendingUp, MessageSquare, ArrowRight, Loader, Send, Eye, ThumbsUp, ThumbsDown, XCircle,
+  FileEdit, Mail, CheckCircle2, Rocket, Download
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import API from '../../../services/api';
+import { convertProposalToProject } from '../../../services/proposalService';
+import { generateProposalPDF } from '../../../utils/proposalPdfGenerator';
+import EmailModal from '../../../components/proposals/EmailModal';
+import DonorDecisionModal from '../../../components/proposals/DonorDecisionModal';
 
 const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
   const { currentUser } = useAuth();
@@ -17,14 +22,18 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
   const [workflowError, setWorkflowError] = useState('');
   const [workflowSuccess, setWorkflowSuccess] = useState('');
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showDonorDecisionModal, setShowDonorDecisionModal] = useState(false);
+  const [donorDecision, setDonorDecision] = useState(null);
   const [workflowAction, setWorkflowAction] = useState(null);
   const [comments, setComments] = useState('');
 
   if (!proposal) return null;
 
   /**
-   * Convert proposal to project
-   * Maps all proposal data to project structure and creates project via API
+   * Convert proposal to project using atomic conversion endpoint
+   * This creates the project, links it to the proposal, generates MEAL indicators,
+   * and optionally creates approval workflows and notifications
    */
   const handleConvertToProject = async () => {
     setConverting(true);
@@ -32,106 +41,36 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
     setConversionSuccess(false);
 
     try {
-      // Map proposal data to project data structure
-      const projectData = {
-        // Basic Information
-        projectCode: proposal.proposalCode.replace('PROP', 'PROJ'),
-        projectName: proposal.title,
-        donor: proposal.donor,
-        programmeArea: proposal.programmeArea,
-        district: proposal.district || 'Colombo',
-
-        // Dates
-        startDate: proposal.startDate || new Date().toISOString().split('T')[0],
-        endDate: proposal.endDate || null,
-
-        // Budget & Beneficiaries
-        totalBudget: parseFloat(proposal.budgetRequested),
-        targetBeneficiaries: parseInt(proposal.targetBeneficiaries),
-
-        // Status
-        status: 'Planning',
-        phase: 'Design',
-
-        // Description
-        description: proposal.summary || '',
-
-        // GER Enhanced Fields
-        projectTier: proposal.projectTier || 'Tier 1',
-        sectorTheme: proposal.sectorTheme || proposal.programmeArea,
-        problemStatement: proposal.problemStatement || '',
-        proposedSolution: proposal.proposedSolution || '',
-        overallGoal: proposal.overallGoal || '',
-        strategicAlignment: proposal.strategicAlignment || '',
-
-        // Objectives & Activities
-        objectives: proposal.objectives || [],
-        keyActivities: proposal.keyActivities || [],
-
-        // MEAL Data
-        resultsFramework: proposal.resultsFramework || [],
-        beneficiaryBreakdown: proposal.beneficiaryBreakdown || {
-          directMale: 0,
-          directFemale: 0,
-          directChildren: 0,
-          directPWD: 0,
-          indirectTotal: 0
-        },
-
-        // Theory of Change
-        theoryOfChange: proposal.theoryOfChange || {
-          inputs: [],
-          activities: [],
-          outputs: [],
-          outcomes: [],
-          impact: '',
-          assumptions: [],
-          risks: []
-        },
-
-        // Budget Breakdown
-        budgetBreakdown: proposal.budgetBreakdown || [],
-
-        // Safeguarding
-        safeguarding: proposal.safeguarding || {
-          dataProtection: false,
-          informedConsent: false,
-          childSafeguarding: false,
-          incidentReporting: false,
-          backgroundChecks: false,
-          codeOfConduct: false,
-          safeguardingFocalPerson: '',
-          cfmChannels: []
-        },
-
-        // Metadata
-        convertedFromProposal: true,
-        proposalId: proposal.id,
-        proposalCode: proposal.proposalCode
+      // Use the atomic conversion endpoint
+      // projectManagerId defaults to current user if not specified
+      const conversionData = {
+        projectManagerId: currentUser?.id,
+        // Optional: Add approval chain if needed
+        // approvalChain: [
+        //   { userId: 5, role: 'Programme Manager', order: 0 },
+        //   { userId: 1, role: 'CEO', order: 1 }
+        // ]
       };
 
-      // Create project via API
-      const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch(`${API_BASE_URL}/projects`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(projectData)
-      });
-
-      const result = await response.json();
+      const result = await convertProposalToProject(proposal.id, conversionData);
 
       if (result.success) {
         setConversionSuccess(true);
-        console.log('✅ Proposal converted to project:', result.data.project);
+        console.log('✅ Proposal converted to project:', {
+          project: result.data.project,
+          indicatorsCreated: result.data.indicatorsCreated,
+          approvalCreated: result.data.approvalCreated
+        });
+
+        // Notify parent component to refresh proposal list
+        if (onUpdate) {
+          onUpdate(result.data.proposal);
+        }
 
         // Show success message for 2 seconds, then close modal
         setTimeout(() => {
           onClose();
-          // Optionally navigate to projects page or show the new project
+          // Navigate to projects page to view the new project
           window.location.href = '/projects';
         }, 2000);
       } else {
@@ -139,7 +78,7 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
       }
     } catch (error) {
       console.error('❌ Error converting proposal:', error);
-      setConversionError(error.message);
+      setConversionError(error.message || 'An error occurred during conversion');
     } finally {
       setConverting(false);
     }
@@ -202,6 +141,69 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
     }
   };
 
+  /**
+   * Handle email send and update proposal status
+   */
+  const handleEmailSend = async (emailPayload) => {
+    try {
+      // In production, this would call an API endpoint to send the email
+      // For now, we'll just update the proposal status to "Submitted to Donor"
+      console.log('Email payload:', emailPayload);
+
+      // Update proposal status
+      await executeStatusChange('Submitted to Donor',
+        `Email sent to ${emailPayload.to} with ${emailPayload.attachments.length} attachment(s)`
+      );
+
+      // Show success message
+      setWorkflowSuccess('Email prepared and proposal marked as submitted to donor');
+
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setWorkflowError('Failed to send email. Please try again.');
+      throw error;
+    }
+  };
+
+  /**
+   * Handle donor decision recording with evidence
+   */
+  const handleDonorDecisionSubmit = async (decisionData) => {
+    try {
+      console.log('Donor decision data:', decisionData);
+
+      // Determine new status based on decision
+      const newStatus = decisionData.decision === 'approved' ? 'Donor Approved' : 'Donor Rejected';
+
+      // Build comprehensive comment from decision data
+      const detailedComment = `
+Donor Decision: ${decisionData.decision.toUpperCase()}
+Response Date: ${new Date(decisionData.donorResponseDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+Communication Channel: ${decisionData.communicationChannel}
+Contact Person: ${decisionData.donorContactPerson}
+
+${decisionData.comments}
+
+${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachments.map(a => a.name).join(', ')}` : ''}
+`.trim();
+
+      // Update proposal status with detailed information
+      await executeStatusChange(newStatus, detailedComment);
+
+      // Show success message
+      setWorkflowSuccess(`Donor ${decisionData.decision === 'approved' ? 'approval' : 'rejection'} recorded successfully`);
+
+      // Close the donor decision modal
+      setShowDonorDecisionModal(false);
+      setDonorDecision(null);
+
+    } catch (error) {
+      console.error('Error recording donor decision:', error);
+      setWorkflowError('Failed to record donor decision. Please try again.');
+      throw error;
+    }
+  };
+
   // Debug logging
   console.log('ProposalViewModal Debug:', {
     currentUser,
@@ -230,17 +232,21 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
     currentUser.role === 'CEO' &&
     ['Submitted', 'Under Review'].includes(proposal.status);
 
+  // Roles that can perform fundraising actions (Submit to Donor, Mark Donor Decision, Convert to Project)
+  const fundraisingRoles = ['Fundraising Manager', 'Admin', 'CEO'];
+
   const canSubmitToDonor = currentUser &&
-    currentUser.role === 'Fundraising Manager' &&
+    fundraisingRoles.includes(currentUser.role) &&
     proposal.status === 'Approved';
 
   const canMarkDonorDecision = currentUser &&
-    currentUser.role === 'Fundraising Manager' &&
+    fundraisingRoles.includes(currentUser.role) &&
     proposal.status === 'Submitted to Donor';
 
   const canConvertToProject = currentUser &&
-    currentUser.role === 'Fundraising Manager' &&
-    proposal.status === 'Donor Approved';
+    fundraisingRoles.includes(currentUser.role) &&
+    proposal.status === 'Donor Approved' &&
+    !proposal.linkedProjectId; // Don't show if already converted
 
   const totalDirectBeneficiaries = (
     (proposal.beneficiaryBreakdown?.directMale || 0) +
@@ -260,6 +266,105 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
       .filter(item => item.category === category)
       .reduce((sum, item) => sum + (item.totalCost || 0), 0);
   };
+
+  // Workflow steps configuration
+  const workflowSteps = [
+    { key: 'Draft', label: 'Draft', icon: FileEdit, color: 'gray' },
+    { key: 'Submitted', label: 'Submitted', icon: Send, color: 'blue' },
+    { key: 'Under Review', label: 'Under Review', icon: Eye, color: 'yellow' },
+    { key: 'Approved', label: 'Approved', icon: CheckCircle2, color: 'green' },
+    { key: 'Submitted to Donor', label: 'Sent to Donor', icon: Mail, color: 'purple' },
+    { key: 'Donor Approved', label: 'Donor Approved', icon: ThumbsUp, color: 'emerald' },
+    { key: 'Project', label: 'Project Created', icon: Rocket, color: 'indigo' }
+  ];
+
+  // Get current step index
+  const getCurrentStepIndex = () => {
+    if (proposal.linkedProjectId) return 6; // Project Created
+    const index = workflowSteps.findIndex(step => step.key === proposal.status);
+    return index >= 0 ? index : 0;
+  };
+
+  const currentStepIndex = getCurrentStepIndex();
+
+  // Workflow Tracker Component
+  const WorkflowTracker = () => (
+    <div className="bg-white border-b border-gray-200 p-6">
+      <h3 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proposal Workflow</h3>
+      <div className="relative">
+        {/* Progress Bar Background */}
+        <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200" style={{ zIndex: 0 }}></div>
+        {/* Progress Bar Fill */}
+        <div
+          className="absolute top-5 left-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-500"
+          style={{
+            width: `${(currentStepIndex / (workflowSteps.length - 1)) * 100}%`,
+            zIndex: 1
+          }}
+        ></div>
+
+        {/* Steps */}
+        <div className="relative flex justify-between" style={{ zIndex: 2 }}>
+          {workflowSteps.map((step, index) => {
+            const isCompleted = index < currentStepIndex;
+            const isCurrent = index === currentStepIndex;
+            const isRejected = proposal.status === 'Rejected' && step.key === 'Under Review';
+            const isDonorRejected = proposal.status === 'Donor Rejected' && step.key === 'Submitted to Donor';
+
+            const StepIcon = step.icon;
+
+            return (
+              <div key={step.key} className="flex flex-col items-center" style={{ width: '14%' }}>
+                {/* Icon Circle */}
+                <div className={`
+                  w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
+                  ${isCompleted ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-lg scale-110` :
+                    isCurrent ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-xl animate-pulse scale-125` :
+                    isRejected || isDonorRejected ? 'bg-red-500 text-white' :
+                    'bg-gray-200 text-gray-400'}
+                `}>
+                  {isCompleted ? (
+                    <CheckCircle size={20} className="animate-scale-in" />
+                  ) : isRejected || isDonorRejected ? (
+                    <XCircle size={20} />
+                  ) : (
+                    <StepIcon size={18} />
+                  )}
+                </div>
+
+                {/* Label */}
+                <div className="mt-2 text-center">
+                  <p className={`text-xs font-semibold transition-colors ${
+                    isCompleted || isCurrent ? 'text-gray-900' : 'text-gray-400'
+                  }`}>
+                    {step.label}
+                  </p>
+                  {isCurrent && (
+                    <p className="text-[10px] text-blue-600 font-bold mt-0.5 animate-pulse">
+                      Current
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Rejected Status Banner */}
+      {(proposal.status === 'Rejected' || proposal.status === 'Donor Rejected') && (
+        <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-500 rounded">
+          <p className="text-sm text-red-800 font-semibold flex items-center gap-2">
+            <XCircle size={16} />
+            {proposal.status === 'Rejected' ? 'Proposal Rejected by CEO' : 'Proposal Rejected by Donor'}
+          </p>
+          {proposal.comments && (
+            <p className="text-xs text-red-700 mt-1">{proposal.comments}</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
@@ -292,6 +397,9 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
             </button>
           </div>
         </div>
+
+        {/* Workflow Tracker */}
+        <WorkflowTracker />
 
         <div className="p-6 space-y-6">
           {/* Tabs */}
@@ -354,6 +462,17 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
                 </span>
               </button>
             )}
+            <button
+              onClick={() => setActiveTab('timeline')}
+              className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
+                activeTab === 'timeline'
+                  ? 'border-b-2 border-indigo-600 text-indigo-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Calendar size={16} />
+              Timeline
+            </button>
           </div>
 
           {/* Overview Tab */}
@@ -404,25 +523,54 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
                   <FileText size={20} className="text-indigo-600" />
                   Proposal Details
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Programme Area</p>
-                    <p className="font-semibold text-gray-900">{proposal.programmeArea}</p>
+                    <p className="font-semibold text-gray-900">{proposal.programmeArea || 'Not specified'}</p>
                   </div>
+                  {proposal.projectTier && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Project Tier</p>
+                      <p className="font-semibold text-gray-900">{proposal.projectTier}</p>
+                    </div>
+                  )}
+                  {proposal.sectorTheme && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Sector Theme</p>
+                      <p className="font-semibold text-gray-900">{proposal.sectorTheme}</p>
+                    </div>
+                  )}
+                  {proposal.district && Array.isArray(proposal.district) && proposal.district.length > 0 && (
+                    <div className="md:col-span-2 lg:col-span-3">
+                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                        <MapPin size={14} />
+                        Target Districts
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {proposal.district.map((dist, idx) => (
+                          <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200">
+                            {dist}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Lead Writer</p>
-                    <p className="font-semibold text-gray-900">{proposal.leadWriter}</p>
+                    <p className="font-semibold text-gray-900">{proposal.leadWriter || 'Not specified'}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Submission Date</p>
-                    <p className="font-semibold text-gray-900">
-                      {new Date(proposal.submissionDate).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                      })}
-                    </p>
-                  </div>
+                  {proposal.submissionDate && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Submission Date</p>
+                      <p className="font-semibold text-gray-900">
+                        {new Date(proposal.submissionDate).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  )}
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Priority</p>
                     <p className={`font-semibold ${
@@ -430,11 +578,132 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
                       proposal.priority === 'Medium' ? 'text-orange-600' :
                       'text-blue-600'
                     }`}>
-                      {proposal.priority}
+                      {proposal.priority || 'Medium'}
                     </p>
                   </div>
+                  {proposal.startDate && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                        <Calendar size={14} />
+                        Start Date
+                      </p>
+                      <p className="font-semibold text-green-700">
+                        {new Date(proposal.startDate).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  )}
+                  {proposal.endDate && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                        <Calendar size={14} />
+                        End Date
+                      </p>
+                      <p className="font-semibold text-red-700">
+                        {new Date(proposal.endDate).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  )}
+                  {proposal.cboName && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                        <Building2 size={14} />
+                        CBO Partner
+                      </p>
+                      <p className="font-semibold text-gray-900">{proposal.cboName}</p>
+                    </div>
+                  )}
                 </div>
               </div>
+
+              {/* Project Description */}
+              {(proposal.summary || proposal.problemStatement || proposal.proposedSolution || proposal.overallGoal) && (
+                <div className="bg-white border border-gray-200 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <MessageSquare size={20} className="text-purple-600" />
+                    Project Description
+                  </h3>
+                  <div className="space-y-4">
+                    {proposal.summary && (
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Summary</p>
+                        <p className="text-gray-900 leading-relaxed">{proposal.summary}</p>
+                      </div>
+                    )}
+                    {proposal.problemStatement && (
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Problem Statement</p>
+                        <p className="text-gray-900 leading-relaxed">{proposal.problemStatement}</p>
+                      </div>
+                    )}
+                    {proposal.proposedSolution && (
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Proposed Solution</p>
+                        <p className="text-gray-900 leading-relaxed">{proposal.proposedSolution}</p>
+                      </div>
+                    )}
+                    {proposal.overallGoal && (
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Overall Goal</p>
+                        <p className="text-gray-900 leading-relaxed">{proposal.overallGoal}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Objectives */}
+              {proposal.objectives && Array.isArray(proposal.objectives) && proposal.objectives.length > 0 && (
+                <div className="bg-white border border-gray-200 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Target size={20} className="text-blue-600" />
+                    Objectives
+                    <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs">
+                      {proposal.objectives.length}
+                    </span>
+                  </h3>
+                  <div className="space-y-3">
+                    {proposal.objectives.map((obj, index) => (
+                      <div key={index} className="flex gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <div className="flex-shrink-0 w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </div>
+                        <p className="text-gray-900 flex-1">{typeof obj === 'string' ? obj : obj.objective || obj.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Key Activities */}
+              {proposal.keyActivities && Array.isArray(proposal.keyActivities) && proposal.keyActivities.length > 0 && (
+                <div className="bg-white border border-gray-200 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <TrendingUp size={20} className="text-green-600" />
+                    Key Activities
+                    <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">
+                      {proposal.keyActivities.length}
+                    </span>
+                  </h3>
+                  <div className="space-y-3">
+                    {proposal.keyActivities.map((activity, index) => (
+                      <div key={index} className="flex gap-3 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <div className="flex-shrink-0 w-7 h-7 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </div>
+                        <p className="text-gray-900 flex-1">{typeof activity === 'string' ? activity : activity.activity || activity.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Beneficiary Breakdown */}
               {proposal.beneficiaryBreakdown && (
@@ -584,6 +853,128 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
               </div>
             </div>
           )}
+
+          {/* Timeline Tab */}
+          {activeTab === 'timeline' && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <Calendar size={20} className="text-indigo-600" />
+                Proposal Timeline
+              </h3>
+
+              <div className="relative pl-8">
+                {/* Vertical line */}
+                <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 to-purple-500"></div>
+
+                {/* Timeline Events */}
+                {proposal.createdAt && (
+                  <div className="relative mb-6">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                      <div className="flex items-center gap-2 mb-1">
+                        <FileEdit size={16} className="text-blue-600" />
+                        <span className="font-semibold text-gray-900">Proposal Created</span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {new Date(proposal.createdAt).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Created by: {proposal.creator?.fullName || 'Unknown'}</p>
+                    </div>
+                  </div>
+                )}
+
+                {proposal.submissionDate && (
+                  <div className="relative mb-6">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Send size={16} className="text-green-600" />
+                        <span className="font-semibold text-gray-900">Proposal Submitted</span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {new Date(proposal.submissionDate).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Submitted by: {proposal.leadWriter || 'Unknown'}</p>
+                    </div>
+                  </div>
+                )}
+
+                {proposal.status === 'Approved' && (
+                  <div className="relative mb-6">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-emerald-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
+                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-emerald-200">
+                      <div className="flex items-center gap-2 mb-1">
+                        <CheckCircle2 size={16} className="text-emerald-600" />
+                        <span className="font-semibold text-gray-900">Proposal Approved</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Current Status</p>
+                      <p className="text-xs text-emerald-700 mt-1 font-semibold">✓ Ready to submit to donor</p>
+                    </div>
+                  </div>
+                )}
+
+                {proposal.status === 'Submitted to Donor' && (
+                  <div className="relative mb-6">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-purple-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
+                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-purple-200">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Mail size={16} className="text-purple-600" />
+                        <span className="font-semibold text-gray-900">Sent to Donor</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Current Status</p>
+                      <p className="text-xs text-purple-700 mt-1 font-semibold">⏳ Awaiting donor decision</p>
+                    </div>
+                  </div>
+                )}
+
+                {proposal.status === 'Donor Approved' && (
+                  <div className="relative mb-6">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
+                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-indigo-200">
+                      <div className="flex items-center gap-2 mb-1">
+                        <ThumbsUp size={16} className="text-indigo-600" />
+                        <span className="font-semibold text-gray-900">Donor Approved</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Current Status</p>
+                      <p className="text-xs text-indigo-700 mt-1 font-semibold">🚀 Ready to convert to project</p>
+                    </div>
+                  </div>
+                )}
+
+                {proposal.linkedProjectId && (
+                  <div className="relative mb-6">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full border-4 border-white shadow-xl"></div>
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg shadow-lg border-2 border-indigo-300">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Rocket size={16} className="text-indigo-700" />
+                        <span className="font-semibold text-gray-900">Project Created</span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {proposal.convertedToProjectDate && new Date(proposal.convertedToProjectDate).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </p>
+                      <p className="text-xs text-indigo-700 mt-1 font-semibold">
+                        Project Code: {proposal.linkedProjectCode}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Workflow Actions Section - Always show */}
@@ -671,47 +1062,55 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
 
               {/* Fundraising Manager: Submit to Donor */}
               {canSubmitToDonor && (
-                <button
-                  onClick={() => handleStatusChange('Submitted to Donor')}
-                  disabled={workflowLoading}
-                  className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {workflowLoading ? (
-                    <Loader size={20} className="animate-spin" />
-                  ) : (
-                    <Send size={20} />
-                  )}
-                  Submit to Donor
-                </button>
+                <>
+                  <button
+                    onClick={() => setShowEmailModal(true)}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Mail size={20} />
+                    Email to Donor
+                  </button>
+                  <button
+                    onClick={() => handleStatusChange('Submitted to Donor')}
+                    disabled={workflowLoading}
+                    className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {workflowLoading ? (
+                      <Loader size={20} className="animate-spin" />
+                    ) : (
+                      <Send size={20} />
+                    )}
+                    Mark as Submitted
+                  </button>
+                </>
               )}
 
               {/* Fundraising Manager: Mark Donor Decision */}
               {canMarkDonorDecision && (
                 <>
                   <button
-                    onClick={() => handleStatusChange('Donor Approved')}
+                    onClick={() => {
+                      setDonorDecision('approved');
+                      setShowDonorDecisionModal(true);
+                    }}
                     disabled={workflowLoading}
                     className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {workflowLoading ? (
-                      <Loader size={20} className="animate-spin" />
-                    ) : (
-                      <ThumbsUp size={20} />
-                    )}
-                    Mark Donor Approved
+                    <ThumbsUp size={20} />
+                    Record Donor Approval
                   </button>
 
                   <button
-                    onClick={() => handleStatusChange('Donor Rejected', true)}
+                    onClick={() => {
+                      setDonorDecision('rejected');
+                      setShowDonorDecisionModal(true);
+                    }}
                     disabled={workflowLoading}
                     className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {workflowLoading ? (
-                      <Loader size={20} className="animate-spin" />
-                    ) : (
-                      <ThumbsDown size={20} />
-                    )}
-                    Mark Donor Rejected
+                    <ThumbsDown size={20} />
+                    Record Donor Rejection
                   </button>
                 </>
               )}
@@ -735,13 +1134,18 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
                           <span>This proposal is awaiting CEO review.</span>
                         )}
                         {proposal.status === 'Approved' && (
-                          <span>This proposal needs to be submitted to donor by Fundraising Manager.</span>
+                          <span>This proposal needs to be submitted to donor by Fundraising Manager, Admin, or CEO.</span>
                         )}
                         {proposal.status === 'Submitted to Donor' && (
-                          <span>Awaiting donor decision from Fundraising Manager.</span>
+                          <span>Awaiting donor decision from Fundraising Manager, Admin, or CEO.</span>
                         )}
-                        {proposal.status === 'Donor Approved' && (
-                          <span>This proposal can be converted to a project by Fundraising Manager.</span>
+                        {proposal.status === 'Donor Approved' && !proposal.linkedProjectId && (
+                          <span>This proposal can be converted to a project by Fundraising Manager, Admin, or CEO.</span>
+                        )}
+                        {proposal.linkedProjectId && (
+                          <span className="text-green-700 font-semibold">
+                            ✓ This proposal has been converted to project {proposal.linkedProjectCode}
+                          </span>
                         )}
                       </>
                     ) : (
@@ -778,13 +1182,35 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
           )}
 
           <div className="flex justify-between items-center gap-3">
-            <div className="text-sm text-gray-600">
-              {proposal.status === 'Donor Approved' && canConvertToProject && (
-                <p className="flex items-center gap-2 text-green-700">
-                  <CheckCircle size={16} />
-                  This proposal is donor-approved and ready for conversion
-                </p>
-              )}
+            <div className="flex items-center gap-3">
+              {/* PDF Download Buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => generateProposalPDF(proposal, 'full')}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow-md hover:shadow-lg"
+                  title="Download full proposal as PDF"
+                >
+                  <Download size={18} />
+                  Full PDF
+                </button>
+                <button
+                  onClick={() => generateProposalPDF(proposal, 'executive')}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md hover:shadow-lg"
+                  title="Download executive summary as PDF"
+                >
+                  <FileText size={18} />
+                  Summary PDF
+                </button>
+              </div>
+
+              <div className="text-sm text-gray-600">
+                {proposal.status === 'Donor Approved' && canConvertToProject && (
+                  <p className="flex items-center gap-2 text-green-700">
+                    <CheckCircle size={16} />
+                    This proposal is donor-approved and ready for conversion
+                  </p>
+                )}
+              </div>
             </div>
             <div className="flex gap-3">
               <button
@@ -817,6 +1243,28 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
           </div>
         </div>
       </div>
+
+      {/* Email Modal */}
+      {showEmailModal && (
+        <EmailModal
+          proposal={proposal}
+          onClose={() => setShowEmailModal(false)}
+          onSend={handleEmailSend}
+        />
+      )}
+
+      {/* Donor Decision Modal */}
+      {showDonorDecisionModal && donorDecision && (
+        <DonorDecisionModal
+          proposal={proposal}
+          decision={donorDecision}
+          onClose={() => {
+            setShowDonorDecisionModal(false);
+            setDonorDecision(null);
+          }}
+          onSubmit={handleDonorDecisionSubmit}
+        />
+      )}
 
       {/* Comment Modal */}
       {showCommentModal && (

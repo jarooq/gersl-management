@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import {
   X, Calendar, DollarSign, Users, Target, MapPin, Heart,
   CheckCircle, Clock, AlertCircle, Plus, Edit, Trash2, FileText,
-  MessageSquare, BarChart3, Users2, Lightbulb, Send
+  MessageSquare, BarChart3, Users2, Lightbulb, Send, Eye, RefreshCw, CheckSquare
 } from 'lucide-react';
 import { useProjects } from '../../../contexts/ProjectContext';
+import TaskDetailView from '../../Operations/components/TaskDetailView';
+import TaskAssignmentModal from '../../Operations/components/TaskAssignmentModal';
+import TaskProgressModal from '../../Operations/components/TaskProgressModal';
+import TaskCompletionModal from '../../Operations/components/TaskCompletionModal';
+import CreateTaskModal from '../../Operations/components/CreateTaskModal';
+import Toast from '../../../components/ui/Toast';
+import LoadingSpinner from '../../../components/ui/LoadingSpinner';
+import * as taskService from '../../../services/taskService';
 
 const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTask, onGenerateReport }) => {
   const [editingTask, setEditingTask] = useState(null);
@@ -20,12 +28,42 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     contactInfo: ''
   });
 
-  const { addCFMFeedback, resolveCFMFeedback } = useProjects();
+  // Task Modal States
+  const [showTaskDetailView, setShowTaskDetailView] = useState(false);
+  const [showTaskAssignment, setShowTaskAssignment] = useState(false);
+  const [showTaskProgress, setShowTaskProgress] = useState(false);
+  const [showTaskCompletion, setShowTaskCompletion] = useState(false);
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isLoadingTask, setIsLoadingTask] = useState(false);
+  const [taskError, setTaskError] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  const { addCFMFeedback, resolveCFMFeedback, refreshProject } = useProjects();
 
   if (!project) return null;
 
-  const budgetUsed = ((project.spent / project.budget) * 100).toFixed(1);
-  const beneficiaryProgress = ((project.beneficiaries / project.targetBeneficiaries) * 100).toFixed(1);
+  // Parse JSON strings if they're still strings (from database TEXT fields)
+  const parseIfString = useCallback((value, defaultValue = []) => {
+    if (!value) return defaultValue;
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+    return value;
+  }, []);
+
+  // Memoized parsed data
+  const resultsFramework = useMemo(() => parseIfString(project.resultsFramework, []), [project.resultsFramework, parseIfString]);
+  const objectives = useMemo(() => parseIfString(project.objectives, []), [project.objectives, parseIfString]);
+  const keyActivities = useMemo(() => parseIfString(project.keyActivities, []), [project.keyActivities, parseIfString]);
+
+  // Memoized calculations
+  const budgetUsed = useMemo(() => ((project.spent / project.budget) * 100).toFixed(1), [project.spent, project.budget]);
+  const beneficiaryProgress = useMemo(() => ((project.beneficiaries / project.targetBeneficiaries) * 100).toFixed(1), [project.beneficiaries, project.targetBeneficiaries]);
 
   const getTaskStatusIcon = (status) => {
     switch (status) {
@@ -90,6 +128,55 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
       default: return 'text-gray-600';
     }
   };
+
+  // Priority colors for tasks
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'Urgent': return 'text-red-600 bg-red-50 border-red-200';
+      case 'High': return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'Medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      case 'Low': return 'text-blue-600 bg-blue-50 border-blue-200';
+      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  };
+
+  // Due date label helper
+  const getDueDateLabel = (dueDate) => {
+    if (!dueDate) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDate);
+    due.setHours(0, 0, 0, 0);
+    const diffTime = due - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return { label: 'Overdue', color: 'text-red-600 bg-red-50' };
+    if (diffDays === 0) return { label: 'Due Today', color: 'text-orange-600 bg-orange-50' };
+    if (diffDays === 1) return { label: 'Due Tomorrow', color: 'text-yellow-600 bg-yellow-50' };
+    if (diffDays <= 3) return { label: 'Due Soon', color: 'text-blue-600 bg-blue-50' };
+    return null;
+  };
+
+  // Task action handlers (memoized)
+  const handleViewTask = useCallback((task) => {
+    setSelectedTask(task);
+    setShowTaskDetailView(true);
+  }, []);
+
+  const handleUpdateProgress = useCallback((task) => {
+    setSelectedTask(task);
+    setShowTaskProgress(true);
+  }, []);
+
+  const handleCompleteTask = useCallback((task) => {
+    setSelectedTask(task);
+    setShowTaskCompletion(true);
+  }, []);
+
+  const handleAssignTask = useCallback((task) => {
+    setSelectedTask(task);
+    setShowTaskAssignment(true);
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
@@ -268,14 +355,14 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   <div className="flex items-center justify-between">
                     <CardTitle>Results Framework</CardTitle>
                     <span className="text-sm text-gray-500">
-                      {project.resultsFramework?.length || 0} indicators
+                      {resultsFramework.length || 0} indicators
                     </span>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {project.resultsFramework && project.resultsFramework.length > 0 ? (
+                  {resultsFramework && resultsFramework.length > 0 ? (
                     <div className="space-y-4">
-                      {project.resultsFramework.map((indicator, index) => (
+                      {resultsFramework.map((indicator, index) => (
                         <div key={index} className="border border-gray-200 rounded-lg p-4">
                           <div className="flex items-start justify-between mb-2">
                             <div>
@@ -440,7 +527,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 <div className="flex justify-between items-center">
                   <CardTitle>Tasks ({project.tasks?.length || 0})</CardTitle>
                   <button
-                    onClick={() => alert('Add task coming soon!')}
+                    onClick={() => setShowCreateTask(true)}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
                   >
                     <Plus size={16} />
@@ -449,44 +536,116 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 </div>
               </CardHeader>
               <CardContent>
+                {/* Error Display */}
+                {taskError && (
+                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <svg className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-red-800 mb-1">Task Operation Failed</h4>
+                      <p className="text-sm text-red-700">{taskError}</p>
+                    </div>
+                    <button
+                      onClick={() => setTaskError(null)}
+                      className="flex-shrink-0 text-red-600 hover:text-red-800 transition"
+                    >
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+
                 {project.tasks && project.tasks.length > 0 ? (
                   <div className="space-y-3">
-                    {project.tasks.map((task) => (
-                      <div key={task.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-start gap-3 flex-1">
-                            {getTaskStatusIcon(task.status)}
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-gray-900">{task.title}</h4>
-                              <p className="text-sm text-gray-600 mt-1">Assigned to: {task.assignedTo}</p>
+                    {project.tasks.map((task) => {
+                      const dueDateInfo = getDueDateLabel(task.dueDate);
+                      return (
+                        <div key={task.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition bg-white shadow-sm">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-start gap-3 flex-1">
+                              {getTaskStatusIcon(task.status)}
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-gray-900">{task.title || task.name}</h4>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  {task.assignedTo ? `Assigned to: ${task.assignedTo}` : 'Not assigned'}
+                                </p>
+                                {task.taskType && (
+                                  <span className="inline-block mt-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                    {task.taskType}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end gap-2">
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getTaskStatusColor(task.status)}`}>
+                                {task.status}
+                              </span>
+                              {task.priority && (
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getPriorityColor(task.priority)}`}>
+                                  {task.priority}
+                                </span>
+                              )}
+                              {dueDateInfo && (
+                                <span className={`px-2 py-1 rounded text-xs font-semibold ${dueDateInfo.color}`}>
+                                  {dueDateInfo.label}
+                                </span>
+                              )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getTaskStatusColor(task.status)}`}>
-                              {task.status}
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="mb-3">
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs text-gray-500">Progress</span>
-                            <span className="text-xs font-bold text-gray-900">{task.progress}%</span>
+                          <div className="mb-3">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-xs text-gray-500">Progress</span>
+                              <span className="text-xs font-bold text-gray-900">{task.progress || 0}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-blue-500 h-2 rounded-full transition-all"
+                                style={{ width: `${task.progress || 0}%` }}
+                              ></div>
+                            </div>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-500 h-2 rounded-full transition-all"
-                              style={{ width: `${task.progress}%` }}
-                            ></div>
-                          </div>
-                        </div>
 
-                        <div className="flex items-center justify-between text-xs text-gray-500">
-                          <span>Start: {task.startDate}</span>
-                          <span>End: {task.endDate}</span>
+                          <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                            <span>Start: {task.startDate || 'N/A'}</span>
+                            <span>Due: {task.dueDate || task.endDate || 'N/A'}</span>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2 pt-3 border-t border-gray-200">
+                            <button
+                              onClick={() => handleViewTask(task)}
+                              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm font-semibold"
+                            >
+                              <Eye size={16} />
+                              View
+                            </button>
+                            {task.status !== 'Completed' && (
+                              <>
+                                <button
+                                  onClick={() => handleUpdateProgress(task)}
+                                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition text-sm font-semibold"
+                                >
+                                  <RefreshCw size={16} />
+                                  Update
+                                </button>
+                                <button
+                                  onClick={() => handleCompleteTask(task)}
+                                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition text-sm font-semibold"
+                                >
+                                  <CheckSquare size={16} />
+                                  Complete
+                                </button>
+                              </>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <p className="text-center text-gray-500 py-8">No tasks added yet</p>
@@ -643,6 +802,183 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               </form>
             </div>
           </div>
+        )}
+
+        {/* Task Detail View Modal */}
+        {showTaskDetailView && selectedTask && (
+          <TaskDetailView
+            task={selectedTask}
+            onClose={() => {
+              setShowTaskDetailView(false);
+              setSelectedTask(null);
+            }}
+            onAssign={() => {
+              setShowTaskDetailView(false);
+              setShowTaskAssignment(true);
+            }}
+            onUpdateProgress={() => {
+              setShowTaskDetailView(false);
+              setShowTaskProgress(true);
+            }}
+            onComplete={() => {
+              setShowTaskDetailView(false);
+              setShowTaskCompletion(true);
+            }}
+          />
+        )}
+
+        {/* Task Assignment Modal */}
+        {showTaskAssignment && selectedTask && (
+          <TaskAssignmentModal
+            task={selectedTask}
+            onClose={() => {
+              setShowTaskAssignment(false);
+              setSelectedTask(null);
+              setTaskError(null);
+            }}
+            onAssign={async (assignmentData) => {
+              try {
+                setIsLoadingTask(true);
+                setTaskError(null);
+
+                // Call backend API to assign task
+                await taskService.assignTask(selectedTask.id, assignmentData);
+
+                // Close modal
+                setShowTaskAssignment(false);
+                setSelectedTask(null);
+
+                // Refresh project data to show updated tasks
+                if (refreshProject) {
+                  await refreshProject(project.id);
+                }
+
+                // Show success toast
+                setToast({ message: 'Task assigned successfully', type: 'success' });
+              } catch (error) {
+                console.error('❌ Task assignment failed:', error);
+                setTaskError(error.message || 'Failed to assign task. Please try again.');
+              } finally {
+                setIsLoadingTask(false);
+              }
+            }}
+          />
+        )}
+
+        {/* Task Progress Modal */}
+        {showTaskProgress && selectedTask && (
+          <TaskProgressModal
+            task={selectedTask}
+            onClose={() => {
+              setShowTaskProgress(false);
+              setSelectedTask(null);
+              setTaskError(null);
+            }}
+            onUpdate={async (progressData) => {
+              try {
+                setIsLoadingTask(true);
+                setTaskError(null);
+
+                // Call backend API to update task
+                await taskService.updateTask(selectedTask.id, progressData);
+
+                // Close modal
+                setShowTaskProgress(false);
+                setSelectedTask(null);
+
+                // Refresh project data to show updated tasks
+                if (refreshProject) {
+                  await refreshProject(project.id);
+                }
+
+                // Show success toast
+                setToast({ message: 'Task progress updated successfully', type: 'success' });
+              } catch (error) {
+                console.error('❌ Task progress update failed:', error);
+                setTaskError(error.message || 'Failed to update task progress. Please try again.');
+              } finally {
+                setIsLoadingTask(false);
+              }
+            }}
+          />
+        )}
+
+        {/* Task Completion Modal */}
+        {showTaskCompletion && selectedTask && (
+          <TaskCompletionModal
+            task={selectedTask}
+            onClose={() => {
+              setShowTaskCompletion(false);
+              setSelectedTask(null);
+              setTaskError(null);
+            }}
+            onComplete={async (completionData) => {
+              try {
+                setIsLoadingTask(true);
+                setTaskError(null);
+
+                // Call backend API to update task with completion data
+                await taskService.updateTask(selectedTask.id, {
+                  status: 'Completed',
+                  progress: 100,
+                  ...completionData
+                });
+
+                // Close modal
+                setShowTaskCompletion(false);
+                setSelectedTask(null);
+
+                // Refresh project data to show updated tasks
+                if (refreshProject) {
+                  await refreshProject(project.id);
+                }
+
+                // Show success toast
+                setToast({ message: 'Task completed successfully', type: 'success' });
+              } catch (error) {
+                console.error('❌ Task completion failed:', error);
+                setTaskError(error.message || 'Failed to complete task. Please try again.');
+              } finally {
+                setIsLoadingTask(false);
+              }
+            }}
+          />
+        )}
+
+        {/* Create Task Modal */}
+        <CreateTaskModal
+          isOpen={showCreateTask}
+          onClose={() => setShowCreateTask(false)}
+          defaultProjectId={project.id}
+          onTaskCreated={async () => {
+            setShowCreateTask(false);
+
+            // Refresh project data to show the new task
+            if (refreshProject) {
+              await refreshProject(project.id);
+            }
+
+            // Show success toast
+            setToast({ message: 'Task created successfully', type: 'success' });
+          }}
+        />
+
+        {/* Loading Overlay */}
+        {isLoadingTask && (
+          <LoadingSpinner
+            fullScreen
+            message="Processing task operation..."
+            size="lg"
+          />
+        )}
+
+        {/* Toast Notification */}
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
         )}
       </div>
     </div>

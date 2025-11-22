@@ -85,7 +85,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
     requestedBudget: '',
     duration: '12 months',
     targetBeneficiaries: '',
-    district: 'Colombo',
+    district: [],
     summary: '',
 
     // GER Enhanced Fields
@@ -144,8 +144,17 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
   // Initialize formData with initialData if provided (from AI), otherwise use defaults
   const [formData, setFormData] = useState(initialData || defaultFormData);
 
+  // Debug: Log partners data when component mounts or partners change
+  React.useEffect(() => {
+    console.log('=== ADD PROPOSAL MODAL - Partners Debug ===');
+    console.log('Partners prop:', partners);
+    console.log('Partners length:', partners ? partners.length : 0);
+    console.log('Current donor value in form:', formData.donor);
+  }, [partners, formData.donor]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Form field changed: ${name} = ${value}`);
     setFormData({ ...formData, [name]: value });
   };
 
@@ -159,6 +168,19 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
     const newActivities = [...formData.keyActivities];
     newActivities[index] = value;
     setFormData({ ...formData, keyActivities: newActivities });
+  };
+
+  // Handle district multi-select
+  const handleDistrictChange = (e) => {
+    const options = e.target.options;
+    const selected = [];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].selected) {
+        selected.push(options[i].value);
+      }
+    }
+    console.log('Districts selected:', selected);
+    setFormData({ ...formData, district: selected });
   };
 
   // MEAL - Results Framework handlers
@@ -402,24 +424,40 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">District</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Districts *
+                  <span className="ml-2 text-xs text-gray-500 font-normal">(Hold Ctrl/Cmd to select multiple)</span>
+                </label>
                 <select
                   name="district"
+                  multiple
                   value={formData.district}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  onChange={handleDistrictChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent h-32"
+                  required
                 >
-                  <option value="">Select District...</option>
                   {SRI_LANKAN_DISTRICTS.map((district) => (
                     <option key={district} value={district}>{district}</option>
                   ))}
                 </select>
+                {formData.district && formData.district.length > 0 && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    Selected ({formData.district.length}): {formData.district.join(', ')}
+                  </p>
+                )}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Donor Organization *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Donor Organization *
+                  {partners && partners.length > 0 && (
+                    <span className="ml-2 text-xs text-green-600 font-normal">
+                      ({partners.length} partners available)
+                    </span>
+                  )}
+                </label>
                 <select
                   name="donor"
                   required
@@ -428,12 +466,21 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <option value="">Select a donor/partner...</option>
-                  {partners && partners.map(partner => (
-                    <option key={partner.id} value={partner.name}>
-                      {partner.name} ({partner.category})
-                    </option>
-                  ))}
+                  {partners && partners.length > 0 ? (
+                    partners.map(partner => (
+                      <option key={partner.id} value={partner.name}>
+                        {partner.name} ({partner.category})
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>Loading partners...</option>
+                  )}
                 </select>
+                {formData.donor && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    Selected: <strong>{formData.donor}</strong>
+                  </p>
+                )}
                 {partners && partners.length === 0 && (
                   <p className="text-xs text-orange-600 mt-1">
                     No partners available. Please add partners in the Partners & Donors module first.
@@ -1369,12 +1416,28 @@ const ProposalsPage = () => {
   const {
     proposals,
     getStats,
-    deleteProposal
+    deleteProposal,
+    loadProposals
   } = useProposals();
 
   const { partners } = usePartners();
   const { cbos } = useCBO();
   const { staff } = useHR();
+
+  // Load proposals on mount
+  React.useEffect(() => {
+    loadProposals();
+  }, []);
+
+  // Debug: Log partners from context
+  React.useEffect(() => {
+    console.log('=== PROPOSALS PAGE - Partners from Context ===');
+    console.log('Partners:', partners);
+    console.log('Partners length:', partners ? partners.length : 0);
+    if (partners && partners.length > 0) {
+      console.log('Sample partner:', partners[0]);
+    }
+  }, [partners]);
 
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
@@ -1407,7 +1470,7 @@ const ProposalsPage = () => {
       requestedBudget: aiGeneratedData.budgetRequested || '',
       duration: '12 months',
       targetBeneficiaries: aiGeneratedData.targetBeneficiaries || '',
-      district: aiGeneratedData.district || 'Colombo',
+      district: Array.isArray(aiGeneratedData.district) ? aiGeneratedData.district : (aiGeneratedData.district ? [aiGeneratedData.district] : []),
       summary: aiGeneratedData.summary || '',
       projectTier: aiGeneratedData.projectTier || 'Tier 1',
       sectorTheme: aiGeneratedData.sectorTheme || aiGeneratedData.programmeArea || 'Education',
@@ -1515,7 +1578,7 @@ const ProposalsPage = () => {
       objectives: formDataToSubmit.objectives.filter(obj => obj.trim() !== ''),
       keyActivities: formDataToSubmit.keyActivities.filter(act => act.trim() !== ''),
       resultsFramework: formDataToSubmit.resultsFramework || [],
-      submittedBy: 'System User',
+      // submittedBy is set automatically by backend from authenticated user
       submitterRole: 'Proposal Manager',
       cboId: formDataToSubmit.cboId || null,
       cboName: formDataToSubmit.cboName || '',
@@ -1556,12 +1619,21 @@ const ProposalsPage = () => {
       const method = isEditMode ? 'PUT' : 'POST';
 
       console.log(`Sending ${method} to ${url}...`);
+
+      // Get the authentication token
+      const token = localStorage.getItem('accessToken');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      // Add Authorization header if token exists
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(url, {
         method: method,
-        headers: {
-          'Content-Type': 'application/json'
-          // No Authorization header needed - using httpOnly cookies
-        },
+        headers: headers,
         credentials: 'include',  // Include cookies for authentication
         body: JSON.stringify(cleanData)
       });
@@ -1916,7 +1988,7 @@ const ProposalsPage = () => {
                         className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95"
                       >
                         <Eye size={14} />
-                        {proposal.resultsFramework ? 'View MEAL Data' : 'View Details'}
+                        View
                       </button>
                       <button
                         onClick={() => {

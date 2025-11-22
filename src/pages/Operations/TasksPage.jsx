@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useProjects } from '../../contexts/ProjectContext';
 import { useHR } from '../../contexts/HRContext';
+import { fetchTasks } from '../../services/taskService';
+import CreateTaskModal from './components/CreateTaskModal';
+import BeneficiarySelectionModal from './components/BeneficiarySelectionModal';
+import AggregateDistributionModal from './components/AggregateDistributionModal';
+import IndividualDistributionModal from './components/IndividualDistributionModal';
+import BudgetWorkflowModal from './components/BudgetWorkflowModal';
+import MediaCoverageModal from './components/MediaCoverageModal';
+import TaskDetailView from './components/TaskDetailView';
+import TaskAssignmentModal from './components/TaskAssignmentModal';
+import AdvancedFilters from '../../components/tasks/AdvancedFilters';
+import FilterChips from '../../components/tasks/FilterChips';
 import {
   ClipboardCheck, CheckCircle, Clock, AlertCircle, Users, Calendar, Flag,
   Plus, Eye, Edit2, Trash2, MessageSquare, Paperclip, PlayCircle, StopCircle,
-  List, LayoutGrid, Filter, ChevronDown, ChevronRight, Link as LinkIcon, X
+  List, LayoutGrid, Filter, ChevronDown, ChevronRight, Link as LinkIcon, X, Download,
+  Square, CheckSquare, Trash, UserPlus
 } from 'lucide-react';
+import { exportTasksToCSV } from '../../utils/exportUtils';
 
 const TasksPage = () => {
   const { projects } = useProjects();
@@ -17,89 +30,66 @@ const TasksPage = () => {
   const [showAddTask, setShowAddTask] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState(new Set());
-
-  // Form state for new task
-  const [newTask, setNewTask] = useState({
-    title: '',
-    description: '',
-    project: '',
-    priority: 'Medium',
-    status: 'To Do',
-    dueDate: '',
-    assignee: '',
-    timeEstimate: '',
-    tags: ''
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [tasks, setTasks] = useState([]);
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewTask(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // Bulk operations state
+  const [selectedTaskIds, setSelectedTaskIds] = useState(new Set());
+  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [bulkAction, setBulkAction] = useState(null); // 'status', 'assign', 'delete'
+  const [showBulkConfirmation, setShowBulkConfirmation] = useState(false);
 
-  // Reset form
-  const resetForm = () => {
-    setNewTask({
-      title: '',
-      description: '',
-      project: '',
-      priority: 'Medium',
-      status: 'To Do',
-      dueDate: '',
-      assignee: '',
-      timeEstimate: '',
-      tags: ''
-    });
-  };
+  // Advanced filters state
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({
+    status: [],
+    priority: [],
+    dateFrom: '',
+    dateTo: '',
+    assignee: [],
+    project: [],
+    searchTerm: ''
+  });
 
-  // Create new task
-  const handleCreateTask = () => {
-    // Validation
-    if (!newTask.title.trim() || !newTask.description.trim() || !newTask.project || !newTask.dueDate) {
-      alert('Please fill in all required fields (Title, Description, Project, Due Date)');
-      return;
+  // Modal states for task operations
+  const [showBeneficiarySelection, setShowBeneficiarySelection] = useState(false);
+  const [showAggregateDistribution, setShowAggregateDistribution] = useState(false);
+  const [showIndividualDistribution, setShowIndividualDistribution] = useState(false);
+  const [showBudgetWorkflow, setShowBudgetWorkflow] = useState(false);
+  const [showMediaCoverage, setShowMediaCoverage] = useState(false);
+  const [showTaskDetailView, setShowTaskDetailView] = useState(false);
+  const [showTaskAssignment, setShowTaskAssignment] = useState(false);
+  const [activeTask, setActiveTask] = useState(null);
+
+  // Fetch tasks from backend on component mount
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  const loadTasks = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetchTasks();
+      if (response.success && response.data) {
+        setTasks(response.data);
+      }
+    } catch (err) {
+      console.error('Error loading tasks:', err);
+      setError(err.message || 'Failed to load tasks');
+    } finally {
+      setLoading(false);
     }
-
-    // Create new task object
-    const taskToAdd = {
-      id: tasks.length + 1,
-      title: newTask.title,
-      description: newTask.description,
-      project: newTask.project,
-      assignee: newTask.assignee ? {
-        name: newTask.assignee,
-        avatar: newTask.assignee.split(' ').map(n => n[0]).join('').toUpperCase()
-      } : { name: 'Unassigned', avatar: 'UN' },
-      priority: newTask.priority,
-      status: newTask.status,
-      dueDate: newTask.dueDate,
-      progress: newTask.status === 'Completed' ? 100 : (newTask.status === 'In Progress' ? 50 : 0),
-      timeTracked: 0,
-      timeEstimate: parseInt(newTask.timeEstimate) || 0,
-      tags: newTask.tags ? newTask.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
-      comments: [],
-      attachments: [],
-      subtasks: [],
-      dependencies: []
-    };
-
-    // Add task to list
-    setTasks(prev => [taskToAdd, ...prev]);
-
-    // Reset form and close modal
-    resetForm();
-    setShowAddTask(false);
-
-    // Show success message (optional)
-    alert('Task created successfully!');
   };
 
-  const getStatusIcon = (status) => {
+  const handleTaskCreated = useCallback((newTask) => {
+    setTasks(prev => [newTask, ...prev]);
+  }, []);
+
+  // Memoized helper functions
+  const getStatusIcon = useCallback((status) => {
     switch (status) {
       case 'Completed':
         return <CheckCircle size={14} className="text-green-600" />;
@@ -110,9 +100,9 @@ const TasksPage = () => {
       default:
         return <Clock size={14} className="text-gray-600" />;
     }
-  };
+  }, []);
 
-  const getStatusColor = (status) => {
+  const getStatusColor = useCallback((status) => {
     switch (status) {
       case 'Completed':
         return 'bg-green-100 text-green-700 border-green-200';
@@ -123,9 +113,9 @@ const TasksPage = () => {
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }
-  };
+  }, []);
 
-  const getPriorityColor = (priority) => {
+  const getPriorityColor = useCallback((priority) => {
     switch (priority) {
       case 'High':
         return 'text-red-600';
@@ -136,31 +126,190 @@ const TasksPage = () => {
       default:
         return 'text-gray-600';
     }
-  };
+  }, []);
 
-  const formatTime = (minutes) => {
+  const formatTime = useCallback((minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (hours > 0) {
       return `${hours}h ${mins}m`;
     }
     return `${mins}m`;
-  };
+  }, []);
 
-  const toggleTaskExpanded = (taskId) => {
-    const newExpanded = new Set(expandedTasks);
-    if (newExpanded.has(taskId)) {
-      newExpanded.delete(taskId);
-    } else {
-      newExpanded.add(taskId);
+  // Export tasks to CSV
+  const handleExportCSV = useCallback(() => {
+    if (tasks && tasks.length > 0) {
+      exportTasksToCSV(tasks);
     }
-    setExpandedTasks(newExpanded);
-  };
+  }, [tasks]);
 
-  const openTaskDetail = (task) => {
-    setSelectedTask(task);
-    setShowTaskDetail(true);
-  };
+  // Bulk operations handlers
+  const toggleTaskSelection = useCallback((taskId) => {
+    setSelectedTaskIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(taskId)) {
+        newSet.delete(taskId);
+      } else {
+        newSet.add(taskId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const selectAllTasks = useCallback(() => {
+    const allTaskIds = new Set(tasks.map(task => task.id));
+    setSelectedTaskIds(allTaskIds);
+  }, [tasks]);
+
+  const deselectAllTasks = useCallback(() => {
+    setSelectedTaskIds(new Set());
+  }, []);
+
+  const handleBulkStatusUpdate = useCallback(async (newStatus) => {
+    if (selectedTaskIds.size === 0) return;
+
+    try {
+      // Update tasks locally (in a real app, this would be an API call)
+      setTasks(prev => prev.map(task =>
+        selectedTaskIds.has(task.id) ? { ...task, status: newStatus } : task
+      ));
+
+      // Clear selection
+      setSelectedTaskIds(new Set());
+      setShowBulkActions(false);
+
+      // Show success message
+      alert(`Updated ${selectedTaskIds.size} task(s) to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating tasks:', error);
+      alert('Failed to update tasks');
+    }
+  }, [selectedTaskIds]);
+
+  const handleBulkDelete = useCallback(async () => {
+    if (selectedTaskIds.size === 0) return;
+
+    try {
+      // Delete tasks locally (in a real app, this would be an API call)
+      setTasks(prev => prev.filter(task => !selectedTaskIds.has(task.id)));
+
+      // Clear selection
+      setSelectedTaskIds(new Set());
+      setShowBulkConfirmation(false);
+      setShowBulkActions(false);
+
+      // Show success message
+      alert(`Deleted ${selectedTaskIds.size} task(s)`);
+    } catch (error) {
+      console.error('Error deleting tasks:', error);
+      alert('Failed to delete tasks');
+    }
+  }, [selectedTaskIds]);
+
+  // Advanced filtering handlers
+  const handleApplyFilters = useCallback((filters) => {
+    setActiveFilters(filters);
+  }, []);
+
+  const handleRemoveFilter = useCallback((key, value) => {
+    setActiveFilters(prev => {
+      const newFilters = { ...prev };
+
+      if (key === 'dateFrom' || key === 'dateTo' || key === 'searchTerm') {
+        newFilters[key] = '';
+      } else if (Array.isArray(prev[key])) {
+        newFilters[key] = prev[key].filter(item => item !== value);
+      }
+
+      return newFilters;
+    });
+  }, []);
+
+  const handleClearAllFilters = useCallback(() => {
+    setActiveFilters({
+      status: [],
+      priority: [],
+      dateFrom: '',
+      dateTo: '',
+      assignee: [],
+      project: [],
+      searchTerm: ''
+    });
+  }, []);
+
+  // Apply filters to tasks using useMemo for performance
+  const filteredTasks = useMemo(() => {
+    let filtered = [...tasks];
+
+    // Status filter
+    if (activeFilters.status && activeFilters.status.length > 0) {
+      filtered = filtered.filter(task => activeFilters.status.includes(task.status));
+    }
+
+    // Priority filter
+    if (activeFilters.priority && activeFilters.priority.length > 0) {
+      filtered = filtered.filter(task => activeFilters.priority.includes(task.priority));
+    }
+
+    // Date range filter
+    if (activeFilters.dateFrom || activeFilters.dateTo) {
+      filtered = filtered.filter(task => {
+        if (!task.dueDate) return false;
+
+        const taskDate = new Date(task.dueDate);
+        const fromDate = activeFilters.dateFrom ? new Date(activeFilters.dateFrom) : null;
+        const toDate = activeFilters.dateTo ? new Date(activeFilters.dateTo) : null;
+
+        if (fromDate && taskDate < fromDate) return false;
+        if (toDate && taskDate > toDate) return false;
+
+        return true;
+      });
+    }
+
+    // Project filter
+    if (activeFilters.project && activeFilters.project.length > 0) {
+      filtered = filtered.filter(task =>
+        task.projectId && activeFilters.project.includes(task.projectId)
+      );
+    }
+
+    // Assignee filter
+    if (activeFilters.assignee && activeFilters.assignee.length > 0) {
+      filtered = filtered.filter(task =>
+        task.assignedTo && activeFilters.assignee.includes(task.assignedTo)
+      );
+    }
+
+    // Search term filter
+    if (activeFilters.searchTerm) {
+      const searchLower = activeFilters.searchTerm.toLowerCase();
+      filtered = filtered.filter(task =>
+        task.title?.toLowerCase().includes(searchLower) ||
+        task.description?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return filtered;
+  }, [tasks, activeFilters]);
+
+  const toggleTaskExpanded = useCallback((taskId) => {
+    setExpandedTasks(prev => {
+      const newExpanded = new Set(prev);
+      if (newExpanded.has(taskId)) {
+        newExpanded.delete(taskId);
+      } else {
+        newExpanded.add(taskId);
+      }
+      return newExpanded;
+    });
+  }, []);
+
+  const openTaskDetail = useCallback((task) => {
+    setActiveTask(task);
+    setShowTaskDetailView(true);
+  }, []);
 
   // Task Templates
   const taskTemplates = [
@@ -323,6 +472,23 @@ const TasksPage = () => {
             </div>
             <div className="flex gap-3">
               <button
+                onClick={() => setShowAdvancedFilters(true)}
+                className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white rounded-lg hover:bg-opacity-30 transition-all font-bold flex items-center gap-2"
+                title="Advanced Filters"
+              >
+                <Filter size={20} />
+                Filters
+              </button>
+              <button
+                onClick={handleExportCSV}
+                disabled={!tasks || tasks.length === 0}
+                className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white rounded-lg hover:bg-opacity-30 transition-all font-bold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Export all tasks to CSV"
+              >
+                <Download size={20} />
+                Export CSV
+              </button>
+              <button
                 onClick={() => setShowTemplates(true)}
                 className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white rounded-lg hover:bg-opacity-30 transition-all font-bold flex items-center gap-2"
               >
@@ -433,9 +599,81 @@ const TasksPage = () => {
       {/* List View */}
       {viewMode === 'list' && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-sm font-bold text-gray-900 mb-6">My Tasks</h2>
+          {/* Bulk Actions Toolbar */}
+          {selectedTaskIds.size > 0 && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-blue-900">
+                  {selectedTaskIds.size} task(s) selected
+                </span>
+                <button
+                  onClick={deselectAllTasks}
+                  className="text-xs text-blue-700 hover:text-blue-900 underline"
+                >
+                  Clear selection
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleBulkStatusUpdate('To Do')}
+                  className="px-3 py-1.5 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 transition-colors"
+                >
+                  Mark To Do
+                </button>
+                <button
+                  onClick={() => handleBulkStatusUpdate('In Progress')}
+                  className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+                >
+                  Mark In Progress
+                </button>
+                <button
+                  onClick={() => handleBulkStatusUpdate('Completed')}
+                  className="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
+                >
+                  Mark Complete
+                </button>
+                <button
+                  onClick={() => setShowBulkConfirmation(true)}
+                  className="px-3 py-1.5 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors flex items-center gap-1"
+                >
+                  <Trash size={14} />
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-sm font-bold text-gray-900">My Tasks</h2>
+            {tasks.length > 0 && (
+              <button
+                onClick={selectedTaskIds.size === tasks.length ? deselectAllTasks : selectAllTasks}
+                className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
+              >
+                {selectedTaskIds.size === tasks.length ? (
+                  <>
+                    <CheckSquare size={14} />
+                    Deselect All
+                  </>
+                ) : (
+                  <>
+                    <Square size={14} />
+                    Select All
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+
+          {/* Filter Chips */}
+          <FilterChips
+            filters={activeFilters}
+            onRemoveFilter={handleRemoveFilter}
+            onClearAll={handleClearAllFilters}
+          />
+
           <div className="space-y-3">
-            {tasks.map((task, index) => {
+            {filteredTasks.map((task, index) => {
               const isExpanded = expandedTasks.has(task.id);
               const completedSubtasks = task.subtasks.filter(st => st.completed).length;
               const totalSubtasks = task.subtasks.length;
@@ -448,16 +686,29 @@ const TasksPage = () => {
                 >
                   {/* Task Header */}
                   <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <button
-                          onClick={() => toggleTaskExpanded(task.id)}
-                          className="hover:bg-gray-100 rounded p-1 transition-colors"
-                        >
-                          {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-                        </button>
-                        <h3 className="font-bold text-gray-900 hover:text-indigo-600 cursor-pointer" onClick={() => openTaskDetail(task)}>
-                          {task.title}
+                    <div className="flex items-center gap-2 flex-1">
+                      {/* Checkbox for bulk selection */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTaskSelection(task.id);
+                        }}
+                        className="p-1 hover:bg-gray-100 rounded transition-colors"
+                      >
+                        {selectedTaskIds.has(task.id) ? (
+                          <CheckSquare size={18} className="text-indigo-600" />
+                        ) : (
+                          <Square size={18} className="text-gray-400" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => toggleTaskExpanded(task.id)}
+                        className="hover:bg-gray-100 rounded p-1 transition-colors"
+                      >
+                        {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                      </button>
+                      <h3 className="font-bold text-gray-900 hover:text-indigo-600 cursor-pointer" onClick={() => openTaskDetail(task)}>
+                        {task.title}
                         </h3>
                         <span className={`px-2 py-0.5 rounded-full text-xs font-bold border flex items-center gap-1 ${getStatusColor(task.status)}`}>
                           {getStatusIcon(task.status)}
@@ -830,178 +1081,119 @@ const TasksPage = () => {
         </div>
       )}
 
-      {/* Add Task Modal */}
-      {showAddTask && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-blue-700 text-white p-6 rounded-t-2xl z-10">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-2xl font-bold mb-1">Create New Task</h2>
-                  <p className="text-indigo-100">Add a new task to your project</p>
-                </div>
-                <button
-                  onClick={() => setShowAddTask(false)}
-                  className="p-2 hover:bg-indigo-700 rounded-lg transition"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-            </div>
+      {/* Create Task Modal */}
+      <CreateTaskModal
+        isOpen={showAddTask}
+        onClose={() => setShowAddTask(false)}
+        onTaskCreated={handleTaskCreated}
+      />
 
-            <div className="p-6">
-              <form className="space-y-6">
-                <div>
-                  <h3 className="text-sm font-bold text-gray-900 mb-4">Task Details</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Task Title *</label>
-                      <input
-                        type="text"
-                        name="title"
-                        value={newTask.title}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Enter task title"
-                      />
-                    </div>
+      {/* Beneficiary Selection Modal */}
+      <BeneficiarySelectionModal
+        isOpen={showBeneficiarySelection}
+        onClose={() => {
+          setShowBeneficiarySelection(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onBeneficiariesAdded={() => {
+          loadTasks();
+        }}
+      />
 
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
-                      <textarea
-                        name="description"
-                        value={newTask.description}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        rows="3"
-                        placeholder="Enter task description"
-                      ></textarea>
-                    </div>
+      {/* Aggregate Distribution Modal */}
+      <AggregateDistributionModal
+        isOpen={showAggregateDistribution}
+        onClose={() => {
+          setShowAggregateDistribution(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onUpdate={() => {
+          loadTasks();
+        }}
+      />
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Project *</label>
-                      <select
-                        name="project"
-                        value={newTask.project}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="">Select project</option>
-                        <option value="Child Protection Initiative">Child Protection Initiative</option>
-                        <option value="Youth Skills Development">Youth Skills Development</option>
-                        <option value="Orphan Care Program">Orphan Care Program</option>
-                        <option value="Emergency Response">Emergency Response</option>
-                        <option value="Education Program">Education Program</option>
-                        <option value="All Projects">All Projects</option>
-                      </select>
-                    </div>
+      {/* Individual Distribution Modal */}
+      <IndividualDistributionModal
+        isOpen={showIndividualDistribution}
+        onClose={() => {
+          setShowIndividualDistribution(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onUpdate={() => {
+          loadTasks();
+        }}
+      />
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Priority *</label>
-                      <select
-                        name="priority"
-                        value={newTask.priority}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                      </select>
-                    </div>
+      {/* Budget Workflow Modal */}
+      <BudgetWorkflowModal
+        isOpen={showBudgetWorkflow}
+        onClose={() => {
+          setShowBudgetWorkflow(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onUpdate={() => {
+          loadTasks();
+        }}
+        userRole="staff"
+      />
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Status *</label>
-                      <select
-                        name="status"
-                        value={newTask.status}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="To Do">To Do</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                      </select>
-                    </div>
+      {/* Media Coverage Modal */}
+      <MediaCoverageModal
+        isOpen={showMediaCoverage}
+        onClose={() => {
+          setShowMediaCoverage(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onUpdate={() => {
+          loadTasks();
+        }}
+      />
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Due Date *</label>
-                      <input
-                        type="date"
-                        name="dueDate"
-                        value={newTask.dueDate}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                    </div>
+      {/* Task Detail View Modal */}
+      <TaskDetailView
+        isOpen={showTaskDetailView}
+        onClose={() => {
+          setShowTaskDetailView(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onEdit={(task) => {
+          setActiveTask(task);
+          setShowTaskDetailView(false);
+          setShowAddTask(true);
+        }}
+        onAssign={(task) => {
+          setActiveTask(task);
+          setShowTaskDetailView(false);
+          setShowTaskAssignment(true);
+        }}
+        onUpdateProgress={(task) => {
+          // Will be implemented in next component
+          console.log('Update progress:', task);
+        }}
+        onComplete={(task) => {
+          // Will be implemented in next component
+          console.log('Complete task:', task);
+        }}
+      />
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Assignee</label>
-                      <input
-                        type="text"
-                        name="assignee"
-                        value={newTask.assignee}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Enter assignee name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Time Estimate (minutes)</label>
-                      <input
-                        type="number"
-                        name="timeEstimate"
-                        value={newTask.timeEstimate}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="0"
-                        min="0"
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Tags (comma separated)</label>
-                      <input
-                        type="text"
-                        name="tags"
-                        value={newTask.tags}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="e.g., MEAL, Urgent, Report"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> After creating the task, you can add subtasks, comments, attachments, and track time from the task detail view. You can also use templates for common task types.
-                  </p>
-                </div>
-              </form>
-            </div>
-
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
-              <button
-                onClick={() => {
-                  resetForm();
-                  setShowAddTask(false);
-                }}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCreateTask}
-                className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
-              >
-                Create Task
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Task Assignment Modal */}
+      <TaskAssignmentModal
+        isOpen={showTaskAssignment}
+        onClose={() => {
+          setShowTaskAssignment(false);
+          setActiveTask(null);
+        }}
+        task={activeTask}
+        onUpdate={() => {
+          loadTasks();
+        }}
+      />
 
       {/* Task Templates Modal */}
       {showTemplates && (
@@ -1106,6 +1298,52 @@ const TasksPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Bulk Delete Confirmation Modal */}
+      {showBulkConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertCircle className="text-red-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Confirm Bulk Delete</h3>
+                <p className="text-sm text-gray-600">This action cannot be undone</p>
+              </div>
+            </div>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to delete <strong>{selectedTaskIds.size}</strong> selected task(s)?
+              All data associated with these tasks will be permanently removed.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowBulkConfirmation(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center gap-2"
+              >
+                <Trash size={16} />
+                Delete {selectedTaskIds.size} Task(s)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Advanced Filters Modal */}
+      {showAdvancedFilters && (
+        <AdvancedFilters
+          onApplyFilters={handleApplyFilters}
+          onClose={() => setShowAdvancedFilters(false)}
+          projects={projects}
+          users={staff}
+        />
       )}
     </div>
   );
