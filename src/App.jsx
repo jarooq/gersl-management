@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { OrphanProvider } from './contexts/OrphanContext';
 import { CoordinatorProvider } from './contexts/CoordinatorContext';
@@ -26,7 +26,6 @@ import WorkflowIntegration from './components/workflow/WorkflowIntegration';
 import AppRouter from './routes/AppRouter';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import CommandPalette from './components/common/CommandPalette';
-import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
 import { initAnalytics } from './utils/analytics';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,33 +37,29 @@ function App() {
     initAnalytics();
   }, []);
 
-  // Global keyboard shortcuts handlers
-  const handleCommandPalette = useCallback(() => {
-    setShowCommandPalette(prev => !prev);
-  }, []);
+  // Global keyboard shortcuts (Cmd/Ctrl + K for command palette)
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const { key, ctrlKey, metaKey } = event;
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const cmdOrCtrl = isMac ? metaKey : ctrlKey;
 
-  const handleEscape = useCallback(() => {
-    // Close command palette if open
-    if (showCommandPalette) {
-      setShowCommandPalette(false);
-    }
+      // Cmd/Ctrl + K: Toggle command palette
+      if (cmdOrCtrl && key === 'k') {
+        event.preventDefault();
+        setShowCommandPalette(prev => !prev);
+      }
+
+      // ESC: Close command palette
+      if (key === 'Escape' && showCommandPalette) {
+        event.preventDefault();
+        setShowCommandPalette(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showCommandPalette]);
-
-  const handleFocusSearch = useCallback(() => {
-    // Focus the search input in the current page
-    const searchInput = document.querySelector('input[type="search"], input[placeholder*="Search" i]');
-    if (searchInput) {
-      searchInput.focus();
-      searchInput.select();
-    }
-  }, []);
-
-  // Initialize keyboard shortcuts with custom handlers
-  useKeyboardShortcuts({
-    onCommandPalette: handleCommandPalette,
-    onEscape: handleEscape,
-    onFocusSearch: handleFocusSearch,
-  });
 
   return (
     <ErrorBoundary>
