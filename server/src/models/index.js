@@ -13,6 +13,8 @@ import TaskBeneficiary from './TaskBeneficiary.js';
 import AggregateDistribution from './AggregateDistribution.js';
 import StaffDocument from './StaffDocument.js';
 import ProjectTeamMember from './ProjectTeamMember.js';
+import AuditLog from './AuditLog.js';
+import { withAuditLog } from '../utils/auditHook.js';
 // import OrphanNeed from './OrphanNeed.js'; // Temporarily disabled - table already exists in Supabase
 
 // ============================================
@@ -3911,6 +3913,9 @@ AggregateDistribution.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' }
 Notification.belongsTo(User, { as: 'user', foreignKey: 'userId' });
 User.hasMany(Notification, { as: 'notifications', foreignKey: 'userId' });
 
+// Audit log → actor (the user who performed the action)
+AuditLog.belongsTo(User, { as: 'actor', foreignKey: 'userId', constraints: false });
+
 // ============================================
 // EXPORTS
 // ============================================
@@ -4000,8 +4005,27 @@ export {
   AggregateDistribution,
   ProjectTeamMember,
   Notification,
+  AuditLog,
   sequelize
 };
+
+// ============================================
+// AUDIT HOOKS — record create/update/delete on sensitive entities
+// ============================================
+withAuditLog(User, 'User');
+withAuditLog(Project, 'Project');
+withAuditLog(Proposal, 'Proposal');
+withAuditLog(Approval, 'Approval');
+withAuditLog(PurchaseOrder, 'PurchaseOrder');
+withAuditLog(Payment, 'Payment');
+withAuditLog(Beneficiary, 'Beneficiary');
+withAuditLog(Vendor, 'Vendor');
+withAuditLog(EmploymentAgreement, 'EmploymentAgreement');
+withAuditLog(Donation, 'Donation');
+withAuditLog(Bill, 'Bill');
+withAuditLog(JournalEntry, 'JournalEntry');
+withAuditLog(Role, 'Role');
+withAuditLog(RolePermission, 'RolePermission');
 
 export default {
   User,
@@ -4087,5 +4111,6 @@ export default {
   AggregateDistribution,
   ProjectTeamMember,
   Notification,
+  AuditLog,
   sequelize
 };

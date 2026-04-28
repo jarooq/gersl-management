@@ -101,6 +101,8 @@ import positionRoutes from './routes/position.routes.js';
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
 import { notFound } from './middleware/notFound.middleware.js';
+import { requestContextMiddleware } from './middleware/requestContext.js';
+import auditLogRoutes from './routes/auditLog.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -174,6 +176,10 @@ app.use(cookieParser());
 
 // Compression
 app.use(compression());
+
+// Request context — makes req.user / req.ip available to Sequelize hooks
+// via AsyncLocalStorage so audit logs capture the actor without plumbing.
+app.use(requestContextMiddleware);
 
 // Logging
 if (process.env.NODE_ENV === 'development') {
@@ -291,6 +297,9 @@ app.use('/api/procurement', procurementRoutes);
 
 // Roles & Permissions routes
 app.use('/api/roles', roleRoutes);
+
+// Audit log access (Admin / CEO / BOD only)
+app.use('/api/audit-logs', auditLogRoutes);
 
 // Task-specific routes (mounted at /api to catch specific patterns)
 // MUST BE LAST among API routes to not interfere with other routes
