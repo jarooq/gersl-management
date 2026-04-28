@@ -103,6 +103,7 @@ import { errorHandler } from './middleware/error.middleware.js';
 import { notFound } from './middleware/notFound.middleware.js';
 import { requestContextMiddleware } from './middleware/requestContext.js';
 import auditLogRoutes from './routes/auditLog.routes.js';
+import uploadsStaticRouter from './routes/uploads-static.js';
 
 // Load environment variables
 dotenv.config();
@@ -188,8 +189,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
 }
 
-// Static files (for uploads) — CORS headers only for whitelisted origins.
-// Reflecting req.headers.origin would let any site read authenticated uploads.
+// Uploaded files — auth-gated by default; campaigns/* is public (donor portal).
+// CORS headers only emitted for whitelisted origins.
 app.use('/uploads', (req, res, next) => {
   const origin = req.headers.origin;
   if (origin && allowedOrigins.includes(origin)) {
@@ -198,7 +199,7 @@ app.use('/uploads', (req, res, next) => {
     res.header('Vary', 'Origin');
   }
   next();
-}, express.static('uploads'));
+}, uploadsStaticRouter);
 
 // ============================================
 // ROUTES
