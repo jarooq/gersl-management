@@ -232,6 +232,22 @@ export const ROLES = {
     reportsTo: 'FINANCE_MANAGER'
   },
 
+  PROCUREMENT_MANAGER: {
+    name: 'Procurement Manager',
+    level: HIERARCHY_LEVELS.MANAGER,
+    department: 'Finance',
+    canApprove: ['vendor_selection', 'purchase_orders', 'vendor_blacklist', 'procurement_thresholds'],
+    reportsTo: 'CEO'
+  },
+
+  PROCUREMENT_OFFICER: {
+    name: 'Procurement Officer',
+    level: HIERARCHY_LEVELS.OFFICER,
+    department: 'Finance',
+    canApprove: ['rfq_processing', 'goods_receipt'],
+    reportsTo: 'PROCUREMENT_MANAGER'
+  },
+
   FIELD_OFFICER: {
     name: 'Field Officer',
     level: HIERARCHY_LEVELS.OFFICER,

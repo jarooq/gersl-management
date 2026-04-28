@@ -56,6 +56,8 @@ const User = sequelize.define('User', {
       'Media Production Officer',
       'Media Officer',
       'Accountant',
+      'Procurement Manager',
+      'Procurement Officer',
       'Project Assistant',
       'Finance Assistant',
       'Fundraising Assistant',
