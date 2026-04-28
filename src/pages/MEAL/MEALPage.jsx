@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useMEAL } from '../../contexts/MEALContext';
 import { useProjects } from '../../contexts/ProjectContext';
 import { useHR } from '../../contexts/HRContext';
+import AddEvaluationWizard from '../../components/meal/AddEvaluationWizard';
+import EditEvaluationWizard from '../../components/meal/EditEvaluationWizard';
+import AddLearningEventWizard from '../../components/meal/AddLearningEventWizard';
+import UpdateIndicatorModal from '../../components/meal/UpdateIndicatorModal';
 import {
   BarChart3,
   Plus,
@@ -47,12 +51,21 @@ const MEALPage = () => {
   const [activeTab, setActiveTab] = useState('indicators');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
+  const [filterProject, setFilterProject] = useState('All');
 
   // Modal states for viewing details
   const [showIndicatorDetail, setShowIndicatorDetail] = useState(false);
   const [showEvaluationDetail, setShowEvaluationDetail] = useState(false);
   const [showComplaintDetail, setShowComplaintDetail] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+
+  // Modal states for creating/editing
+  const [showAddEvaluation, setShowAddEvaluation] = useState(false);
+  const [showEditEvaluation, setShowEditEvaluation] = useState(false);
+  const [editingEvaluation, setEditingEvaluation] = useState(null);
+  const [showAddComplaint, setShowAddComplaint] = useState(false);
+  const [showAddLearningEvent, setShowAddLearningEvent] = useState(false);
+  const [updatingIndicator, setUpdatingIndicator] = useState(null);
 
   const stats = getStats();
 
@@ -61,21 +74,32 @@ const MEALPage = () => {
     const matchesSearch = indicator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          indicator.code.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'All' || indicator.status === filterStatus;
-    return matchesSearch && matchesStatus;
+    const matchesProject = filterProject === 'All' || indicator.projectId === parseInt(filterProject);
+    return matchesSearch && matchesStatus && matchesProject;
   });
 
   const filteredEvaluations = evaluations.filter(evaluation => {
+    const projectName = typeof evaluation.project === 'object' ? (evaluation.project?.name || '') : (evaluation.project || '');
     const matchesSearch = evaluation.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         evaluation.project.toLowerCase().includes(searchTerm.toLowerCase());
+                         projectName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'All' || evaluation.status === filterStatus;
-    return matchesSearch && matchesStatus;
+    const matchesProject = filterProject === 'All' || evaluation.projectId === parseInt(filterProject);
+    return matchesSearch && matchesStatus && matchesProject;
   });
 
   const filteredComplaints = complaints.filter(complaint => {
     const matchesSearch = complaint.ticketNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          complaint.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'All' || complaint.status === filterStatus;
-    return matchesSearch && matchesStatus;
+    const matchesProject = filterProject === 'All' || complaint.projectId === parseInt(filterProject);
+    return matchesSearch && matchesStatus && matchesProject;
+  });
+
+  const filteredLearningEvents = learningEvents.filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesProject = filterProject === 'All' || event.projectId === parseInt(filterProject);
+    return matchesSearch && matchesProject;
   });
 
   const getStatusColor = (status) => {
@@ -233,6 +257,18 @@ const MEALPage = () => {
                 />
               </div>
               <select
+                value={filterProject}
+                onChange={(e) => setFilterProject(e.target.value)}
+                className="input-modern min-w-[200px]"
+              >
+                <option value="All">All Projects</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+              <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="input-modern"
@@ -244,97 +280,117 @@ const MEALPage = () => {
               </select>
             </div>
 
-            {/* Indicators Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {filteredIndicators.map((indicator, index) => {
-                const progress = ((indicator.current / indicator.target) * 100).toFixed(0);
-                return (
-                  <div
-                    key={indicator.id}
-                    className="card-modern group p-5 animate-slide-up"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-1 mr-3">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            {/* Indicators Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-200 bg-gray-50">
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Code</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Indicator Name</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Project</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Type</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Baseline</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Current</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Target</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Progress</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Status</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredIndicators.map((indicator, index) => {
+                    const progress = ((indicator.current / indicator.target) * 100).toFixed(0);
+                    return (
+                      <tr
+                        key={indicator.id}
+                        className="border-b border-gray-100 hover:bg-gray-50 transition-colors animate-slide-up"
+                        style={{ animationDelay: `${index * 0.02}s` }}
+                      >
+                        <td className="p-3">
+                          <span className="text-xs font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
                             {indicator.code}
                           </span>
-                          <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${getStatusColor(indicator.status)} flex items-center gap-1`}>
-                            {getProgressIcon(indicator)}
+                        </td>
+                        <td className="p-3">
+                          <p className="font-semibold text-sm text-gray-900 mb-0.5">{indicator.name}</p>
+                          <p className="text-xs text-gray-500">Unit: {indicator.unit}</p>
+                        </td>
+                        <td className="p-3">
+                          <p className="text-sm text-gray-700">
+                            {typeof indicator.project === 'object' ? indicator.project?.name : indicator.project}
+                          </p>
+                        </td>
+                        <td className="p-3">
+                          <span className="text-xs font-semibold text-gray-600">{indicator.type}</span>
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="font-semibold text-sm text-gray-900">{indicator.baseline}</span>
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="font-bold text-sm text-blue-600">{indicator.current}</span>
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="font-semibold text-sm text-green-600">{indicator.target}</span>
+                        </td>
+                        <td className="p-3">
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-xs font-bold text-gray-900">{progress}%</span>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div
+                                className={`h-1.5 rounded-full transition-all ${
+                                  progress >= 75 ? 'bg-green-500' :
+                                  progress >= 50 ? 'bg-yellow-500' :
+                                  'bg-red-500'
+                                }`}
+                                style={{ width: `${progress}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(indicator.status)}`}>
                             {indicator.status}
                           </span>
-                        </div>
-                        <h3 className="font-bold text-base text-gray-900 leading-tight mb-1">{indicator.name}</h3>
-                        <p className="text-sm text-gray-600 font-medium">{indicator.project}</p>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-semibold text-gray-600">Progress</span>
-                        <span className="text-xs font-bold text-gray-900">{progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1.5 shadow-inner">
-                        <div
-                          className={`h-1.5 rounded-full transition-all ${
-                            progress >= 75 ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
-                            progress >= 50 ? 'bg-gradient-to-r from-yellow-500 to-amber-600' :
-                            'bg-gradient-to-r from-red-500 to-rose-600'
-                          }`}
-                          style={{ width: `${progress}%` }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      <div className="text-center p-2 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 mb-1">Baseline</p>
-                        <p className="font-bold text-sm text-gray-900">{indicator.baseline}</p>
-                      </div>
-                      <div className="text-center p-2 bg-blue-50 rounded-lg border border-blue-100">
-                        <p className="text-xs text-blue-600 mb-1">Current</p>
-                        <p className="font-bold text-sm text-blue-900">{indicator.current}</p>
-                      </div>
-                      <div className="text-center p-2 bg-green-50 rounded-lg border border-green-100">
-                        <p className="text-xs text-green-600 mb-1">Target</p>
-                        <p className="font-bold text-sm text-green-900">{indicator.target}</p>
-                      </div>
-                    </div>
-
-                    <div className="pt-4 border-t border-gray-200">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <p className="text-xs text-gray-500">Type: <span className="font-semibold text-gray-700">{indicator.type}</span></p>
-                          <p className="text-xs text-gray-500">Responsible: <span className="font-semibold text-gray-700">{indicator.responsible}</span></p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedItem(indicator);
-                            setShowIndicatorDetail(true);
-                          }}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg hover:from-teal-700 hover:to-cyan-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95">
-                          <Eye size={14} />
-                          View
-                        </button>
-                        <button className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95">
-                          <Edit size={16} />
-                        </button>
-                        <button
-                          onClick={() => deleteIndicator(indicator.id)}
-                          className="px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all border border-red-200 hover:border-red-300 active:scale-95"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              onClick={() => {
+                                setSelectedItem(indicator);
+                                setShowIndicatorDetail(true);
+                              }}
+                              className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                              title="View Details"
+                            >
+                              <Eye size={16} />
+                            </button>
+                            <button
+                              onClick={() => setUpdatingIndicator(indicator)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Update Progress"
+                            >
+                              <TrendingUp size={16} />
+                            </button>
+                            <button
+                              onClick={() => deleteIndicator(indicator.id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              {filteredIndicators.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  <Target size={48} className="mx-auto mb-3 opacity-50" />
+                  <p>No indicators found</p>
+                </div>
+              )}
             </div>
 
             {filteredIndicators.length === 0 && (
@@ -350,91 +406,157 @@ const MEALPage = () => {
         {/* Evaluations Tab */}
         {activeTab === 'evaluations' && (
           <div className="p-6">
-            <div className="space-y-4">
-              {filteredEvaluations.map((evaluation, index) => (
-                <div
-                  key={evaluation.id}
-                  className="card-modern p-5 animate-slide-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1 mr-3">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(evaluation.status)}`}>
+            {/* Add Evaluation Button */}
+            <div className="mb-6 flex justify-between items-center">
+              <h3 className="text-lg font-bold text-gray-900">Project Evaluations</h3>
+              <button
+                onClick={() => setShowAddEvaluation(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all font-semibold shadow-md"
+              >
+                <Plus size={18} />
+                Add Evaluation
+              </button>
+            </div>
+
+            {/* Search and Filter Bar */}
+            <div className="mb-6 flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search evaluations..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="input-modern pl-10 w-full"
+                />
+              </div>
+              <select
+                value={filterProject}
+                onChange={(e) => setFilterProject(e.target.value)}
+                className="input-modern min-w-[200px]"
+              >
+                <option value="All">All Projects</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="input-modern"
+              >
+                <option value="All">All Status</option>
+                <option value="Planned">Planned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+
+            {/* Evaluations Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-200 bg-gray-50">
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Title</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Type</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Project</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Evaluator</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Duration</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Budget</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Report Status</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Status</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredEvaluations.map((evaluation, index) => (
+                    <tr
+                      key={evaluation.id}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors animate-slide-up"
+                      style={{ animationDelay: `${index * 0.02}s` }}
+                    >
+                      <td className="p-3">
+                        <p className="font-semibold text-sm text-gray-900">{evaluation.title}</p>
+                      </td>
+                      <td className="p-3">
+                        <span className="text-xs font-semibold text-purple-600">{evaluation.type}</span>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">
+                          {typeof evaluation.project === 'object' ? evaluation.project?.name : evaluation.project}
+                        </p>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">{evaluation.evaluator}</p>
+                      </td>
+                      <td className="p-3 text-center">
+                        <p className="text-xs text-gray-600">
+                          {new Date(evaluation.startDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })} -<br/>
+                          {new Date(evaluation.endDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
+                        </p>
+                      </td>
+                      <td className="p-3 text-center">
+                        <p className="font-semibold text-sm text-gray-900">
+                          LKR {(evaluation.budget / 1000).toFixed(0)}K
+                        </p>
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                          evaluation.reportStatus === 'Completed' ? 'bg-green-100 text-green-700' :
+                          evaluation.reportStatus === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {evaluation.reportStatus}
+                        </span>
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(evaluation.status)}`}>
                           {evaluation.status}
                         </span>
-                        <span className="text-xs font-semibold text-purple-600">{evaluation.type}</span>
-                      </div>
-                      <h3 className="font-bold text-lg text-gray-900 mb-1">{evaluation.title}</h3>
-                      <p className="text-sm text-gray-600 font-medium">{evaluation.project}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Evaluator</p>
-                      <p className="font-semibold text-sm text-gray-900">{evaluation.evaluator}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Budget</p>
-                      <p className="font-semibold text-sm text-gray-900">LKR {(evaluation.budget / 1000).toFixed(0)}K</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Duration</p>
-                      <p className="font-semibold text-sm text-gray-900">
-                        {new Date(evaluation.startDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })} -
-                        {new Date(evaluation.endDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Report Status</p>
-                      <p className="font-semibold text-sm text-gray-900">{evaluation.reportStatus}</p>
-                    </div>
-                  </div>
-
-                  {evaluation.findings && (
-                    <div className="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                      <p className="text-xs font-semibold text-blue-700 mb-1">Key Findings</p>
-                      <p className="text-sm text-gray-700">{evaluation.findings}</p>
-                    </div>
-                  )}
-
-                  {evaluation.recommendations && evaluation.recommendations.length > 0 && (
-                    <div className="mb-4">
-                      <p className="text-xs font-semibold text-gray-600 mb-2">Recommendations</p>
-                      <ul className="space-y-1">
-                        {evaluation.recommendations.map((rec, idx) => (
-                          <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                            <CheckCircle size={14} className="text-green-500 mt-0.5 flex-shrink-0" />
-                            <span>{rec}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  <div className="flex gap-2 pt-4 border-t border-gray-200">
-                    <button
-                      onClick={() => {
-                        setSelectedItem(evaluation);
-                        setShowEvaluationDetail(true);
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg hover:from-teal-700 hover:to-cyan-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95">
-                      <FileText size={14} />
-                      View Report
-                    </button>
-                    <button className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95">
-                      <Edit size={16} />
-                    </button>
-                    <button
-                      onClick={() => deleteEvaluation(evaluation.id)}
-                      className="px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all border border-red-200 hover:border-red-300 active:scale-95"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center justify-center gap-1">
+                          <button
+                            onClick={() => {
+                              setSelectedItem(evaluation);
+                              setShowEvaluationDetail(true);
+                            }}
+                            className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                            title="View Report"
+                          >
+                            <FileText size={16} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingEvaluation(evaluation);
+                              setShowEditEvaluation(true);
+                            }}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <Edit size={16} />
+                          </button>
+                          <button
+                            onClick={() => deleteEvaluation(evaluation.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredEvaluations.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  <FileCheck size={48} className="mx-auto mb-3 opacity-50" />
+                  <p>No evaluations found</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         )}
@@ -442,82 +564,129 @@ const MEALPage = () => {
         {/* Learning Tab */}
         {activeTab === 'learning' && (
           <div className="p-6">
-            <div className="space-y-4">
-              {learningEvents.map((event, index) => (
-                <div
-                  key={event.id}
-                  className="card-modern p-5 animate-slide-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+            {/* Search and Filter Bar */}
+            <div className="mb-6 flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search learning events..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="input-modern pl-10 w-full"
+                />
+              </div>
+              <select
+                value={filterProject}
+                onChange={(e) => setFilterProject(e.target.value)}
+                className="input-modern min-w-[200px]"
+              >
+                <option value="All">All Projects</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => setShowAddLearningEvent(true)}
+                className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all font-semibold flex items-center gap-2 shadow-md hover:shadow-lg"
+              >
+                <Plus size={18} />
+                Add Event
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-200 bg-gray-50">
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Event Title</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Type</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Project</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Linked Evaluation</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Date</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Facilitator</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Participants</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Status</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredLearningEvents.map((event, index) => (
+                    <tr key={event.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="p-3">
+                        <p className="font-semibold text-sm text-gray-900">{event.title}</p>
+                        {event.objectives && (
+                          <p className="text-xs text-gray-600 mt-1">{event.objectives}</p>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
+                          {event.type}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">
+                          {typeof event.project === 'object' ? event.project?.name : event.project}
+                        </p>
+                      </td>
+                      <td className="p-3">
+                        {event.evaluationId ? (
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-semibold">
+                              {evaluations.find(e => e.id === event.evaluationId)?.title || 'Linked'}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-400 italic">None</span>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">
+                          {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </p>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">{event.facilitator}</p>
+                      </td>
+                      <td className="p-3 text-center">
+                        <p className="text-sm font-semibold text-gray-900">{event.participants}</p>
+                      </td>
+                      <td className="p-3 text-center">
                         <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(event.status)}`}>
                           {event.status}
                         </span>
-                        <span className="text-xs font-semibold text-indigo-600">{event.type}</span>
-                      </div>
-                      <h3 className="font-bold text-lg text-gray-900 mb-1">{event.title}</h3>
-                      <p className="text-sm text-gray-600">{event.objectives}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Date</p>
-                      <p className="font-semibold text-sm text-gray-900">
-                        {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Facilitator</p>
-                      <p className="font-semibold text-sm text-gray-900">{event.facilitator}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">Participants</p>
-                      <p className="font-semibold text-sm text-gray-900">{event.participants} people</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-xs font-semibold text-gray-600 mb-2 flex items-center gap-2">
-                        <Lightbulb size={14} className="text-yellow-500" />
-                        Key Learnings
-                      </p>
-                      <ul className="space-y-1">
-                        {event.keyLearnings.map((learning, idx) => (
-                          <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                            <span className="text-yellow-500 flex-shrink-0">•</span>
-                            <span>{learning}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-600 mb-2 flex items-center gap-2">
-                        <Activity size={14} className="text-teal-500" />
-                        Action Points
-                      </p>
-                      <ul className="space-y-1">
-                        {event.actionPoints.map((action, idx) => (
-                          <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                            <CheckCircle size={14} className="text-teal-500 mt-0.5 flex-shrink-0" />
-                            <span>{action}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-xs text-gray-600">
-                      <BookOpen size={12} className="inline mr-1" />
-                      Documentation: <span className="font-semibold">{event.documentation}</span>
-                    </p>
-                  </div>
-                </div>
-              ))}
+                      </td>
+                      <td className="p-3 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => {/* View details modal */}}
+                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all"
+                            title="View Details"
+                          >
+                            <Eye size={16} />
+                          </button>
+                          <button
+                            onClick={() => {/* Edit modal */}}
+                            className="p-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-all"
+                            title="Edit"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button
+                            onClick={() => {/* Delete confirmation */}}
+                            className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
@@ -525,6 +694,17 @@ const MEALPage = () => {
         {/* Accountability/Complaints Tab */}
         {activeTab === 'complaints' && (
           <div className="p-6">
+            {/* Header with Add Button */}
+            <div className="mb-6 flex justify-between items-center">
+              <h3 className="text-lg font-bold text-gray-900">Beneficiary Complaints & Feedback</h3>
+              <button
+                onClick={() => setShowAddComplaint(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-600 to-red-700 text-white rounded-lg hover:from-orange-700 hover:to-red-800 transition-all font-semibold shadow-md"
+              >
+                <Plus size={18} />
+                Record Complaint
+              </button>
+            </div>
             {/* Search and Filter */}
             <div className="mb-6 flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
@@ -538,6 +718,18 @@ const MEALPage = () => {
                 />
               </div>
               <select
+                value={filterProject}
+                onChange={(e) => setFilterProject(e.target.value)}
+                className="input-modern min-w-[200px]"
+              >
+                <option value="All">All Projects</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+              <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="input-modern"
@@ -550,71 +742,99 @@ const MEALPage = () => {
               </select>
             </div>
 
-            <div className="space-y-3">
-              {filteredComplaints.map((complaint, index) => (
-                <div
-                  key={complaint.id}
-                  className="card-modern p-4 animate-slide-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-200 bg-gray-50">
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Ticket #</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Category</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Project</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Description</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Complainant</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Submitted</th>
+                    <th className="text-left p-3 text-xs font-bold text-gray-700 uppercase">Assigned To</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Priority</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Status</th>
+                    <th className="text-center p-3 text-xs font-bold text-gray-700 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredComplaints.map((complaint, index) => (
+                    <tr key={complaint.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="p-3">
+                        <span className="text-xs font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
                           {complaint.ticketNumber}
                         </span>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm font-semibold text-gray-900">{complaint.category}</p>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">
+                          {typeof complaint.project === 'object' ? complaint.project?.name : complaint.project}
+                        </p>
+                      </td>
+                      <td className="p-3 max-w-xs">
+                        <p className="text-sm text-gray-700 truncate" title={complaint.description}>
+                          {complaint.description}
+                        </p>
+                        {complaint.resolution && (
+                          <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                            <CheckCircle size={12} />
+                            Resolved
+                          </p>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">{complaint.complainant}</p>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">
+                          {new Date(complaint.submittedDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </p>
+                      </td>
+                      <td className="p-3">
+                        <p className="text-sm text-gray-700">{complaint.assignedTo}</p>
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className={`text-xs font-bold ${getPriorityColor(complaint.priority)}`}>
+                          {complaint.priority}
+                        </span>
+                      </td>
+                      <td className="p-3 text-center">
                         <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(complaint.status)}`}>
                           {complaint.status}
                         </span>
-                        <span className={`text-xs font-bold ${getPriorityColor(complaint.priority)}`}>
-                          {complaint.priority} Priority
-                        </span>
-                      </div>
-                      <p className="text-sm font-semibold text-gray-900 mb-1">{complaint.category} - {complaint.project}</p>
-                      <p className="text-sm text-gray-700">{complaint.description}</p>
-                    </div>
-                    <button
-                      onClick={() => deleteComplaint(complaint.id)}
-                      className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all flex-shrink-0"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-4 gap-3 mb-3">
-                    <div>
-                      <p className="text-xs text-gray-500">Submitted</p>
-                      <p className="font-semibold text-xs text-gray-900">
-                        {new Date(complaint.submittedDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Complainant</p>
-                      <p className="font-semibold text-xs text-gray-900">{complaint.complainant}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Assigned To</p>
-                      <p className="font-semibold text-xs text-gray-900">{complaint.assignedTo}</p>
-                    </div>
-                    {complaint.satisfactionRating && (
-                      <div>
-                        <p className="text-xs text-gray-500">Satisfaction</p>
-                        <p className="font-semibold text-xs text-gray-900 flex items-center gap-1">
-                          <Star size={12} className="text-yellow-500 fill-yellow-500" />
-                          {complaint.satisfactionRating}/5
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {complaint.resolution && (
-                    <div className="p-3 bg-green-50 rounded-lg border border-green-100">
-                      <p className="text-xs font-semibold text-green-700 mb-1">Resolution</p>
-                      <p className="text-sm text-gray-700">{complaint.resolution}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                      </td>
+                      <td className="p-3 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => {/* View details modal */}}
+                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all"
+                            title="View Details"
+                          >
+                            <Eye size={16} />
+                          </button>
+                          <button
+                            onClick={() => {/* Edit modal */}}
+                            className="p-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-all"
+                            title="Edit"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button
+                            onClick={() => deleteComplaint(complaint.id)}
+                            className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             {filteredComplaints.length === 0 && (
@@ -642,7 +862,9 @@ const MEALPage = () => {
                     </span>
                   </div>
                   <h2 className="text-2xl font-bold mb-1">{selectedItem.name}</h2>
-                  <p className="text-teal-100">{selectedItem.project}</p>
+                  <p className="text-teal-100">
+                    {typeof selectedItem.project === 'object' ? selectedItem.project?.name : selectedItem.project}
+                  </p>
                 </div>
                 <button
                   onClick={() => setShowIndicatorDetail(false)}
@@ -755,7 +977,9 @@ const MEALPage = () => {
                     <span className="text-sm bg-white/20 px-2 py-1 rounded">{selectedItem.type}</span>
                   </div>
                   <h2 className="text-2xl font-bold mb-1">{selectedItem.title}</h2>
-                  <p className="text-purple-100">{selectedItem.project}</p>
+                  <p className="text-purple-100">
+                    {typeof selectedItem.project === 'object' ? selectedItem.project?.name : selectedItem.project}
+                  </p>
                 </div>
                 <button
                   onClick={() => setShowEvaluationDetail(false)}
@@ -810,6 +1034,49 @@ const MEALPage = () => {
                 </div>
               </div>
 
+              {/* Methodology */}
+              {selectedItem.methodology && (
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Methodology</h3>
+                  <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+                    <p className="text-gray-800 whitespace-pre-wrap">{selectedItem.methodology}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Objectives */}
+              {selectedItem.objectives && Array.isArray(selectedItem.objectives) && selectedItem.objectives.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Evaluation Objectives</h3>
+                  <div className="space-y-2">
+                    {selectedItem.objectives.map((objective, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                        <span className="flex-shrink-0 w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                          {idx + 1}
+                        </span>
+                        <p className="text-gray-800 flex-1">{objective}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Report URL */}
+              {selectedItem.reportUrl && (
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Evaluation Report</h3>
+                  <a
+                    href={selectedItem.reportUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <FileText size={18} />
+                    View Report
+                  </a>
+                </div>
+              )}
+
               {/* Findings */}
               {selectedItem.findings && (
                 <div>
@@ -847,6 +1114,241 @@ const MEALPage = () => {
           </div>
         </div>
       )}
+
+      {/* Add Evaluation Wizard */}
+      {showAddEvaluation && (
+        <AddEvaluationWizard
+          projects={projects}
+          onClose={() => setShowAddEvaluation(false)}
+        />
+      )}
+
+      {/* Edit Evaluation Modal */}
+      {showEditEvaluation && editingEvaluation && (
+        <EditEvaluationWizard
+          evaluation={editingEvaluation}
+          projects={projects}
+          onClose={() => {
+            setShowEditEvaluation(false);
+            setEditingEvaluation(null);
+          }}
+        />
+      )}
+
+      {/* Add Learning Event Modal */}
+      {showAddLearningEvent && (
+        <AddLearningEventWizard
+          projects={projects}
+          evaluations={evaluations}
+          onClose={() => setShowAddLearningEvent(false)}
+        />
+      )}
+
+      {/* Update Indicator Modal */}
+      {updatingIndicator && (
+        <UpdateIndicatorModal
+          indicator={updatingIndicator}
+          onClose={() => setUpdatingIndicator(null)}
+        />
+      )}
+
+      {/* Add Complaint Modal */}
+      {showAddComplaint && (
+        <AddComplaintModal
+          projects={projects}
+          onClose={() => setShowAddComplaint(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+// Add Complaint Modal Component
+const AddComplaintModal = ({ projects, onClose }) => {
+  const { addComplaint } = useMEAL();
+  const [formData, setFormData] = useState({
+    complainantName: '',
+    contactMethod: 'Phone',
+    contactDetails: '',
+    category: 'Service Quality',
+    priority: 'Medium',
+    description: '',
+    projectId: '',
+    status: 'Open'
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setSubmitting(true);
+      const project = projects.find(p => p.id === parseInt(formData.projectId));
+      await addComplaint({
+        ...formData,
+        projectId: parseInt(formData.projectId),
+        projectName: project?.name || '',
+        submittedDate: new Date().toISOString().split('T')[0]
+      });
+      onClose();
+    } catch (error) {
+      console.error('Error adding complaint:', error);
+      alert('Failed to add complaint');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-red-700 p-6 rounded-t-2xl text-white">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-xl font-bold">Record New Complaint</h3>
+              <p className="text-orange-100 text-sm mt-1">Beneficiary/Community feedback mechanism</p>
+            </div>
+            <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+              <X size={24} />
+            </button>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Complainant Name *
+              </label>
+              <input
+                type="text"
+                value={formData.complainantName}
+                onChange={(e) => setFormData({ ...formData, complainantName: e.target.value })}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                placeholder="Full name"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Contact Method *
+              </label>
+              <select
+                value={formData.contactMethod}
+                onChange={(e) => setFormData({ ...formData, contactMethod: e.target.value })}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+              >
+                <option value="Phone">Phone</option>
+                <option value="Email">Email</option>
+                <option value="In Person">In Person</option>
+                <option value="Written">Written Letter</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Contact Details *
+            </label>
+            <input
+              type="text"
+              value={formData.contactDetails}
+              onChange={(e) => setFormData({ ...formData, contactDetails: e.target.value })}
+              required
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+              placeholder="Phone number or email"
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Category *
+              </label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+              >
+                <option value="Service Quality">Service Quality</option>
+                <option value="Staff Conduct">Staff Conduct</option>
+                <option value="Safeguarding">Safeguarding</option>
+                <option value="Discrimination">Discrimination</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Priority *
+              </label>
+              <select
+                value={formData.priority}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Project *
+              </label>
+              <select
+                value={formData.projectId}
+                onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+              >
+                <option value="">Select...</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Complaint Description *
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+              rows={4}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+              placeholder="Describe the complaint in detail..."
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all font-semibold"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-700 text-white rounded-xl hover:from-orange-700 hover:to-red-800 transition-all font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {submitting ? 'Submitting...' : 'Submit Complaint'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

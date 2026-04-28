@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Target, Clock, TrendingUp, Search, Filter } from 'lucide-react';
 import { useCampaign } from '../../contexts/CampaignContext';
+import { getImageUrl } from '../../services/api';
 
 const CampaignsListPage = () => {
   const { campaigns } = useCampaign();
@@ -16,7 +17,7 @@ const CampaignsListPage = () => {
 
   // Filter campaigns
   const filteredCampaigns = publicCampaigns.filter(campaign => {
-    const matchesSearch = campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          campaign.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || campaign.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -147,14 +148,27 @@ const CampaignsListPage = () => {
                 <div key={campaign.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden group">
                   {/* Image */}
                   <div className="h-56 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all"></div>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Target className="text-white" size={64} />
-                    </div>
+                    {campaign.imageUrl ? (
+                      <>
+                        <img
+                          src={getImageUrl(campaign.imageUrl)}
+                          alt={campaign.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all"></div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Target className="text-white" size={64} />
+                        </div>
+                      </>
+                    )}
 
                     {/* Category Badge */}
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 left-4 z-10">
                       <span className="bg-white/90 backdrop-blur-sm text-blue-900 text-xs font-bold px-3 py-2 rounded-full">
                         {campaign.category}
                       </span>
@@ -162,7 +176,7 @@ const CampaignsListPage = () => {
 
                     {/* Days Left Badge */}
                     {daysLeft > 0 && (
-                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+                      <div className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
                         <Clock size={14} className="text-blue-600" />
                         <span className="text-xs font-semibold text-blue-600">{daysLeft} days left</span>
                       </div>
@@ -172,7 +186,7 @@ const CampaignsListPage = () => {
                   <div className="p-6">
                     {/* Title */}
                     <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                      {campaign.name}
+                      {campaign.title}
                     </h3>
 
                     {/* Description */}

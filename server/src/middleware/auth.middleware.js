@@ -132,6 +132,8 @@ const PERMISSIONS = {
   HR_EDIT: 'hr:edit',
   HR_DELETE: 'hr:delete',
   HR_APPROVE_LEAVE: 'hr:approve_leave',
+  HR_VERIFY_DOCUMENTS: 'hr:verify_documents',
+  HR_UPLOAD_DOCUMENTS: 'hr:upload_documents',
 
   // CBO permissions
   CBO_VIEW: 'cbo:view',
@@ -259,6 +261,8 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.HR_EDIT,
     PERMISSIONS.HR_DELETE,
     PERMISSIONS.HR_APPROVE_LEAVE,
+    PERMISSIONS.HR_VERIFY_DOCUMENTS,
+    PERMISSIONS.HR_UPLOAD_DOCUMENTS,
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_EXPORT
   ],

@@ -81,12 +81,12 @@ const ContactPage = () => {
       icon: MapPin,
       title: 'Head Office',
       details: [
-        'No. 155/2, Colombo Road',
-        'Kurunegala, Sri Lanka'
+        '65 Abdul Majeed Road, Kinniya-04',
+        'Trincomalee, Sri Lanka'
       ],
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-50',
-      link: 'https://maps.google.com/?q=Kurunegala,Sri+Lanka'
+      link: 'https://maps.google.com/?q=Kinniya,Trincomalee,Sri+Lanka'
     },
     {
       icon: Clock,
@@ -348,14 +348,14 @@ const ContactPage = () => {
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-gray-100">
                 <div className="h-80 bg-gradient-to-br from-blue-100 to-purple-100 relative">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63371.80891117829!2d80.33445847831955!3d7.487247443652965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae33ac2a29be8c7%3A0x4a8a775b2f9b3e33!2sKurunegala!5e0!3m2!1sen!2slk!4v1234567890"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31583.91651095891!2d81.17899461896742!3d8.489444740611908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3afbc9a5f5c5c5c5%3A0x5c5c5c5c5c5c5c5c!2sKinniya%2C%20Sri%20Lanka!5e0!3m2!1sen!2slk!4v1234567890"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen=""
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="GERSL Location"
+                    title="GERSL Location - Kinniya, Trincomalee"
                   ></iframe>
                 </div>
               </div>

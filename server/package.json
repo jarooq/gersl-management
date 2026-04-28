@@ -1,7 +1,7 @@
 {
   "name": "gersl-backend",
   "version": "1.0.0",
-  "description": "GERSL Management System - Backend API",
+  "description": "Global Ehsan Relief - Sri Lanka Management System - Backend API",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
     "management",
     "api"
   ],
-  "author": "GERSL Development Team",
+  "author": "Global Ehsan Relief - Sri Lanka Development Team",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",

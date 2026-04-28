@@ -127,6 +127,20 @@ router.post(
 );
 
 // ============================================
+// CAMPAIGN IMAGE UPLOADS
+// ============================================
+
+// @route   POST /api/upload/campaign
+// @desc    Upload campaign image
+// @access  Private
+router.post(
+  '/campaign',
+  setUploadPath('campaigns'),
+  uploadSingle('image'),
+  uploadSingleFile
+);
+
+// ============================================
 // DELETE FILE
 // ============================================
 

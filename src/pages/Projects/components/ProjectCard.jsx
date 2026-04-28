@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, DollarSign, Users, TrendingUp, Eye, Edit, Trash2, Target, MessageSquare, Shield } from 'lucide-react';
 
 const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
+  const navigate = useNavigate();
   const getStatusColor = (status) => {
     switch (status) {
       case 'Implementation': return 'bg-blue-100 text-blue-700 border-blue-200';
@@ -132,7 +134,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
         {/* Action Buttons */}
         <div className="flex gap-2 pt-4 border-t border-gray-200">
           <button
-            onClick={() => onView(project)}
+            onClick={() => navigate(`/admin/projects/${project.id}`)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
           >
             <Eye size={16} />

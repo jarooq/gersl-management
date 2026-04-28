@@ -82,7 +82,7 @@ If you didn't request this reset, please ignore this email.
     `
   }),
 
-  newUserAccount: (username, tempPassword, loginUrl) => ({
+  newUserAccount: (username, loginUrl) => ({
     subject: 'Welcome to GERSL Management System - Your Account Details',
     html: `
       <!DOCTYPE html>
@@ -109,20 +109,18 @@ If you didn't request this reset, please ignore this email.
             <p>Your account has been created successfully! You now have access to the GERSL Management System.</p>
 
             <div class="credentials">
-              <h3 style="margin-top: 0;">Your Login Credentials:</h3>
-              <p><strong>Username:</strong> ${username}</p>
-              <p><strong>Temporary Password:</strong> <code style="background: #f0f0f0; padding: 5px 10px; border-radius: 3px;">${tempPassword}</code></p>
+              <h3 style="margin-top: 0;">Your Username:</h3>
+              <p><strong>${username}</strong></p>
             </div>
 
             <div class="important">
-              <strong>🔒 Important Security Steps:</strong><br>
-              1. Keep this password secure and don't share it<br>
-              2. You must change this password on your first login<br>
-              3. Choose a strong password (min. 8 characters with uppercase, lowercase, number, and special character)
+              <strong>🔒 Setting your password:</strong><br>
+              For your security we never email passwords. Click the button below and choose
+              "Forgot password" on the login page to set a strong password.
             </div>
 
             <p style="text-align: center;">
-              <a href="${loginUrl}" class="button">Login to Your Account</a>
+              <a href="${loginUrl}" class="button">Set Your Password &amp; Login</a>
             </p>
 
             <p>If you have any questions or need assistance, please contact your system administrator.</p>
@@ -140,18 +138,12 @@ Welcome to GERSL Management System!
 
 Hello ${username},
 
-Your account has been created successfully!
+Your account has been created successfully.
 
-Login Credentials:
 Username: ${username}
-Temporary Password: ${tempPassword}
 
-IMPORTANT SECURITY STEPS:
-1. Keep this password secure
-2. Change this password on your first login
-3. Choose a strong password
-
-Login at: ${loginUrl}
+For security we do not email passwords. Visit ${loginUrl} and use
+"Forgot password" to set a strong password before logging in.
 
 © ${new Date().getFullYear()} GERSL
     `
@@ -306,9 +298,9 @@ export const sendPasswordResetEmail = async (email, username, resetToken) => {
   return sendEmail(email, template);
 };
 
-export const sendNewUserEmail = async (email, username, tempPassword) => {
+export const sendNewUserEmail = async (email, username) => {
   const loginUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login`;
-  const template = emailTemplates.newUserAccount(username, tempPassword, loginUrl);
+  const template = emailTemplates.newUserAccount(username, loginUrl);
   return sendEmail(email, template);
 };
 

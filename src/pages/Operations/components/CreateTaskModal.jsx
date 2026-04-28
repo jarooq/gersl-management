@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useProjects } from '../../../contexts/ProjectContext';
-import { useHR } from '../../../contexts/HRContext';
 import { createTask } from '../../../services/taskService';
+import * as API from '../../../services/api';
 import {
   X,
   CheckCircle,
@@ -17,14 +17,20 @@ import {
   Gift
 } from 'lucide-react';
 
-const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = null }) => {
+const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = null, projectTeamMembers = null, availableStaff = null }) => {
   const { projects } = useProjects();
-  const { staff } = useHR();
+  // No longer need staff from HRContext - we use project team members directly
 
   // Multi-step form state
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // Prevent duplicate submissions
+  const isSubmittingRef = useRef(false);
+
+  // Dynamic project team members (fetched when project is selected)
+  const [dynamicProjectTeamMembers, setDynamicProjectTeamMembers] = useState(null);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -36,7 +42,8 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
     status: 'Not Started',
     startDate: '',
     dueDate: '',
-    assignedTo: '',
+    assignedTo: '', // Legacy single assignee (for backward compatibility)
+    assignedUsers: [], // New: multiple assignees
 
     // Task type fields
     taskType: 'Other',
@@ -90,8 +97,35 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
   useEffect(() => {
     if (isOpen) {
       resetForm();
+      // Reset submission guard when modal opens
+      isSubmittingRef.current = false;
     }
   }, [isOpen]);
+
+  // Fetch project team members when project is selected
+  useEffect(() => {
+    const fetchProjectTeamMembers = async () => {
+      if (formData.projectId && !projectTeamMembers) {
+        // Only fetch if projectTeamMembers prop is not already provided
+        try {
+          const response = await API.ProjectAPI.getById(formData.projectId);
+          if (response && response.teamMembers) {
+            setDynamicProjectTeamMembers(response.teamMembers);
+          } else {
+            setDynamicProjectTeamMembers([]);
+          }
+        } catch (error) {
+          console.error('Error fetching project team members:', error);
+          setDynamicProjectTeamMembers([]);
+        }
+      } else if (!formData.projectId) {
+        // Clear dynamic team members if no project is selected
+        setDynamicProjectTeamMembers(null);
+      }
+    };
+
+    fetchProjectTeamMembers();
+  }, [formData.projectId, projectTeamMembers]);
 
   const resetForm = () => {
     setFormData({
@@ -103,6 +137,7 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
       startDate: '',
       dueDate: '',
       assignedTo: '',
+      assignedUsers: [],
       taskType: 'Other',
       taskCategory: '',
       requiresProcurement: false,
@@ -178,6 +213,15 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
     }));
   };
 
+  const handleAssignedUserToggle = (userId) => {
+    setFormData(prev => ({
+      ...prev,
+      assignedUsers: prev.assignedUsers.includes(userId)
+        ? prev.assignedUsers.filter(id => id !== userId)
+        : [...prev.assignedUsers, userId]
+    }));
+  };
+
   const validateStep = (step) => {
     const newErrors = {};
 
@@ -222,10 +266,36 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
   };
 
   const handleSubmit = async () => {
+    // Prevent duplicate submissions
+    if (isSubmittingRef.current) {
+      console.log('⚠️ Submission already in progress, ignoring duplicate click');
+      return;
+    }
+
     if (!validateStep(currentStep)) return;
 
+    // Set submission guard immediately
+    isSubmittingRef.current = true;
     setLoading(true);
+
     try {
+      // Sanitize beneficiarySelectionMethod - map old values to valid enum values
+      let beneficiarySelectionMethod = formData.beneficiarySelectionMethod || null;
+      if (beneficiarySelectionMethod) {
+        const validMethods = ['None', 'Manual Selection', 'Criteria Based', 'Community Nomination', 'Application Based', 'Existing List'];
+        // Map old invalid values to valid ones
+        const methodMapping = {
+          'Needs-based': 'Criteria Based',
+          'Random': 'Manual Selection',
+          'First-come': 'Application Based'
+        };
+
+        if (!validMethods.includes(beneficiarySelectionMethod)) {
+          beneficiarySelectionMethod = methodMapping[beneficiarySelectionMethod] || 'None';
+          console.warn(`⚠️ Invalid beneficiarySelectionMethod "${formData.beneficiarySelectionMethod}" mapped to "${beneficiarySelectionMethod}"`);
+        }
+      }
+
       // Prepare data for API
       const taskData = {
         projectId: parseInt(formData.projectId),
@@ -235,7 +305,9 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
         status: formData.status,
         startDate: formData.startDate || null,
         dueDate: formData.dueDate,
-        assignedTo: formData.assignedTo ? parseInt(formData.assignedTo) : null,
+        // Use new multi-staff assignment if any selected, otherwise fall back to single assignee
+        assignedUsers: formData.assignedUsers.length > 0 ? formData.assignedUsers :
+                      (formData.assignedTo ? [parseInt(formData.assignedTo)] : []),
 
         taskType: formData.taskType,
         taskCategory: formData.taskCategory || null,
@@ -246,7 +318,7 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
 
         involvesBeneficiaries: formData.involvesBeneficiaries,
         beneficiaryTrackingMode: formData.beneficiaryTrackingMode,
-        beneficiarySelectionMethod: formData.beneficiarySelectionMethod || null,
+        beneficiarySelectionMethod: beneficiarySelectionMethod,
         selectionCriteria: formData.selectionCriteria || null,
         targetBeneficiaries: formData.targetBeneficiaries ? parseInt(formData.targetBeneficiaries) : null,
 
@@ -265,18 +337,26 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
         mediaTeamAssigned: formData.mediaTeamAssigned.length > 0 ? formData.mediaTeamAssigned : null
       };
 
+      console.log('✅ Creating task:', taskData.title);
       const response = await createTask(taskData);
 
+      console.log('📊 Create Task API Response:', response);
+
       if (response.success) {
-        onTaskCreated?.(response.data);
+        console.log('✅ Task created successfully');
+        // Backend returns { success: true, task: {...} }, not { success: true, data: {...} }
+        const createdTask = response.task || response.data;
+        onTaskCreated?.(createdTask);
         onClose();
         resetForm();
       }
     } catch (error) {
-      console.error('Error creating task:', error);
+      console.error('❌ Error creating task:', error);
       setErrors({ submit: error.message || 'Failed to create task. Please try again.' });
     } finally {
       setLoading(false);
+      // Reset submission guard
+      isSubmittingRef.current = false;
     }
   };
 
@@ -453,20 +533,78 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Assign To</label>
-                  <select
-                    name="assignedTo"
-                    value={formData.assignedTo}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  >
-                    <option value="">Unassigned</option>
-                    {staff?.map(member => (
-                      <option key={member.id} value={member.id}>
-                        {member.name || `${member.firstName} ${member.lastName}`}
-                      </option>
-                    ))}
-                  </select>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    <Users className="inline mr-2" size={18} />
+                    Assign Staff Members (Multiple Selection)
+                    {((projectTeamMembers && projectTeamMembers.length > 0) || (dynamicProjectTeamMembers && dynamicProjectTeamMembers.length > 0)) && (
+                      <span className="ml-2 text-xs text-gray-500">(Project Team Members Only)</span>
+                    )}
+                    {!formData.projectId && (
+                      <span className="ml-2 text-xs text-amber-600">(Select a project to filter staff)</span>
+                    )}
+                  </label>
+                  <div className="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto bg-gray-50">
+                    {(() => {
+                      // Use either prop-provided or dynamically fetched project team members
+                      const effectiveProjectTeamMembers = projectTeamMembers || dynamicProjectTeamMembers;
+
+                      // Show team members directly from the project (no need to match with staff table)
+                      // Team members already have user information from the API
+                      const availableMembers = effectiveProjectTeamMembers && effectiveProjectTeamMembers.length > 0
+                        ? effectiveProjectTeamMembers
+                        : []; // Return empty array if no project selected or no team members
+
+                      return availableMembers && availableMembers.length > 0 ? (
+                        <div className="space-y-2">
+                          {availableMembers.map(teamMember => {
+                            // Use userId from team member (this is the user_id from project_team_members table)
+                            const userId = teamMember.userId;
+                            const userName = teamMember.user?.fullName || teamMember.user?.username || 'Unknown User';
+                            const userRole = teamMember.role || teamMember.user?.position || teamMember.user?.role || '';
+
+                            return (
+                              <label
+                                key={teamMember.id}
+                                className="flex items-center p-3 rounded-lg hover:bg-white cursor-pointer transition-colors border border-transparent hover:border-indigo-200"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={formData.assignedUsers.includes(userId)}
+                                  onChange={() => handleAssignedUserToggle(userId)}
+                                  className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                                />
+                                <span className="ml-3 text-sm font-medium text-gray-900">
+                                  {userName}
+                                </span>
+                                {userRole && (
+                                  <span className="ml-auto text-xs text-gray-500">{userRole}</span>
+                                )}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-center py-4">
+                          {!formData.projectId ? (
+                            <div className="text-gray-500">
+                              <p className="font-semibold">No project selected</p>
+                              <p className="text-xs mt-1">Select a project above to see team members</p>
+                            </div>
+                          ) : (
+                            <div className="text-gray-500">
+                              <p className="font-semibold">No project team members</p>
+                              <p className="text-xs mt-1">This project has no assigned team members</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                  {formData.assignedUsers.length > 0 && (
+                    <p className="mt-2 text-sm text-indigo-600">
+                      {formData.assignedUsers.length} staff member(s) selected
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -599,11 +737,12 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                           <option value="">Select method</option>
-                          <option value="Needs-based">Needs-based Assessment</option>
-                          <option value="Vulnerability">Vulnerability Score</option>
-                          <option value="Geographic">Geographic Targeting</option>
-                          <option value="Community">Community Nomination</option>
-                          <option value="Random">Random Selection</option>
+                          <option value="Manual Selection">Manual Selection</option>
+                          <option value="Criteria Based">Criteria Based</option>
+                          <option value="Community Nomination">Community Nomination</option>
+                          <option value="Application Based">Application Based</option>
+                          <option value="Existing List">Existing List</option>
+                          <option value="None">None</option>
                         </select>
                       </div>
 
@@ -806,35 +945,43 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">Assign Media Team</label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {staff?.filter(member =>
-                        member.department === 'Media' || member.role?.includes('Media')
-                      ).map(member => (
-                        <button
-                          key={member.id}
-                          type="button"
-                          onClick={() => handleMediaTeamToggle(member.id)}
-                          className={`p-3 rounded-lg border-2 transition-all text-left ${
-                            formData.mediaTeamAssigned.includes(member.id)
-                              ? 'border-indigo-500 bg-indigo-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            {formData.mediaTeamAssigned.includes(member.id) && (
-                              <CheckCircle className="text-indigo-600" size={18} />
-                            )}
-                            <div>
-                              <p className="font-semibold text-sm text-gray-900">
-                                {member.name || `${member.firstName} ${member.lastName}`}
-                              </p>
-                              <p className="text-xs text-gray-600">{member.role || member.position}</p>
+                      {(projectTeamMembers || dynamicProjectTeamMembers)?.filter(teamMember =>
+                        teamMember.user?.department === 'Media' || teamMember.user?.role?.includes('Media') || teamMember.role?.includes('Media')
+                      ).map(teamMember => {
+                        const userId = teamMember.userId;
+                        const userName = teamMember.user?.fullName || teamMember.user?.username || 'Unknown User';
+                        const userRole = teamMember.role || teamMember.user?.position || teamMember.user?.role || '';
+
+                        return (
+                          <button
+                            key={teamMember.id}
+                            type="button"
+                            onClick={() => handleMediaTeamToggle(userId)}
+                            className={`p-3 rounded-lg border-2 transition-all text-left ${
+                              formData.mediaTeamAssigned.includes(userId)
+                                ? 'border-indigo-500 bg-indigo-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              {formData.mediaTeamAssigned.includes(userId) && (
+                                <CheckCircle className="text-indigo-600" size={18} />
+                              )}
+                              <div>
+                                <p className="font-semibold text-sm text-gray-900">
+                                  {userName}
+                                </p>
+                                <p className="text-xs text-gray-600">{userRole}</p>
+                              </div>
                             </div>
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        );
+                      })}
                     </div>
-                    {staff?.filter(member => member.department === 'Media').length === 0 && (
-                      <p className="text-sm text-gray-500 italic">No media team members found</p>
+                    {(!(projectTeamMembers || dynamicProjectTeamMembers) || (projectTeamMembers || dynamicProjectTeamMembers).filter(teamMember =>
+                      teamMember.user?.department === 'Media' || teamMember.user?.role?.includes('Media') || teamMember.role?.includes('Media')
+                    ).length === 0) && (
+                      <p className="text-sm text-gray-500 italic">No media team members found in this project</p>
                     )}
                   </div>
                 </>

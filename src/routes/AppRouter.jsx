@@ -21,13 +21,17 @@ const TendersPage = lazy(() => import('../public-portal/pages/TendersPage'));
 const TenderDetailPage = lazy(() => import('../public-portal/pages/TenderDetailPage'));
 const ContactPage = lazy(() => import('../public-portal/pages/ContactPage'));
 const OrphansInNeedPage = lazy(() => import('../public-portal/pages/OrphansInNeedPage'));
+const PrivacyPolicyPage = lazy(() => import('../public-portal/pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('../public-portal/pages/TermsOfServicePage'));
 
 // Lazy-loaded page components (code splitting)
 const Dashboard = lazy(() => import('../pages/Dashboard/Dashboard'));
 const StaffDashboard = lazy(() => import('../pages/Dashboard/StaffDashboard'));
 const ExecutiveDashboard = lazy(() => import('../pages/Dashboard/ExecutiveDashboard'));
+const DashboardRedirect = lazy(() => import('../components/common/DashboardRedirect'));
 const OrphansPage = lazy(() => import('../pages/Orphans/OrphansPage'));
 const ProjectsPage = lazy(() => import('../pages/Projects/ProjectsPage'));
+const ProjectDetailPage = lazy(() => import('../pages/Projects/ProjectDetailPage'));
 const FinancePage = lazy(() => import('../pages/Finance/FinancePage'));
 const HRPage = lazy(() => import('../pages/HR/HRPage'));
 const AttendancePage = lazy(() => import('../pages/HR/AttendancePage'));
@@ -50,9 +54,9 @@ const MyTasksPage = lazy(() => import('../pages/Operations/MyTasksPage'));
 const ApprovalsPage = lazy(() => import('../pages/Approvals/ApprovalsPage'));
 const CompliancePage = lazy(() => import('../pages/Compliance/CompliancePage'));
 const CampaignsPage = lazy(() => import('../pages/Campaigns/CampaignsPage'));
-const DonationsPage = lazy(() => import('../pages/Campaigns/DonationsPage'));
-const JobPostingsPage = lazy(() => import('../pages/Campaigns/JobPostingsPage'));
-const VendorCallsPage = lazy(() => import('../pages/Campaigns/VendorCallsPage'));
+const DonationsPage = lazy(() => import('../pages/Donations/DonationsPage'));
+const JobPostingsPage = lazy(() => import('../pages/JobPostings/JobPostingsPage'));
+const VendorCallsPage = lazy(() => import('../pages/VendorCalls/VendorCallsPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -190,6 +194,26 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             </Suspense>
           }
         />
+        <Route
+          path="/privacy"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <PrivacyPolicyPage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/terms"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PublicLayout>
+                <TermsOfServicePage />
+              </PublicLayout>
+            </Suspense>
+          }
+        />
 
         {/* Admin Login */}
         <Route path="/login" element={<Login />} />
@@ -204,13 +228,22 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route
+            index
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DashboardRedirect />
+              </Suspense>
+            }
+          />
           <Route
             path="dashboard"
             element={
-              <Suspense fallback={<PageLoader />}>
-                <Dashboard />
-              </Suspense>
+              <PermissionRoute permission={PERMISSIONS.DASHBOARD_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <Dashboard />
+                </Suspense>
+              </PermissionRoute>
             }
           />
           <Route
@@ -280,6 +313,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             }
           />
           <Route
+            path="projects/:id"
+            element={
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <ProjectDetailPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
             path="operations/activities"
             element={
               <PermissionRoute permission={PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES}>
@@ -302,7 +345,7 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
           <Route
             path="operations/my-tasks"
             element={
-              <PermissionRoute permission={PERMISSIONS.OPERATIONS_VIEW_TASKS}>
+              <PermissionRoute permission={PERMISSIONS.OPERATIONS_MY_TASKS}>
                 <Suspense fallback={<PageLoader />}>
                   <MyTasksPage />
                 </Suspense>

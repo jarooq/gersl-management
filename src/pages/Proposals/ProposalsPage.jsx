@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProposals } from '../../contexts/ProposalsContext';
 import { usePartners } from '../../contexts/PartnersContext';
 import { useCBO } from '../../contexts/CBOContext';
@@ -7,6 +7,7 @@ import ProposalViewModal from './components/ProposalViewModal';
 import AIProposalAssistant from '../../components/proposals/AIProposalAssistant';
 import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
 import { SRI_LANKAN_ADMINISTRATIVE_DIVISIONS } from '../../data/sriLankanDivisions';
+import API from '../../services/api';
 import {
   FileText,
   Plus,
@@ -75,6 +76,9 @@ const generateProposalCode = () => {
 };
 
 const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partners, initialData }) => {
+  const [departments, setDepartments] = useState([]);
+  const [loadingDepartments, setLoadingDepartments] = useState(true);
+
   const defaultFormData = {
     proposalCode: generateProposalCode(),
     donor: '',
@@ -82,6 +86,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
     cboName: '',
     title: '',
     programmeArea: 'Education',
+    department: '',
     requestedBudget: '',
     duration: '12 months',
     targetBeneficiaries: '',
@@ -151,6 +156,25 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
     console.log('Partners length:', partners ? partners.length : 0);
     console.log('Current donor value in form:', formData.donor);
   }, [partners, formData.donor]);
+
+  // Fetch departments from database on mount
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        setLoadingDepartments(true);
+        const response = await API.Departments.getAll();
+        console.log('📋 Fetched departments:', response);
+        setDepartments(response.departments || []);
+      } catch (error) {
+        console.error('❌ Failed to fetch departments:', error);
+        setDepartments([]);
+      } finally {
+        setLoadingDepartments(false);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -552,6 +576,32 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
+            </div>
+
+            {/* Department Field */}
+            <div>
+              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                <span>📂</span>
+                Department *
+              </label>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleInputChange}
+                required
+                disabled={loadingDepartments}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                <option value="">
+                  {loadingDepartments ? 'Loading departments...' : '-- Select Department --'}
+                </option>
+                {departments.map(dept => (
+                  <option key={dept.id} value={dept.name}>{dept.name}</option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-600 mt-1">
+                Project Officers will only see proposals in their assigned department
+              </p>
             </div>
 
             <div className="grid grid-cols-3 gap-4">

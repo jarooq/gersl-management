@@ -12,8 +12,8 @@
 export const generateProposalSubmissionEmail = (proposal, options = {}) => {
   const {
     donorContactName = 'Dear Sir/Madam',
-    organizationName = 'Global Education and Relief Services Lanka (GERSL)',
-    senderName = options.senderName || 'GERSL Team',
+    organizationName = 'Global Ehsan Relief - Sri Lanka',
+    senderName = options.senderName || 'Global Ehsan Relief - Sri Lanka Team',
     senderTitle = options.senderTitle || 'Fundraising Manager',
     customMessage = ''
   } = options;
@@ -116,8 +116,8 @@ Confidential: This document contains proprietary information intended only for t
 export const generateFollowUpEmail = (proposal, options = {}) => {
   const {
     donorContactName = 'Dear Sir/Madam',
-    organizationName = 'GERSL',
-    senderName = options.senderName || 'GERSL Team',
+    organizationName = 'Global Ehsan Relief - Sri Lanka',
+    senderName = options.senderName || 'Global Ehsan Relief - Sri Lanka Team',
     daysSinceSubmission = 14
   } = options;
 
@@ -177,8 +177,8 @@ Phone: ${options.senderPhone || '+94 XX XXX XXXX'}
 export const generateThankYouEmail = (proposal, options = {}) => {
   const {
     donorContactName = 'Dear Sir/Madam',
-    organizationName = 'GERSL',
-    senderName = options.senderName || 'GERSL Team',
+    organizationName = 'Global Ehsan Relief - Sri Lanka',
+    senderName = options.senderName || 'Global Ehsan Relief - Sri Lanka Team',
     senderTitle = options.senderTitle || 'Executive Director'
   } = options;
 

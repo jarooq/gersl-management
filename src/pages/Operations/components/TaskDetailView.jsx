@@ -32,7 +32,7 @@ import { getTaskBeneficiaries } from '../../../services/taskBeneficiaryService';
 import { getAggregateDistributionByTask } from '../../../services/aggregateDistributionService';
 import TaskComments from '../../../components/tasks/TaskComments';
 
-const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgress, onComplete }) => {
+const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgress, onComplete, onSelectBeneficiaries }) => {
   const { projects } = useProjects();
   const { staff } = useHR();
   const { beneficiaries } = useBeneficiaries();
@@ -829,12 +829,24 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
     </div>
   );
 
+  // Dynamically build tabs based on task type
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: FileCheck },
-    { id: 'beneficiaries', label: 'Beneficiaries', icon: Users },
-    { id: 'distribution', label: 'Distribution', icon: Package },
-    { id: 'comments', label: 'Comments', icon: MessageCircle }
+    { id: 'overview', label: 'Overview', icon: FileCheck }
   ];
+
+  // Add Beneficiaries tab only for tasks that involve beneficiaries
+  const beneficiaryTaskTypes = ['Beneficiary Selection', 'Mass Distribution', 'Individual Distribution'];
+  if (task.involvesBeneficiaries && beneficiaryTaskTypes.includes(task.taskType)) {
+    tabs.push({ id: 'beneficiaries', label: 'Beneficiaries', icon: Users });
+  }
+
+  // Add Distribution tab only for tasks with distribution
+  if (task.distributionType && task.distributionType !== 'None') {
+    tabs.push({ id: 'distribution', label: 'Distribution', icon: Package });
+  }
+
+  // Always show Comments tab
+  tabs.push({ id: 'comments', label: 'Comments', icon: MessageCircle });
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -859,38 +871,49 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
         {/* Quick Actions Bar */}
         <div className="bg-gray-50 border-b border-gray-200 px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => onEdit && onEdit(task)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
-            >
-              <Edit className="w-4 h-4" />
-              Edit Task
-            </button>
-            {!assignedStaff && (
+            {onEdit && (
               <button
-                onClick={() => onAssign && onAssign(task)}
+                onClick={() => onEdit(task)}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
+              >
+                <Edit className="w-4 h-4" />
+                Edit Task
+              </button>
+            )}
+            {onAssign && !assignedStaff && (
+              <button
+                onClick={() => onAssign(task)}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
               >
                 <UserPlus className="w-4 h-4" />
                 Assign Staff
               </button>
             )}
-            {task.status !== 'Completed' && (
+            {onUpdateProgress && task.status !== 'Completed' && (
               <button
-                onClick={() => onUpdateProgress && onUpdateProgress(task)}
+                onClick={() => onUpdateProgress(task)}
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
               >
                 <TrendingUp className="w-4 h-4" />
                 Update Progress
               </button>
             )}
-            {task.status === 'In Progress' && (
+            {onComplete && task.status === 'In Progress' && (
               <button
-                onClick={() => onComplete && onComplete(task)}
+                onClick={() => onComplete(task)}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
               >
                 <CheckCircle className="w-4 h-4" />
                 Mark Complete
+              </button>
+            )}
+            {task.involvesBeneficiaries && ['Beneficiary Selection', 'Mass Distribution', 'Individual Distribution'].includes(task.taskType) && (
+              <button
+                onClick={() => onSelectBeneficiaries && onSelectBeneficiaries(task)}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+              >
+                <Users className="w-4 h-4" />
+                {taskBeneficiaries.length > 0 ? 'Manage Beneficiaries' : 'Select Beneficiaries'}
               </button>
             )}
           </div>

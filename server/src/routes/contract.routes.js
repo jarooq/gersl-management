@@ -1,6 +1,8 @@
 import express from 'express';
-import * as contractController from '../controllers/contract.controller.js';
-import { protect } from '../middleware/auth.middleware.js';
+import contractController from '../controllers/contract.controller.js';
+import { protect, requireRole } from '../middleware/auth.middleware.js';
+
+const requireHRorAdmin = requireRole('Admin', 'HR Manager', 'HR Officer');
 
 const router = express.Router();
 
@@ -19,6 +21,9 @@ router.get('/agreements/:id', protect, contractController.getAgreementById);
 
 // Sign employment agreement
 router.put('/agreements/:id/sign', protect, contractController.signAgreement);
+
+// Delete employment agreement (HR/Admin only — and controller still enforces Draft-only)
+router.delete('/agreements/:id', protect, requireHRorAdmin, contractController.deleteAgreement);
 
 // ============================================
 // CONTRACT RENEWALS (1 Year Expiry Tracking)
@@ -72,5 +77,12 @@ router.post('/job-description/generate', protect, contractController.generateJob
 
 // Create staff with automatic employment agreement generation
 router.post('/staff/create-with-agreement', protect, contractController.createStaffWithAgreement);
+
+// ============================================
+// EMPLOYEE SELF-SERVICE
+// ============================================
+
+// Get my HR data (for logged-in employee)
+router.get('/my-data', protect, contractController.getMyHRData);
 
 export default router;

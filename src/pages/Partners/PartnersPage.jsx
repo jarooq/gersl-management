@@ -68,10 +68,7 @@ const PartnersPage = () => {
   const [showEditPartnerModal, setShowEditPartnerModal] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState(null);
 
-  // Fetch partners on component mount
-  useEffect(() => {
-    fetchPartners();
-  }, [fetchPartners]);
+  // Context already fetches partners on mount via its own useEffect
 
   // Safe stats calculation - only if we have data
   const stats = partners ? getStats() : {

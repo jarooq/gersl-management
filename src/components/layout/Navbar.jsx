@@ -35,11 +35,13 @@ const Navbar = ({ toggleSidebar }) => {
               <Menu size={24} className="text-gray-700" />
             </button>
 
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 rounded-lg shadow-md">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
+            <img
+              src="/Logo.png"
+              alt="Global Ehsan Relief"
+              className="h-10 w-10 object-contain"
+            />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">GERSL</h1>
+              <h1 className="text-lg font-bold text-gray-900">Global Ehsan Relief - Sri Lanka</h1>
               <p className="text-xs text-gray-500 hidden sm:block">Management System</p>
             </div>
           </div>

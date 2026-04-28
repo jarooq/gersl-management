@@ -20,7 +20,7 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
     where,
     limit: parseInt(limit),
     offset: parseInt(offset),
-    order: [['poDate', 'DESC']],
+    order: [['requestDate', 'DESC']],
     include: [
       { model: Project, as: 'project', attributes: ['id', 'name', 'projectCode'] },
       { model: User, as: 'creator', attributes: ['id', 'fullName'] },

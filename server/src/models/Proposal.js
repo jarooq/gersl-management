@@ -30,6 +30,11 @@ const Proposal = sequelize.define('Proposal', {
     allowNull: false,
     field: 'project_area'
   },
+  department: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    field: 'department'
+  },
   district: {
     type: DataTypes.JSON,
     defaultValue: [],
@@ -230,8 +235,8 @@ const Proposal = sequelize.define('Proposal', {
   indexes: [
     { fields: ['proposal_code'] },
     { fields: ['status'] },
-    { fields: ['donor'] },
-    { fields: ['programme_area'] },
+    { fields: ['donor_name'] },
+    { fields: ['project_area'] },
     { fields: ['created_by'] },
     { fields: ['linked_project_id'] }
   ]

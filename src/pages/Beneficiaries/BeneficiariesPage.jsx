@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useBeneficiaries } from '../../contexts/BeneficiaryContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { hasPermission } from '../../utils/permissions';
 import { PERMISSIONS } from '../../utils/permissions';
 import BeneficiaryFormModal from '../../components/beneficiaries/BeneficiaryFormModal';
 import BeneficiaryListGenerator from '../../components/beneficiaries/BeneficiaryListGenerator';
@@ -35,7 +34,7 @@ import {
 import './BeneficiariesPage.css';
 
 const BeneficiariesPage = () => {
-  const { currentUser: user } = useAuth();
+  const { currentUser: user, hasPermission } = useAuth();
   const {
     beneficiaries,
     loading,
@@ -64,10 +63,10 @@ const BeneficiariesPage = () => {
   const [showListGenerator, setShowListGenerator] = useState(false);
   const [showBulkUpload, setShowBulkUpload] = useState(false);
 
-  const canView = hasPermission(user, PERMISSIONS.BENEFICIARIES_VIEW);
-  const canCreate = hasPermission(user, PERMISSIONS.BENEFICIARIES_CREATE);
-  const canEdit = hasPermission(user, PERMISSIONS.BENEFICIARIES_EDIT);
-  const canDelete = hasPermission(user, PERMISSIONS.BENEFICIARIES_DELETE);
+  const canView = hasPermission(PERMISSIONS.BENEFICIARIES_VIEW);
+  const canCreate = hasPermission(PERMISSIONS.BENEFICIARIES_CREATE);
+  const canEdit = hasPermission(PERMISSIONS.BENEFICIARIES_EDIT);
+  const canDelete = hasPermission(PERMISSIONS.BENEFICIARIES_DELETE);
 
   useEffect(() => {
     if (canView) {

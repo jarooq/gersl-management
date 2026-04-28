@@ -177,6 +177,30 @@ export const signAgreement = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * Delete employment agreement
+ */
+export const deleteAgreement = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const agreement = await EmploymentAgreement.findByPk(id);
+  if (!agreement) {
+    throw new NotFoundError('Employment agreement not found');
+  }
+
+  // Only allow deletion of Draft agreements
+  if (agreement.status !== 'Draft') {
+    throw new BadRequestError('Only draft agreements can be deleted');
+  }
+
+  await agreement.destroy();
+
+  res.json({
+    success: true,
+    message: 'Employment agreement deleted successfully'
+  });
+});
+
 // ============================================
 // CONTRACT RENEWALS
 // ============================================
@@ -832,11 +856,99 @@ export const createStaffWithAgreement = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * Get my HR data (for logged-in employee)
+ * Returns employment agreement, resignations, and contract renewals for the current user
+ */
+export const getMyHRData = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+
+  // Find staff record linked to this user
+  const staffRecord = await Staff.findOne({
+    where: { userId },
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['id', 'username', 'fullName', 'email', 'role', 'department']
+      }
+    ]
+  });
+
+  if (!staffRecord) {
+    return res.json({
+      success: true,
+      message: 'No staff record found for this user',
+      data: {
+        hasStaffRecord: false,
+        staff: null,
+        agreement: null,
+        renewals: [],
+        resignations: []
+      }
+    });
+  }
+
+  // Get active employment agreement
+  const agreement = await EmploymentAgreement.findOne({
+    where: {
+      staffId: staffRecord.id,
+      status: 'Active'
+    },
+    order: [['startDate', 'DESC']],
+    include: [
+      {
+        model: Staff,
+        as: 'staff',
+        attributes: ['id', 'fullName', 'position', 'department', 'salary']
+      }
+    ]
+  });
+
+  // Get contract renewals for this staff
+  const renewals = await ContractRenewal.findAll({
+    where: { staffId: staffRecord.id },
+    order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: Staff,
+        as: 'staff',
+        attributes: ['id', 'fullName', 'position']
+      }
+    ]
+  });
+
+  // Get resignations submitted by this staff
+  const resignations = await Resignation.findAll({
+    where: { staffId: staffRecord.id },
+    order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: Staff,
+        as: 'staff',
+        attributes: ['id', 'fullName', 'position']
+      }
+    ]
+  });
+
+  res.json({
+    success: true,
+    data: {
+      hasStaffRecord: true,
+      staff: staffRecord,
+      agreement,
+      renewals,
+      resignations
+    }
+  });
+});
+
 export default {
   createEmploymentAgreement,
   getAllAgreements,
   getAgreementById,
   signAgreement,
+  deleteAgreement,
   getExpiringContracts,
   createContractRenewal,
   approveContractRenewal,
@@ -847,5 +959,6 @@ export default {
   acceptResignation,
   getAllResignations,
   generateJobDescription,
-  createStaffWithAgreement
+  createStaffWithAgreement,
+  getMyHRData
 };

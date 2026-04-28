@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { X, Briefcase, DollarSign, Users, Calendar, MapPin, Heart, Target } from 'lucide-react';
+import API from '../../../services/api';
+// Department field populated from database
 
 const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
+  const [departments, setDepartments] = useState([]);
+  const [loadingDepartments, setLoadingDepartments] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     programmeArea: '',
+    department: '',
     budget: '',
     spent: '',
     targetBeneficiaries: '',
@@ -28,12 +33,33 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
     'Community Development'
   ];
 
+  // Fetch departments from database
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        setLoadingDepartments(true);
+        const response = await API.Departments.getAll();
+        setDepartments(response.departments || []);
+      } catch (error) {
+        console.error('❌ Failed to fetch departments:', error);
+        setDepartments([]);
+      } finally {
+        setLoadingDepartments(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchDepartments();
+    }
+  }, [isOpen]);
+
   // Populate form with project data when modal opens
   useEffect(() => {
     if (project && isOpen) {
       setFormData({
         name: project.name || '',
         programmeArea: project.programmeArea || '',
+        department: project.department || '',
         budget: project.budget || '',
         spent: project.spent || '',
         targetBeneficiaries: project.targetBeneficiaries || '',
@@ -69,6 +95,9 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
       beneficiaries: parseInt(formData.beneficiaries) || 0,
       progress: parseInt(formData.progress) || 0
     };
+
+    console.log('🔍 EditProjectForm - formData.department:', formData.department);
+    console.log('🔍 EditProjectForm - projectData being submitted:', projectData);
 
     onSubmit(project.id, projectData);
     handleClose();
@@ -147,6 +176,31 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
 
               <div>
                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <Briefcase size={16} className="text-indigo-600" />
+                  Department *
+                </label>
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  required
+                  disabled={loadingDepartments}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">
+                    {loadingDepartments ? 'Loading departments...' : 'Select Department'}
+                  </option>
+                  {departments.map(dept => (
+                    <option key={dept.id} value={dept.name}>{dept.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Project Status & Progress */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                   <Target size={16} className="text-green-600" />
                   Project Status *
                 </label>
@@ -162,6 +216,24 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   <option value="Closing">Closing</option>
                   <option value="Completed">Completed</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <Target size={16} className="text-blue-600" />
+                  Progress (%) *
+                </label>
+                <input
+                  type="number"
+                  name="progress"
+                  value={formData.progress}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  placeholder="0-100"
+                />
               </div>
             </div>
 

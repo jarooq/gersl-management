@@ -142,7 +142,8 @@ export const createEvaluation = asyncHandler(async (req, res) => {
     reportStatus: reportStatus || 'Pending',
     reportUrl,
     attachments: attachments || [],
-    budget
+    budget,
+    createdBy: req.user.id
   });
 
   res.status(201).json({
@@ -199,8 +200,8 @@ export const updateEvaluation = asyncHandler(async (req, res) => {
     type: type || evaluation.type,
     projectId: projectId !== undefined ? projectId : evaluation.projectId,
     evaluator: evaluator || evaluation.evaluator,
-    startDate: startDate || evaluation.startDate,
-    endDate: endDate !== undefined ? endDate : evaluation.endDate,
+    startDate: startDate !== undefined ? (startDate || null) : evaluation.startDate,
+    endDate: endDate !== undefined ? (endDate || null) : evaluation.endDate,
     status: status || evaluation.status,
     methodology: methodology !== undefined ? methodology : evaluation.methodology,
     objectives: objectives !== undefined ? objectives : evaluation.objectives,

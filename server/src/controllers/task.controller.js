@@ -1,5 +1,6 @@
-import { Task, Project, User } from '../models/index.js';
-import { Op } from 'sequelize';
+import { Task, Project, User, TaskAssignee, TaskComment } from '../models/index.js';
+import sequelize from '../config/database.js';
+import { Op, Sequelize } from 'sequelize';
 
 /**
  * Get all tasks with filtering
@@ -15,8 +16,13 @@ export const getAllTasks = async (req, res) => {
       where.projectId = projectId;
     }
 
+    // Support filtering by assignedTo - checks both legacy assignedTo field and TaskAssignee table.
+    // Note: TaskAssignee is always part of the include list below, so the $assignees.userId$ alias resolves.
     if (assignedTo) {
-      where.assignedTo = assignedTo;
+      where[Op.or] = [
+        { assignedTo: assignedTo },
+        { '$assignees.userId$': assignedTo }
+      ];
     }
 
     if (status) {
@@ -33,20 +39,31 @@ export const getAllTasks = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email', 'role']
+          attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
         },
         {
           model: User,
           as: 'assigner',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
+        },
+        // Include all assignees (multi-staff)
+        {
+          model: TaskAssignee,
+          as: 'assignees',
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', ['full_name', 'fullName'], 'email', 'role', 'department']
+          }]
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
+      distinct: true // Avoid duplicate rows when filtering by assignee
     });
 
     res.json({
@@ -76,22 +93,44 @@ export const getTaskById = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName', 'status']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName'], 'status']
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email', 'role', 'department']
+          attributes: ['id', ['full_name', 'fullName'], 'email', 'role', 'department']
         },
         {
           model: User,
           as: 'assigner',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         },
         {
           model: User,
           as: 'approver',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
+        },
+        // Include all assignees (multi-staff)
+        {
+          model: TaskAssignee,
+          as: 'assignees',
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', ['full_name', 'fullName'], 'email', 'role', 'department']
+          }],
+          order: [['assignedAt', 'ASC']]
+        },
+        // Include comments with author info
+        {
+          model: TaskComment,
+          as: 'comments',
+          include: [{
+            model: User,
+            as: 'author',
+            attributes: ['id', ['full_name', 'fullName'], 'email']
+          }],
+          order: [['createdAt', 'DESC']]
         }
       ]
     });
@@ -127,7 +166,8 @@ export const createTask = async (req, res) => {
       projectId,
       title,
       description,
-      assignedTo,
+      assignedTo, // Legacy: single user ID
+      assignedUsers, // New: array of user IDs for multi-staff assignment
       dueDate,
       startDate,
       priority,
@@ -234,23 +274,46 @@ export const createTask = async (req, res) => {
     // Create task
     const task = await Task.create(taskData);
 
+    // Create TaskAssignee records for multi-staff assignment
+    if (assignedUsers && Array.isArray(assignedUsers) && assignedUsers.length > 0) {
+      const assigneeRecords = assignedUsers.map(userId => ({
+        taskId: task.id,
+        userId: userId,
+        assignedBy: req.user.id,
+        assignedAt: new Date(),
+        status: 'Pending'
+      }));
+
+      await TaskAssignee.bulkCreate(assigneeRecords);
+    }
+
     // Fetch with relationships
     const fullTask = await Task.findByPk(task.id, {
       include: [
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         },
         {
           model: User,
           as: 'assigner',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
+        },
+        // Include multi-staff assignees
+        {
+          model: TaskAssignee,
+          as: 'assignees',
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
+          }]
         }
       ]
     });
@@ -275,21 +338,40 @@ export const createTask = async (req, res) => {
  * PUT /api/tasks/:id
  */
 export const updateTask = async (req, res) => {
+  const t = await sequelize.transaction();
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const { assignedUsers, ...updateData } = req.body;
 
-    const task = await Task.findByPk(id);
+    const task = await Task.findByPk(id, { transaction: t });
 
     if (!task) {
+      await t.rollback();
       return res.status(404).json({
         success: false,
         message: 'Task not found'
       });
     }
 
-    // Update task
-    await task.update(updateData);
+    await task.update(updateData, { transaction: t });
+
+    if (assignedUsers && Array.isArray(assignedUsers)) {
+      await TaskAssignee.destroy({ where: { taskId: id }, transaction: t });
+
+      if (assignedUsers.length > 0) {
+        const assigneeRecords = assignedUsers.map(userId => ({
+          taskId: id,
+          userId: userId,
+          assignedBy: req.user.id,
+          assignedAt: new Date(),
+          status: 'Pending'
+        }));
+
+        await TaskAssignee.bulkCreate(assigneeRecords, { transaction: t });
+      }
+    }
+
+    await t.commit();
 
     // Fetch updated task with relationships
     const updatedTask = await Task.findByPk(id, {
@@ -297,17 +379,27 @@ export const updateTask = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         },
         {
           model: User,
           as: 'assigner',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
+        },
+        // Include multi-staff assignees
+        {
+          model: TaskAssignee,
+          as: 'assignees',
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
+          }]
         }
       ]
     });
@@ -318,6 +410,7 @@ export const updateTask = async (req, res) => {
       task: updatedTask
     });
   } catch (error) {
+    if (!t.finished) await t.rollback();
     console.error('Error updating task:', error);
     res.status(500).json({
       success: false,
@@ -408,7 +501,7 @@ export const assignTask = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
@@ -418,7 +511,7 @@ export const assignTask = async (req, res) => {
         {
           model: User,
           as: 'assigner',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -482,12 +575,12 @@ export const updateTaskStatus = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -552,12 +645,12 @@ export const updateTaskProgress = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -586,39 +679,76 @@ export const getMyTasks = async (req, res) => {
     const userId = req.user.id;
     const { status } = req.query;
 
-    const where = { assignedTo: userId };
-
+    // Find tasks where user is assigned either via old assignedTo field OR new TaskAssignee table
+    const taskWhere = {};
     if (status) {
-      where.status = status;
+      taskWhere.status = status;
     }
 
     const tasks = await Task.findAll({
-      where,
+      where: {
+        ...taskWhere,
+        [Op.or]: [
+          { assignedTo: userId },
+          { '$assignees.user_id$': userId },
+          Sequelize.where(
+            Sequelize.col('Task.media_team_assigned'),
+            Op.contains,
+            [userId]
+          )
+        ]
+      },
       include: [
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName', 'status']
+          required: false, // LEFT JOIN to include tasks without projects
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName'], 'status']
         },
         {
           model: User,
           as: 'assigner',
-          attributes: ['id', 'fullName', 'email']
+          required: false, // LEFT JOIN to include tasks without assigner
+          attributes: ['id', ['full_name', 'fullName'], 'email']
+        },
+        {
+          model: TaskAssignee,
+          as: 'assignees',
+          required: false, // LEFT JOIN to include tasks with no multi-staff assignments
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
+          }]
         }
       ],
       order: [['dueDate', 'ASC']]
     });
 
+    // Add user's role in each task (primary assignee vs media team member)
+    const tasksWithRole = tasks.map(task => {
+      const taskData = task.toJSON();
+
+      // Determine user's role in this task
+      const isPrimaryAssignee = taskData.assignedTo === userId ||
+                               taskData.assignees?.some(a => a.userId === userId);
+      const isMediaTeamMember = taskData.mediaTeamAssigned?.includes(userId);
+
+      return {
+        ...taskData,
+        userRole: isPrimaryAssignee ? 'primary' : isMediaTeamMember ? 'media' : 'unknown'
+      };
+    });
+
     res.json({
       success: true,
-      tasks
+      tasks: tasksWithRole
     });
   } catch (error) {
     console.error('Error fetching my tasks:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch tasks',
-      error: error.message
+      message: 'Failed to fetch tasks'
     });
   }
 };
@@ -665,12 +795,12 @@ export const requestBudget = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -732,17 +862,17 @@ export const approveBudget = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         },
         {
           model: User,
           as: 'approver',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -802,17 +932,17 @@ export const rejectBudget = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         },
         {
           model: User,
           as: 'approver',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -883,12 +1013,12 @@ export const assignMediaTeam = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -915,10 +1045,10 @@ export const assignMediaTeam = async (req, res) => {
 export const updateMediaCoverageStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mediaCoverageStatus, distributionEvidence } = req.body;
+    const { mediaCoverageStatus, distributionEvidence, mediaCoverageNotes, mediaLinks } = req.body;
 
     const validStatuses = ['Not Required', 'Pending', 'In Progress', 'Completed'];
-    if (!validStatuses.includes(mediaCoverageStatus)) {
+    if (mediaCoverageStatus && !validStatuses.includes(mediaCoverageStatus)) {
       return res.status(400).json({
         success: false,
         message: `Invalid media coverage status. Must be one of: ${validStatuses.join(', ')}`
@@ -934,16 +1064,38 @@ export const updateMediaCoverageStatus = async (req, res) => {
       });
     }
 
-    const updateData = { mediaCoverageStatus };
+    const updateData = {};
 
-    // If marking as completed, set completion timestamp
-    if (mediaCoverageStatus === 'Completed') {
-      updateData.mediaCoverageCompletedAt = new Date();
+    // Update status if provided
+    if (mediaCoverageStatus) {
+      updateData.mediaCoverageStatus = mediaCoverageStatus;
+
+      // If marking as completed, set completion timestamp
+      if (mediaCoverageStatus === 'Completed') {
+        updateData.mediaCoverageCompletedAt = new Date();
+      }
     }
 
-    // Update distribution evidence if provided
+    // Update media coverage notes if provided
+    if (mediaCoverageNotes !== undefined) {
+      updateData.mediaCoverageNotes = mediaCoverageNotes;
+    }
+
+    // Update distribution evidence if provided (for backward compatibility)
     if (distributionEvidence) {
       updateData.distributionEvidence = distributionEvidence;
+    }
+
+    // Handle media links (Google Drive links for photos, videos, testimonials)
+    if (mediaLinks) {
+      // Store media links in distributionEvidence JSONB field
+      const currentEvidence = task.distributionEvidence || {};
+      updateData.distributionEvidence = {
+        ...currentEvidence,
+        mediaLinks: mediaLinks, // { photos: [...], videos: [...], testimonials: [...] }
+        uploadedBy: req.user.id,
+        uploadedAt: new Date()
+      };
     }
 
     await task.update(updateData);
@@ -954,12 +1106,12 @@ export const updateMediaCoverageStatus = async (req, res) => {
         {
           model: Project,
           as: 'project',
-          attributes: ['id', 'projectCode', 'projectName']
+          attributes: ['id', ['project_code', 'projectCode'], ['name', 'projectName']]
         },
         {
           model: User,
           as: 'assignee',
-          attributes: ['id', 'fullName', 'email']
+          attributes: ['id', ['full_name', 'fullName'], 'email']
         }
       ]
     });
@@ -974,6 +1126,206 @@ export const updateMediaCoverageStatus = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to update media coverage status',
+      error: error.message
+    });
+  }
+};
+
+// ============================================
+// TASK COMMENT ENDPOINTS
+// ============================================
+
+/**
+ * Get all comments for a task
+ * GET /api/tasks/:id/comments
+ */
+export const getTaskComments = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const task = await Task.findByPk(id);
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Task not found'
+      });
+    }
+
+    const comments = await TaskComment.findAll({
+      where: { taskId: id },
+      include: [{
+        model: User,
+        as: 'author',
+        attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
+      }],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({
+      success: true,
+      comments
+    });
+  } catch (error) {
+    console.error('Error fetching task comments:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch task comments',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Add a comment to a task
+ * POST /api/tasks/:id/comments
+ */
+export const addTaskComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content, mentionedUsers } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Comment content is required'
+      });
+    }
+
+    const task = await Task.findByPk(id);
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Task not found'
+      });
+    }
+
+    const comment = await TaskComment.create({
+      taskId: id,
+      userId: req.user.id,
+      content: content.trim(),
+      mentionedUsers: mentionedUsers || []
+    });
+
+    const fullComment = await TaskComment.findByPk(comment.id, {
+      include: [{
+        model: User,
+        as: 'author',
+        attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
+      }]
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Comment added successfully',
+      comment: fullComment
+    });
+  } catch (error) {
+    console.error('Error adding task comment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to add comment',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Update a comment
+ * PUT /api/tasks/:taskId/comments/:commentId
+ */
+export const updateTaskComment = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Comment content is required'
+      });
+    }
+
+    const comment = await TaskComment.findByPk(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Comment not found'
+      });
+    }
+
+    // Only the author can update their comment
+    if (comment.userId !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only edit your own comments'
+      });
+    }
+
+    await comment.update({
+      content: content.trim(),
+      isEdited: true
+    });
+
+    const updatedComment = await TaskComment.findByPk(commentId, {
+      include: [{
+        model: User,
+        as: 'author',
+        attributes: ['id', ['full_name', 'fullName'], 'email', 'role']
+      }]
+    });
+
+    res.json({
+      success: true,
+      message: 'Comment updated successfully',
+      comment: updatedComment
+    });
+  } catch (error) {
+    console.error('Error updating task comment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update comment',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Delete a comment
+ * DELETE /api/tasks/:taskId/comments/:commentId
+ */
+export const deleteTaskComment = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+
+    const comment = await TaskComment.findByPk(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Comment not found'
+      });
+    }
+
+    // Only the author can delete their comment
+    if (comment.userId !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only delete your own comments'
+      });
+    }
+
+    await comment.destroy();
+
+    res.json({
+      success: true,
+      message: 'Comment deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting task comment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete comment',
       error: error.message
     });
   }

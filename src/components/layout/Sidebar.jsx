@@ -71,7 +71,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   const menuItems = [
     { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.DASHBOARD_VIEW },
-    { path: '/admin/my-dashboard', icon: Activity, label: 'My Dashboard', color: 'text-indigo-600', bgColor: 'bg-indigo-50' },
+    { path: '/admin/my-dashboard', icon: Activity, label: 'My Dashboard', color: 'text-indigo-600', bgColor: 'bg-indigo-50', showOnlyWithoutPermission: PERMISSIONS.DASHBOARD_VIEW },
     {
       label: 'Orphan Care',
       icon: Baby,
@@ -105,7 +105,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/projects', icon: FolderKanban, label: 'Projects', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.PROJECTS_VIEW },
         { path: '/admin/operations/activities', icon: Target, label: 'Activities', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES },
         { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'All Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
-        { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
+        { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50' }, // No permission required - available to all users
         { path: '/admin/approvals', icon: CheckCircle, label: 'Approvals', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.APPROVALS_VIEW },
         { path: '/admin/compliance', icon: Shield, label: 'Compliance & Safeguarding', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.COMPLIANCE_VIEW },
       ]
@@ -167,7 +167,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     if (item.hasSubmenu) {
       // Filter sub-items and only show the parent if at least one sub-item is accessible
       const accessibleSubItems = item.subItems.filter((subItem) =>
-        hasPermission(subItem.permission)
+        !subItem.permission || hasPermission(subItem.permission)
       );
       if (accessibleSubItems.length > 0) {
         // Return item with filtered sub-items
@@ -176,8 +176,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       }
       return false;
     } else {
+      // Handle showOnlyWithoutPermission (for items that should hide when user has a specific permission)
+      if (item.showOnlyWithoutPermission) {
+        return !hasPermission(item.showOnlyWithoutPermission);
+      }
+
       // For regular items, check if user has permission
-      return hasPermission(item.permission);
+      // If no permission is specified, show to everyone
+      return !item.permission || hasPermission(item.permission);
     }
   });
 

@@ -16,10 +16,10 @@ const NotificationBell = () => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/notifications?limit=10');
-      if (response.data.success) {
-        setNotifications(response.data.notifications);
-        setUnreadCount(response.data.unreadCount);
+      const response = await api.Notification.getAll({ limit: 10 });
+      if (response.success) {
+        setNotifications(response.notifications || []);
+        setUnreadCount(response.unreadCount || 0);
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -50,7 +50,7 @@ const NotificationBell = () => {
   // Mark notification as read
   const handleMarkAsRead = async (id, actionUrl) => {
     try {
-      await api.put(`/api/notifications/${id}/read`);
+      await api.Notification.markAsRead(id);
       await fetchNotifications();
 
       if (actionUrl) {
@@ -65,7 +65,7 @@ const NotificationBell = () => {
   // Mark all as read
   const handleMarkAllAsRead = async () => {
     try {
-      await api.put('/api/notifications/read-all');
+      await api.Notification.markAllAsRead();
       await fetchNotifications();
     } catch (error) {
       console.error('Error marking all as read:', error);
@@ -76,7 +76,7 @@ const NotificationBell = () => {
   const handleDelete = async (id, e) => {
     e.stopPropagation();
     try {
-      await api.delete(`/api/notifications/${id}`);
+      await api.Notification.delete(id);
       await fetchNotifications();
     } catch (error) {
       console.error('Error deleting notification:', error);

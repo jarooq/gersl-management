@@ -14,14 +14,12 @@ import {
   approveBudget,
   rejectBudget,
   assignMediaTeam,
-  updateMediaCoverageStatus
-} from '../controllers/task.controller.js';
-import {
+  updateMediaCoverageStatus,
   getTaskComments,
-  createTaskComment,
+  addTaskComment,
   updateTaskComment,
   deleteTaskComment
-} from '../controllers/taskComment.controller.js';
+} from '../controllers/task.controller.js';
 import {
   uploadAttachment,
   getTaskAttachments,
@@ -70,8 +68,8 @@ router.put('/:id/media-team', verifyToken, assignMediaTeam);
 router.put('/:id/media-status', verifyToken, updateMediaCoverageStatus);
 
 // Comment endpoints
-router.get('/:taskId/comments', verifyToken, getTaskComments);
-router.post('/:taskId/comments', verifyToken, createTaskComment);
+router.get('/:id/comments', verifyToken, getTaskComments);
+router.post('/:taskId/comments', verifyToken, addTaskComment);
 router.put('/:taskId/comments/:commentId', verifyToken, updateTaskComment);
 router.delete('/:taskId/comments/:commentId', verifyToken, deleteTaskComment);
 

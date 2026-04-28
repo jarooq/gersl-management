@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Heart, Target, Clock, Users, Share2, Calendar, CheckCircle, ArrowLeft, DollarSign, Mail, Phone, User } from 'lucide-react';
+import { Heart, Target, Clock, Users, Share2, Calendar, CheckCircle, ArrowLeft, DollarSign, Mail, Phone, User, Package } from 'lucide-react';
 import { useCampaign } from '../../contexts/CampaignContext';
+import API, { getImageUrl } from '../../services/api';
 
 const CampaignDetailPage = () => {
   const { id } = useParams();
@@ -19,8 +20,30 @@ const CampaignDetailPage = () => {
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [packages, setPackages] = useState([]);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [loadingPackages, setLoadingPackages] = useState(true);
 
   const campaign = campaigns.find(c => c.id === parseInt(id));
+
+  // Load campaign packages
+  useEffect(() => {
+    const loadPackages = async () => {
+      if (campaign?.id) {
+        try {
+          setLoadingPackages(true);
+          const activePackages = await API.CampaignPackage.getActive(campaign.id);
+          setPackages(activePackages || []);
+        } catch (error) {
+          console.error('Error loading packages:', error);
+          setPackages([]);
+        } finally {
+          setLoadingPackages(false);
+        }
+      }
+    };
+    loadPackages();
+  }, [campaign?.id]);
 
   if (!campaign) {
     return (
@@ -47,7 +70,14 @@ const CampaignDetailPage = () => {
     e.preventDefault();
     setSubmitting(true);
 
-    const amount = donationAmount === 'custom' ? parseFloat(customAmount) : parseFloat(donationAmount);
+    let amount;
+    if (selectedPackage) {
+      amount = parseFloat(selectedPackage.amount);
+    } else if (donationAmount === 'custom') {
+      amount = parseFloat(customAmount);
+    } else {
+      amount = parseFloat(donationAmount);
+    }
 
     if (!amount || amount <= 0) {
       alert('Please enter a valid donation amount');
@@ -59,7 +89,7 @@ const CampaignDetailPage = () => {
       // Create donation record
       const donation = {
         campaignId: campaign.id,
-        campaignName: campaign.name,
+        campaignName: campaign.title,
         donorName: donorInfo.anonymous ? 'Anonymous' : donorInfo.name,
         email: donorInfo.email,
         phone: donorInfo.phone,
@@ -85,7 +115,7 @@ const CampaignDetailPage = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: campaign.name,
+        title: campaign.title,
         text: campaign.description,
         url: window.location.href
       });
@@ -131,38 +161,84 @@ const CampaignDetailPage = () => {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+      {/* Hero Section with Campaign Image */}
+      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 overflow-hidden">
+        {campaign.imageUrl && (
+          <div className="absolute inset-0">
+            <img
+              src={getImageUrl(campaign.imageUrl)}
+              alt={campaign.title}
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-blue-700/90 to-indigo-800/90"></div>
+          </div>
+        )}
+
+        <div className="relative container mx-auto px-4 py-12">
+          <div className="max-w-4xl mx-auto text-white">
             {/* Category Badge */}
-            <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-sm font-semibold px-4 py-2 rounded-full mb-4">
-              {campaign.category}
-            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-sm font-semibold px-4 py-2 rounded-full">
+                {campaign.category}
+              </span>
+              {campaign.status && (
+                <span className="inline-block bg-green-500/30 backdrop-blur-sm text-white text-sm font-semibold px-4 py-2 rounded-full">
+                  {campaign.status}
+                </span>
+              )}
+            </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{campaign.name}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{campaign.title}</h1>
 
             {/* Short Description */}
-            <p className="text-lg text-blue-100 mb-8">{campaign.description}</p>
+            <p className="text-lg text-blue-100 mb-6 leading-relaxed">{campaign.description}</p>
+
+            {/* Progress Bar */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-semibold text-blue-100">Campaign Progress</span>
+                <span className="text-2xl font-bold">{progress.toFixed(0)}%</span>
+              </div>
+              <div className="h-3 bg-white/20 rounded-full overflow-hidden mb-4">
+                <div
+                  className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                ></div>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-100">
+                  <span className="text-2xl font-bold text-white">${campaign.raisedAmount.toLocaleString()}</span>
+                  <span className="text-blue-200"> raised</span>
+                </span>
+                <span className="text-blue-100">
+                  of <span className="font-semibold text-white">${campaign.targetAmount.toLocaleString()}</span> goal
+                </span>
+              </div>
+            </div>
 
             {/* Key Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <p className="text-3xl font-bold mb-1">${campaign.raisedAmount.toLocaleString()}</p>
-                <p className="text-sm text-blue-100">Raised</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="w-5 h-5 text-blue-200" />
+                  <p className="text-sm text-blue-100">Donors</p>
+                </div>
+                <p className="text-2xl font-bold">{donorCount}</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <p className="text-3xl font-bold mb-1">${campaign.targetAmount.toLocaleString()}</p>
-                <p className="text-sm text-blue-100">Goal</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-5 h-5 text-blue-200" />
+                  <p className="text-sm text-blue-100">Days Left</p>
+                </div>
+                <p className="text-2xl font-bold">{daysLeft > 0 ? daysLeft : 0}</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <p className="text-3xl font-bold mb-1">{donorCount}</p>
-                <p className="text-sm text-blue-100">Donors</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <p className="text-3xl font-bold mb-1">{daysLeft > 0 ? daysLeft : 0}</p>
-                <p className="text-sm text-blue-100">Days Left</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="w-5 h-5 text-blue-200" />
+                  <p className="text-sm text-blue-100">End Date</p>
+                </div>
+                <p className="text-sm font-semibold">{new Date(campaign.endDate).toLocaleDateString()}</p>
               </div>
             </div>
           </div>
@@ -174,37 +250,50 @@ const CampaignDetailPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Campaign Details */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Progress Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-gray-800">Campaign Progress</h3>
-                <span className="text-3xl font-bold text-blue-600">{progress.toFixed(0)}%</span>
-              </div>
-
-              <div className="h-4 bg-gray-200 rounded-full overflow-hidden mb-6">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-600 to-blue-700 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(progress, 100)}%` }}
-                ></div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Amount Raised</p>
-                  <p className="text-2xl font-bold text-gray-800">${campaign.raisedAmount.toLocaleString()}</p>
+            {/* Campaign Packages - Show if available */}
+            {packages.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                <div className="flex items-center gap-2 mb-6">
+                  <Package className="w-6 h-6 text-purple-600" />
+                  <h3 className="text-2xl font-bold text-gray-800">Campaign Packages</h3>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-600 mb-1">Target Goal</p>
-                  <p className="text-2xl font-bold text-gray-800">${campaign.targetAmount.toLocaleString()}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {packages.map((pkg) => (
+                    <div
+                      key={pkg.id}
+                      className="border-2 border-gray-200 rounded-xl p-4 hover:border-purple-500 transition-all"
+                    >
+                      {pkg.imageUrl && (
+                        <img
+                          src={getImageUrl(pkg.imageUrl)}
+                          alt={pkg.name}
+                          className="w-full h-32 object-cover rounded-lg mb-3"
+                        />
+                      )}
+                      <h4 className="font-bold text-gray-900 mb-2">{pkg.name}</h4>
+                      {pkg.description && (
+                        <p className="text-sm text-gray-600 mb-3">{pkg.description}</p>
+                      )}
+                      <p className="text-2xl font-bold text-purple-600">
+                        ${parseFloat(pkg.amount).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* About Campaign */}
             <div className="bg-white rounded-2xl shadow-lg p-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-4">About This Campaign</h3>
-              <div className="prose max-w-none text-gray-600">
-                <p className="mb-4">{campaign.description}</p>
+              <div className="prose max-w-none text-gray-600 leading-relaxed">
+                <p className="mb-4 text-lg">{campaign.description}</p>
+                {campaign.type && (
+                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 my-4">
+                    <p className="text-sm font-semibold text-blue-900 mb-1">Campaign Type</p>
+                    <p className="text-blue-700">{campaign.type}</p>
+                  </div>
+                )}
                 <p className="mb-4">
                   This campaign is part of our ongoing efforts to make a meaningful impact in the communities we serve.
                   Your generous support will help us achieve our goals and bring positive change to those who need it most.
@@ -216,31 +305,35 @@ const CampaignDetailPage = () => {
               </div>
             </div>
 
-            {/* Campaign Details */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">Campaign Details</h3>
+            {/* Campaign Timeline */}
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6">Campaign Timeline</h3>
               <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Calendar className="text-blue-600 flex-shrink-0 mt-1" size={20} />
-                  <div>
-                    <p className="font-semibold text-gray-800">Campaign Duration</p>
-                    <p className="text-gray-600">
-                      {new Date(campaign.startDate).toLocaleDateString()} - {new Date(campaign.endDate).toLocaleDateString()}
-                    </p>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <Calendar className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-800">Start Date</p>
+                    <p className="text-gray-600">{new Date(campaign.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <Target className="text-blue-600 flex-shrink-0 mt-1" size={20} />
-                  <div>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-800">End Date</p>
+                    <p className="text-gray-600">{new Date(campaign.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Target className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
                     <p className="font-semibold text-gray-800">Category</p>
                     <p className="text-gray-600">{campaign.category}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Users className="text-blue-600 flex-shrink-0 mt-1" size={20} />
-                  <div>
-                    <p className="font-semibold text-gray-800">Total Donors</p>
-                    <p className="text-gray-600">{donorCount} generous supporters</p>
                   </div>
                 </div>
               </div>
@@ -261,31 +354,97 @@ const CampaignDetailPage = () => {
 
                 {!showDonationForm ? (
                   <div>
-                    {/* Quick Donation Buttons */}
-                    <div className="grid grid-cols-2 gap-3 mb-4">
-                      {suggestedAmounts.map(amount => (
+                    {/* Show Packages if available */}
+                    {packages.length > 0 ? (
+                      <div className="space-y-4 mb-4">
+                        <h4 className="font-semibold text-gray-700 text-sm mb-2 flex items-center gap-2">
+                          <Package size={16} />
+                          Select a Package
+                        </h4>
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                          {packages.map((pkg) => (
+                            <button
+                              key={pkg.id}
+                              onClick={() => {
+                                setSelectedPackage(pkg);
+                                setDonationAmount('');
+                                setShowDonationForm(true);
+                              }}
+                              className="w-full text-left bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all group"
+                            >
+                              <div className="flex items-center gap-3">
+                                {pkg.imageUrl && (
+                                  <img
+                                    src={getImageUrl(pkg.imageUrl)}
+                                    alt={pkg.name}
+                                    className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                                  />
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <h5 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                    {pkg.name}
+                                  </h5>
+                                  {pkg.description && (
+                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{pkg.description}</p>
+                                  )}
+                                  <p className="text-lg font-bold text-blue-600 mt-2">
+                                    ${parseFloat(pkg.amount).toFixed(2)}
+                                  </p>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="relative">
+                          <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300"></div>
+                          </div>
+                          <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">or</span>
+                          </div>
+                        </div>
+
                         <button
-                          key={amount}
                           onClick={() => {
-                            setDonationAmount(amount.toString());
+                            setSelectedPackage(null);
+                            setDonationAmount('custom');
                             setShowDonationForm(true);
                           }}
-                          className="bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-800 font-semibold py-3 rounded-xl transition-all"
+                          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
                         >
-                          ${amount}
+                          Enter Custom Amount
                         </button>
-                      ))}
-                    </div>
+                      </div>
+                    ) : (
+                      /* Show regular donation buttons if no packages */
+                      <div>
+                        <div className="grid grid-cols-2 gap-3 mb-4">
+                          {suggestedAmounts.map(amount => (
+                            <button
+                              key={amount}
+                              onClick={() => {
+                                setDonationAmount(amount.toString());
+                                setShowDonationForm(true);
+                              }}
+                              className="bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-800 font-semibold py-3 rounded-xl transition-all"
+                            >
+                              ${amount}
+                            </button>
+                          ))}
+                        </div>
 
-                    <button
-                      onClick={() => {
-                        setDonationAmount('custom');
-                        setShowDonationForm(true);
-                      }}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
-                    >
-                      Enter Custom Amount
-                    </button>
+                        <button
+                          onClick={() => {
+                            setDonationAmount('custom');
+                            setShowDonationForm(true);
+                          }}
+                          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
+                        >
+                          Enter Custom Amount
+                        </button>
+                      </div>
+                    )}
 
                     <button
                       onClick={handleShare}
@@ -302,7 +461,35 @@ const CampaignDetailPage = () => {
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Donation Amount
                       </label>
-                      {donationAmount === 'custom' ? (
+                      {selectedPackage ? (
+                        <div className="bg-purple-50 border-2 border-purple-600 rounded-xl p-4">
+                          <div className="flex items-center gap-3">
+                            {selectedPackage.imageUrl && (
+                              <img
+                                src={getImageUrl(selectedPackage.imageUrl)}
+                                alt={selectedPackage.name}
+                                className="w-12 h-12 object-cover rounded-lg"
+                              />
+                            )}
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-900">{selectedPackage.name}</p>
+                              <p className="text-2xl font-bold text-purple-600">
+                                ${parseFloat(selectedPackage.amount).toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedPackage(null);
+                              setDonationAmount('custom');
+                            }}
+                            className="text-sm text-purple-600 hover:text-purple-700 mt-2 w-full text-center"
+                          >
+                            Change to custom amount
+                          </button>
+                        </div>
+                      ) : donationAmount === 'custom' ? (
                         <div className="relative">
                           <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                           <input

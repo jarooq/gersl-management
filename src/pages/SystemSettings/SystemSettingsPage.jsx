@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Settings, Users, Shield, Bell, Database, Palette,
   Key, Globe, Mail, Cloud, CreditCard, Download,
   Upload, Save, CheckCircle, XCircle, Clock, Activity,
-  Sparkles, Zap
+  Sparkles, Zap, Briefcase, Building2, Plus, Trash2, Edit2
 } from 'lucide-react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { ROLES, HIERARCHY_LEVELS, getRoleName } from '../../config/roleHierarchy';
@@ -38,10 +38,184 @@ const SystemSettingsPage = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const stats = getStats();
 
+  // Departments state
+  const [departments, setDepartments] = useState([]);
+  const [showDepartmentModal, setShowDepartmentModal] = useState(false);
+  const [editingDepartment, setEditingDepartment] = useState(null);
+  const [departmentForm, setDepartmentForm] = useState({
+    name: '',
+    description: '',
+    code: '',
+    color: 'from-blue-500 to-cyan-600',
+    icon: 'briefcase',
+    isActive: true,
+    sortOrder: 0
+  });
+
+  // Load departments
+  useEffect(() => {
+    if (activeTab === 'departments') {
+      loadDepartments();
+    }
+  }, [activeTab]);
+
+  const loadDepartments = async () => {
+    try {
+      const response = await API.Departments.getAll(true); // Include inactive
+      setDepartments(response.departments || []);
+    } catch (error) {
+      console.error('Error loading departments:', error);
+    }
+  };
+
+  const handleDepartmentSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingDepartment) {
+        await API.Departments.update(editingDepartment.id, departmentForm);
+      } else {
+        await API.Departments.create(departmentForm);
+      }
+      loadDepartments();
+      setShowDepartmentModal(false);
+      setEditingDepartment(null);
+      setDepartmentForm({
+        name: '',
+        description: '',
+        code: '',
+        color: 'from-blue-500 to-cyan-600',
+        icon: 'briefcase',
+        isActive: true,
+        sortOrder: 0
+      });
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error saving department:', error);
+      alert(error.response?.data?.message || 'Failed to save department');
+    }
+  };
+
+  const handleDeleteDepartment = async (id) => {
+    if (window.confirm('Are you sure you want to deactivate this department?')) {
+      try {
+        await API.Departments.delete(id);
+        loadDepartments();
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        console.error('Error deleting department:', error);
+        alert('Failed to delete department');
+      }
+    }
+  };
+
+  const handleEditDepartment = (dept) => {
+    setEditingDepartment(dept);
+    setDepartmentForm({
+      name: dept.name,
+      description: dept.description || '',
+      code: dept.code || '',
+      color: dept.color || 'from-blue-500 to-cyan-600',
+      icon: dept.icon || 'briefcase',
+      isActive: dept.isActive !== undefined ? dept.isActive : true,
+      sortOrder: dept.sortOrder || 0
+    });
+    setShowDepartmentModal(true);
+  };
+
+  // Positions state
+  const [positions, setPositions] = useState([]);
+  const [showPositionModal, setShowPositionModal] = useState(false);
+  const [editingPosition, setEditingPosition] = useState(null);
+  const [positionForm, setPositionForm] = useState({
+    title: '',
+    description: '',
+    code: '',
+    level: '',
+    departmentId: null,
+    isActive: true,
+    sortOrder: 0
+  });
+
+  // Load positions
+  useEffect(() => {
+    if (activeTab === 'positions') {
+      loadPositions();
+    }
+  }, [activeTab]);
+
+  const loadPositions = async () => {
+    try {
+      const response = await API.Positions.getAll(true); // Include inactive
+      setPositions(response.positions || []);
+    } catch (error) {
+      console.error('Error loading positions:', error);
+    }
+  };
+
+  const handlePositionSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingPosition) {
+        await API.Positions.update(editingPosition.id, positionForm);
+      } else {
+        await API.Positions.create(positionForm);
+      }
+      loadPositions();
+      setShowPositionModal(false);
+      setEditingPosition(null);
+      setPositionForm({
+        title: '',
+        description: '',
+        code: '',
+        level: '',
+        departmentId: null,
+        isActive: true,
+        sortOrder: 0
+      });
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error saving position:', error);
+      alert(error.response?.data?.message || 'Failed to save position');
+    }
+  };
+
+  const handleDeletePosition = async (id) => {
+    if (window.confirm('Are you sure you want to deactivate this position?')) {
+      try {
+        await API.Positions.delete(id);
+        loadPositions();
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        console.error('Error deleting position:', error);
+        alert('Failed to delete position');
+      }
+    }
+  };
+
+  const handleEditPosition = (pos) => {
+    setEditingPosition(pos);
+    setPositionForm({
+      title: pos.title,
+      description: pos.description || '',
+      code: pos.code || '',
+      level: pos.level || '',
+      departmentId: pos.departmentId || null,
+      isActive: pos.isActive !== undefined ? pos.isActive : true,
+      sortOrder: pos.sortOrder || 0
+    });
+    setShowPositionModal(true);
+  };
+
   const tabs = [
     { id: 'general', name: 'General', icon: Settings },
     { id: 'users', name: 'Users', icon: Users },
     { id: 'roles', name: 'Roles & Permissions', icon: Shield },
+    { id: 'departments', name: 'Departments', icon: Building2 },
+    { id: 'positions', name: 'Positions', icon: Briefcase },
     { id: 'ai', name: 'AI Configuration', icon: Sparkles },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'backup', name: 'Backup & Recovery', icon: Database },
@@ -141,6 +315,18 @@ const SystemSettingsPage = () => {
           {activeTab === 'general' && <GeneralTab settings={systemSettings} setSettings={setSystemSettings} onSave={handleSave} />}
           {activeTab === 'users' && <UsersTab users={users} addUser={addUser} updateUser={updateUser} deleteUser={deleteUser} toggleUserStatus={toggleUserStatus} />}
           {activeTab === 'roles' && <RolesTab roles={roles} />}
+          {activeTab === 'departments' && <DepartmentsTab
+            departments={departments}
+            onAdd={() => { setEditingDepartment(null); setDepartmentForm({ name: '', description: '', code: '', color: 'from-blue-500 to-cyan-600', icon: 'briefcase', isActive: true, sortOrder: 0 }); setShowDepartmentModal(true); }}
+            onEdit={handleEditDepartment}
+            onDelete={handleDeleteDepartment}
+          />}
+          {activeTab === 'positions' && <PositionsTab
+            positions={positions}
+            onAdd={() => { setEditingPosition(null); setPositionForm({ title: '', description: '', code: '', level: '', departmentId: null, isActive: true, sortOrder: 0 }); setShowPositionModal(true); }}
+            onEdit={handleEditPosition}
+            onDelete={handleDeletePosition}
+          />}
           {activeTab === 'ai' && <AIConfigTab onSave={handleSave} />}
           {activeTab === 'notifications' && <NotificationsTab settings={notificationSettings} setSettings={setNotificationSettings} onSave={handleSave} />}
           {activeTab === 'backup' && <BackupTab settings={backupSettings} setSettings={setBackupSettings} triggerBackup={triggerBackup} onSave={handleSave} />}
@@ -149,6 +335,241 @@ const SystemSettingsPage = () => {
           {activeTab === 'security' && <SecurityTab settings={securitySettings} setSettings={setSecuritySettings} onSave={handleSave} />}
         </div>
       </div>
+
+      {/* Department Modal */}
+      {showDepartmentModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900">
+                {editingDepartment ? 'Edit Department' : 'Add New Department'}
+              </h2>
+            </div>
+
+            <form onSubmit={handleDepartmentSubmit} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Department Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={departmentForm.name}
+                  onChange={(e) => setDepartmentForm({ ...departmentForm, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g., Finance, HR, Operations"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Department Code
+                </label>
+                <input
+                  type="text"
+                  value={departmentForm.code}
+                  onChange={(e) => setDepartmentForm({ ...departmentForm, code: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g., FIN, HR, OPS"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={departmentForm.description}
+                  onChange={(e) => setDepartmentForm({ ...departmentForm, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  rows="3"
+                  placeholder="Brief description of the department..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Color Theme
+                </label>
+                <select
+                  value={departmentForm.color}
+                  onChange={(e) => setDepartmentForm({ ...departmentForm, color: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="from-blue-500 to-cyan-600">Blue</option>
+                  <option value="from-purple-500 to-pink-600">Purple</option>
+                  <option value="from-green-500 to-teal-600">Green</option>
+                  <option value="from-orange-500 to-red-600">Orange</option>
+                  <option value="from-indigo-500 to-purple-600">Indigo</option>
+                  <option value="from-yellow-400 to-orange-500">Yellow</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Sort Order
+                </label>
+                <input
+                  type="number"
+                  value={departmentForm.sortOrder}
+                  onChange={(e) => setDepartmentForm({ ...departmentForm, sortOrder: parseInt(e.target.value) || 0 })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isActive"
+                  checked={departmentForm.isActive}
+                  onChange={(e) => setDepartmentForm({ ...departmentForm, isActive: e.target.checked })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <label htmlFor="isActive" className="text-sm text-gray-700">
+                  Active
+                </label>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDepartmentModal(false);
+                    setEditingDepartment(null);
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  {editingDepartment ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Position Modal */}
+      {showPositionModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900">
+                {editingPosition ? 'Edit Position' : 'Add New Position'}
+              </h2>
+            </div>
+
+            <form onSubmit={handlePositionSubmit} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Position Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={positionForm.title}
+                  onChange={(e) => setPositionForm({ ...positionForm, title: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g., Program Manager, Finance Officer"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Position Code
+                </label>
+                <input
+                  type="text"
+                  value={positionForm.code}
+                  onChange={(e) => setPositionForm({ ...positionForm, code: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g., PM, FO"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Level
+                </label>
+                <select
+                  value={positionForm.level}
+                  onChange={(e) => setPositionForm({ ...positionForm, level: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Select Level</option>
+                  <option value="Executive">Executive</option>
+                  <option value="Senior">Senior</option>
+                  <option value="Mid">Mid</option>
+                  <option value="Entry">Entry</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={positionForm.description}
+                  onChange={(e) => setPositionForm({ ...positionForm, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  rows="3"
+                  placeholder="Brief description of the position..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Sort Order
+                </label>
+                <input
+                  type="number"
+                  value={positionForm.sortOrder}
+                  onChange={(e) => setPositionForm({ ...positionForm, sortOrder: parseInt(e.target.value) || 0 })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="positionIsActive"
+                  checked={positionForm.isActive}
+                  onChange={(e) => setPositionForm({ ...positionForm, isActive: e.target.checked })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <label htmlFor="positionIsActive" className="text-sm text-gray-700">
+                  Active
+                </label>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPositionModal(false);
+                    setEditingPosition(null);
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  {editingPosition ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -293,13 +714,40 @@ const UsersTab = ({ users, toggleUserStatus }) => {
     email: '',
     password: '',
     fullName: '',
-    role: 'Guest',
+    role: '',
     department: '',
+    position: '',
     phone: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Load dynamic dropdown data
+  const [roles, setRoles] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [positions, setPositions] = useState([]);
+
+  useEffect(() => {
+    const loadDropdownData = async () => {
+      try {
+        // Load roles - RolesAPI.getAll() returns the roles array directly
+        const rolesData = await API.Roles.getAll();
+        setRoles(rolesData || []);
+
+        // Load departments
+        const departmentsData = await API.Departments.getAll();
+        setDepartments(departmentsData.departments || []);
+
+        // Load positions
+        const positionsData = await API.Positions.getAll();
+        setPositions(positionsData.positions || []);
+      } catch (error) {
+        console.error('Error loading dropdown data:', error);
+      }
+    };
+    loadDropdownData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -315,8 +763,9 @@ const UsersTab = ({ users, toggleUserStatus }) => {
         email: '',
         password: '',
         fullName: '',
-        role: 'Guest',
+        role: '',
         department: '',
+        position: '',
         phone: ''
       });
       setTimeout(() => {
@@ -472,7 +921,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Role <span className="text-red-500">*</span>
+                    User Role <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.role}
@@ -481,19 +930,14 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                     required
                     disabled={isLoading}
                   >
-                    <option value="Admin">Admin</option>
-                    <option value="CEO">CEO</option>
-                    <option value="Programme Manager">Programme Manager</option>
-                    <option value="Finance Manager">Finance Manager</option>
-                    <option value="Finance Officer">Finance Officer</option>
-                    <option value="Fundraising Manager">Fundraising Manager</option>
-                    <option value="HR Manager">HR Manager</option>
-                    <option value="Project Officer">Project Officer</option>
-                    <option value="Field Officer">Field Officer</option>
-                    <option value="MEAL Officer">MEAL Officer</option>
-                    <option value="Accountant">Accountant</option>
-                    <option value="Guest">Guest</option>
+                    <option value="">Select Role</option>
+                    {roles.map(role => (
+                      <option key={role.id} value={role.name}>
+                        {role.name}
+                      </option>
+                    ))}
                   </select>
+                  <p className="text-xs text-gray-500 mt-1">System access level from Settings → Roles</p>
                 </div>
 
                 <div>
@@ -509,17 +953,44 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                   />
                 </div>
 
-                <div className="md:col-span-2">
+                <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Department
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     disabled={isLoading}
-                  />
+                  >
+                    <option value="">Select Department</option>
+                    {departments.map(dept => (
+                      <option key={dept.id} value={dept.name}>
+                        {dept.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">From Settings → Departments</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Position
+                  </label>
+                  <select
+                    value={formData.position}
+                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    disabled={isLoading}
+                  >
+                    <option value="">Select Position</option>
+                    {positions.map(position => (
+                      <option key={position.id} value={position.title}>
+                        {position.title}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">Job title from Settings → Positions</p>
                 </div>
               </div>
 
@@ -609,7 +1080,7 @@ const RolesTab = () => {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">
-            Based on GERSL Organizational Structure
+            Based on Global Ehsan Relief - Sri Lanka Organizational Structure
           </span>
         </div>
       </div>
@@ -1889,5 +2360,185 @@ const StatCard = ({ icon: Icon, label, value, total, color }) => (
     </div>
   </div>
 );
+
+// ============================================
+// DEPARTMENTS TAB
+// ============================================
+const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
+  const colorOptions = [
+    { value: 'from-blue-500 to-cyan-600', label: 'Blue', preview: 'bg-gradient-to-r from-blue-500 to-cyan-600' },
+    { value: 'from-purple-500 to-pink-600', label: 'Purple', preview: 'bg-gradient-to-r from-purple-500 to-pink-600' },
+    { value: 'from-green-500 to-teal-600', label: 'Green', preview: 'bg-gradient-to-r from-green-500 to-teal-600' },
+    { value: 'from-orange-500 to-red-600', label: 'Orange', preview: 'bg-gradient-to-r from-orange-500 to-red-600' },
+    { value: 'from-indigo-500 to-purple-600', label: 'Indigo', preview: 'bg-gradient-to-r from-indigo-500 to-purple-600' },
+    { value: 'from-yellow-400 to-orange-500', label: 'Yellow', preview: 'bg-gradient-to-r from-yellow-400 to-orange-500' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">Departments</h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage organizational departments ({departments.length} total)
+          </p>
+        </div>
+        <button
+          onClick={onAdd}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          Add Department
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {departments.map((dept) => (
+          <div
+            key={dept.id}
+            className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${dept.color} flex items-center justify-center text-white`}>
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEdit(dept)}
+                  className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                  title="Edit"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete(dept.id)}
+                  className="p-1 text-gray-600 hover:text-red-600 transition-colors"
+                  title="Delete"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <h3 className="font-bold text-gray-900 mb-1">{dept.name}</h3>
+            {dept.code && (
+              <p className="text-xs text-gray-500 mb-2">Code: {dept.code}</p>
+            )}
+            {dept.description && (
+              <p className="text-sm text-gray-600 mb-2 line-clamp-2">{dept.description}</p>
+            )}
+            <div className="flex items-center justify-between mt-3 pt-3 border-t">
+              <span className={`text-xs px-2 py-1 rounded ${dept.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                {dept.isActive ? 'Active' : 'Inactive'}
+              </span>
+              <span className="text-xs text-gray-500">Order: {dept.sortOrder}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {departments.length === 0 && (
+        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+          <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-600">No departments yet. Add your first department to get started.</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================
+// POSITIONS TAB
+// ============================================
+const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
+  const levelOptions = [
+    { value: 'Executive', label: 'Executive', color: 'bg-purple-100 text-purple-800' },
+    { value: 'Senior', label: 'Senior', color: 'bg-blue-100 text-blue-800' },
+    { value: 'Mid', label: 'Mid', color: 'bg-green-100 text-green-800' },
+    { value: 'Entry', label: 'Entry', color: 'bg-gray-100 text-gray-800' },
+  ];
+
+  const getLevelColor = (level) => {
+    const option = levelOptions.find(opt => opt.value === level);
+    return option ? option.color : 'bg-gray-100 text-gray-800';
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">Positions</h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage job positions and titles ({positions.length} total)
+          </p>
+        </div>
+        <button
+          onClick={onAdd}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          Add Position
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {positions.map((position) => (
+          <div
+            key={position.id}
+            className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-600 flex items-center justify-center text-white">
+                <Briefcase className="w-6 h-6" />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEdit(position)}
+                  className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                  title="Edit"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete(position.id)}
+                  className="p-1 text-gray-600 hover:text-red-600 transition-colors"
+                  title="Delete"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <h3 className="font-bold text-gray-900 mb-1">{position.title}</h3>
+            {position.code && (
+              <p className="text-xs text-gray-500 mb-2">Code: {position.code}</p>
+            )}
+            {position.level && (
+              <span className={`text-xs px-2 py-1 rounded ${getLevelColor(position.level)} inline-block mb-2`}>
+                {position.level}
+              </span>
+            )}
+            {position.description && (
+              <p className="text-sm text-gray-600 mb-2 line-clamp-2">{position.description}</p>
+            )}
+            <div className="flex items-center justify-between mt-3 pt-3 border-t">
+              <span className={`text-xs px-2 py-1 rounded ${position.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                {position.isActive ? 'Active' : 'Inactive'}
+              </span>
+              <span className="text-xs text-gray-500">Order: {position.sortOrder}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {positions.length === 0 && (
+        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+          <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-600">No positions yet. Add your first position to get started.</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default SystemSettingsPage;

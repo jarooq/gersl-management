@@ -16,6 +16,7 @@ import usersRoutes from './routes/users.routes.js';
 import orphanRoutes from './routes/orphan.routes.js';
 // import orphanNeedRoutes from './routes/orphanNeed.routes.js'; // Temporarily disabled
 import projectRoutes from './routes/project.routes.js';
+import projectTeamRoutes from './routes/projectTeam.routes.js';
 import proposalRoutes from './routes/proposal.routes.js';
 import financeRoutes from './routes/finance.routes.js';
 import hrRoutes from './routes/hr.routes.js';
@@ -23,7 +24,7 @@ import cboRoutes from './routes/cbo.routes.js';
 import partnerRoutes from './routes/partner.routes.js';
 import mealRoutes from './routes/meal.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
-import approvalRoutes from './routes/approvalRoutes.js';
+import approvalRoutes from './routes/approval.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import taskBeneficiaryRoutes from './routes/taskBeneficiary.routes.js';
 import aggregateDistributionRoutes from './routes/aggregateDistribution.routes.js';
@@ -31,11 +32,13 @@ import notificationRoutes from './routes/notification.routes.js';
 import reportRoutes from './routes/report.routes.js';
 import visitLogRoutes from './routes/visitLog.routes.js';
 import beneficiaryRoutes from './routes/beneficiaries.routes.js';
+import beneficiarySupportRoutes from './routes/beneficiarySupport.routes.js';
 import aiRoutes from './routes/ai.routes.js';
 import coordinatorRoutes from './routes/coordinator.routes.js';
 
 // New feature routes
 import campaignRoutes from './routes/campaign.routes.js';
+import campaignPackageRoutes from './routes/campaignPackage.routes.js';
 import donationRoutes from './routes/donation.routes.js';
 import invoiceRoutes from './routes/invoice.routes.js';
 import billRoutes from './routes/bill.routes.js';
@@ -86,6 +89,15 @@ import roleRoutes from './routes/role.routes.js';
 // HR Contract Management routes
 import contractRoutes from './routes/contract.routes.js';
 
+// Staff Documents routes
+import staffDocumentRoutes from './routes/staffDocument.routes.js';
+
+// Department routes
+import departmentRoutes from './routes/department.routes.js';
+
+// Position routes
+import positionRoutes from './routes/position.routes.js';
+
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
 import { notFound } from './middleware/notFound.middleware.js';
@@ -94,7 +106,7 @@ import { notFound } from './middleware/notFound.middleware.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // ============================================
 // MIDDLEWARE
@@ -109,16 +121,21 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration - Allow multiple origins
-const allowedOrigins = [
+// CORS configuration - origin list comes from env (CORS_ALLOWED_ORIGINS, comma-separated).
+// Dev defaults are kept so local Vite/CRA still work without env config.
+const devDefaultOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  'http://localhost:3000',
-  'https://gersl-management-jarooqs-projects.vercel.app',
-  'https://gersl-management.vercel.app',
-  'https://gersl-management-nu.vercel.app',
-  'https://erp-globalehsan.org', // Production frontend (CloudFront)
-  'http://gersl-management-frontend.s3-website-us-east-1.amazonaws.com', // S3 direct access
+  'http://localhost:5175',
+  'http://localhost:3000'
+];
+const envOrigins = (process.env.CORS_ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
+const allowedOrigins = [
+  ...(process.env.NODE_ENV === 'production' ? [] : devDefaultOrigins),
+  ...envOrigins,
   process.env.CORS_ORIGIN,
   process.env.FRONTEND_URL
 ].filter(Boolean);
@@ -165,8 +182,17 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
 }
 
-// Static files (for uploads)
-app.use('/uploads', express.static('uploads'));
+// Static files (for uploads) — CORS headers only for whitelisted origins.
+// Reflecting req.headers.origin would let any site read authenticated uploads.
+app.use('/uploads', (req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Vary', 'Origin');
+  }
+  next();
+}, express.static('uploads'));
 
 // ============================================
 // ROUTES
@@ -188,13 +214,17 @@ app.use('/api/users', usersRoutes);
 app.use('/api/orphans', orphanRoutes);
 // app.use('/api/orphan-needs', orphanNeedRoutes); // Temporarily disabled
 app.use('/api/projects', projectRoutes);
+app.use('/api', projectTeamRoutes); // Project team management routes
 app.use('/api/proposals', proposalRoutes);
 app.use('/api/finance', financeRoutes);
 // HR specific routes must come BEFORE general /api/hr route
 app.use('/api/hr/onboarding', hrOnboardingRoutes);
 app.use('/api/hr/appraisal', hrAppraisalRoutes);
 app.use('/api/hr/contracts', contractRoutes);
+app.use('/api/hr/documents', staffDocumentRoutes);
 app.use('/api/hr', hrRoutes);
+app.use('/api/settings/departments', departmentRoutes);
+app.use('/api/settings/positions', positionRoutes);
 // CBO specific routes must come BEFORE general /api/cbo route
 app.use('/api/cbo/volunteers', cboVolunteerRoutes);
 app.use('/api/cbo/activities', cboActivityRoutes);
@@ -211,17 +241,19 @@ app.use('/api/meal', mealRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/approvals', approvalRoutes);
 app.use('/api/tasks', taskRoutes);
-app.use('/api', taskBeneficiaryRoutes);
-app.use('/api', aggregateDistributionRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/visit-logs', visitLogRoutes);
 app.use('/api/beneficiaries', beneficiaryRoutes);
+app.use('/api/beneficiary-support', beneficiarySupportRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/coordinators', coordinatorRoutes);
 
 // New feature routes
+// Campaign routes first (handles GET /campaigns, GET /campaigns/:id, POST /campaigns, etc.)
 app.use('/api/campaigns', campaignRoutes);
+// Package routes second (handles /campaigns/:campaignId/packages/*)
+app.use('/api/campaigns', campaignPackageRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/bills', billRoutes);
@@ -260,6 +292,11 @@ app.use('/api/procurement', procurementRoutes);
 // Roles & Permissions routes
 app.use('/api/roles', roleRoutes);
 
+// Task-specific routes (mounted at /api to catch specific patterns)
+// MUST BE LAST among API routes to not interfere with other routes
+app.use('/api', taskBeneficiaryRoutes);
+app.use('/api', aggregateDistributionRoutes);
+
 // 404 handler
 app.use(notFound);
 
@@ -290,7 +327,7 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log('');
       console.log('🚀 ====================================');
-      console.log(`   GERSL Management API Server`);
+      console.log(`   Global Ehsan Relief - Sri Lanka API`);
       console.log('   ====================================');
       console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`   Server: http://localhost:${PORT}`);

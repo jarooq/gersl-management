@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
-import { Project, User, Expense, Indicator } from '../models/index.js';
+import { Project, User, Expense, Indicator, ProjectTeamMember } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { DEPARTMENT_RESTRICTED_ROLES } from '../constants/roles.js';
 
 // ============================================
 // GET ALL PROJECTS
@@ -20,6 +21,18 @@ export const getAllProjects = asyncHandler(async (req, res) => {
 
   if (status) where.status = status;
   if (programmeArea) where.programmeArea = programmeArea;
+
+  // 🔒 DEPARTMENT-BASED ACCESS CONTROL
+  // Project Officers can ONLY see projects in their department
+  // Managers, Directors, Admin, CEO can see ALL projects
+  const user = req.user;
+  const userRole = user.role;
+  const userDepartment = user.department;
+
+  // If user is a Project Officer or restricted role, filter by their department
+  if (DEPARTMENT_RESTRICTED_ROLES.includes(userRole) && userDepartment) {
+    where.department = userDepartment;
+  }
 
   const { count, rows: projects } = await Project.findAndCountAll({
     where,
@@ -71,6 +84,19 @@ export const getProjectById = asyncHandler(async (req, res) => {
       {
         model: Indicator,
         as: 'indicators'
+      },
+      {
+        model: ProjectTeamMember,
+        as: 'teamMembers',
+        where: { isActive: true },
+        required: false,
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: ['id', 'fullName', 'username', 'email', 'role', 'department', 'position', 'phone']
+          }
+        ]
       }
     ]
   });

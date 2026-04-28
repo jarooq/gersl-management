@@ -46,9 +46,6 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
       }
     }
 
-    // Store plain password before hashing (for email)
-    const plainPassword = password;
-
     // Create user
     const user = await User.create({
       username,
@@ -61,19 +58,17 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
       phone: phone || null
     });
 
-    // Send welcome email with credentials
+    // Welcome email (no password — recipient uses forgot-password to set one).
     try {
       const { sendNewUserEmail } = await import('../utils/emailService.js');
-      await sendNewUserEmail(user.email, user.username, plainPassword);
-      console.log('✅ Welcome email sent to:', user.email);
+      await sendNewUserEmail(user.email, user.username);
     } catch (emailError) {
-      console.error('❌ Failed to send welcome email:', emailError);
-      // Continue anyway - user was created successfully
+      console.error('Failed to send welcome email:', emailError);
     }
 
     res.status(201).json({
       success: true,
-      message: 'User created successfully. Welcome email sent with login credentials.',
+      message: 'User created successfully. Welcome email sent.',
       data: {
         id: user.id,
         username: user.username,

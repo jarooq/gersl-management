@@ -64,7 +64,7 @@ const PermissionRoute = ({
   department,
   maxHierarchyLevel,
   fallback,
-  redirectTo = '/admin/dashboard'
+  redirectTo = '/admin/my-dashboard'
 }) => {
   const {
     isLoggedIn,

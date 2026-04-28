@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
 import { User } from '../models/index.js';
 import { asyncHandler, AppError, BadRequestError, UnauthorizedError, ConflictError } from '../middleware/error.middleware.js';
+import { sendNewUserEmail } from '../utils/emailService.js';
 
 // ============================================
 // PASSWORD VALIDATION
@@ -133,6 +134,11 @@ export const register = asyncHandler(async (req, res) => {
   user.lastLogin = new Date();
   await user.save();
 
+  // Welcome email (no password — user must use forgot-password flow if needed).
+  sendNewUserEmail(email, username).catch(error => {
+    console.error('Failed to send welcome email:', error);
+  });
+
   // Set httpOnly cookies
   setAuthCookies(res, accessToken, refreshToken);
 
@@ -217,9 +223,6 @@ export const login = asyncHandler(async (req, res) => {
   // Load permissions from database based on user's role
   const userWithPermissions = user.toJSON();
 
-  console.log('🔍 login - User role:', userWithPermissions.role);
-  console.log('🔍 login - User ID:', userWithPermissions.id);
-
   try {
     // Query to get role permissions from database
     const rolePermissions = await user.sequelize.query(`
@@ -235,11 +238,9 @@ export const login = asyncHandler(async (req, res) => {
     });
 
     userWithPermissions.permissions = rolePermissions || [];
-    console.log(`✅ login - Loaded ${rolePermissions?.length || 0} permissions from database for ${userWithPermissions.role}`);
 
     // If Admin has no permissions in database, add wildcard permission
     if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
-      console.log('⚠️ login - Admin has no permissions in DB, adding wildcard (*)');
       userWithPermissions.permissions = [{
         id: 0,
         permissionKey: '*',
@@ -247,12 +248,8 @@ export const login = asyncHandler(async (req, res) => {
         description: 'Full system access'
       }];
     }
-
-    if (rolePermissions?.length > 0) {
-      console.log('📋 login - First few permissions:', rolePermissions.slice(0, 5).map(p => p.permissionKey));
-    }
   } catch (error) {
-    console.error('❌ login - Error loading permissions from database:', error);
+    console.error('login - Error loading permissions from database:', error);
     // Fallback: If Admin, give wildcard permission
     if (userWithPermissions.role === 'Admin') {
       userWithPermissions.permissions = [{
@@ -265,8 +262,6 @@ export const login = asyncHandler(async (req, res) => {
       userWithPermissions.permissions = [];
     }
   }
-
-  console.log('📤 login - Response user permissions count:', userWithPermissions.permissions.length);
 
   res.json({
     success: true,
@@ -361,9 +356,6 @@ export const getMe = asyncHandler(async (req, res) => {
   // we'll add a wildcard permission for Admin users
   const userWithPermissions = user.toJSON();
 
-  console.log('🔍 getMe - User role:', userWithPermissions.role);
-  console.log('🔍 getMe - User ID:', userWithPermissions.id);
-
   try {
     // Query to get role permissions from database
     const rolePermissions = await user.sequelize.query(`
@@ -379,11 +371,9 @@ export const getMe = asyncHandler(async (req, res) => {
     });
 
     userWithPermissions.permissions = rolePermissions || [];
-    console.log(`✅ getMe - Loaded ${rolePermissions?.length || 0} permissions from database for ${userWithPermissions.role}`);
 
     // If Admin has no permissions in database, add wildcard permission
     if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
-      console.log('⚠️ getMe - Admin has no permissions in DB, adding wildcard (*)');
       userWithPermissions.permissions = [{
         id: 0,
         permissionKey: '*',
@@ -391,12 +381,8 @@ export const getMe = asyncHandler(async (req, res) => {
         description: 'Full system access'
       }];
     }
-
-    if (rolePermissions?.length > 0) {
-      console.log('📋 getMe - First few permissions:', rolePermissions.slice(0, 5).map(p => p.permissionKey));
-    }
   } catch (error) {
-    console.error('❌ getMe - Error loading permissions from database:', error);
+    console.error('getMe - Error loading permissions from database:', error);
     // Fallback: If Admin, give wildcard permission
     if (userWithPermissions.role === 'Admin') {
       userWithPermissions.permissions = [{
@@ -409,8 +395,6 @@ export const getMe = asyncHandler(async (req, res) => {
       userWithPermissions.permissions = [];
     }
   }
-
-  console.log('📤 getMe - Response:', JSON.stringify({ user: userWithPermissions }, null, 2));
 
   // Add no-cache headers to prevent browser from caching this response
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -521,28 +505,14 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   try {
     const { sendPasswordResetEmail } = await import('../utils/emailService.js');
     await sendPasswordResetEmail(user.email, user.username, resetToken);
-    console.log('✅ Password reset email sent to:', user.email);
   } catch (emailError) {
-    console.error('❌ Failed to send password reset email:', emailError);
+    console.error('Failed to send password reset email:', emailError);
     // Continue anyway - don't reveal email sending failures to user
-  }
-
-  // Only log in development mode
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔐 Password Reset Request');
-    console.log('User:', user.email);
-    console.log('Reset URL:', `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`);
-    console.log('Token expires:', user.passwordResetExpires);
   }
 
   res.json({
     success: true,
-    message: 'If an account with that email exists, a password reset link has been sent to your email.',
-    // REMOVE THIS IN PRODUCTION - only for development testing
-    ...(process.env.NODE_ENV === 'development' && {
-      resetToken,
-      note: 'Reset token provided for development only'
-    })
+    message: 'If an account with that email exists, a password reset link has been sent to your email.'
   });
 });
 

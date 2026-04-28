@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import {
   X, Calendar, DollarSign, Users, Target, MapPin, Heart,
   CheckCircle, Clock, AlertCircle, Plus, Edit, Trash2, FileText,
-  MessageSquare, BarChart3, Users2, Lightbulb, Send, Eye, RefreshCw, CheckSquare
+  MessageSquare, BarChart3, Users2, Lightbulb, Send, Eye, RefreshCw, CheckSquare, GanttChartSquare
 } from 'lucide-react';
 import { useProjects } from '../../../contexts/ProjectContext';
 import TaskDetailView from '../../Operations/components/TaskDetailView';
@@ -11,8 +11,11 @@ import TaskAssignmentModal from '../../Operations/components/TaskAssignmentModal
 import TaskProgressModal from '../../Operations/components/TaskProgressModal';
 import TaskCompletionModal from '../../Operations/components/TaskCompletionModal';
 import CreateTaskModal from '../../Operations/components/CreateTaskModal';
+import TaskFormModal from '../../Operations/components/TaskFormModal';
+import BeneficiarySelectionModal from '../../Operations/components/BeneficiarySelectionModal';
 import Toast from '../../../components/ui/Toast';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
+import GanttChart from '../../../components/charts/GanttChart';
 import * as taskService from '../../../services/taskService';
 
 const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTask, onGenerateReport }) => {
@@ -34,12 +37,47 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
   const [showTaskProgress, setShowTaskProgress] = useState(false);
   const [showTaskCompletion, setShowTaskCompletion] = useState(false);
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const [showEditTask, setShowEditTask] = useState(false);
+  const [showBeneficiarySelection, setShowBeneficiarySelection] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isLoadingTask, setIsLoadingTask] = useState(false);
   const [taskError, setTaskError] = useState(null);
   const [toast, setToast] = useState(null);
 
+  // Real tasks from backend (replaces project.tasks)
+  const [projectTasks, setProjectTasks] = useState([]);
+  const [loadingTasks, setLoadingTasks] = useState(true);
+
   const { addCFMFeedback, resolveCFMFeedback, refreshProject } = useProjects();
+
+  // Load tasks from backend API when project changes
+  const loadProjectTasks = useCallback(async () => {
+    if (!project?.id) return;
+
+    try {
+      setLoadingTasks(true);
+      const response = await taskService.fetchTasks({ projectId: project.id });
+      console.log('📋 Project Tasks API Response:', response);
+
+      // The API returns { success: true, tasks: [...] } or { success: true, data: [...] }
+      const tasksData = response.tasks || response.data || [];
+      console.log('📋 Extracted Tasks:', tasksData);
+
+      if (response.success && tasksData) {
+        setProjectTasks(tasksData);
+      }
+    } catch (error) {
+      console.error('❌ Error loading project tasks:', error);
+      setTaskError('Failed to load tasks');
+    } finally {
+      setLoadingTasks(false);
+    }
+  }, [project?.id]);
+
+  // Load tasks when component mounts or project changes
+  useEffect(() => {
+    loadProjectTasks();
+  }, [loadProjectTasks]);
 
   if (!project) return null;
 
@@ -178,6 +216,48 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     setShowTaskAssignment(true);
   }, []);
 
+  const handleEditTask = useCallback((task) => {
+    setSelectedTask(task);
+    setShowEditTask(true);
+  }, []);
+
+  const handleSelectBeneficiaries = useCallback((task) => {
+    setSelectedTask(task);
+    setShowBeneficiarySelection(true);
+  }, []);
+
+  const handleDeleteTask = useCallback(async (task) => {
+    if (!window.confirm(`Are you sure you want to delete the task "${task.title || task.name}"?`)) {
+      return;
+    }
+
+    try {
+      setIsLoadingTask(true);
+      await taskService.deleteTask(task.id);
+
+      setToast({
+        message: 'Task deleted successfully',
+        type: 'success'
+      });
+
+      // Reload tasks from API
+      await loadProjectTasks();
+
+      // Call parent callback if provided
+      if (onDeleteTask) {
+        onDeleteTask(task.id);
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      setToast({
+        message: error.message || 'Failed to delete task',
+        type: 'error'
+      });
+    } finally {
+      setIsLoadingTask(false);
+    }
+  }, [loadProjectTasks, onDeleteTask]);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
@@ -258,6 +338,17 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               }`}
             >
               Tasks
+            </button>
+            <button
+              onClick={() => setActiveTab('timeline')}
+              className={`px-6 py-3 font-semibold transition flex items-center gap-2 ${
+                activeTab === 'timeline'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <GanttChartSquare size={16} />
+              Timeline
             </button>
           </div>
 
@@ -525,7 +616,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle>Tasks ({project.tasks?.length || 0})</CardTitle>
+                  <CardTitle>Tasks ({projectTasks?.length || 0})</CardTitle>
                   <button
                     onClick={() => setShowCreateTask(true)}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
@@ -559,9 +650,13 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   </div>
                 )}
 
-                {project.tasks && project.tasks.length > 0 ? (
+                {loadingTasks ? (
+                  <div className="text-center py-8">
+                    <LoadingSpinner size="md" message="Loading tasks..." />
+                  </div>
+                ) : projectTasks && projectTasks.length > 0 ? (
                   <div className="space-y-3">
-                    {project.tasks.map((task) => {
+                    {projectTasks.map((task) => {
                       const dueDateInfo = getDueDateLabel(task.dueDate);
                       return (
                         <div key={task.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition bg-white shadow-sm">
@@ -627,6 +722,13 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                             {task.status !== 'Completed' && (
                               <>
                                 <button
+                                  onClick={() => handleEditTask(task)}
+                                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition text-sm font-semibold"
+                                >
+                                  <Edit size={16} />
+                                  Edit
+                                </button>
+                                <button
                                   onClick={() => handleUpdateProgress(task)}
                                   className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition text-sm font-semibold"
                                 >
@@ -640,8 +742,23 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                                   <CheckSquare size={16} />
                                   Complete
                                 </button>
+                                {task.involvesBeneficiaries && task.taskType === 'Beneficiary Selection' && (
+                                  <button
+                                    onClick={() => handleSelectBeneficiaries(task)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition text-sm font-semibold"
+                                  >
+                                    <Users size={16} />
+                                    Select
+                                  </button>
+                                )}
                               </>
                             )}
+                            <button
+                              onClick={() => handleDeleteTask(task)}
+                              className="flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm font-semibold"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </div>
                         </div>
                       );
@@ -650,6 +767,18 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 ) : (
                   <p className="text-center text-gray-500 py-8">No tasks added yet</p>
                 )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Timeline Tab */}
+          {activeTab === 'timeline' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Project Timeline - Gantt Chart</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <GanttChart tasks={projectTasks || []} />
               </CardContent>
             </Card>
           )}
@@ -824,6 +953,10 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               setShowTaskDetailView(false);
               setShowTaskCompletion(true);
             }}
+            onSelectBeneficiaries={() => {
+              setShowTaskDetailView(false);
+              setShowBeneficiarySelection(true);
+            }}
           />
         )}
 
@@ -886,10 +1019,8 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 setShowTaskProgress(false);
                 setSelectedTask(null);
 
-                // Refresh project data to show updated tasks
-                if (refreshProject) {
-                  await refreshProject(project.id);
-                }
+                // Reload tasks from API to show updated tasks
+                await loadProjectTasks();
 
                 // Show success toast
                 setToast({ message: 'Task progress updated successfully', type: 'success' });
@@ -928,10 +1059,8 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 setShowTaskCompletion(false);
                 setSelectedTask(null);
 
-                // Refresh project data to show updated tasks
-                if (refreshProject) {
-                  await refreshProject(project.id);
-                }
+                // Reload tasks from API to show updated tasks
+                await loadProjectTasks();
 
                 // Show success toast
                 setToast({ message: 'Task completed successfully', type: 'success' });
@@ -950,18 +1079,57 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
           isOpen={showCreateTask}
           onClose={() => setShowCreateTask(false)}
           defaultProjectId={project.id}
+          projectTeamMembers={project.teamMembers || []}
           onTaskCreated={async () => {
             setShowCreateTask(false);
 
-            // Refresh project data to show the new task
-            if (refreshProject) {
-              await refreshProject(project.id);
-            }
+            // Reload tasks from API to show the new task
+            await loadProjectTasks();
 
             // Show success toast
             setToast({ message: 'Task created successfully', type: 'success' });
           }}
         />
+
+        {/* Edit Task Modal */}
+        {showEditTask && selectedTask && (
+          <TaskFormModal
+            mode="edit"
+            task={selectedTask}
+            isOpen={showEditTask}
+            onClose={() => {
+              setShowEditTask(false);
+              setSelectedTask(null);
+            }}
+            projectTeamMembers={project.teamMembers || []}
+            onTaskUpdated={async () => {
+              // Reload tasks from API to show the updated task
+              await loadProjectTasks();
+
+              // Show success toast
+              setToast({ message: 'Task updated successfully', type: 'success' });
+            }}
+          />
+        )}
+
+        {/* Beneficiary Selection Modal */}
+        {showBeneficiarySelection && selectedTask && (
+          <BeneficiarySelectionModal
+            isOpen={showBeneficiarySelection}
+            onClose={() => {
+              setShowBeneficiarySelection(false);
+              setSelectedTask(null);
+            }}
+            task={selectedTask}
+            onBeneficiariesSelected={async () => {
+              // Reload tasks from API to show the updated task
+              await loadProjectTasks();
+
+              // Show success toast
+              setToast({ message: 'Beneficiaries selected successfully', type: 'success' });
+            }}
+          />
+        )}
 
         {/* Loading Overlay */}
         {isLoadingTask && (

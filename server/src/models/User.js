@@ -133,10 +133,81 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     allowNull: true,
     comment: 'Account locked until this timestamp after too many failed attempts'
+  },
+
+  // HR-specific fields for Staff Profile
+  employeeId: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+    unique: true,
+    field: 'employee_id',
+    comment: 'Unique employee identifier'
+  },
+  dateOfBirth: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'date_of_birth',
+    comment: 'Employee date of birth'
+  },
+  gender: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    comment: 'Employee gender (Male, Female, Other)'
+  },
+  address: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    comment: 'Employee residential address'
+  },
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    comment: 'Employee biography/profile description'
+  },
+  joiningDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+    field: 'joining_date',
+    comment: 'Date when employee joined the organization'
+  },
+  salary: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: true,
+    comment: 'Employee monthly salary'
+  },
+  contractType: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+    field: 'contract_type',
+    comment: 'Type of employment contract (Permanent, Contract, Part-time, etc.)'
+  },
+  workHours: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+    field: 'work_hours',
+    comment: 'Working hours (e.g., 9:00 AM - 5:00 PM)'
+  },
+  leaveBalance: {
+    type: DataTypes.INTEGER,
+    defaultValue: 21,
+    field: 'leave_balance',
+    comment: 'Number of leave days available'
+  },
+  emergencyContact: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'emergency_contact',
+    comment: 'Emergency contact name and phone number'
+  },
+  position: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    comment: 'Job position/title'
   }
 }, {
   tableName: 'users',
   timestamps: true,
+  underscored: true,
   hooks: {
     beforeCreate: async (user) => {
       if (user.password) {

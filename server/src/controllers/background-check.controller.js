@@ -19,7 +19,7 @@ export const getAllBackgroundChecks = asyncHandler(async (req, res) => {
     limit: parseInt(limit),
     offset: parseInt(offset),
     include: [
-      { model: Staff, as: 'staff', attributes: ['id', 'firstName', 'lastName'] },
+      { model: Staff, as: 'staff', attributes: ['id', 'fullName'] },
       { model: User, as: 'creator', attributes: ['id', 'fullName'] }
     ],
     order: [['requestedDate', 'DESC']]
@@ -80,7 +80,7 @@ export const createBackgroundCheck = asyncHandler(async (req, res) => {
 
   const createdCheck = await BackgroundCheck.findByPk(backgroundCheck.id, {
     include: [
-      { model: Staff, as: 'staff', attributes: ['id', 'firstName', 'lastName'] },
+      { model: Staff, as: 'staff', attributes: ['id', 'fullName'] },
       { model: User, as: 'creator', attributes: ['id', 'fullName'] }
     ]
   });
@@ -133,7 +133,7 @@ export const updateBackgroundCheck = asyncHandler(async (req, res) => {
 
   const updatedCheck = await BackgroundCheck.findByPk(id, {
     include: [
-      { model: Staff, as: 'staff', attributes: ['id', 'firstName', 'lastName'] },
+      { model: Staff, as: 'staff', attributes: ['id', 'fullName'] },
       { model: User, as: 'creator', attributes: ['id', 'fullName'] }
     ]
   });

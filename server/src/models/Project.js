@@ -12,7 +12,7 @@ const Project = sequelize.define('Project', {
   projectName: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    field: 'project_name'
+    field: 'name'
   },
   projectCode: {
     type: DataTypes.STRING(100),
@@ -68,6 +68,11 @@ const Project = sequelize.define('Project', {
   programmeArea: {
     type: DataTypes.STRING(100),
     field: 'programme_area'
+  },
+  department: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    field: 'department'
   },
   projectManager: {
     type: DataTypes.STRING(150),
@@ -244,6 +249,7 @@ const Project = sequelize.define('Project', {
     { fields: ['project_code'] },
     { fields: ['status'] },
     { fields: ['programme_area'] },
+    { fields: ['department'] },
     { fields: ['manager_id'] },
     { fields: ['proposal_id'] }
   ]

@@ -117,6 +117,18 @@ export default defineConfig({
       usePolling: false,
       interval: 1000,
     },
+    proxy: {
+      '/uploads': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   preview: {
     port: 5173,

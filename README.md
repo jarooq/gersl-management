@@ -1,6 +1,6 @@
-# GERSL Management System
+# Global Ehsan Relief - Sri Lanka Management System
 
-A comprehensive NGO management ERP system for Global Ehsan Relief and Services Limited.
+A comprehensive NGO management ERP system for Global Ehsan Relief - Sri Lanka.
 
 ## Tech Stack
 

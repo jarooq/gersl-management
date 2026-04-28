@@ -31,7 +31,7 @@ export const getAllRoles = async (req, res) => {
       FROM roles r
       LEFT JOIN role_permissions rp ON rp.role_id = r.id
       LEFT JOIN permissions p ON p.id = rp.permission_id
-      LEFT JOIN users u ON u.role = r.name
+      LEFT JOIN users u ON u.role::text = r.name
       GROUP BY r.id
       ORDER BY
         CASE WHEN r.is_system_role THEN 0 ELSE 1 END,
@@ -572,7 +572,7 @@ export const getRoleStats = async (req, res) => {
         r.name as role_name,
         COUNT(u.id) as user_count
       FROM roles r
-      LEFT JOIN users u ON u.role = r.name
+      LEFT JOIN users u ON u.role::text = r.name
       GROUP BY r.id, r.name
       ORDER BY user_count DESC
     `, {

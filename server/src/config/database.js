@@ -26,10 +26,9 @@ const sequelize = useSQLite
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       dialectOptions: {
         family: 4, // Force IPv4 to avoid IPv6 connection issues
-        ssl: process.env.NODE_ENV === 'production' ? {
-          require: true,
-          rejectUnauthorized: false
-        } : false
+        ssl: process.env.NODE_ENV === 'production'
+          ? { require: true, rejectUnauthorized: process.env.DB_SSL_STRICT !== 'false' }
+          : false
       },
       pool: {
         max: 10,
@@ -55,10 +54,9 @@ const sequelize = useSQLite
         dialectOptions: {
           // Force IPv4 to avoid IPv6 connection issues on some hosts
           family: 4,
-          ssl: process.env.NODE_ENV === 'production' ? {
-            require: true,
-            rejectUnauthorized: false
-          } : false
+          ssl: process.env.NODE_ENV === 'production'
+            ? { require: true, rejectUnauthorized: process.env.DB_SSL_STRICT !== 'false' }
+            : false
         },
         pool: {
           max: 10,

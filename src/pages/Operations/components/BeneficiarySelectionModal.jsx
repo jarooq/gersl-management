@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useBeneficiaries } from '../../../contexts/BeneficiaryContext';
 import { addBeneficiariesToTaskBulk, getTaskBeneficiaries } from '../../../services/taskBeneficiaryService';
+import BeneficiaryFormModal from '../../../components/beneficiaries/BeneficiaryFormModal';
 import {
   X,
   Search,
@@ -14,11 +15,12 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
-  Loader
+  Loader,
+  UserPlus
 } from 'lucide-react';
 
 const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded }) => {
-  const { beneficiaries, loading: beneficiariesLoading } = useBeneficiaries();
+  const { beneficiaries, loading: beneficiariesLoading, refreshBeneficiaries } = useBeneficiaries();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState([]);
@@ -27,6 +29,8 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [newlyRegisteredId, setNewlyRegisteredId] = useState(null);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -136,6 +140,33 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
     }
   };
 
+  const handleBeneficiaryRegistered = async (newBeneficiary) => {
+    try {
+      // Refresh the beneficiaries list
+      await refreshBeneficiaries();
+
+      // Set the newly registered beneficiary ID for highlighting
+      setNewlyRegisteredId(newBeneficiary.id);
+
+      // Auto-select the newly registered beneficiary
+      setSelectedBeneficiaries(prev => [...prev, newBeneficiary.id]);
+
+      // Show success message
+      setSuccessMessage(`Successfully registered ${newBeneficiary.full_name}! They have been auto-selected.`);
+
+      // Close the registration form
+      setShowRegisterForm(false);
+
+      // Clear the highlight after 5 seconds
+      setTimeout(() => {
+        setNewlyRegisteredId(null);
+      }, 5000);
+    } catch (err) {
+      console.error('Error after beneficiary registration:', err);
+      setError('Beneficiary registered but failed to refresh the list');
+    }
+  };
+
   // Filter beneficiaries based on search and filters
   const filteredBeneficiaries = beneficiaries?.filter(beneficiary => {
     // Search filter
@@ -185,7 +216,8 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
@@ -233,16 +265,25 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
 
         {/* Search and Filters */}
         <div className="p-6 space-y-4 border-b border-gray-200">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by name, NIC, or phone number..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+          {/* Search Bar with Register Button */}
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by name, NIC, or phone number..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <button
+              onClick={() => setShowRegisterForm(true)}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold flex items-center gap-2 whitespace-nowrap"
+            >
+              <UserPlus size={18} />
+              Register New
+            </button>
           </div>
 
           {/* Filter Toggle */}
@@ -395,6 +436,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
               {filteredBeneficiaries.map(beneficiary => {
                 const isExisting = existingBeneficiaries.includes(beneficiary.id);
                 const isSelected = selectedBeneficiaries.includes(beneficiary.id);
+                const isNewlyRegistered = beneficiary.id === newlyRegisteredId;
                 const age = beneficiary.date_of_birth
                   ? new Date().getFullYear() - new Date(beneficiary.date_of_birth).getFullYear()
                   : null;
@@ -405,6 +447,8 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                     className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
                       isExisting
                         ? 'border-gray-300 bg-gray-100 opacity-60 cursor-not-allowed'
+                        : isNewlyRegistered
+                        ? 'border-green-500 bg-green-50 shadow-lg'
                         : isSelected
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-blue-300'
@@ -418,6 +462,11 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                           {isExisting && (
                             <span className="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
                               Already Added
+                            </span>
+                          )}
+                          {isNewlyRegistered && (
+                            <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-bold animate-pulse">
+                              Just Registered!
                             </span>
                           )}
                         </h3>
@@ -491,7 +540,15 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
           </button>
         </div>
       </div>
-    </div>
+      </div>
+
+      {/* Beneficiary Registration Form Modal */}
+      <BeneficiaryFormModal
+        isOpen={showRegisterForm}
+        onClose={() => setShowRegisterForm(false)}
+        onSuccess={handleBeneficiaryRegistered}
+      />
+    </>
   );
 };
 

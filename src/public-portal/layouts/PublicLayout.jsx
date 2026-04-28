@@ -72,8 +72,8 @@ const PublicLayout = ({ children }) => {
             <div className="flex items-center justify-between">
               <Link to="/" className="inline-block">
                 <img
-                  src="/GER NEW LOGO-03.png"
-                  alt="GERSL Logo"
+                  src="/Logo 10.jpeg"
+                  alt="Global Ehsan Relief - Sri Lanka Logo"
                   className="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-105 rounded-lg"
                 />
               </Link>
@@ -152,16 +152,16 @@ const PublicLayout = ({ children }) => {
             <div className="lg:col-span-4">
               <Link to="/" className="inline-block mb-6">
                 <img
-                  src="/GER NEW LOGO-03.png"
-                  alt="GERSL Logo"
+                  src="/Logo 10.jpeg"
+                  alt="Global Ehsan Relief - Sri Lanka Logo"
                   className="h-20 w-auto object-contain brightness-110 rounded-lg"
                 />
               </Link>
               <h3 className="text-white font-bold text-xl mb-3">
-                Global Education & Relief Services Lanka
+                Global Ehsan Relief - Sri Lanka
               </h3>
               <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                Empowering communities through education, humanitarian relief, and sustainable development across Sri Lanka since 2009.
+                Inspired by Islamic values, we empower communities through education, relief services, and sustainable development across Sri Lanka.
               </p>
               <div className="flex items-center gap-3">
                 <a
@@ -265,7 +265,7 @@ const PublicLayout = ({ children }) => {
               <ul className="space-y-3 text-sm">
                 <li className="flex items-start gap-3">
                   <MapPin size={16} className="mt-0.5 flex-shrink-0 text-yellow-400" />
-                  <span>Colombo, Sri Lanka</span>
+                  <span>65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone size={16} className="flex-shrink-0 text-yellow-400" />
@@ -294,7 +294,7 @@ const PublicLayout = ({ children }) => {
         <div className="border-t border-gray-800">
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
-              <p>&copy; {new Date().getFullYear()} GERSL - Global Education and Relief Services Lanka. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} Global Ehsan Relief - Sri Lanka. All rights reserved.</p>
               <div className="flex items-center gap-6">
                 <Link to="/privacy" className="hover:text-yellow-400 transition-colors">Privacy Policy</Link>
                 <Link to="/terms" className="hover:text-yellow-400 transition-colors">Terms of Service</Link>

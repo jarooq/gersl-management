@@ -6,6 +6,7 @@ import {
   Zap, Shield, Baby, Droplet, BookOpen, Utensils, Calendar
 } from 'lucide-react';
 import { useCampaign } from '../../contexts/CampaignContext';
+import { getImageUrl } from '../../services/api';
 
 const HomePage = () => {
   const { campaigns } = useCampaign();
@@ -276,6 +277,7 @@ const HomePage = () => {
         </div>
       </section>
 
+
       {/* Active Campaigns Section with Enhanced Tabs */}
       {activeCampaigns.length > 0 && (
         <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
@@ -317,15 +319,28 @@ const HomePage = () => {
                   <div key={campaign.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden group transform hover:-translate-y-2">
                     {/* Campaign Image with Enhanced Overlay */}
                     <div className="h-56 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 relative overflow-hidden">
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
-                      <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-500"></div>
-                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-yellow-300/20 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Target className="text-white/80 group-hover:scale-110 transition-transform" size={72} />
-                      </div>
+                      {campaign.imageUrl ? (
+                        <>
+                          <img
+                            src={getImageUrl(campaign.imageUrl)}
+                            alt={campaign.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
+                          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-500"></div>
+                          <div className="absolute bottom-0 left-0 w-32 h-32 bg-yellow-300/20 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Target className="text-white/80 group-hover:scale-110 transition-transform" size={72} />
+                          </div>
+                        </>
+                      )}
 
                       {/* Category Badge */}
-                      <div className="absolute top-4 left-4">
+                      <div className="absolute top-4 left-4 z-10">
                         <span className="bg-white/95 backdrop-blur-sm text-blue-900 text-xs font-bold px-4 py-2 rounded-full shadow-lg">
                           {campaign.category}
                         </span>
@@ -335,7 +350,7 @@ const HomePage = () => {
                     <div className="p-6">
                       {/* Title */}
                       <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors min-h-[56px]">
-                        {campaign.name}
+                        {campaign.title}
                       </h3>
 
                       {/* Description */}
@@ -524,7 +539,7 @@ const HomePage = () => {
               Join us in transforming lives and building stronger communities across Sri Lanka
             </p>
 
-            <div className="flex flex-wrap gap-6 justify-center mb-10">
+            <div className="flex flex-wrap gap-6 justify-center">
               <Link
                 to="/campaigns"
                 className="inline-flex items-center gap-3 bg-blue-600 text-white px-12 py-6 rounded-full font-bold hover:bg-blue-700 transition-all shadow-2xl hover:shadow-3xl hover:scale-110 transform text-lg"
@@ -539,28 +554,6 @@ const HomePage = () => {
                 Learn About Our Work
                 <ArrowRight size={28} />
               </Link>
-            </div>
-
-            {/* Contact Info */}
-            <div className="flex flex-wrap gap-4 md:gap-8 justify-center text-gray-800">
-              <div className="flex items-center gap-2 text-sm md:text-base">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <Phone size={20} className="text-blue-600" />
-                </div>
-                <span className="font-semibold">+94 26 223 6220</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm md:text-base">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <Phone size={20} className="text-blue-600" />
-                </div>
-                <span className="font-semibold">+94 77 703 0822</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm md:text-base">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <Mail size={20} className="text-blue-600" />
-                </div>
-                <span className="font-semibold">info@global-ehsan-relief.org.lk</span>
-              </div>
             </div>
           </div>
         </div>

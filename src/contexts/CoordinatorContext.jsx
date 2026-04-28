@@ -19,7 +19,7 @@ export const CoordinatorProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
   // Get auth token from localStorage
   const getAuthToken = () => {

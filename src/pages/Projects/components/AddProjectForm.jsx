@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Briefcase, DollarSign, Users, Calendar, MapPin, Heart, Target, FileText, CheckSquare, TrendingUp, Shield, AlertCircle } from 'lucide-react';
+import API from '../../../services/api';
+// Department field populated from database
 
 const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
   const [activeTab, setActiveTab] = useState('basic');
+  const [departments, setDepartments] = useState([]);
+  const [loadingDepartments, setLoadingDepartments] = useState(true);
   const [formData, setFormData] = useState({
     // Basic Information
     projectCode: '',
     name: '',
     donor: '',
     programmeArea: 'Education',
+    department: '',
     location: 'Colombo',
     startDate: '',
     endDate: '',
@@ -78,6 +83,28 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
     'Protection',
     'Nutrition'
   ];
+
+  // Fetch departments from database
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        setLoadingDepartments(true);
+        const response = await API.Departments.getAll();
+        console.log('📋 Fetched departments:', response);
+        setDepartments(response.departments || []);
+      } catch (error) {
+        console.error('❌ Failed to fetch departments:', error);
+        // Fallback to empty array - user can still create project without department
+        setDepartments([]);
+      } finally {
+        setLoadingDepartments(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchDepartments();
+    }
+  }, [isOpen]);
 
   const districts = [
     'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -191,6 +218,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
       name: '',
       donor: '',
       programmeArea: 'Education',
+      department: '',
       location: 'Colombo',
       startDate: '',
       endDate: '',
@@ -402,6 +430,32 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     ))}
                   </select>
                 </div>
+              </div>
+
+              {/* Department */}
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <Briefcase size={16} className="text-indigo-600" />
+                  Department *
+                </label>
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  required
+                  disabled={loadingDepartments}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">
+                    {loadingDepartments ? 'Loading departments...' : '-- Select Department --'}
+                  </option>
+                  {departments.map(dept => (
+                    <option key={dept.id} value={dept.name}>{dept.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-600 mt-1">
+                  Project Officers will only see projects in their assigned department
+                </p>
               </div>
 
               {/* District & Project Tier */}

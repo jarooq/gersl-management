@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Proposal, User, Project, Indicator, Approval, Notification } from '../models/index.js';
 import { Op } from 'sequelize';
 import sequelize from '../config/database.js';
+import { DEPARTMENT_RESTRICTED_ROLES } from '../constants/roles.js';
 
 /**
  * @desc    Get all proposals
@@ -24,6 +25,18 @@ export const getAllProposals = asyncHandler(async (req, res) => {
   if (priority) where.priority = priority;
   if (donor) where.donor = donor;
   if (programmeArea) where.programmeArea = programmeArea;
+
+  // 🔒 DEPARTMENT-BASED ACCESS CONTROL
+  // Project Officers can ONLY see proposals in their department
+  // Managers, Directors, Admin, CEO can see ALL proposals
+  const user = req.user;
+  const userRole = user.role;
+  const userDepartment = user.department;
+
+  // If user is a Project Officer or restricted role, filter by their department
+  if (DEPARTMENT_RESTRICTED_ROLES.includes(userRole) && userDepartment) {
+    where.department = userDepartment;
+  }
 
   const { count, rows: proposals } = await Proposal.findAndCountAll({
     where,
@@ -378,8 +391,6 @@ export const convertProposalToProject = asyncHandler(async (req, res) => {
     const projectCode = `PROJ-${year}-${String(projectCount + 1).padStart(3, '0')}`;
 
     // 3. Create project using RAW SQL to bypass Sequelize field mapping issue
-    console.log('🔍 Creating project with title:', proposal.title);
-
     const [projectResult] = await sequelize.query(`
       INSERT INTO projects (
         project_name,
@@ -467,8 +478,6 @@ export const convertProposalToProject = asyncHandler(async (req, res) => {
       projectName: projectResult[0].project_name,
       projectCode: projectResult[0].project_code
     };
-
-    console.log('✅ Project created with ID:', project.id);
 
     // 4. Update proposal with project link
     await proposal.update({

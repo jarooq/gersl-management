@@ -68,10 +68,10 @@ export const generateOrphanReportPDF = async (report, orphan) => {
         reject(new Error('Logo not found'));
       };
 
-      img.src = '/logo.png';
+      img.src = '/Logo 10.jpeg';
     });
 
-    doc.addImage(logoDataUrl, 'PNG', pageWidth / 2 - 15, 15, 30, 30);
+    doc.addImage(logoDataUrl, 'JPEG', pageWidth / 2 - 15, 15, 30, 30);
     yPosition = 50;
   } catch (error) {
     console.log('⚠️ Logo not loaded, continuing without logo:', error.message);
@@ -84,13 +84,13 @@ export const generateOrphanReportPDF = async (report, orphan) => {
 
   // Organization name
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
+  doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text('GERSL', pageWidth / 2, yPosition + 15, { align: 'center' });
+  doc.text('Global Ehsan Relief - Sri Lanka', pageWidth / 2, yPosition + 15, { align: 'center' });
 
-  doc.setFontSize(12);
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text('Global Ehsan Relief - Sri Lanka', pageWidth / 2, yPosition + 25, { align: 'center' });
+  doc.text('65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka', pageWidth / 2, yPosition + 25, { align: 'center' });
 
   // Document title
   doc.setFontSize(20);

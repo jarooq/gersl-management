@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { Report, User, Project } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
 
@@ -20,7 +20,11 @@ export const getAllReports = asyncHandler(async (req, res) => {
     where[Op.or] = [
       { createdBy: userId },
       { isPublic: true },
-      { sharedWith: { [Op.contains]: [userId] } }
+      Sequelize.where(
+        Sequelize.cast(Sequelize.col('Report.shared_with'), 'jsonb'),
+        Op.contains,
+        Sequelize.cast(JSON.stringify([userId]), 'jsonb')
+      )
     ];
   }
 
@@ -440,7 +444,11 @@ export const getReportsByType = asyncHandler(async (req, res) => {
     where[Op.or] = [
       { createdBy: userId },
       { isPublic: true },
-      { sharedWith: { [Op.contains]: [userId] } }
+      Sequelize.where(
+        Sequelize.cast(Sequelize.col('Report.shared_with'), 'jsonb'),
+        Op.contains,
+        Sequelize.cast(JSON.stringify([userId]), 'jsonb')
+      )
     ];
   }
 

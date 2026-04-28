@@ -21,7 +21,8 @@ const Login = () => {
 
     const result = await login(username, password);
     if (result.success) {
-      navigate('/admin/dashboard');
+      // Navigate to /admin root, which will redirect to appropriate dashboard based on permissions
+      navigate('/admin');
     } else {
       setError(result.message);
     }
@@ -53,8 +54,9 @@ const Login = () => {
                 <Heart className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold">GERSL</h1>
+                <h1 className="text-2xl font-bold">Global Ehsan Relief - Sri Lanka</h1>
                 <p className="text-blue-100 text-sm">Management System</p>
+                <p className="text-blue-200 text-xs mt-1">65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka</p>
               </div>
             </div>
             <h2 className="text-3xl font-bold leading-tight">
@@ -88,11 +90,11 @@ const Login = () => {
         <div className="flex items-center justify-center animate-scale-in">
           <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
             <div className="text-center mb-8">
-              <div className="lg:hidden flex items-center justify-center gap-2 mb-4">
+              <div className="lg:hidden flex flex-col items-center justify-center gap-2 mb-4">
                 <div className="bg-blue-600 p-2 rounded-lg">
                   <Heart className="w-6 h-6 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">GERSL</h1>
+                <h1 className="text-xl font-bold text-gray-900 text-center">Global Ehsan Relief - Sri Lanka</h1>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
               <p className="text-gray-600">Sign in to continue to your dashboard</p>
@@ -177,6 +179,13 @@ const Login = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Footer */}
+      <div className="absolute bottom-0 left-0 right-0 py-4 text-center text-white/80 text-xs">
+        <p className="font-semibold">Global Ehsan Relief - Sri Lanka</p>
+        <p className="mt-1">65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka</p>
+        <p className="mt-2">&copy; {new Date().getFullYear()} All rights reserved.</p>
       </div>
     </div>
   );

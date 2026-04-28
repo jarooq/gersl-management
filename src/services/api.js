@@ -343,6 +343,103 @@ export const ProjectAPI = {
 };
 
 // ============================================
+// PROJECT TEAM MANAGEMENT API
+// ============================================
+
+export const ProjectTeamAPI = {
+  getTeamMembers: async (projectId, includeInactive = false) => {
+    const params = includeInactive ? '?includeInactive=true' : '';
+    const data = await request(`/projects/${projectId}/team${params}`);
+    return data;
+  },
+
+  getAvailableStaff: async (projectId, department = null) => {
+    const params = department ? `?department=${encodeURIComponent(department)}` : '';
+    const data = await request(`/projects/${projectId}/team/available${params}`);
+    return data;
+  },
+
+  addTeamMember: async (projectId, memberData) => {
+    const data = await request(`/projects/${projectId}/team`, {
+      method: 'POST',
+      body: JSON.stringify(memberData),
+    });
+    return data;
+  },
+
+  updateTeamMember: async (teamMemberId, updates) => {
+    const data = await request(`/team-members/${teamMemberId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+    return data;
+  },
+
+  removeTeamMember: async (teamMemberId) => {
+    const data = await request(`/team-members/${teamMemberId}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+};
+
+// ============================================
+// TASK API
+// ============================================
+
+export const TaskAPI = {
+  getAll: async (filters = {}) => {
+    const queryString = new URLSearchParams(filters).toString();
+    const data = await request(`/tasks?${queryString}`);
+    return data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/tasks/${id}`);
+    return data;
+  },
+
+  create: async (taskData) => {
+    const data = await request('/tasks', {
+      method: 'POST',
+      body: JSON.stringify(taskData),
+    });
+    return data;
+  },
+
+  update: async (id, updates) => {
+    const data = await request(`/tasks/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+    return data;
+  },
+
+  delete: async (id) => {
+    const data = await request(`/tasks/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  updateStatus: async (id, status) => {
+    const data = await request(`/tasks/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+    return data;
+  },
+
+  updateProgress: async (id, progress) => {
+    const data = await request(`/tasks/${id}/progress`, {
+      method: 'PUT',
+      body: JSON.stringify({ progress }),
+    });
+    return data;
+  },
+};
+
+// ============================================
 // FINANCE API
 // ============================================
 
@@ -1572,6 +1669,18 @@ export const UploadAPI = {
     return data.data;
   },
 
+  uploadCampaignImage: async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const data = await request('/upload/campaign', {
+      method: 'POST',
+      body: formData,
+      headers: {},
+    });
+    return data.data;
+  },
+
   deleteFile: async (filepath) => {
     await request('/upload', {
       method: 'DELETE',
@@ -1853,6 +1962,69 @@ export const CampaignAPI = {
   getStats: async () => {
     const data = await request('/campaigns/stats');
     return data.data;
+  },
+};
+
+// ============================================
+// CAMPAIGN PACKAGE API
+// ============================================
+export const CampaignPackageAPI = {
+  // Get all packages for a campaign (authenticated)
+  getAll: async (campaignId) => {
+    const data = await request(`/campaigns/${campaignId}/packages`);
+    return data.data.packages;
+  },
+
+  // Get active packages for a campaign (public)
+  getActive: async (campaignId) => {
+    const data = await request(`/campaigns/${campaignId}/packages/active`);
+    return data.data.packages;
+  },
+
+  // Get single package
+  getById: async (id) => {
+    const data = await request(`/campaigns/packages/${id}`);
+    return data.data.package;
+  },
+
+  // Create package
+  create: async (campaignId, packageData) => {
+    const data = await request(`/campaigns/${campaignId}/packages`, {
+      method: 'POST',
+      body: JSON.stringify(packageData),
+    });
+    return data.data.package;
+  },
+
+  // Update package
+  update: async (id, packageData) => {
+    const data = await request(`/campaigns/packages/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(packageData),
+    });
+    return data.data.package;
+  },
+
+  // Delete package
+  delete: async (id) => {
+    await request(`/campaigns/packages/${id}`, { method: 'DELETE' });
+  },
+
+  // Reorder packages
+  reorder: async (campaignId, packageIds) => {
+    const data = await request(`/campaigns/${campaignId}/packages/reorder`, {
+      method: 'PUT',
+      body: JSON.stringify({ packageIds }),
+    });
+    return data.data.packages;
+  },
+
+  // Toggle package status
+  toggleStatus: async (id) => {
+    const data = await request(`/campaigns/packages/${id}/toggle`, {
+      method: 'PATCH',
+    });
+    return data.data.package;
   },
 };
 
@@ -2704,10 +2876,186 @@ const RolesAPI = {
   },
 };
 
+// ============================================
+// DEPARTMENTS API (System Settings)
+// ============================================
+const DepartmentsAPI = {
+  getAll: async (includeInactive = false) => {
+    const params = includeInactive ? '?includeInactive=true' : '';
+    const data = await request(`/settings/departments${params}`);
+    return data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/settings/departments/${id}`);
+    return data;
+  },
+
+  create: async (departmentData) => {
+    const data = await request('/settings/departments', {
+      method: 'POST',
+      body: JSON.stringify(departmentData),
+    });
+    return data;
+  },
+
+  update: async (id, departmentData) => {
+    const data = await request(`/settings/departments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(departmentData),
+    });
+    return data;
+  },
+
+  delete: async (id) => {
+    const data = await request(`/settings/departments/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  hardDelete: async (id) => {
+    const data = await request(`/settings/departments/${id}/hard`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  reorder: async (departmentIds) => {
+    const data = await request('/settings/departments/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ departmentIds }),
+    });
+    return data;
+  },
+};
+
+// ============================================
+// POSITIONS API (System Settings)
+// ============================================
+const PositionsAPI = {
+  getAll: async (includeInactive = false) => {
+    const params = includeInactive ? '?includeInactive=true' : '';
+    const data = await request(`/settings/positions${params}`);
+    return data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/settings/positions/${id}`);
+    return data;
+  },
+
+  create: async (positionData) => {
+    const data = await request('/settings/positions', {
+      method: 'POST',
+      body: JSON.stringify(positionData),
+    });
+    return data;
+  },
+
+  update: async (id, positionData) => {
+    const data = await request(`/settings/positions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(positionData),
+    });
+    return data;
+  },
+
+  delete: async (id) => {
+    const data = await request(`/settings/positions/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  hardDelete: async (id) => {
+    const data = await request(`/settings/positions/${id}/hard`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  reorder: async (positionIds) => {
+    const data = await request('/settings/positions/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ positionIds }),
+    });
+    return data;
+  },
+};
+
+// ============================================
+// NOTIFICATION API
+// ============================================
+const NotificationAPI = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/notifications?${queryString}` : '/notifications';
+    const data = await request(endpoint);
+    return data;
+  },
+
+  getUnread: async () => {
+    const data = await request('/notifications/unread');
+    return data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/notifications/${id}`);
+    return data;
+  },
+
+  markAsRead: async (id) => {
+    const data = await request(`/notifications/${id}/read`, {
+      method: 'PUT',
+    });
+    return data;
+  },
+
+  markAllAsRead: async () => {
+    const data = await request('/notifications/read-all', {
+      method: 'PUT',
+    });
+    return data;
+  },
+
+  delete: async (id) => {
+    const data = await request(`/notifications/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  deleteAllRead: async () => {
+    const data = await request('/notifications/read', {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  create: async (notificationData) => {
+    const data = await request('/notifications', {
+      method: 'POST',
+      body: JSON.stringify(notificationData),
+    });
+    return data;
+  },
+
+  createBulk: async (notifications) => {
+    const data = await request('/notifications/bulk', {
+      method: 'POST',
+      body: JSON.stringify({ notifications }),
+    });
+    return data;
+  },
+};
+
 const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
   Roles: RolesAPI,
+  Departments: DepartmentsAPI,
+  Positions: PositionsAPI,
   Orphan: OrphanAPI,
   OrphanNeed: OrphanNeedAPI,
   VisitLog: VisitLogAPI,
@@ -2725,8 +3073,10 @@ const API = {
   BeneficiarySupport: BeneficiarySupportAPI,
   AI: AIAPI,
   Proposal: ProposalAPI,
+  Notification: NotificationAPI,
   // New Finance APIs
   Campaign: CampaignAPI,
+  CampaignPackage: CampaignPackageAPI,
   Donation: DonationAPI,
   Invoice: InvoiceAPI,
   Bill: BillAPI,
@@ -3068,6 +3418,13 @@ API.HRContract = {
     return data.data.agreement;
   },
 
+  deleteAgreement: async (id) => {
+    const data = await request(`/hr/contracts/agreements/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
   // ===== CONTRACT RENEWALS =====
   getExpiringContracts: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
@@ -3155,45 +3512,101 @@ API.HRContract = {
     return data.data;
   },
 
-  // ===== COORDINATORS API =====
-  Coordinators: {
-    getAll: async (params = {}) => {
-      const queryString = new URLSearchParams(params).toString();
-      const endpoint = queryString ? `/coordinators?${queryString}` : '/coordinators';
-      const data = await request(endpoint);
-      return data;
-    },
+  // ===== EMPLOYEE SELF-SERVICE =====
+  getMyHRData: async () => {
+    const data = await request('/hr/contracts/my-data');
+    return data.data;
+  }
+};
 
-    getById: async (id) => {
-      const data = await request(`/coordinators/${id}`);
-      return data;
-    },
-
-    getStats: async (id, period = 'monthly') => {
-      const data = await request(`/coordinators/${id}/stats?period=${period}`);
-      return data;
-    },
-
-    getAssignedOrphans: async (id) => {
-      const data = await request(`/coordinators/${id}/orphans`);
-      return data;
-    },
-
-    assignOrphan: async (coordinatorId, orphanId) => {
-      const data = await request(`/coordinators/${coordinatorId}/assign-orphan`, {
-        method: 'POST',
-        body: JSON.stringify({ orphanId }),
-      });
-      return data;
-    },
-
-    unassignOrphan: async (coordinatorId, orphanId) => {
-      const data = await request(`/coordinators/${coordinatorId}/orphans/${orphanId}`, {
-        method: 'DELETE',
-      });
-      return data;
-    },
+// ===== COORDINATORS API =====
+API.Coordinators = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/coordinators?${queryString}` : '/coordinators';
+    const data = await request(endpoint);
+    return data;
   },
+
+  getById: async (id) => {
+    const data = await request(`/coordinators/${id}`);
+    return data;
+  },
+
+  getStats: async (id, period = 'monthly') => {
+    const data = await request(`/coordinators/${id}/stats?period=${period}`);
+    return data;
+  },
+
+  getAssignedOrphans: async (id) => {
+    const data = await request(`/coordinators/${id}/orphans`);
+    return data;
+  },
+
+  assignOrphan: async (coordinatorId, orphanId) => {
+    const data = await request(`/coordinators/${coordinatorId}/assign-orphan`, {
+      method: 'POST',
+      body: JSON.stringify({ orphanId }),
+    });
+    return data;
+  },
+
+  unassignOrphan: async (coordinatorId, orphanId) => {
+    const data = await request(`/coordinators/${coordinatorId}/orphans/${orphanId}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+};
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+/**
+ * Convert a relative image URL to an absolute URL pointing to the backend server
+ * @param {string} imageUrl - The image URL from the database (relative or absolute)
+ * @returns {string} - Absolute URL to the image
+ */
+export const getImageUrl = (imageUrl) => {
+  if (!imageUrl) return '';
+
+  // Debug logging
+  if (import.meta.env.DEV) {
+    console.log('🖼️ getImageUrl called with:', imageUrl);
+  }
+
+  // If already an absolute URL, strip localhost:3001 to avoid CORS issues
+  if (imageUrl.startsWith('http://localhost:3001/')) {
+    const relativePath = imageUrl.replace('http://localhost:3001', '');
+    if (import.meta.env.DEV) {
+      console.log('🔄 Stripped localhost:3001, now relative:', relativePath);
+    }
+    imageUrl = relativePath;
+  } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    // External URL, return as-is
+    if (import.meta.env.DEV) {
+      console.log('✅ External absolute URL, returning as-is');
+    }
+    return imageUrl;
+  }
+
+  // If it's a relative URL starting with /uploads, return as-is (Vite proxy handles it)
+  if (imageUrl.startsWith('/uploads')) {
+    if (import.meta.env.DEV) {
+      console.log('✅ Relative /uploads URL, using Vite proxy:', imageUrl);
+    }
+    return imageUrl;
+  }
+
+  // If it doesn't start with /, add it
+  const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+  const baseUrl = API_BASE_URL.replace('/api', '');
+  const result = `${baseUrl}${path}`;
+  if (import.meta.env.DEV) {
+    console.log('🔄 Adding base URL:', result);
+  }
+  return result;
 };
 
 export default API;

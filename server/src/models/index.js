@@ -7,8 +7,12 @@ import Approval from './Approval.js';
 import Task from './Task.js';
 import TaskAttachment from './TaskAttachment.js';
 import Notification from './Notification.js';
+import TaskComment from './TaskComment.js';
+import TaskAssignee from './TaskAssignee.js';
 import TaskBeneficiary from './TaskBeneficiary.js';
 import AggregateDistribution from './AggregateDistribution.js';
+import StaffDocument from './StaffDocument.js';
+import ProjectTeamMember from './ProjectTeamMember.js';
 // import OrphanNeed from './OrphanNeed.js'; // Temporarily disabled - table already exists in Supabase
 
 // ============================================
@@ -426,6 +430,102 @@ const Expense = sequelize.define('Expense', {
   }
 }, {
   tableName: 'expenses',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// DEPARTMENT MODEL
+// ============================================
+const Department = sequelize.define('Department', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  code: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    unique: true
+  },
+  color: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+    defaultValue: 'from-blue-500 to-cyan-600'
+  },
+  icon: {
+    type: DataTypes.STRING(50),
+    allowNull: true
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    field: 'is_active'
+  },
+  sortOrder: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    field: 'sort_order'
+  }
+}, {
+  tableName: 'departments',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// POSITION MODEL
+// ============================================
+const Position = sequelize.define('Position', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  title: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  code: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    unique: true
+  },
+  level: {
+    type: DataTypes.STRING(50),
+    allowNull: true // Entry, Mid, Senior, Executive
+  },
+  departmentId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'department_id'
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    field: 'is_active'
+  },
+  sortOrder: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    field: 'sort_order'
+  }
+}, {
+  tableName: 'positions',
   timestamps: true,
   underscored: true
 });
@@ -2528,7 +2628,7 @@ const Evaluation = sequelize.define('Evaluation', {
   recommendations: { type: DataTypes.TEXT },
   reportStatus: { type: DataTypes.ENUM('Pending', 'Draft', 'Final', 'Published'), defaultValue: 'Pending', field: 'report_status' },
   reportUrl: { type: DataTypes.STRING(500), field: 'report_url' },
-  attachments: { type: DataTypes.INTEGER, defaultValue: 0 },
+  attachments: { type: DataTypes.JSON, defaultValue: [] },
   budget: { type: DataTypes.DECIMAL(12, 2) },
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, {
@@ -2542,6 +2642,7 @@ const Evaluation = sequelize.define('Evaluation', {
 // ============================================
 const LearningEvent = sequelize.define('LearningEvent', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  projectId: { type: DataTypes.INTEGER, references: { model: 'projects', key: 'id' }, field: 'project_id' },
   eventCode: { type: DataTypes.STRING(50), unique: true, field: 'event_code' },
   title: { type: DataTypes.STRING(200), allowNull: false },
   type: { type: DataTypes.ENUM('Workshop', 'Training', 'Webinar', 'Conference', 'Community of Practice', 'Lesson Learned Session'), allowNull: false },
@@ -2581,7 +2682,7 @@ const Complaint = sequelize.define('Complaint', {
   projectId: { type: DataTypes.INTEGER, references: { model: 'projects', key: 'id' }, field: 'project_id' },
   projectName: { type: DataTypes.STRING(200), field: 'project_name' },
   status: { type: DataTypes.ENUM('Open', 'Under Investigation', 'In Progress', 'Resolved', 'Closed'), defaultValue: 'Open' },
-  assignedTo: { type: DataTypes.STRING(100), field: 'assigned_to' },
+  assignedTo: { type: DataTypes.INTEGER, field: 'assigned_to', references: { model: 'users', key: 'id' } },
   investigationNotes: { type: DataTypes.TEXT, field: 'investigation_notes' },
   resolution: { type: DataTypes.TEXT },
   resolvedDate: { type: DataTypes.DATEONLY, field: 'resolved_date' },
@@ -2610,6 +2711,9 @@ User.hasMany(Report, { as: 'createdReports', foreignKey: 'createdBy' });
 User.hasMany(Report, { as: 'editedReports', foreignKey: 'lastEditedBy' });
 User.hasMany(Proposal, { as: 'createdProposals', foreignKey: 'createdBy' });
 User.hasMany(Proposal, { as: 'editedProposals', foreignKey: 'lastEditedBy' });
+User.hasMany(StaffDocument, { as: 'documents', foreignKey: 'userId' });
+User.hasMany(StaffDocument, { as: 'uploadedDocuments', foreignKey: 'uploadedBy' });
+User.hasMany(StaffDocument, { as: 'verifiedDocuments', foreignKey: 'verifiedBy' });
 // User.hasMany(OrphanNeed, { as: 'recordedNeeds', foreignKey: 'recordedBy' });
 // User.hasMany(OrphanNeed, { as: 'approvedNeeds', foreignKey: 'approvedBy' });
 
@@ -2628,6 +2732,11 @@ Project.hasMany(Indicator, { as: 'indicators', foreignKey: 'projectId' });
 Project.hasMany(Report, { as: 'reports', foreignKey: 'projectId' });
 Project.hasMany(Evaluation, { as: 'evaluations', foreignKey: 'projectId' });
 Project.hasMany(Complaint, { as: 'complaints', foreignKey: 'projectId' });
+Project.hasMany(ProjectTeamMember, { as: 'teamMembers', foreignKey: 'projectId' });
+
+// ProjectTeamMember associations
+ProjectTeamMember.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+ProjectTeamMember.belongsTo(User, { as: 'user', foreignKey: 'userId' });
 
 // Evaluation associations
 Evaluation.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
@@ -2666,6 +2775,11 @@ Termination.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 Resignation.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
 Resignation.belongsTo(User, { as: 'reviewer', foreignKey: 'reviewedBy' });
 Resignation.belongsTo(User, { as: 'acceptor', foreignKey: 'acceptedBy' });
+
+// StaffDocument associations
+StaffDocument.belongsTo(User, { as: 'employee', foreignKey: 'userId' });
+StaffDocument.belongsTo(User, { as: 'uploader', foreignKey: 'uploadedBy' });
+StaffDocument.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
 
 // Indicator associations
 Indicator.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
@@ -2710,6 +2824,7 @@ const Campaign = sequelize.define('Campaign', {
   category: { type: DataTypes.STRING(100) },
   targetAmount: { type: DataTypes.DECIMAL(12, 2), defaultValue: 0, field: 'target_amount' },
   raisedAmount: { type: DataTypes.DECIMAL(12, 2), defaultValue: 0, field: 'raised_amount' },
+  perDonorAmount: { type: DataTypes.DECIMAL(12, 2), field: 'per_donor_amount' },
   status: { type: DataTypes.STRING(50), defaultValue: 'Draft' },
   startDate: { type: DataTypes.DATEONLY, field: 'start_date' },
   endDate: { type: DataTypes.DATEONLY, field: 'end_date' },
@@ -2723,6 +2838,23 @@ const Campaign = sequelize.define('Campaign', {
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, {
   tableName: 'campaigns',
+  timestamps: true,
+  underscored: true
+});
+
+// ============================================
+// CAMPAIGN PACKAGE MODEL
+// ============================================
+const CampaignPackage = sequelize.define('CampaignPackage', {
+  campaignId: { type: DataTypes.INTEGER, references: { model: 'campaigns', key: 'id' }, field: 'campaign_id' },
+  name: { type: DataTypes.STRING(200), allowNull: false },
+  description: { type: DataTypes.TEXT },
+  amount: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
+  imageUrl: { type: DataTypes.STRING(500), field: 'image_url' },
+  displayOrder: { type: DataTypes.INTEGER, defaultValue: 0, field: 'display_order' },
+  isActive: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_active' }
+}, {
+  tableName: 'campaign_packages',
   timestamps: true,
   underscored: true
 });
@@ -2921,7 +3053,7 @@ const SafeguardingPolicy = sequelize.define('SafeguardingPolicy', {
   reviewDate: { type: DataTypes.DATEONLY, field: 'review_date' },
   status: { type: DataTypes.ENUM('Active', 'Archived', 'Draft'), defaultValue: 'Draft' },
   documentUrl: { type: DataTypes.STRING(500), field: 'document_url' },
-  approvedBy: { type: DataTypes.STRING(100), field: 'approved_by' },
+  approvedBy: { type: DataTypes.INTEGER, field: 'approved_by', references: { model: 'users', key: 'id' } },
   approvalDate: { type: DataTypes.DATEONLY, field: 'approval_date' },
   acknowledgedBy: { type: DataTypes.JSON, defaultValue: [], field: 'acknowledged_by' },
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
@@ -2942,7 +3074,7 @@ const SafeguardingIncident = sequelize.define('SafeguardingIncident', {
   reportedDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'reported_date' },
   incidentDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'incident_date' },
   location: { type: DataTypes.STRING(200) },
-  reportedBy: { type: DataTypes.STRING(100), allowNull: false, field: 'reported_by' },
+  reportedBy: { type: DataTypes.INTEGER, allowNull: false, field: 'reported_by', references: { model: 'users', key: 'id' } },
   personInvolved: { type: DataTypes.STRING(100), field: 'person_involved' },
   description: { type: DataTypes.TEXT, allowNull: false },
   immediateAction: { type: DataTypes.TEXT, field: 'immediate_action' },
@@ -3113,8 +3245,12 @@ const LeaveRequest = sequelize.define('LeaveRequest', {
 // Campaign associations
 Campaign.hasMany(Donation, { as: 'donations', foreignKey: 'campaignId' });
 Campaign.hasMany(SocialMediaPost, { as: 'socialPosts', foreignKey: 'campaignId' });
+Campaign.hasMany(CampaignPackage, { as: 'packages', foreignKey: 'campaignId' });
 Campaign.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 Campaign.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+
+// CampaignPackage associations
+CampaignPackage.belongsTo(Campaign, { as: 'campaign', foreignKey: 'campaignId' });
 
 // Donation associations
 Donation.belongsTo(Campaign, { as: 'campaign', foreignKey: 'campaignId' });
@@ -3465,7 +3601,7 @@ const FinancialReport = sequelize.define('FinancialReport', {
   reportDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'report_date' },
   periodStart: { type: DataTypes.DATEONLY, field: 'period_start' },
   periodEnd: { type: DataTypes.DATEONLY, field: 'period_end' },
-  reportData: { type: DataTypes.JSONB, field: 'report_data' }, // Stores the generated report data
+  reportData: { type: DataTypes.JSON, field: 'report_data' }, // Stores the generated report data
   notes: { type: DataTypes.TEXT },
   status: { type: DataTypes.STRING(20), defaultValue: 'Draft' }, // Draft, Generated, Published
   publishedAt: { type: DataTypes.DATE, field: 'published_at' },
@@ -3481,7 +3617,7 @@ const PurchaseRequisition = sequelize.define('PurchaseRequisition', {
   requisitionNumber: { type: DataTypes.STRING(50), unique: true, field: 'requisition_number' },
   title: { type: DataTypes.STRING(200), allowNull: false },
   description: { type: DataTypes.TEXT },
-  items: { type: DataTypes.JSONB }, // Array of items with qty, description, estimated cost
+  items: { type: DataTypes.JSON }, // Array of items with qty, description, estimated cost
   requestedBy: { type: DataTypes.STRING(100), allowNull: false, field: 'requested_by' },
   department: { type: DataTypes.STRING(100) },
   urgency: { type: DataTypes.STRING(20), defaultValue: 'Normal' }, // Low, Normal, High, Urgent
@@ -3720,7 +3856,7 @@ User.hasMany(Approval, { as: 'initiatedApprovals', foreignKey: 'initiatedBy' });
 
 // TASK RELATIONSHIPS
 Task.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
-Task.belongsTo(User, { as: 'assignee', foreignKey: 'assignedTo' });
+Task.belongsTo(User, { as: 'assignee', foreignKey: 'assignedTo' }); // Legacy single assignee
 Task.belongsTo(User, { as: 'assigner', foreignKey: 'assignedBy' });
 Task.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 
@@ -3728,6 +3864,19 @@ Task.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 Project.hasMany(Task, { as: 'tasks', foreignKey: 'projectId' });
 User.hasMany(Task, { as: 'assignedTasks', foreignKey: 'assignedTo' });
 User.hasMany(Task, { as: 'createdTasks', foreignKey: 'assignedBy' });
+
+// TASK ASSIGNEE RELATIONSHIPS (Multi-staff assignment)
+Task.hasMany(TaskAssignee, { as: 'assignees', foreignKey: 'taskId' });
+TaskAssignee.belongsTo(Task, { as: 'task', foreignKey: 'taskId' });
+TaskAssignee.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+TaskAssignee.belongsTo(User, { as: 'assigner', foreignKey: 'assignedBy' });
+User.hasMany(TaskAssignee, { as: 'taskAssignments', foreignKey: 'userId' });
+
+// TASK COMMENT RELATIONSHIPS
+Task.hasMany(TaskComment, { as: 'comments', foreignKey: 'taskId' });
+TaskComment.belongsTo(Task, { as: 'task', foreignKey: 'taskId' });
+TaskComment.belongsTo(User, { as: 'author', foreignKey: 'userId' });
+User.hasMany(TaskComment, { as: 'taskComments', foreignKey: 'userId' });
 
 // TASK BENEFICIARY RELATIONSHIPS (for Individual Distribution mode)
 Task.hasMany(TaskBeneficiary, { as: 'taskBeneficiaries', foreignKey: 'taskId' });
@@ -3771,7 +3920,10 @@ export {
   Orphan,
   Project,
   Expense,
+  Department,
+  Position,
   Staff,
+  StaffDocument,
   EmploymentAgreement,
   ContractRenewal,
   Termination,
@@ -3799,6 +3951,7 @@ export {
   OrphanProgressRating,
   GeneratedOrphanReport,
   Campaign,
+  CampaignPackage,
   Donation,
   JobPosting,
   JobApplication,
@@ -3841,8 +3994,11 @@ export {
   Approval,
   Task,
   TaskAttachment,
+  TaskComment,
+  TaskAssignee,
   TaskBeneficiary,
   AggregateDistribution,
+  ProjectTeamMember,
   Notification,
   sequelize
 };
@@ -3852,6 +4008,8 @@ export default {
   Orphan,
   Project,
   Expense,
+  Department,
+  Position,
   Staff,
   EmploymentAgreement,
   ContractRenewal,
@@ -3880,6 +4038,7 @@ export default {
   OrphanProgressRating,
   GeneratedOrphanReport,
   Campaign,
+  CampaignPackage,
   Donation,
   JobPosting,
   JobApplication,
@@ -3922,8 +4081,11 @@ export default {
   Approval,
   Task,
   TaskAttachment,
+  TaskComment,
+  TaskAssignee,
   TaskBeneficiary,
   AggregateDistribution,
+  ProjectTeamMember,
   Notification,
   sequelize
 };

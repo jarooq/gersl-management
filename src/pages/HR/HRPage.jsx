@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHR } from '../../contexts/HRContext';
 import API from '../../services/api';
+import StaffProfileModal from '../../components/hr/StaffProfileModal';
 import {
   Users, UserPlus, Clock, Calendar, TrendingUp, CheckCircle,
   XCircle, AlertCircle, ArrowRight, LogIn, LogOut, FileText,
@@ -20,37 +21,7 @@ const HRPage = () => {
     gpsAttendance,
     assetCheckouts,
     vehicleRequests,
-    accommodationRequests,
-    getStats,
-    checkIn,
-    checkOut,
-    applyLeave,
-    approveLeave,
-    rejectLeave,
-    addStaff,
-    addOnboarding,
-    updateOnboarding,
-    deleteOnboarding,
-    addAppraisal,
-    updateAppraisal,
-    deleteAppraisal,
-    addGpsAttendance,
-    updateGpsAttendance,
-    deleteGpsAttendance,
-    addAssetCheckout,
-    updateAssetCheckout,
-    deleteAssetCheckout,
-    returnAsset,
-    addVehicleRequest,
-    updateVehicleRequest,
-    deleteVehicleRequest,
-    approveVehicleRequest,
-    rejectVehicleRequest,
-    addAccommodationRequest,
-    updateAccommodationRequest,
-    deleteAccommodationRequest,
-    approveAccommodationRequest,
-    rejectAccommodationRequest
+    accommodationRequests
   } = useHR();
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -67,8 +38,28 @@ const HRPage = () => {
   const [showAssetCheckoutModal, setShowAssetCheckoutModal] = useState(false);
   const [showVehicleRequestModal, setShowVehicleRequestModal] = useState(false);
   const [showAccommodationRequestModal, setShowAccommodationRequestModal] = useState(false);
+  const [showStaffProfileModal, setShowStaffProfileModal] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [showEditStaffModal, setShowEditStaffModal] = useState(false);
+  const [editStaffForm, setEditStaffForm] = useState({});
 
-  const stats = getStats();
+  // Calculate stats locally
+  const stats = {
+    totalStaff: staff?.length || 0,
+    activeStaff: staff?.filter(s => s.status === 'Active')?.length || 0,
+    presentToday: attendance?.filter(a => {
+      const today = new Date().toISOString().split('T')[0];
+      return a.date === today && a.status === 'Present';
+    })?.length || 0,
+    attendanceRate: staff?.length > 0
+      ? Math.round((attendance?.filter(a => {
+          const today = new Date().toISOString().split('T')[0];
+          return a.date === today && a.status === 'Present';
+        })?.length || 0) / staff.length * 100)
+      : 0,
+    pendingLeaves: leaveRequests?.filter(lr => lr.status === 'Pending')?.length || 0,
+    onboardingCount: onboardingRecords?.filter(or => or.status === 'In Progress')?.length || 0
+  };
 
   // Staff form state
   const [staffForm, setStaffForm] = useState({
@@ -88,26 +79,38 @@ const HRPage = () => {
     userStatus: 'Active'
   });
 
-  // Roles state for dynamic dropdown
-  const [roles, setRoles] = useState([]);
+  // Roles - hardcoded to match User model ENUM (schema-defined, don't change)
+  const roles = [
+    'Admin', 'BOD', 'CEO', 'Director Programmes', 'Programme Manager',
+    'Finance Manager', 'Finance Officer', 'Fundraising Manager',
+    'HR Manager', 'HR Officer', 'Project Officer WASH', 'Project Officer Orphans',
+    'Project Officer Livelihoods', 'Project Officer Infrastructure',
+    'Project Officer Education', 'Project Officer Women', 'Project Officer',
+    'Field Officer', 'MEAL Officer', 'Media Production Officer', 'Media Officer',
+    'Accountant', 'Project Assistant', 'Finance Assistant', 'Fundraising Assistant',
+    'HR Assistant', 'Orphan Coordinator', 'Guest'
+  ];
 
-  // Load roles from database on mount
-  useEffect(() => {
-    const loadRoles = async () => {
-      try {
-        const rolesData = await API.Roles.getAll();
-        setRoles(rolesData.roles || []);
-      } catch (error) {
-        console.error('Error loading roles:', error);
-        // Fallback to default roles if API fails
-        setRoles([
-          { id: 1, name: 'Staff' },
-          { id: 2, name: 'Admin' }
-        ]);
-      }
-    };
-    loadRoles();
-  }, []);
+  // Departments - hardcoded to match User model ENUM
+  const departments = [
+    'Governance', 'Executive', 'Programmes', 'Finance',
+    'Fundraising', 'HR', 'MEAL', 'IT'
+  ];
+
+  // Positions - hardcoded standard organizational positions
+  const positions = [
+    'Executive Director', 'Director Programmes', 'Programme Manager',
+    'Finance Manager', 'HR Manager', 'Fundraising Manager',
+    'Project Officer', 'Finance Officer', 'HR Officer',
+    'MEAL Officer', 'Media Production Officer', 'Media Officer',
+    'Field Officer', 'Accountant', 'Project Assistant',
+    'Finance Assistant', 'HR Assistant', 'Fundraising Assistant',
+    'Orphan Coordinator', 'Program Coordinator', 'Operations Officer',
+    'IT Officer', 'Administrative Officer', 'Driver', 'Office Assistant'
+  ];
+
+
+
 
   // Onboarding form state
   const [onboardingForm, setOnboardingForm] = useState({
@@ -276,13 +279,13 @@ const HRPage = () => {
       return;
     }
 
-    // Call backend to create staff and user account
-    const result = await addStaff({
-      ...staffForm,
-      salary: parseFloat(staffForm.salary) || 0
-    });
+    try {
+      // Call backend to create staff and user account
+      const result = await API.HR.create({
+        ...staffForm,
+        salary: parseFloat(staffForm.salary) || 0
+      });
 
-    if (result.success) {
       // Reset form
       setStaffForm({
         fullName: '',
@@ -303,8 +306,12 @@ const HRPage = () => {
 
       setShowAddStaffModal(false);
       alert('✅ Staff member and user account created successfully!\n\nThe staff member can now log in with their credentials.');
-    } else {
-      alert('❌ Error: ' + result.message);
+
+      // Refresh HR data
+      window.location.reload(); // Simple reload to refresh data
+    } catch (error) {
+      console.error('Error creating staff:', error);
+      alert('❌ Error: ' + (error.message || 'Failed to create staff member'));
     }
   };
 
@@ -634,63 +641,209 @@ const HRPage = () => {
         ))}
       </div>
 
-      {/* Field Operations Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          {
-            title: 'GPS Check-ins',
-            value: 0,
-            icon: Navigation,
-            gradient: 'from-emerald-500 to-teal-600',
-            change: 'No data yet',
-            subtitle: 'today'
-          },
-          {
-            title: 'Active Movements',
-            value: 0,
-            icon: MapPin,
-            gradient: 'from-cyan-500 to-blue-600',
-            change: 'No movements',
-            subtitle: 'in progress'
-          },
-          {
-            title: 'Vehicle Requests',
-            value: 0,
-            icon: Car,
-            gradient: 'from-indigo-500 to-purple-600',
-            change: 'No requests',
-            subtitle: 'this week'
-          },
-          {
-            title: 'Assets Checked Out',
-            value: 0,
-            icon: Package,
-            gradient: 'from-pink-500 to-rose-600',
-            change: 'No assets',
-            subtitle: 'active'
-          }
-        ].map((stat, index) => (
-          <div
-            key={index}
-            className="stat-card group cursor-pointer animate-slide-up"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-600 mb-2">{stat.title}</p>
-                <h3 className="text-3xl font-bold text-gray-900">{stat.value}</h3>
-                <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
-              </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
-                <stat.icon className="text-white" size={24} />
-              </div>
+      {/* HR Analytics and Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Department Distribution */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <PieChart className="text-orange-600" size={18} />
+                Department Distribution
+              </h3>
+              <p className="text-xs text-gray-600 mt-1">Staff across departments</p>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-sm font-medium text-gray-600">{stat.change}</span>
-              <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+            <div className="text-right">
+              <div className="text-xl font-bold text-gray-900">{stats.activeStaff}</div>
+              <div className="text-xs text-orange-600">Active Staff</div>
             </div>
           </div>
-        ))}
+          <div className="space-y-3">
+            {departmentDistribution.map((dept, index) => (
+              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-medium text-gray-700">{dept.name}</span>
+                  <span className="text-xs font-bold text-gray-900">{dept.count} staff</span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                  <div className={`h-1.5 rounded-full bg-gradient-to-r ${dept.color} transition-all duration-500`}
+                    style={{ width: `${dept.percentage}%` }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Leave Status Overview */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <Calendar className="text-blue-600" size={18} />
+                Leave Status Overview
+              </h3>
+              <p className="text-xs text-gray-600 mt-1">Current leave requests</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            {(() => {
+              const pendingCount = leaveRequests.filter(r => r.status === 'Pending').length;
+              const approvedCount = leaveRequests.filter(r => r.status === 'Approved').length;
+              const rejectedCount = leaveRequests.filter(r => r.status === 'Rejected').length;
+              const total = leaveRequests.length || 1;
+
+              const leaveStats = [
+                { status: 'Pending', count: pendingCount, percent: Math.round((pendingCount / total) * 100), color: 'bg-yellow-500' },
+                { status: 'Approved', count: approvedCount, percent: Math.round((approvedCount / total) * 100), color: 'bg-green-500' },
+                { status: 'Rejected', count: rejectedCount, percent: Math.round((rejectedCount / total) * 100), color: 'bg-red-500' }
+              ].filter(item => item.count > 0);
+
+              if (leaveStats.length === 0) {
+                return (
+                  <div className="text-center py-8 text-gray-500 text-sm">
+                    No leave requests yet
+                  </div>
+                );
+              }
+
+              return leaveStats.map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                    <span className="text-sm font-medium text-gray-700">{item.status}</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-bold text-gray-900">{item.count} requests</span>
+                    <span className="text-xs text-gray-600 bg-white px-2 py-1 rounded">{item.percent}%</span>
+                  </div>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
+
+        {/* Attendance Trend (Last 7 Days) */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <BarChart3 className="text-green-600" size={18} />
+                Weekly Attendance Trend
+              </h3>
+              <p className="text-xs text-gray-600 mt-1">Last 7 days</p>
+            </div>
+            <div className="text-right">
+              <div className={`text-xl font-bold flex items-center gap-1 ${
+                weeklyAttendanceTrend.trend >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {weeklyAttendanceTrend.trend >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+                {weeklyAttendanceTrend.averageRate}%
+              </div>
+              <div className="text-xs text-gray-600">Avg attendance</div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {weeklyAttendanceTrend.days.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 text-sm">
+                No attendance data for the last 7 days
+              </div>
+            ) : (
+              (() => {
+                const maxValue = Math.max(...weeklyAttendanceTrend.days.map(d => d.count), 1);
+                return weeklyAttendanceTrend.days.map((day, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <span className="text-xs font-medium text-gray-600 w-16">{day.day}</span>
+                    <div className="flex-1 flex gap-1">
+                      <div className="bg-green-500 h-8 rounded transition-all duration-300"
+                        style={{ width: `${(day.count / maxValue) * 100}%` }}
+                        title={`${day.count} present`}></div>
+                    </div>
+                    <span className="text-xs text-gray-500 w-12 text-right">{day.count}/{stats.totalStaff}</span>
+                  </div>
+                ));
+              })()
+            )}
+          </div>
+        </div>
+
+        {/* HR Performance Metrics */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <Target className="text-purple-600" size={18} />
+                HR Performance Metrics
+              </h3>
+              <p className="text-xs text-gray-600 mt-1">Key performance indicators</p>
+            </div>
+            {(() => {
+              // Calculate overall HR performance score
+              const attendanceScore = stats.attendanceRate || 0;
+              const staffRetention = stats.totalStaff > 0 ? Math.round((stats.activeStaff / stats.totalStaff) * 100) : 0;
+              const leaveApprovalRate = stats.totalLeaves > 0 ? Math.round(((stats.totalLeaves - stats.pendingLeaves) / stats.totalLeaves) * 100) : 0;
+              const overallScore = Math.round((attendanceScore + staffRetention + leaveApprovalRate) / 3);
+
+              return (
+                <div className="text-right">
+                  <div className={`text-xl font-bold ${
+                    overallScore >= 75 ? 'text-green-600' :
+                    overallScore >= 50 ? 'text-yellow-600' : 'text-red-600'
+                  }`}>
+                    {overallScore}%
+                  </div>
+                  <div className="text-xs text-gray-600">Overall Score</div>
+                </div>
+              );
+            })()}
+          </div>
+          <div className="space-y-4">
+            {(() => {
+              const attendanceScore = stats.attendanceRate || 0;
+              const staffRetention = stats.totalStaff > 0 ? Math.round((stats.activeStaff / stats.totalStaff) * 100) : 0;
+              const leaveApprovalRate = stats.totalLeaves > 0 ? Math.round(((stats.totalLeaves - stats.pendingLeaves) / stats.totalLeaves) * 100) : 0;
+              const onboardingComplete = onboardingRecords.filter(r => r.status === 'Completed').length;
+              const onboardingTotal = onboardingRecords.length || 1;
+              const onboardingRate = Math.round((onboardingComplete / onboardingTotal) * 100);
+
+              return [
+                { metric: 'Attendance Rate', value: attendanceScore, target: 90, status: attendanceScore >= 90 ? 'above' : 'below' },
+                { metric: 'Staff Retention', value: staffRetention, target: 95, status: staffRetention >= 95 ? 'above' : 'below' },
+                { metric: 'Leave Processing', value: leaveApprovalRate, target: 80, status: leaveApprovalRate >= 80 ? 'above' : 'below' },
+                { metric: 'Onboarding Complete', value: onboardingRate, target: 85, status: onboardingRate >= 85 ? 'above' : 'below' }
+              ].map((item, index) => (
+                <div key={index}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-medium text-gray-700">{item.metric}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-gray-900">{item.value}%</span>
+                      {item.status === 'above' && (
+                        <TrendingUp className="text-green-600" size={14} />
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className={`h-1.5 rounded-full transition-all duration-500 ${
+                        item.value >= item.target
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                          : 'bg-gradient-to-r from-yellow-500 to-orange-600'
+                      }`}
+                      style={{ width: `${item.value}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-gray-500">Target: {item.target}%</span>
+                    <span className={`text-xs font-medium ${
+                      item.value >= item.target ? 'text-green-600' : 'text-orange-600'
+                    }`}>
+                      {item.value - item.target > 0 ? `+${item.value - item.target}%` : `${item.value - item.target}%`}
+                    </span>
+                  </div>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -775,7 +928,10 @@ const HRPage = () => {
                     <div className="mt-3 pt-3 border-t border-gray-100">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => alert(`Viewing profile for ${member.fullName}`)}
+                          onClick={() => {
+                            setSelectedStaff(member);
+                            setShowStaffProfileModal(true);
+                          }}
                           className="flex-1 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition-all text-xs font-semibold border border-orange-200">
                           View Profile
                         </button>
@@ -1835,36 +1991,6 @@ const HRPage = () => {
         </div>
       </div>
 
-      {/* Quick Action Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl p-6 text-white shadow-lg animate-slide-up cursor-pointer hover:scale-105 transition-transform">
-          <div className="flex items-center justify-between mb-4">
-            <UserPlus size={32} className="opacity-80" />
-            <ArrowRight size={20} />
-          </div>
-          <h3 className="text-2xl font-bold mb-2">Add New Staff</h3>
-          <p className="text-orange-100 text-sm">Onboard new team members quickly</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-6 text-white shadow-lg animate-slide-up cursor-pointer hover:scale-105 transition-transform" style={{ animationDelay: '0.1s' }}>
-          <div className="flex items-center justify-between mb-4">
-            <CheckCircle size={32} className="opacity-80" />
-            <ArrowRight size={20} />
-          </div>
-          <h3 className="text-2xl font-bold mb-2">Approve Leaves</h3>
-          <p className="text-green-100 text-sm">{stats.pendingLeaves} requests waiting</p>
-        </div>
-
-        <div className="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl p-6 text-white shadow-lg animate-slide-up cursor-pointer hover:scale-105 transition-transform" style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center justify-between mb-4">
-            <FileText size={32} className="opacity-80" />
-            <ArrowRight size={20} />
-          </div>
-          <h3 className="text-2xl font-bold mb-2">Generate Report</h3>
-          <p className="text-blue-100 text-sm">Export monthly HR analytics</p>
-        </div>
-      </div>
-
       {/* Add Staff Modal */}
       {showAddStaffModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -1941,15 +2067,11 @@ const HRPage = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="">Select Department</option>
-                      <option value="Executive">Executive</option>
-                      <option value="Finance">Finance</option>
-                      <option value="Projects">Projects</option>
-                      <option value="HR">HR</option>
-                      <option value="Orphan Care">Orphan Care</option>
-                      <option value="MEAL">MEAL</option>
-                      <option value="Proposals">Proposals</option>
-                      <option value="Operations">Operations</option>
-                      <option value="Other">Other</option>
+                      {departments.map(dept => (
+                        <option key={dept} value={dept}>
+                          {dept}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1963,9 +2085,9 @@ const HRPage = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="">Select Position</option>
-                      {roles.map(role => (
-                        <option key={role.id} value={role.name}>
-                          {role.name}
+                      {positions.map(position => (
+                        <option key={position} value={position}>
+                          {position}
                         </option>
                       ))}
                     </select>
@@ -2077,12 +2199,12 @@ const HRPage = () => {
                       >
                         <option value="">Select Role</option>
                         {roles.map(role => (
-                          <option key={role.id} value={role.name}>
-                            {role.name}
+                          <option key={role} value={role}>
+                            {role}
                           </option>
                         ))}
                       </select>
-                      <p className="text-xs text-gray-500 mt-1">Determines system access level</p>
+                      <p className="text-xs text-gray-500 mt-1">Determines system access level based on position</p>
                     </div>
 
                     <div>
@@ -2118,6 +2240,307 @@ const HRPage = () => {
                 <UserPlus className="inline mr-2" size={18} />
                 Add Staff Member
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Staff Modal */}
+      {showEditStaffModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 rounded-t-2xl z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <Edit size={24} />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">Edit Staff Member</h2>
+                    <p className="text-blue-100 text-sm mt-1">Update staff member details</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowEditStaffModal(false)}
+                  className="p-2 hover:bg-white/20 rounded-lg transition"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="space-y-5">
+                {/* Basic Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Basic Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editStaffForm.fullName}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, fullName: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Email <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        value={editStaffForm.email}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, email: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Phone
+                      </label>
+                      <input
+                        type="tel"
+                        value={editStaffForm.phone}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, phone: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Employee ID
+                      </label>
+                      <input
+                        type="text"
+                        value={editStaffForm.employeeId}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, employeeId: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Date of Birth
+                      </label>
+                      <input
+                        type="date"
+                        value={editStaffForm.dateOfBirth}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, dateOfBirth: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Gender
+                      </label>
+                      <select
+                        value={editStaffForm.gender}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, gender: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    <div className="col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Address
+                      </label>
+                      <textarea
+                        value={editStaffForm.address}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, address: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        rows="2"
+                      />
+                    </div>
+
+                    <div className="col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Bio
+                      </label>
+                      <textarea
+                        value={editStaffForm.bio}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, bio: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        rows="3"
+                        placeholder="Brief professional biography..."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Employment Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Employment Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Department
+                      </label>
+                      <select
+                        value={editStaffForm.department}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, department: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Select Department</option>
+                        <option value="Governance">Governance</option>
+                        <option value="Executive">Executive</option>
+                        <option value="Programmes">Programmes</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Fundraising">Fundraising</option>
+                        <option value="HR">HR</option>
+                        <option value="MEAL">MEAL</option>
+                        <option value="IT">IT</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Position
+                      </label>
+                      <input
+                        type="text"
+                        value={editStaffForm.position}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, position: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Joining Date
+                      </label>
+                      <input
+                        type="date"
+                        value={editStaffForm.joiningDate}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, joiningDate: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Contract Type
+                      </label>
+                      <select
+                        value={editStaffForm.contractType}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, contractType: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Select Contract Type</option>
+                        <option value="Permanent">Permanent</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Temporary">Temporary</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Work Hours
+                      </label>
+                      <input
+                        type="text"
+                        value={editStaffForm.workHours}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, workHours: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="9:00 AM - 5:00 PM"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Salary (LKR)
+                      </label>
+                      <input
+                        type="number"
+                        value={editStaffForm.salary}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, salary: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Leave Balance (days)
+                      </label>
+                      <input
+                        type="number"
+                        value={editStaffForm.leaveBalance}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, leaveBalance: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Status
+                      </label>
+                      <select
+                        value={editStaffForm.status}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, status: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Suspended">Suspended</option>
+                      </select>
+                    </div>
+
+                    <div className="col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Emergency Contact
+                      </label>
+                      <input
+                        type="text"
+                        value={editStaffForm.emergencyContact}
+                        onChange={(e) => setEditStaffForm({ ...editStaffForm, emergencyContact: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Name: Contact Number"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={async () => {
+                    try {
+                      const response = await API.put(`/users/${editStaffForm.id}`, editStaffForm);
+                      if (response.data.success) {
+                        alert('✅ Staff member updated successfully!');
+                        setShowEditStaffModal(false);
+                        // Refresh the staff list or update locally
+                        window.location.reload();
+                      } else {
+                        alert('❌ Error: ' + response.data.message);
+                      }
+                    } catch (error) {
+                      console.error('Error updating staff:', error);
+                      alert('❌ Error updating staff member: ' + (error.response?.data?.message || error.message));
+                    }
+                  }}
+                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+                >
+                  Save Changes
+                </button>
+                <button
+                  onClick={() => setShowEditStaffModal(false)}
+                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-semibold text-gray-700"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2838,6 +3261,47 @@ const HRPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Staff Profile Modal */}
+      {showStaffProfileModal && selectedStaff && (
+        <StaffProfileModal
+          staff={selectedStaff}
+          onClose={() => {
+            setShowStaffProfileModal(false);
+            setSelectedStaff(null);
+          }}
+          onEdit={(staff) => {
+            setEditStaffForm({
+              id: staff.id,
+              fullName: staff.fullName || '',
+              email: staff.email || '',
+              phone: staff.phone || '',
+              department: staff.department || '',
+              position: staff.position || '',
+              joiningDate: staff.joiningDate || '',
+              salary: staff.salary || '',
+              leaveBalance: staff.leaveBalance || 21,
+              status: staff.status || 'Active',
+              employeeId: staff.employeeId || '',
+              dateOfBirth: staff.dateOfBirth || '',
+              gender: staff.gender || '',
+              address: staff.address || '',
+              bio: staff.bio || '',
+              contractType: staff.contractType || '',
+              workHours: staff.workHours || '',
+              emergencyContact: staff.emergencyContact || ''
+            });
+            setShowStaffProfileModal(false);
+            setShowEditStaffModal(true);
+          }}
+          onDelete={(staff) => {
+            // TODO: Implement delete functionality
+            if (window.confirm(`Are you sure you want to remove ${staff.fullName}?`)) {
+              console.log('Delete staff:', staff);
+            }
+          }}
+        />
       )}
     </div>
   );

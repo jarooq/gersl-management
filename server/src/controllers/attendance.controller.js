@@ -21,7 +21,7 @@ export const getAllAttendance = asyncHandler(async (req, res) => {
     offset: parseInt(offset),
     order: [['attendanceDate', 'DESC']],
     include: [
-      { model: Staff, as: 'staff', attributes: ['id', 'fullName', 'employeeId'] },
+      { model: Staff, as: 'staff', attributes: ['id', 'fullName'] },
       { model: User, as: 'approver', attributes: ['id', 'fullName'] }
     ]
   });
@@ -158,7 +158,7 @@ export const getAllLeaveRequests = asyncHandler(async (req, res) => {
     offset: parseInt(offset),
     order: [['createdAt', 'DESC']],
     include: [
-      { model: Staff, as: 'staff', attributes: ['id', 'fullName', 'employeeId'] },
+      { model: Staff, as: 'staff', attributes: ['id', 'fullName'] },
       { model: User, as: 'approver', attributes: ['id', 'fullName'] }
     ]
   });

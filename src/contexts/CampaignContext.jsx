@@ -34,26 +34,25 @@ export const CampaignProvider = ({ children }) => {
 
   // Load data from backend on mount
   useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
-
     const loadCampaignData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const [
-          campaignsRes,
-          donationsRes,
-          jobsRes,
-          vendorsRes
-        ] = await Promise.allSettled([
-          API.Campaign.getAll(),
-          API.Donation.getAll(),
-          API.JobPosting.getAll(),
-          API.VendorCall.getAll()
-        ]);
+        // Always load campaigns for public access
+        // Load other data only when logged in
+        const promises = [API.Campaign.getAll()];
+
+        if (isLoggedIn) {
+          promises.push(
+            API.Donation.getAll(),
+            API.JobPosting.getAll(),
+            API.VendorCall.getAll()
+          );
+        }
+
+        const results = await Promise.allSettled(promises);
+        const [campaignsRes, donationsRes, jobsRes, vendorsRes] = results;
 
         // Set campaigns data
         if (campaignsRes.status === 'fulfilled') {
@@ -62,24 +61,24 @@ export const CampaignProvider = ({ children }) => {
           console.error('Error loading campaigns:', campaignsRes.reason);
         }
 
-        // Set donations data
-        if (donationsRes.status === 'fulfilled') {
+        // Set donations data (only when logged in)
+        if (donationsRes && donationsRes.status === 'fulfilled') {
           setDonations(donationsRes.value.donations || []);
-        } else {
+        } else if (donationsRes) {
           console.error('Error loading donations:', donationsRes.reason);
         }
 
-        // Set job postings data
-        if (jobsRes.status === 'fulfilled') {
+        // Set job postings data (only when logged in)
+        if (jobsRes && jobsRes.status === 'fulfilled') {
           setJobPostings(jobsRes.value.jobPostings || []);
-        } else {
+        } else if (jobsRes) {
           console.error('Error loading job postings:', jobsRes.reason);
         }
 
-        // Set vendor calls data
-        if (vendorsRes.status === 'fulfilled') {
+        // Set vendor calls data (only when logged in)
+        if (vendorsRes && vendorsRes.status === 'fulfilled') {
           setVendorCalls(vendorsRes.value.vendorCalls || []);
-        } else {
+        } else if (vendorsRes) {
           console.error('Error loading vendor calls:', vendorsRes.reason);
         }
 

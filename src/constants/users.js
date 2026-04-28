@@ -1,15 +1,6 @@
-export const USERS = [
-  { id: 1, username: "admin", password: "admin123", name: "Admin User", role: "Administrator", avatar: "👑" },
-  { id: 2, username: "ceo", password: "ceo123", name: "CEO", role: "CEO", avatar: "👔" },
-  { id: 3, username: "pm", password: "pm123", name: "Programme Manager", role: "Programme Manager", avatar: "🎯" },
-  { id: 4, username: "finance", password: "fin123", name: "Michael Chen", role: "Finance Manager", avatar: "📊" },
-  { id: 5, username: "meal", password: "meal123", name: "MEAL Officer", role: "MEAL", avatar: "📈" },
-  { id: 6, username: "coord", password: "coord123", name: "Field Coordinator", role: "Coordinator", avatar: "👤" },
-  { id: 7, username: "donor", password: "donor123", name: "John Donor", role: "Donor", avatar: "💝" },
-  { id: 8, username: "hr", password: "hr123", name: "HR Manager", role: "HR Manager", avatar: "👥" },
-  { id: 9, username: "fundraising", password: "fund123", name: "Emma Thompson", role: "Fundraising Officer", avatar: "💰" },
-  { id: 10, username: "orphan", password: "orphan123", name: "Sarah Care", role: "Orphan Manager", avatar: "👶" }
-];
+// Mock user list kept for legacy references in dev fixtures.
+// Real authentication goes through /api/auth/login — these passwords are not used.
+export const USERS = [];
 
 export const USER_ROLES = {
   ADMIN: "Administrator",

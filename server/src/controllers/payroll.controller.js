@@ -18,7 +18,7 @@ export const getAllPayroll = asyncHandler(async (req, res) => {
     offset: parseInt(offset),
     order: [['payPeriodEnd', 'DESC']],
     include: [
-      { model: Staff, as: 'staff', attributes: ['id', 'fullName', 'employeeId'] },
+      { model: Staff, as: 'staff', attributes: ['id', 'fullName'] },
       { model: User, as: 'creator', attributes: ['id', 'fullName'] },
       { model: User, as: 'processor', attributes: ['id', 'fullName'] }
     ]
