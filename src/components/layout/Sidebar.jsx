@@ -31,7 +31,8 @@ import {
   X,
   UserCheck,
   Wallet,
-  Activity
+  Activity,
+  ShoppingCart
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
@@ -122,6 +123,16 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/donations', icon: DollarSign, label: 'Donations', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.DONATIONS_VIEW },
         { path: '/admin/job-postings', icon: Briefcase, label: 'Job Postings', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.JOB_POSTINGS_VIEW },
         { path: '/admin/vendor-calls', icon: Store, label: 'Vendor Calls', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.VENDOR_CALLS_VIEW },
+      ]
+    },
+    {
+      label: 'Procurement',
+      icon: ShoppingCart,
+      color: 'text-amber-600',
+      bgColor: 'bg-amber-50',
+      hasSubmenu: true,
+      subItems: [
+        { path: '/admin/procurement/inbox', icon: ClipboardCheck, label: 'Inbox', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_REQUEST_VIEW },
       ]
     },
     {

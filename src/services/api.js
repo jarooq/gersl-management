@@ -3050,6 +3050,48 @@ const NotificationAPI = {
   },
 };
 
+// ============================================
+// PROCUREMENT API
+// ============================================
+export const ProcurementAPI = {
+  getAllRequisitions: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/requisitions${qs ? `?${qs}` : ''}`);
+  },
+  getUnassigned: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/requisitions/unassigned${qs ? `?${qs}` : ''}`);
+  },
+  getMyQueue: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/requisitions/my-queue${qs ? `?${qs}` : ''}`);
+  },
+  getRequisition: (id) => request(`/procurement/requisitions/${id}`),
+  createRequisition: (data) =>
+    request('/procurement/requisitions', { method: 'POST', body: JSON.stringify(data) }),
+  updateRequisition: (id, data) =>
+    request(`/procurement/requisitions/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  assignRequisition: (id, payload) =>
+    request(`/procurement/requisitions/${id}/assign`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  unassignRequisition: (id) =>
+    request(`/procurement/requisitions/${id}/unassign`, { method: 'PATCH' }),
+  setMethod: (id, procurementMethod) =>
+    request(`/procurement/requisitions/${id}/method`, {
+      method: 'PATCH',
+      body: JSON.stringify({ procurementMethod })
+    }),
+  approveRequisition: (id, notes) =>
+    request(`/procurement/requisitions/${id}/approve`, {
+      method: 'PUT',
+      body: JSON.stringify({ notes })
+    }),
+  deleteRequisition: (id) =>
+    request(`/procurement/requisitions/${id}`, { method: 'DELETE' }),
+  // Helper: load procurement officers/managers for the assign modal
+  listProcurementOfficers: () =>
+    request('/users?role=Procurement+Officer,Procurement+Manager')
+};
+
 const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
@@ -3075,6 +3117,7 @@ const API = {
   Proposal: ProposalAPI,
   Notification: NotificationAPI,
   // New Finance APIs
+  Procurement: ProcurementAPI,
   Campaign: CampaignAPI,
   CampaignPackage: CampaignPackageAPI,
   Donation: DonationAPI,

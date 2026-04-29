@@ -1,5 +1,5 @@
-import { PurchaseRequisition, PurchaseOrder, Vendor, InventoryItem, Asset } from '../models/index.js';
-import { asyncHandler, ValidationError, NotFoundError } from '../middleware/error.middleware.js';
+import { PurchaseRequisition, PurchaseOrder, Vendor, InventoryItem, Asset, User } from '../models/index.js';
+import { asyncHandler, ValidationError, NotFoundError, BadRequestError, ForbiddenError } from '../middleware/error.middleware.js';
 import { Op } from 'sequelize';
 
 // ============================================
@@ -618,4 +618,144 @@ export const assignAsset = asyncHandler(async (req, res) => {
     success: true,
     data: { asset }
   });
+});
+
+// ============================================
+// PROCUREMENT REQUEST INBOX
+// ============================================
+
+const VALID_METHODS = ['Direct', 'RFQ-3', 'Sealed-Tender', 'Framework'];
+
+const officerInclude = [
+  { model: User, as: 'assignedOfficer', attributes: ['id', 'username', 'fullName', 'email', 'role'] },
+  { model: User, as: 'assigner',        attributes: ['id', 'username', 'fullName', 'role'] },
+  { model: User, as: 'creator',         attributes: ['id', 'username', 'fullName', 'role'] }
+];
+
+// Manager view: requisitions submitted but not yet assigned to an Officer.
+export const getUnassignedRequisitions = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 50, urgency, department } = req.query;
+  const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+
+  const where = {
+    assignedOfficerId: null,
+    status: { [Op.in]: ['Pending', 'Submitted', 'Approved'] }
+  };
+  if (urgency) where.urgency = urgency;
+  if (department) where.department = department;
+
+  const { rows, count } = await PurchaseRequisition.findAndCountAll({
+    where,
+    limit: parseInt(limit, 10),
+    offset,
+    order: [['urgency', 'DESC'], ['createdAt', 'ASC']],
+    include: officerInclude
+  });
+
+  res.json({
+    success: true,
+    data: {
+      requisitions: rows,
+      pagination: { total: count, page: parseInt(page, 10), pages: Math.ceil(count / parseInt(limit, 10)) }
+    }
+  });
+});
+
+// Officer view: requisitions assigned to the current user.
+export const getMyQueue = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 50, status } = req.query;
+  const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+
+  const where = { assignedOfficerId: req.user.id };
+  if (status) where.status = status;
+
+  const { rows, count } = await PurchaseRequisition.findAndCountAll({
+    where,
+    limit: parseInt(limit, 10),
+    offset,
+    order: [['urgency', 'DESC'], ['assignedAt', 'DESC']],
+    include: officerInclude
+  });
+
+  res.json({
+    success: true,
+    data: {
+      requisitions: rows,
+      pagination: { total: count, page: parseInt(page, 10), pages: Math.ceil(count / parseInt(limit, 10)) }
+    }
+  });
+});
+
+// Manager assigns an Officer (and optionally locks the procurement method).
+export const assignRequisition = asyncHandler(async (req, res) => {
+  const { officerId, procurementMethod } = req.body;
+  if (!officerId) throw new BadRequestError('officerId is required');
+
+  const requisition = await PurchaseRequisition.findByPk(req.params.id);
+  if (!requisition) throw new NotFoundError('Purchase requisition not found');
+
+  const officer = await User.findByPk(officerId);
+  if (!officer) throw new BadRequestError('Officer not found');
+  if (!['Procurement Officer', 'Procurement Manager', 'Admin'].includes(officer.role)) {
+    throw new BadRequestError('Selected user is not a Procurement Officer/Manager');
+  }
+  if (officer.status !== 'Active') {
+    throw new BadRequestError('Selected officer is not Active');
+  }
+
+  if (procurementMethod && !VALID_METHODS.includes(procurementMethod)) {
+    throw new BadRequestError(`procurementMethod must be one of: ${VALID_METHODS.join(', ')}`);
+  }
+
+  await requisition.update({
+    assignedOfficerId: officer.id,
+    assignedBy: req.user.id,
+    assignedAt: new Date(),
+    status: 'Assigned',
+    ...(procurementMethod ? { procurementMethod } : {})
+  });
+
+  const reloaded = await PurchaseRequisition.findByPk(requisition.id, { include: officerInclude });
+  res.json({ success: true, data: { requisition: reloaded } });
+});
+
+// Manager (or assigned Officer) sets / changes the procurement method.
+export const setProcurementMethod = asyncHandler(async (req, res) => {
+  const { procurementMethod } = req.body;
+  if (!procurementMethod) throw new BadRequestError('procurementMethod is required');
+  if (!VALID_METHODS.includes(procurementMethod)) {
+    throw new BadRequestError(`procurementMethod must be one of: ${VALID_METHODS.join(', ')}`);
+  }
+
+  const requisition = await PurchaseRequisition.findByPk(req.params.id);
+  if (!requisition) throw new NotFoundError('Purchase requisition not found');
+
+  const isManager = ['Admin', 'CEO', 'Procurement Manager'].includes(req.user.role);
+  const isAssignedOfficer = requisition.assignedOfficerId === req.user.id;
+  if (!isManager && !isAssignedOfficer) {
+    throw new ForbiddenError('Only the assigned officer or a manager can change the procurement method');
+  }
+
+  await requisition.update({ procurementMethod });
+  res.json({ success: true, data: { requisition } });
+});
+
+// Officer-side: cancel an assignment (returns the requisition to the unassigned queue).
+export const unassignRequisition = asyncHandler(async (req, res) => {
+  const requisition = await PurchaseRequisition.findByPk(req.params.id);
+  if (!requisition) throw new NotFoundError('Purchase requisition not found');
+
+  const isManager = ['Admin', 'CEO', 'Procurement Manager'].includes(req.user.role);
+  const isAssignedOfficer = requisition.assignedOfficerId === req.user.id;
+  if (!isManager && !isAssignedOfficer) {
+    throw new ForbiddenError('Only the assigned officer or a manager can unassign');
+  }
+
+  await requisition.update({
+    assignedOfficerId: null,
+    assignedBy: null,
+    assignedAt: null,
+    status: requisition.status === 'Assigned' ? 'Submitted' : requisition.status
+  });
+  res.json({ success: true, data: { requisition } });
 });

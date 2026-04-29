@@ -7,6 +7,11 @@ import {
   updateRequisition,
   deleteRequisition,
   approveRequisition,
+  getUnassignedRequisitions,
+  getMyQueue,
+  assignRequisition,
+  setProcurementMethod,
+  unassignRequisition,
   // Purchase Orders
   getAllOrders,
   getOrderById,
@@ -55,10 +60,17 @@ const requireProcurementManager = requireRole(
 // ============================================
 // REQUISITIONS ROUTES
 // ============================================
+// Inbox endpoints — must come before /:id so :id doesn't swallow them
+router.get('/requisitions/unassigned', requireProcurementManager, getUnassignedRequisitions);
+router.get('/requisitions/my-queue', getMyQueue);
+
 router.get('/requisitions', getAllRequisitions);
 router.post('/requisitions', requireProcurementWrite, createRequisition);
 router.get('/requisitions/:id', validateId(), getRequisitionById);
 router.put('/requisitions/:id', validateId(), requireProcurementWrite, updateRequisition);
+router.patch('/requisitions/:id/assign', validateId(), requireProcurementManager, assignRequisition);
+router.patch('/requisitions/:id/unassign', validateId(), requireProcurementWrite, unassignRequisition);
+router.patch('/requisitions/:id/method', validateId(), requireProcurementWrite, setProcurementMethod);
 router.put('/requisitions/:id/approve', validateId(), requireProcurementManager, approveRequisition);
 router.delete('/requisitions/:id', validateId(), requireProcurementManager, deleteRequisition);
 

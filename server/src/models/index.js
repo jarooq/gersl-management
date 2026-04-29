@@ -3620,15 +3620,55 @@ const PurchaseRequisition = sequelize.define('PurchaseRequisition', {
   title: { type: DataTypes.STRING(200), allowNull: false },
   description: { type: DataTypes.TEXT },
   items: { type: DataTypes.JSON }, // Array of items with qty, description, estimated cost
+  estimatedAmount: { type: DataTypes.DECIMAL(15, 2), field: 'estimated_amount' },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
   requestedBy: { type: DataTypes.STRING(100), allowNull: false, field: 'requested_by' },
   department: { type: DataTypes.STRING(100) },
+  projectId: { type: DataTypes.INTEGER, field: 'project_id' },
+  taskId: { type: DataTypes.INTEGER, field: 'task_id' },
   urgency: { type: DataTypes.STRING(20), defaultValue: 'Normal' }, // Low, Normal, High, Urgent
-  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Approved, Rejected, Converted
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Pending'
+    // Pending | Submitted | Assigned | In-Sourcing | Approved | Rejected | Converted | Cancelled | Closed
+  },
+  procurementMethod: {
+    type: DataTypes.STRING(30),
+    field: 'procurement_method'
+    // Direct | RFQ-3 | Sealed-Tender | Framework
+  },
+  assignedOfficerId: {
+    type: DataTypes.INTEGER,
+    references: { model: 'users', key: 'id' },
+    field: 'assigned_officer_id',
+    comment: 'Procurement Officer this requisition is assigned to'
+  },
+  assignedAt: { type: DataTypes.DATE, field: 'assigned_at' },
+  assignedBy: {
+    type: DataTypes.INTEGER,
+    references: { model: 'users', key: 'id' },
+    field: 'assigned_by',
+    comment: 'Procurement Manager who assigned'
+  },
+  donorComplianceCheck: {
+    type: DataTypes.JSONB,
+    field: 'donor_compliance_check',
+    comment: '{ donorId, eligible, reason, checkedBy, checkedAt }'
+  },
   approvedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'approved_by' },
   approvedAt: { type: DataTypes.DATE, field: 'approved_at' },
   approvalNotes: { type: DataTypes.TEXT, field: 'approval_notes' },
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
-}, { tableName: 'purchase_requisitions', timestamps: true, underscored: true });
+}, {
+  tableName: 'purchase_requisitions',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['status'] },
+    { fields: ['assigned_officer_id'] },
+    { fields: ['project_id'] }
+  ]
+});
 
 const Vendor = sequelize.define('Vendor', {
   vendorName: { type: DataTypes.STRING(200), allowNull: false, field: 'vendor_name' },
@@ -3915,6 +3955,13 @@ User.hasMany(Notification, { as: 'notifications', foreignKey: 'userId' });
 
 // Audit log → actor (the user who performed the action)
 AuditLog.belongsTo(User, { as: 'actor', foreignKey: 'userId', constraints: false });
+
+// Procurement requisition → assigned officer / assigner / creator / approver
+PurchaseRequisition.belongsTo(User, { as: 'assignedOfficer', foreignKey: 'assignedOfficerId' });
+PurchaseRequisition.belongsTo(User, { as: 'assigner',        foreignKey: 'assignedBy' });
+PurchaseRequisition.belongsTo(User, { as: 'creator',         foreignKey: 'createdBy' });
+PurchaseRequisition.belongsTo(User, { as: 'approver',        foreignKey: 'approvedBy' });
+User.hasMany(PurchaseRequisition, { as: 'assignedRequisitions', foreignKey: 'assignedOfficerId' });
 
 // ============================================
 // EXPORTS

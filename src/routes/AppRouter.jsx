@@ -57,6 +57,7 @@ const CampaignsPage = lazy(() => import('../pages/Campaigns/CampaignsPage'));
 const DonationsPage = lazy(() => import('../pages/Donations/DonationsPage'));
 const JobPostingsPage = lazy(() => import('../pages/JobPostings/JobPostingsPage'));
 const VendorCallsPage = lazy(() => import('../pages/VendorCalls/VendorCallsPage'));
+const ProcurementInboxPage = lazy(() => import('../pages/Procurement/ProcurementInboxPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -398,6 +399,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               <PermissionRoute permission={PERMISSIONS.VENDOR_CALLS_VIEW}>
                 <Suspense fallback={<PageLoader />}>
                   <VendorCallsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="procurement/inbox"
+            element={
+              <PermissionRoute permission={PERMISSIONS.PROCUREMENT_REQUEST_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <ProcurementInboxPage />
                 </Suspense>
               </PermissionRoute>
             }
