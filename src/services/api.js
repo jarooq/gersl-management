@@ -3088,8 +3088,32 @@ export const ProcurementAPI = {
   deleteRequisition: (id) =>
     request(`/procurement/requisitions/${id}`, { method: 'DELETE' }),
   // Helper: load procurement officers/managers for the assign modal
-  listProcurementOfficers: () =>
-    request('/users?role=Procurement+Officer,Procurement+Manager')
+  listProcurementOfficers: () => request('/procurement/officers'),
+
+  // ============================================
+  // RFQ
+  // ============================================
+  listRFQs: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/rfqs${qs ? `?${qs}` : ''}`);
+  },
+  getRFQ: (id) => request(`/procurement/rfqs/${id}`),
+  createRFQ: (data) =>
+    request('/procurement/rfqs', { method: 'POST', body: JSON.stringify(data) }),
+  inviteVendors: (rfqId, vendorIds) =>
+    request(`/procurement/rfqs/${rfqId}/invite`, {
+      method: 'POST',
+      body: JSON.stringify({ vendorIds })
+    }),
+  sendRFQ: (rfqId) =>
+    request(`/procurement/rfqs/${rfqId}/send`, { method: 'POST' }),
+  closeRFQ: (rfqId) =>
+    request(`/procurement/rfqs/${rfqId}/close`, { method: 'PATCH' }),
+  cancelRFQ: (rfqId, reason) =>
+    request(`/procurement/rfqs/${rfqId}/cancel`, {
+      method: 'PATCH',
+      body: JSON.stringify({ reason })
+    })
 };
 
 const API = {

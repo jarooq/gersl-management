@@ -3684,6 +3684,69 @@ const Vendor = sequelize.define('Vendor', {
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, { tableName: 'vendors', timestamps: true, underscored: true });
 
+// ============================================
+// RFQ — Request for Quotation
+// ============================================
+const RFQ = sequelize.define('RFQ', {
+  rfqNumber: { type: DataTypes.STRING(50), unique: true, field: 'rfq_number' },
+  requisitionId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'requisition_id',
+    references: { model: 'purchase_requisitions', key: 'id' }
+  },
+  scopeOfWork: { type: DataTypes.TEXT, field: 'scope_of_work' },
+  closingDate: { type: DataTypes.DATE, field: 'closing_date' },
+  termsOfDelivery: { type: DataTypes.TEXT, field: 'terms_of_delivery' },
+  paymentTerms: { type: DataTypes.STRING(255), field: 'payment_terms' },
+  attachments: { type: DataTypes.JSONB, defaultValue: [] },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Draft'
+    // Draft | Sent | Closed | Cancelled
+  },
+  sentAt: { type: DataTypes.DATE, field: 'sent_at' },
+  sentBy: {
+    type: DataTypes.INTEGER,
+    field: 'sent_by',
+    references: { model: 'users', key: 'id' }
+  },
+  closedAt: { type: DataTypes.DATE, field: 'closed_at' },
+  cancelReason: { type: DataTypes.TEXT, field: 'cancel_reason' },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: { model: 'users', key: 'id' }
+  }
+}, {
+  tableName: 'rfqs',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['requisition_id'] },
+    { fields: ['status'] },
+    { fields: ['closing_date'] }
+  ]
+});
+
+const RFQVendor = sequelize.define('RFQVendor', {
+  rfqId: { type: DataTypes.INTEGER, allowNull: false, field: 'rfq_id', references: { model: 'rfqs', key: 'id' } },
+  vendorId: { type: DataTypes.INTEGER, allowNull: false, field: 'vendor_id', references: { model: 'vendors', key: 'id' } },
+  invitedAt: { type: DataTypes.DATE, field: 'invited_at' },
+  sentAt: { type: DataTypes.DATE, field: 'sent_at' },
+  responseReceivedAt: { type: DataTypes.DATE, field: 'response_received_at' },
+  declined: { type: DataTypes.BOOLEAN, defaultValue: false }
+}, {
+  tableName: 'rfq_vendors',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['rfq_id'] },
+    { fields: ['vendor_id'] },
+    { unique: true, fields: ['rfq_id', 'vendor_id'] }
+  ]
+});
+
 const InventoryItem = sequelize.define('InventoryItem', {
   itemCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'item_code' },
   itemName: { type: DataTypes.STRING(200), allowNull: false, field: 'item_name' },
@@ -3963,6 +4026,18 @@ PurchaseRequisition.belongsTo(User, { as: 'creator',         foreignKey: 'create
 PurchaseRequisition.belongsTo(User, { as: 'approver',        foreignKey: 'approvedBy' });
 User.hasMany(PurchaseRequisition, { as: 'assignedRequisitions', foreignKey: 'assignedOfficerId' });
 
+// RFQ associations
+RFQ.belongsTo(PurchaseRequisition, { as: 'requisition', foreignKey: 'requisitionId' });
+PurchaseRequisition.hasMany(RFQ,    { as: 'rfqs',         foreignKey: 'requisitionId' });
+RFQ.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+RFQ.belongsTo(User, { as: 'sender',  foreignKey: 'sentBy' });
+
+RFQ.belongsToMany(Vendor, { as: 'vendors', through: RFQVendor, foreignKey: 'rfqId', otherKey: 'vendorId' });
+Vendor.belongsToMany(RFQ, { as: 'rfqs',    through: RFQVendor, foreignKey: 'vendorId', otherKey: 'rfqId' });
+RFQ.hasMany(RFQVendor,   { as: 'invitations', foreignKey: 'rfqId' });
+RFQVendor.belongsTo(RFQ, { as: 'rfq',         foreignKey: 'rfqId' });
+RFQVendor.belongsTo(Vendor, { as: 'vendor',   foreignKey: 'vendorId' });
+
 // ============================================
 // EXPORTS
 // ============================================
@@ -4053,6 +4128,8 @@ export {
   ProjectTeamMember,
   Notification,
   AuditLog,
+  RFQ,
+  RFQVendor,
   sequelize
 };
 
@@ -4073,6 +4150,8 @@ withAuditLog(Bill, 'Bill');
 withAuditLog(JournalEntry, 'JournalEntry');
 withAuditLog(Role, 'Role');
 withAuditLog(RolePermission, 'RolePermission');
+withAuditLog(PurchaseRequisition, 'PurchaseRequisition');
+withAuditLog(RFQ, 'RFQ');
 
 export default {
   User,
@@ -4159,5 +4238,7 @@ export default {
   ProjectTeamMember,
   Notification,
   AuditLog,
+  RFQ,
+  RFQVendor,
   sequelize
 };

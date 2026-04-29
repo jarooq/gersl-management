@@ -740,6 +740,19 @@ export const setProcurementMethod = asyncHandler(async (req, res) => {
   res.json({ success: true, data: { requisition } });
 });
 
+// Lookup helper: list users eligible to be assigned procurement work.
+export const listProcurementOfficers = asyncHandler(async (req, res) => {
+  const officers = await User.findAll({
+    where: {
+      status: 'Active',
+      role: { [Op.in]: ['Procurement Officer', 'Procurement Manager'] }
+    },
+    attributes: ['id', 'username', 'fullName', 'email', 'role', 'department'],
+    order: [['fullName', 'ASC']]
+  });
+  res.json({ success: true, data: { officers } });
+});
+
 // Officer-side: cancel an assignment (returns the requisition to the unassigned queue).
 export const unassignRequisition = asyncHandler(async (req, res) => {
   const requisition = await PurchaseRequisition.findByPk(req.params.id);

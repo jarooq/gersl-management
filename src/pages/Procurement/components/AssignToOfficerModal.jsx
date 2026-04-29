@@ -25,7 +25,7 @@ export default function AssignToOfficerModal({ requisition, onClose, onAssigned 
       try {
         const res = await ProcurementAPI.listProcurementOfficers();
         if (cancelled) return;
-        const list = res?.data?.users || res?.users || res?.data || [];
+        const list = res?.data?.officers || res?.officers || [];
         setOfficers(Array.isArray(list) ? list : []);
       } catch (e) {
         if (!cancelled) setError(e?.message || 'Failed to load officers');

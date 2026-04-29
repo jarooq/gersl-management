@@ -12,6 +12,7 @@ import {
   assignRequisition,
   setProcurementMethod,
   unassignRequisition,
+  listProcurementOfficers,
   // Purchase Orders
   getAllOrders,
   getOrderById,
@@ -39,6 +40,15 @@ import {
   deleteAsset,
   assignAsset
 } from '../controllers/procurement.controller.js';
+import {
+  listRFQs,
+  getRFQ,
+  createRFQ,
+  inviteVendors,
+  sendRFQ,
+  closeRFQ,
+  cancelRFQ
+} from '../controllers/rfq.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -64,6 +74,9 @@ const requireProcurementManager = requireRole(
 router.get('/requisitions/unassigned', requireProcurementManager, getUnassignedRequisitions);
 router.get('/requisitions/my-queue', getMyQueue);
 
+// Lookup: officers eligible for assignment (any procurement-write role can read)
+router.get('/officers', requireProcurementWrite, listProcurementOfficers);
+
 router.get('/requisitions', getAllRequisitions);
 router.post('/requisitions', requireProcurementWrite, createRequisition);
 router.get('/requisitions/:id', validateId(), getRequisitionById);
@@ -73,6 +86,17 @@ router.patch('/requisitions/:id/unassign', validateId(), requireProcurementWrite
 router.patch('/requisitions/:id/method', validateId(), requireProcurementWrite, setProcurementMethod);
 router.put('/requisitions/:id/approve', validateId(), requireProcurementManager, approveRequisition);
 router.delete('/requisitions/:id', validateId(), requireProcurementManager, deleteRequisition);
+
+// ============================================
+// RFQ ROUTES
+// ============================================
+router.get('/rfqs', listRFQs);
+router.post('/rfqs', requireProcurementWrite, createRFQ);
+router.get('/rfqs/:id', validateId(), getRFQ);
+router.post('/rfqs/:id/invite', validateId(), requireProcurementWrite, inviteVendors);
+router.post('/rfqs/:id/send', validateId(), requireProcurementWrite, sendRFQ);
+router.patch('/rfqs/:id/close', validateId(), requireProcurementWrite, closeRFQ);
+router.patch('/rfqs/:id/cancel', validateId(), requireProcurementManager, cancelRFQ);
 
 // ============================================
 // PURCHASE ORDERS ROUTES

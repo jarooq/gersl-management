@@ -3,6 +3,7 @@ import { ProcurementAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../utils/permissions';
 import AssignToOfficerModal from './components/AssignToOfficerModal';
+import RFQBuilderModal from './components/RFQBuilderModal';
 
 const URGENCY_BADGE = {
   Low: 'bg-gray-100 text-gray-700',
@@ -40,6 +41,7 @@ export default function ProcurementInboxPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [assignTarget, setAssignTarget] = useState(null);
+  const [rfqTarget, setRfqTarget] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -60,6 +62,18 @@ export default function ProcurementInboxPage() {
   const handleAssigned = () => {
     setAssignTarget(null);
     load();
+  };
+
+  const handleRFQCreated = () => {
+    setRfqTarget(null);
+    load();
+  };
+
+  const canStartRFQ = (r) => {
+    if (!r) return false;
+    if (['Closed', 'Cancelled', 'Rejected', 'Converted'].includes(r.status)) return false;
+    if (activeTab !== 'mine') return false;
+    return true;
   };
 
   return (
@@ -147,15 +161,24 @@ export default function ProcurementInboxPage() {
                   {r.assignedOfficer ? r.assignedOfficer.fullName : '—'}
                 </td>
                 <td className="px-4 py-2">
-                  {activeTab === 'unassigned' && isManager ? (
+                  {activeTab === 'unassigned' && isManager && (
                     <button
                       onClick={() => setAssignTarget(r)}
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                     >
                       Assign
                     </button>
-                  ) : (
-                    <span className="text-xs text-gray-400">View</span>
+                  )}
+                  {canStartRFQ(r) && (
+                    <button
+                      onClick={() => setRfqTarget(r)}
+                      className="text-amber-600 hover:text-amber-800 text-sm font-medium"
+                    >
+                      Start RFQ
+                    </button>
+                  )}
+                  {!canStartRFQ(r) && activeTab === 'mine' && (
+                    <span className="text-xs text-gray-400">{r.status}</span>
                   )}
                 </td>
               </tr>
@@ -169,6 +192,14 @@ export default function ProcurementInboxPage() {
           requisition={assignTarget}
           onClose={() => setAssignTarget(null)}
           onAssigned={handleAssigned}
+        />
+      )}
+
+      {rfqTarget && (
+        <RFQBuilderModal
+          requisition={rfqTarget}
+          onClose={() => setRfqTarget(null)}
+          onCreated={handleRFQCreated}
         />
       )}
     </div>
