@@ -3113,6 +3113,43 @@ export const ProcurementAPI = {
     request(`/procurement/rfqs/${rfqId}/cancel`, {
       method: 'PATCH',
       body: JSON.stringify({ reason })
+    }),
+
+  // ============================================
+  // Quotations
+  // ============================================
+  listQuotationsForRFQ: (rfqId) =>
+    request(`/procurement/rfqs/${rfqId}/quotations`),
+  createQuotation: (rfqId, data) =>
+    request(`/procurement/rfqs/${rfqId}/quotations`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  updateQuotation: (id, data) =>
+    request(`/procurement/quotations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteQuotation: (id) =>
+    request(`/procurement/quotations/${id}`, { method: 'DELETE' }),
+
+  // ============================================
+  // Bid Analysis
+  // ============================================
+  listBidAnalyses: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/bid-analyses${qs ? `?${qs}` : ''}`);
+  },
+  getBidAnalysis: (id) => request(`/procurement/bid-analyses/${id}`),
+  createBidAnalysis: (data) =>
+    request('/procurement/bid-analyses', { method: 'POST', body: JSON.stringify(data) }),
+  updateBidAnalysis: (id, data) =>
+    request(`/procurement/bid-analyses/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  submitBidAnalysis: (id) =>
+    request(`/procurement/bid-analyses/${id}/submit`, { method: 'PATCH' }),
+  approveBidAnalysis: (id) =>
+    request(`/procurement/bid-analyses/${id}/approve`, { method: 'PATCH' }),
+  rejectBidAnalysis: (id, reason) =>
+    request(`/procurement/bid-analyses/${id}/reject`, {
+      method: 'PATCH',
+      body: JSON.stringify({ reason })
     })
 };
 

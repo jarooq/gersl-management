@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ProcurementAPI } from '../../../services/api';
 
 // Helper: pick today + 7d formatted as datetime-local default.
@@ -12,6 +13,7 @@ const defaultClosingDate = () => {
 };
 
 export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
+  const navigate = useNavigate();
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -215,7 +217,13 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
                 Draft RFQ <strong>{createdRfq.rfqNumber}</strong> created with {createdRfq.invitations?.length || 0} vendor(s).
               </div>
               <p className="text-sm text-gray-600">
-                Click <em>Send</em> to mark the RFQ as Sent and email each invited vendor.
+                Click <em>Send</em> to mark the RFQ as Sent and email each invited vendor, or
+                <button
+                  type="button"
+                  onClick={() => { onCreated?.(); navigate(`/admin/procurement/rfqs/${createdRfq.id}`); }}
+                  className="text-blue-600 hover:underline ml-1"
+                >open the workspace</button>
+                to record quotations.
               </p>
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-2 text-sm">{error}</div>

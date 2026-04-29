@@ -3729,6 +3729,178 @@ const RFQ = sequelize.define('RFQ', {
   ]
 });
 
+// ============================================
+// Quotation — vendor's price response to an RFQ
+// ============================================
+const Quotation = sequelize.define('Quotation', {
+  rfqId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'rfq_id',
+    references: { model: 'rfqs', key: 'id' }
+  },
+  vendorId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'vendor_id',
+    references: { model: 'vendors', key: 'id' }
+  },
+  totalAmount: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: false,
+    field: 'total_amount'
+  },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  deliveryDays: { type: DataTypes.INTEGER, field: 'delivery_days' },
+  validityDays: { type: DataTypes.INTEGER, field: 'validity_days' },
+  paymentTerms: { type: DataTypes.STRING(255), field: 'payment_terms' },
+  technicalComplianceScore: {
+    type: DataTypes.DECIMAL(5, 2),
+    field: 'technical_compliance_score',
+    comment: '0-100 score for non-price compliance'
+  },
+  attachments: { type: DataTypes.JSONB, defaultValue: [] },
+  notes: { type: DataTypes.TEXT },
+  receivedAt: { type: DataTypes.DATE, field: 'received_at', defaultValue: DataTypes.NOW },
+  recordedBy: {
+    type: DataTypes.INTEGER,
+    field: 'recorded_by',
+    references: { model: 'users', key: 'id' }
+  },
+  // Once a bid analysis referencing this quotation is approved, lock edits.
+  isLocked: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'is_locked' }
+}, {
+  tableName: 'quotations',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['rfq_id'] },
+    { fields: ['vendor_id'] },
+    { unique: true, fields: ['rfq_id', 'vendor_id'] }
+  ]
+});
+
+const QuotationLine = sequelize.define('QuotationLine', {
+  quotationId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'quotation_id',
+    references: { model: 'quotations', key: 'id' }
+  },
+  itemDescription: { type: DataTypes.STRING(500), allowNull: false, field: 'item_description' },
+  qty: { type: DataTypes.DECIMAL(15, 2), allowNull: false, defaultValue: 1 },
+  unit: { type: DataTypes.STRING(40) },
+  unitPrice: { type: DataTypes.DECIMAL(15, 2), allowNull: false, field: 'unit_price' },
+  lineTotal: { type: DataTypes.DECIMAL(15, 2), field: 'line_total' }
+}, {
+  tableName: 'quotation_lines',
+  timestamps: true,
+  underscored: true,
+  indexes: [{ fields: ['quotation_id'] }]
+});
+
+// ============================================
+// Bid Analysis — recommendation derived from quotations
+// ============================================
+const BidAnalysis = sequelize.define('BidAnalysis', {
+  requisitionId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'requisition_id',
+    references: { model: 'purchase_requisitions', key: 'id' }
+  },
+  rfqId: {
+    type: DataTypes.INTEGER,
+    field: 'rfq_id',
+    references: { model: 'rfqs', key: 'id' }
+  },
+  scoringCriteria: {
+    type: DataTypes.JSONB,
+    field: 'scoring_criteria',
+    comment: '{ price: 50, delivery: 20, quality: 20, compliance: 10 } — must total 100'
+  },
+  recommendedVendorId: {
+    type: DataTypes.INTEGER,
+    field: 'recommended_vendor_id',
+    references: { model: 'vendors', key: 'id' }
+  },
+  rationale: { type: DataTypes.TEXT },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Draft'
+    // Draft | Submitted | Approved | Rejected
+  },
+  preparedBy: {
+    type: DataTypes.INTEGER,
+    field: 'prepared_by',
+    references: { model: 'users', key: 'id' }
+  },
+  submittedAt: { type: DataTypes.DATE, field: 'submitted_at' },
+  reviewedBy: {
+    type: DataTypes.INTEGER,
+    field: 'reviewed_by',
+    references: { model: 'users', key: 'id' }
+  },
+  approvedBy: {
+    type: DataTypes.INTEGER,
+    field: 'approved_by',
+    references: { model: 'users', key: 'id' }
+  },
+  approvedAt: { type: DataTypes.DATE, field: 'approved_at' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' }
+}, {
+  tableName: 'bid_analyses',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['requisition_id'] },
+    { fields: ['rfq_id'] },
+    { fields: ['status'] },
+    { fields: ['recommended_vendor_id'] }
+  ]
+});
+
+const BidAnalysisScore = sequelize.define('BidAnalysisScore', {
+  bidAnalysisId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'bid_analysis_id',
+    references: { model: 'bid_analyses', key: 'id' }
+  },
+  vendorId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'vendor_id',
+    references: { model: 'vendors', key: 'id' }
+  },
+  quotationId: {
+    type: DataTypes.INTEGER,
+    field: 'quotation_id',
+    references: { model: 'quotations', key: 'id' }
+  },
+  criterionKey: { type: DataTypes.STRING(50), allowNull: false, field: 'criterion_key' },
+  rawScore: {
+    type: DataTypes.DECIMAL(6, 2),
+    allowNull: false,
+    field: 'raw_score',
+    comment: '0-100'
+  },
+  weightedScore: {
+    type: DataTypes.DECIMAL(7, 3),
+    field: 'weighted_score',
+    comment: 'rawScore * weight / 100'
+  }
+}, {
+  tableName: 'bid_analysis_scores',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['bid_analysis_id'] },
+    { fields: ['vendor_id'] },
+    { unique: true, fields: ['bid_analysis_id', 'vendor_id', 'criterion_key'] }
+  ]
+});
+
 const RFQVendor = sequelize.define('RFQVendor', {
   rfqId: { type: DataTypes.INTEGER, allowNull: false, field: 'rfq_id', references: { model: 'rfqs', key: 'id' } },
   vendorId: { type: DataTypes.INTEGER, allowNull: false, field: 'vendor_id', references: { model: 'vendors', key: 'id' } },
@@ -4038,6 +4210,29 @@ RFQ.hasMany(RFQVendor,   { as: 'invitations', foreignKey: 'rfqId' });
 RFQVendor.belongsTo(RFQ, { as: 'rfq',         foreignKey: 'rfqId' });
 RFQVendor.belongsTo(Vendor, { as: 'vendor',   foreignKey: 'vendorId' });
 
+// Quotation associations
+Quotation.belongsTo(RFQ,    { as: 'rfq',    foreignKey: 'rfqId' });
+RFQ.hasMany(Quotation,      { as: 'quotations', foreignKey: 'rfqId' });
+Quotation.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId' });
+Vendor.hasMany(Quotation,   { as: 'quotations', foreignKey: 'vendorId' });
+Quotation.belongsTo(User,   { as: 'recorder', foreignKey: 'recordedBy' });
+Quotation.hasMany(QuotationLine,  { as: 'lines', foreignKey: 'quotationId' });
+QuotationLine.belongsTo(Quotation, { as: 'quotation', foreignKey: 'quotationId' });
+
+// Bid analysis associations
+BidAnalysis.belongsTo(PurchaseRequisition, { as: 'requisition', foreignKey: 'requisitionId' });
+PurchaseRequisition.hasMany(BidAnalysis,    { as: 'bidAnalyses', foreignKey: 'requisitionId' });
+BidAnalysis.belongsTo(RFQ,    { as: 'rfq',    foreignKey: 'rfqId' });
+RFQ.hasMany(BidAnalysis,      { as: 'bidAnalyses', foreignKey: 'rfqId' });
+BidAnalysis.belongsTo(Vendor, { as: 'recommendedVendor', foreignKey: 'recommendedVendorId' });
+BidAnalysis.belongsTo(User,   { as: 'preparer', foreignKey: 'preparedBy' });
+BidAnalysis.belongsTo(User,   { as: 'reviewer', foreignKey: 'reviewedBy' });
+BidAnalysis.belongsTo(User,   { as: 'approver', foreignKey: 'approvedBy' });
+BidAnalysis.hasMany(BidAnalysisScore, { as: 'scores', foreignKey: 'bidAnalysisId' });
+BidAnalysisScore.belongsTo(BidAnalysis, { as: 'bidAnalysis', foreignKey: 'bidAnalysisId' });
+BidAnalysisScore.belongsTo(Vendor,      { as: 'vendor',      foreignKey: 'vendorId' });
+BidAnalysisScore.belongsTo(Quotation,   { as: 'quotation',   foreignKey: 'quotationId' });
+
 // ============================================
 // EXPORTS
 // ============================================
@@ -4130,6 +4325,10 @@ export {
   AuditLog,
   RFQ,
   RFQVendor,
+  Quotation,
+  QuotationLine,
+  BidAnalysis,
+  BidAnalysisScore,
   sequelize
 };
 
@@ -4152,6 +4351,8 @@ withAuditLog(Role, 'Role');
 withAuditLog(RolePermission, 'RolePermission');
 withAuditLog(PurchaseRequisition, 'PurchaseRequisition');
 withAuditLog(RFQ, 'RFQ');
+withAuditLog(Quotation, 'Quotation');
+withAuditLog(BidAnalysis, 'BidAnalysis');
 
 export default {
   User,
@@ -4240,5 +4441,9 @@ export default {
   AuditLog,
   RFQ,
   RFQVendor,
+  Quotation,
+  QuotationLine,
+  BidAnalysis,
+  BidAnalysisScore,
   sequelize
 };

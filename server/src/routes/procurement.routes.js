@@ -49,6 +49,22 @@ import {
   closeRFQ,
   cancelRFQ
 } from '../controllers/rfq.controller.js';
+import {
+  listQuotationsForRFQ,
+  getQuotation,
+  createQuotation,
+  updateQuotation,
+  deleteQuotation
+} from '../controllers/quotation.controller.js';
+import {
+  listBidAnalyses,
+  getBidAnalysis,
+  createBidAnalysis,
+  updateBidAnalysis,
+  submitBidAnalysis,
+  approveBidAnalysis,
+  rejectBidAnalysis
+} from '../controllers/bidAnalysis.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -97,6 +113,24 @@ router.post('/rfqs/:id/invite', validateId(), requireProcurementWrite, inviteVen
 router.post('/rfqs/:id/send', validateId(), requireProcurementWrite, sendRFQ);
 router.patch('/rfqs/:id/close', validateId(), requireProcurementWrite, closeRFQ);
 router.patch('/rfqs/:id/cancel', validateId(), requireProcurementManager, cancelRFQ);
+
+// Quotations live under their parent RFQ for create/list, and at top level for update/delete.
+router.get('/rfqs/:id/quotations', validateId(), listQuotationsForRFQ);
+router.post('/rfqs/:id/quotations', validateId(), requireProcurementWrite, createQuotation);
+router.get('/quotations/:id', validateId(), getQuotation);
+router.put('/quotations/:id', validateId(), requireProcurementWrite, updateQuotation);
+router.delete('/quotations/:id', validateId(), requireProcurementManager, deleteQuotation);
+
+// ============================================
+// BID ANALYSIS ROUTES
+// ============================================
+router.get('/bid-analyses', listBidAnalyses);
+router.post('/bid-analyses', requireProcurementWrite, createBidAnalysis);
+router.get('/bid-analyses/:id', validateId(), getBidAnalysis);
+router.put('/bid-analyses/:id', validateId(), requireProcurementWrite, updateBidAnalysis);
+router.patch('/bid-analyses/:id/submit', validateId(), requireProcurementWrite, submitBidAnalysis);
+router.patch('/bid-analyses/:id/approve', validateId(), requireProcurementManager, approveBidAnalysis);
+router.patch('/bid-analyses/:id/reject',  validateId(), requireProcurementManager, rejectBidAnalysis);
 
 // ============================================
 // PURCHASE ORDERS ROUTES
