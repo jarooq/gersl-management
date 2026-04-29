@@ -3174,7 +3174,37 @@ export const ProcurementAPI = {
   cancelPO:      (id, reason) =>
     request(`/procurement/pos/${id}/cancel`,  { method: 'PATCH', body: JSON.stringify({ reason }) }),
   // Returns text/html — needs raw fetch helper
-  poPreviewUrl:  (id) => `${import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api')}/procurement/pos/${id}/preview`
+  poPreviewUrl:  (id) => `${import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api')}/procurement/pos/${id}/preview`,
+
+  // ============================================
+  // Goods Receipt Notes
+  // ============================================
+  listGRNsForPO: (poId) => request(`/procurement/pos/${poId}/grns`),
+  createGRN:     (poId, data) =>
+    request(`/procurement/pos/${poId}/grns`, { method: 'POST', body: JSON.stringify(data) }),
+  getGRN:        (id) => request(`/procurement/grns/${id}`),
+  verifyGRN:     (id) => request(`/procurement/grns/${id}/verify`, { method: 'PATCH' }),
+  rejectGRN:     (id, reason) =>
+    request(`/procurement/grns/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+
+  // ============================================
+  // Three-way match
+  // ============================================
+  listMatches: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/three-way-matches${qs ? `?${qs}` : ''}`);
+  },
+  createMatch:  (data) =>
+    request('/procurement/three-way-matches', { method: 'POST', body: JSON.stringify(data) }),
+  resolveMatch: (id, payload) =>
+    request(`/procurement/three-way-matches/${id}/resolve`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload)
+    }),
+  checkPaymentEligibility: (poId, invoiceId) => {
+    const qs = new URLSearchParams({ poId, invoiceId }).toString();
+    return request(`/procurement/three-way-matches/eligibility?${qs}`);
+  }
 };
 
 const API = {

@@ -3418,6 +3418,131 @@ const PurchaseOrder = sequelize.define('PurchaseOrder', {
   ]
 });
 
+// ============================================
+// Goods Receipt Note — what physically arrived against a PO
+// ============================================
+const GoodsReceiptNote = sequelize.define('GoodsReceiptNote', {
+  grnNumber: { type: DataTypes.STRING(50), unique: true, field: 'grn_number' },
+  poId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'po_id',
+    references: { model: 'purchase_orders', key: 'id' }
+  },
+  deliveryNoteNo: { type: DataTypes.STRING(80), field: 'delivery_note_no' },
+  deliveryNoteUrl: { type: DataTypes.STRING(1000), field: 'delivery_note_url' },
+  photos: { type: DataTypes.JSONB, defaultValue: [] },
+  receivedAt: { type: DataTypes.DATE, field: 'received_at', defaultValue: DataTypes.NOW },
+  receivedBy: {
+    type: DataTypes.INTEGER,
+    field: 'received_by',
+    references: { model: 'users', key: 'id' }
+  },
+  location: { type: DataTypes.STRING(255) },
+  conditionNotes: { type: DataTypes.TEXT, field: 'condition_notes' },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Draft'
+    // Draft | Verified | Rejected | Partial
+  },
+  verifiedBy: {
+    type: DataTypes.INTEGER,
+    field: 'verified_by',
+    references: { model: 'users', key: 'id' }
+  },
+  verifiedAt: { type: DataTypes.DATE, field: 'verified_at' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' }
+}, {
+  tableName: 'goods_receipt_notes',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['po_id'] },
+    { fields: ['status'] },
+    { fields: ['received_by'] }
+  ]
+});
+
+const GRNLine = sequelize.define('GRNLine', {
+  grnId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'grn_id',
+    references: { model: 'goods_receipt_notes', key: 'id' }
+  },
+  poLineId: {
+    type: DataTypes.INTEGER,
+    field: 'po_line_id',
+    references: { model: 'po_lines', key: 'id' }
+  },
+  itemDescription: { type: DataTypes.STRING(500), field: 'item_description' },
+  qtyReceived: { type: DataTypes.DECIMAL(15, 2), allowNull: false, defaultValue: 0, field: 'qty_received' },
+  qtyAccepted: { type: DataTypes.DECIMAL(15, 2), allowNull: false, defaultValue: 0, field: 'qty_accepted' },
+  qtyRejected: { type: DataTypes.DECIMAL(15, 2), allowNull: false, defaultValue: 0, field: 'qty_rejected' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' }
+}, {
+  tableName: 'grn_lines',
+  timestamps: true,
+  underscored: true,
+  indexes: [{ fields: ['grn_id'] }, { fields: ['po_line_id'] }]
+});
+
+// ============================================
+// Three-way match — PO + GRN + Invoice/Bill reconciliation
+// ============================================
+const ThreeWayMatch = sequelize.define('ThreeWayMatch', {
+  poId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'po_id',
+    references: { model: 'purchase_orders', key: 'id' }
+  },
+  grnId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'grn_id',
+    references: { model: 'goods_receipt_notes', key: 'id' }
+  },
+  invoiceId: {
+    type: DataTypes.INTEGER,
+    field: 'invoice_id',
+    comment: 'Optional FK to bills/invoices — soft to avoid coupling churn'
+  },
+  qtyMatch: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'qty_match' },
+  priceMatch: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'price_match' },
+  vendorMatch: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'vendor_match' },
+  varianceAmount: { type: DataTypes.DECIMAL(15, 2), field: 'variance_amount' },
+  varianceReason: { type: DataTypes.TEXT, field: 'variance_reason' },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Pending'
+    // Pending | Matched | Discrepancy | Overridden
+  },
+  overrideReason: { type: DataTypes.TEXT, field: 'override_reason' },
+  matchedBy: {
+    type: DataTypes.INTEGER,
+    field: 'matched_by',
+    references: { model: 'users', key: 'id' }
+  },
+  matchedAt: { type: DataTypes.DATE, field: 'matched_at' },
+  resolvedBy: {
+    type: DataTypes.INTEGER,
+    field: 'resolved_by',
+    references: { model: 'users', key: 'id' }
+  },
+  resolvedAt: { type: DataTypes.DATE, field: 'resolved_at' }
+}, {
+  tableName: 'three_way_matches',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['po_id'] },
+    { fields: ['grn_id'] },
+    { fields: ['invoice_id'] },
+    { fields: ['status'] }
+  ]
+});
+
 // Per-line snapshot at PO time (independent of QuotationLine so vendor can't
 // retroactively shift price after issuance).
 const POLine = sequelize.define('POLine', {
@@ -4319,6 +4444,23 @@ BidAnalysis.belongsTo(User,   { as: 'approver', foreignKey: 'approvedBy' });
 BidAnalysis.hasMany(BidAnalysisScore, { as: 'scores', foreignKey: 'bidAnalysisId' });
 PurchaseOrder.belongsTo(BidAnalysis,  { as: 'bidAnalysis', foreignKey: 'bidAnalysisId' });
 BidAnalysis.hasMany(PurchaseOrder,    { as: 'purchaseOrders', foreignKey: 'bidAnalysisId' });
+
+// GRN associations
+GoodsReceiptNote.belongsTo(PurchaseOrder, { as: 'po', foreignKey: 'poId' });
+PurchaseOrder.hasMany(GoodsReceiptNote,    { as: 'grns', foreignKey: 'poId' });
+GoodsReceiptNote.belongsTo(User, { as: 'receiver', foreignKey: 'receivedBy' });
+GoodsReceiptNote.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
+GoodsReceiptNote.hasMany(GRNLine, { as: 'lines', foreignKey: 'grnId' });
+GRNLine.belongsTo(GoodsReceiptNote, { as: 'grn', foreignKey: 'grnId' });
+GRNLine.belongsTo(POLine, { as: 'poLine', foreignKey: 'poLineId' });
+
+// 3-way match associations
+ThreeWayMatch.belongsTo(PurchaseOrder,    { as: 'po',  foreignKey: 'poId' });
+ThreeWayMatch.belongsTo(GoodsReceiptNote, { as: 'grn', foreignKey: 'grnId' });
+PurchaseOrder.hasMany(ThreeWayMatch,    { as: 'matches', foreignKey: 'poId' });
+GoodsReceiptNote.hasMany(ThreeWayMatch, { as: 'matches', foreignKey: 'grnId' });
+ThreeWayMatch.belongsTo(User, { as: 'matcher',  foreignKey: 'matchedBy' });
+ThreeWayMatch.belongsTo(User, { as: 'resolver', foreignKey: 'resolvedBy' });
 BidAnalysisScore.belongsTo(BidAnalysis, { as: 'bidAnalysis', foreignKey: 'bidAnalysisId' });
 BidAnalysisScore.belongsTo(Vendor,      { as: 'vendor',      foreignKey: 'vendorId' });
 BidAnalysisScore.belongsTo(Quotation,   { as: 'quotation',   foreignKey: 'quotationId' });
@@ -4420,6 +4562,9 @@ export {
   BidAnalysis,
   BidAnalysisScore,
   POLine,
+  GoodsReceiptNote,
+  GRNLine,
+  ThreeWayMatch,
   sequelize
 };
 
@@ -4445,6 +4590,8 @@ withAuditLog(RFQ, 'RFQ');
 withAuditLog(Quotation, 'Quotation');
 withAuditLog(BidAnalysis, 'BidAnalysis');
 withAuditLog(POLine, 'POLine');
+withAuditLog(GoodsReceiptNote, 'GoodsReceiptNote');
+withAuditLog(ThreeWayMatch, 'ThreeWayMatch');
 
 export default {
   User,
@@ -4538,5 +4685,8 @@ export default {
   BidAnalysis,
   BidAnalysisScore,
   POLine,
+  GoodsReceiptNote,
+  GRNLine,
+  ThreeWayMatch,
   sequelize
 };

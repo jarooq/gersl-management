@@ -78,6 +78,20 @@ import {
   cancelPO,
   previewPOHtml
 } from '../controllers/po.controller.js';
+import {
+  listGRNsForPO,
+  getGRN,
+  createGRN,
+  verifyGRN,
+  rejectGRN
+} from '../controllers/grn.controller.js';
+import {
+  listMatches,
+  getMatch,
+  createMatch,
+  resolveMatch,
+  checkPaymentEligibility
+} from '../controllers/threeWayMatch.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -159,6 +173,22 @@ router.post ('/pos/:id/issue',       validateId(), requireProcurementManager, is
 router.patch('/pos/:id/acknowledge', validateId(), requireProcurementWrite, acknowledgePO);
 router.patch('/pos/:id/cancel',      validateId(), requireProcurementManager, cancelPO);
 router.get  ('/pos/:id/preview',     validateId(), previewPOHtml);
+
+// GRNs nested under PO for create/list, top-level for get/verify/reject
+router.get ('/pos/:id/grns', validateId(), listGRNsForPO);
+router.post('/pos/:id/grns', validateId(), requireProcurementWrite, createGRN);
+router.get  ('/grns/:id',           validateId(), getGRN);
+router.patch('/grns/:id/verify',    validateId(), requireProcurementManager, verifyGRN);
+router.patch('/grns/:id/reject',    validateId(), requireProcurementManager, rejectGRN);
+
+// ============================================
+// THREE-WAY MATCH
+// ============================================
+router.get ('/three-way-matches',                 listMatches);
+router.post('/three-way-matches',                 requireProcurementWrite, createMatch);
+router.get ('/three-way-matches/eligibility',     checkPaymentEligibility);
+router.get ('/three-way-matches/:id',             validateId(), getMatch);
+router.patch('/three-way-matches/:id/resolve',    validateId(), requireProcurementManager, resolveMatch);
 
 // ============================================
 // LEGACY PURCHASE ORDERS ROUTES (older free-form POs)

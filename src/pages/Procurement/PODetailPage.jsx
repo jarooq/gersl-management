@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ProcurementAPI } from '../../services/api';
+import RecordGRNModal from './components/RecordGRNModal';
 
 const STATUS_BADGE = {
   Draft: 'bg-gray-100 text-gray-700',
@@ -24,16 +25,25 @@ const fmt = (amount, currency = 'LKR') => {
 export default function PODetailPage() {
   const { id } = useParams();
   const [po, setPo] = useState(null);
+  const [grns, setGrns] = useState([]);
+  const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [showGrnModal, setShowGrnModal] = useState(false);
 
   const load = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await ProcurementAPI.getPO(id);
-      setPo(res?.data?.po || null);
+      const [poRes, grnRes, matchRes] = await Promise.all([
+        ProcurementAPI.getPO(id),
+        ProcurementAPI.listGRNsForPO(id).catch(() => ({ data: { grns: [] } })),
+        ProcurementAPI.listMatches({ poId: id }).catch(() => ({ data: { matches: [] } }))
+      ]);
+      setPo(poRes?.data?.po || null);
+      setGrns(grnRes?.data?.grns || []);
+      setMatches(matchRes?.data?.matches || []);
     } catch (e) {
       setError(e?.message || 'Failed to load PO');
     } finally {
@@ -64,6 +74,19 @@ export default function PODetailPage() {
   const onCancel = async () => {
     const reason = window.prompt('Cancel reason (optional)?') || '';
     action(() => ProcurementAPI.cancelPO(id, reason));
+  };
+
+  const onVerifyGrn = (grnId) => action(() => ProcurementAPI.verifyGRN(grnId));
+  const onRejectGrn = async (grnId) => {
+    const reason = window.prompt('Rejection reason?');
+    if (!reason) return;
+    action(() => ProcurementAPI.rejectGRN(grnId, reason));
+  };
+  const onCreateMatch = (grnId) => action(() => ProcurementAPI.createMatch({ poId: Number(id), grnId }));
+  const onResolveMatch = async (matchId) => {
+    const reason = window.prompt('Override reason (mandatory)?');
+    if (!reason) return;
+    action(() => ProcurementAPI.resolveMatch(matchId, { reason, force: 'Matched' }));
   };
 
   if (loading) return <div className="p-6 text-sm text-gray-500">Loading…</div>;
@@ -205,12 +228,96 @@ export default function PODetailPage() {
         >Preview / print</a>
       </section>
 
+      <section className="bg-white border border-gray-200 rounded">
+        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-gray-900">Goods Receipts</h2>
+          {['Issued', 'Acknowledged', 'Partial-Received'].includes(po.status) && (
+            <button
+              onClick={() => setShowGrnModal(true)}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
+            >Record receipt</button>
+          )}
+        </div>
+        <div className="p-4 text-sm space-y-2">
+          {grns.length === 0 && <div className="text-gray-500">No GRNs yet.</div>}
+          {grns.map(g => (
+            <div key={g.id} className="border border-gray-200 rounded-md p-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <strong>{g.grnNumber || `GRN #${g.id}`}</strong>
+                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${
+                    g.status === 'Verified' ? 'bg-green-100 text-green-700' :
+                    g.status === 'Partial'  ? 'bg-yellow-100 text-yellow-800' :
+                    g.status === 'Rejected' ? 'bg-red-100 text-red-700' :
+                    'bg-gray-100 text-gray-700'
+                  }`}>{g.status}</span>
+                  <span className="ml-2 text-gray-500 text-xs">{new Date(g.receivedAt).toLocaleDateString()}</span>
+                </div>
+                <div className="flex gap-2">
+                  {g.status === 'Draft' && (
+                    <>
+                      <button onClick={() => onVerifyGrn(g.id)} disabled={busy} className="text-sm text-green-700 hover:underline">Verify</button>
+                      <button onClick={() => onRejectGrn(g.id)} disabled={busy} className="text-sm text-red-700 hover:underline">Reject</button>
+                    </>
+                  )}
+                  {(g.status === 'Verified' || g.status === 'Partial') && (
+                    <button onClick={() => onCreateMatch(g.id)} disabled={busy} className="text-sm text-blue-600 hover:underline">Run 3-way match</button>
+                  )}
+                </div>
+              </div>
+              {g.deliveryNoteNo && <div className="text-xs text-gray-500 mt-1">Delivery note: {g.deliveryNoteNo}</div>}
+              {g.rejectionReason && <div className="text-xs text-red-700 mt-1">Rejected: {g.rejectionReason}</div>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {matches.length > 0 && (
+        <section className="bg-white border border-gray-200 rounded">
+          <div className="px-4 py-3 border-b border-gray-200 font-semibold">Three-way matches</div>
+          <div className="p-4 text-sm space-y-2">
+            {matches.map(m => (
+              <div key={m.id} className="border border-gray-200 rounded-md p-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      m.status === 'Matched' ? 'bg-green-100 text-green-700' :
+                      m.status === 'Discrepancy' ? 'bg-red-100 text-red-700' :
+                      m.status === 'Overridden' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-gray-100 text-gray-700'
+                    }`}>{m.status}</span>
+                    <span className="ml-2 text-gray-700">
+                      Qty {m.qtyMatch ? '✓' : '✗'} · Price {m.priceMatch ? '✓' : '✗'} · Vendor {m.vendorMatch ? '✓' : '✗'}
+                    </span>
+                    {m.varianceAmount != null && Number(m.varianceAmount) !== 0 && (
+                      <span className="ml-2 text-gray-500 text-xs">Variance: {Number(m.varianceAmount).toLocaleString()}</span>
+                    )}
+                  </div>
+                  {m.status === 'Discrepancy' && (
+                    <button onClick={() => onResolveMatch(m.id)} className="text-sm text-yellow-700 hover:underline">Override</button>
+                  )}
+                </div>
+                {m.overrideReason && <div className="text-xs text-yellow-800 mt-1">Override: {m.overrideReason}</div>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="text-xs text-gray-500 grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div>Created by {po.creator?.fullName || '—'}</div>
         <div>Approved by {po.approver?.fullName || '—'}{po.approvalDate ? ` on ${new Date(po.approvalDate).toLocaleDateString()}` : ''}</div>
         <div>Issued by {po.issuer?.fullName || '—'}{po.issuedAt ? ` on ${new Date(po.issuedAt).toLocaleDateString()}` : ''}</div>
         <div>{po.acknowledgedAt ? `Acknowledged ${new Date(po.acknowledgedAt).toLocaleDateString()}` : ''}</div>
       </section>
+
+      {showGrnModal && (
+        <RecordGRNModal
+          po={po}
+          onClose={() => setShowGrnModal(false)}
+          onSaved={() => { setShowGrnModal(false); load(); }}
+        />
+      )}
     </div>
   );
 }
