@@ -3871,18 +3871,118 @@ const PurchaseRequisition = sequelize.define('PurchaseRequisition', {
 });
 
 const Vendor = sequelize.define('Vendor', {
+  vendorCode: { type: DataTypes.STRING(50), unique: true, field: 'vendor_code' },
   vendorName: { type: DataTypes.STRING(200), allowNull: false, field: 'vendor_name' },
-  vendorType: { type: DataTypes.STRING(50), field: 'vendor_type' }, // Supplier, Contractor, Service Provider
+  vendorType: { type: DataTypes.STRING(50), field: 'vendor_type' },
   contactPerson: { type: DataTypes.STRING(100), field: 'contact_person' },
   email: { type: DataTypes.STRING(100) },
   phone: { type: DataTypes.STRING(20) },
   address: { type: DataTypes.TEXT },
+  district: { type: DataTypes.STRING(100) },
+  country: { type: DataTypes.STRING(100), defaultValue: 'Sri Lanka' },
+  // Compliance + identity
   taxId: { type: DataTypes.STRING(50), field: 'tax_id' },
+  vatNo: { type: DataTypes.STRING(50), field: 'vat_no' },
+  registrationNo: { type: DataTypes.STRING(80), field: 'registration_no' },
+  // Banking (for payment release)
+  bankAccountName: { type: DataTypes.STRING(200), field: 'bank_account_name' },
+  bankName: { type: DataTypes.STRING(200), field: 'bank_name' },
+  branch: { type: DataTypes.STRING(200) },
+  accountNo: { type: DataTypes.STRING(80), field: 'account_no' },
+  swift: { type: DataTypes.STRING(40) },
+  // Procurement intelligence
+  categories: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    defaultValue: [],
+    comment: 'e.g. ["Stationery","Construction","IT"]'
+  },
   paymentTerms: { type: DataTypes.STRING(100), field: 'payment_terms' },
-  status: { type: DataTypes.STRING(20), defaultValue: 'Active' }, // Active, Inactive, Blacklisted
+  rating: { type: DataTypes.DECIMAL(3, 2) },
+  // Due diligence
+  dueDiligenceStatus: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Pending',
+    field: 'due_diligence_status'
+    // Pending | Cleared | Failed
+  },
+  dueDiligenceCheckedBy: {
+    type: DataTypes.INTEGER,
+    field: 'due_diligence_checked_by',
+    references: { model: 'users', key: 'id' }
+  },
+  dueDiligenceCheckedAt: { type: DataTypes.DATE, field: 'due_diligence_checked_at' },
+  dueDiligenceNotes: { type: DataTypes.TEXT, field: 'due_diligence_notes' },
+  taxCertificateUrl: { type: DataTypes.STRING(1000), field: 'tax_certificate_url' },
+  registrationCertificateUrl: { type: DataTypes.STRING(1000), field: 'registration_certificate_url' },
+  otherDocs: { type: DataTypes.JSONB, defaultValue: [], field: 'other_docs' },
+  // Lifecycle
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Active'
+    // Active | Inactive | Blacklisted | Suspended | PendingDocs
+  },
+  blacklistReason: { type: DataTypes.TEXT, field: 'blacklist_reason' },
+  blacklistedBy: {
+    type: DataTypes.INTEGER,
+    field: 'blacklisted_by',
+    references: { model: 'users', key: 'id' }
+  },
+  blacklistedAt: { type: DataTypes.DATE, field: 'blacklisted_at' },
+  // Soft links
+  relatedUserIds: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    defaultValue: [],
+    field: 'related_user_ids',
+    comment: 'COI declaration — staff related to this vendor'
+  },
   notes: { type: DataTypes.TEXT },
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
-}, { tableName: 'vendors', timestamps: true, underscored: true });
+}, {
+  tableName: 'vendors',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['status'] },
+    { fields: ['due_diligence_status'] },
+    { fields: ['vendor_name'] }
+  ]
+});
+
+// ============================================
+// Procurement thresholds — configurable approval matrix
+// ============================================
+const ProcurementThreshold = sequelize.define('ProcurementThreshold', {
+  scopeType: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    defaultValue: 'global',
+    field: 'scope_type'
+    // global | donor | project
+  },
+  scopeId: { type: DataTypes.INTEGER, field: 'scope_id' },
+  minAmount: { type: DataTypes.DECIMAL(15, 2), allowNull: false, defaultValue: 0, field: 'min_amount' },
+  maxAmount: { type: DataTypes.DECIMAL(15, 2), field: 'max_amount' },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  requiredMethod: {
+    type: DataTypes.STRING(30),
+    field: 'required_method'
+    // Direct | RFQ-3 | Sealed-Tender | Framework
+  },
+  approverRole: { type: DataTypes.STRING(80), field: 'approver_role' },
+  requiresCommittee: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'requires_committee' },
+  effectiveFrom: { type: DataTypes.DATEONLY, field: 'effective_from' },
+  effectiveTo: { type: DataTypes.DATEONLY, field: 'effective_to' },
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
+}, {
+  tableName: 'procurement_thresholds',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['scope_type', 'scope_id'] },
+    { fields: ['min_amount', 'max_amount'] }
+  ]
+});
 
 // ============================================
 // RFQ — Request for Quotation
@@ -4565,6 +4665,7 @@ export {
   GoodsReceiptNote,
   GRNLine,
   ThreeWayMatch,
+  ProcurementThreshold,
   sequelize
 };
 
@@ -4592,6 +4693,7 @@ withAuditLog(BidAnalysis, 'BidAnalysis');
 withAuditLog(POLine, 'POLine');
 withAuditLog(GoodsReceiptNote, 'GoodsReceiptNote');
 withAuditLog(ThreeWayMatch, 'ThreeWayMatch');
+withAuditLog(ProcurementThreshold, 'ProcurementThreshold');
 
 export default {
   User,
@@ -4688,5 +4790,6 @@ export default {
   GoodsReceiptNote,
   GRNLine,
   ThreeWayMatch,
+  ProcurementThreshold,
   sequelize
 };

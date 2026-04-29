@@ -3204,6 +3204,59 @@ export const ProcurementAPI = {
   checkPaymentEligibility: (poId, invoiceId) => {
     const qs = new URLSearchParams({ poId, invoiceId }).toString();
     return request(`/procurement/three-way-matches/eligibility?${qs}`);
+  },
+
+  // ============================================
+  // Vendor master (workflow-aware)
+  // ============================================
+  listVendorMaster: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/vendor-master${qs ? `?${qs}` : ''}`);
+  },
+  getVendorMaster: (id) => request(`/procurement/vendor-master/${id}`),
+  createVendorMaster: (data) =>
+    request('/procurement/vendor-master', { method: 'POST', body: JSON.stringify(data) }),
+  updateVendorMaster: (id, data) =>
+    request(`/procurement/vendor-master/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteVendorMaster: (id) =>
+    request(`/procurement/vendor-master/${id}`, { method: 'DELETE' }),
+  setVendorDueDiligence: (id, payload) =>
+    request(`/procurement/vendor-master/${id}/due-diligence`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload)
+    }),
+  blacklistVendor: (id, reason) =>
+    request(`/procurement/vendor-master/${id}/blacklist`, {
+      method: 'PATCH',
+      body: JSON.stringify({ reason })
+    }),
+  unblacklistVendor: (id) =>
+    request(`/procurement/vendor-master/${id}/unblacklist`, { method: 'PATCH' }),
+
+  // ============================================
+  // Procurement thresholds
+  // ============================================
+  listThresholds: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/thresholds${qs ? `?${qs}` : ''}`);
+  },
+  createThreshold: (data) =>
+    request('/procurement/thresholds', { method: 'POST', body: JSON.stringify(data) }),
+  updateThreshold: (id, data) =>
+    request(`/procurement/thresholds/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteThreshold: (id) =>
+    request(`/procurement/thresholds/${id}`, { method: 'DELETE' }),
+  resolveThreshold: (params) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/thresholds/resolve${qs ? `?${qs}` : ''}`);
+  },
+
+  // ============================================
+  // Dashboard
+  // ============================================
+  getProcurementDashboard: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/dashboard${qs ? `?${qs}` : ''}`);
   }
 };
 

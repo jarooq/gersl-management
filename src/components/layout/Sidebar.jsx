@@ -132,7 +132,10 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       bgColor: 'bg-amber-50',
       hasSubmenu: true,
       subItems: [
+        { path: '/admin/procurement/dashboard', icon: BarChart, label: 'Dashboard', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_DASHBOARD_VIEW },
         { path: '/admin/procurement/inbox', icon: ClipboardCheck, label: 'Inbox', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_REQUEST_VIEW },
+        { path: '/admin/procurement/vendors', icon: Store, label: 'Vendors', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_VENDOR_VIEW },
+        { path: '/admin/procurement/thresholds', icon: Settings, label: 'Thresholds', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_THRESHOLDS_MANAGE },
       ]
     },
     {

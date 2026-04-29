@@ -92,6 +92,25 @@ import {
   resolveMatch,
   checkPaymentEligibility
 } from '../controllers/threeWayMatch.controller.js';
+import {
+  listVendors,
+  getVendor,
+  createVendor as createVendorRich,
+  updateVendorRecord,
+  blacklistVendor,
+  unblacklistVendor,
+  setDueDiligence,
+  deleteVendorRecord
+} from '../controllers/vendor.controller.js';
+import {
+  listThresholds,
+  getThreshold,
+  createThreshold,
+  updateThreshold,
+  deleteThreshold,
+  resolveThreshold
+} from '../controllers/procurementThreshold.controller.js';
+import { getProcurementDashboard } from '../controllers/procurementDashboard.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -189,6 +208,33 @@ router.post('/three-way-matches',                 requireProcurementWrite, creat
 router.get ('/three-way-matches/eligibility',     checkPaymentEligibility);
 router.get ('/three-way-matches/:id',             validateId(), getMatch);
 router.patch('/three-way-matches/:id/resolve',    validateId(), requireProcurementManager, resolveMatch);
+
+// ============================================
+// VENDOR MASTER (workflow-aware)
+// ============================================
+router.get   ('/vendor-master',                listVendors);
+router.post  ('/vendor-master',                requireProcurementWrite, createVendorRich);
+router.get   ('/vendor-master/:id',            validateId(), getVendor);
+router.put   ('/vendor-master/:id',            validateId(), requireProcurementWrite, updateVendorRecord);
+router.patch ('/vendor-master/:id/due-diligence', validateId(), requireProcurementManager, setDueDiligence);
+router.patch ('/vendor-master/:id/blacklist',  validateId(), requireProcurementManager, blacklistVendor);
+router.patch ('/vendor-master/:id/unblacklist',validateId(), requireProcurementManager, unblacklistVendor);
+router.delete('/vendor-master/:id',            validateId(), requireProcurementManager, deleteVendorRecord);
+
+// ============================================
+// PROCUREMENT THRESHOLDS
+// ============================================
+router.get   ('/thresholds/resolve', resolveThreshold);
+router.get   ('/thresholds',         listThresholds);
+router.post  ('/thresholds',         requireProcurementManager, createThreshold);
+router.get   ('/thresholds/:id',     validateId(), getThreshold);
+router.put   ('/thresholds/:id',     validateId(), requireProcurementManager, updateThreshold);
+router.delete('/thresholds/:id',     validateId(), requireProcurementManager, deleteThreshold);
+
+// ============================================
+// DASHBOARD
+// ============================================
+router.get('/dashboard', getProcurementDashboard);
 
 // ============================================
 // LEGACY PURCHASE ORDERS ROUTES (older free-form POs)
