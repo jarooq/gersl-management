@@ -3671,6 +3671,24 @@ const CashAccount = sequelize.define('CashAccount', {
     comment: 'Donor-restricted petty cash floats: separate per project'
   },
   isActive: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_active' },
+  approvalThresholds: {
+    type: DataTypes.JSONB,
+    defaultValue: [],
+    field: 'approval_thresholds',
+    comment: 'Array of {minAmount, maxAmount?, requiredRole}. Bands above the highest match require an explicit override.'
+  },
+  receiptRequiredOver: {
+    type: DataTypes.DECIMAL(15, 2),
+    defaultValue: 1000,
+    field: 'receipt_required_over',
+    comment: 'Out transactions above this amount require receipt_url'
+  },
+  voucherCounter: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    field: 'voucher_counter',
+    comment: 'Incremented atomically when issuing a new voucher number'
+  },
   notes: { type: DataTypes.TEXT },
   createdBy: { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
 }, {
@@ -3681,6 +3699,98 @@ const CashAccount = sequelize.define('CashAccount', {
     { fields: ['type'] },
     { fields: ['custodian_user_id'] },
     { fields: ['is_active'] }
+  ]
+});
+
+// ============================================
+// Cash Transaction — receipt / payment / transfer / adjustment
+// ============================================
+const CashTransaction = sequelize.define('CashTransaction', {
+  cashAccountId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'cash_account_id',
+    references: { model: 'cash_accounts', key: 'id' }
+  },
+  transactionType: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    field: 'transaction_type'
+    // Receipt | Payment | Transfer | Adjustment | Reconciliation
+  },
+  direction: {
+    type: DataTypes.STRING(4),
+    allowNull: false
+    // In | Out
+  },
+  amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  balanceAfter: {
+    type: DataTypes.DECIMAL(15, 2),
+    field: 'balance_after',
+    comment: 'Snapshot of account balance after this transaction posted'
+  },
+  voucherNo: { type: DataTypes.STRING(50), field: 'voucher_no' },
+  referenceType: {
+    type: DataTypes.STRING(40),
+    field: 'reference_type'
+    // Bill | Donation | Payroll | Transfer | Manual | FuelClaim | etc.
+  },
+  referenceId: { type: DataTypes.INTEGER, field: 'reference_id' },
+  counterpartyAccountId: {
+    type: DataTypes.INTEGER,
+    field: 'counterparty_account_id',
+    references: { model: 'cash_accounts', key: 'id' },
+    comment: 'For Transfer rows, the other side of the pair'
+  },
+  pairId: {
+    type: DataTypes.INTEGER,
+    field: 'pair_id',
+    references: { model: 'cash_transactions', key: 'id' },
+    comment: 'Sibling transaction id for transfers'
+  },
+  payeeName: { type: DataTypes.STRING(200), field: 'payee_name' },
+  receiptUrl: { type: DataTypes.STRING(1000), field: 'receipt_url' },
+  description: { type: DataTypes.TEXT },
+  categoryId: {
+    type: DataTypes.INTEGER,
+    field: 'category_id',
+    comment: 'Soft FK to chart_of_accounts.id (no hard FK to avoid coupling)'
+  },
+  projectId: { type: DataTypes.INTEGER, field: 'project_id' },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Posted'
+    // Pending-Approval | Posted | Rejected | Reversed
+  },
+  performedBy: { type: DataTypes.INTEGER, field: 'performed_by', references: { model: 'users', key: 'id' } },
+  approvedBy: { type: DataTypes.INTEGER, field: 'approved_by',  references: { model: 'users', key: 'id' } },
+  approvedAt: { type: DataTypes.DATE,    field: 'approved_at' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' },
+  reversedById: {
+    type: DataTypes.INTEGER,
+    field: 'reversed_by_id',
+    references: { model: 'cash_transactions', key: 'id' },
+    comment: 'If voided, points to the reversing entry'
+  },
+  occurredAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'occurred_at',
+    comment: 'When the cash actually moved (vs created_at = when keyed)'
+  }
+}, {
+  tableName: 'cash_transactions',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['cash_account_id'] },
+    { fields: ['transaction_type'] },
+    { fields: ['status'] },
+    { fields: ['voucher_no'] },
+    { fields: ['occurred_at'] },
+    { fields: ['reference_type', 'reference_id'] }
   ]
 });
 
@@ -4632,6 +4742,13 @@ CashAccount.belongsTo(User, { as: 'custodian',    foreignKey: 'custodianUserId' 
 CashAccount.belongsTo(User, { as: 'altCustodian', foreignKey: 'altCustodianUserId' });
 CashAccount.belongsTo(User, { as: 'creator',      foreignKey: 'createdBy' });
 CashAccount.belongsTo(ChartOfAccounts, { as: 'coaAccount', foreignKey: 'coaAccountId' });
+CashAccount.hasMany(CashTransaction, { as: 'transactions', foreignKey: 'cashAccountId' });
+CashTransaction.belongsTo(CashAccount, { as: 'account',          foreignKey: 'cashAccountId' });
+CashTransaction.belongsTo(CashAccount, { as: 'counterparty',     foreignKey: 'counterpartyAccountId' });
+CashTransaction.belongsTo(CashTransaction, { as: 'pair',         foreignKey: 'pairId' });
+CashTransaction.belongsTo(CashTransaction, { as: 'reversedBy',   foreignKey: 'reversedById' });
+CashTransaction.belongsTo(User, { as: 'performer', foreignKey: 'performedBy' });
+CashTransaction.belongsTo(User, { as: 'approver',  foreignKey: 'approvedBy' });
 
 // 3-way match associations
 ThreeWayMatch.belongsTo(PurchaseOrder,    { as: 'po',  foreignKey: 'poId' });
@@ -4746,6 +4863,7 @@ export {
   ThreeWayMatch,
   ProcurementThreshold,
   CashAccount,
+  CashTransaction,
   sequelize
 };
 
@@ -4775,6 +4893,7 @@ withAuditLog(GoodsReceiptNote, 'GoodsReceiptNote');
 withAuditLog(ThreeWayMatch, 'ThreeWayMatch');
 withAuditLog(ProcurementThreshold, 'ProcurementThreshold');
 withAuditLog(CashAccount, 'CashAccount');
+withAuditLog(CashTransaction, 'CashTransaction');
 
 export default {
   User,
@@ -4873,5 +4992,6 @@ export default {
   ThreeWayMatch,
   ProcurementThreshold,
   CashAccount,
+  CashTransaction,
   sequelize
 };

@@ -8,6 +8,15 @@ import {
   reactivateCashAccount,
   getCashSummary
 } from '../controllers/cashAccount.controller.js';
+import {
+  listTransactions,
+  getTransaction,
+  recordTransaction,
+  transferBetweenAccounts,
+  approveTransaction,
+  rejectTransaction,
+  reverseTransaction
+} from '../controllers/cashTransaction.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -19,6 +28,10 @@ router.use(requireAuth);
 const requireCashView = requireRole(
   'Admin', 'CEO', 'Finance Manager', 'Finance Officer', 'Accountant', 'Procurement Manager'
 );
+const requireCashWrite = requireRole(
+  'Admin', 'CEO', 'Finance Manager', 'Finance Officer', 'Accountant'
+);
+const requireCashApprover = requireRole('Admin', 'CEO', 'Finance Manager', 'Finance Officer');
 const requireCashManager = requireRole('Admin', 'CEO', 'Finance Manager');
 
 // Cash Accounts (Locker / CashBook / PettyCash)
@@ -29,5 +42,14 @@ router.get   ('/accounts/:id',     validateId(), requireCashView, getCashAccount
 router.put   ('/accounts/:id',     validateId(), requireCashManager, updateCashAccount);
 router.patch ('/accounts/:id/deactivate', validateId(), requireCashManager, deactivateCashAccount);
 router.patch ('/accounts/:id/reactivate', validateId(), requireCashManager, reactivateCashAccount);
+
+// Cash transactions
+router.get   ('/transactions',                    requireCashView, listTransactions);
+router.post  ('/transactions',                    requireCashWrite, recordTransaction);
+router.post  ('/transactions/transfer',           requireCashWrite, transferBetweenAccounts);
+router.get   ('/transactions/:id',                validateId(), requireCashView, getTransaction);
+router.patch ('/transactions/:id/approve',        validateId(), requireCashApprover, approveTransaction);
+router.patch ('/transactions/:id/reject',         validateId(), requireCashApprover, rejectTransaction);
+router.post  ('/transactions/:id/reverse',        validateId(), requireCashApprover, reverseTransaction);
 
 export default router;

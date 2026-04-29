@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CashAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../utils/permissions';
@@ -124,7 +125,9 @@ export default function CashAccountsPage() {
                   </span>
                 </td>
                 <td className="px-4 py-2 text-sm">
-                  <div className="font-medium text-gray-900">{a.name}</div>
+                  <Link to={`/admin/finance/cash/accounts/${a.id}`} className="font-medium text-blue-700 hover:underline">
+                    {a.name}
+                  </Link>
                   <div className="text-xs text-gray-500">{a.location || ''}</div>
                 </td>
                 <td className="px-4 py-2 text-sm text-gray-700">

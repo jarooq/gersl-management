@@ -3277,7 +3277,24 @@ export const CashAPI = {
     request(`/cash/accounts/${id}/deactivate`, { method: 'PATCH' }),
   reactivateAccount: (id) =>
     request(`/cash/accounts/${id}/reactivate`, { method: 'PATCH' }),
-  getSummary: () => request('/cash/accounts/summary')
+  getSummary: () => request('/cash/accounts/summary'),
+
+  // Transactions
+  listTransactions: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/cash/transactions${qs ? `?${qs}` : ''}`);
+  },
+  getTransaction: (id) => request(`/cash/transactions/${id}`),
+  recordTransaction: (data) =>
+    request('/cash/transactions', { method: 'POST', body: JSON.stringify(data) }),
+  transferCash: (data) =>
+    request('/cash/transactions/transfer', { method: 'POST', body: JSON.stringify(data) }),
+  approveTransaction: (id) =>
+    request(`/cash/transactions/${id}/approve`, { method: 'PATCH' }),
+  rejectTransaction: (id, reason) =>
+    request(`/cash/transactions/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  reverseTransaction: (id, reason) =>
+    request(`/cash/transactions/${id}/reverse`, { method: 'POST',  body: JSON.stringify({ reason }) })
 };
 
 const API = {
