@@ -3611,6 +3611,79 @@ const BankAccount = sequelize.define('BankAccount', {
   notes: { type: DataTypes.TEXT }
 }, { tableName: 'bank_accounts', timestamps: true, underscored: true });
 
+// ============================================
+// Cash Account — physical cash held by the org
+// (Three layers: Locker -> CashBook -> PettyCash)
+// ============================================
+const CashAccount = sequelize.define('CashAccount', {
+  type: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    defaultValue: 'CashBook'
+    // Locker | CashBook | PettyCash
+  },
+  name: { type: DataTypes.STRING(200), allowNull: false },
+  location: { type: DataTypes.STRING(200) },
+  custodianUserId: {
+    type: DataTypes.INTEGER,
+    field: 'custodian_user_id',
+    references: { model: 'users', key: 'id' },
+    comment: 'Accountable person'
+  },
+  altCustodianUserId: {
+    type: DataTypes.INTEGER,
+    field: 'alt_custodian_user_id',
+    references: { model: 'users', key: 'id' },
+    comment: 'Backup custodian — required for dual-control on Locker'
+  },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  imprestLimit: {
+    type: DataTypes.DECIMAL(15, 2),
+    field: 'imprest_limit',
+    comment: 'Petty cash ceiling — replenishes back to this'
+  },
+  reorderPoint: {
+    type: DataTypes.DECIMAL(15, 2),
+    field: 'reorder_point',
+    comment: 'Alert when balance drops below this'
+  },
+  currentBalance: {
+    type: DataTypes.DECIMAL(15, 2),
+    defaultValue: 0,
+    field: 'current_balance',
+    comment: 'Denormalized — refreshed on transaction commit / nightly job'
+  },
+  openingBalance: {
+    type: DataTypes.DECIMAL(15, 2),
+    defaultValue: 0,
+    field: 'opening_balance'
+  },
+  openingDate: { type: DataTypes.DATEONLY, field: 'opening_date' },
+  coaAccountId: {
+    type: DataTypes.INTEGER,
+    field: 'coa_account_id',
+    references: { model: 'chart_of_accounts', key: 'id' },
+    comment: 'Link to chart of accounts for journal posting'
+  },
+  restrictedToProjectId: {
+    type: DataTypes.INTEGER,
+    field: 'restricted_to_project_id',
+    comment: 'Donor-restricted petty cash floats: separate per project'
+  },
+  isActive: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_active' },
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
+}, {
+  tableName: 'cash_accounts',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['type'] },
+    { fields: ['custodian_user_id'] },
+    { fields: ['is_active'] }
+  ]
+});
+
 // BankTransaction Model
 const BankTransaction = sequelize.define('BankTransaction', {
   transactionDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'transaction_date' },
@@ -4554,6 +4627,12 @@ GoodsReceiptNote.hasMany(GRNLine, { as: 'lines', foreignKey: 'grnId' });
 GRNLine.belongsTo(GoodsReceiptNote, { as: 'grn', foreignKey: 'grnId' });
 GRNLine.belongsTo(POLine, { as: 'poLine', foreignKey: 'poLineId' });
 
+// Cash account associations
+CashAccount.belongsTo(User, { as: 'custodian',    foreignKey: 'custodianUserId' });
+CashAccount.belongsTo(User, { as: 'altCustodian', foreignKey: 'altCustodianUserId' });
+CashAccount.belongsTo(User, { as: 'creator',      foreignKey: 'createdBy' });
+CashAccount.belongsTo(ChartOfAccounts, { as: 'coaAccount', foreignKey: 'coaAccountId' });
+
 // 3-way match associations
 ThreeWayMatch.belongsTo(PurchaseOrder,    { as: 'po',  foreignKey: 'poId' });
 ThreeWayMatch.belongsTo(GoodsReceiptNote, { as: 'grn', foreignKey: 'grnId' });
@@ -4666,6 +4745,7 @@ export {
   GRNLine,
   ThreeWayMatch,
   ProcurementThreshold,
+  CashAccount,
   sequelize
 };
 
@@ -4694,6 +4774,7 @@ withAuditLog(POLine, 'POLine');
 withAuditLog(GoodsReceiptNote, 'GoodsReceiptNote');
 withAuditLog(ThreeWayMatch, 'ThreeWayMatch');
 withAuditLog(ProcurementThreshold, 'ProcurementThreshold');
+withAuditLog(CashAccount, 'CashAccount');
 
 export default {
   User,
@@ -4791,5 +4872,6 @@ export default {
   GRNLine,
   ThreeWayMatch,
   ProcurementThreshold,
+  CashAccount,
   sequelize
 };

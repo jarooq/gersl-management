@@ -63,6 +63,7 @@ const PODetailPage = lazy(() => import('../pages/Procurement/PODetailPage'));
 const VendorsPage = lazy(() => import('../pages/Procurement/VendorsPage'));
 const ProcurementThresholdsPage = lazy(() => import('../pages/Procurement/ProcurementThresholdsPage'));
 const ProcurementDashboardPage = lazy(() => import('../pages/Procurement/ProcurementDashboardPage'));
+const CashAccountsPage = lazy(() => import('../pages/Finance/CashAccountsPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -464,6 +465,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               <PermissionRoute permission={PERMISSIONS.PROCUREMENT_DASHBOARD_VIEW}>
                 <Suspense fallback={<PageLoader />}>
                   <ProcurementDashboardPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="finance/cash/accounts"
+            element={
+              <PermissionRoute permission={PERMISSIONS.CASH_ACCOUNTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <CashAccountsPage />
                 </Suspense>
               </PermissionRoute>
             }

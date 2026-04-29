@@ -3260,6 +3260,26 @@ export const ProcurementAPI = {
   }
 };
 
+// ============================================
+// CASH MODULE API
+// ============================================
+export const CashAPI = {
+  listAccounts: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/cash/accounts${qs ? `?${qs}` : ''}`);
+  },
+  getAccount: (id) => request(`/cash/accounts/${id}`),
+  createAccount: (data) =>
+    request('/cash/accounts', { method: 'POST', body: JSON.stringify(data) }),
+  updateAccount: (id, data) =>
+    request(`/cash/accounts/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deactivateAccount: (id) =>
+    request(`/cash/accounts/${id}/deactivate`, { method: 'PATCH' }),
+  reactivateAccount: (id) =>
+    request(`/cash/accounts/${id}/reactivate`, { method: 'PATCH' }),
+  getSummary: () => request('/cash/accounts/summary')
+};
+
 const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
@@ -3286,6 +3306,7 @@ const API = {
   Notification: NotificationAPI,
   // New Finance APIs
   Procurement: ProcurementAPI,
+  Cash: CashAPI,
   Campaign: CampaignAPI,
   CampaignPackage: CampaignPackageAPI,
   Donation: DonationAPI,

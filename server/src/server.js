@@ -104,6 +104,7 @@ import { notFound } from './middleware/notFound.middleware.js';
 import { requestContextMiddleware } from './middleware/requestContext.js';
 import auditLogRoutes from './routes/auditLog.routes.js';
 import uploadsStaticRouter from './routes/uploads-static.js';
+import cashRoutes from './routes/cash.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -301,6 +302,9 @@ app.use('/api/roles', roleRoutes);
 
 // Audit log access (Admin / CEO / BOD only)
 app.use('/api/audit-logs', auditLogRoutes);
+
+// Cash module (Locker / CashBook / PettyCash)
+app.use('/api/cash', cashRoutes);
 
 // Task-specific routes (mounted at /api to catch specific patterns)
 // MUST BE LAST among API routes to not interfere with other routes

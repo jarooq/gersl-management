@@ -112,6 +112,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       ]
     },
     { path: '/admin/finance', icon: DollarSign, label: 'Finance', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.FINANCE_VIEW },
+    { path: '/admin/finance/cash/accounts', icon: Wallet, label: 'Cash Accounts', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.CASH_ACCOUNTS_VIEW },
     {
       label: 'Public Engagement',
       icon: Megaphone,
