@@ -65,6 +65,19 @@ import {
   approveBidAnalysis,
   rejectBidAnalysis
 } from '../controllers/bidAnalysis.controller.js';
+import {
+  listPOs,
+  getPO,
+  draftPOFromBidAnalysis,
+  updatePO,
+  submitPO,
+  approvePO,
+  rejectPO,
+  issuePO,
+  acknowledgePO,
+  cancelPO,
+  previewPOHtml
+} from '../controllers/po.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -133,7 +146,22 @@ router.patch('/bid-analyses/:id/approve', validateId(), requireProcurementManage
 router.patch('/bid-analyses/:id/reject',  validateId(), requireProcurementManager, rejectBidAnalysis);
 
 // ============================================
-// PURCHASE ORDERS ROUTES
+// NEW PROCUREMENT POs (workflow-aware)
+// ============================================
+router.get('/pos', listPOs);
+router.post('/pos', requireProcurementWrite, draftPOFromBidAnalysis);
+router.get('/pos/:id', validateId(), getPO);
+router.put('/pos/:id', validateId(), requireProcurementWrite, updatePO);
+router.patch('/pos/:id/submit',      validateId(), requireProcurementWrite, submitPO);
+router.patch('/pos/:id/approve',     validateId(), requireProcurementManager, approvePO);
+router.patch('/pos/:id/reject',      validateId(), requireProcurementManager, rejectPO);
+router.post ('/pos/:id/issue',       validateId(), requireProcurementManager, issuePO);
+router.patch('/pos/:id/acknowledge', validateId(), requireProcurementWrite, acknowledgePO);
+router.patch('/pos/:id/cancel',      validateId(), requireProcurementManager, cancelPO);
+router.get  ('/pos/:id/preview',     validateId(), previewPOHtml);
+
+// ============================================
+// LEGACY PURCHASE ORDERS ROUTES (older free-form POs)
 // ============================================
 router.get('/orders', getAllOrders);
 router.post('/orders', requireProcurementWrite, createOrder);

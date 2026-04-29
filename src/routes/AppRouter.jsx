@@ -59,6 +59,7 @@ const JobPostingsPage = lazy(() => import('../pages/JobPostings/JobPostingsPage'
 const VendorCallsPage = lazy(() => import('../pages/VendorCalls/VendorCallsPage'));
 const ProcurementInboxPage = lazy(() => import('../pages/Procurement/ProcurementInboxPage'));
 const RFQWorkspacePage = lazy(() => import('../pages/Procurement/RFQWorkspacePage'));
+const PODetailPage = lazy(() => import('../pages/Procurement/PODetailPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -420,6 +421,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               <PermissionRoute permission={PERMISSIONS.PROCUREMENT_RFQ_CREATE}>
                 <Suspense fallback={<PageLoader />}>
                   <RFQWorkspacePage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="procurement/pos/:id"
+            element={
+              <PermissionRoute permission={PERMISSIONS.PROCUREMENT_PO_DRAFT}>
+                <Suspense fallback={<PageLoader />}>
+                  <PODetailPage />
                 </Suspense>
               </PermissionRoute>
             }

@@ -3351,20 +3351,95 @@ const PurchaseOrder = sequelize.define('PurchaseOrder', {
   requiredDate: { type: DataTypes.DATEONLY, field: 'required_date' },
   vendorName: { type: DataTypes.STRING(200), allowNull: false, field: 'vendor_name' },
   vendorContact: { type: DataTypes.STRING(100), field: 'vendor_contact' },
+  // Procurement workflow links (added in step 9 — nullable for legacy rows).
+  requisitionId: {
+    type: DataTypes.INTEGER,
+    field: 'requisition_id',
+    references: { model: 'purchase_requisitions', key: 'id' }
+  },
+  bidAnalysisId: {
+    type: DataTypes.INTEGER,
+    field: 'bid_analysis_id',
+    references: { model: 'bid_analyses', key: 'id' }
+  },
+  vendorId: {
+    type: DataTypes.INTEGER,
+    field: 'vendor_id',
+    references: { model: 'vendors', key: 'id' }
+  },
+  quotationId: {
+    type: DataTypes.INTEGER,
+    field: 'quotation_id',
+    references: { model: 'quotations', key: 'id' }
+  },
+  donorId: {
+    type: DataTypes.INTEGER,
+    field: 'donor_id',
+    comment: 'For donor-restricted procurement; FK left soft to avoid cross-module coupling'
+  },
   projectId: { type: DataTypes.INTEGER, references: { model: 'projects', key: 'id' }, field: 'project_id' },
   department: { type: DataTypes.STRING(100) },
   requestorName: { type: DataTypes.STRING(100), field: 'requestor_name' },
+  subtotal: { type: DataTypes.DECIMAL(15, 2), field: 'subtotal' },
+  tax: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0 },
   totalAmount: { type: DataTypes.DECIMAL(12, 2), allowNull: false, field: 'total_amount' },
   currency: { type: DataTypes.STRING(10), defaultValue: 'LKR' },
-  status: { type: DataTypes.STRING(50), defaultValue: 'Pending' },
+  paymentTerms: { type: DataTypes.STRING(255), field: 'payment_terms' },
+  deliveryDate: { type: DataTypes.DATEONLY, field: 'delivery_date' },
+  status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Draft'
+    // Draft | Pending-Approval | Approved | Issued | Acknowledged |
+    // Partial-Received | Received | Closed | Cancelled
+  },
   approvalStatus: { type: DataTypes.STRING(50), defaultValue: 'Pending', field: 'approval_status' },
   approvedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'approved_by' },
   approvalDate: { type: DataTypes.DATE, field: 'approval_date' },
+  approvalNotes: { type: DataTypes.TEXT, field: 'approval_notes' },
+  issuedAt: { type: DataTypes.DATE, field: 'issued_at' },
+  issuedBy: { type: DataTypes.INTEGER, field: 'issued_by', references: { model: 'users', key: 'id' } },
+  signedPdfUrl: { type: DataTypes.STRING(1000), field: 'signed_pdf_url' },
+  acknowledgedAt: { type: DataTypes.DATE, field: 'acknowledged_at' },
+  cancelReason: { type: DataTypes.TEXT, field: 'cancel_reason' },
+  // Legacy free-form line items kept for older rows.
   lineItems: { type: DataTypes.JSON, field: 'line_items' },
   deliveryAddress: { type: DataTypes.TEXT, field: 'delivery_address' },
   specialInstructions: { type: DataTypes.TEXT, field: 'special_instructions' },
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
-}, { tableName: 'purchase_orders', timestamps: true, underscored: true });
+}, {
+  tableName: 'purchase_orders',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['status'] },
+    { fields: ['vendor_id'] },
+    { fields: ['requisition_id'] },
+    { fields: ['bid_analysis_id'] }
+  ]
+});
+
+// Per-line snapshot at PO time (independent of QuotationLine so vendor can't
+// retroactively shift price after issuance).
+const POLine = sequelize.define('POLine', {
+  poId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'po_id',
+    references: { model: 'purchase_orders', key: 'id' }
+  },
+  itemDescription: { type: DataTypes.STRING(500), allowNull: false, field: 'item_description' },
+  qty: { type: DataTypes.DECIMAL(15, 2), allowNull: false, defaultValue: 1 },
+  unit: { type: DataTypes.STRING(40) },
+  unitPrice: { type: DataTypes.DECIMAL(15, 2), allowNull: false, field: 'unit_price' },
+  lineTotal: { type: DataTypes.DECIMAL(15, 2), field: 'line_total' },
+  glAccountId: { type: DataTypes.INTEGER, field: 'gl_account_id' },
+  projectId: { type: DataTypes.INTEGER, field: 'project_id' }
+}, {
+  tableName: 'po_lines',
+  timestamps: true,
+  underscored: true,
+  indexes: [{ fields: ['po_id'] }]
+});
 
 // ChartOfAccounts Model
 const ChartOfAccounts = sequelize.define('ChartOfAccounts', {
@@ -4219,6 +4294,19 @@ Quotation.belongsTo(User,   { as: 'recorder', foreignKey: 'recordedBy' });
 Quotation.hasMany(QuotationLine,  { as: 'lines', foreignKey: 'quotationId' });
 QuotationLine.belongsTo(Quotation, { as: 'quotation', foreignKey: 'quotationId' });
 
+// Purchase order ↔ procurement chain
+// (Note: creator/approver/project aliases are already declared earlier
+//  alongside the legacy PurchaseOrder associations — don't redeclare.)
+PurchaseOrder.belongsTo(PurchaseRequisition, { as: 'requisition', foreignKey: 'requisitionId' });
+PurchaseRequisition.hasMany(PurchaseOrder,    { as: 'purchaseOrders', foreignKey: 'requisitionId' });
+PurchaseOrder.belongsTo(Vendor,    { as: 'vendor',  foreignKey: 'vendorId' });
+Vendor.hasMany(PurchaseOrder,      { as: 'purchaseOrders', foreignKey: 'vendorId' });
+PurchaseOrder.belongsTo(User,      { as: 'issuer',  foreignKey: 'issuedBy' });
+PurchaseOrder.hasMany(POLine,      { as: 'lines',   foreignKey: 'poId' });
+POLine.belongsTo(PurchaseOrder,    { as: 'po',      foreignKey: 'poId' });
+PurchaseOrder.belongsTo(Quotation, { as: 'quotation', foreignKey: 'quotationId' });
+// bidAnalysisId / bidAnalysis association added further below where BidAnalysis is in scope.
+
 // Bid analysis associations
 BidAnalysis.belongsTo(PurchaseRequisition, { as: 'requisition', foreignKey: 'requisitionId' });
 PurchaseRequisition.hasMany(BidAnalysis,    { as: 'bidAnalyses', foreignKey: 'requisitionId' });
@@ -4229,6 +4317,8 @@ BidAnalysis.belongsTo(User,   { as: 'preparer', foreignKey: 'preparedBy' });
 BidAnalysis.belongsTo(User,   { as: 'reviewer', foreignKey: 'reviewedBy' });
 BidAnalysis.belongsTo(User,   { as: 'approver', foreignKey: 'approvedBy' });
 BidAnalysis.hasMany(BidAnalysisScore, { as: 'scores', foreignKey: 'bidAnalysisId' });
+PurchaseOrder.belongsTo(BidAnalysis,  { as: 'bidAnalysis', foreignKey: 'bidAnalysisId' });
+BidAnalysis.hasMany(PurchaseOrder,    { as: 'purchaseOrders', foreignKey: 'bidAnalysisId' });
 BidAnalysisScore.belongsTo(BidAnalysis, { as: 'bidAnalysis', foreignKey: 'bidAnalysisId' });
 BidAnalysisScore.belongsTo(Vendor,      { as: 'vendor',      foreignKey: 'vendorId' });
 BidAnalysisScore.belongsTo(Quotation,   { as: 'quotation',   foreignKey: 'quotationId' });
@@ -4329,6 +4419,7 @@ export {
   QuotationLine,
   BidAnalysis,
   BidAnalysisScore,
+  POLine,
   sequelize
 };
 
@@ -4353,6 +4444,7 @@ withAuditLog(PurchaseRequisition, 'PurchaseRequisition');
 withAuditLog(RFQ, 'RFQ');
 withAuditLog(Quotation, 'Quotation');
 withAuditLog(BidAnalysis, 'BidAnalysis');
+withAuditLog(POLine, 'POLine');
 
 export default {
   User,
@@ -4445,5 +4537,6 @@ export default {
   QuotationLine,
   BidAnalysis,
   BidAnalysisScore,
+  POLine,
   sequelize
 };

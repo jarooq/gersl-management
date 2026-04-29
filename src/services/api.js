@@ -3150,7 +3150,31 @@ export const ProcurementAPI = {
     request(`/procurement/bid-analyses/${id}/reject`, {
       method: 'PATCH',
       body: JSON.stringify({ reason })
-    })
+    }),
+
+  // ============================================
+  // Workflow-aware Purchase Orders (procurement chain)
+  // ============================================
+  listPOs: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/procurement/pos${qs ? `?${qs}` : ''}`);
+  },
+  getPO: (id) => request(`/procurement/pos/${id}`),
+  draftPOFromBidAnalysis: (data) =>
+    request('/procurement/pos', { method: 'POST', body: JSON.stringify(data) }),
+  updatePO: (id, data) =>
+    request(`/procurement/pos/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  submitPO:      (id) => request(`/procurement/pos/${id}/submit`,      { method: 'PATCH' }),
+  approvePO:     (id, notes) =>
+    request(`/procurement/pos/${id}/approve`, { method: 'PATCH', body: JSON.stringify({ notes }) }),
+  rejectPO:      (id, reason) =>
+    request(`/procurement/pos/${id}/reject`,  { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  issuePO:       (id) => request(`/procurement/pos/${id}/issue`,       { method: 'POST'  }),
+  acknowledgePO: (id) => request(`/procurement/pos/${id}/acknowledge`, { method: 'PATCH' }),
+  cancelPO:      (id, reason) =>
+    request(`/procurement/pos/${id}/cancel`,  { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  // Returns text/html — needs raw fetch helper
+  poPreviewUrl:  (id) => `${import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api')}/procurement/pos/${id}/preview`
 };
 
 const API = {

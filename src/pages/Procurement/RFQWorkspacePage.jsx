@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ProcurementAPI } from '../../services/api';
 import RecordQuotationModal from './components/RecordQuotationModal';
 import BidAnalysisModal from './components/BidAnalysisModal';
@@ -27,6 +27,7 @@ const BA_STATUS_BADGE = {
 
 export default function RFQWorkspacePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [rfq, setRfq] = useState(null);
   const [quotations, setQuotations] = useState([]);
   const [bidAnalyses, setBidAnalyses] = useState([]);
@@ -103,6 +104,16 @@ export default function RFQWorkspacePage() {
       await load();
     } catch (e) {
       alert(e?.message || 'Submit failed');
+    }
+  };
+
+  const onDraftPO = async (baId) => {
+    try {
+      const res = await ProcurementAPI.draftPOFromBidAnalysis({ bidAnalysisId: baId });
+      const newPo = res?.data?.po;
+      if (newPo?.id) navigate(`/admin/procurement/pos/${newPo.id}`);
+    } catch (e) {
+      alert(e?.message || 'Failed to draft PO');
     }
   };
 
@@ -235,6 +246,12 @@ export default function RFQWorkspacePage() {
                       <button onClick={() => onApprove(ba.id)} className="text-sm text-green-700 hover:underline">Approve</button>
                       <button onClick={() => onReject(ba.id)}  className="text-sm text-red-700 hover:underline">Reject</button>
                     </>
+                  )}
+                  {ba.status === 'Approved' && (
+                    <button
+                      onClick={() => onDraftPO(ba.id)}
+                      className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700"
+                    >Draft PO</button>
                   )}
                 </div>
               </div>
