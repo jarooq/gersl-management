@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CashAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
@@ -31,7 +31,7 @@ export default function CashBookPage() {
   const canRequestReplen = hasPermission(user, 'finance:cash:replenishment:request');
 
   const [account, setAccount] = useState(null);
-  const [rows, setRows] = useState([]);
+  const [report, setReport] = useState(null);
   const [counts, setCounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,14 +51,14 @@ export default function CashBookPage() {
     setLoading(true);
     setError(null);
     try {
-      const [accRes, txRes, countRes, replenRes] = await Promise.all([
+      const [accRes, reportRes, countRes, replenRes] = await Promise.all([
         CashAPI.getAccount(id),
-        CashAPI.listTransactions({ accountId: id, from, to, limit: 200 }),
+        CashAPI.getCashBookReport(id, { from, to }),
         CashAPI.listCounts({ accountId: id }).catch(() => ({ data: { counts: [] } })),
         CashAPI.listReplenishments({ pettyCashAccountId: id }).catch(() => ({ data: { replenishments: [] } }))
       ]);
       setAccount(accRes?.data?.account || null);
-      setRows(txRes?.data?.transactions || []);
+      setReport(reportRes?.data || null);
       setCounts(countRes?.data?.counts || []);
       setReplenishments(replenRes?.data?.replenishments || []);
     } catch (e) {
@@ -70,30 +70,11 @@ export default function CashBookPage() {
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
 
-  // Compute opening balance for the displayed window:
-  // current balance minus the In/Out within the window for posted rows.
-  const opening = useMemo(() => {
-    if (!account) return 0;
-    let runningDelta = 0;
-    for (const r of rows) {
-      if (r.status !== 'Posted') continue;
-      runningDelta += (r.direction === 'In' ? Number(r.amount) : -Number(r.amount));
-    }
-    return Number(account.currentBalance) - runningDelta;
-  }, [rows, account]);
-
-  // Build a display list with running balance per row (Posted only).
-  const display = useMemo(() => {
-    let bal = opening;
-    return rows.map(r => {
-      let lineBal = bal;
-      if (r.status === 'Posted') {
-        bal = bal + (r.direction === 'In' ? Number(r.amount) : -Number(r.amount));
-        lineBal = bal;
-      }
-      return { ...r, runningBalance: r.status === 'Posted' ? lineBal : null };
-    });
-  }, [rows, opening]);
+  // Server-supplied accurate opening + per-row running balance.
+  const opening = report?.opening ?? 0;
+  const closing = report?.closing ?? Number(account?.currentBalance || 0);
+  const totals = report?.totals || { receipts: 0, payments: 0 };
+  const display = report?.lines || [];
 
   const onApprove = async (txId) => {
     try { await CashAPI.approveTransaction(txId); load(); }
@@ -161,6 +142,16 @@ export default function CashBookPage() {
           <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="rounded-md border border-gray-300 px-2 py-1 text-sm" />
         </label>
         <button onClick={load} className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Apply</button>
+        <a
+          href={CashAPI.cashBookReportUrl(id, 'html', { from, to })}
+          target="_blank"
+          rel="noreferrer"
+          className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+        >Print preview</a>
+        <a
+          href={CashAPI.cashBookReportUrl(id, 'csv', { from, to })}
+          className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+        >Download CSV</a>
         <div className="ml-auto flex gap-2">
           {canRecord && (
             <>
@@ -209,20 +200,17 @@ export default function CashBookPage() {
             )}
             {display.map(r => (
               <tr key={r.id} className={r.status === 'Reversed' ? 'opacity-60 line-through' : ''}>
-                <td className="px-3 py-2 text-sm text-gray-700">{new Date(r.occurredAt).toLocaleDateString()}</td>
+                <td className="px-3 py-2 text-sm text-gray-700">{new Date(r.date).toLocaleDateString()}</td>
                 <td className="px-3 py-2 text-sm font-mono text-gray-700">{r.voucherNo || '—'}</td>
                 <td className="px-3 py-2 text-sm">{r.transactionType}</td>
                 <td className="px-3 py-2 text-sm">
-                  <div className="text-gray-900">{r.description || r.payeeName || '—'}</div>
-                  {r.counterpartyAccountId && r.counterparty && (
-                    <div className="text-xs text-gray-500">↔ {r.counterparty.name}</div>
-                  )}
-                  {r.referenceType && (
-                    <div className="text-xs text-gray-500">{r.referenceType}{r.referenceId ? ` #${r.referenceId}` : ''}</div>
+                  <div className="text-gray-900">{r.particulars || '—'}</div>
+                  {r.reference && (
+                    <div className="text-xs text-gray-500">{r.reference.type}{r.reference.id ? ` #${r.reference.id}` : ''}</div>
                   )}
                 </td>
-                <td className="px-3 py-2 text-sm text-right text-green-700">{r.direction === 'In' ? fmt(r.amount, account.currency) : ''}</td>
-                <td className="px-3 py-2 text-sm text-right text-red-700">{r.direction === 'Out' ? fmt(r.amount, account.currency) : ''}</td>
+                <td className="px-3 py-2 text-sm text-right text-green-700">{r.receipt != null ? fmt(r.receipt, account.currency) : ''}</td>
+                <td className="px-3 py-2 text-sm text-right text-red-700">{r.payment != null ? fmt(r.payment, account.currency) : ''}</td>
                 <td className="px-3 py-2 text-sm text-right">{r.runningBalance != null ? fmt(r.runningBalance, account.currency) : '—'}</td>
                 <td className="px-3 py-2">
                   <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[r.status] || 'bg-gray-100 text-gray-700'}`}>
@@ -230,13 +218,13 @@ export default function CashBookPage() {
                   </span>
                 </td>
                 <td className="px-3 py-2 text-sm text-right space-x-2 whitespace-nowrap">
-                  {r.status === 'Pending-Approval' && canApprove && r.performedBy !== user?.id && (
+                  {r.status === 'Pending-Approval' && canApprove && r.performer?.id !== user?.id && (
                     <>
                       <button onClick={() => onApprove(r.id)} className="text-green-700 hover:underline">Approve</button>
                       <button onClick={() => onReject(r.id)}  className="text-red-700 hover:underline">Reject</button>
                     </>
                   )}
-                  {r.status === 'Posted' && canApprove && !r.reversedById && (
+                  {r.status === 'Posted' && canApprove && (
                     <button onClick={() => onReverse(r.id)} className="text-yellow-700 hover:underline">Reverse</button>
                   )}
                 </td>
@@ -244,9 +232,16 @@ export default function CashBookPage() {
             ))}
           </tbody>
           <tfoot>
+            <tr className="bg-gray-50">
+              <td colSpan={4} className="px-3 py-2 text-sm text-right text-gray-600">Period totals</td>
+              <td className="px-3 py-2 text-sm text-right text-green-700">{fmt(totals.receipts, account.currency)}</td>
+              <td className="px-3 py-2 text-sm text-right text-red-700">{fmt(totals.payments, account.currency)}</td>
+              <td className="px-3 py-2 text-sm text-right">{fmt(closing, account.currency)}</td>
+              <td colSpan={2}></td>
+            </tr>
             <tr className="bg-gray-100 font-semibold">
               <td colSpan={6} className="px-3 py-2 text-sm text-right">Closing balance</td>
-              <td className="px-3 py-2 text-sm text-right">{fmt(account.currentBalance, account.currency)}</td>
+              <td className="px-3 py-2 text-sm text-right">{fmt(closing, account.currency)}</td>
               <td colSpan={2}></td>
             </tr>
           </tfoot>

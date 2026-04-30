@@ -3328,7 +3328,18 @@ export const CashAPI = {
   disburseReplenishment: (id) =>
     request(`/cash/replenishments/${id}/disburse`, { method: 'POST' }),
   cancelReplenishment: (id) =>
-    request(`/cash/replenishments/${id}/cancel`, { method: 'PATCH' })
+    request(`/cash/replenishments/${id}/cancel`, { method: 'PATCH' }),
+
+  // Cash book report (json — html/csv use the URL helper below)
+  getCashBookReport: (accountId, params = {}) => {
+    const qs = new URLSearchParams({ ...params, format: 'json' }).toString();
+    return request(`/cash/accounts/${accountId}/cash-book?${qs}`);
+  },
+  cashBookReportUrl: (accountId, format, params = {}) => {
+    const base = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
+    const qs = new URLSearchParams({ ...params, format }).toString();
+    return `${base}/cash/accounts/${accountId}/cash-book?${qs}`;
+  }
 };
 
 const API = {

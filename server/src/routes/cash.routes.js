@@ -35,6 +35,7 @@ import {
   disburseReplenishment,
   cancelReplenishment
 } from '../controllers/pettyCashReplenishment.controller.js';
+import { getCashBookReport } from '../controllers/cashBookReport.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -60,6 +61,7 @@ router.get   ('/accounts/:id',     validateId(), requireCashView, getCashAccount
 router.put   ('/accounts/:id',     validateId(), requireCashManager, updateCashAccount);
 router.patch ('/accounts/:id/deactivate', validateId(), requireCashManager, deactivateCashAccount);
 router.patch ('/accounts/:id/reactivate', validateId(), requireCashManager, reactivateCashAccount);
+router.get   ('/accounts/:id/cash-book',  validateId(), requireCashView, getCashBookReport);
 
 // Cash transactions
 router.get   ('/transactions',                    requireCashView, listTransactions);
