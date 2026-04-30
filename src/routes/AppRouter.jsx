@@ -67,6 +67,8 @@ const CashAccountsPage = lazy(() => import('../pages/Finance/CashAccountsPage'))
 const CashBookPage = lazy(() => import('../pages/Finance/CashBookPage'));
 const CashReplenishmentsPage = lazy(() => import('../pages/Finance/CashReplenishmentsPage'));
 const MovementRegisterPage = lazy(() => import('../pages/Operations/MovementRegisterPage'));
+const FuelClaimsPage = lazy(() => import('../pages/Operations/FuelClaimsPage'));
+const FuelRatesPage = lazy(() => import('../pages/Operations/FuelRatesPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -507,6 +509,22 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             element={
               <Suspense fallback={<PageLoader />}>
                 <MovementRegisterPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="operations/fuel-claims"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <FuelClaimsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="operations/fuel-rates"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <FuelRatesPage />
               </Suspense>
             }
           />

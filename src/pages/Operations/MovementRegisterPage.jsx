@@ -71,6 +71,22 @@ export default function MovementRegisterPage() {
     action(() => MovementAPI.cancelMovement(m.id, reason));
   };
 
+  const onClaimFuel = async (m) => {
+    let km = m.distanceKm;
+    if (!km) {
+      const v = window.prompt('Distance (km) for this claim?');
+      if (!v) return;
+      km = Number(v);
+    }
+    try {
+      const res = await MovementAPI.deriveFuelClaim({ movementId: m.id, distanceKm: km });
+      const claimId = res?.data?.claim?.id;
+      alert(`Fuel claim drafted (#${claimId}). Net amount: ${res?.data?.claim?.currency || 'LKR'} ${Number(res?.data?.claim?.netAmount || 0).toLocaleString()}. Submit it from the Fuel claims page.`);
+    } catch (e) {
+      alert(e?.message || 'Failed to derive fuel claim');
+    }
+  };
+
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       <header className="flex items-start justify-between">
@@ -166,6 +182,9 @@ export default function MovementRegisterPage() {
                     )}
                     {isOwn && !['Returned', 'Cancelled', 'Rejected'].includes(m.status) && (
                       <button disabled={busy} onClick={() => onCancel(m)} className="text-gray-500 hover:underline">Cancel</button>
+                    )}
+                    {isOwn && m.status === 'Returned' && !m.isPassenger && (
+                      <button disabled={busy} onClick={() => onClaimFuel(m)} className="text-amber-700 hover:underline">Claim fuel</button>
                     )}
                   </td>
                 </tr>

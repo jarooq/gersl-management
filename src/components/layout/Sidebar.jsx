@@ -108,6 +108,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'All Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
         { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50' }, // No permission required - available to all users
         { path: '/admin/operations/movements', icon: MapPin, label: 'Movement Register', color: 'text-purple-600', bgColor: 'bg-purple-50' },
+        { path: '/admin/operations/fuel-claims', icon: DollarSign, label: 'Fuel Claims', color: 'text-purple-600', bgColor: 'bg-purple-50' },
+        { path: '/admin/operations/fuel-rates', icon: Settings, label: 'Fuel Rates', color: 'text-purple-600', bgColor: 'bg-purple-50' },
         { path: '/admin/approvals', icon: CheckCircle, label: 'Approvals', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.APPROVALS_VIEW },
         { path: '/admin/compliance', icon: Shield, label: 'Compliance & Safeguarding', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.COMPLIANCE_VIEW },
       ]

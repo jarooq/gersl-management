@@ -3746,6 +3746,130 @@ const Vehicle = sequelize.define('Vehicle', {
 });
 
 // ============================================
+// Fuel Rate — per-vehicle-type per-km rate (effective dated)
+// ============================================
+const FuelRate = sequelize.define('FuelRate', {
+  vehicleType: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    field: 'vehicle_type'
+    // Bike | Car | Van | PublicTransport
+  },
+  ratePerKm: {
+    type: DataTypes.DECIMAL(10, 4),
+    allowNull: false,
+    field: 'rate_per_km'
+  },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  effectiveFrom: { type: DataTypes.DATEONLY, allowNull: false, field: 'effective_from' },
+  effectiveTo:   { type: DataTypes.DATEONLY, field: 'effective_to' },
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
+}, {
+  tableName: 'fuel_rates',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['vehicle_type'] },
+    { fields: ['effective_from', 'effective_to'] }
+  ]
+});
+
+// ============================================
+// Fuel Claim — derived from a movement (one per movement, idempotent)
+// ============================================
+const FuelClaim = sequelize.define('FuelClaim', {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'user_id',
+    references: { model: 'users', key: 'id' }
+  },
+  movementId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'movement_id',
+    references: { model: 'movement_log', key: 'id' }
+  },
+  vehicleId: {
+    type: DataTypes.INTEGER,
+    field: 'vehicle_id',
+    references: { model: 'vehicles', key: 'id' }
+  },
+  vehicleType: { type: DataTypes.STRING(20), field: 'vehicle_type' },
+  distanceKm: { type: DataTypes.DECIMAL(10, 2), field: 'distance_km' },
+  ratePerKm:  { type: DataTypes.DECIMAL(10, 4), field: 'rate_per_km' },
+  fuelRateId: {
+    type: DataTypes.INTEGER,
+    field: 'fuel_rate_id',
+    references: { model: 'fuel_rates', key: 'id' }
+  },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  grossAmount:     { type: DataTypes.DECIMAL(15, 2), field: 'gross_amount' },
+  lunchDeduction:  { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'lunch_deduction' },
+  netAmount:       { type: DataTypes.DECIMAL(15, 2), field: 'net_amount' },
+  bypassLunchReason: { type: DataTypes.TEXT, field: 'bypass_lunch_reason' },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Draft'
+    // Draft | Submitted | Approved | Rejected | Paid | Merged | Cancelled
+  },
+  approvedBy: { type: DataTypes.INTEGER, field: 'approved_by', references: { model: 'users', key: 'id' } },
+  approvedAt: { type: DataTypes.DATE, field: 'approved_at' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' },
+  // When a claim is auto-merged into someone else's claim (passenger):
+  primaryClaimId: {
+    type: DataTypes.INTEGER,
+    field: 'primary_claim_id',
+    references: { model: 'fuel_claims', key: 'id' }
+  },
+  paidWithBillId:    { type: DataTypes.INTEGER, field: 'paid_with_bill_id' },
+  paidWithCashTxId:  { type: DataTypes.INTEGER, field: 'paid_with_cash_tx_id' },
+  paidAt: { type: DataTypes.DATE, field: 'paid_at' },
+  notes: { type: DataTypes.TEXT }
+}, {
+  tableName: 'fuel_claims',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { fields: ['movement_id'] },
+    { fields: ['status'] },
+    { fields: ['primary_claim_id'] },
+    { unique: true, fields: ['movement_id'] }
+  ]
+});
+
+const FuelClaimPassenger = sequelize.define('FuelClaimPassenger', {
+  fuelClaimId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'fuel_claim_id',
+    references: { model: 'fuel_claims', key: 'id' }
+  },
+  passengerUserId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'passenger_user_id',
+    references: { model: 'users', key: 'id' }
+  },
+  passengerMovementId: {
+    type: DataTypes.INTEGER,
+    field: 'passenger_movement_id',
+    references: { model: 'movement_log', key: 'id' }
+  },
+  sharePct: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0, field: 'share_pct' }
+}, {
+  tableName: 'fuel_claim_passengers',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['fuel_claim_id'] },
+    { fields: ['passenger_user_id'] }
+  ]
+});
+
+// ============================================
 // Movement Log — staff field-trip register
 // ============================================
 const MovementLog = sequelize.define('MovementLog', {
@@ -5002,6 +5126,20 @@ CashCountSession.belongsTo(CashTransaction, { as: 'adjustmentTx', foreignKey: 'a
 Vehicle.belongsTo(User, { as: 'owner', foreignKey: 'ownerUserId' });
 User.hasMany(Vehicle,    { as: 'vehicles', foreignKey: 'ownerUserId' });
 
+// Fuel claim associations
+FuelClaim.belongsTo(User,        { as: 'staff',     foreignKey: 'userId' });
+FuelClaim.belongsTo(User,        { as: 'approver',  foreignKey: 'approvedBy' });
+FuelClaim.belongsTo(MovementLog, { as: 'movement',  foreignKey: 'movementId' });
+FuelClaim.belongsTo(Vehicle,     { as: 'vehicle',   foreignKey: 'vehicleId' });
+FuelClaim.belongsTo(FuelRate,    { as: 'fuelRate',  foreignKey: 'fuelRateId' });
+FuelClaim.belongsTo(FuelClaim,   { as: 'primaryClaim', foreignKey: 'primaryClaimId' });
+FuelClaim.hasMany(FuelClaim,     { as: 'mergedClaims',  foreignKey: 'primaryClaimId' });
+FuelClaim.hasMany(FuelClaimPassenger, { as: 'passengers', foreignKey: 'fuelClaimId' });
+FuelClaimPassenger.belongsTo(FuelClaim,  { as: 'claim',    foreignKey: 'fuelClaimId' });
+FuelClaimPassenger.belongsTo(User,       { as: 'passenger', foreignKey: 'passengerUserId' });
+FuelClaimPassenger.belongsTo(MovementLog,{ as: 'movement',  foreignKey: 'passengerMovementId' });
+MovementLog.hasOne(FuelClaim, { as: 'fuelClaim', foreignKey: 'movementId' });
+
 // Movement log associations
 MovementLog.belongsTo(User,    { as: 'staff',     foreignKey: 'userId' });
 MovementLog.belongsTo(User,    { as: 'approver',  foreignKey: 'approvedBy' });
@@ -5137,6 +5275,9 @@ export {
   PettyCashReplenishment,
   Vehicle,
   MovementLog,
+  FuelRate,
+  FuelClaim,
+  FuelClaimPassenger,
   sequelize
 };
 
@@ -5171,6 +5312,8 @@ withAuditLog(CashCountSession, 'CashCountSession');
 withAuditLog(PettyCashReplenishment, 'PettyCashReplenishment');
 withAuditLog(Vehicle, 'Vehicle');
 withAuditLog(MovementLog, 'MovementLog');
+withAuditLog(FuelRate, 'FuelRate');
+withAuditLog(FuelClaim, 'FuelClaim');
 
 export default {
   User,
@@ -5274,5 +5417,8 @@ export default {
   PettyCashReplenishment,
   Vehicle,
   MovementLog,
+  FuelRate,
+  FuelClaim,
+  FuelClaimPassenger,
   sequelize
 };

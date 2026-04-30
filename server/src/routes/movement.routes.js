@@ -18,6 +18,24 @@ import {
   updateVehicleRecord,
   deactivateVehicleRecord
 } from '../controllers/vehicle.controller.js';
+import {
+  listFuelRates,
+  getFuelRate,
+  createFuelRate,
+  updateFuelRate,
+  deleteFuelRate
+} from '../controllers/fuelRate.controller.js';
+import {
+  listClaims,
+  getClaim,
+  deriveClaim,
+  duplicateCheck,
+  submitClaim,
+  approveClaim,
+  rejectClaim,
+  mergeClaim,
+  cancelClaim
+} from '../controllers/fuelClaim.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -47,5 +65,24 @@ router.patch ('/movements/:id/arrive',      validateId(), arriveMovement);
 router.patch ('/movements/:id/return',      validateId(), returnMovement);
 router.patch ('/movements/:id/cancel',      validateId(), cancelMovement);
 router.post  ('/movements/:id/ping',        validateId(), pingMovement);
+
+// Fuel rates
+const requireFinanceManager = requireRole('Admin', 'CEO', 'Finance Manager', 'HR Manager');
+router.get   ('/fuel-rates',          listFuelRates);
+router.post  ('/fuel-rates',          requireFinanceManager, createFuelRate);
+router.get   ('/fuel-rates/:id',      validateId(), getFuelRate);
+router.put   ('/fuel-rates/:id',      validateId(), requireFinanceManager, updateFuelRate);
+router.delete('/fuel-rates/:id',      validateId(), requireFinanceManager, deleteFuelRate);
+
+// Fuel claims
+router.get   ('/fuel-claims',                       listClaims);
+router.post  ('/fuel-claims',                       deriveClaim);
+router.get   ('/fuel-claims/:id',                   validateId(), getClaim);
+router.get   ('/fuel-claims/:id/duplicate-check',   validateId(), duplicateCheck);
+router.patch ('/fuel-claims/:id/submit',            validateId(), submitClaim);
+router.patch ('/fuel-claims/:id/approve',           validateId(), requireApprover, approveClaim);
+router.patch ('/fuel-claims/:id/reject',            validateId(), requireApprover, rejectClaim);
+router.patch ('/fuel-claims/:id/merge',             validateId(), requireApprover, mergeClaim);
+router.patch ('/fuel-claims/:id/cancel',            validateId(), cancelClaim);
 
 export default router;

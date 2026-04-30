@@ -3377,7 +3377,40 @@ export const MovementAPI = {
   returnMovement: (id, distanceKm) =>
     request(`/movements/${id}/return`, { method: 'PATCH', body: JSON.stringify({ distanceKm }) }),
   cancelMovement: (id, reason) =>
-    request(`/movements/${id}/cancel`, { method: 'PATCH', body: JSON.stringify({ reason }) })
+    request(`/movements/${id}/cancel`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+
+  // Fuel rates
+  listFuelRates: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/fuel-rates${qs ? `?${qs}` : ''}`);
+  },
+  createFuelRate: (data) =>
+    request('/fuel-rates', { method: 'POST', body: JSON.stringify(data) }),
+  updateFuelRate: (id, data) =>
+    request(`/fuel-rates/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteFuelRate: (id) =>
+    request(`/fuel-rates/${id}`, { method: 'DELETE' }),
+
+  // Fuel claims
+  listFuelClaims: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/fuel-claims${qs ? `?${qs}` : ''}`);
+  },
+  getFuelClaim: (id) => request(`/fuel-claims/${id}`),
+  deriveFuelClaim: (data) =>
+    request('/fuel-claims', { method: 'POST', body: JSON.stringify(data) }),
+  duplicateCheck: (id) =>
+    request(`/fuel-claims/${id}/duplicate-check`),
+  submitFuelClaim: (id) =>
+    request(`/fuel-claims/${id}/submit`, { method: 'PATCH' }),
+  approveFuelClaim: (id) =>
+    request(`/fuel-claims/${id}/approve`, { method: 'PATCH' }),
+  rejectFuelClaim: (id, reason) =>
+    request(`/fuel-claims/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  mergeFuelClaim: (id, primaryClaimId, sharePct) =>
+    request(`/fuel-claims/${id}/merge`, { method: 'PATCH', body: JSON.stringify({ primaryClaimId, sharePct }) }),
+  cancelFuelClaim: (id) =>
+    request(`/fuel-claims/${id}/cancel`, { method: 'PATCH' })
 };
 
 const API = {
