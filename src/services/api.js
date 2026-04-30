@@ -3311,7 +3311,24 @@ export const CashAPI = {
   disputeCount: (id, reason) =>
     request(`/cash/counts/${id}/dispute`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
   cancelCount: (id) =>
-    request(`/cash/counts/${id}`, { method: 'DELETE' })
+    request(`/cash/counts/${id}`, { method: 'DELETE' }),
+
+  // Petty cash replenishments
+  listReplenishments: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/cash/replenishments${qs ? `?${qs}` : ''}`);
+  },
+  getReplenishment: (id) => request(`/cash/replenishments/${id}`),
+  requestReplenishment: (data) =>
+    request('/cash/replenishments', { method: 'POST', body: JSON.stringify(data) }),
+  approveReplenishment: (id, data = {}) =>
+    request(`/cash/replenishments/${id}/approve`, { method: 'PATCH', body: JSON.stringify(data) }),
+  rejectReplenishment: (id, reason) =>
+    request(`/cash/replenishments/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  disburseReplenishment: (id) =>
+    request(`/cash/replenishments/${id}/disburse`, { method: 'POST' }),
+  cancelReplenishment: (id) =>
+    request(`/cash/replenishments/${id}/cancel`, { method: 'PATCH' })
 };
 
 const API = {

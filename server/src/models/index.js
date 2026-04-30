@@ -3710,6 +3710,66 @@ const CashAccount = sequelize.define('CashAccount', {
 });
 
 // ============================================
+// Petty Cash Replenishment — imprest top-up workflow
+// ============================================
+const PettyCashReplenishment = sequelize.define('PettyCashReplenishment', {
+  pettyCashAccountId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'petty_cash_account_id',
+    references: { model: 'cash_accounts', key: 'id' }
+  },
+  sourceAccountId: {
+    type: DataTypes.INTEGER,
+    field: 'source_account_id',
+    references: { model: 'cash_accounts', key: 'id' },
+    comment: 'Cash Book or Locker account to draw from on disbursement'
+  },
+  requestedAmount: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: false,
+    field: 'requested_amount',
+    comment: 'Computed at request time: imprestLimit - currentBalance'
+  },
+  approvedAmount: { type: DataTypes.DECIMAL(15, 2), field: 'approved_amount' },
+  currency: { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Requested'
+    // Requested | Approved | Rejected | Disbursed | Cancelled
+  },
+  voucherIds: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    defaultValue: [],
+    field: 'voucher_ids',
+    comment: 'cash_transactions.id list being reimbursed by this replenishment'
+  },
+  requestedBy: { type: DataTypes.INTEGER, field: 'requested_by', references: { model: 'users', key: 'id' } },
+  requestedAt: { type: DataTypes.DATE, field: 'requested_at', defaultValue: DataTypes.NOW },
+  approvedBy:  { type: DataTypes.INTEGER, field: 'approved_by',  references: { model: 'users', key: 'id' } },
+  approvedAt:  { type: DataTypes.DATE,    field: 'approved_at' },
+  disbursedBy: { type: DataTypes.INTEGER, field: 'disbursed_by', references: { model: 'users', key: 'id' } },
+  disbursedAt: { type: DataTypes.DATE,    field: 'disbursed_at' },
+  disbursementTxId: {
+    type: DataTypes.INTEGER,
+    field: 'disbursement_tx_id',
+    references: { model: 'cash_transactions', key: 'id' },
+    comment: 'Transfer-Out transaction id created on disbursement'
+  },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' },
+  notes: { type: DataTypes.TEXT }
+}, {
+  tableName: 'petty_cash_replenishments',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['petty_cash_account_id'] },
+    { fields: ['source_account_id'] },
+    { fields: ['status'] }
+  ]
+});
+
+// ============================================
 // Cash Count Session — physical count vs system balance
 // ============================================
 const CashCountSession = sequelize.define('CashCountSession', {
@@ -4831,6 +4891,15 @@ CashCountSession.belongsTo(User, { as: 'witness',  foreignKey: 'witnessUserId' }
 CashCountSession.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 CashCountSession.belongsTo(CashTransaction, { as: 'adjustmentTx', foreignKey: 'adjustmentTxId' });
 
+// Petty cash replenishment associations
+PettyCashReplenishment.belongsTo(CashAccount, { as: 'pettyCashAccount', foreignKey: 'pettyCashAccountId' });
+PettyCashReplenishment.belongsTo(CashAccount, { as: 'sourceAccount',    foreignKey: 'sourceAccountId' });
+CashAccount.hasMany(PettyCashReplenishment,    { as: 'replenishments',    foreignKey: 'pettyCashAccountId' });
+PettyCashReplenishment.belongsTo(User, { as: 'requester',  foreignKey: 'requestedBy' });
+PettyCashReplenishment.belongsTo(User, { as: 'approver',   foreignKey: 'approvedBy' });
+PettyCashReplenishment.belongsTo(User, { as: 'disburser',  foreignKey: 'disbursedBy' });
+PettyCashReplenishment.belongsTo(CashTransaction, { as: 'disbursementTx', foreignKey: 'disbursementTxId' });
+
 // 3-way match associations
 ThreeWayMatch.belongsTo(PurchaseOrder,    { as: 'po',  foreignKey: 'poId' });
 ThreeWayMatch.belongsTo(GoodsReceiptNote, { as: 'grn', foreignKey: 'grnId' });
@@ -4946,6 +5015,7 @@ export {
   CashAccount,
   CashTransaction,
   CashCountSession,
+  PettyCashReplenishment,
   sequelize
 };
 
@@ -4977,6 +5047,7 @@ withAuditLog(ProcurementThreshold, 'ProcurementThreshold');
 withAuditLog(CashAccount, 'CashAccount');
 withAuditLog(CashTransaction, 'CashTransaction');
 withAuditLog(CashCountSession, 'CashCountSession');
+withAuditLog(PettyCashReplenishment, 'PettyCashReplenishment');
 
 export default {
   User,
@@ -5077,5 +5148,6 @@ export default {
   CashAccount,
   CashTransaction,
   CashCountSession,
+  PettyCashReplenishment,
   sequelize
 };

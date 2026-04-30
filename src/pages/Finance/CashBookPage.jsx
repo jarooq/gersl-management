@@ -6,6 +6,7 @@ import { hasPermission } from '../../utils/permissions';
 import RecordCashTxModal from './components/RecordCashTxModal';
 import TransferCashModal from './components/TransferCashModal';
 import CashCountModal from './components/CashCountModal';
+import RequestReplenishmentModal from './components/RequestReplenishmentModal';
 
 const STATUS_BADGE = {
   Posted: 'bg-green-100 text-green-700',
@@ -27,6 +28,7 @@ export default function CashBookPage() {
   const canApprove = hasPermission(user, 'finance:cash:transactions:approve');
   const canRunCount     = hasPermission(user, 'finance:cash:count:run');
   const canApproveCount = hasPermission(user, 'finance:cash:count:approve');
+  const canRequestReplen = hasPermission(user, 'finance:cash:replenishment:request');
 
   const [account, setAccount] = useState(null);
   const [rows, setRows] = useState([]);
@@ -42,19 +44,23 @@ export default function CashBookPage() {
   const [showTransfer, setShowTransfer] = useState(false);
   const [showCount, setShowCount] = useState(false);
   const [activeCount, setActiveCount] = useState(null);
+  const [showReplen, setShowReplen] = useState(false);
+  const [replenishments, setReplenishments] = useState([]);
 
   const load = async () => {
     setLoading(true);
     setError(null);
     try {
-      const [accRes, txRes, countRes] = await Promise.all([
+      const [accRes, txRes, countRes, replenRes] = await Promise.all([
         CashAPI.getAccount(id),
         CashAPI.listTransactions({ accountId: id, from, to, limit: 200 }),
-        CashAPI.listCounts({ accountId: id }).catch(() => ({ data: { counts: [] } }))
+        CashAPI.listCounts({ accountId: id }).catch(() => ({ data: { counts: [] } })),
+        CashAPI.listReplenishments({ pettyCashAccountId: id }).catch(() => ({ data: { replenishments: [] } }))
       ]);
       setAccount(accRes?.data?.account || null);
       setRows(txRes?.data?.transactions || []);
       setCounts(countRes?.data?.counts || []);
+      setReplenishments(replenRes?.data?.replenishments || []);
     } catch (e) {
       setError(e?.message || 'Failed to load cash book');
     } finally {
@@ -166,6 +172,12 @@ export default function CashBookPage() {
             <button onClick={() => { setActiveCount(null); setShowCount(true); }}
                     className="px-3 py-1.5 text-sm font-medium text-white bg-amber-600 rounded-md hover:bg-amber-700">
               Run cash count
+            </button>
+          )}
+          {account.type === 'PettyCash' && canRequestReplen && (
+            <button onClick={() => setShowReplen(true)}
+                    className="px-3 py-1.5 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700">
+              Request replenishment
             </button>
           )}
         </div>
@@ -313,6 +325,43 @@ export default function CashBookPage() {
           onClose={() => { setShowCount(false); setActiveCount(null); }}
           onSaved={() => { setShowCount(false); setActiveCount(null); load(); }}
         />
+      )}
+
+      {showReplen && account.type === 'PettyCash' && (
+        <RequestReplenishmentModal
+          pettyAccount={account}
+          onClose={() => setShowReplen(false)}
+          onSaved={() => { setShowReplen(false); load(); }}
+        />
+      )}
+
+      {account.type === 'PettyCash' && replenishments.length > 0 && (
+        <section className="bg-white border border-gray-200 rounded-md">
+          <div className="px-4 py-3 border-b border-gray-200 font-semibold text-sm">Replenishments</div>
+          <div className="p-4 text-sm space-y-2">
+            {replenishments.map(r => (
+              <div key={r.id} className="border border-gray-200 rounded-md p-3 flex items-center justify-between">
+                <div>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    r.status === 'Disbursed' ? 'bg-green-100 text-green-700' :
+                    r.status === 'Approved'  ? 'bg-blue-100 text-blue-700' :
+                    r.status === 'Requested' ? 'bg-yellow-100 text-yellow-800' :
+                    r.status === 'Rejected'  ? 'bg-red-100 text-red-700' :
+                    'bg-gray-100 text-gray-700'
+                  }`}>{r.status}</span>
+                  <span className="ml-2 text-gray-700">
+                    {fmt(r.approvedAmount ?? r.requestedAmount, r.currency)}
+                    {r.sourceAccount && <> · from {r.sourceAccount.name}</>}
+                  </span>
+                  <span className="ml-2 text-xs text-gray-500">{new Date(r.requestedAt).toLocaleDateString()}</span>
+                </div>
+                {r.disbursementTx && (
+                  <span className="text-xs text-gray-500">{r.disbursementTx.voucherNo}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );
