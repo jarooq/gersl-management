@@ -3222,6 +3222,77 @@ const Attendance = sequelize.define('Attendance', {
 });
 
 // ============================================
+// Attendance Punch — mobile in/out punches (one row per punch)
+// ============================================
+const AttendancePunch = sequelize.define('AttendancePunch', {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'user_id',
+    references: { model: 'users', key: 'id' }
+  },
+  punchType: {
+    type: DataTypes.STRING(10),
+    allowNull: false,
+    field: 'punch_type'
+    // In | Out | BreakIn | BreakOut
+  },
+  occurredAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'occurred_at'
+  },
+  latitude:  { type: DataTypes.DECIMAL(10, 7) },
+  longitude: { type: DataTypes.DECIMAL(10, 7) },
+  accuracyM: { type: DataTypes.DECIMAL(8, 2), field: 'accuracy_m' },
+  selfieUrl: { type: DataTypes.STRING(1000), field: 'selfie_url' },
+  deviceId: { type: DataTypes.STRING(120), field: 'device_id' },
+  geofenceMatch: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'geofence_match' },
+  source: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'mobile'
+    // mobile | web | manual | system
+  },
+  notes: { type: DataTypes.TEXT }
+}, {
+  tableName: 'attendance_punches',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { fields: ['punch_type'] },
+    { fields: ['occurred_at'] }
+  ]
+});
+
+// ============================================
+// Device Registration — push tokens (FCM/APNs) per user per device
+// ============================================
+const DeviceRegistration = sequelize.define('DeviceRegistration', {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'user_id',
+    references: { model: 'users', key: 'id' }
+  },
+  deviceId: { type: DataTypes.STRING(120), allowNull: false, field: 'device_id' },
+  platform: { type: DataTypes.STRING(20) }, // ios | android
+  pushToken: { type: DataTypes.STRING(500), field: 'push_token' },
+  appVersion: { type: DataTypes.STRING(40), field: 'app_version' },
+  lastSeen: { type: DataTypes.DATE, field: 'last_seen', defaultValue: DataTypes.NOW },
+  isActive: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_active' }
+}, {
+  tableName: 'device_registrations',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { unique: true, fields: ['user_id', 'device_id'] }
+  ]
+});
+
+// ============================================
 // Attendance Correction — staff requests an HR-approved fix to a punch
 // ============================================
 const AttendanceCorrection = sequelize.define('AttendanceCorrection', {
@@ -5175,6 +5246,12 @@ AttendanceCorrection.belongsTo(User, { as: 'requester', foreignKey: 'requestedBy
 AttendanceCorrection.belongsTo(User, { as: 'reviewer',  foreignKey: 'reviewedBy' });
 Attendance.hasMany(AttendanceCorrection, { as: 'corrections', foreignKey: 'attendanceId' });
 
+// Mobile attendance punches + device registrations
+AttendancePunch.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+User.hasMany(AttendancePunch,    { as: 'attendancePunches', foreignKey: 'userId' });
+DeviceRegistration.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+User.hasMany(DeviceRegistration,    { as: 'devices', foreignKey: 'userId' });
+
 // Vehicle associations
 Vehicle.belongsTo(User, { as: 'owner', foreignKey: 'ownerUserId' });
 User.hasMany(Vehicle,    { as: 'vehicles', foreignKey: 'ownerUserId' });
@@ -5332,6 +5409,8 @@ export {
   FuelClaim,
   FuelClaimPassenger,
   AttendanceCorrection,
+  AttendancePunch,
+  DeviceRegistration,
   sequelize
 };
 
@@ -5369,6 +5448,7 @@ withAuditLog(MovementLog, 'MovementLog');
 withAuditLog(FuelRate, 'FuelRate');
 withAuditLog(FuelClaim, 'FuelClaim');
 withAuditLog(AttendanceCorrection, 'AttendanceCorrection');
+withAuditLog(AttendancePunch, 'AttendancePunch');
 withAuditLog(Attendance, 'Attendance');
 
 export default {
@@ -5477,5 +5557,7 @@ export default {
   FuelClaim,
   FuelClaimPassenger,
   AttendanceCorrection,
+  AttendancePunch,
+  DeviceRegistration,
   sequelize
 };

@@ -106,6 +106,7 @@ import auditLogRoutes from './routes/auditLog.routes.js';
 import uploadsStaticRouter from './routes/uploads-static.js';
 import cashRoutes from './routes/cash.routes.js';
 import movementRoutes from './routes/movement.routes.js';
+import deviceRoutes from './routes/device.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -309,6 +310,9 @@ app.use('/api/cash', cashRoutes);
 
 // Movement register + vehicles
 app.use('/api', movementRoutes);
+
+// Mobile device registrations (push tokens)
+app.use('/api/devices', deviceRoutes);
 
 // Task-specific routes (mounted at /api to catch specific patterns)
 // MUST BE LAST among API routes to not interfere with other routes

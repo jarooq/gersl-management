@@ -10,6 +10,12 @@ import {
   attendanceRegister,
   movementRegister
 } from '../controllers/attendanceCorrection.controller.js';
+import {
+  recordPunch,
+  listMyPunches,
+  todayStatus,
+  listPunchesByUser
+} from '../controllers/attendancePunch.controller.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -40,5 +46,11 @@ router.patch ('/corrections/:id/cancel',      validateId(), cancelCorrection);
 // Register reports
 router.get('/reports/attendance', attendanceRegister);
 router.get('/reports/movements',  movementRegister);
+
+// Mobile attendance punches
+router.post('/punches',           recordPunch);
+router.get ('/punches/today',     todayStatus);
+router.get ('/punches/me',        listMyPunches);
+router.get ('/punches',           listPunchesByUser);
 
 export default router;
