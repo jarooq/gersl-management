@@ -6,6 +6,9 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
 
 // Import database
 import sequelize, { testConnection, syncDatabase } from './config/database.js';
@@ -318,6 +321,35 @@ app.use('/api/devices', deviceRoutes);
 // MUST BE LAST among API routes to not interfere with other routes
 app.use('/api', taskBeneficiaryRoutes);
 app.use('/api', aggregateDistributionRoutes);
+
+// ============================================
+// SINGLE-SERVICE MODE — serve the built frontend
+// Resolved from <repo>/dist (Vite output). Skipped if dist/ doesn't exist
+// (typical during local API-only dev when you run `vite` separately).
+// ============================================
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DIST_DIR = path.resolve(__dirname, '../../dist');
+const distExists = fs.existsSync(path.join(DIST_DIR, 'index.html'));
+
+if (distExists) {
+  console.log(`📦 Serving frontend from ${DIST_DIR}`);
+  app.use(express.static(DIST_DIR, {
+    index: false, // SPA fallback owns index.html
+    maxAge: '1d',
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      }
+    }
+  }));
+  // SPA catch-all: only for GETs that aren't API or upload routes.
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) return next();
+    if (req.method !== 'GET') return next();
+    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  });
+}
 
 // 404 handler
 app.use(notFound);

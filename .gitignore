@@ -60,11 +60,9 @@ api/
 vercel.json
 .env.render
 .netlify
-Procfile
 deploy.sh
 setup-vercel-env.sh
 setup-vercel-backend.sh
-server/Procfile
 server/setup-vercel-backend.sh
 server/deploy-eb-fixed.sh
 .ebextensions/
@@ -78,6 +76,7 @@ scripts/test-*.sh
 !README.md
 *.md
 !README.md
+!RAILWAY.md
 *.sql
 
 # Connection configuration (contains sensitive credentials)

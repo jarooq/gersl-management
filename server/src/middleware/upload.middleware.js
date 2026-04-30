@@ -1,39 +1,56 @@
 import multer from 'multer';
+import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { BadRequestError } from './error.middleware.js';
+import { isStorageConfigured, s3ClientForUploads, isPublicKey } from '../services/storage.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure uploads directory exists
+// Disk fallback (used when S3 env vars are missing — local dev / first deploy).
 const uploadsDir = path.join(__dirname, '../../uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configure storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = path.join(uploadsDir, req.uploadPath || '');
+const buildKey = (req, file) => {
+  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+  const ext = path.extname(file.originalname);
+  const nameWithoutExt = path.basename(file.originalname, ext);
+  const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9_-]/g, '_');
+  const filename = `${sanitizedName}-${uniqueSuffix}${ext}`;
+  const sub = req.uploadPath || '';
+  return sub ? `${sub}/${filename}` : filename;
+};
 
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    // Generate unique filename
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    const nameWithoutExt = path.basename(file.originalname, ext);
-    const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9_-]/g, '_');
-    cb(null, sanitizedName + '-' + uniqueSuffix + ext);
-  }
-});
+// S3 storage if configured, disk otherwise. multer-s3 stamps file.location +
+// file.key on the multer file object so callers can persist either an S3 key
+// or a /uploads/<path> URL — the upload controller normalizes both shapes.
+const storage = isStorageConfigured()
+  ? multerS3({
+      s3: s3ClientForUploads().client,
+      bucket: s3ClientForUploads().bucket,
+      // ACL is not supported on R2; multer-s3 will skip it harmlessly.
+      contentType: multerS3.AUTO_CONTENT_TYPE,
+      cacheControl: (req, file, cb) => {
+        cb(null, isPublicKey(req.uploadPath || '') ? 'public, max-age=86400' : 'private, max-age=3600');
+      },
+      key: (req, file, cb) => cb(null, buildKey(req, file))
+    })
+  : multer.diskStorage({
+      destination: function (req, file, cb) {
+        const uploadPath = path.join(uploadsDir, req.uploadPath || '');
+        if (!fs.existsSync(uploadPath)) {
+          fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+      },
+      filename: function (req, file, cb) {
+        cb(null, path.basename(buildKey(req, file)));
+      }
+    });
 
 // File filter
 const fileFilter = (req, file, cb) => {
