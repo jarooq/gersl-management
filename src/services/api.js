@@ -3342,6 +3342,44 @@ export const CashAPI = {
   }
 };
 
+// ============================================
+// MOVEMENT REGISTER + VEHICLES
+// ============================================
+export const MovementAPI = {
+  // Vehicles
+  listVehicles: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/vehicles${qs ? `?${qs}` : ''}`);
+  },
+  createVehicle: (data) =>
+    request('/vehicles', { method: 'POST', body: JSON.stringify(data) }),
+  updateVehicle: (id, data) =>
+    request(`/vehicles/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deactivateVehicle: (id) =>
+    request(`/vehicles/${id}/deactivate`, { method: 'PATCH' }),
+
+  // Movements
+  listMovements: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/movements${qs ? `?${qs}` : ''}`);
+  },
+  getMovement: (id) => request(`/movements/${id}`),
+  createMovement: (data) =>
+    request('/movements', { method: 'POST', body: JSON.stringify(data) }),
+  approveMovement: (id) =>
+    request(`/movements/${id}/approve`, { method: 'PATCH' }),
+  rejectMovement: (id, reason) =>
+    request(`/movements/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  depart: (id) =>
+    request(`/movements/${id}/depart`, { method: 'PATCH' }),
+  arrive: (id) =>
+    request(`/movements/${id}/arrive`, { method: 'PATCH' }),
+  returnMovement: (id, distanceKm) =>
+    request(`/movements/${id}/return`, { method: 'PATCH', body: JSON.stringify({ distanceKm }) }),
+  cancelMovement: (id, reason) =>
+    request(`/movements/${id}/cancel`, { method: 'PATCH', body: JSON.stringify({ reason }) })
+};
+
 const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
@@ -3369,6 +3407,7 @@ const API = {
   // New Finance APIs
   Procurement: ProcurementAPI,
   Cash: CashAPI,
+  Movement: MovementAPI,
   Campaign: CampaignAPI,
   CampaignPackage: CampaignPackageAPI,
   Donation: DonationAPI,

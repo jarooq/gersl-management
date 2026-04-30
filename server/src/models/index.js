@@ -3710,6 +3710,113 @@ const CashAccount = sequelize.define('CashAccount', {
 });
 
 // ============================================
+// Vehicle — bike / car / van used for movements + fuel claims
+// ============================================
+const Vehicle = sequelize.define('Vehicle', {
+  type: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    defaultValue: 'Bike'
+    // Bike | Car | Van | PublicTransport
+  },
+  plateNo: { type: DataTypes.STRING(40), unique: true, field: 'plate_no' },
+  ownerUserId: {
+    type: DataTypes.INTEGER,
+    field: 'owner_user_id',
+    references: { model: 'users', key: 'id' },
+    comment: 'Personal vehicles linked to staff; null for org fleet'
+  },
+  isPersonal: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_personal' },
+  fuelEfficiencyKmpl: {
+    type: DataTypes.DECIMAL(5, 2),
+    field: 'fuel_efficiency_kmpl'
+  },
+  isActive: { type: DataTypes.BOOLEAN, defaultValue: true, field: 'is_active' },
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
+}, {
+  tableName: 'vehicles',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['type'] },
+    { fields: ['owner_user_id'] },
+    { fields: ['is_active'] }
+  ]
+});
+
+// ============================================
+// Movement Log — staff field-trip register
+// ============================================
+const MovementLog = sequelize.define('MovementLog', {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'user_id',
+    references: { model: 'users', key: 'id' }
+  },
+  vehicleId: {
+    type: DataTypes.INTEGER,
+    field: 'vehicle_id',
+    references: { model: 'vehicles', key: 'id' }
+  },
+  projectId: { type: DataTypes.INTEGER, field: 'project_id' },
+  taskId: { type: DataTypes.INTEGER, field: 'task_id' },
+  fromLocation: { type: DataTypes.STRING(255), allowNull: false, field: 'from_location' },
+  toLocation: { type: DataTypes.STRING(255), allowNull: false, field: 'to_location' },
+  purpose: { type: DataTypes.TEXT },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Planned'
+    // Planned | Approved | InMovement | Arrived | Returned | Cancelled | Rejected
+  },
+  // Timeline
+  plannedDepartureAt: { type: DataTypes.DATE, field: 'planned_departure_at' },
+  plannedReturnAt: { type: DataTypes.DATE, field: 'planned_return_at' },
+  departureAt: { type: DataTypes.DATE, field: 'departure_at' },
+  arrivalAt: { type: DataTypes.DATE, field: 'arrival_at' },
+  returnAt: { type: DataTypes.DATE, field: 'return_at' },
+  // Computed metrics
+  distanceKm: { type: DataTypes.DECIMAL(10, 2), field: 'distance_km' },
+  // Approval / lifecycle metadata
+  approvedBy: { type: DataTypes.INTEGER, field: 'approved_by', references: { model: 'users', key: 'id' } },
+  approvedAt: { type: DataTypes.DATE, field: 'approved_at' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' },
+  cancelReason: { type: DataTypes.TEXT, field: 'cancel_reason' },
+  // GPS pings while in movement (best-effort, optional)
+  gpsTrack: {
+    type: DataTypes.JSONB,
+    defaultValue: [],
+    field: 'gps_track',
+    comment: 'Array of {lat, lng, ts}'
+  },
+  isPassenger: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    field: 'is_passenger',
+    comment: 'Set when staff was a passenger on someone else’s movement (no fuel claim)'
+  },
+  primaryMovementId: {
+    type: DataTypes.INTEGER,
+    field: 'primary_movement_id',
+    references: { model: 'movement_log', key: 'id' },
+    comment: 'When isPassenger=true, points at the rider’s movement'
+  },
+  notes: { type: DataTypes.TEXT }
+}, {
+  tableName: 'movement_log',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { fields: ['status'] },
+    { fields: ['project_id'] },
+    { fields: ['departure_at'] },
+    { fields: ['vehicle_id'] }
+  ]
+});
+
+// ============================================
 // Petty Cash Replenishment — imprest top-up workflow
 // ============================================
 const PettyCashReplenishment = sequelize.define('PettyCashReplenishment', {
@@ -4891,6 +4998,18 @@ CashCountSession.belongsTo(User, { as: 'witness',  foreignKey: 'witnessUserId' }
 CashCountSession.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 CashCountSession.belongsTo(CashTransaction, { as: 'adjustmentTx', foreignKey: 'adjustmentTxId' });
 
+// Vehicle associations
+Vehicle.belongsTo(User, { as: 'owner', foreignKey: 'ownerUserId' });
+User.hasMany(Vehicle,    { as: 'vehicles', foreignKey: 'ownerUserId' });
+
+// Movement log associations
+MovementLog.belongsTo(User,    { as: 'staff',     foreignKey: 'userId' });
+MovementLog.belongsTo(User,    { as: 'approver',  foreignKey: 'approvedBy' });
+MovementLog.belongsTo(Vehicle, { as: 'vehicle',   foreignKey: 'vehicleId' });
+MovementLog.belongsTo(MovementLog, { as: 'primaryMovement', foreignKey: 'primaryMovementId' });
+MovementLog.hasMany(MovementLog,   { as: 'passengers',      foreignKey: 'primaryMovementId' });
+User.hasMany(MovementLog, { as: 'movements', foreignKey: 'userId' });
+
 // Petty cash replenishment associations
 PettyCashReplenishment.belongsTo(CashAccount, { as: 'pettyCashAccount', foreignKey: 'pettyCashAccountId' });
 PettyCashReplenishment.belongsTo(CashAccount, { as: 'sourceAccount',    foreignKey: 'sourceAccountId' });
@@ -5016,6 +5135,8 @@ export {
   CashTransaction,
   CashCountSession,
   PettyCashReplenishment,
+  Vehicle,
+  MovementLog,
   sequelize
 };
 
@@ -5048,6 +5169,8 @@ withAuditLog(CashAccount, 'CashAccount');
 withAuditLog(CashTransaction, 'CashTransaction');
 withAuditLog(CashCountSession, 'CashCountSession');
 withAuditLog(PettyCashReplenishment, 'PettyCashReplenishment');
+withAuditLog(Vehicle, 'Vehicle');
+withAuditLog(MovementLog, 'MovementLog');
 
 export default {
   User,
@@ -5149,5 +5272,7 @@ export default {
   CashTransaction,
   CashCountSession,
   PettyCashReplenishment,
+  Vehicle,
+  MovementLog,
   sequelize
 };

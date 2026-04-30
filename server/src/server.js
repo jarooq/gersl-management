@@ -105,6 +105,7 @@ import { requestContextMiddleware } from './middleware/requestContext.js';
 import auditLogRoutes from './routes/auditLog.routes.js';
 import uploadsStaticRouter from './routes/uploads-static.js';
 import cashRoutes from './routes/cash.routes.js';
+import movementRoutes from './routes/movement.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -305,6 +306,9 @@ app.use('/api/audit-logs', auditLogRoutes);
 
 // Cash module (Locker / CashBook / PettyCash)
 app.use('/api/cash', cashRoutes);
+
+// Movement register + vehicles
+app.use('/api', movementRoutes);
 
 // Task-specific routes (mounted at /api to catch specific patterns)
 // MUST BE LAST among API routes to not interfere with other routes

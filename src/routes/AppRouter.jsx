@@ -66,6 +66,7 @@ const ProcurementDashboardPage = lazy(() => import('../pages/Procurement/Procure
 const CashAccountsPage = lazy(() => import('../pages/Finance/CashAccountsPage'));
 const CashBookPage = lazy(() => import('../pages/Finance/CashBookPage'));
 const CashReplenishmentsPage = lazy(() => import('../pages/Finance/CashReplenishmentsPage'));
+const MovementRegisterPage = lazy(() => import('../pages/Operations/MovementRegisterPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -499,6 +500,14 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
                   <CashReplenishmentsPage />
                 </Suspense>
               </PermissionRoute>
+            }
+          />
+          <Route
+            path="operations/movements"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <MovementRegisterPage />
+              </Suspense>
             }
           />
           <Route path="hr">
