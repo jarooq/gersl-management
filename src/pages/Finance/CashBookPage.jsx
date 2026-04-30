@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../utils/permissions';
 import RecordCashTxModal from './components/RecordCashTxModal';
 import TransferCashModal from './components/TransferCashModal';
+import CashCountModal from './components/CashCountModal';
 
 const STATUS_BADGE = {
   Posted: 'bg-green-100 text-green-700',
@@ -24,9 +25,12 @@ export default function CashBookPage() {
   const { user } = useAuth();
   const canRecord  = hasPermission(user, 'finance:cash:transactions:record');
   const canApprove = hasPermission(user, 'finance:cash:transactions:approve');
+  const canRunCount     = hasPermission(user, 'finance:cash:count:run');
+  const canApproveCount = hasPermission(user, 'finance:cash:count:approve');
 
   const [account, setAccount] = useState(null);
   const [rows, setRows] = useState([]);
+  const [counts, setCounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [from, setFrom] = useState(() => {
@@ -36,17 +40,21 @@ export default function CashBookPage() {
   const [to, setTo] = useState(() => new Date().toISOString().slice(0, 10));
   const [showRecord, setShowRecord] = useState(false);
   const [showTransfer, setShowTransfer] = useState(false);
+  const [showCount, setShowCount] = useState(false);
+  const [activeCount, setActiveCount] = useState(null);
 
   const load = async () => {
     setLoading(true);
     setError(null);
     try {
-      const [accRes, txRes] = await Promise.all([
+      const [accRes, txRes, countRes] = await Promise.all([
         CashAPI.getAccount(id),
-        CashAPI.listTransactions({ accountId: id, from, to, limit: 200 })
+        CashAPI.listTransactions({ accountId: id, from, to, limit: 200 }),
+        CashAPI.listCounts({ accountId: id }).catch(() => ({ data: { counts: [] } }))
       ]);
       setAccount(accRes?.data?.account || null);
       setRows(txRes?.data?.transactions || []);
+      setCounts(countRes?.data?.counts || []);
     } catch (e) {
       setError(e?.message || 'Failed to load cash book');
     } finally {
@@ -98,6 +106,22 @@ export default function CashBookPage() {
     catch (e) { alert(e?.message || 'Reverse failed'); }
   };
 
+  const onApproveCount = async (countId) => {
+    try { await CashAPI.approveCount(countId); load(); }
+    catch (e) { alert(e?.message || 'Approve failed'); }
+  };
+  const onDisputeCount = async (countId) => {
+    const reason = window.prompt('Dispute reason?');
+    if (!reason) return;
+    try { await CashAPI.disputeCount(countId, reason); load(); }
+    catch (e) { alert(e?.message || 'Dispute failed'); }
+  };
+  const onCancelCount = async (countId) => {
+    if (!window.confirm('Cancel this Pending count?')) return;
+    try { await CashAPI.cancelCount(countId); load(); }
+    catch (e) { alert(e?.message || 'Cancel failed'); }
+  };
+
   if (loading) return <div className="p-6 text-sm text-gray-500">Loading…</div>;
   if (error)   return <div className="p-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">{error}</div>;
   if (!account) return <div className="p-6 text-sm text-gray-500">Account not found.</div>;
@@ -137,6 +161,12 @@ export default function CashBookPage() {
               <button onClick={() => setShowRecord(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Record receipt / payment</button>
               <button onClick={() => setShowTransfer(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Transfer</button>
             </>
+          )}
+          {canRunCount && (
+            <button onClick={() => { setActiveCount(null); setShowCount(true); }}
+                    className="px-3 py-1.5 text-sm font-medium text-white bg-amber-600 rounded-md hover:bg-amber-700">
+              Run cash count
+            </button>
           )}
         </div>
       </section>
@@ -211,6 +241,56 @@ export default function CashBookPage() {
         </table>
       </div>
 
+      <section className="bg-white border border-gray-200 rounded-md">
+        <div className="px-4 py-3 border-b border-gray-200 font-semibold text-sm">Cash counts</div>
+        <div className="p-4 text-sm space-y-2">
+          {counts.length === 0 && <div className="text-gray-500">No counts yet.</div>}
+          {counts.map(c => (
+            <div key={c.id} className="border border-gray-200 rounded-md p-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    c.status === 'Approved' ? 'bg-green-100 text-green-700' :
+                    c.status === 'Submitted' ? 'bg-yellow-100 text-yellow-800' :
+                    c.status === 'Disputed' ? 'bg-red-100 text-red-700' :
+                    'bg-gray-100 text-gray-700'
+                  }`}>{c.status}</span>
+                  <span className="ml-2 text-gray-700">
+                    Expected {fmt(c.expectedBalance, account.currency)}
+                    {c.countedBalance != null && <> · Counted {fmt(c.countedBalance, account.currency)}</>}
+                    {c.variance != null && <>
+                      {' · '}
+                      <span className={Number(c.variance) === 0 ? 'text-gray-700' : Number(c.variance) > 0 ? 'text-green-700' : 'text-red-700'}>
+                        Variance {Number(c.variance) > 0 ? '+' : ''}{Number(c.variance).toLocaleString()}
+                      </span>
+                    </>}
+                  </span>
+                  <span className="ml-2 text-gray-500 text-xs">{new Date(c.occurredAt).toLocaleDateString()}</span>
+                </div>
+                <div className="flex gap-2">
+                  {c.status === 'Pending' && (
+                    <>
+                      <button onClick={() => { setActiveCount(c); setShowCount(true); }} className="text-sm text-blue-600 hover:underline">Submit</button>
+                      <button onClick={() => onCancelCount(c.id)} className="text-sm text-gray-500 hover:underline">Cancel</button>
+                    </>
+                  )}
+                  {c.status === 'Submitted' && canApproveCount && c.countedBy !== user?.id && (
+                    <>
+                      <button onClick={() => onApproveCount(c.id)} className="text-sm text-green-700 hover:underline">Approve</button>
+                      <button onClick={() => onDisputeCount(c.id)} className="text-sm text-red-700 hover:underline">Dispute</button>
+                    </>
+                  )}
+                </div>
+              </div>
+              {c.disputeReason && <div className="text-xs text-red-700 mt-1">Disputed: {c.disputeReason}</div>}
+              {c.adjustmentTx && (
+                <div className="text-xs text-gray-500 mt-1">Posted adjustment {c.adjustmentTx.voucherNo} · balance now {fmt(c.adjustmentTx.balanceAfter, account.currency)}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {showRecord && (
         <RecordCashTxModal
           account={account}
@@ -223,6 +303,15 @@ export default function CashBookPage() {
           fromAccount={account}
           onClose={() => setShowTransfer(false)}
           onSaved={() => { setShowTransfer(false); load(); }}
+        />
+      )}
+
+      {showCount && (
+        <CashCountModal
+          account={account}
+          existingCount={activeCount}
+          onClose={() => { setShowCount(false); setActiveCount(null); }}
+          onSaved={() => { setShowCount(false); setActiveCount(null); load(); }}
         />
       )}
     </div>

@@ -3689,6 +3689,13 @@ const CashAccount = sequelize.define('CashAccount', {
     field: 'voucher_counter',
     comment: 'Incremented atomically when issuing a new voucher number'
   },
+  countVarianceTolerance: {
+    type: DataTypes.DECIMAL(15, 2),
+    defaultValue: 100,
+    field: 'count_variance_tolerance',
+    comment: 'Variance up to this amount auto-adjusts; above triggers Manager review'
+  },
+  lastCountAt: { type: DataTypes.DATE, field: 'last_count_at' },
   notes: { type: DataTypes.TEXT },
   createdBy: { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
 }, {
@@ -3699,6 +3706,72 @@ const CashAccount = sequelize.define('CashAccount', {
     { fields: ['type'] },
     { fields: ['custodian_user_id'] },
     { fields: ['is_active'] }
+  ]
+});
+
+// ============================================
+// Cash Count Session — physical count vs system balance
+// ============================================
+const CashCountSession = sequelize.define('CashCountSession', {
+  cashAccountId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'cash_account_id',
+    references: { model: 'cash_accounts', key: 'id' }
+  },
+  expectedBalance: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: false,
+    field: 'expected_balance',
+    comment: 'System balance at moment of count'
+  },
+  countedBalance: {
+    type: DataTypes.DECIMAL(15, 2),
+    field: 'counted_balance',
+    comment: 'Physical count entered by custodian'
+  },
+  variance: { type: DataTypes.DECIMAL(15, 2) },
+  denominationBreakdown: {
+    type: DataTypes.JSONB,
+    field: 'denomination_breakdown',
+    comment: '{ "5000": 3, "1000": 12, "500": 8, ... }'
+  },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Pending'
+    // Pending | Submitted | Approved | Disputed
+  },
+  notes: { type: DataTypes.TEXT },
+  countedBy: { type: DataTypes.INTEGER, field: 'counted_by',  references: { model: 'users', key: 'id' } },
+  witnessUserId: {
+    type: DataTypes.INTEGER,
+    field: 'witness_user_id',
+    references: { model: 'users', key: 'id' },
+    comment: 'Required for Locker counts'
+  },
+  approvedBy: { type: DataTypes.INTEGER, field: 'approved_by', references: { model: 'users', key: 'id' } },
+  approvedAt: { type: DataTypes.DATE,   field: 'approved_at' },
+  adjustmentTxId: {
+    type: DataTypes.INTEGER,
+    field: 'adjustment_tx_id',
+    references: { model: 'cash_transactions', key: 'id' },
+    comment: 'Adjustment transaction posted on approval (when variance > tolerance)'
+  },
+  disputeReason: { type: DataTypes.TEXT, field: 'dispute_reason' },
+  occurredAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'occurred_at'
+  }
+}, {
+  tableName: 'cash_count_sessions',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['cash_account_id'] },
+    { fields: ['status'] },
+    { fields: ['occurred_at'] }
   ]
 });
 
@@ -4750,6 +4823,14 @@ CashTransaction.belongsTo(CashTransaction, { as: 'reversedBy',   foreignKey: 're
 CashTransaction.belongsTo(User, { as: 'performer', foreignKey: 'performedBy' });
 CashTransaction.belongsTo(User, { as: 'approver',  foreignKey: 'approvedBy' });
 
+// Cash count associations
+CashCountSession.belongsTo(CashAccount, { as: 'account', foreignKey: 'cashAccountId' });
+CashAccount.hasMany(CashCountSession,    { as: 'counts',  foreignKey: 'cashAccountId' });
+CashCountSession.belongsTo(User, { as: 'counter',  foreignKey: 'countedBy' });
+CashCountSession.belongsTo(User, { as: 'witness',  foreignKey: 'witnessUserId' });
+CashCountSession.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+CashCountSession.belongsTo(CashTransaction, { as: 'adjustmentTx', foreignKey: 'adjustmentTxId' });
+
 // 3-way match associations
 ThreeWayMatch.belongsTo(PurchaseOrder,    { as: 'po',  foreignKey: 'poId' });
 ThreeWayMatch.belongsTo(GoodsReceiptNote, { as: 'grn', foreignKey: 'grnId' });
@@ -4864,6 +4945,7 @@ export {
   ProcurementThreshold,
   CashAccount,
   CashTransaction,
+  CashCountSession,
   sequelize
 };
 
@@ -4894,6 +4976,7 @@ withAuditLog(ThreeWayMatch, 'ThreeWayMatch');
 withAuditLog(ProcurementThreshold, 'ProcurementThreshold');
 withAuditLog(CashAccount, 'CashAccount');
 withAuditLog(CashTransaction, 'CashTransaction');
+withAuditLog(CashCountSession, 'CashCountSession');
 
 export default {
   User,
@@ -4993,5 +5076,6 @@ export default {
   ProcurementThreshold,
   CashAccount,
   CashTransaction,
+  CashCountSession,
   sequelize
 };

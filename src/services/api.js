@@ -3294,7 +3294,24 @@ export const CashAPI = {
   rejectTransaction: (id, reason) =>
     request(`/cash/transactions/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
   reverseTransaction: (id, reason) =>
-    request(`/cash/transactions/${id}/reverse`, { method: 'POST',  body: JSON.stringify({ reason }) })
+    request(`/cash/transactions/${id}/reverse`, { method: 'POST',  body: JSON.stringify({ reason }) }),
+
+  // Cash counts
+  listCounts: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/cash/counts${qs ? `?${qs}` : ''}`);
+  },
+  getCount: (id) => request(`/cash/counts/${id}`),
+  startCount: (data) =>
+    request('/cash/counts', { method: 'POST', body: JSON.stringify(data) }),
+  submitCount: (id, data) =>
+    request(`/cash/counts/${id}/submit`, { method: 'PATCH', body: JSON.stringify(data) }),
+  approveCount: (id) =>
+    request(`/cash/counts/${id}/approve`, { method: 'PATCH' }),
+  disputeCount: (id, reason) =>
+    request(`/cash/counts/${id}/dispute`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  cancelCount: (id) =>
+    request(`/cash/counts/${id}`, { method: 'DELETE' })
 };
 
 const API = {

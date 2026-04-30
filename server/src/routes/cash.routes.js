@@ -17,6 +17,15 @@ import {
   rejectTransaction,
   reverseTransaction
 } from '../controllers/cashTransaction.controller.js';
+import {
+  listCounts,
+  getCount,
+  startCount,
+  submitCount,
+  approveCount,
+  disputeCount,
+  cancelCount
+} from '../controllers/cashCount.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -51,5 +60,14 @@ router.get   ('/transactions/:id',                validateId(), requireCashView,
 router.patch ('/transactions/:id/approve',        validateId(), requireCashApprover, approveTransaction);
 router.patch ('/transactions/:id/reject',         validateId(), requireCashApprover, rejectTransaction);
 router.post  ('/transactions/:id/reverse',        validateId(), requireCashApprover, reverseTransaction);
+
+// Cash count sessions
+router.get   ('/counts',                          requireCashView, listCounts);
+router.post  ('/counts',                          requireCashWrite, startCount);
+router.get   ('/counts/:id',                      validateId(), requireCashView, getCount);
+router.patch ('/counts/:id/submit',               validateId(), requireCashWrite, submitCount);
+router.patch ('/counts/:id/approve',              validateId(), requireCashManager, approveCount);
+router.patch ('/counts/:id/dispute',              validateId(), requireCashManager, disputeCount);
+router.delete('/counts/:id',                      validateId(), requireCashWrite, cancelCount);
 
 export default router;
