@@ -3222,6 +3222,53 @@ const Attendance = sequelize.define('Attendance', {
 });
 
 // ============================================
+// Attendance Correction — staff requests an HR-approved fix to a punch
+// ============================================
+const AttendanceCorrection = sequelize.define('AttendanceCorrection', {
+  attendanceId: {
+    type: DataTypes.INTEGER,
+    field: 'attendance_id',
+    references: { model: 'attendance', key: 'id' },
+    comment: 'Existing attendance row to patch — null when requesting a missing-day insertion'
+  },
+  staffId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'staff_id',
+    references: { model: 'staff', key: 'id' }
+  },
+  attendanceDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'attendance_date' },
+  field: {
+    type: DataTypes.STRING(40),
+    allowNull: false
+    // checkInTime | checkOutTime | status | leaveType | location | notes | newRecord
+  },
+  oldValue: { type: DataTypes.STRING(255), field: 'old_value' },
+  newValue: { type: DataTypes.STRING(255), field: 'new_value' },
+  reason: { type: DataTypes.TEXT, allowNull: false },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Pending'
+    // Pending | Approved | Rejected | Cancelled
+  },
+  requestedBy: { type: DataTypes.INTEGER, field: 'requested_by', references: { model: 'users', key: 'id' } },
+  requestedAt: { type: DataTypes.DATE, field: 'requested_at', defaultValue: DataTypes.NOW },
+  reviewedBy: { type: DataTypes.INTEGER, field: 'reviewed_by', references: { model: 'users', key: 'id' } },
+  reviewedAt: { type: DataTypes.DATE, field: 'reviewed_at' },
+  rejectionReason: { type: DataTypes.TEXT, field: 'rejection_reason' }
+}, {
+  tableName: 'attendance_corrections',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['attendance_id'] },
+    { fields: ['staff_id'] },
+    { fields: ['status'] },
+    { fields: ['attendance_date'] }
+  ]
+});
+
+// ============================================
 // LEAVE REQUEST MODEL
 // ============================================
 const LeaveRequest = sequelize.define('LeaveRequest', {
@@ -5122,6 +5169,12 @@ CashCountSession.belongsTo(User, { as: 'witness',  foreignKey: 'witnessUserId' }
 CashCountSession.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 CashCountSession.belongsTo(CashTransaction, { as: 'adjustmentTx', foreignKey: 'adjustmentTxId' });
 
+// Attendance correction associations
+AttendanceCorrection.belongsTo(Attendance, { as: 'attendance', foreignKey: 'attendanceId' });
+AttendanceCorrection.belongsTo(User, { as: 'requester', foreignKey: 'requestedBy' });
+AttendanceCorrection.belongsTo(User, { as: 'reviewer',  foreignKey: 'reviewedBy' });
+Attendance.hasMany(AttendanceCorrection, { as: 'corrections', foreignKey: 'attendanceId' });
+
 // Vehicle associations
 Vehicle.belongsTo(User, { as: 'owner', foreignKey: 'ownerUserId' });
 User.hasMany(Vehicle,    { as: 'vehicles', foreignKey: 'ownerUserId' });
@@ -5278,6 +5331,7 @@ export {
   FuelRate,
   FuelClaim,
   FuelClaimPassenger,
+  AttendanceCorrection,
   sequelize
 };
 
@@ -5314,6 +5368,8 @@ withAuditLog(Vehicle, 'Vehicle');
 withAuditLog(MovementLog, 'MovementLog');
 withAuditLog(FuelRate, 'FuelRate');
 withAuditLog(FuelClaim, 'FuelClaim');
+withAuditLog(AttendanceCorrection, 'AttendanceCorrection');
+withAuditLog(Attendance, 'Attendance');
 
 export default {
   User,
@@ -5420,5 +5476,6 @@ export default {
   FuelRate,
   FuelClaim,
   FuelClaimPassenger,
+  AttendanceCorrection,
   sequelize
 };

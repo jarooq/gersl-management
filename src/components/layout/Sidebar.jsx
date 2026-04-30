@@ -152,6 +152,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       subItems: [
         { path: '/admin/hr', icon: Users, label: 'HR Overview', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/corrections', icon: ClipboardCheck, label: 'Attendance Corrections', color: 'text-orange-600', bgColor: 'bg-orange-50' },
         { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
         { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
         { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_CONTRACTS },

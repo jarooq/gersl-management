@@ -2771,6 +2771,36 @@ export const AttendanceAPI = {
 };
 
 // ============================================
+// ATTENDANCE CORRECTIONS + REGISTER REPORTS
+// ============================================
+export const AttendanceCorrectionAPI = {
+  list: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/attendance/corrections${qs ? `?${qs}` : ''}`);
+  },
+  get: (id) => request(`/attendance/corrections/${id}`),
+  request: (data) =>
+    request('/attendance/corrections', { method: 'POST', body: JSON.stringify(data) }),
+  approve: (id) =>
+    request(`/attendance/corrections/${id}/approve`, { method: 'PATCH' }),
+  reject: (id, reason) =>
+    request(`/attendance/corrections/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+  cancel: (id) =>
+    request(`/attendance/corrections/${id}/cancel`, { method: 'PATCH' }),
+
+  attendanceRegisterUrl: (params = {}) => {
+    const base = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
+    const qs = new URLSearchParams({ ...params, format: 'csv' }).toString();
+    return `${base}/attendance/reports/attendance?${qs}`;
+  },
+  movementRegisterUrl: (params = {}) => {
+    const base = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
+    const qs = new URLSearchParams({ ...params, format: 'csv' }).toString();
+    return `${base}/attendance/reports/movements?${qs}`;
+  }
+};
+
+// ============================================
 // LEAVE REQUEST API
 // ============================================
 
