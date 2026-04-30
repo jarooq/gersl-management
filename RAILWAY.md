@@ -136,6 +136,29 @@ node server/src/migrations/create_mobile_punches_devices.js
 
 All scripts are idempotent — re-running is safe.
 
+## 6.1 First-run admin bootstrap
+
+Before you can log in, you need at least one user. Set these in Railway
+**Variables** (one-time):
+
+```
+BOOTSTRAP_ADMIN_USERNAME=admin
+BOOTSTRAP_ADMIN_EMAIL=you@gersl.org
+BOOTSTRAP_ADMIN_PASSWORD=<min 12 chars, upper+lower+digit>
+BOOTSTRAP_ADMIN_FULLNAME=Your Name
+```
+
+Then in Railway shell:
+
+```
+node server/src/scripts/seed-bootstrap.js
+```
+
+The script refuses to run if any user already exists — it's safe to leave
+the env vars set permanently and run the script again on every redeploy
+without risk. **Rotate the password on first login** so the credential
+isn't sitting in your env vars.
+
 ## 7. Custom domain (optional)
 
 1. Service → **Settings** → **Domains** → **Add Custom Domain** → enter
