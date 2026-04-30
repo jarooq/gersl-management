@@ -8,6 +8,12 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Gersl Mobile</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>GERSL records your location only when you punch attendance, log a movement, or capture beneficiary visit evidence.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used for selfie attendance, distribution photos, and document evidence.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used when you attach an existing photo to a task or visit.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
