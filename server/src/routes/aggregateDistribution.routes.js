@@ -1,5 +1,6 @@
 import express from 'express';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { requireAuth, authorize } from '../middleware/auth.middleware.js';
+import { validateId } from '../middleware/validate.middleware.js';
 import {
   createAggregateDistribution,
   getAggregateDistributionByTask,
@@ -11,17 +12,19 @@ import {
 
 const router = express.Router();
 
-// All routes require authentication
 router.use(requireAuth);
+const requireMealEditor = authorize(
+  'Admin', 'CEO', 'Director Programmes', 'Programme Manager',
+  'MEAL Officer', 'Project Officer', 'Field Officer'
+);
+const requireMealVerifier = authorize('Admin', 'CEO', 'Programme Manager', 'MEAL Officer');
 
-// Task-specific aggregate distribution routes
-router.post('/tasks/:taskId/aggregate-distribution', createAggregateDistribution);
-router.get('/tasks/:taskId/aggregate-distribution', getAggregateDistributionByTask);
+router.post  ('/tasks/:taskId/aggregate-distribution', validateId('taskId'), requireMealEditor, createAggregateDistribution);
+router.get   ('/tasks/:taskId/aggregate-distribution', validateId('taskId'), getAggregateDistributionByTask);
 
-// Aggregate distribution management routes
-router.get('/aggregate-distributions', getAllAggregateDistributions);
-router.put('/aggregate-distributions/:id', updateAggregateDistribution);
-router.put('/aggregate-distributions/:id/verify', verifyAggregateDistribution);
-router.delete('/aggregate-distributions/:id', deleteAggregateDistribution);
+router.get   ('/aggregate-distributions',              getAllAggregateDistributions);
+router.put   ('/aggregate-distributions/:id',          validateId(), requireMealEditor,   updateAggregateDistribution);
+router.put   ('/aggregate-distributions/:id/verify',   validateId(), requireMealVerifier, verifyAggregateDistribution);
+router.delete('/aggregate-distributions/:id',          validateId(), authorize('Admin', 'Programme Manager'), deleteAggregateDistribution);
 
 export default router;

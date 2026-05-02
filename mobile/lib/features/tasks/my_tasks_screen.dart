@@ -46,7 +46,7 @@ class MyTasksScreen extends ConsumerWidget {
           }
           return ListView.separated(
             padding: const EdgeInsets.all(12),
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
             itemCount: rows.length,
             itemBuilder: (context, i) => _TaskCard(task: rows[i]),
           );

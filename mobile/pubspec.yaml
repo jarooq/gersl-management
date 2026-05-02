@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.11.1
+  sdk: ^3.11.0
 
 dependencies:
   flutter:
@@ -29,6 +29,13 @@ dependencies:
   permission_handler: ^11.3.1
   geolocator: ^13.0.1
   image_picker: ^1.1.2
+
+  # Background GPS tracking (foreground notification on Android)
+  flutter_background_service: ^5.0.10
+  flutter_local_notifications: ^17.2.3
+
+  # Open PDFs / external URLs (payslip download → external viewer)
+  url_launcher: ^6.3.1
 
   # Date/Number formatting
   intl: ^0.20.0

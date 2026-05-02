@@ -1,11 +1,13 @@
 import express from 'express';
 import * as payrollController from '../controllers/payroll.controller.js';
+import { renderPayslipPdf } from '../controllers/payrollPdf.controller.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 router.use(protect);
 
 router.get('/', payrollController.getAllPayroll);
+router.get('/:id/pdf', renderPayslipPdf);
 router.get('/:id', payrollController.getPayrollById);
 router.post('/', authorize('Admin', 'Manager'), payrollController.createPayroll);
 router.put('/:id', authorize('Admin', 'Manager'), payrollController.updatePayroll);

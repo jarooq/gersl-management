@@ -1,4 +1,6 @@
-import * as XLSX from 'xlsx';
+// Lazy-loaded XLSX (~600KB) — only pulled in when an upload/template feature runs.
+let _xlsxPromise = null;
+const loadXLSX = () => (_xlsxPromise ??= import('xlsx'));
 
 /**
  * Parse Excel or CSV file to JSON
@@ -9,8 +11,9 @@ export const parseExcelFile = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
+        const XLSX = await loadXLSX();
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
 
@@ -42,7 +45,8 @@ export const parseExcelFile = (file) => {
  * Generate Excel template for Orphans
  * @returns {Blob} - Excel file blob
  */
-export const generateOrphansTemplate = () => {
+export const generateOrphansTemplate = async () => {
+  const XLSX = await loadXLSX();
   const headers = [
     'Full Name *',
     'Date of Birth (YYYY-MM-DD) *',
@@ -120,7 +124,8 @@ export const generateOrphansTemplate = () => {
  * Generate Excel template for Beneficiaries
  * @returns {Blob} - Excel file blob
  */
-export const generateBeneficiariesTemplate = () => {
+export const generateBeneficiariesTemplate = async () => {
+  const XLSX = await loadXLSX();
   const headers = [
     'NIC *',
     'Full Name *',

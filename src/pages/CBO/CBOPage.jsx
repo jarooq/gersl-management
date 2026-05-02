@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCBO } from '../../contexts/CBOContext';
+import { API_BASE_URL } from '../../config/apiBase';
 import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
 import ProposalDetailModal from './components/ProposalDetailModal';
 import {
@@ -781,7 +782,6 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
     setIsLoading(true);
 
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
       const response = await fetch(`${API_BASE_URL}/proposals`, {
         method: 'POST',
         headers: {

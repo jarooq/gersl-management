@@ -141,6 +141,26 @@ router.post(
 );
 
 // ============================================
+// PUNCH SELFIE UPLOADS
+// ============================================
+router.post(
+  '/punch',
+  setUploadPath('punches'),
+  uploadSingle('image'),
+  uploadSingleFile
+);
+
+// ============================================
+// VISIT PHOTO UPLOADS
+// ============================================
+router.post(
+  '/visit',
+  setUploadPath('visits'),
+  uploadSingle('image'),
+  uploadSingleFile
+);
+
+// ============================================
 // DELETE FILE
 // ============================================
 

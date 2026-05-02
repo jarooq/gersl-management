@@ -76,10 +76,10 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
     }
   };
 
-  const handleDownloadTemplate = () => {
+  const handleDownloadTemplate = async () => {
     const blob = type === 'orphans'
-      ? generateOrphansTemplate()
-      : generateBeneficiariesTemplate();
+      ? await generateOrphansTemplate()
+      : await generateBeneficiariesTemplate();
 
     const filename = type === 'orphans'
       ? 'Orphans_Upload_Template.xlsx'

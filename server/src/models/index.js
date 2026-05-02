@@ -420,6 +420,17 @@ const Expense = sequelize.define('Expense', {
   paymentMethod: {
     type: DataTypes.STRING(50)
   },
+  receiptUrl: {
+    type: DataTypes.STRING(1000),
+    field: 'receipt_url'
+  },
+  // Who created this expense (mobile self-service claim or web entry).
+  // Distinct from approvedBy.
+  submittedBy: {
+    type: DataTypes.INTEGER,
+    field: 'submitted_by',
+    references: { model: 'users', key: 'id' }
+  },
   approvedBy: {
     type: DataTypes.INTEGER,
     references: {
@@ -2749,6 +2760,7 @@ Complaint.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 // Expense associations
 Expense.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 Expense.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+Expense.belongsTo(User, { as: 'submitter', foreignKey: 'submittedBy' });
 
 // Staff associations
 Staff.belongsTo(User, { as: 'user', foreignKey: 'userId' });
@@ -3249,6 +3261,10 @@ const AttendancePunch = sequelize.define('AttendancePunch', {
   selfieUrl: { type: DataTypes.STRING(1000), field: 'selfie_url' },
   deviceId: { type: DataTypes.STRING(120), field: 'device_id' },
   geofenceMatch: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'geofence_match' },
+  // Lunch tracking — set by BreakIn / BreakOut punches; convenience fields
+  // for daily reports without re-aggregating punch rows.
+  lunchStart: { type: DataTypes.DATE, field: 'lunch_start' },
+  lunchEnd:   { type: DataTypes.DATE, field: 'lunch_end' },
   source: {
     type: DataTypes.STRING(20),
     defaultValue: 'mobile'
@@ -3287,7 +3303,7 @@ const DeviceRegistration = sequelize.define('DeviceRegistration', {
   timestamps: true,
   underscored: true,
   indexes: [
-    { fields: ['user_id'] },
+    // Composite unique covers user_id-prefix lookups; no separate single-field index needed.
     { unique: true, fields: ['user_id', 'device_id'] }
   ]
 });
@@ -3343,7 +3359,10 @@ const AttendanceCorrection = sequelize.define('AttendanceCorrection', {
 // LEAVE REQUEST MODEL
 // ============================================
 const LeaveRequest = sequelize.define('LeaveRequest', {
+  // Either staffId (legacy/admin-created path linked to Staff record) or userId
+  // (self-service mobile path linked directly to User). At least one must be set.
   staffId: { type: DataTypes.INTEGER, references: { model: 'staff', key: 'id' }, field: 'staff_id' },
+  userId:  { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'user_id' },
   leaveType: { type: DataTypes.STRING(50), allowNull: false, field: 'leave_type' },
   startDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'start_date' },
   endDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'end_date' },
@@ -3356,7 +3375,11 @@ const LeaveRequest = sequelize.define('LeaveRequest', {
 }, {
   tableName: 'leave_requests',
   timestamps: true,
-  underscored: true
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { fields: ['status'] }
+  ]
 });
 
 // ============================================
@@ -3410,6 +3433,8 @@ Attendance.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 // LeaveRequest associations
 LeaveRequest.belongsTo(Staff, { as: 'staff', foreignKey: 'staffId' });
 LeaveRequest.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
+LeaveRequest.belongsTo(User, { as: 'requester', foreignKey: 'userId' });
+User.hasMany(LeaveRequest, { as: 'leaveRequests', foreignKey: 'userId' });
 
 // FINANCE MODELS
 // ============================================
@@ -3837,7 +3862,7 @@ const Vehicle = sequelize.define('Vehicle', {
     defaultValue: 'Bike'
     // Bike | Car | Van | PublicTransport
   },
-  plateNo: { type: DataTypes.STRING(40), unique: true, field: 'plate_no' },
+  plateNo: { type: DataTypes.STRING(40), unique: true, allowNull: false, field: 'plate_no' },
   ownerUserId: {
     type: DataTypes.INTEGER,
     field: 'owner_user_id',
@@ -3951,7 +3976,6 @@ const FuelClaim = sequelize.define('FuelClaim', {
   underscored: true,
   indexes: [
     { fields: ['user_id'] },
-    { fields: ['movement_id'] },
     { fields: ['status'] },
     { fields: ['primary_claim_id'] },
     { unique: true, fields: ['movement_id'] }
@@ -4536,7 +4560,7 @@ const PurchaseRequisition = sequelize.define('PurchaseRequisition', {
 });
 
 const Vendor = sequelize.define('Vendor', {
-  vendorCode: { type: DataTypes.STRING(50), unique: true, field: 'vendor_code' },
+  vendorCode: { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'vendor_code' },
   vendorName: { type: DataTypes.STRING(200), allowNull: false, field: 'vendor_name' },
   vendorType: { type: DataTypes.STRING(50), field: 'vendor_type' },
   contactPerson: { type: DataTypes.STRING(100), field: 'contact_person' },
@@ -4878,7 +4902,7 @@ const RFQVendor = sequelize.define('RFQVendor', {
   timestamps: true,
   underscored: true,
   indexes: [
-    { fields: ['rfq_id'] },
+    // Composite unique covers rfq_id-prefix lookups; vendor_id needs its own (not a prefix).
     { fields: ['vendor_id'] },
     { unique: true, fields: ['rfq_id', 'vendor_id'] }
   ]
@@ -5299,6 +5323,198 @@ BidAnalysisScore.belongsTo(Vendor,      { as: 'vendor',      foreignKey: 'vendor
 BidAnalysisScore.belongsTo(Quotation,   { as: 'quotation',   foreignKey: 'quotationId' });
 
 // ============================================
+// MOBILE / HR EXPANSION (ported from GERHR Firestore app)
+// ============================================
+
+// Raw GPS stream from background location service. Expected to grow large
+// (one row per ~5s of movement per user) — keep this table lean.
+const LocationPoint = sequelize.define('LocationPoint', {
+  userId:    { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  recordedAt:{ type: DataTypes.DATE, allowNull: false, field: 'recorded_at' },
+  latitude:  { type: DataTypes.DECIMAL(10, 7), allowNull: false },
+  longitude: { type: DataTypes.DECIMAL(10, 7), allowNull: false },
+  accuracyM: { type: DataTypes.DECIMAL(8, 2), field: 'accuracy_m' },
+  speedKmh:  { type: DataTypes.DECIMAL(6, 2), field: 'speed_kmh' },
+  source:    { type: DataTypes.STRING(20), defaultValue: 'mobile' } // mobile | manual
+}, {
+  tableName: 'location_points',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id', 'recorded_at'] }
+  ]
+});
+
+// Staff-initiated cash advance against future payroll.
+const SalaryAdvance = sequelize.define('SalaryAdvance', {
+  userId:    { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  amount:    { type: DataTypes.DECIMAL(12, 2), allowNull: false },
+  reason:    { type: DataTypes.TEXT },
+  status:    { type: DataTypes.ENUM('Pending', 'Approved', 'Rejected', 'Deducted', 'Cancelled'), defaultValue: 'Pending' },
+  decidedBy: { type: DataTypes.INTEGER, field: 'decided_by', references: { model: 'users', key: 'id' } },
+  decidedAt: { type: DataTypes.DATE, field: 'decided_at' },
+  decisionNotes: { type: DataTypes.TEXT, field: 'decision_notes' },
+  payrollRunId: { type: DataTypes.INTEGER, field: 'payroll_run_id' } // populated when deducted
+}, {
+  tableName: 'salary_advances',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { fields: ['status'] }
+  ]
+});
+
+// Generic field visit (distinct from OrphanVisitLog which is orphan-care specific).
+const Visit = sequelize.define('Visit', {
+  userId:    { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  customerName: { type: DataTypes.STRING(200), field: 'customer_name' },
+  purpose:   { type: DataTypes.TEXT },
+  occurredAt:{ type: DataTypes.DATE, allowNull: false, field: 'occurred_at', defaultValue: DataTypes.NOW },
+  latitude:  { type: DataTypes.DECIMAL(10, 7) },
+  longitude: { type: DataTypes.DECIMAL(10, 7) },
+  photoUrl:  { type: DataTypes.STRING(1000), field: 'photo_url' },
+  beneficiariesServed: { type: DataTypes.INTEGER, field: 'beneficiaries_served' },
+  projectId: { type: DataTypes.INTEGER, field: 'project_id', references: { model: 'projects', key: 'id' } },
+  taskId:    { type: DataTypes.INTEGER, field: 'task_id',    references: { model: 'tasks',    key: 'id' } },
+  notes:     { type: DataTypes.TEXT }
+}, {
+  tableName: 'visits',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id'] },
+    { fields: ['project_id'] },
+    { fields: ['occurred_at'] }
+  ]
+});
+
+// Recurring/scheduled work block — distinct from one-off Tasks.
+const Shift = sequelize.define('Shift', {
+  userId:   { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  date:     { type: DataTypes.DATEONLY, allowNull: false },
+  startTime:{ type: DataTypes.TIME, allowNull: false, field: 'start_time' },
+  endTime:  { type: DataTypes.TIME, allowNull: false, field: 'end_time' },
+  breakMinutes: { type: DataTypes.INTEGER, defaultValue: 0, field: 'break_minutes' },
+  location: { type: DataTypes.STRING(200) },
+  status:   { type: DataTypes.ENUM('Scheduled', 'Completed', 'Missed', 'Cancelled'), defaultValue: 'Scheduled' },
+  notes:    { type: DataTypes.TEXT },
+  createdBy:{ type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } }
+}, {
+  tableName: 'shifts',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { unique: true, fields: ['user_id', 'date'] },
+    { fields: ['date'] }
+  ]
+});
+
+// Org-wide broadcasts (admin → all staff).
+const Announcement = sequelize.define('Announcement', {
+  title:    { type: DataTypes.STRING(200), allowNull: false },
+  body:     { type: DataTypes.TEXT, allowNull: false },
+  audience: { type: DataTypes.STRING(50), defaultValue: 'all' }, // all | role:Admin | dept:HR
+  publishedAt:{ type: DataTypes.DATE, field: 'published_at', defaultValue: DataTypes.NOW },
+  expiresAt:{ type: DataTypes.DATE, field: 'expires_at' },
+  createdBy:{ type: DataTypes.INTEGER, allowNull: false, field: 'created_by', references: { model: 'users', key: 'id' } }
+}, {
+  tableName: 'announcements',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['published_at'] }
+  ]
+});
+
+// Idempotency ledger for the GERHR Firestore→Postgres migration. One row
+// per Firestore document migrated; the migration script consults this to
+// skip re-imports.
+const GerhrMigration = sequelize.define('GerhrMigration', {
+  collection:  { type: DataTypes.STRING(80), allowNull: false },
+  firestoreId: { type: DataTypes.STRING(120), allowNull: false, field: 'firestore_id' },
+  targetTable: { type: DataTypes.STRING(80), field: 'target_table' },
+  targetId:    { type: DataTypes.INTEGER, field: 'target_id' },
+  migratedAt:  { type: DataTypes.DATE, defaultValue: DataTypes.NOW, field: 'migrated_at' },
+  notes:       { type: DataTypes.TEXT }
+}, {
+  tableName: '_gerhr_migrations',
+  timestamps: false,
+  underscored: true,
+  indexes: [
+    { unique: true, fields: ['collection', 'firestore_id'] }
+  ]
+});
+
+// Output of the daily clusterer — derived from raw location_points. Each
+// row is either a STOP (staff dwelled in one place) or a TRIP (staff was
+// moving between stops). Used by the fuel-claim flow + admin movement view.
+const MovementSegment = sequelize.define('MovementSegment', {
+  userId:       { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  date:         { type: DataTypes.DATEONLY, allowNull: false }, // bucket the segment belongs to
+  segmentType:  { type: DataTypes.ENUM('STOP', 'TRIP'), allowNull: false, field: 'segment_type' },
+  startedAt:    { type: DataTypes.DATE, allowNull: false, field: 'started_at' },
+  endedAt:      { type: DataTypes.DATE, allowNull: false, field: 'ended_at' },
+  durationMinutes: { type: DataTypes.INTEGER, field: 'duration_minutes' },
+  // For STOPs: center; for TRIPs: start.
+  startLat:     { type: DataTypes.DECIMAL(10, 7), field: 'start_lat' },
+  startLng:     { type: DataTypes.DECIMAL(10, 7), field: 'start_lng' },
+  endLat:       { type: DataTypes.DECIMAL(10, 7), field: 'end_lat' },
+  endLng:       { type: DataTypes.DECIMAL(10, 7), field: 'end_lng' },
+  distanceKm:   { type: DataTypes.DECIMAL(8, 3), field: 'distance_km' }, // null for STOP
+  pointCount:   { type: DataTypes.INTEGER, field: 'point_count' }
+}, {
+  tableName: 'movement_segments',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { fields: ['user_id', 'date'] },
+    { fields: ['date'] }
+  ]
+});
+
+// Per-user, per-leave-type running balance (entitled minus taken).
+const LeaveBalance = sequelize.define('LeaveBalance', {
+  userId:   { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  year:     { type: DataTypes.INTEGER, allowNull: false },
+  leaveType:{ type: DataTypes.STRING(40), allowNull: false, field: 'leave_type' }, // Annual | Casual | Sick | Maternity | Compassionate | Unpaid
+  entitledDays: { type: DataTypes.DECIMAL(5, 1), defaultValue: 0, field: 'entitled_days' },
+  takenDays:    { type: DataTypes.DECIMAL(5, 1), defaultValue: 0, field: 'taken_days' }
+}, {
+  tableName: 'leave_balances',
+  timestamps: true,
+  underscored: true,
+  indexes: [
+    { unique: true, fields: ['user_id', 'year', 'leave_type'] }
+  ]
+});
+
+// Associations for the new mobile/HR models.
+LocationPoint.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+User.hasMany(LocationPoint, { as: 'locationPoints', foreignKey: 'userId' });
+
+SalaryAdvance.belongsTo(User, { as: 'user',     foreignKey: 'userId' });
+SalaryAdvance.belongsTo(User, { as: 'decider',  foreignKey: 'decidedBy' });
+User.hasMany(SalaryAdvance, { as: 'salaryAdvances', foreignKey: 'userId' });
+
+Visit.belongsTo(User,    { as: 'user',    foreignKey: 'userId' });
+Visit.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+Visit.belongsTo(Task,    { as: 'task',    foreignKey: 'taskId' });
+User.hasMany(Visit,      { as: 'visits',  foreignKey: 'userId' });
+
+Shift.belongsTo(User, { as: 'user',     foreignKey: 'userId' });
+Shift.belongsTo(User, { as: 'creator',  foreignKey: 'createdBy' });
+User.hasMany(Shift, { as: 'shifts', foreignKey: 'userId' });
+
+Announcement.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+LeaveBalance.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+User.hasMany(LeaveBalance, { as: 'leaveBalances', foreignKey: 'userId' });
+
+MovementSegment.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+User.hasMany(MovementSegment, { as: 'movementSegments', foreignKey: 'userId' });
+
+// ============================================
 // EXPORTS
 // ============================================
 
@@ -5411,6 +5627,15 @@ export {
   AttendanceCorrection,
   AttendancePunch,
   DeviceRegistration,
+  // Mobile / HR expansion (ported from GERHR)
+  LocationPoint,
+  SalaryAdvance,
+  Visit,
+  Shift,
+  Announcement,
+  LeaveBalance,
+  MovementSegment,
+  GerhrMigration,
   sequelize
 };
 
@@ -5559,5 +5784,14 @@ export default {
   AttendanceCorrection,
   AttendancePunch,
   DeviceRegistration,
+  // Mobile / HR expansion (ported from GERHR)
+  LocationPoint,
+  SalaryAdvance,
+  Visit,
+  Shift,
+  Announcement,
+  LeaveBalance,
+  MovementSegment,
+  GerhrMigration,
   sequelize
 };

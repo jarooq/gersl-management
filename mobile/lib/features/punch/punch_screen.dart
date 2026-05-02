@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../services/api_client.dart';
 import 'punch_repository.dart';
 
 final todayProvider = FutureProvider.autoDispose((ref) async {
@@ -31,15 +36,44 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     );
   }
 
-  Future<void> _punch(String punchType) async {
+  // Capture a selfie + upload it. Returns the URL the backend stores; null if
+  // the user cancels or upload fails (caller treats as optional).
+  Future<String?> _captureSelfie() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.front,
+      imageQuality: 70,
+      maxWidth: 1024,
+    );
+    if (picked == null) return null;
+    try {
+      final dio = ref.read(dioProvider);
+      final form = FormData.fromMap({
+        'image': await MultipartFile.fromFile(picked.path, filename: File(picked.path).uri.pathSegments.last),
+      });
+      final res = await dio.post('/upload/punch', data: form,
+          options: Options(headers: {'Content-Type': 'multipart/form-data'}));
+      // Controller returns { data: { url, path, ... } } — fall back to either.
+      final data = res.data['data'] ?? res.data;
+      return (data['url'] ?? data['path'])?.toString();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _punch(String punchType, {bool withSelfie = false}) async {
     setState(() { _busy = true; _error = null; });
     try {
       final pos = await _resolveLocation();
+      String? selfieUrl;
+      if (withSelfie) selfieUrl = await _captureSelfie();
       await ref.read(punchRepoProvider).record(
         punchType: punchType,
         latitude: pos?.latitude,
         longitude: pos?.longitude,
         accuracyM: pos?.accuracy,
+        selfieUrl: selfieUrl,
       );
       ref.invalidate(todayProvider);
       if (mounted) {
@@ -87,7 +121,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
                   color: Colors.green,
                   icon: Icons.login,
                   busy: _busy,
-                  onPressed: () => _punch('In'),
+                  onPressed: () => _punch('In', withSelfie: true),
                 ),
               ),
               const SizedBox(width: 12),
@@ -127,7 +161,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
           const SizedBox(height: 8),
           today.when(
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
             data: (d) {
               final punches = (d['punches'] as List? ?? []).cast<Map>();
               if (punches.isEmpty) {

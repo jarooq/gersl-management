@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Upload, Link as LinkIcon, CheckCircle, AlertCircle, Trash2, Plus } from 'lucide-react';
 import axios from 'axios';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+import { API_BASE_URL as API_BASE } from '../../../config/apiBase';
 
 const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
   const [loading, setLoading] = useState(false);

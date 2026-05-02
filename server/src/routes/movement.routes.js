@@ -36,6 +36,7 @@ import {
   mergeClaim,
   cancelClaim
 } from '../controllers/fuelClaim.controller.js';
+import { renderFuelClaimPdf } from '../controllers/fuelClaimPdf.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -79,6 +80,7 @@ router.get   ('/fuel-claims',                       listClaims);
 router.post  ('/fuel-claims',                       deriveClaim);
 router.get   ('/fuel-claims/:id',                   validateId(), getClaim);
 router.get   ('/fuel-claims/:id/duplicate-check',   validateId(), duplicateCheck);
+router.get   ('/fuel-claims/:id/pdf',                validateId(), renderFuelClaimPdf);
 router.patch ('/fuel-claims/:id/submit',            validateId(), submitClaim);
 router.patch ('/fuel-claims/:id/approve',           validateId(), requireApprover, approveClaim);
 router.patch ('/fuel-claims/:id/reject',            validateId(), requireApprover, rejectClaim);

@@ -153,6 +153,9 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/hr', icon: Users, label: 'HR Overview', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/corrections', icon: ClipboardCheck, label: 'Attendance Corrections', color: 'text-orange-600', bgColor: 'bg-orange-50' },
+        { path: '/admin/hr/live-map', icon: MapPin, label: 'Live staff map', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/shifts', icon: Calendar, label: 'Shift roster', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/movement-segments', icon: MapPin, label: 'Movement segments', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
         { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
         { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_CONTRACTS },
@@ -162,6 +165,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     { path: '/admin/cbo', icon: Users2, label: 'CBO Partners', color: 'text-indigo-600', bgColor: 'bg-indigo-50', permission: PERMISSIONS.CBO_VIEW },
     { path: '/admin/meal', icon: BarChart, label: 'MEAL', color: 'text-teal-600', bgColor: 'bg-teal-50', permission: PERMISSIONS.MEAL_VIEW },
     { path: '/admin/social-media', icon: Share2, label: 'Social Media', color: 'text-sky-600', bgColor: 'bg-sky-50', permission: PERMISSIONS.SOCIAL_MEDIA_VIEW },
+    { path: '/admin/announcements', icon: Megaphone, label: 'Announcements', color: 'text-pink-600', bgColor: 'bg-pink-50' },
     { path: '/admin/reports', icon: FileBarChart, label: 'Reports', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.REPORTS_VIEW },
     { path: '/admin/settings', icon: Settings, label: 'Settings', color: 'text-gray-600', bgColor: 'bg-gray-50', permission: PERMISSIONS.SETTINGS_VIEW },
   ];

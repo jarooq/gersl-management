@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import {
   register,
   login,
@@ -15,6 +16,25 @@ import { sanitizeBody } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
 
+// Brute-force protection on credential endpoints. Per-IP, counts failures only
+// (skipSuccessfulRequests=true) so legitimate users aren't punished.
+const credentialLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 8,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many failed attempts. Try again in 15 minutes.' }
+});
+
+const passwordResetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many password reset requests. Try again in 1 hour.' }
+});
+
 // ============================================
 // PUBLIC ROUTES
 // ============================================
@@ -27,7 +47,7 @@ router.post('/register', sanitizeBody, register);
 // @route   POST /api/auth/login
 // @desc    Login user
 // @access  Public
-router.post('/login', sanitizeBody, login);
+router.post('/login', credentialLimiter, sanitizeBody, login);
 
 // @route   POST /api/auth/refresh
 // @desc    Refresh access token
@@ -37,12 +57,12 @@ router.post('/refresh', refreshToken);
 // @route   POST /api/auth/forgot-password
 // @desc    Request password reset
 // @access  Public
-router.post('/forgot-password', sanitizeBody, forgotPassword);
+router.post('/forgot-password', passwordResetLimiter, sanitizeBody, forgotPassword);
 
 // @route   POST /api/auth/reset-password
 // @desc    Reset password with token
 // @access  Public
-router.post('/reset-password', sanitizeBody, resetPassword);
+router.post('/reset-password', passwordResetLimiter, sanitizeBody, resetPassword);
 
 // ============================================
 // PROTECTED ROUTES

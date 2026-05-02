@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Calendar, GraduationCap, Heart, Eye, Edit, Trash2 } from 'lucide-react';
+import { API_ORIGIN } from '../../../config/apiBase';
 
 const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
   const getStatusColor = (status) => {
@@ -39,8 +40,7 @@ const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
       }
 
       if (Array.isArray(photos) && photos.length > 0) {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-        return `${API_URL}${photos[0]}`;
+        return `${API_ORIGIN}${photos[0]}`;
       }
     } catch (error) {
       console.error('OrphanCard - Error in getProfilePhotoUrl:', error);

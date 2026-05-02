@@ -6,8 +6,8 @@ const router = express.Router();
 router.use(protect);
 
 router.get('/', bankAccountController.getAllBankAccounts);
-router.get('/:id', bankAccountController.getBankAccountById);
 router.get('/:id/balance', bankAccountController.getBankAccountBalance);
+router.get('/:id', bankAccountController.getBankAccountById);
 router.post('/', authorize('Admin', 'Manager'), bankAccountController.createBankAccount);
 router.put('/:id', authorize('Admin', 'Manager'), bankAccountController.updateBankAccount);
 router.delete('/:id', authorize('Admin'), bankAccountController.deleteBankAccount);

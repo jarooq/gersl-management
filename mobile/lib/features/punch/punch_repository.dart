@@ -23,11 +23,11 @@ class PunchRepository {
   }) async {
     final res = await _dio.post('/attendance/punches', data: {
       'punchType': punchType,
-      if (latitude != null) 'latitude': latitude,
-      if (longitude != null) 'longitude': longitude,
-      if (accuracyM != null) 'accuracyM': accuracyM,
-      if (selfieUrl != null) 'selfieUrl': selfieUrl,
-      if (deviceId != null) 'deviceId': deviceId,
+      'latitude': ?latitude,
+      'longitude': ?longitude,
+      'accuracyM': ?accuracyM,
+      'selfieUrl': ?selfieUrl,
+      'deviceId': ?deviceId,
       if (notes != null && notes.isNotEmpty) 'notes': notes,
     });
     return (res.data['data'] as Map).cast<String, dynamic>();

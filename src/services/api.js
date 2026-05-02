@@ -6,7 +6,7 @@
 // Use environment variable for API URL, fallback to relative path for production
 // In production (Vercel), relative /api goes through our serverless proxy
 // In development, use localhost
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
+import { API_BASE_URL, API_ORIGIN } from '../config/apiBase';
 const API_TIMEOUT = 30000;
 
 // Log API URL for debugging (development only)
@@ -78,15 +78,12 @@ const handleResponse = async (response) => {
     const message = data?.message || 'An error occurred';
     const errors = data?.errors || null;
 
-    // Only log errors that aren't expected 404s for disabled features
-    if (!(response.status === 404 && response.url.includes('orphan-needs'))) {
-      console.error('❌ API Error:', {
-        url: response.url,
-        status: response.status,
-        message,
-        errors
-      });
-    }
+    console.error('❌ API Error:', {
+      url: response.url,
+      status: response.status,
+      message,
+      errors
+    });
 
     throw new APIError(message, response.status, errors);
   }
@@ -1543,53 +1540,20 @@ export const OrphanReportAPI = {
 };
 
 // ============================================
-// ORPHAN NEED API
+// ORPHAN NEED API — backend route currently disabled (no server-side controller).
+// Methods degrade safely so consumer pages render without throwing.
 // ============================================
 
+const ORPHAN_NEED_DISABLED = { disabled: true, reason: 'orphan-needs backend route not deployed' };
+
 export const OrphanNeedAPI = {
-  getAll: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/orphan-needs?${queryString}`);
-    return data;
-  },
-
-  getById: async (id) => {
-    const data = await request(`/orphan-needs/${id}`);
-    return data.data;
-  },
-
-  getSummary: async () => {
-    const data = await request('/orphan-needs/summary');
-    return data.data;
-  },
-
-  create: async (needData) => {
-    const data = await request('/orphan-needs', {
-      method: 'POST',
-      body: JSON.stringify(needData),
-    });
-    return data.data;
-  },
-
-  update: async (id, needData) => {
-    const data = await request(`/orphan-needs/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(needData),
-    });
-    return data.data;
-  },
-
-  approve: async (id, approved) => {
-    const data = await request(`/orphan-needs/${id}/approve`, {
-      method: 'PUT',
-      body: JSON.stringify({ approved }),
-    });
-    return data.data;
-  },
-
-  delete: async (id) => {
-    await request(`/orphan-needs/${id}`, { method: 'DELETE' });
-  },
+  getAll:    async () => ({ data: [], pagination: { total: 0 }, ...ORPHAN_NEED_DISABLED }),
+  getById:   async () => null,
+  getSummary:async () => ({ totalNeeds: 0, byCategory: [], ...ORPHAN_NEED_DISABLED }),
+  create:    async () => { throw new Error('Orphan needs feature is currently disabled'); },
+  update:    async () => { throw new Error('Orphan needs feature is currently disabled'); },
+  approve:   async () => { throw new Error('Orphan needs feature is currently disabled'); },
+  delete:    async () => { throw new Error('Orphan needs feature is currently disabled'); },
 };
 
 // ============================================
@@ -2789,14 +2753,12 @@ export const AttendanceCorrectionAPI = {
     request(`/attendance/corrections/${id}/cancel`, { method: 'PATCH' }),
 
   attendanceRegisterUrl: (params = {}) => {
-    const base = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
     const qs = new URLSearchParams({ ...params, format: 'csv' }).toString();
-    return `${base}/attendance/reports/attendance?${qs}`;
+    return `${API_BASE_URL}/attendance/reports/attendance?${qs}`;
   },
   movementRegisterUrl: (params = {}) => {
-    const base = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
     const qs = new URLSearchParams({ ...params, format: 'csv' }).toString();
-    return `${base}/attendance/reports/movements?${qs}`;
+    return `${API_BASE_URL}/attendance/reports/movements?${qs}`;
   }
 };
 
@@ -3204,7 +3166,7 @@ export const ProcurementAPI = {
   cancelPO:      (id, reason) =>
     request(`/procurement/pos/${id}/cancel`,  { method: 'PATCH', body: JSON.stringify({ reason }) }),
   // Returns text/html — needs raw fetch helper
-  poPreviewUrl:  (id) => `${import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api')}/procurement/pos/${id}/preview`,
+  poPreviewUrl:  (id) => `${API_BASE_URL}/procurement/pos/${id}/preview`,
 
   // ============================================
   // Goods Receipt Notes
@@ -3366,9 +3328,8 @@ export const CashAPI = {
     return request(`/cash/accounts/${accountId}/cash-book?${qs}`);
   },
   cashBookReportUrl: (accountId, format, params = {}) => {
-    const base = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
     const qs = new URLSearchParams({ ...params, format }).toString();
-    return `${base}/cash/accounts/${accountId}/cash-book?${qs}`;
+    return `${API_BASE_URL}/cash/accounts/${accountId}/cash-book?${qs}`;
   }
 };
 
@@ -3972,13 +3933,12 @@ export const getImageUrl = (imageUrl) => {
     console.log('🖼️ getImageUrl called with:', imageUrl);
   }
 
-  // If already an absolute URL, strip localhost:3001 to avoid CORS issues
-  if (imageUrl.startsWith('http://localhost:3001/')) {
-    const relativePath = imageUrl.replace('http://localhost:3001', '');
+  // If already an absolute URL pointing at our API origin, strip it for relative serving
+  if (API_ORIGIN && imageUrl.startsWith(API_ORIGIN + '/')) {
+    imageUrl = imageUrl.slice(API_ORIGIN.length);
     if (import.meta.env.DEV) {
-      console.log('🔄 Stripped localhost:3001, now relative:', relativePath);
+      console.log('🔄 Stripped API origin, now relative:', imageUrl);
     }
-    imageUrl = relativePath;
   } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
     // External URL, return as-is
     if (import.meta.env.DEV) {

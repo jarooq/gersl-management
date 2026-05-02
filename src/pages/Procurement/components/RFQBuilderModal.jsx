@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProcurementAPI } from '../../../services/api';
+import { API_BASE_URL } from '../../../config/apiBase';
 
 // Helper: pick today + 7d formatted as datetime-local default.
 const defaultClosingDate = () => {
@@ -34,7 +35,7 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
       setLoading(true);
       try {
         // Reuse the existing vendors list endpoint.
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/procurement/vendors`, {
+        const res = await fetch(`${API_BASE_URL}/procurement/vendors`, {
           credentials: 'include',
           headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}` }
         }).then(r => r.json());

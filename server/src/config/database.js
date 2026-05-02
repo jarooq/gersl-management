@@ -9,6 +9,13 @@ const useSQLite = process.env.DB_USE_SQLITE === 'true';
 // Check if DATABASE_URL is provided (for connection pooling or full connection strings)
 const useDatabaseURL = !!process.env.DATABASE_URL;
 
+// Enable SSL when running against a managed Postgres (Supabase, Neon, RDS, etc.)
+// regardless of NODE_ENV. In production, SSL is always on.
+const sslEnabled = process.env.NODE_ENV === 'production' || process.env.DB_SSL === 'true';
+const sslConfig = sslEnabled
+  ? { require: true, rejectUnauthorized: process.env.DB_SSL_STRICT !== 'false' }
+  : false;
+
 const sequelize = useSQLite
   ? new Sequelize({
       dialect: 'sqlite',
@@ -26,9 +33,7 @@ const sequelize = useSQLite
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       dialectOptions: {
         family: 4, // Force IPv4 to avoid IPv6 connection issues
-        ssl: process.env.NODE_ENV === 'production'
-          ? { require: true, rejectUnauthorized: process.env.DB_SSL_STRICT !== 'false' }
-          : false
+        ssl: sslConfig
       },
       pool: {
         max: 10,
@@ -54,9 +59,7 @@ const sequelize = useSQLite
         dialectOptions: {
           // Force IPv4 to avoid IPv6 connection issues on some hosts
           family: 4,
-          ssl: process.env.NODE_ENV === 'production'
-            ? { require: true, rejectUnauthorized: process.env.DB_SSL_STRICT !== 'false' }
-            : false
+          ssl: sslConfig
         },
         pool: {
           max: 10,

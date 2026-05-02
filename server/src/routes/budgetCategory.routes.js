@@ -6,37 +6,18 @@ import {
   updateBudgetCategory,
   deleteBudgetCategory
 } from '../controllers/budgetCategory.controller.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { requireAuth, authorize } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
 
-// All routes require authentication
 router.use(requireAuth);
+const requireFinance = authorize('Admin', 'CEO', 'Finance Manager');
 
-// @route   GET /api/budget-categories
-// @desc    Get all budget categories
-// @access  Private
-router.get('/', getAllBudgetCategories);
-
-// @route   POST /api/budget-categories
-// @desc    Create new budget category
-// @access  Private
-router.post('/', createBudgetCategory);
-
-// @route   GET /api/budget-categories/:id
-// @desc    Get budget category by ID
-// @access  Private
-router.get('/:id', validateId(), getBudgetCategoryById);
-
-// @route   PUT /api/budget-categories/:id
-// @desc    Update budget category
-// @access  Private
-router.put('/:id', validateId(), updateBudgetCategory);
-
-// @route   DELETE /api/budget-categories/:id
-// @desc    Delete budget category
-// @access  Private
-router.delete('/:id', validateId(), deleteBudgetCategory);
+router.get   ('/',         getAllBudgetCategories);
+router.post  ('/',         requireFinance, createBudgetCategory);
+router.get   ('/:id',      validateId(), getBudgetCategoryById);
+router.put   ('/:id',      validateId(), requireFinance, updateBudgetCategory);
+router.delete('/:id',      validateId(), requireFinance, deleteBudgetCategory);
 
 export default router;

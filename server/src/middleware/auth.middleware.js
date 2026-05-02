@@ -17,6 +17,15 @@ export const verifyToken = async (req, res, next) => {
         : null;
     }
 
+    // Last resort: ?token=… query param. Accepted ONLY for GET endpoints that
+    // produce downloadable artefacts (payslip PDF, fuel claim PDF) where the
+    // mobile app launches an external viewer that can't carry headers.
+    // Tokens leak in server access logs — keep this surface narrow.
+    if (!token && req.method === 'GET' && req.query?.token &&
+        /\/(pdf|payslips\/\d+\/pdf|fuel-claims\/\d+\/pdf)/.test(req.originalUrl)) {
+      token = String(req.query.token);
+    }
+
     if (!token) {
       return res.status(401).json({
         success: false,

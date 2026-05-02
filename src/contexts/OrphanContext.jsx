@@ -3,6 +3,7 @@ import { SRI_LANKA_DISTRICTS } from '../constants/sriLankaDistricts';
 import { OrphanAPI } from '../services/api';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/apiBase';
 
 const OrphanContext = createContext(null);
 
@@ -192,7 +193,7 @@ export const OrphanProvider = ({ children }) => {
   // Assign coordinator to orphan
   const assignCoordinator = async (orphanId, coordinator) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = API_BASE_URL;
       const token = localStorage.getItem('accessToken');
 
       // Make API call to assign coordinator

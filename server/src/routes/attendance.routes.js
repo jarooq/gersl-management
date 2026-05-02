@@ -22,12 +22,7 @@ import { validateId } from '../middleware/validate.middleware.js';
 const router = express.Router();
 router.use(protect);
 
-router.get('/', attendanceController.getAllAttendance);
-router.get('/stats', attendanceController.getAttendanceStats);
-router.get('/:id', attendanceController.getAttendanceById);
-router.post('/', attendanceController.createAttendance);
-router.put('/:id', attendanceController.updateAttendance);
-router.delete('/:id', authorize('Admin', 'Manager'), attendanceController.deleteAttendance);
+// Static sub-paths must come BEFORE /:id routes — Express matches in order.
 
 // Leave requests
 router.get('/leave/requests', attendanceController.getAllLeaveRequests);
@@ -52,5 +47,15 @@ router.post('/punches',           recordPunch);
 router.get ('/punches/today',     todayStatus);
 router.get ('/punches/me',        listMyPunches);
 router.get ('/punches',           listPunchesByUser);
+
+// Stats and listings
+router.get('/', attendanceController.getAllAttendance);
+router.get('/stats', attendanceController.getAttendanceStats);
+router.post('/', attendanceController.createAttendance);
+
+// Param routes — must be LAST
+router.get('/:id', attendanceController.getAttendanceById);
+router.put('/:id', attendanceController.updateAttendance);
+router.delete('/:id', authorize('Admin', 'Manager'), attendanceController.deleteAttendance);
 
 export default router;

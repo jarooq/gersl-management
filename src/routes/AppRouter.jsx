@@ -70,6 +70,10 @@ const MovementRegisterPage = lazy(() => import('../pages/Operations/MovementRegi
 const FuelClaimsPage = lazy(() => import('../pages/Operations/FuelClaimsPage'));
 const FuelRatesPage = lazy(() => import('../pages/Operations/FuelRatesPage'));
 const AttendanceCorrectionsPage = lazy(() => import('../pages/HR/AttendanceCorrectionsPage'));
+const LiveStaffMapPage = lazy(() => import('../pages/HR/LiveStaffMapPage'));
+const ShiftRosterPage = lazy(() => import('../pages/HR/ShiftRosterPage'));
+const MovementSegmentsPage = lazy(() => import('../pages/HR/MovementSegmentsPage'));
+const AnnouncementsAdminPage = lazy(() => import('../pages/Announcements/AnnouncementsAdminPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
@@ -534,6 +538,44 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             element={
               <Suspense fallback={<PageLoader />}>
                 <AttendanceCorrectionsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="hr/live-map"
+            element={
+              <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
+                <Suspense fallback={<PageLoader />}>
+                  <LiveStaffMapPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="hr/shifts"
+            element={
+              <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
+                <Suspense fallback={<PageLoader />}>
+                  <ShiftRosterPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="hr/movement-segments"
+            element={
+              <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
+                <Suspense fallback={<PageLoader />}>
+                  <MovementSegmentsPage />
+                </Suspense>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="announcements"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AnnouncementsAdminPage />
               </Suspense>
             }
           />

@@ -17,7 +17,6 @@ import sequelize, { testConnection, syncDatabase } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
 import usersRoutes from './routes/users.routes.js';
 import orphanRoutes from './routes/orphan.routes.js';
-// import orphanNeedRoutes from './routes/orphanNeed.routes.js'; // Temporarily disabled
 import projectRoutes from './routes/project.routes.js';
 import projectTeamRoutes from './routes/projectTeam.routes.js';
 import proposalRoutes from './routes/proposal.routes.js';
@@ -101,6 +100,20 @@ import departmentRoutes from './routes/department.routes.js';
 // Position routes
 import positionRoutes from './routes/position.routes.js';
 
+// Mobile / HR expansion (ported from GERHR)
+import locationPointRoutes from './routes/locationPoint.routes.js';
+import salaryAdvanceRoutes from './routes/salaryAdvance.routes.js';
+import visitRoutes from './routes/visit.routes.js';
+import shiftRoutes from './routes/shift.routes.js';
+import announcementRoutes from './routes/announcement.routes.js';
+import leaveBalanceRoutes from './routes/leaveBalance.routes.js';
+import meLeaveRoutes from './routes/meLeave.routes.js';
+import meExpenseRoutes from './routes/meExpense.routes.js';
+import mePayslipRoutes from './routes/mePayslip.routes.js';
+import movementClusterRoutes from './routes/movementCluster.routes.js';
+import cron from 'node-cron';
+import { clusterAllUsersForDate } from './services/movementClusterer.js';
+
 // Import error handler
 import { errorHandler } from './middleware/error.middleware.js';
 import { notFound } from './middleware/notFound.middleware.js';
@@ -113,6 +126,16 @@ import deviceRoutes from './routes/device.routes.js';
 
 // Load environment variables
 dotenv.config();
+
+// Fail fast on misconfigured secrets — a short or missing JWT_SECRET makes tokens forgeable.
+const MIN_SECRET_LEN = 32;
+for (const key of ['JWT_SECRET', 'JWT_REFRESH_SECRET']) {
+  const v = process.env[key];
+  if (!v || v.length < MIN_SECRET_LEN) {
+    console.error(`❌ ${key} is missing or shorter than ${MIN_SECRET_LEN} chars. Refusing to start.`);
+    process.exit(1);
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -225,7 +248,6 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/orphans', orphanRoutes);
-// app.use('/api/orphan-needs', orphanNeedRoutes); // Temporarily disabled
 app.use('/api/projects', projectRoutes);
 app.use('/api', projectTeamRoutes); // Project team management routes
 app.use('/api/proposals', proposalRoutes);
@@ -317,6 +339,18 @@ app.use('/api', movementRoutes);
 // Mobile device registrations (push tokens)
 app.use('/api/devices', deviceRoutes);
 
+// Mobile / HR expansion (ported from GERHR)
+app.use('/api/locations',         locationPointRoutes);
+app.use('/api/salary-advances',   salaryAdvanceRoutes);
+app.use('/api/visits',            visitRoutes);
+app.use('/api/shifts',            shiftRoutes);
+app.use('/api/announcements',     announcementRoutes);
+app.use('/api/leave-balances',    leaveBalanceRoutes);
+app.use('/api/me/leave-requests', meLeaveRoutes);
+app.use('/api/me/expenses',       meExpenseRoutes);
+app.use('/api/me/payslips',       mePayslipRoutes);
+app.use('/api/movement-segments', movementClusterRoutes);
+
 // Task-specific routes (mounted at /api to catch specific patterns)
 // MUST BE LAST among API routes to not interfere with other routes
 app.use('/api', taskBeneficiaryRoutes);
@@ -375,6 +409,23 @@ const startServer = async () => {
     // Temporarily disabled to skip sync issues - tables already exist in DB
     if (process.env.NODE_ENV === 'development' && process.env.ENABLE_DB_SYNC === 'true') {
       await syncDatabase({ alter: true });
+    }
+
+    // Daily movement clusterer — runs at 01:30 server-time, processes
+    // yesterday's location_points for all users into movement_segments.
+    // Skipped if VERCEL or NODE_ENV=test to keep serverless invocations cheap.
+    if (process.env.NODE_ENV !== 'test' && process.env.VERCEL !== '1') {
+      cron.schedule('30 1 * * *', async () => {
+        const d = new Date();
+        d.setDate(d.getDate() - 1);
+        const dateStr = d.toISOString().slice(0, 10);
+        try {
+          const summary = await clusterAllUsersForDate(dateStr);
+          console.log(`🛰  Movement cluster ${dateStr}:`, summary.length, 'users processed');
+        } catch (e) {
+          console.error('❌ Movement cluster failed:', e.message);
+        }
+      });
     }
 
     // Start server

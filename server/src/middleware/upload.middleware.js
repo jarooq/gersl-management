@@ -17,12 +17,17 @@ if (!fs.existsSync(uploadsDir)) {
 
 const buildKey = (req, file) => {
   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-  const ext = path.extname(file.originalname);
-  const nameWithoutExt = path.basename(file.originalname, ext);
-  const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9_-]/g, '_');
+  const ext = path.extname(file.originalname).replace(/[^a-zA-Z0-9.]/g, '');
+  const nameWithoutExt = path.basename(file.originalname, path.extname(file.originalname));
+  const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80);
   const filename = `${sanitizedName}-${uniqueSuffix}${ext}`;
-  const sub = req.uploadPath || '';
-  return sub ? `${sub}/${filename}` : filename;
+  const sub = (req.uploadPath || '').replace(/^\/+|\.\.+/g, '');
+  const key = sub ? `${sub}/${filename}` : filename;
+  // Defense-in-depth: refuse anything that resolves outside the upload root.
+  if (key.includes('..') || key.startsWith('/') || key.includes('\\')) {
+    throw new BadRequestError('Invalid upload path');
+  }
+  return key;
 };
 
 // S3 storage if configured, disk otherwise. multer-s3 stamps file.location +

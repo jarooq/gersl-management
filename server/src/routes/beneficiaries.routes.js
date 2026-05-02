@@ -16,6 +16,10 @@ import {
   getGNDivisions
 } from '../controllers/beneficiaries.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
+const reqView   = requirePermission(PERMISSIONS.BENEFICIARIES_VIEW);
+const reqCreate = requirePermission(PERMISSIONS.BENEFICIARIES_CREATE);
+const reqEdit   = requirePermission(PERMISSIONS.BENEFICIARIES_EDIT);
+const reqDelete = requirePermission(PERMISSIONS.BENEFICIARIES_DELETE);
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
@@ -30,119 +34,25 @@ router.use(requireAuth);
 // @route   GET /api/beneficiaries/stats
 // @desc    Get beneficiary statistics
 // @access  Private (View permission)
-router.get('/stats', getBeneficiaryStats);
+router.get('/stats', reqView, getBeneficiaryStats);
+router.get('/districts', reqView, getDistricts);
+router.get('/divisions', reqView, getDivisions);
+router.get('/gn-divisions', reqView, getGNDivisions);
 
-// @route   GET /api/beneficiaries/districts
-// @desc    Get all districts
-// @access  Private (View permission)
-router.get('/districts', getDistricts);
-
-// @route   GET /api/beneficiaries/divisions
-// @desc    Get divisions by district
-// @access  Private (View permission)
-router.get('/divisions', getDivisions);
-
-// @route   GET /api/beneficiaries/gn-divisions
-// @desc    Get GN divisions by DS division
-// @access  Private (View permission)
-router.get('/gn-divisions', getGNDivisions);
-
-// @route   GET /api/beneficiaries
-// @desc    Get all beneficiaries
-// @access  Private (View permission)
-router.get(
-  '/',
-  validatePagination,
-  getAllBeneficiaries
-);
-
-// @route   POST /api/beneficiaries
-// @desc    Create new beneficiary
-// @access  Private (Create permission)
-router.post(
-  '/',
-  sanitizeBody,
-  createBeneficiary
-);
-
-// @route   GET /api/beneficiaries/:id
-// @desc    Get beneficiary by ID
-// @access  Private (View permission)
-router.get(
-  '/:id',
-  validateId(),
-  getBeneficiaryById
-);
-
-// @route   PUT /api/beneficiaries/:id
-// @desc    Update beneficiary
-// @access  Private (Edit permission)
-router.put(
-  '/:id',
-  validateId(),
-  sanitizeBody,
-  updateBeneficiary
-);
-
-// @route   DELETE /api/beneficiaries/:id
-// @desc    Delete beneficiary
-// @access  Private (Delete permission)
-router.delete(
-  '/:id',
-  validateId(),
-  deleteBeneficiary
-);
+router.get('/', reqView, validatePagination, getAllBeneficiaries);
+router.post('/', reqCreate, sanitizeBody, createBeneficiary);
+router.get('/:id', reqView, validateId(), getBeneficiaryById);
+router.put('/:id', reqEdit, validateId(), sanitizeBody, updateBeneficiary);
+router.delete('/:id', reqDelete, validateId(), deleteBeneficiary);
 
 // ============================================
 // BENEFICIARY SUPPORT ROUTES
 // ============================================
 
-// @route   GET /api/beneficiaries/:beneficiaryId/support
-// @desc    Get all support for a beneficiary
-// @access  Private (View permission)
-router.get(
-  '/:beneficiaryId/support',
-  validateId('beneficiaryId'),
-  getBeneficiarySupport
-);
-
-// @route   POST /api/beneficiaries/:beneficiaryId/support
-// @desc    Create new support record
-// @access  Private (Create permission)
-router.post(
-  '/:beneficiaryId/support',
-  validateId('beneficiaryId'),
-  sanitizeBody,
-  createBeneficiarySupport
-);
-
-// @route   PUT /api/beneficiaries/support/:id
-// @desc    Update support record
-// @access  Private (Edit permission)
-router.put(
-  '/support/:id',
-  validateId(),
-  sanitizeBody,
-  updateBeneficiarySupport
-);
-
-// @route   PUT /api/beneficiaries/support/:id/verify
-// @desc    Verify support delivery
-// @access  Private (Edit permission)
-router.put(
-  '/support/:id/verify',
-  validateId(),
-  sanitizeBody,
-  verifySupport
-);
-
-// @route   DELETE /api/beneficiaries/support/:id
-// @desc    Delete support record
-// @access  Private (Delete permission)
-router.delete(
-  '/support/:id',
-  validateId(),
-  deleteBeneficiarySupport
-);
+router.get   ('/:beneficiaryId/support',  reqView,   validateId('beneficiaryId'), getBeneficiarySupport);
+router.post  ('/:beneficiaryId/support',  reqCreate, validateId('beneficiaryId'), sanitizeBody, createBeneficiarySupport);
+router.put   ('/support/:id',             reqEdit,   validateId(), sanitizeBody, updateBeneficiarySupport);
+router.put   ('/support/:id/verify',      reqEdit,   validateId(), sanitizeBody, verifySupport);
+router.delete('/support/:id',             reqDelete, validateId(), deleteBeneficiarySupport);
 
 export default router;

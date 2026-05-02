@@ -8,6 +8,7 @@ import AIProposalAssistant from '../../components/proposals/AIProposalAssistant'
 import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
 import { SRI_LANKAN_ADMINISTRATIVE_DIVISIONS } from '../../data/sriLankanDivisions';
 import API from '../../services/api';
+import { API_BASE_URL } from '../../config/apiBase';
 import {
   FileText,
   Plus,
@@ -1658,9 +1659,6 @@ const ProposalsPage = () => {
     console.log('Cleaned data to submit:', cleanData);
 
     try {
-      // Use environment variable for API URL
-      const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:3001/api' : '/api');
-
       // Check if we're updating an existing proposal or creating a new one
       const isEditMode = formDataToSubmit.id ? true : false;
       const url = isEditMode

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useOrphans } from '../../../contexts/OrphanContext';
 import { useAuth } from '../../../contexts/AuthContext';
+import { API_ORIGIN } from '../../../config/apiBase';
 import AssignCoordinatorModal from './AssignCoordinatorModal';
 import AssignDonorModal from './AssignDonorModal';
 import VisitsTab from './VisitsTab';
@@ -46,8 +47,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
       console.log('OrphanProfile - Photos after parsing:', photos, Array.isArray(photos));
 
       if (Array.isArray(photos) && photos.length > 0) {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-        const photoUrl = `${API_URL}${photos[0]}`;
+        const photoUrl = `${API_ORIGIN}${photos[0]}`;
         console.log('OrphanProfile - Final photo URL:', photoUrl);
         return photoUrl;
       } else {
@@ -1113,7 +1113,7 @@ const DocumentsTab = ({ orphan }) => {
   };
 
   const documents = getDocuments();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  const API_URL = API_ORIGIN;
 
   // Helper function to handle document download/view
   const handleDocumentClick = (docUrl) => {
