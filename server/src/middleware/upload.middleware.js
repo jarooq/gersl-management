@@ -10,9 +10,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Disk fallback (used when S3 env vars are missing — local dev / first deploy).
+// On serverless platforms (Vercel) the filesystem is read-only outside /tmp,
+// so mkdir will throw. Swallow the error — if disk storage is then used at
+// runtime, the upload itself will fail with a clearer error.
 const uploadsDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn(`[upload] uploads/ dir unavailable (${err.code}); S3 storage required.`);
 }
 
 const buildKey = (req, file) => {
