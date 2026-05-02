@@ -6,10 +6,14 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists (best-effort — read-only fs on Vercel).
 const uploadsDir = path.join(__dirname, '../../uploads/staff-documents');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn(`[staff-upload] uploads/staff-documents dir unavailable (${err.code}); S3 required.`);
 }
 
 // Configure storage

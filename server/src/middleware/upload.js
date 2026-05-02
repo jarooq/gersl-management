@@ -6,10 +6,16 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists. Wrapped in try/catch — Vercel's filesystem
+// is read-only outside /tmp, so this throws at boot in serverless. If disk
+// storage is then attempted at runtime, the upload itself will fail loudly.
 const uploadsDir = path.join(__dirname, '../../uploads/tasks');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn(`[upload] uploads/tasks dir unavailable (${err.code}); S3 storage required.`);
 }
 
 // Configure storage
