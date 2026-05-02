@@ -1,5 +1,9 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+// Static import so Vercel's nft file-tracer pulls pg into the function bundle.
+// Without this, Sequelize's dynamic require('pg') fails at runtime with
+// "Please install pg package manually".
+import pg from 'pg';
 
 dotenv.config();
 
@@ -30,6 +34,7 @@ const sequelize = useSQLite
   : useDatabaseURL
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
+      dialectModule: pg, // serverless: bypass Sequelize's dynamic require('pg')
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       dialectOptions: {
         family: 4, // Force IPv4 to avoid IPv6 connection issues
@@ -55,6 +60,7 @@ const sequelize = useSQLite
         host: process.env.DB_HOST || 'localhost',
         port: process.env.DB_PORT || 5432,
         dialect: 'postgres',
+        dialectModule: pg, // serverless: bypass Sequelize's dynamic require('pg')
         logging: process.env.NODE_ENV === 'development' ? console.log : false,
         dialectOptions: {
           // Force IPv4 to avoid IPv6 connection issues on some hosts
