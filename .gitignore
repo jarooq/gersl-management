@@ -56,8 +56,6 @@ public/uploads/
 # Deployment files and artifacts
 .vercel
 server/.vercel
-api/
-vercel.json
 .env.render
 .netlify
 deploy.sh

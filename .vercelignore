@@ -1,0 +1,13 @@
+mobile
+GERHR
+archive
+dev-tools
+*.bak
+*.txt
+node_modules
+.env
+.env.*
+!.env.example
+server/.env
+server/database.sqlite
+server/uploads

@@ -1,81 +1,180 @@
 ========================================
 VERCEL ENVIRONMENT VARIABLES
-Copy and paste these into Vercel Dashboard
+Copy these into Vercel Dashboard → Settings → Environment Variables.
+Set every variable for "Production" (and "Preview" if you want PR previews).
 ========================================
 
-Go to: https://vercel.com/gersls-projects/gersl-management/settings/environment-variables
+Project: gersl-management
+Database: Supabase project gersl-management-dev (ref jkmkeycwpqvhgjmkwyap, ap-northeast-1)
 
-For each variable below:
-1. Click "Add New"
-2. Enter the NAME (left side)
-3. Enter the VALUE (right side)
-4. Select "Production" environment
-5. Click "Save"
-
-========================================
+----------------------------------------
+CORE
+----------------------------------------
 
 NAME: NODE_ENV
 VALUE: production
 
-NAME: DB_USE_SQLITE
+NAME: PORT
+VALUE: 3001
+
+----------------------------------------
+DATABASE — Supabase Postgres via Transaction Pooler (port 6543)
+Get the password from Supabase → Project Settings → Database → Database password
+----------------------------------------
+
+NAME: DATABASE_URL
+VALUE: postgresql://postgres.jkmkeycwpqvhgjmkwyap:<URL-ENCODED-PASSWORD>@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres
+
+NAME: DB_SSL
+VALUE: true
+
+NAME: DB_SSL_STRICT
 VALUE: false
 
-NAME: DB_DIALECT
-VALUE: postgres
+NAME: ENABLE_DB_SYNC
+VALUE: false
 
-NAME: DB_HOST
-VALUE: db.misihnasjvifnktfpylp.supabase.co
-
-NAME: DB_PORT
-VALUE: 5432
-
-NAME: DB_NAME
-VALUE: postgres
-
-NAME: DB_USER
-VALUE: postgres
-
-NAME: DB_PASSWORD
-VALUE: Ger@2025
+----------------------------------------
+JWT — generate fresh secrets for production. NEVER reuse dev secrets.
+Generate with: node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"
+Both must be ≥ 32 chars (server enforces at startup).
+----------------------------------------
 
 NAME: JWT_SECRET
-VALUE: WAwzcc0J/Q7ZI4VzhSjM/ilxZ6Q1J6dHhZ5BHSLxreg7Ef/jNg3gVzizgu8XzaLMPSQVZpuDrhQQJnSgyX3vPg==
+VALUE: <paste a fresh 64+ char base64 string>
 
 NAME: JWT_EXPIRE
 VALUE: 24h
 
 NAME: JWT_REFRESH_SECRET
-VALUE: J2l3tAdj3vhEcyUdr61TjQH5WzrlPJ6kSOpPV8jeO+vwsu96HHfUTC+EGVsiS0+Srfd/RUtiHBuHkJKS2wLz+w==
+VALUE: <paste a different fresh 64+ char base64 string>
 
 NAME: JWT_REFRESH_EXPIRE
 VALUE: 7d
 
+----------------------------------------
+CORS — list every public origin the frontend will be served from
+----------------------------------------
+
 NAME: CORS_ORIGIN
 VALUE: https://gersl-management.vercel.app
 
+NAME: CORS_ALLOWED_ORIGINS
+VALUE: https://gersl-management.vercel.app,https://erp-globalehsan.org
+
 NAME: FRONTEND_URL
 VALUE: https://gersl-management.vercel.app
+
+----------------------------------------
+RATE LIMITS
+----------------------------------------
 
 NAME: RATE_LIMIT_WINDOW
 VALUE: 15
 
 NAME: RATE_LIMIT_MAX_REQUESTS
-VALUE: 100
+VALUE: 300
+
+----------------------------------------
+FILE UPLOADS — must use S3-compatible storage on Vercel.
+Vercel functions have a read-only filesystem; multer disk storage will fail.
+Recommended: Cloudflare R2 (free egress, S3-compatible).
+----------------------------------------
+
+NAME: MAX_FILE_SIZE
+VALUE: 5242880
+
+NAME: S3_ENDPOINT
+VALUE: https://<accountid>.r2.cloudflarestorage.com
+
+NAME: S3_REGION
+VALUE: auto
+
+NAME: S3_BUCKET
+VALUE: <your-r2-bucket-name>
+
+NAME: S3_ACCESS_KEY_ID
+VALUE: <r2 access key id>
+
+NAME: S3_SECRET_ACCESS_KEY
+VALUE: <r2 secret access key>
+
+NAME: S3_PUBLIC_BASE_URL
+VALUE: https://media.gersl.org
+
+NAME: S3_PUBLIC_PREFIX
+VALUE: campaigns
+
+----------------------------------------
+FIRST-RUN ADMIN BOOTSTRAP
+Only used by `node server/src/scripts/seed-bootstrap.js` once. Safe to leave
+set after first run; script refuses to do anything when users table has rows.
+----------------------------------------
+
+NAME: BOOTSTRAP_ADMIN_USERNAME
+VALUE: admin
+
+NAME: BOOTSTRAP_ADMIN_EMAIL
+VALUE: [email protected]
+
+NAME: BOOTSTRAP_ADMIN_PASSWORD
+VALUE: <a strong one-time password — change on first login>
+
+NAME: BOOTSTRAP_ADMIN_FULLNAME
+VALUE: GERSL Administrator
+
+----------------------------------------
+EMAIL (optional — needed for forgot-password + migrated-user reset blast)
+----------------------------------------
+
+NAME: SMTP_HOST
+VALUE: smtp.office365.com
+
+NAME: SMTP_PORT
+VALUE: 587
+
+NAME: SMTP_USER
+VALUE: [email protected]
+
+NAME: SMTP_PASSWORD
+VALUE: <app password>
+
+NAME: EMAIL_FROM
+VALUE: [email protected]
+
+----------------------------------------
+ORG GEOFENCE (optional — for mobile attendance punches)
+----------------------------------------
+
+NAME: ORG_GEOFENCE_LAT
+VALUE: 6.9271
+
+NAME: ORG_GEOFENCE_LNG
+VALUE: 79.8612
+
+NAME: ORG_GEOFENCE_RADIUS_M
+VALUE: 200
+
+----------------------------------------
+AI ASSISTANTS (optional)
+----------------------------------------
+
+NAME: GROQ_API_KEY
+VALUE: <https://console.groq.com>
+
+NAME: GEMINI_API_KEY
+VALUE: <https://makersuite.google.com/app/apikey>
+
+----------------------------------------
+VERCEL CRON — secret for /api/cron/cluster
+Generate one and put it in BOTH:
+ 1. This env var (so the function can verify the call)
+ 2. Vercel Dashboard → Project → Settings → Cron Jobs → "Verify with header"
+----------------------------------------
+
+NAME: CRON_SECRET
+VALUE: <a random string, e.g. node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
 
 ========================================
-TOTAL: 17 environment variables
-========================================
-
-NOTE: These variables are already added via CLI, but you can verify them in the dashboard.
-If any are missing, add them using the format above.
-
-========================================
-FOR RENDER.COM (if switching from Vercel):
-========================================
-
-Same variables as above, PLUS add:
-
-NAME: PORT
-VALUE: 10000
-
+After saving, redeploy from the Deployments tab so the new vars take effect.
 ========================================
