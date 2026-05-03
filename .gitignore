@@ -79,3 +79,7 @@ connection-config.json
 *.tar.gz
 backend-*.tar.gz
 models-fix.tar.gz
+
+# Local agent + supabase scratch
+.claude/settings.local.json
+supabase/.temp/
