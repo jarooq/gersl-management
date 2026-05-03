@@ -5,7 +5,7 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/api/((?!cron/).*)", "destination": "/api/index" },
-    { "source": "/((?!assets/|.*\.[a-zA-Z0-9]+$).*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|.*\\.[a-zA-Z0-9]+$).*)", "destination": "/index.html" }
   ],
   "crons": [
     { "path": "/api/cron/cluster", "schedule": "30 1 * * *" }
