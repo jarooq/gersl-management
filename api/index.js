@@ -1,21 +1,14 @@
-// Vercel serverless entrypoint. Vercel maps every request matching /api/*
-// (per vercel.json rewrite) into this function and hands it the standard
-// Node http req/res, which serverless-http adapts for the Express app.
-//
-// The Express app itself (server/src/server.js) gates app.listen() on
-// VERCEL !== '1', so importing it doesn't open a TCP socket.
-//
-// IMPORTANT: keep this file synchronous at top-level. The previous version
-// wrapped boot in an async function called per request — that worked but
-// caused Vercel runtime to lose the response, returning 504s on every call.
+// Vercel serverless entrypoint. Express's request handler is (req, res, next).
+// Vercel's @vercel/node runtime hands us (req, res), which Express accepts
+// directly — no serverless-http adapter needed. Bypassing serverless-http
+// resolved the 504-on-every-request hang we hit when wrapping with it.
 
-import serverless from 'serverless-http';
 import app from '../server/src/server.js';
 
 export const config = {
-  // Default 10s on Hobby, 60s on Pro. Bumped for the rare slow query
-  // (movement clustering trigger, fuel-claim PDF render).
   maxDuration: 30,
 };
 
-export default serverless(app);
+export default function handler(req, res) {
+  return app(req, res);
+}
