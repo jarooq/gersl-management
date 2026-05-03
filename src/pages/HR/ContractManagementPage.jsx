@@ -749,16 +749,16 @@ const ContractManagementPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-violet-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <FileSignature className="w-5 h-5 animate-pulse" />
+                <FileSignature className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">HR Contract Management</h1>
@@ -771,7 +771,7 @@ const ContractManagementPage = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0s' }}>
+        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-gray-600 mb-1">Active Agreements</p>
@@ -781,7 +781,7 @@ const ContractManagementPage = () => {
               </div>
               <p className="text-xs text-gray-500 mt-1">Currently active</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <FileSignature className="text-white" size={18} />
             </div>
           </div>
@@ -789,14 +789,14 @@ const ContractManagementPage = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 <span className="text-xs font-semibold text-blue-600">Active</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-gray-600 mb-1">Expiring Soon</p>
@@ -806,7 +806,7 @@ const ContractManagementPage = () => {
               </div>
               <p className="text-xs text-gray-500 mt-1">Needs attention</p>
             </div>
-            <div className="bg-gradient-to-br from-yellow-500 to-amber-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <AlertCircle className="text-white" size={18} />
             </div>
           </div>
@@ -814,14 +814,14 @@ const ContractManagementPage = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
                 <span className="text-xs font-semibold text-yellow-600">Warning</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-gray-600 mb-1">Pending Terminations</p>
@@ -831,7 +831,7 @@ const ContractManagementPage = () => {
               </div>
               <p className="text-xs text-gray-500 mt-1">Awaiting approval</p>
             </div>
-            <div className="bg-gradient-to-br from-red-500 to-rose-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-danger-50 border border-danger-600/20 text-danger-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
               <UserX className="text-white" size={18} />
             </div>
           </div>
@@ -839,14 +839,14 @@ const ContractManagementPage = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
                 <span className="text-xs font-semibold text-red-600">Pending</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-gray-600 mb-1">Pending Resignations</p>
@@ -856,7 +856,7 @@ const ContractManagementPage = () => {
               </div>
               <p className="text-xs text-gray-500 mt-1">Awaiting review</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-violet-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-violet-50 border border-violet-200 text-violet-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
               <LogOut className="text-white" size={18} />
             </div>
           </div>
@@ -864,7 +864,7 @@ const ContractManagementPage = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
                 <span className="text-xs font-semibold text-purple-600">Submitted</span>
               </div>
             </div>

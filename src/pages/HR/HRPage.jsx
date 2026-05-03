@@ -562,89 +562,50 @@ const HRPage = () => {
   }, [attendance, staff]);
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 animate-pulse" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">HR Management</h1>
-                <p className="text-orange-100 text-sm">Managing {stats.totalStaff} team members with excellence</p>
-              </div>
-            </div>
-          </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Human Resources</p>
+          <h1 className="text-h1 text-ink-900">HR Management</h1>
+          <p className="text-sm text-ink-500 mt-1">Managing {stats.totalStaff} team members across the organization.</p>
         </div>
       </div>
 
-      {/* Primary Stats Cards */}
+      {/* Primary Stats — flat NGO design */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          {
-            title: 'Total Staff',
-            value: stats.totalStaff,
-            icon: Users,
-            gradient: 'from-orange-500 to-amber-600',
-            change: `${stats.activeStaff} active`,
-            subtitle: 'team members'
-          },
-          {
-            title: 'Present Today',
-            value: stats.presentToday,
-            icon: CheckCircle,
-            gradient: 'from-green-500 to-emerald-600',
-            change: `${stats.attendanceRate}% attendance`,
-            subtitle: 'checked in'
-          },
-          {
-            title: 'Pending Leaves',
-            value: stats.pendingLeaves,
-            icon: Calendar,
-            gradient: 'from-blue-500 to-cyan-600',
-            change: 'Awaiting approval',
-            subtitle: 'leave requests'
-          },
-          {
-            title: 'Departments',
-            value: departmentDistribution.length,
-            icon: TrendingUp,
-            gradient: 'from-purple-500 to-indigo-600',
-            change: 'All operational',
-            subtitle: 'active teams'
-          }
-        ].map((stat, index) => (
-          <div
-            key={index}
-            className="stat-card group cursor-pointer animate-slide-up"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1">
-                <p className="text-xs font-semibold text-gray-600 mb-2">{stat.title}</p>
-                <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
+          { title: 'Total Staff',    value: stats.totalStaff,            icon: Users,       chip: 'bg-mission-100 border-mission-200 text-mission-700', change: `${stats.activeStaff} active`,      subtitle: 'team members' },
+          { title: 'Present Today',  value: stats.presentToday,          icon: CheckCircle, chip: 'bg-success-50 border-success-600/20 text-success-700', change: `${stats.attendanceRate}% attendance`, subtitle: 'checked in' },
+          { title: 'Pending Leaves', value: stats.pendingLeaves,         icon: Calendar,    chip: 'bg-primary-50 border-primary-200 text-primary-700',  change: 'Awaiting approval',                  subtitle: 'leave requests' },
+          { title: 'Departments',    value: departmentDistribution.length, icon: TrendingUp, chip: 'bg-violet-50 border-violet-200 text-violet-700',     change: 'All operational',                    subtitle: 'active teams' },
+        ].map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div key={stat.title} className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-ink-500">{stat.title}</p>
+                  <h3 className="text-2xl font-bold text-ink-900 mt-0.5">{stat.value}</h3>
+                  <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
+                </div>
+                <div className={`w-10 h-10 rounded-md border flex items-center justify-center ${stat.chip}`}>
+                  <Icon size={18} />
+                </div>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
-                <stat.icon className="text-white" size={18} />
+              <div className="flex items-center justify-between pt-3 border-t border-ink-100">
+                <span className="text-xs font-medium text-ink-600">{stat.change}</span>
+                <ArrowRight size={14} className="text-ink-300 group-hover:text-navy-700 group-hover:translate-x-0.5 transition" />
               </div>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-xs font-medium text-gray-600">{stat.change}</span>
-              <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* HR Analytics and Insights */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Department Distribution */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -675,7 +636,7 @@ const HRPage = () => {
         </div>
 
         {/* Leave Status Overview */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -723,7 +684,7 @@ const HRPage = () => {
         </div>
 
         {/* Attendance Trend (Last 7 Days) */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -767,7 +728,7 @@ const HRPage = () => {
         </div>
 
         {/* HR Performance Metrics */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -885,7 +846,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Staff Directory</h2>
                 <button
                   onClick={() => setShowAddStaffModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-600 to-amber-700 text-white rounded-lg hover:from-orange-700 hover:to-amber-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <UserPlus size={18} />
                   Add Staff
                 </button>
@@ -895,11 +856,11 @@ const HRPage = () => {
                 {staff.map((member, index) => (
                   <div
                     key={member.id}
-                    className="card-modern group p-4 animate-slide-up"
+                    className="card-modern group p-4"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-start gap-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-105 transition-transform">
                         {member.fullName.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -976,7 +937,7 @@ const HRPage = () => {
                         <tr key={member.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">
+                              <div className="w-8 h-8 bg-mission-100 border border-mission-200 text-mission-700 text-white rounded-lg flex items-center justify-center text-sm font-bold">
                                 {member.fullName.charAt(0)}
                               </div>
                               <div>
@@ -1055,7 +1016,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Leave Requests</h2>
                 <button
                   onClick={() => setShowLeaveModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-700 text-white rounded-lg hover:from-blue-700 hover:to-cyan-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Calendar size={18} />
                   Apply Leave
                 </button>
@@ -1065,13 +1026,13 @@ const HRPage = () => {
                 {leaveRequests.map((leave, index) => (
                   <div
                     key={leave.id}
-                    className="card-modern p-4 animate-slide-up"
+                    className="card-modern p-4"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 text-white rounded-lg flex items-center justify-center font-bold">
+                          <div className="w-10 h-10 bg-primary-50 border border-primary-200 text-primary-700 text-white rounded-lg flex items-center justify-center font-bold">
                             {leave.employeeName.charAt(0)}
                           </div>
                           <div>
@@ -1150,7 +1111,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Staff Movement Register</h2>
                 <button
                   onClick={() => alert('Start GPS tracking for staff movement')}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <MapPin size={18} />
                   Start Tracking
                 </button>
@@ -1176,7 +1137,7 @@ const HRPage = () => {
                   <div key={movement.id} className="card-modern p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3 flex-1">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl flex items-center justify-center font-bold">
+                        <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center font-bold">
                           {movement.staffName.charAt(0)}
                         </div>
                         <div className="flex-1">
@@ -1235,7 +1196,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Asset Movement Register</h2>
                 <button
                   onClick={() => setShowAssetCheckoutModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg hover:from-teal-700 hover:to-cyan-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Package size={18} />
                   Checkout Asset
                 </button>
@@ -1324,7 +1285,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">GPS-Based Attendance</h2>
                 <button
                   onClick={handleGpsCheckIn}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Navigation size={18} />
                   Check In (GPS)
                 </button>
@@ -1363,7 +1324,7 @@ const HRPage = () => {
                     <div key={record.id} className="card-modern p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl flex items-center justify-center font-bold">
+                          <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center font-bold">
                             {record.employeeName?.charAt(0) || 'N'}
                           </div>
                           <div className="flex-1">
@@ -1443,7 +1404,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Vehicle Requests</h2>
                 <button
                   onClick={() => setShowVehicleRequestModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-sky-700 text-white rounded-lg hover:from-blue-700 hover:to-sky-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Car size={18} />
                   Request Vehicle
                 </button>
@@ -1570,7 +1531,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Accommodation Requests</h2>
                 <button
                   onClick={() => setShowAccommodationRequestModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-rose-600 to-pink-700 text-white rounded-lg hover:from-rose-700 hover:to-pink-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Home size={18} />
                   Request Accommodation
                 </button>
@@ -1708,7 +1669,7 @@ const HRPage = () => {
                 <h2 className="text-lg font-bold text-gray-900">Project Expenses (Vehicle & Accommodation)</h2>
                 <button
                   onClick={() => alert('Full expense report will be generated and downloaded')}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all shadow-md hover:shadow-lg active:scale-95">
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Receipt size={18} />
                   View Full Report
                 </button>
@@ -1821,7 +1782,7 @@ const HRPage = () => {
       {/* Charts and Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Attendance Trend Chart */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -1858,7 +1819,7 @@ const HRPage = () => {
         </div>
 
         {/* Department Distribution */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -1895,7 +1856,7 @@ const HRPage = () => {
         </div>
 
         {/* Leave Statistics */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -1911,7 +1872,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-4">
             {leaveStatistics.types.map((item, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg border border-gray-200 animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="p-3 bg-gray-50 rounded-lg border border-gray-200" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${item.color}`}></div>
@@ -1935,7 +1896,7 @@ const HRPage = () => {
         </div>
 
         {/* Performance Metrics */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -1995,7 +1956,7 @@ const HRPage = () => {
       {showAddStaffModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-amber-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -2249,7 +2210,7 @@ const HRPage = () => {
       {showEditStaffModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -2751,7 +2712,7 @@ const HRPage = () => {
       {showLeaveModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-700 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Apply for Leave</h2>
             </div>
             <div className="p-6">
@@ -2853,7 +2814,7 @@ const HRPage = () => {
       {showAssetCheckoutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-teal-600 to-cyan-700 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Checkout Asset</h2>
             </div>
             <div className="p-6">
@@ -2968,7 +2929,7 @@ const HRPage = () => {
       {showVehicleRequestModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-sky-700 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Request Vehicle</h2>
             </div>
             <div className="p-6">
@@ -3117,7 +3078,7 @@ const HRPage = () => {
       {showAccommodationRequestModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-rose-600 to-pink-700 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Request Accommodation</h2>
             </div>
             <div className="p-6">

@@ -234,12 +234,12 @@ const AttendancePage = () => {
     <div className="p-8 bg-gray-50 min-h-screen">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <Clock className="w-5 h-5 animate-pulse" />
+              <Clock className="w-5 h-5" />
             </div>
             <div>
               <h1 className="text-2xl font-bold mb-1">Attendance Management</h1>
@@ -253,7 +253,7 @@ const AttendancePage = () => {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-primary-50 border border-primary-200 text-primary-700 rounded-md flex items-center justify-center">
               <Clock size={24} />
             </div>
           </div>
@@ -263,7 +263,7 @@ const AttendancePage = () => {
 
         <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center">
               <CheckCircle size={24} />
             </div>
           </div>
@@ -273,7 +273,7 @@ const AttendancePage = () => {
 
         <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center">
               <MapPin size={24} />
             </div>
           </div>
@@ -283,7 +283,7 @@ const AttendancePage = () => {
 
         <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
               <User size={24} />
             </div>
           </div>
@@ -293,7 +293,7 @@ const AttendancePage = () => {
 
         <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-danger-50 border border-danger-600/20 text-danger-700 rounded-md flex items-center justify-center">
               <AlertCircle size={24} />
             </div>
           </div>
@@ -307,21 +307,21 @@ const AttendancePage = () => {
         <div className="flex gap-3">
           <button
             onClick={() => setShowCheckInModal(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md hover:shadow-lg active:scale-95 font-semibold"
+            className="flex items-center gap-2 px-6 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition"
           >
             <LogIn size={20} />
             Check In
           </button>
           <button
             onClick={() => setShowCheckOutModal(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg hover:from-orange-700 hover:to-red-700 transition-all shadow-md hover:shadow-lg active:scale-95 font-semibold"
+            className="flex items-center gap-2 px-6 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition"
           >
             <LogOut size={20} />
             Check Out
           </button>
           <button
             onClick={handleExport}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg active:scale-95 font-semibold"
+            className="flex items-center gap-2 px-6 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition"
           >
             <Download size={20} />
             Export
@@ -388,7 +388,7 @@ const AttendancePage = () => {
               <div key={`${record.type}-${record.id || index}`} className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className={`w-12 h-12 ${record.hasGPS ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-cyan-600'} text-white rounded-xl flex items-center justify-center`}>
+                    <div className={`w-12 h-12 ${record.hasGPS ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-primary-50 border border-primary-200 text-primary-700'} text-white rounded-xl flex items-center justify-center`}>
                       {record.hasGPS ? <MapPin size={24} /> : <User size={24} />}
                     </div>
                     <div>
@@ -449,7 +449,7 @@ const AttendancePage = () => {
       {showCheckInModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Check In</h2>
                 <button
@@ -513,7 +513,7 @@ const AttendancePage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCheckIn}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 hover:bg-navy-800 text-white px-5 py-2.5 rounded-md font-medium shadow-card transition"
                 >
                   Check In
                 </button>
@@ -533,7 +533,7 @@ const AttendancePage = () => {
       {showCheckOutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-red-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Check Out</h2>
                 <button
