@@ -63,13 +63,13 @@ export default function CashAccountsPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-5">
       <header className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Cash accounts</h1>
-          <p className="text-sm text-gray-500">Locker, cash book, and petty cash floats. Transactions are recorded separately.</p>
+          <h1 className="text-h1 text-ink-900">Cash accounts</h1>
+          <p className="text-sm text-ink-500">Locker, cash book, and petty cash floats. Transactions are recorded separately.</p>
         </div>
         {canManage && (
           <button
             onClick={() => { setEditing(null); setShowForm(true); }}
-            className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+            className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
           >Add account</button>
         )}
       </header>
@@ -77,10 +77,10 @@ export default function CashAccountsPage() {
       {summary && (
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {(summary.byType || []).map(b => (
-            <div key={`${b.type}-${b.currency}`} className="bg-white border border-gray-200 rounded-md p-4">
-              <div className="text-xs uppercase text-gray-500">{b.type}</div>
-              <div className="text-2xl font-semibold mt-1 text-gray-900">{fmt(b.totalBalance, b.currency)}</div>
-              <div className="text-xs text-gray-500 mt-1">{b.accountCount} account(s)</div>
+            <div key={`${b.type}-${b.currency}`} className="bg-white border border-ink-100 rounded-md p-4">
+              <div className="text-xs uppercase text-ink-500">{b.type}</div>
+              <div className="text-2xl font-semibold mt-1 text-ink-900">{fmt(b.totalBalance, b.currency)}</div>
+              <div className="text-xs text-ink-500 mt-1">{b.accountCount} account(s)</div>
             </div>
           ))}
         </section>
@@ -99,23 +99,23 @@ export default function CashAccountsPage() {
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Account</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Custodian</th>
-              <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Balance</th>
-              <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Imprest</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Type</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Account</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Custodian</th>
+              <th className="px-4 py-2 text-right text-xs font-medium text-ink-500 uppercase">Balance</th>
+              <th className="px-4 py-2 text-right text-xs font-medium text-ink-500 uppercase">Imprest</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={7} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={7} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
             {!loading && accounts.length === 0 && (
-              <tr><td colSpan={7} className="p-6 text-center text-sm text-gray-500">No cash accounts yet.</td></tr>
+              <tr><td colSpan={7} className="p-6 text-center text-sm text-ink-500">No cash accounts yet.</td></tr>
             )}
             {!loading && accounts.map(a => (
               <tr key={a.id} className={!a.isActive ? 'opacity-60' : ''}>
@@ -128,23 +128,23 @@ export default function CashAccountsPage() {
                   <Link to={`/admin/finance/cash/accounts/${a.id}`} className="font-medium text-blue-700 hover:underline">
                     {a.name}
                   </Link>
-                  <div className="text-xs text-gray-500">{a.location || ''}</div>
+                  <div className="text-xs text-ink-500">{a.location || ''}</div>
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="px-4 py-2 text-sm text-ink-700">
                   {a.custodian?.fullName || '—'}
-                  {a.altCustodian && <div className="text-xs text-gray-500">+ {a.altCustodian.fullName}</div>}
+                  {a.altCustodian && <div className="text-xs text-ink-500">+ {a.altCustodian.fullName}</div>}
                 </td>
                 <td className="px-4 py-2 text-sm text-right font-medium">{fmt(a.currentBalance, a.currency)}</td>
-                <td className="px-4 py-2 text-sm text-right text-gray-600">{a.type === 'PettyCash' && a.imprestLimit != null ? fmt(a.imprestLimit, a.currency) : '—'}</td>
+                <td className="px-4 py-2 text-sm text-right text-ink-600">{a.type === 'PettyCash' && a.imprestLimit != null ? fmt(a.imprestLimit, a.currency) : '—'}</td>
                 <td className="px-4 py-2 text-sm">
                   {a.isActive
                     ? <span className="text-green-700">Active</span>
-                    : <span className="text-gray-400">Inactive</span>}
+                    : <span className="text-ink-400">Inactive</span>}
                 </td>
                 <td className="px-4 py-2 text-sm text-right space-x-2">
                   {canManage && (
                     <>
-                      <button onClick={() => { setEditing(a); setShowForm(true); }} className="text-blue-600 hover:underline">Edit</button>
+                      <button onClick={() => { setEditing(a); setShowForm(true); }} className="text-navy-700 hover:underline">Edit</button>
                       {a.isActive
                         ? <button onClick={() => onDeactivate(a)} className="text-red-700 hover:underline">Deactivate</button>
                         : <button onClick={() => onReactivate(a)} className="text-emerald-700 hover:underline">Reactivate</button>}

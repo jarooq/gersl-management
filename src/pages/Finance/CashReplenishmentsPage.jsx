@@ -9,7 +9,7 @@ const STATUS_BADGE = {
   Approved:  'bg-blue-100 text-blue-700',
   Rejected:  'bg-red-100 text-red-700',
   Disbursed: 'bg-green-100 text-green-700',
-  Cancelled: 'bg-gray-200 text-gray-600'
+  Cancelled: 'bg-gray-200 text-ink-600'
 };
 
 const fmt = (v, currency = 'LKR') => {
@@ -83,8 +83,8 @@ export default function CashReplenishmentsPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold text-gray-900">Replenishment queue</h1>
-        <p className="text-sm text-gray-500">Petty cash imprest top-ups.</p>
+        <h1 className="text-h1 text-ink-900">Replenishment queue</h1>
+        <p className="text-sm text-ink-500">Petty cash imprest top-ups.</p>
       </header>
 
       <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export default function CashReplenishmentsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="ml-2 rounded-md border border-gray-300 px-2 py-1 text-sm"
+            className="ml-2 rounded-md border border-ink-200 px-2 py-1 text-sm"
           >
             <option value="">All</option>
             <option>Requested</option>
@@ -103,29 +103,29 @@ export default function CashReplenishmentsPage() {
             <option>Cancelled</option>
           </select>
         </label>
-        <button onClick={load} className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Refresh</button>
+        <button onClick={load} className="px-3 py-1 text-sm border border-ink-200 rounded-md hover:bg-ink-50">Refresh</button>
       </div>
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Petty cash</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Requested</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Approved</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Requester</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">#</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Petty cash</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Requested</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Approved</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Source</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Requester</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={8} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={8} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
             {!loading && rows.length === 0 && (
-              <tr><td colSpan={8} className="p-4 text-center text-sm text-gray-500">No replenishments.</td></tr>
+              <tr><td colSpan={8} className="p-4 text-center text-sm text-ink-500">No replenishments.</td></tr>
             )}
             {rows.map(r => (
               <tr key={r.id}>
@@ -147,12 +147,12 @@ export default function CashReplenishmentsPage() {
                 <td className="px-3 py-2 text-sm space-x-2 whitespace-nowrap">
                   {r.status === 'Requested' && canApprove && (
                     <>
-                      <button disabled={busy} onClick={() => onApprove(r)} className="text-blue-600 hover:underline">Approve</button>
+                      <button disabled={busy} onClick={() => onApprove(r)} className="text-navy-700 hover:underline">Approve</button>
                       <button disabled={busy} onClick={() => onReject(r)}  className="text-red-700 hover:underline">Reject</button>
                     </>
                   )}
                   {r.status === 'Requested' && r.requestedBy === user?.id && (
-                    <button disabled={busy} onClick={() => onCancel(r)} className="text-gray-500 hover:underline">Cancel</button>
+                    <button disabled={busy} onClick={() => onCancel(r)} className="text-ink-500 hover:underline">Cancel</button>
                   )}
                   {r.status === 'Approved' && canApprove && (
                     <button disabled={busy} onClick={() => onDisburse(r)} className="text-green-700 hover:underline">Disburse</button>

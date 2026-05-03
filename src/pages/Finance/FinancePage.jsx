@@ -400,14 +400,14 @@ const FinancePage = () => {
             .text-sm { font-size: 0.875rem; }
             .font-bold { font-weight: 700; }
             .font-semibold { font-weight: 600; }
-            .text-gray-900 { color: #111827; }
-            .text-gray-700 { color: #374151; }
-            .text-gray-600 { color: #4b5563; }
-            .text-gray-500 { color: #6b7280; }
+            .text-ink-900 { color: #111827; }
+            .text-ink-700 { color: #374151; }
+            .text-ink-600 { color: #4b5563; }
+            .text-ink-500 { color: #6b7280; }
             .text-blue-600 { color: #2563eb; }
             .text-green-600 { color: #059669; }
             .text-orange-600 { color: #ea580c; }
-            .bg-gray-50 { background-color: #f9fafb; }
+            .bg-ink-50 { background-color: #f9fafb; }
             .bg-blue-50 { background-color: #eff6ff; }
             .bg-green-50 { background-color: #ecfdf5; }
             .bg-orange-50 { background-color: #fff7ed; }
@@ -434,7 +434,7 @@ const FinancePage = () => {
               }
 
               /* Ensure backgrounds print */
-              .bg-gray-50,
+              .bg-ink-50,
               .bg-blue-50,
               .bg-green-50,
               .bg-orange-50,
@@ -510,8 +510,8 @@ const FinancePage = () => {
               .border-t-2 { border-top: 2px solid #d1d5db; }
               .font-bold { font-weight: 700; }
               .font-semibold { font-weight: 600; }
-              .text-gray-900 { color: #111827; }
-              .text-gray-700 { color: #374151; }
+              .text-ink-900 { color: #111827; }
+              .text-ink-700 { color: #374151; }
               .text-blue-600 { color: #2563eb; }
               .text-green-600 { color: #059669; }
               .text-orange-600 { color: #ea580c; }
@@ -696,74 +696,64 @@ const FinancePage = () => {
     .reduce((sum, bill) => sum + bill.amount, 0);
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* QuickBooks-Style Header */}
-      <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <Building2 className="w-5 h-5 animate-pulse" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold mb-2">Financial Management</h1>
-              <p className="text-emerald-100 text-sm">Complete accounting & financial control system</p>
-            </div>
-          </div>
-        </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="border-b border-ink-100 pb-5 mb-2">
+        <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Finance · Accounting</p>
+        <h1 className="text-h1 text-ink-900">Financial Management</h1>
+        <p className="text-sm text-ink-500 mt-1">Complete accounting and financial control across the organisation.</p>
       </div>
 
       {/* QuickBooks Dashboard Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card group cursor-pointer animate-slide-up bg-white">
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer">
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-2">Total Revenue (YTD)</p>
-              <h3 className="text-2xl font-bold text-gray-900">LKR {(totalRevenue / 1000000).toFixed(1)}M</h3>
-              <p className="text-xs text-gray-500 mt-1">From grants & donations</p>
+              <p className="text-xs font-semibold text-ink-600 mb-2">Total Revenue (YTD)</p>
+              <h3 className="text-2xl font-bold text-ink-900">LKR {(totalRevenue / 1000000).toFixed(1)}M</h3>
+              <p className="text-xs text-ink-500 mt-1">From grants & donations</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
-              <TrendingUp className="text-white" size={18} />
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
+              <TrendingUp size={18} />
             </div>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-ink-100">
             <span className="text-xs font-medium text-green-600">Year to date</span>
             <ArrowUpRight size={16} className="text-green-400 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up bg-white" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-2">Total Expenses (YTD)</p>
-              <h3 className="text-2xl font-bold text-gray-900">LKR {(totalExpenses / 1000000).toFixed(1)}M</h3>
-              <p className="text-xs text-gray-500 mt-1">All categories</p>
+              <p className="text-xs font-semibold text-ink-600 mb-2">Total Expenses (YTD)</p>
+              <h3 className="text-2xl font-bold text-ink-900">LKR {(totalExpenses / 1000000).toFixed(1)}M</h3>
+              <p className="text-xs text-ink-500 mt-1">All categories</p>
             </div>
-            <div className="bg-gradient-to-br from-red-500 to-rose-600 p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
-              <TrendingDown className="text-white" size={18} />
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
+              <TrendingDown size={18} />
             </div>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-ink-100">
             <span className="text-xs font-medium text-red-600">Year to date</span>
             <ArrowDownRight size={16} className="text-red-400 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up bg-white" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-2">Net Income</p>
+              <p className="text-xs font-semibold text-ink-600 mb-2">Net Income</p>
               <h3 className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 LKR {(netIncome / 1000000).toFixed(1)}M
               </h3>
-              <p className="text-xs text-gray-500 mt-1">Profit this period</p>
+              <p className="text-xs text-ink-500 mt-1">Profit this period</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
-              <DollarSign className="text-white" size={18} />
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
+              <DollarSign size={18} />
             </div>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-ink-100">
             <span className="text-xs font-medium text-blue-600">
               {((netIncome / totalRevenue) * 100).toFixed(1)}% margin
             </span>
@@ -771,18 +761,18 @@ const FinancePage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up bg-white" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-2">Cash & Bank Balance</p>
-              <h3 className="text-2xl font-bold text-gray-900">LKR {(cashBalance / 1000000).toFixed(1)}M</h3>
-              <p className="text-xs text-gray-500 mt-1">Available funds</p>
+              <p className="text-xs font-semibold text-ink-600 mb-2">Cash & Bank Balance</p>
+              <h3 className="text-2xl font-bold text-ink-900">LKR {(cashBalance / 1000000).toFixed(1)}M</h3>
+              <p className="text-xs text-ink-500 mt-1">Available funds</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-pink-600 p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
-              <Wallet className="text-white" size={18} />
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
+              <Wallet size={18} />
             </div>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-ink-100">
             <span className="text-xs font-medium text-purple-600">
               {(() => {
                 const bankAccounts = chartOfAccounts.filter(acc =>
@@ -807,8 +797,8 @@ const FinancePage = () => {
               <FileText className="text-white" size={18} />
             </div>
             <div>
-              <p className="font-bold text-gray-900 text-sm">Create Invoice</p>
-              <p className="text-xs text-gray-600">{invoices.filter(i => i.status === 'Pending').length} pending</p>
+              <p className="font-bold text-ink-900 text-sm">Create Invoice</p>
+              <p className="text-xs text-ink-600">{invoices.filter(i => i.status === 'Pending').length} pending</p>
             </div>
           </div>
         </button>
@@ -822,8 +812,8 @@ const FinancePage = () => {
               <Receipt className="text-white" size={18} />
             </div>
             <div>
-              <p className="font-bold text-gray-900 text-sm">Record Expense</p>
-              <p className="text-xs text-gray-600">Quick entry</p>
+              <p className="font-bold text-ink-900 text-sm">Record Expense</p>
+              <p className="text-xs text-ink-600">Quick entry</p>
             </div>
           </div>
         </button>
@@ -837,8 +827,8 @@ const FinancePage = () => {
               <Edit className="text-white" size={18} />
             </div>
             <div>
-              <p className="font-bold text-gray-900 text-sm">Journal Entry</p>
-              <p className="text-xs text-gray-600">Manual posting</p>
+              <p className="font-bold text-ink-900 text-sm">Journal Entry</p>
+              <p className="text-xs text-ink-600">Manual posting</p>
             </div>
           </div>
         </button>
@@ -852,16 +842,16 @@ const FinancePage = () => {
               <RefreshCw className="text-white" size={18} />
             </div>
             <div>
-              <p className="font-bold text-gray-900 text-sm">Reconcile Bank</p>
-              <p className="text-xs text-gray-600">{bankTransactions.filter(t => t.status === 'Pending').length} pending</p>
+              <p className="font-bold text-ink-900 text-sm">Reconcile Bank</p>
+              <p className="text-xs text-ink-600">{bankTransactions.filter(t => t.status === 'Pending').length} pending</p>
             </div>
           </div>
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-xl shadow-lg border border-ink-100">
+        <div className="border-b border-ink-100">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
             {[
               { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -880,7 +870,7 @@ const FinancePage = () => {
                 className={`flex items-center justify-center gap-2 px-3 py-3 rounded-lg font-semibold text-xs md:text-sm transition-all ${
                   activeTab === tab.id
                     ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg scale-105'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
                 <tab.icon size={16} className="flex-shrink-0" />
@@ -999,8 +989,8 @@ const FinancePage = () => {
 
               {/* Recent Transactions */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Income</h3>
+                <div className="bg-white border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4">Recent Income</h3>
                   <div className="space-y-3">
                     {invoices.slice(0, 5).map((invoice) => (
                       <div key={invoice.id} className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
@@ -1009,8 +999,8 @@ const FinancePage = () => {
                             <ArrowDownRight className="text-white" size={18} />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900 text-sm">{invoice.client}</p>
-                            <p className="text-xs text-gray-600">{invoice.invoiceNo} • {invoice.issued}</p>
+                            <p className="font-semibold text-ink-900 text-sm">{invoice.client}</p>
+                            <p className="text-xs text-ink-600">{invoice.invoiceNo} • {invoice.issued}</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -1026,8 +1016,8 @@ const FinancePage = () => {
                   </div>
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Expenses</h3>
+                <div className="bg-white border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4">Recent Expenses</h3>
                   <div className="space-y-3">
                     {bills.slice(0, 5).map((bill) => (
                       <div key={bill.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
@@ -1036,8 +1026,8 @@ const FinancePage = () => {
                             <ArrowUpRight className="text-white" size={18} />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900 text-sm">{bill.vendor}</p>
-                            <p className="text-xs text-gray-600">{bill.billNo} • {bill.received}</p>
+                            <p className="font-semibold text-ink-900 text-sm">{bill.vendor}</p>
+                            <p className="text-xs text-ink-600">{bill.billNo} • {bill.received}</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -1055,29 +1045,29 @@ const FinancePage = () => {
               {/* Charts and Analytics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Expense Distribution Chart */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 animate-slide-up">
+                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                         <PieChart className="text-orange-600" size={20} />
                         Expense Distribution
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1">By category (YTD)</p>
+                      <p className="text-sm text-ink-600 mt-1">By category (YTD)</p>
                     </div>
                   </div>
                   <div className="space-y-3">
                     {expenseDistribution.map((item, index) => (
                       <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-medium text-gray-700">{item.category}</span>
-                          <span className="text-sm font-bold text-gray-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
+                          <span className="text-sm font-medium text-ink-700">{item.category}</span>
+                          <span className="text-sm font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
                         </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                        <div className="w-full bg-ink-100 rounded-full h-2.5 overflow-hidden">
                           <div className={`h-2.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
                             style={{ width: `${item.percent}%` }}></div>
                         </div>
                         <div className="flex items-center justify-between mt-1">
-                          <span className="text-xs text-gray-500">{item.percent}% of total</span>
+                          <span className="text-xs text-ink-500">{item.percent}% of total</span>
                         </div>
                       </div>
                     ))}
@@ -1085,14 +1075,14 @@ const FinancePage = () => {
                 </div>
 
                 {/* Revenue Sources Chart */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 animate-slide-up">
+                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                         <BarChart3 className="text-green-600" size={20} />
                         Revenue Sources
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1">Income breakdown</p>
+                      <p className="text-sm text-ink-600 mt-1">Income breakdown</p>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -1121,21 +1111,21 @@ const FinancePage = () => {
 
                       if (revenueSources.length === 0) {
                         return (
-                          <div className="text-center py-8 text-gray-500 text-sm">
+                          <div className="text-center py-8 text-ink-500 text-sm">
                             No revenue data available
                           </div>
                         );
                       }
 
                       return revenueSources.map((item, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div key={index} className="flex items-center justify-between p-3 bg-ink-50 rounded-lg">
                           <div className="flex items-center gap-3">
                             <div className={`w-3 h-3 rounded-full ${colors[index % colors.length]}`}></div>
-                            <span className="text-sm font-medium text-gray-700">{item.source}</span>
+                            <span className="text-sm font-medium text-ink-700">{item.source}</span>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="text-sm font-bold text-gray-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
-                            <span className="text-xs text-gray-600 bg-white px-2 py-1 rounded">{item.percent}%</span>
+                            <span className="text-sm font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
+                            <span className="text-xs text-ink-600 bg-white px-2 py-1 rounded">{item.percent}%</span>
                           </div>
                         </div>
                       ));
@@ -1144,14 +1134,14 @@ const FinancePage = () => {
                 </div>
 
                 {/* Cash Flow Trend */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 animate-slide-up">
+                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                         <LineChart className="text-blue-600" size={20} />
                         Cash Flow Trend
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1">Last 6 months (millions)</p>
+                      <p className="text-sm text-ink-600 mt-1">Last 6 months (millions)</p>
                     </div>
                     {(() => {
                       // Calculate last 6 months cash flow from invoices and bills
@@ -1192,7 +1182,7 @@ const FinancePage = () => {
                             {netChange >= 0 ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
                             {netChange >= 0 ? '+' : ''}{percentChange}%
                           </div>
-                          <div className="text-xs text-gray-600">{netChange >= 0 ? 'Net positive' : 'Net negative'}</div>
+                          <div className="text-xs text-ink-600">{netChange >= 0 ? 'Net positive' : 'Net negative'}</div>
                         </div>
                       );
                     })()}
@@ -1229,7 +1219,7 @@ const FinancePage = () => {
 
                       if (monthsData.every(m => m.inflow === 0 && m.outflow === 0)) {
                         return (
-                          <div className="text-center py-8 text-gray-500 text-sm">
+                          <div className="text-center py-8 text-ink-500 text-sm">
                             No cash flow activity in the last 6 months
                           </div>
                         );
@@ -1239,7 +1229,7 @@ const FinancePage = () => {
 
                       return monthsData.map((item, index) => (
                         <div key={index} className="flex items-center gap-3">
-                          <span className="text-xs font-medium text-gray-600 w-20">{item.month}</span>
+                          <span className="text-xs font-medium text-ink-600 w-20">{item.month}</span>
                           <div className="flex-1 flex gap-1">
                             <div className="bg-green-500 h-8 rounded transition-all duration-300 flex items-center justify-center text-white text-xs font-bold"
                               style={{ width: `${(item.inflow / maxValue) * 100}%` }}
@@ -1252,27 +1242,27 @@ const FinancePage = () => {
                               {item.outflow > 8 && `${item.outflow.toFixed(1)}M`}
                             </div>
                           </div>
-                          <span className="text-xs text-gray-500 w-16 text-right">
+                          <span className="text-xs text-ink-500 w-16 text-right">
                             {item.inflow - item.outflow >= 0 ? '+' : ''}{(item.inflow - item.outflow).toFixed(1)}M
                           </span>
                         </div>
                       ));
                     })()}
                   </div>
-                  <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-ink-100">
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-green-500 rounded"></div>
-                      <span className="text-xs text-gray-600">Inflow</span>
+                      <span className="text-xs text-ink-600">Inflow</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-red-400 rounded"></div>
-                      <span className="text-xs text-gray-600">Outflow</span>
+                      <span className="text-xs text-ink-600">Outflow</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Financial Health Metrics */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 animate-slide-up">
+                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
                   {(() => {
                     // Calculate real financial health metrics
                     const totalAssets = chartOfAccounts
@@ -1343,24 +1333,24 @@ const FinancePage = () => {
                       <>
                         <div className="flex items-center justify-between mb-6">
                           <div>
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                               <Target className="text-purple-600" size={20} />
                               Financial Health Metrics
                             </h3>
-                            <p className="text-sm text-gray-600 mt-1">Key indicators</p>
+                            <p className="text-sm text-ink-600 mt-1">Key indicators</p>
                           </div>
                           <div className="text-right">
                             <div className={`text-2xl font-bold ${statusColor}`}>{overallStatus}</div>
-                            <div className="text-xs text-gray-600">{healthyCount}/4 targets met</div>
+                            <div className="text-xs text-ink-600">{healthyCount}/4 targets met</div>
                           </div>
                         </div>
                         <div className="space-y-4">
                           {metrics.map((item, index) => (
                             <div key={index}>
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm font-medium text-gray-700">{item.metric}</span>
+                                <span className="text-sm font-medium text-ink-700">{item.metric}</span>
                                 <div className="flex items-center gap-2">
-                                  <span className="text-sm font-bold text-gray-900">{item.label}</span>
+                                  <span className="text-sm font-bold text-ink-900">{item.label}</span>
                                   {item.status === 'above' ? (
                                     <TrendingUp className="text-green-600" size={14} />
                                   ) : (
@@ -1368,7 +1358,7 @@ const FinancePage = () => {
                                   )}
                                 </div>
                               </div>
-                              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                              <div className="w-full bg-ink-100 rounded-full h-2 overflow-hidden">
                                 <div
                                   className={`h-2 rounded-full transition-all duration-500 ${
                                     item.status === 'above'
@@ -1379,7 +1369,7 @@ const FinancePage = () => {
                                 ></div>
                               </div>
                               <div className="flex items-center justify-between mt-1">
-                                <span className="text-xs text-gray-500">Target: {item.target}%</span>
+                                <span className="text-xs text-ink-500">Target: {item.target}%</span>
                                 <span className={`text-xs font-medium ${
                                   item.status === 'above' ? 'text-green-600' : 'text-orange-600'
                                 }`}>
@@ -1402,8 +1392,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Chart of Accounts</h2>
-                  <p className="text-sm text-gray-600">Complete list of all accounts in the system</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Chart of Accounts</h2>
+                  <p className="text-sm text-ink-600">Complete list of all accounts in the system</p>
                 </div>
                 <button
                   onClick={() => setShowAddAccount(true)}
@@ -1415,7 +1405,7 @@ const FinancePage = () => {
               </div>
 
               {['Asset', 'Liability', 'Equity', 'Revenue', 'Expense'].map((accountType) => (
-                <div key={accountType} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div key={accountType} className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                   <div className={`p-4 ${
                     accountType === 'Asset' ? 'bg-blue-50 border-b border-blue-200' :
                     accountType === 'Liability' ? 'bg-red-50 border-b border-red-200' :
@@ -1423,7 +1413,7 @@ const FinancePage = () => {
                     accountType === 'Revenue' ? 'bg-green-50 border-b border-green-200' :
                     'bg-orange-50 border-b border-orange-200'
                   }`}>
-                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                       {accountType === 'Asset' && <TrendingUp size={20} className="text-blue-600" />}
                       {accountType === 'Liability' && <TrendingDown size={20} className="text-red-600" />}
                       {accountType === 'Equity' && <PieChart size={20} className="text-purple-600" />}
@@ -1432,14 +1422,14 @@ const FinancePage = () => {
                       {accountType}s
                     </h3>
                   </div>
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-ink-100">
                     {chartOfAccounts.filter(acc => acc.type === accountType).map((account) => (
-                      <div key={account.id} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+                      <div key={account.id} className="flex items-center justify-between p-4 hover:bg-ink-50 transition-colors">
                         <div className="flex items-center gap-4 flex-1">
-                          <span className="font-mono text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">{account.code}</span>
+                          <span className="font-mono text-sm text-ink-500 bg-ink-100 px-2 py-1 rounded">{account.code}</span>
                           <div>
-                            <p className="font-semibold text-gray-900">{account.name}</p>
-                            <p className="text-xs text-gray-600">{account.subtype}</p>
+                            <p className="font-semibold text-ink-900">{account.name}</p>
+                            <p className="text-xs text-ink-600">{account.subtype}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
@@ -1447,7 +1437,7 @@ const FinancePage = () => {
                             <p className={`font-bold ${account.dr ? 'text-blue-600' : 'text-red-600'}`}>
                               LKR {(account.balance / 1000000).toFixed(2)}M
                             </p>
-                            <p className="text-xs text-gray-500">{account.dr ? 'Debit' : 'Credit'} balance</p>
+                            <p className="text-xs text-ink-500">{account.dr ? 'Debit' : 'Credit'} balance</p>
                           </div>
                           <div className="flex gap-2">
                             <button
@@ -1464,19 +1454,19 @@ const FinancePage = () => {
                                 setSelectedAccount(account);
                                 setShowEditAccount(true);
                               }}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="p-2 hover:bg-ink-100 rounded-lg transition-colors"
                             >
-                              <Edit size={16} className="text-gray-600" />
+                              <Edit size={16} className="text-ink-600" />
                             </button>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="p-4 bg-gray-50 border-t border-gray-200">
+                  <div className="p-4 bg-ink-50 border-t border-ink-100">
                     <div className="flex items-center justify-between">
-                      <p className="font-bold text-gray-900">Total {accountType}s:</p>
-                      <p className="font-bold text-xl text-gray-900">
+                      <p className="font-bold text-ink-900">Total {accountType}s:</p>
+                      <p className="font-bold text-xl text-ink-900">
                         LKR {(chartOfAccounts.filter(acc => acc.type === accountType).reduce((sum, acc) => sum + acc.balance, 0) / 1000000).toFixed(2)}M
                       </p>
                     </div>
@@ -1486,19 +1476,19 @@ const FinancePage = () => {
 
               {/* Accounting Equation */}
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Accounting Equation</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Accounting Equation</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                   <div className="bg-white rounded-lg p-4 border border-blue-200">
-                    <p className="text-sm text-gray-600 mb-1">Assets</p>
+                    <p className="text-sm text-ink-600 mb-1">Assets</p>
                     <p className="text-2xl font-bold text-blue-600">LKR {(totalAssets / 1000000).toFixed(1)}M</p>
                   </div>
-                  <div className="flex items-center justify-center text-3xl font-bold text-gray-400">=</div>
+                  <div className="flex items-center justify-center text-3xl font-bold text-ink-400">=</div>
                   <div className="bg-white rounded-lg p-4 border border-purple-200">
-                    <p className="text-sm text-gray-600 mb-1">Liabilities + Equity</p>
+                    <p className="text-sm text-ink-600 mb-1">Liabilities + Equity</p>
                     <p className="text-2xl font-bold text-purple-600">LKR {((totalLiabilities + chartOfAccounts.filter(acc => acc.type === 'Equity').reduce((sum, acc) => sum + acc.balance, 0)) / 1000000).toFixed(1)}M</p>
                   </div>
                 </div>
-                <p className="text-center text-sm text-gray-600 mt-4">
+                <p className="text-center text-sm text-ink-600 mt-4">
                   {totalAssets === (totalLiabilities + chartOfAccounts.filter(acc => acc.type === 'Equity').reduce((sum, acc) => sum + acc.balance, 0))
                     ? '✓ Books are balanced'
                     : '⚠ Equation does not balance - please review entries'}
@@ -1512,8 +1502,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Fixed Assets Register</h2>
-                  <p className="text-sm text-gray-600">Property, Plant & Equipment (PPE) with automatic depreciation tracking</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Fixed Assets Register</h2>
+                  <p className="text-sm text-ink-600">Property, Plant & Equipment (PPE) with automatic depreciation tracking</p>
                 </div>
                 <button
                   onClick={() => setShowAddAsset(true)}
@@ -1572,45 +1562,45 @@ const FinancePage = () => {
               </div>
 
               {/* Assets Table */}
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-ink-50 border-b border-ink-100">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Asset Code</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Asset Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Type</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Acquisition Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Cost</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Accum. Depreciation</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">WDV</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Condition</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Asset Code</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Asset Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Type</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Acquisition Date</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Cost</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Accum. Depreciation</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">WDV</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Condition</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-ink-100">
                       {fixedAssets.filter(asset => !asset.disposed).map((asset) => {
                         const depreciationPercent = (asset.accumulatedDepreciation / asset.cost) * 100;
 
                         return (
-                          <tr key={asset.id} className="hover:bg-gray-50 transition-colors">
+                          <tr key={asset.id} className="hover:bg-ink-50 transition-colors">
                             <td className="px-4 py-3">
-                              <p className="font-mono text-sm font-semibold text-gray-900">{asset.assetCode}</p>
+                              <p className="font-mono text-sm font-semibold text-ink-900">{asset.assetCode}</p>
                             </td>
                             <td className="px-4 py-3">
-                              <p className="text-sm font-semibold text-gray-900">{asset.assetName}</p>
-                              <p className="text-xs text-gray-500">{asset.location}</p>
+                              <p className="text-sm font-semibold text-ink-900">{asset.assetName}</p>
+                              <p className="text-xs text-ink-500">{asset.location}</p>
                             </td>
                             <td className="px-4 py-3">
                               <span className="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
                                 {asset.assetType}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-sm text-gray-600">
+                            <td className="px-4 py-3 text-sm text-ink-600">
                               {new Date(asset.acquisitionDate).toLocaleDateString()}
                             </td>
                             <td className="px-4 py-3">
-                              <p className="font-semibold text-gray-900">
+                              <p className="font-semibold text-ink-900">
                                 LKR {asset.cost.toLocaleString()}
                               </p>
                             </td>
@@ -1688,39 +1678,39 @@ const FinancePage = () => {
                 {fixedAssets.filter(a => !a.disposed).length === 0 && (
                   <div className="text-center py-12">
                     <Package size={48} className="mx-auto text-gray-300 mb-3" />
-                    <p className="text-gray-500 font-medium">No fixed assets yet</p>
-                    <p className="text-sm text-gray-400 mt-1">Click "Add Fixed Asset" to start tracking your assets</p>
+                    <p className="text-ink-500 font-medium">No fixed assets yet</p>
+                    <p className="text-sm text-ink-400 mt-1">Click "Add Fixed Asset" to start tracking your assets</p>
                   </div>
                 )}
               </div>
 
               {/* Summary by Asset Type */}
               {Object.keys(getSummaryByType()).length > 0 && (
-                <div className="bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Summary by Asset Type</h3>
+                <div className="bg-gradient-to-br from-gray-50 to-slate-50 border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4">Summary by Asset Type</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {Object.entries(getSummaryByType()).map(([assetType, summary]) => (
-                      <div key={assetType} className="bg-white rounded-lg p-4 border border-gray-200">
-                        <h4 className="font-semibold text-gray-900 mb-3">{assetType}</h4>
+                      <div key={assetType} className="bg-white rounded-lg p-4 border border-ink-100">
+                        <h4 className="font-semibold text-ink-900 mb-3">{assetType}</h4>
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Count:</span>
-                            <span className="font-semibold text-gray-900">{summary.count}</span>
+                            <span className="text-ink-600">Count:</span>
+                            <span className="font-semibold text-ink-900">{summary.count}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Total Cost:</span>
+                            <span className="text-ink-600">Total Cost:</span>
                             <span className="font-semibold text-blue-600">
                               LKR {(summary.totalCost / 1000000).toFixed(2)}M
                             </span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Accum. Depr.:</span>
+                            <span className="text-ink-600">Accum. Depr.:</span>
                             <span className="font-semibold text-red-600">
                               LKR {(summary.totalAccumulatedDepreciation / 1000000).toFixed(2)}M
                             </span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">WDV:</span>
+                            <span className="text-ink-600">WDV:</span>
                             <span className="font-semibold text-green-600">
                               LKR {(summary.totalWrittenDownValue / 1000000).toFixed(2)}M
                             </span>
@@ -1739,8 +1729,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Grant Receivables</h2>
-                  <p className="text-sm text-gray-600">Track pledged grants and receipts from donors</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Grant Receivables</h2>
+                  <p className="text-sm text-ink-600">Track pledged grants and receipts from donors</p>
                 </div>
                 <button
                   onClick={() => setShowAddGrant(true)}
@@ -1799,36 +1789,36 @@ const FinancePage = () => {
               </div>
 
               {/* Grant Receivables Table */}
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-ink-50 border-b border-ink-100">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Donor</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Project</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Pledged Amount</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Received</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Outstanding</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Expected Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Status</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Donor</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Project</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Pledged Amount</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Received</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Outstanding</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Expected Date</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-ink-100">
                       {grantReceivables.map((grant) => {
                         const outstanding = grant.pledgeAmount - grant.receivedAmount;
                         const percentage = (grant.receivedAmount / grant.pledgeAmount) * 100;
                         const isOverdue = new Date(grant.expectedReceiptDate) < new Date() && grant.status !== 'Fully Received';
 
                         return (
-                          <tr key={grant.id} className="hover:bg-gray-50 transition-colors">
+                          <tr key={grant.id} className="hover:bg-ink-50 transition-colors">
                             <td className="px-4 py-3">
-                              <p className="font-semibold text-gray-900">{grant.donorName}</p>
-                              <p className="text-xs text-gray-500">Pledge: {new Date(grant.pledgeDate).toLocaleDateString()}</p>
+                              <p className="font-semibold text-ink-900">{grant.donorName}</p>
+                              <p className="text-xs text-ink-500">Pledge: {new Date(grant.pledgeDate).toLocaleDateString()}</p>
                             </td>
                             <td className="px-4 py-3">
-                              <p className="text-sm font-semibold text-gray-900">{grant.projectCategory || grant.projectName}</p>
-                              <p className="text-xs text-gray-600">{grant.programmeArea}</p>
+                              <p className="text-sm font-semibold text-ink-900">{grant.projectCategory || grant.projectName}</p>
+                              <p className="text-xs text-ink-600">{grant.programmeArea}</p>
                               {grant.proposalId && (
                                 <p className="text-xs text-blue-600 mt-0.5">
                                   Linked to {proposals?.find(p => p.id === grant.proposalId)?.proposalCode || `Proposal #${grant.proposalId}`}
@@ -1836,7 +1826,7 @@ const FinancePage = () => {
                               )}
                             </td>
                             <td className="px-4 py-3">
-                              <p className="font-semibold text-gray-900">
+                              <p className="font-semibold text-ink-900">
                                 LKR {grant.pledgeAmount.toLocaleString()}
                               </p>
                             </td>
@@ -1857,7 +1847,7 @@ const FinancePage = () => {
                               </p>
                             </td>
                             <td className="px-4 py-3">
-                              <p className={`text-sm ${isOverdue ? 'text-red-600 font-semibold' : 'text-gray-900'}`}>
+                              <p className={`text-sm ${isOverdue ? 'text-red-600 font-semibold' : 'text-ink-900'}`}>
                                 {new Date(grant.expectedReceiptDate).toLocaleDateString()}
                               </p>
                               {isOverdue && (
@@ -1870,7 +1860,7 @@ const FinancePage = () => {
                                   ? 'bg-green-100 text-green-700'
                                   : grant.status === 'Partially Received'
                                   ? 'bg-orange-100 text-orange-700'
-                                  : 'bg-gray-100 text-gray-700'
+                                  : 'bg-ink-100 text-ink-700'
                               }`}>
                                 {grant.status}
                               </span>
@@ -1922,8 +1912,8 @@ const FinancePage = () => {
                 {grantReceivables.length === 0 && (
                   <div className="text-center py-12">
                     <HandCoins size={48} className="mx-auto text-gray-300 mb-3" />
-                    <p className="text-gray-500 font-medium">No grant receivables yet</p>
-                    <p className="text-sm text-gray-400 mt-1">Click "Add Grant Receivable" to start tracking pledged grants</p>
+                    <p className="text-ink-500 font-medium">No grant receivables yet</p>
+                    <p className="text-sm text-ink-400 mt-1">Click "Add Grant Receivable" to start tracking pledged grants</p>
                   </div>
                 )}
               </div>
@@ -1943,8 +1933,8 @@ const FinancePage = () => {
                           <div key={grant.id} className="bg-white rounded-lg p-3 border border-red-200">
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="font-semibold text-gray-900">{grant.donorName} - {grant.projectName}</p>
-                                <p className="text-sm text-gray-600">
+                                <p className="font-semibold text-ink-900">{grant.donorName} - {grant.projectName}</p>
+                                <p className="text-sm text-ink-600">
                                   Outstanding: LKR {(grant.pledgeAmount - grant.receivedAmount).toLocaleString()} |
                                   Expected: {new Date(grant.expectedReceiptDate).toLocaleDateString()}
                                 </p>
@@ -1974,8 +1964,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Invoices</h2>
-                  <p className="text-sm text-gray-600">Manage client invoices and receivables</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Invoices</h2>
+                  <p className="text-sm text-ink-600">Manage client invoices and receivables</p>
                 </div>
                 <button
                   onClick={() => setShowAddInvoice(true)}
@@ -1986,37 +1976,37 @@ const FinancePage = () => {
                 </button>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-ink-50 border-b border-ink-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Invoice #</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Client</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Project</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Issued</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Due</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Amount</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Status</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Actions</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Invoice #</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Client</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Project</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Issued</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Due</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Amount</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {invoices.map((invoice) => (
-                      <tr key={invoice.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-sm font-mono text-gray-900">{invoice.invoiceNo}</td>
-                        <td className="px-4 py-3 text-sm font-semibold text-gray-900">{invoice.client}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{invoice.project}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{invoice.issued}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{invoice.due}</td>
+                      <tr key={invoice.id} className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 text-sm font-mono text-ink-900">{invoice.invoiceNo}</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-ink-900">{invoice.client}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{invoice.project}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{invoice.issued}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{invoice.due}</td>
                         <td className="px-4 py-3 text-sm">
                           {invoice.currency === 'LKR' ? (
-                            <span className="font-bold text-gray-900">LKR {(invoice.amountLKR / 1000000).toFixed(1)}M</span>
+                            <span className="font-bold text-ink-900">LKR {(invoice.amountLKR / 1000000).toFixed(1)}M</span>
                           ) : (
                             <div className="flex flex-col">
-                              <span className="font-bold text-gray-900">
+                              <span className="font-bold text-ink-900">
                                 {getCurrencySymbol(invoice.currency)} {invoice.originalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                               </span>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-ink-500">
                                 LKR {invoice.amountLKR.toLocaleString('en-US')}
                               </span>
                             </div>
@@ -2057,10 +2047,10 @@ const FinancePage = () => {
                                 setSelectedInvoice(invoice);
                                 setShowEditInvoice(true);
                               }}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="p-2 hover:bg-ink-100 rounded-lg transition-colors"
                               title="Edit"
                             >
-                              <Edit size={16} className="text-gray-600" />
+                              <Edit size={16} className="text-ink-600" />
                             </button>
                           </div>
                         </td>
@@ -2077,8 +2067,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Bills & Payments</h2>
-                  <p className="text-sm text-gray-600">Manage vendor bills and payables</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Bills & Payments</h2>
+                  <p className="text-sm text-ink-600">Manage vendor bills and payables</p>
                 </div>
                 <button
                   onClick={() => setShowAddBill(true)}
@@ -2130,29 +2120,29 @@ const FinancePage = () => {
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-ink-50 border-b border-ink-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Bill #</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Vendor</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Category</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Received</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Due</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Amount</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Status</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Actions</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Bill #</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Vendor</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Category</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Received</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Due</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Amount</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {bills.map((bill) => (
-                      <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-sm font-mono text-gray-900">{bill.billNo}</td>
-                        <td className="px-4 py-3 text-sm font-semibold text-gray-900">{bill.vendor}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{bill.category}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{bill.received}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{bill.due}</td>
-                        <td className="px-4 py-3 text-sm font-bold text-gray-900">LKR {bill.amount.toLocaleString()}</td>
+                      <tr key={bill.id} className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 text-sm font-mono text-ink-900">{bill.billNo}</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-ink-900">{bill.vendor}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{bill.category}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{bill.received}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{bill.due}</td>
+                        <td className="px-4 py-3 text-sm font-bold text-ink-900">LKR {bill.amount.toLocaleString()}</td>
                         <td className="px-4 py-3">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                             bill.status === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
@@ -2189,10 +2179,10 @@ const FinancePage = () => {
                                 setSelectedBill(bill);
                                 setShowEditBill(true);
                               }}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="p-2 hover:bg-ink-100 rounded-lg transition-colors"
                               title="Edit"
                             >
-                              <Edit size={16} className="text-gray-600" />
+                              <Edit size={16} className="text-ink-600" />
                             </button>
                           </div>
                         </td>
@@ -2209,8 +2199,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Journal Entries</h2>
-                  <p className="text-sm text-gray-600">Manual accounting entries and adjustments</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Journal Entries</h2>
+                  <p className="text-sm text-ink-600">Manual accounting entries and adjustments</p>
                 </div>
                 <button
                   onClick={() => setShowAddJournalEntry(true)}
@@ -2223,12 +2213,12 @@ const FinancePage = () => {
 
               <div className="space-y-4">
                 {journalEntries.map((entry) => (
-                  <div key={entry.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                  <div key={entry.id} className="bg-white border border-ink-100 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-sm font-bold text-blue-900">{entry.entryNo}</span>
-                          <span className="text-sm text-gray-600">{entry.date}</span>
+                          <span className="text-sm text-ink-600">{entry.date}</span>
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                             entry.status === 'Posted' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
                           }`}>
@@ -2236,27 +2226,27 @@ const FinancePage = () => {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600">by {entry.createdBy}</span>
+                          <span className="text-sm text-ink-600">by {entry.createdBy}</span>
                           <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                            <Edit size={16} className="text-gray-600" />
+                            <Edit size={16} className="text-ink-600" />
                           </button>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-700 mt-2">{entry.description}</p>
+                      <p className="text-sm text-ink-700 mt-2">{entry.description}</p>
                     </div>
                     <div className="p-4">
                       <table className="w-full">
-                        <thead className="border-b border-gray-200">
+                        <thead className="border-b border-ink-100">
                           <tr>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600">Account</th>
-                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600">Debit</th>
-                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600">Credit</th>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-ink-600">Account</th>
+                            <th className="px-4 py-2 text-right text-xs font-semibold text-ink-600">Debit</th>
+                            <th className="px-4 py-2 text-right text-xs font-semibold text-ink-600">Credit</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-ink-100">
                           {entry.entries.map((line, idx) => (
                             <tr key={idx}>
-                              <td className="px-4 py-2 text-sm text-gray-900">{line.account}</td>
+                              <td className="px-4 py-2 text-sm text-ink-900">{line.account}</td>
                               <td className="px-4 py-2 text-sm text-right font-mono text-blue-600">
                                 {line.debit > 0 ? `LKR ${line.debit.toLocaleString()}` : '-'}
                               </td>
@@ -2265,8 +2255,8 @@ const FinancePage = () => {
                               </td>
                             </tr>
                           ))}
-                          <tr className="bg-gray-50 font-bold">
-                            <td className="px-4 py-2 text-sm text-gray-900">Total</td>
+                          <tr className="bg-ink-50 font-bold">
+                            <td className="px-4 py-2 text-sm text-ink-900">Total</td>
                             <td className="px-4 py-2 text-sm text-right font-mono text-blue-900">
                               LKR {entry.total.toLocaleString()}
                             </td>
@@ -2288,8 +2278,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Bank Accounts</h2>
-                  <p className="text-sm text-gray-600">Manage bank accounts and reconciliation</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Bank Accounts</h2>
+                  <p className="text-sm text-ink-600">Manage bank accounts and reconciliation</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
@@ -2328,27 +2318,27 @@ const FinancePage = () => {
               </div>
 
               {/* Recent Bank Transactions */}
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <div className="p-4 bg-gray-50 border-b border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900">Recent Bank Transactions</h3>
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
+                <div className="p-4 bg-ink-50 border-b border-ink-100">
+                  <h3 className="text-lg font-bold text-ink-900">Recent Bank Transactions</h3>
                 </div>
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-ink-50 border-b border-ink-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Date</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Description</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Bank</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Type</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600">Amount</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Date</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Description</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Bank</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Type</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600">Amount</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {bankTransactions.map((transaction) => (
-                      <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-sm text-gray-600">{transaction.date}</td>
-                        <td className="px-4 py-3 text-sm font-semibold text-gray-900">{transaction.description}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{transaction.bank}</td>
+                      <tr key={transaction.id} className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 text-sm text-ink-600">{transaction.date}</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-ink-900">{transaction.description}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{transaction.bank}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                             transaction.type === 'Deposit' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -2381,8 +2371,8 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Financial Reports</h2>
-                  <p className="text-sm text-gray-600">Generate and view financial statements</p>
+                  <h2 className="text-2xl font-bold text-ink-900">Financial Reports</h2>
+                  <p className="text-sm text-ink-600">Generate and view financial statements</p>
                 </div>
                 <button
                   onClick={() => setShowReportBuilder(true)}
@@ -2402,12 +2392,12 @@ const FinancePage = () => {
                   { name: 'General Ledger', desc: 'Complete transaction history', icon: FileText, color: 'gray' },
                   { name: 'Trial Balance', desc: 'Verify debits equal credits', icon: CheckCircle, color: 'teal' },
                 ].map((report, idx) => (
-                  <div key={idx} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-gray-300 transition-all group">
+                  <div key={idx} className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-lg hover:border-ink-200 transition-all group">
                     <div className={`w-12 h-12 bg-${report.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <report.icon className={`text-${report.color}-600`} size={24} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">{report.name}</h3>
-                    <p className="text-sm text-gray-600 mb-4">{report.desc}</p>
+                    <h3 className="font-bold text-ink-900 mb-2">{report.name}</h3>
+                    <p className="text-sm text-ink-600 mb-4">{report.desc}</p>
                     <button
                       onClick={() => handleGenerateReport(report.name)}
                       className="w-full px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center justify-center gap-2"
@@ -2420,49 +2410,49 @@ const FinancePage = () => {
               </div>
 
               {/* Sample P&L */}
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200">
                   <h3 className="text-lg font-bold text-green-900">Profit & Loss Statement (Year to Date)</h3>
                   <p className="text-sm text-green-700">January 1, 2025 - November 7, 2025</p>
                 </div>
                 <div className="p-6">
                   <div className="space-y-4">
-                    <div className="border-b border-gray-200 pb-4">
-                      <h4 className="font-bold text-gray-900 mb-3">Revenue</h4>
+                    <div className="border-b border-ink-100 pb-4">
+                      <h4 className="font-bold text-ink-900 mb-3">Revenue</h4>
                       {chartOfAccounts.filter(acc => acc.type === 'Revenue').map((acc) => (
                         <div key={acc.id} className="flex items-center justify-between py-2">
-                          <span className="text-sm text-gray-700">{acc.name}</span>
+                          <span className="text-sm text-ink-700">{acc.name}</span>
                           <span className="text-sm font-semibold text-green-600">LKR {(acc.balance / 1000000).toFixed(2)}M</span>
                         </div>
                       ))}
-                      <div className="flex items-center justify-between py-2 mt-2 border-t border-gray-100">
-                        <span className="font-bold text-gray-900">Total Revenue</span>
+                      <div className="flex items-center justify-between py-2 mt-2 border-t border-ink-100">
+                        <span className="font-bold text-ink-900">Total Revenue</span>
                         <span className="text-lg font-bold text-green-600">LKR {(totalRevenue / 1000000).toFixed(2)}M</span>
                       </div>
                     </div>
 
-                    <div className="border-b border-gray-200 pb-4">
-                      <h4 className="font-bold text-gray-900 mb-3">Expenses</h4>
+                    <div className="border-b border-ink-100 pb-4">
+                      <h4 className="font-bold text-ink-900 mb-3">Expenses</h4>
                       {chartOfAccounts.filter(acc => acc.type === 'Expense').map((acc) => (
                         <div key={acc.id} className="flex items-center justify-between py-2">
-                          <span className="text-sm text-gray-700">{acc.name}</span>
+                          <span className="text-sm text-ink-700">{acc.name}</span>
                           <span className="text-sm font-semibold text-red-600">LKR {(acc.balance / 1000000).toFixed(2)}M</span>
                         </div>
                       ))}
-                      <div className="flex items-center justify-between py-2 mt-2 border-t border-gray-100">
-                        <span className="font-bold text-gray-900">Total Expenses</span>
+                      <div className="flex items-center justify-between py-2 mt-2 border-t border-ink-100">
+                        <span className="font-bold text-ink-900">Total Expenses</span>
                         <span className="text-lg font-bold text-red-600">LKR {(totalExpenses / 1000000).toFixed(2)}M</span>
                       </div>
                     </div>
 
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
                       <div className="flex items-center justify-between">
-                        <span className="text-xl font-bold text-gray-900">Net Income</span>
+                        <span className="text-xl font-bold text-ink-900">Net Income</span>
                         <span className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           LKR {(netIncome / 1000000).toFixed(2)}M
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-2">
+                      <p className="text-sm text-ink-600 mt-2">
                         Profit Margin: {((netIncome / totalRevenue) * 100).toFixed(1)}%
                       </p>
                     </div>
@@ -2479,7 +2469,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Process Payment</h2>
@@ -2501,22 +2491,22 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Bill Summary */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Bill Summary</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Bill Summary</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Bill Number</p>
-                    <p className="font-bold text-gray-900 font-mono">{selectedBill.billNo}</p>
+                    <p className="text-sm text-ink-600">Bill Number</p>
+                    <p className="font-bold text-ink-900 font-mono">{selectedBill.billNo}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Vendor</p>
-                    <p className="font-bold text-gray-900">{selectedBill.vendor}</p>
+                    <p className="text-sm text-ink-600">Vendor</p>
+                    <p className="font-bold text-ink-900">{selectedBill.vendor}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Due Date</p>
-                    <p className="font-bold text-gray-900">{selectedBill.due}</p>
+                    <p className="text-sm text-ink-600">Due Date</p>
+                    <p className="font-bold text-ink-900">{selectedBill.due}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Amount</p>
+                    <p className="text-sm text-ink-600">Amount</p>
                     <p className="font-bold text-red-600 text-lg">LKR {selectedBill.amount.toLocaleString()}</p>
                   </div>
                 </div>
@@ -2524,40 +2514,40 @@ const FinancePage = () => {
 
               {/* Payment Voucher Form */}
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-gray-900">Payment Voucher Details</h3>
+                <h3 className="text-lg font-bold text-ink-900">Payment Voucher Details</h3>
 
                 {/* Voucher Number - Auto-generated */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Voucher Number
                   </label>
                   <input
                     type="text"
                     value={`PV-2025-00${selectedBill.id}`}
                     disabled
-                    className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold text-gray-900"
+                    className="w-full px-4 py-3 bg-ink-100 border border-ink-200 rounded-lg font-mono font-bold text-ink-900"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Auto-generated voucher number</p>
+                  <p className="text-xs text-ink-500 mt-1">Auto-generated voucher number</p>
                 </div>
 
                 {/* Payment Date */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Payment Date *
                   </label>
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Payment Method */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Payment Method *
                   </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                     <option value="">Select payment method</option>
                     <option value="Bank Transfer">Bank Transfer</option>
                     <option value="Cheque">Cheque</option>
@@ -2568,10 +2558,10 @@ const FinancePage = () => {
 
                 {/* Bank Account (if Bank Transfer selected) */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Bank Account *
                   </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                     <option value="">Select bank account</option>
                     <option value="Commercial Bank">Commercial Bank - Account ending 1234</option>
                     <option value="NDB">NDB - Account ending 5678</option>
@@ -2580,31 +2570,31 @@ const FinancePage = () => {
                 </div>
 
                 {/* Vendor Bank Details */}
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                  <h4 className="text-sm font-bold text-gray-900 mb-3">Vendor Bank Details</h4>
+                <div className="bg-ink-50 rounded-xl p-4 border border-ink-100">
+                  <h4 className="text-sm font-bold text-ink-900 mb-3">Vendor Bank Details</h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-xs text-gray-600 mb-1">Bank Name</label>
+                      <label className="block text-xs text-ink-600 mb-1">Bank Name</label>
                       <input
                         type="text"
                         placeholder="Enter vendor's bank name"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-600 mb-1">Account Number</label>
+                      <label className="block text-xs text-ink-600 mb-1">Account Number</label>
                       <input
                         type="text"
                         placeholder="Enter vendor's account number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-600 mb-1">Account Name</label>
+                      <label className="block text-xs text-ink-600 mb-1">Account Name</label>
                       <input
                         type="text"
                         defaultValue={selectedBill.vendor}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm"
                       />
                     </div>
                   </div>
@@ -2612,46 +2602,46 @@ const FinancePage = () => {
 
                 {/* Payment Reference */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Payment Reference / Transaction ID
                   </label>
                   <input
                     type="text"
                     placeholder="Enter payment reference or transaction ID"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg font-mono focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Description / Notes */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Payment Notes
                   </label>
                   <textarea
                     rows="3"
                     placeholder="Add any notes or remarks about this payment..."
                     defaultValue={`Payment for ${selectedBill.description}`}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Approved By (Finance Officer) */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Approved By (Finance Officer) *
                   </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                     <option value="">Select Finance Officer</option>
                     <option value="John Smith">John Smith (Finance Officer)</option>
                     <option value="Sarah Ahmed">Sarah Ahmed (Finance Officer)</option>
                     <option value="Michael Chen">Michael Chen (Finance Officer)</option>
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">Only Finance Officers can approve payments (Stage 3)</p>
+                  <p className="text-xs text-ink-500 mt-1">Only Finance Officers can approve payments (Stage 3)</p>
                 </div>
 
                 {/* Attachments */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Attachments (Optional)
                   </label>
                   <input
@@ -2669,11 +2659,11 @@ const FinancePage = () => {
                   />
                   <label
                     htmlFor="payment-attachment-upload"
-                    className="block border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 hover:bg-green-50 transition-all cursor-pointer"
+                    className="block border-2 border-dashed border-ink-200 rounded-lg p-6 text-center hover:border-green-500 hover:bg-green-50 transition-all cursor-pointer"
                   >
-                    <Upload className="mx-auto text-gray-400 mb-2" size={32} />
-                    <p className="text-sm text-gray-600">Click to upload or drag and drop</p>
-                    <p className="text-xs text-gray-500 mt-1">Receipts, invoices, or supporting documents (PDF, JPG, PNG, DOC)</p>
+                    <Upload className="mx-auto text-ink-400 mb-2" size={32} />
+                    <p className="text-sm text-ink-600">Click to upload or drag and drop</p>
+                    <p className="text-xs text-ink-500 mt-1">Receipts, invoices, or supporting documents (PDF, JPG, PNG, DOC)</p>
                   </label>
                 </div>
               </div>
@@ -2694,14 +2684,14 @@ const FinancePage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => {
                     setShowPayBill(false);
                     setSelectedBill(null);
                   }}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -2720,7 +2710,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-red-600 to-rose-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Bill Details</h2>
@@ -2784,31 +2774,31 @@ const FinancePage = () => {
               </div>
 
               {/* Vendor Information */}
-              <div className="bg-gray-50 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <div className="bg-ink-50 rounded-xl p-6">
+                <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Building2 size={20} className="text-red-600" />
                   Vendor Information
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Vendor Name</p>
-                    <p className="font-bold text-gray-900">{selectedBill.vendor}</p>
+                    <p className="text-sm text-ink-600">Vendor Name</p>
+                    <p className="font-bold text-ink-900">{selectedBill.vendor}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Category</p>
-                    <p className="font-bold text-gray-900">{selectedBill.category}</p>
+                    <p className="text-sm text-ink-600">Category</p>
+                    <p className="font-bold text-ink-900">{selectedBill.category}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Contact</p>
-                    <p className="font-semibold text-gray-900">{selectedBill.vendorContact}</p>
+                    <p className="text-sm text-ink-600">Contact</p>
+                    <p className="font-semibold text-ink-900">{selectedBill.vendorContact}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Email</p>
-                    <p className="font-semibold text-gray-900">{selectedBill.vendorEmail}</p>
+                    <p className="text-sm text-ink-600">Email</p>
+                    <p className="font-semibold text-ink-900">{selectedBill.vendorEmail}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-sm text-gray-600">Address</p>
-                    <p className="font-semibold text-gray-900">{selectedBill.vendorAddress}</p>
+                    <p className="text-sm text-ink-600">Address</p>
+                    <p className="font-semibold text-ink-900">{selectedBill.vendorAddress}</p>
                   </div>
                 </div>
               </div>
@@ -2834,45 +2824,45 @@ const FinancePage = () => {
               </div>
 
               {/* Description */}
-              <div className="bg-gray-50 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Description</h3>
-                <p className="text-gray-700">{selectedBill.description}</p>
+              <div className="bg-ink-50 rounded-xl p-6">
+                <h3 className="text-lg font-bold text-ink-900 mb-2">Description</h3>
+                <p className="text-ink-700">{selectedBill.description}</p>
               </div>
 
               {/* Line Items */}
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <div className="bg-gray-50 p-4 border-b border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
+                <div className="bg-ink-50 p-4 border-b border-ink-100">
+                  <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                     <Receipt size={20} className="text-red-600" />
                     Line Items
                   </h3>
                 </div>
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-ink-50 border-b border-ink-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Description</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600">Qty</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600">Unit Price</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600">Amount</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Description</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600">Qty</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600">Unit Price</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600">Amount</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {selectedBill.lineItems.map((item, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm text-gray-900">{item.description}</td>
-                        <td className="px-4 py-3 text-sm text-right text-gray-600">{item.quantity}</td>
-                        <td className="px-4 py-3 text-sm text-right font-mono text-gray-600">
+                      <tr key={index} className="hover:bg-ink-50">
+                        <td className="px-4 py-3 text-sm text-ink-900">{item.description}</td>
+                        <td className="px-4 py-3 text-sm text-right text-ink-600">{item.quantity}</td>
+                        <td className="px-4 py-3 text-sm text-right font-mono text-ink-600">
                           LKR {item.unitPrice.toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 text-sm text-right font-bold text-gray-900">
+                        <td className="px-4 py-3 text-sm text-right font-bold text-ink-900">
                           LKR {item.amount.toLocaleString()}
                         </td>
                       </tr>
                     ))}
                   </tbody>
-                  <tfoot className="bg-gray-50 border-t-2 border-gray-300">
+                  <tfoot className="bg-ink-50 border-t-2 border-ink-200">
                     <tr>
-                      <td colSpan="3" className="px-4 py-4 text-right text-lg font-bold text-gray-900">
+                      <td colSpan="3" className="px-4 py-4 text-right text-lg font-bold text-ink-900">
                         Total Amount
                       </td>
                       <td className="px-4 py-4 text-right text-2xl font-bold text-red-600">
@@ -2921,22 +2911,22 @@ const FinancePage = () => {
 
               {/* Notes */}
               {selectedBill.notes && (
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm text-gray-600 mb-1">Notes</p>
-                  <p className="text-gray-900">{selectedBill.notes}</p>
+                <div className="bg-ink-50 rounded-xl p-4">
+                  <p className="text-sm text-ink-600 mb-1">Notes</p>
+                  <p className="text-ink-900">{selectedBill.notes}</p>
                 </div>
               )}
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => {
                     setShowBillDetail(false);
                     setSelectedBill(null);
                   }}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Close
                 </button>
@@ -2986,23 +2976,23 @@ const FinancePage = () => {
             {/* Modal Body */}
             <div className="p-6 space-y-6">
               {/* Invoice Summary */}
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="text-sm font-bold text-gray-900 mb-3">Invoice Details</h3>
+              <div className="bg-ink-50 rounded-lg p-4 border border-ink-100">
+                <h3 className="text-sm font-bold text-ink-900 mb-3">Invoice Details</h3>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
-                    <span className="text-gray-600">Invoice No:</span>
-                    <span className="font-semibold text-gray-900 ml-2">{selectedInvoice.invoiceNo}</span>
+                    <span className="text-ink-600">Invoice No:</span>
+                    <span className="font-semibold text-ink-900 ml-2">{selectedInvoice.invoiceNo}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Due Date:</span>
-                    <span className="font-semibold text-gray-900 ml-2">{selectedInvoice.due}</span>
+                    <span className="text-ink-600">Due Date:</span>
+                    <span className="font-semibold text-ink-900 ml-2">{selectedInvoice.due}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Currency:</span>
-                    <span className="font-semibold text-gray-900 ml-2">{selectedInvoice.currency}</span>
+                    <span className="text-ink-600">Currency:</span>
+                    <span className="font-semibold text-ink-900 ml-2">{selectedInvoice.currency}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Amount:</span>
+                    <span className="text-ink-600">Amount:</span>
                     <span className="font-semibold text-green-600 ml-2">
                       {getCurrencySymbol(selectedInvoice.currency)} {selectedInvoice.originalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
@@ -3013,7 +3003,7 @@ const FinancePage = () => {
               {/* Payment Form */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Amount Received ({selectedInvoice.currency}) *
                   </label>
                   <input
@@ -3021,7 +3011,7 @@ const FinancePage = () => {
                     id="paymentAmount"
                     step="0.01"
                     defaultValue={selectedInvoice.originalAmount}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     onChange={(e) => {
                       const amount = parseFloat(e.target.value) || 0;
                       const lkrAmount = parseFloat(document.getElementById('amountLKR').value) || 0;
@@ -3034,7 +3024,7 @@ const FinancePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Total LKR Amount Received *
                   </label>
                   <input
@@ -3042,7 +3032,7 @@ const FinancePage = () => {
                     id="amountLKR"
                     step="0.01"
                     defaultValue={selectedInvoice.amountLKR}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
                     onChange={(e) => {
                       const lkrAmount = parseFloat(e.target.value) || 0;
                       const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
@@ -3055,38 +3045,38 @@ const FinancePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Exchange Rate (Auto-calculated)
                   </label>
                   <input
                     type="text"
                     id="exchangeRate"
                     defaultValue={selectedInvoice.exchangeRate.toFixed(2)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-bold text-lg"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg bg-ink-50 text-ink-700 font-bold text-lg"
                     readOnly
                   />
-                  <p className="text-xs text-gray-500 mt-1">1 {selectedInvoice.currency} = Rate × LKR</p>
+                  <p className="text-xs text-ink-500 mt-1">1 {selectedInvoice.currency} = Rate × LKR</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Payment Date *
                   </label>
                   <input
                     type="date"
                     id="paymentDate"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Bank Account
                   </label>
                   <select
                     id="bankAccount"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   >
                     <option>Bank Account - Commercial Bank</option>
                     <option>Bank Account - NDB</option>
@@ -3095,13 +3085,13 @@ const FinancePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Notes (Optional)
                   </label>
                   <textarea
                     id="paymentNotes"
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Add any notes about this payment..."
                   ></textarea>
                 </div>
@@ -3109,14 +3099,14 @@ const FinancePage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => {
                     setShowReceivePayment(false);
                     setSelectedInvoice(null);
                   }}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -3162,7 +3152,7 @@ const FinancePage = () => {
       {showAddInvoice && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Create New Invoice</h2>
@@ -3180,8 +3170,8 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donor/Client Name *</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donor/Client Name *</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500">
                     <option value="">Select donor/client</option>
                     {partners
                       .filter(p => p.status === 'Active')
@@ -3192,30 +3182,30 @@ const FinancePage = () => {
                         </option>
                       ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">From registered partners in Partners module</p>
+                  <p className="text-xs text-ink-500 mt-1">From registered partners in Partners module</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Invoice Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Invoice Date *</label>
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Due Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Due Date *</label>
                   <input
                     type="date"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Project *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Project *</label>
                   <select
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     onChange={(e) => handleProposalSelection(e.target.value)}
                     value={selectedProposalForInvoice || ''}
                   >
@@ -3237,20 +3227,20 @@ const FinancePage = () => {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Description</label>
                   <textarea
                     rows="3"
                     placeholder="Enter invoice description..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                   />
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Line Items</h3>
+              <div className="border-t border-ink-100 pt-4">
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Line Items</h3>
                 <div className="space-y-3">
                   {/* Header Row */}
-                  <div className="grid grid-cols-12 gap-3 text-xs font-semibold text-gray-600 mb-2">
+                  <div className="grid grid-cols-12 gap-3 text-xs font-semibold text-ink-600 mb-2">
                     <div className="col-span-6">Description</div>
                     <div className="col-span-2">Quantity</div>
                     <div className="col-span-3">Unit Price (LKR)</div>
@@ -3266,7 +3256,7 @@ const FinancePage = () => {
                           placeholder="Item description"
                           value={item.description}
                           onChange={(e) => updateLineItem(index, 'description', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm"
                         />
                       </div>
                       <div className="col-span-2">
@@ -3275,7 +3265,7 @@ const FinancePage = () => {
                           placeholder="Qty"
                           value={item.quantity}
                           onChange={(e) => updateLineItem(index, 'quantity', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm"
                           min="1"
                         />
                       </div>
@@ -3285,18 +3275,18 @@ const FinancePage = () => {
                           placeholder="Unit Price"
                           value={item.unitPrice}
                           onChange={(e) => updateLineItem(index, 'unitPrice', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm"
                           min="0"
                         />
                       </div>
                       <div className="col-span-1 flex items-center justify-between">
-                        <span className="text-xs font-semibold text-gray-600">
+                        <span className="text-xs font-semibold text-ink-600">
                           {formatCurrency(item.quantity * item.unitPrice, 'LKR')}
                         </span>
                         {invoiceLineItems.length > 1 && (
                           <button
                             onClick={() => removeLineItem(index)}
-                            className="p-1 text-gray-400 hover:text-red-600"
+                            className="p-1 text-ink-400 hover:text-red-600"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -3317,8 +3307,8 @@ const FinancePage = () => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-600">Total Invoice Amount</p>
-                    <p className="text-xs text-gray-500 mt-1">{invoiceLineItems.length} line item(s)</p>
+                    <p className="text-sm text-ink-600">Total Invoice Amount</p>
+                    <p className="text-xs text-ink-500 mt-1">{invoiceLineItems.length} line item(s)</p>
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-green-600">
@@ -3329,11 +3319,11 @@ const FinancePage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={closeInvoiceModal}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -3350,7 +3340,7 @@ const FinancePage = () => {
       {showAddExpense && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-red-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Record Expense</h2>
@@ -3368,26 +3358,26 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Expense Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Expense Date *</label>
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Amount (LKR) *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Amount (LKR) *</label>
                   <input
                     type="number"
                     placeholder="0.00"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Expense Account *</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Expense Account *</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option value="">Select expense account</option>
                     <option>Program Expenses</option>
                     <option>Salaries & Wages</option>
@@ -3401,8 +3391,8 @@ const FinancePage = () => {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Project</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Project</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option value="">General / Not project-specific</option>
                     <option>Child Protection Initiative</option>
                     <option>Education Program</option>
@@ -3412,8 +3402,8 @@ const FinancePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method *</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Payment Method *</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option value="">Select payment method</option>
                     <option>Cash</option>
                     <option>Bank Transfer</option>
@@ -3423,8 +3413,8 @@ const FinancePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Paid From *</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Paid From *</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option value="">Select account</option>
                     <option>Cash in Hand</option>
                     <option>Commercial Bank</option>
@@ -3433,39 +3423,39 @@ const FinancePage = () => {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Vendor / Payee</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Vendor / Payee</label>
                   <input
                     type="text"
                     placeholder="Enter vendor name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Description *</label>
                   <textarea
                     rows="3"
                     placeholder="Enter expense description..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Receipt / Reference Number</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Receipt / Reference Number</label>
                   <input
                     type="text"
                     placeholder="Enter receipt or reference number"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setShowAddExpense(false)}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -3482,7 +3472,7 @@ const FinancePage = () => {
       {showAddJournalEntry && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Create Journal Entry</h2>
@@ -3500,39 +3490,39 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Entry Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Entry Date *</label>
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Reference Number</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Reference Number</label>
                   <input
                     type="text"
                     placeholder="Auto-generated"
-                    className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg"
+                    className="w-full px-4 py-3 bg-ink-100 border border-ink-200 rounded-lg"
                     disabled
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Description *</label>
                   <textarea
                     rows="2"
                     placeholder="Enter journal entry description..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Journal Lines</h3>
+              <div className="border-t border-ink-100 pt-4">
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Journal Lines</h3>
 
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                  <div className="grid grid-cols-12 gap-3 font-semibold text-sm text-gray-700 mb-3">
+                <div className="bg-ink-50 rounded-lg p-4 mb-4">
+                  <div className="grid grid-cols-12 gap-3 font-semibold text-sm text-ink-700 mb-3">
                     <div className="col-span-6">Account</div>
                     <div className="col-span-3 text-right">Debit</div>
                     <div className="col-span-3 text-right">Credit</div>
@@ -3541,7 +3531,7 @@ const FinancePage = () => {
                   <div className="space-y-3">
                     <div className="grid grid-cols-12 gap-3">
                       <div className="col-span-6">
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <select className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm">
                           <option>Select account...</option>
                           <option>Cash in Hand</option>
                           <option>Bank Account - Commercial Bank</option>
@@ -3555,21 +3545,21 @@ const FinancePage = () => {
                         <input
                           type="number"
                           placeholder="0.00"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-right"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm text-right"
                         />
                       </div>
                       <div className="col-span-3">
                         <input
                           type="number"
                           placeholder="0.00"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-right"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm text-right"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-12 gap-3">
                       <div className="col-span-6">
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <select className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm">
                           <option>Select account...</option>
                           <option>Cash in Hand</option>
                           <option>Bank Account - Commercial Bank</option>
@@ -3583,14 +3573,14 @@ const FinancePage = () => {
                         <input
                           type="number"
                           placeholder="0.00"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-right"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm text-right"
                         />
                       </div>
                       <div className="col-span-3">
                         <input
                           type="number"
                           placeholder="0.00"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-right"
+                          className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm text-right"
                         />
                       </div>
                     </div>
@@ -3603,15 +3593,15 @@ const FinancePage = () => {
 
                 <div className="grid grid-cols-3 gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
                   <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-1">Total Debits</p>
+                    <p className="text-sm text-ink-600 mb-1">Total Debits</p>
                     <p className="text-2xl font-bold text-blue-600">LKR 0.00</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-1">Total Credits</p>
+                    <p className="text-sm text-ink-600 mb-1">Total Credits</p>
                     <p className="text-2xl font-bold text-indigo-600">LKR 0.00</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-1">Difference</p>
+                    <p className="text-sm text-ink-600 mb-1">Difference</p>
                     <p className="text-2xl font-bold text-green-600">LKR 0.00</p>
                   </div>
                 </div>
@@ -3624,11 +3614,11 @@ const FinancePage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setShowAddJournalEntry(false)}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -3645,7 +3635,7 @@ const FinancePage = () => {
       {showBankReconciliation && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Bank Reconciliation</h2>
@@ -3663,71 +3653,71 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Bank Account *</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Bank Account *</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
                     <option>Commercial Bank - Account 1234</option>
                     <option>NDB - Account 5678</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Statement Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Statement Date *</label>
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Statement Balance *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Statement Balance *</label>
                   <input
                     type="number"
                     placeholder="0.00"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6">
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-1">System Balance</p>
+                  <p className="text-sm text-ink-600 mb-1">System Balance</p>
                   <p className="text-2xl font-bold text-purple-600">LKR 45.0M</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-1">Statement Balance</p>
+                  <p className="text-sm text-ink-600 mb-1">Statement Balance</p>
                   <p className="text-2xl font-bold text-pink-600">LKR 0.0M</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-1">Difference</p>
+                  <p className="text-sm text-ink-600 mb-1">Difference</p>
                   <p className="text-2xl font-bold text-orange-600">LKR 45.0M</p>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Unreconciled Transactions</h3>
+              <div className="border-t border-ink-100 pt-4">
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Unreconciled Transactions</h3>
 
-                <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-ink-50 border-b border-ink-100">
                       <tr>
                         <th className="px-4 py-3 text-left">
                           <input type="checkbox" className="w-4 h-4" />
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Description</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Type</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600">Amount</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Date</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Description</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Type</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600">Amount</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      <tr className="hover:bg-gray-50">
+                    <tbody className="divide-y divide-ink-100">
+                      <tr className="hover:bg-ink-50">
                         <td className="px-4 py-3">
                           <input type="checkbox" className="w-4 h-4" />
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-600">2025-11-01</td>
-                        <td className="px-4 py-3 text-sm font-semibold text-gray-900">UNICEF Grant Receipt</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">2025-11-01</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-ink-900">UNICEF Grant Receipt</td>
                         <td className="px-4 py-3">
                           <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Deposit</span>
                         </td>
@@ -3736,12 +3726,12 @@ const FinancePage = () => {
                           <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">Pending</span>
                         </td>
                       </tr>
-                      <tr className="hover:bg-gray-50">
+                      <tr className="hover:bg-ink-50">
                         <td className="px-4 py-3">
                           <input type="checkbox" className="w-4 h-4" />
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-600">2025-11-03</td>
-                        <td className="px-4 py-3 text-sm font-semibold text-gray-900">Office Rent Payment</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">2025-11-03</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-ink-900">Office Rent Payment</td>
                         <td className="px-4 py-3">
                           <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Withdrawal</span>
                         </td>
@@ -3756,11 +3746,11 @@ const FinancePage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-between">
                 <button
                   onClick={() => setShowBankReconciliation(false)}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -3783,7 +3773,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Sticky Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Account Details</h2>
@@ -3804,22 +3794,22 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Account Information Card */}
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Account Information</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Account Information</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Account Code</p>
-                    <p className="font-mono font-bold text-gray-900 bg-white px-3 py-2 rounded-lg border border-gray-200">{selectedAccount.code}</p>
+                    <p className="text-sm text-ink-600 mb-1">Account Code</p>
+                    <p className="font-mono font-bold text-ink-900 bg-white px-3 py-2 rounded-lg border border-ink-100">{selectedAccount.code}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Account Type</p>
-                    <p className="font-semibold text-gray-900">{selectedAccount.type}</p>
+                    <p className="text-sm text-ink-600 mb-1">Account Type</p>
+                    <p className="font-semibold text-ink-900">{selectedAccount.type}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Subtype</p>
-                    <p className="font-semibold text-gray-900">{selectedAccount.subtype}</p>
+                    <p className="text-sm text-ink-600 mb-1">Subtype</p>
+                    <p className="font-semibold text-ink-900">{selectedAccount.subtype}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Normal Balance</p>
+                    <p className="text-sm text-ink-600 mb-1">Normal Balance</p>
                     <p className={`font-semibold ${selectedAccount.dr ? 'text-blue-600' : 'text-red-600'}`}>
                       {selectedAccount.dr ? 'Debit' : 'Credit'}
                     </p>
@@ -3829,73 +3819,73 @@ const FinancePage = () => {
 
               {/* Current Balance Card */}
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Current Balance</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-2">Current Balance</h3>
                 <p className="text-4xl font-bold text-green-600">
                   LKR {(selectedAccount.balance / 1000000).toFixed(2)}M
                 </p>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-ink-600 mt-2">
                   As of {new Date().toLocaleDateString('en-GB')}
                 </p>
               </div>
 
               {/* Recent Transactions */}
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <div className="bg-gray-50 border-b border-gray-200 p-4">
-                  <h3 className="text-lg font-bold text-gray-900">Recent Transactions</h3>
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
+                <div className="bg-ink-50 border-b border-ink-100 p-4">
+                  <h3 className="text-lg font-bold text-ink-900">Recent Transactions</h3>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-ink-50 border-b border-ink-100">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Reference</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Debit</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Credit</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Balance</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Date</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Reference</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Description</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600 uppercase tracking-wider">Debit</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600 uppercase tracking-wider">Credit</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600 uppercase tracking-wider">Balance</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-ink-100">
                       {/* Sample transaction data */}
-                      <tr className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-sm text-gray-900">2025-11-07</td>
-                        <td className="px-4 py-3 text-sm font-mono text-gray-600">JE-001</td>
-                        <td className="px-4 py-3 text-sm text-gray-900">Grant Receipt - UNICEF</td>
+                      <tr className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 text-sm text-ink-900">2025-11-07</td>
+                        <td className="px-4 py-3 text-sm font-mono text-ink-600">JE-001</td>
+                        <td className="px-4 py-3 text-sm text-ink-900">Grant Receipt - UNICEF</td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-green-600">
                           {selectedAccount.dr ? 'LKR 15.0M' : '-'}
                         </td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-red-600">
                           {!selectedAccount.dr ? 'LKR 15.0M' : '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-right font-bold text-gray-900">
+                        <td className="px-4 py-3 text-sm text-right font-bold text-ink-900">
                           LKR {(selectedAccount.balance / 1000000).toFixed(2)}M
                         </td>
                       </tr>
-                      <tr className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-sm text-gray-900">2025-11-05</td>
-                        <td className="px-4 py-3 text-sm font-mono text-gray-600">PV-002</td>
-                        <td className="px-4 py-3 text-sm text-gray-900">Payment to ABC Training</td>
+                      <tr className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 text-sm text-ink-900">2025-11-05</td>
+                        <td className="px-4 py-3 text-sm font-mono text-ink-600">PV-002</td>
+                        <td className="px-4 py-3 text-sm text-ink-900">Payment to ABC Training</td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-green-600">
                           {!selectedAccount.dr ? 'LKR 1.5M' : '-'}
                         </td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-red-600">
                           {selectedAccount.dr ? 'LKR 1.5M' : '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-right font-bold text-gray-900">
+                        <td className="px-4 py-3 text-sm text-right font-bold text-ink-900">
                           LKR {((selectedAccount.balance - 1500000) / 1000000).toFixed(2)}M
                         </td>
                       </tr>
-                      <tr className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-sm text-gray-900">2025-11-03</td>
-                        <td className="px-4 py-3 text-sm font-mono text-gray-600">EXP-045</td>
-                        <td className="px-4 py-3 text-sm text-gray-900">Office Supplies Purchase</td>
+                      <tr className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 text-sm text-ink-900">2025-11-03</td>
+                        <td className="px-4 py-3 text-sm font-mono text-ink-600">EXP-045</td>
+                        <td className="px-4 py-3 text-sm text-ink-900">Office Supplies Purchase</td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-green-600">
                           {selectedAccount.type === 'Expense' ? 'LKR 0.45M' : '-'}
                         </td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-red-600">
                           {selectedAccount.type === 'Asset' ? 'LKR 0.45M' : '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-right font-bold text-gray-900">
+                        <td className="px-4 py-3 text-sm text-right font-bold text-ink-900">
                           LKR {((selectedAccount.balance - 1950000) / 1000000).toFixed(2)}M
                         </td>
                       </tr>
@@ -3926,13 +3916,13 @@ const FinancePage = () => {
             </div>
 
             {/* Sticky Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex items-center justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex items-center justify-between">
               <button
                 onClick={() => {
                   setShowAccountDetail(false);
                   setSelectedAccount(null);
                 }}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
               >
                 Close
               </button>
@@ -3962,7 +3952,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Add New Account</h2>
@@ -3980,10 +3970,10 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Account Type Selection */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Account Type <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                   <option value="">Select account type</option>
                   <option value="Asset">Asset</option>
                   <option value="Liability">Liability</option>
@@ -3995,10 +3985,10 @@ const FinancePage = () => {
 
               {/* Account Subtype */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Account Subtype <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                   <option value="">Select subtype</option>
                   <optgroup label="Asset">
                     <option value="Current Assets">Current Assets</option>
@@ -4030,21 +4020,21 @@ const FinancePage = () => {
               {/* Account Code and Name */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Account Code <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder="e.g., 5600"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Must be unique (4-digit recommended)</p>
+                  <p className="text-xs text-ink-500 mt-1">Must be unique (4-digit recommended)</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Normal Balance <span className="text-red-500">*</span>
                   </label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                  <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                     <option value="">Select balance type</option>
                     <option value="debit">Debit</option>
                     <option value="credit">Credit</option>
@@ -4053,39 +4043,39 @@ const FinancePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Account Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   placeholder="e.g., Marketing & Advertising"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description
                 </label>
                 <textarea
                   rows="3"
                   placeholder="Optional description of what this account tracks"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
                 />
               </div>
 
               {/* Opening Balance */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Opening Balance (LKR)
                 </label>
                 <input
                   type="number"
                   placeholder="0.00"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 />
-                <p className="text-xs text-gray-500 mt-1">Leave blank or enter 0 for new accounts</p>
+                <p className="text-xs text-ink-500 mt-1">Leave blank or enter 0 for new accounts</p>
               </div>
 
               {/* Accounting Guide */}
@@ -4105,10 +4095,10 @@ const FinancePage = () => {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex items-center justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex items-center justify-between">
               <button
                 onClick={() => setShowAddAccount(false)}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
               >
                 Cancel
               </button>
@@ -4146,26 +4136,26 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Account Type (read-only) */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Account Type
                 </label>
                 <input
                   type="text"
                   value={selectedAccount.type}
                   disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg bg-ink-100 text-ink-600 cursor-not-allowed"
                 />
-                <p className="text-xs text-gray-500 mt-1">Account type cannot be changed</p>
+                <p className="text-xs text-ink-500 mt-1">Account type cannot be changed</p>
               </div>
 
               {/* Account Subtype */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Account Subtype <span className="text-red-500">*</span>
                 </label>
                 <select
                   defaultValue={selectedAccount.subtype}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                 >
                   {selectedAccount.type === 'Asset' && (
                     <>
@@ -4207,44 +4197,44 @@ const FinancePage = () => {
               {/* Account Code (read-only) and Name */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Account Code
                   </label>
                   <input
                     type="text"
                     value={selectedAccount.code}
                     disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed font-mono"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg bg-ink-100 text-ink-600 cursor-not-allowed font-mono"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Account code cannot be changed</p>
+                  <p className="text-xs text-ink-500 mt-1">Account code cannot be changed</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Normal Balance
                   </label>
                   <input
                     type="text"
                     value={selectedAccount.dr ? 'Debit' : 'Credit'}
                     disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg bg-ink-100 text-ink-600 cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Account Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   defaultValue={selectedAccount.name}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                 />
               </div>
 
               {/* Current Balance (read-only) */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Current Balance
                 </label>
                 <div className="flex items-center gap-4">
@@ -4252,24 +4242,24 @@ const FinancePage = () => {
                     type="text"
                     value={`LKR ${(selectedAccount.balance / 1000000).toFixed(2)}M`}
                     disabled
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-900 font-bold cursor-not-allowed"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg bg-ink-100 text-ink-900 font-bold cursor-not-allowed"
                   />
                   <span className={`px-4 py-2 rounded-lg font-semibold ${selectedAccount.dr ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'}`}>
                     {selectedAccount.dr ? 'DR' : 'CR'}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Balance is calculated from transactions</p>
+                <p className="text-xs text-ink-500 mt-1">Balance is calculated from transactions</p>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description
                 </label>
                 <textarea
                   rows="3"
                   placeholder="Optional description of what this account tracks"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 resize-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 resize-none"
                 />
               </div>
 
@@ -4286,13 +4276,13 @@ const FinancePage = () => {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex items-center justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex items-center justify-between">
               <button
                 onClick={() => {
                   setShowEditAccount(false);
                   setSelectedAccount(null);
                 }}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
               >
                 Cancel
               </button>
@@ -4315,7 +4305,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-red-600 to-rose-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Add New Bill</h2>
@@ -4333,49 +4323,49 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Vendor Information */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Vendor Information</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Vendor Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Vendor Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       placeholder="Enter vendor name"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Vendor Contact
                     </label>
                     <input
                       type="text"
                       placeholder="+94 XX XXX XXXX"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Vendor Email
                     </label>
                     <input
                       type="email"
                       placeholder="vendor@example.com"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Vendor Address
                     </label>
                     <input
                       type="text"
                       placeholder="Enter vendor address"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                 </div>
@@ -4383,24 +4373,24 @@ const FinancePage = () => {
 
               {/* Bill Details */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Bill Details</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Bill Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Bill Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       placeholder="e.g., BILL-001"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Project <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                       <option value="">Select project</option>
                       <option value="General Operations">General Operations</option>
                       <option value="Child Protection Initiative">Child Protection Initiative</option>
@@ -4411,30 +4401,30 @@ const FinancePage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Bill Received Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Due Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Payment Terms
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                       <option value="Due on Receipt">Due on Receipt</option>
                       <option value="Net 15 days">Net 15 days</option>
                       <option value="Net 30 days">Net 30 days</option>
@@ -4447,42 +4437,42 @@ const FinancePage = () => {
 
               {/* Line Items */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Line Items</h3>
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Line Items</h3>
+                <div className="border border-ink-100 rounded-lg overflow-hidden">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-ink-50 border-b border-ink-100">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Description</th>
-                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase w-24">Qty</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase w-32">Unit Price</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase w-32">Amount</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">Description</th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-ink-600 uppercase w-24">Qty</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600 uppercase w-32">Unit Price</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-ink-600 uppercase w-32">Amount</th>
                         <th className="px-4 py-3 w-12"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-gray-100">
+                      <tr className="border-b border-ink-100">
                         <td className="px-4 py-3">
                           <input
                             type="text"
                             placeholder="Item description"
-                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-red-500"
+                            className="w-full px-2 py-1 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-red-500"
                           />
                         </td>
                         <td className="px-4 py-3">
                           <input
                             type="number"
                             placeholder="1"
-                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-center focus:ring-2 focus:ring-red-500"
+                            className="w-full px-2 py-1 border border-ink-200 rounded text-sm text-center focus:ring-2 focus:ring-red-500"
                           />
                         </td>
                         <td className="px-4 py-3">
                           <input
                             type="number"
                             placeholder="0.00"
-                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-right focus:ring-2 focus:ring-red-500"
+                            className="w-full px-2 py-1 border border-ink-200 rounded text-sm text-right focus:ring-2 focus:ring-red-500"
                           />
                         </td>
-                        <td className="px-4 py-3 text-right text-sm font-semibold text-gray-900">
+                        <td className="px-4 py-3 text-right text-sm font-semibold text-ink-900">
                           LKR 0.00
                         </td>
                         <td className="px-4 py-3">
@@ -4501,28 +4491,28 @@ const FinancePage = () => {
               </div>
 
               {/* Total Amount */}
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="bg-ink-50 rounded-lg p-4 border border-ink-100">
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-gray-900">Total Amount</span>
+                  <span className="text-lg font-bold text-ink-900">Total Amount</span>
                   <span className="text-2xl font-bold text-red-600">LKR 0.00</span>
                 </div>
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Notes (Optional)
                 </label>
                 <textarea
                   rows="3"
                   placeholder="Add any additional notes about this bill"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
                 />
               </div>
 
               {/* Attachments */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Attachments
                 </label>
                 <input
@@ -4540,20 +4530,20 @@ const FinancePage = () => {
                 />
                 <label
                   htmlFor="bill-attachment-upload"
-                  className="block border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-red-400 hover:bg-red-50 transition-all cursor-pointer"
+                  className="block border-2 border-dashed border-ink-200 rounded-lg p-6 text-center hover:border-red-400 hover:bg-red-50 transition-all cursor-pointer"
                 >
-                  <Upload className="mx-auto text-gray-400 mb-2" size={32} />
-                  <p className="text-sm text-gray-600">Click to upload bill documents</p>
-                  <p className="text-xs text-gray-500 mt-1">PDF, JPG, PNG up to 10MB</p>
+                  <Upload className="mx-auto text-ink-400 mb-2" size={32} />
+                  <p className="text-sm text-ink-600">Click to upload bill documents</p>
+                  <p className="text-xs text-ink-500 mt-1">PDF, JPG, PNG up to 10MB</p>
                 </label>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex items-center justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex items-center justify-between">
               <button
                 onClick={() => setShowAddBill(false)}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
               >
                 Cancel
               </button>
@@ -4570,7 +4560,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Custom Financial Report Builder</h2>
@@ -4588,24 +4578,24 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Report Configuration */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Report Configuration</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Report Configuration</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Report Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       placeholder="e.g., Q4 2025 Financial Summary"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Report Type <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                       <option value="">Select report type</option>
                       <option value="Profit & Loss">Profit & Loss Statement</option>
                       <option value="Balance Sheet">Balance Sheet</option>
@@ -4618,10 +4608,10 @@ const FinancePage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Output Format <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                       <option value="PDF">PDF Document</option>
                       <option value="Excel">Excel Spreadsheet</option>
                       <option value="CSV">CSV File</option>
@@ -4632,13 +4622,13 @@ const FinancePage = () => {
 
               {/* Date Range */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Date Range</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Date Range</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Period <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                       <option value="custom">Custom Date Range</option>
                       <option value="today">Today</option>
                       <option value="this-week">This Week</option>
@@ -4652,22 +4642,22 @@ const FinancePage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Start Date
                     </label>
                     <input
                       type="date"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       End Date
                     </label>
                     <input
                       type="date"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
                 </div>
@@ -4675,13 +4665,13 @@ const FinancePage = () => {
 
               {/* Filters */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Filters</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Filters</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Account Type
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                       <option value="all">All Account Types</option>
                       <option value="Asset">Assets Only</option>
                       <option value="Liability">Liabilities Only</option>
@@ -4692,10 +4682,10 @@ const FinancePage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Project
                     </label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <select className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                       <option value="all">All Projects</option>
                       <option value="Child Protection Initiative">Child Protection Initiative</option>
                       <option value="Youth Skills Development">Youth Skills Development</option>
@@ -4706,24 +4696,24 @@ const FinancePage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Minimum Amount (LKR)
                     </label>
                     <input
                       type="number"
                       placeholder="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Maximum Amount (LKR)
                     </label>
                     <input
                       type="number"
                       placeholder="No limit"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
                 </div>
@@ -4731,27 +4721,27 @@ const FinancePage = () => {
 
               {/* Display Options */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Display Options</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Display Options</h3>
                 <div className="space-y-3">
-                  <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-amber-50 cursor-pointer">
+                  <label className="flex items-center gap-3 p-3 border border-ink-100 rounded-lg hover:bg-amber-50 cursor-pointer">
                     <input type="checkbox" defaultChecked className="w-4 h-4 text-amber-600" />
-                    <span className="text-sm font-medium text-gray-700">Include Account Balances</span>
+                    <span className="text-sm font-medium text-ink-700">Include Account Balances</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-amber-50 cursor-pointer">
+                  <label className="flex items-center gap-3 p-3 border border-ink-100 rounded-lg hover:bg-amber-50 cursor-pointer">
                     <input type="checkbox" defaultChecked className="w-4 h-4 text-amber-600" />
-                    <span className="text-sm font-medium text-gray-700">Show Transaction Details</span>
+                    <span className="text-sm font-medium text-ink-700">Show Transaction Details</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-amber-50 cursor-pointer">
+                  <label className="flex items-center gap-3 p-3 border border-ink-100 rounded-lg hover:bg-amber-50 cursor-pointer">
                     <input type="checkbox" className="w-4 h-4 text-amber-600" />
-                    <span className="text-sm font-medium text-gray-700">Group by Project</span>
+                    <span className="text-sm font-medium text-ink-700">Group by Project</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-amber-50 cursor-pointer">
+                  <label className="flex items-center gap-3 p-3 border border-ink-100 rounded-lg hover:bg-amber-50 cursor-pointer">
                     <input type="checkbox" className="w-4 h-4 text-amber-600" />
-                    <span className="text-sm font-medium text-gray-700">Include Comparison with Previous Period</span>
+                    <span className="text-sm font-medium text-ink-700">Include Comparison with Previous Period</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-amber-50 cursor-pointer">
+                  <label className="flex items-center gap-3 p-3 border border-ink-100 rounded-lg hover:bg-amber-50 cursor-pointer">
                     <input type="checkbox" className="w-4 h-4 text-amber-600" />
-                    <span className="text-sm font-medium text-gray-700">Show Charts and Graphs</span>
+                    <span className="text-sm font-medium text-ink-700">Show Charts and Graphs</span>
                   </label>
                 </div>
               </div>
@@ -4769,10 +4759,10 @@ const FinancePage = () => {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex items-center justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex items-center justify-between">
               <button
                 onClick={() => setShowReportBuilder(false)}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
               >
                 Cancel
               </button>
@@ -4795,7 +4785,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Invoice Details</h2>
@@ -4833,8 +4823,8 @@ const FinancePage = () => {
                       <Clock size={32} className="text-yellow-600" />
                     )}
                     <div>
-                      <p className="text-lg font-bold text-gray-900">{selectedInvoice.status}</p>
-                      <p className="text-sm text-gray-600">Invoice Status</p>
+                      <p className="text-lg font-bold text-ink-900">{selectedInvoice.status}</p>
+                      <p className="text-sm text-ink-600">Invoice Status</p>
                     </div>
                   </div>
                   <span className={`px-4 py-2 rounded-full text-sm font-bold ${
@@ -4850,33 +4840,33 @@ const FinancePage = () => {
               {/* Client & Project Information */}
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Client Information</h3>
+                  <h3 className="text-lg font-bold text-ink-900 mb-4">Client Information</h3>
                   <div className="space-y-2">
                     <div>
-                      <p className="text-sm text-gray-600">Client Name</p>
-                      <p className="font-bold text-gray-900">{selectedInvoice.client}</p>
+                      <p className="text-sm text-ink-600">Client Name</p>
+                      <p className="font-bold text-ink-900">{selectedInvoice.client}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Project</p>
-                      <p className="font-semibold text-gray-900">{selectedInvoice.project}</p>
+                      <p className="text-sm text-ink-600">Project</p>
+                      <p className="font-semibold text-ink-900">{selectedInvoice.project}</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Invoice Details</h3>
+                  <h3 className="text-lg font-bold text-ink-900 mb-4">Invoice Details</h3>
                   <div className="space-y-2">
                     <div>
-                      <p className="text-sm text-gray-600">Invoice Number</p>
-                      <p className="font-mono font-bold text-gray-900">{selectedInvoice.invoiceNo}</p>
+                      <p className="text-sm text-ink-600">Invoice Number</p>
+                      <p className="font-mono font-bold text-ink-900">{selectedInvoice.invoiceNo}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Issue Date</p>
-                      <p className="font-semibold text-gray-900">{selectedInvoice.issued}</p>
+                      <p className="text-sm text-ink-600">Issue Date</p>
+                      <p className="font-semibold text-ink-900">{selectedInvoice.issued}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Due Date</p>
-                      <p className="font-semibold text-gray-900">{selectedInvoice.due}</p>
+                      <p className="text-sm text-ink-600">Due Date</p>
+                      <p className="font-semibold text-ink-900">{selectedInvoice.due}</p>
                     </div>
                   </div>
                 </div>
@@ -4886,7 +4876,7 @@ const FinancePage = () => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="text-sm text-gray-600 mb-1">Invoice Amount</p>
+                    <p className="text-sm text-ink-600 mb-1">Invoice Amount</p>
                     {selectedInvoice.currency === 'LKR' ? (
                       <p className="text-4xl font-bold text-green-600">
                         LKR {(selectedInvoice.amountLKR / 1000000).toFixed(1)}M
@@ -4896,9 +4886,9 @@ const FinancePage = () => {
                         <p className="text-3xl font-bold text-green-600">
                           {getCurrencySymbol(selectedInvoice.currency)} {selectedInvoice.originalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
+                        <div className="flex items-center gap-3 text-sm text-ink-600">
                           <span className="font-semibold">@ {selectedInvoice.exchangeRate.toLocaleString('en-US', { minimumFractionDigits: 2 })} LKR/{selectedInvoice.currency}</span>
-                          <span className="text-gray-400">•</span>
+                          <span className="text-ink-400">•</span>
                           <span className="font-bold text-green-600">LKR {selectedInvoice.amountLKR.toLocaleString('en-US')}</span>
                         </div>
                       </div>
@@ -4910,14 +4900,14 @@ const FinancePage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => {
                     setShowInvoiceDetail(false);
                     setSelectedInvoice(null);
                   }}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Close
                 </button>
@@ -4963,7 +4953,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Edit Invoice</h2>
@@ -4985,15 +4975,15 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Client Information Section */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Client Information</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Client Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Donor/Client Name *
                     </label>
                     <select
                       defaultValue={selectedInvoice.client}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">Select donor/client</option>
                       {partners
@@ -5005,15 +4995,15 @@ const FinancePage = () => {
                           </option>
                         ))}
                     </select>
-                    <p className="text-xs text-gray-500 mt-1">From registered partners</p>
+                    <p className="text-xs text-ink-500 mt-1">From registered partners</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Project *
                     </label>
                     <select
                       defaultValue={selectedInvoice.project}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">Select project</option>
                       {proposals
@@ -5025,64 +5015,64 @@ const FinancePage = () => {
                           </option>
                         ))}
                     </select>
-                    <p className="text-xs text-gray-500 mt-1">From approved proposals</p>
+                    <p className="text-xs text-ink-500 mt-1">From approved proposals</p>
                   </div>
                 </div>
               </div>
 
               {/* Invoice Details Section */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Invoice Details</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Invoice Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Invoice Number
                     </label>
                     <input
                       type="text"
                       defaultValue={selectedInvoice.invoiceNo}
                       disabled
-                      className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg font-mono"
+                      className="w-full px-4 py-3 bg-ink-100 border border-ink-200 rounded-lg font-mono"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Invoice number cannot be changed</p>
+                    <p className="text-xs text-ink-500 mt-1">Invoice number cannot be changed</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Amount (LKR) *
                     </label>
                     <input
                       type="number"
                       defaultValue={selectedInvoice.amount}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Issue Date *
                     </label>
                     <input
                       type="date"
                       defaultValue={selectedInvoice.issued}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Due Date *
                     </label>
                     <input
                       type="date"
                       defaultValue={selectedInvoice.due}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Status *
                     </label>
                     <select
                       defaultValue={selectedInvoice.status}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="Pending">Pending</option>
                       <option value="Paid">Paid</option>
@@ -5094,26 +5084,26 @@ const FinancePage = () => {
 
               {/* Notes Section */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Notes (Optional)
                 </label>
                 <textarea
                   rows="3"
                   placeholder="Add any notes about this invoice"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 />
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => {
                     setShowEditInvoice(false);
                     setSelectedInvoice(null);
                   }}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -5139,7 +5129,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-red-600 to-rose-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Edit Bill</h2>
@@ -5161,25 +5151,25 @@ const FinancePage = () => {
             <div className="p-6 space-y-6">
               {/* Vendor Information */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Vendor Information</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Vendor Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Vendor Name *
                     </label>
                     <input
                       type="text"
                       defaultValue={selectedBill.vendor}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Category *
                     </label>
                     <select
                       defaultValue={selectedBill.category}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
                       <option>Office Supplies</option>
                       <option>Transportation</option>
@@ -5194,57 +5184,57 @@ const FinancePage = () => {
 
               {/* Bill Details */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Bill Details</h3>
+                <h3 className="text-lg font-bold text-ink-900 mb-4">Bill Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Bill Number
                     </label>
                     <input
                       type="text"
                       defaultValue={selectedBill.billNo}
                       disabled
-                      className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg font-mono"
+                      className="w-full px-4 py-3 bg-ink-100 border border-ink-200 rounded-lg font-mono"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Bill number cannot be changed</p>
+                    <p className="text-xs text-ink-500 mt-1">Bill number cannot be changed</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Amount (LKR) *
                     </label>
                     <input
                       type="number"
                       defaultValue={selectedBill.amount}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Date Received *
                     </label>
                     <input
                       type="date"
                       defaultValue={selectedBill.received}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Due Date *
                     </label>
                     <input
                       type="date"
                       defaultValue={selectedBill.due}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Status *
                     </label>
                     <select
                       defaultValue={selectedBill.status}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
                       <option value="Pending">Pending</option>
                       <option value="Paid">Paid</option>
@@ -5256,26 +5246,26 @@ const FinancePage = () => {
 
               {/* Description/Notes */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description / Notes
                 </label>
                 <textarea
                   rows="3"
                   placeholder="Add any notes about this bill"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
                 />
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => {
                     setShowEditBill(false);
                     setSelectedBill(null);
                   }}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -5319,49 +5309,49 @@ const FinancePage = () => {
               {selectedReportType === 'Profit & Loss Statement' && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">GERSL Management</h3>
-                    <p className="text-gray-600">Profit & Loss Statement</p>
-                    <p className="text-sm text-gray-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
+                    <h3 className="text-xl font-bold text-ink-900">GERSL Management</h3>
+                    <p className="text-ink-600">Profit & Loss Statement</p>
+                    <p className="text-sm text-ink-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
                   </div>
 
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-bold text-gray-900 mb-3 text-lg">Revenue</h4>
+                  <div className="border-b border-ink-100 pb-4">
+                    <h4 className="font-bold text-ink-900 mb-3 text-lg">Revenue</h4>
                     {chartOfAccounts.filter(acc => acc.type === 'Revenue').map((acc) => (
-                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">{acc.name}</span>
+                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">{acc.name}</span>
                         <span className="font-semibold text-green-600">LKR {acc.balance.toLocaleString()}</span>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-green-50 px-2 rounded">
-                      <span className="font-bold text-gray-900 text-lg">Total Revenue</span>
+                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-green-50 px-2 rounded">
+                      <span className="font-bold text-ink-900 text-lg">Total Revenue</span>
                       <span className="text-xl font-bold text-green-600">LKR {totalRevenue.toLocaleString()}</span>
                     </div>
                   </div>
 
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-bold text-gray-900 mb-3 text-lg">Expenses</h4>
+                  <div className="border-b border-ink-100 pb-4">
+                    <h4 className="font-bold text-ink-900 mb-3 text-lg">Expenses</h4>
                     {chartOfAccounts.filter(acc => acc.type === 'Expense').map((acc) => (
-                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">{acc.name}</span>
+                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">{acc.name}</span>
                         <span className="font-semibold text-red-600">LKR {acc.balance.toLocaleString()}</span>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-red-50 px-2 rounded">
-                      <span className="font-bold text-gray-900 text-lg">Total Expenses</span>
+                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-red-50 px-2 rounded">
+                      <span className="font-bold text-ink-900 text-lg">Total Expenses</span>
                       <span className="text-xl font-bold text-red-600">LKR {totalExpenses.toLocaleString()}</span>
                     </div>
                   </div>
 
                   <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-6 rounded-xl border-2 border-blue-200">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-2xl font-bold text-gray-900">Net Income</span>
+                      <span className="text-2xl font-bold text-ink-900">Net Income</span>
                       <span className={`text-3xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         LKR {netIncome.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Profit Margin:</span>
-                      <span className="font-bold text-gray-900">{((netIncome / totalRevenue) * 100).toFixed(2)}%</span>
+                      <span className="text-ink-600">Profit Margin:</span>
+                      <span className="font-bold text-ink-900">{((netIncome / totalRevenue) * 100).toFixed(2)}%</span>
                     </div>
                   </div>
                 </div>
@@ -5370,61 +5360,61 @@ const FinancePage = () => {
               {selectedReportType === 'Balance Sheet' && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">GERSL Management</h3>
-                    <p className="text-gray-600">Balance Sheet</p>
-                    <p className="text-sm text-gray-500">As of {new Date().toLocaleDateString('en-GB')}</p>
+                    <h3 className="text-xl font-bold text-ink-900">GERSL Management</h3>
+                    <p className="text-ink-600">Balance Sheet</p>
+                    <p className="text-sm text-ink-500">As of {new Date().toLocaleDateString('en-GB')}</p>
                   </div>
 
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-bold text-gray-900 mb-3 text-lg">Assets</h4>
+                  <div className="border-b border-ink-100 pb-4">
+                    <h4 className="font-bold text-ink-900 mb-3 text-lg">Assets</h4>
                     {chartOfAccounts.filter(acc => acc.type === 'Asset').map((acc) => (
-                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">{acc.name}</span>
+                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">{acc.name}</span>
                         <span className="font-semibold text-blue-600">LKR {acc.balance.toLocaleString()}</span>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-blue-50 px-2 rounded">
-                      <span className="font-bold text-gray-900 text-lg">Total Assets</span>
+                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-blue-50 px-2 rounded">
+                      <span className="font-bold text-ink-900 text-lg">Total Assets</span>
                       <span className="text-xl font-bold text-blue-600">LKR {totalAssets.toLocaleString()}</span>
                     </div>
                   </div>
 
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-bold text-gray-900 mb-3 text-lg">Liabilities</h4>
+                  <div className="border-b border-ink-100 pb-4">
+                    <h4 className="font-bold text-ink-900 mb-3 text-lg">Liabilities</h4>
                     {chartOfAccounts.filter(acc => acc.type === 'Liability').map((acc) => (
-                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">{acc.name}</span>
+                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">{acc.name}</span>
                         <span className="font-semibold text-orange-600">LKR {acc.balance.toLocaleString()}</span>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-orange-50 px-2 rounded">
-                      <span className="font-bold text-gray-900 text-lg">Total Liabilities</span>
+                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-orange-50 px-2 rounded">
+                      <span className="font-bold text-ink-900 text-lg">Total Liabilities</span>
                       <span className="text-xl font-bold text-orange-600">LKR {totalLiabilities.toLocaleString()}</span>
                     </div>
                   </div>
 
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-bold text-gray-900 mb-3 text-lg">Equity</h4>
+                  <div className="border-b border-ink-100 pb-4">
+                    <h4 className="font-bold text-ink-900 mb-3 text-lg">Equity</h4>
                     {chartOfAccounts.filter(acc => acc.type === 'Equity').map((acc) => (
-                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">{acc.name}</span>
+                      <div key={acc.id} className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">{acc.name}</span>
                         <span className="font-semibold text-purple-600">LKR {acc.balance.toLocaleString()}</span>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-purple-50 px-2 rounded">
-                      <span className="font-bold text-gray-900 text-lg">Total Equity</span>
+                    <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-purple-50 px-2 rounded">
+                      <span className="font-bold text-ink-900 text-lg">Total Equity</span>
                       <span className="text-xl font-bold text-purple-600">LKR {totalEquity.toLocaleString()}</span>
                     </div>
                   </div>
 
                   <div className="bg-gradient-to-r from-indigo-50 to-purple-100 p-6 rounded-xl border-2 border-indigo-200">
                     <div className="flex items-center justify-between">
-                      <span className="text-xl font-bold text-gray-900">Total Liabilities + Equity</span>
+                      <span className="text-xl font-bold text-ink-900">Total Liabilities + Equity</span>
                       <span className="text-2xl font-bold text-indigo-600">
                         LKR {(totalLiabilities + totalEquity).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600 mt-2">
+                    <p className="text-xs text-ink-600 mt-2">
                       {totalAssets === (totalLiabilities + totalEquity) ?
                         '✓ Balance Sheet is balanced' :
                         '⚠ Balance Sheet is not balanced'}
@@ -5436,37 +5426,37 @@ const FinancePage = () => {
               {selectedReportType === 'Trial Balance' && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">GERSL Management</h3>
-                    <p className="text-gray-600">Trial Balance</p>
-                    <p className="text-sm text-gray-500">As of {new Date().toLocaleDateString('en-GB')}</p>
+                    <h3 className="text-xl font-bold text-ink-900">GERSL Management</h3>
+                    <p className="text-ink-600">Trial Balance</p>
+                    <p className="text-sm text-ink-500">As of {new Date().toLocaleDateString('en-GB')}</p>
                   </div>
 
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-gray-100 border-b-2 border-gray-300">
-                          <th className="px-4 py-3 text-left font-bold text-gray-900">Account Code</th>
-                          <th className="px-4 py-3 text-left font-bold text-gray-900">Account Name</th>
-                          <th className="px-4 py-3 text-right font-bold text-gray-900">Debit</th>
-                          <th className="px-4 py-3 text-right font-bold text-gray-900">Credit</th>
+                        <tr className="bg-ink-100 border-b-2 border-ink-200">
+                          <th className="px-4 py-3 text-left font-bold text-ink-900">Account Code</th>
+                          <th className="px-4 py-3 text-left font-bold text-ink-900">Account Name</th>
+                          <th className="px-4 py-3 text-right font-bold text-ink-900">Debit</th>
+                          <th className="px-4 py-3 text-right font-bold text-ink-900">Credit</th>
                         </tr>
                       </thead>
                       <tbody>
                         {chartOfAccounts.map((acc) => (
-                          <tr key={acc.id} className="border-b border-gray-200 hover:bg-gray-50">
-                            <td className="px-4 py-2 text-sm font-mono text-gray-600">{acc.code}</td>
-                            <td className="px-4 py-2 text-sm text-gray-700">{acc.name}</td>
-                            <td className="px-4 py-2 text-sm text-right font-semibold text-gray-900">
+                          <tr key={acc.id} className="border-b border-ink-100 hover:bg-ink-50">
+                            <td className="px-4 py-2 text-sm font-mono text-ink-600">{acc.code}</td>
+                            <td className="px-4 py-2 text-sm text-ink-700">{acc.name}</td>
+                            <td className="px-4 py-2 text-sm text-right font-semibold text-ink-900">
                               {acc.dr ? `LKR ${acc.balance.toLocaleString()}` : '-'}
                             </td>
-                            <td className="px-4 py-2 text-sm text-right font-semibold text-gray-900">
+                            <td className="px-4 py-2 text-sm text-right font-semibold text-ink-900">
                               {!acc.dr ? `LKR ${acc.balance.toLocaleString()}` : '-'}
                             </td>
                           </tr>
                         ))}
-                        <tr className="bg-gray-100 border-t-2 border-gray-300 font-bold">
+                        <tr className="bg-ink-100 border-t-2 border-ink-200 font-bold">
                           <td className="px-4 py-3" colSpan="2">
-                            <span className="text-lg text-gray-900">Total</span>
+                            <span className="text-lg text-ink-900">Total</span>
                           </td>
                           <td className="px-4 py-3 text-right text-lg text-green-600">
                             LKR {chartOfAccounts.filter(a => a.dr).reduce((sum, a) => sum + a.balance, 0).toLocaleString()}
@@ -5493,29 +5483,29 @@ const FinancePage = () => {
               {selectedReportType === 'General Ledger' && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">GERSL Management</h3>
-                    <p className="text-gray-600">General Ledger</p>
-                    <p className="text-sm text-gray-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
+                    <h3 className="text-xl font-bold text-ink-900">GERSL Management</h3>
+                    <p className="text-ink-600">General Ledger</p>
+                    <p className="text-sm text-ink-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
                   </div>
 
                   <div className="space-y-6">
                     {['Asset', 'Liability', 'Equity', 'Revenue', 'Expense'].map((type) => (
-                      <div key={type} className="border border-gray-200 rounded-lg overflow-hidden">
-                        <div className="bg-gray-100 px-4 py-3 border-b border-gray-200">
-                          <h4 className="font-bold text-gray-900">{type} Accounts</h4>
+                      <div key={type} className="border border-ink-100 rounded-lg overflow-hidden">
+                        <div className="bg-ink-100 px-4 py-3 border-b border-ink-100">
+                          <h4 className="font-bold text-ink-900">{type} Accounts</h4>
                         </div>
                         <div className="p-4">
                           {chartOfAccounts.filter(acc => acc.type === type).map((acc) => (
-                            <div key={acc.id} className="mb-4 pb-4 border-b border-gray-100 last:border-b-0">
+                            <div key={acc.id} className="mb-4 pb-4 border-b border-ink-100 last:border-b-0">
                               <div className="flex items-center justify-between mb-2">
                                 <div>
-                                  <span className="font-mono text-xs text-gray-500">{acc.code}</span>
-                                  <h5 className="font-semibold text-gray-900">{acc.name}</h5>
-                                  <p className="text-xs text-gray-600">{acc.subtype}</p>
+                                  <span className="font-mono text-xs text-ink-500">{acc.code}</span>
+                                  <h5 className="font-semibold text-ink-900">{acc.name}</h5>
+                                  <p className="text-xs text-ink-600">{acc.subtype}</p>
                                 </div>
                                 <div className="text-right">
-                                  <p className="text-sm text-gray-500">{acc.dr ? 'Debit' : 'Credit'} Balance</p>
-                                  <p className="text-lg font-bold text-gray-900">LKR {acc.balance.toLocaleString()}</p>
+                                  <p className="text-sm text-ink-500">{acc.dr ? 'Debit' : 'Credit'} Balance</p>
+                                  <p className="text-lg font-bold text-ink-900">LKR {acc.balance.toLocaleString()}</p>
                                 </div>
                               </div>
                             </div>
@@ -5530,39 +5520,39 @@ const FinancePage = () => {
               {selectedReportType === 'Cash Flow Statement' && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">GERSL Management</h3>
-                    <p className="text-gray-600">Cash Flow Statement</p>
-                    <p className="text-sm text-gray-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
+                    <h3 className="text-xl font-bold text-ink-900">GERSL Management</h3>
+                    <p className="text-ink-600">Cash Flow Statement</p>
+                    <p className="text-sm text-ink-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
                   </div>
 
                   {/* Operating Activities */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="border border-ink-100 rounded-lg overflow-hidden">
                     <div className="bg-blue-50 px-4 py-3 border-b border-blue-200">
                       <h4 className="font-bold text-blue-900">Cash Flow from Operating Activities</h4>
                     </div>
                     <div className="p-4 space-y-2">
-                      <div className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">Net Income</span>
-                        <span className="font-semibold text-gray-900">LKR {netIncome.toLocaleString()}</span>
+                      <div className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">Net Income</span>
+                        <span className="font-semibold text-ink-900">LKR {netIncome.toLocaleString()}</span>
                       </div>
                       <div className="ml-4 space-y-2 text-sm">
                         <div className="flex items-center justify-between py-1 px-2">
-                          <span className="text-gray-600">Add: Depreciation</span>
-                          <span className="text-gray-900">
+                          <span className="text-ink-600">Add: Depreciation</span>
+                          <span className="text-ink-900">
                             LKR {chartOfAccounts.find(a => a.name === 'Depreciation')?.balance.toLocaleString() || '0'}
                           </span>
                         </div>
                         <div className="flex items-center justify-between py-1 px-2">
-                          <span className="text-gray-600">Changes in Accounts Receivable</span>
+                          <span className="text-ink-600">Changes in Accounts Receivable</span>
                           <span className="text-red-600">LKR ({accountsReceivable.toLocaleString()})</span>
                         </div>
                         <div className="flex items-center justify-between py-1 px-2">
-                          <span className="text-gray-600">Changes in Accounts Payable</span>
+                          <span className="text-ink-600">Changes in Accounts Payable</span>
                           <span className="text-green-600">LKR {accountsPayable.toLocaleString()}</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-blue-50 px-2 rounded font-semibold">
-                        <span className="text-gray-900">Net Cash from Operating Activities</span>
+                      <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-blue-50 px-2 rounded font-semibold">
+                        <span className="text-ink-900">Net Cash from Operating Activities</span>
                         <span className="text-blue-600">
                           LKR {(netIncome + (chartOfAccounts.find(a => a.name === 'Depreciation')?.balance || 0) - accountsReceivable + accountsPayable).toLocaleString()}
                         </span>
@@ -5571,42 +5561,42 @@ const FinancePage = () => {
                   </div>
 
                   {/* Investing Activities */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="border border-ink-100 rounded-lg overflow-hidden">
                     <div className="bg-purple-50 px-4 py-3 border-b border-purple-200">
                       <h4 className="font-bold text-purple-900">Cash Flow from Investing Activities</h4>
                     </div>
                     <div className="p-4 space-y-2">
-                      <div className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">Purchase of Fixed Assets</span>
+                      <div className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">Purchase of Fixed Assets</span>
                         <span className="text-red-600">LKR (5,000,000)</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">Sale of Investments</span>
+                      <div className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">Sale of Investments</span>
                         <span className="text-green-600">LKR 0</span>
                       </div>
-                      <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-purple-50 px-2 rounded font-semibold">
-                        <span className="text-gray-900">Net Cash from Investing Activities</span>
+                      <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-purple-50 px-2 rounded font-semibold">
+                        <span className="text-ink-900">Net Cash from Investing Activities</span>
                         <span className="text-purple-600">LKR (5,000,000)</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Financing Activities */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="border border-ink-100 rounded-lg overflow-hidden">
                     <div className="bg-green-50 px-4 py-3 border-b border-green-200">
                       <h4 className="font-bold text-green-900">Cash Flow from Financing Activities</h4>
                     </div>
                     <div className="p-4 space-y-2">
-                      <div className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">Grants Received</span>
+                      <div className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">Grants Received</span>
                         <span className="text-green-600">LKR {totalRevenue.toLocaleString()}</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 hover:bg-gray-50 px-2 rounded">
-                        <span className="text-gray-700">Loan Payments</span>
+                      <div className="flex items-center justify-between py-2 hover:bg-ink-50 px-2 rounded">
+                        <span className="text-ink-700">Loan Payments</span>
                         <span className="text-red-600">LKR (2,000,000)</span>
                       </div>
-                      <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-gray-300 bg-green-50 px-2 rounded font-semibold">
-                        <span className="text-gray-900">Net Cash from Financing Activities</span>
+                      <div className="flex items-center justify-between py-3 mt-2 border-t-2 border-ink-200 bg-green-50 px-2 rounded font-semibold">
+                        <span className="text-ink-900">Net Cash from Financing Activities</span>
                         <span className="text-green-600">LKR {(totalRevenue - 2000000).toLocaleString()}</span>
                       </div>
                     </div>
@@ -5616,17 +5606,17 @@ const FinancePage = () => {
                   <div className="bg-gradient-to-r from-indigo-50 to-blue-100 p-6 rounded-xl border-2 border-indigo-200">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-lg font-semibold text-gray-900">Net Change in Cash</span>
+                        <span className="text-lg font-semibold text-ink-900">Net Change in Cash</span>
                         <span className="text-2xl font-bold text-indigo-600">
                           LKR {(netIncome + (chartOfAccounts.find(a => a.name === 'Depreciation')?.balance || 0) - accountsReceivable + accountsPayable - 5000000 + totalRevenue - 2000000).toLocaleString()}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Cash at Beginning of Period</span>
-                        <span className="font-semibold text-gray-900">LKR 25,000,000</span>
+                        <span className="text-ink-600">Cash at Beginning of Period</span>
+                        <span className="font-semibold text-ink-900">LKR 25,000,000</span>
                       </div>
                       <div className="flex items-center justify-between pt-3 border-t-2 border-indigo-300">
-                        <span className="text-xl font-bold text-gray-900">Cash at End of Period</span>
+                        <span className="text-xl font-bold text-ink-900">Cash at End of Period</span>
                         <span className="text-2xl font-bold text-indigo-600">LKR {cashBalance.toLocaleString()}</span>
                       </div>
                     </div>
@@ -5637,25 +5627,25 @@ const FinancePage = () => {
               {selectedReportType === 'Budget vs Actual' && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">GERSL Management</h3>
-                    <p className="text-gray-600">Budget vs Actual Analysis</p>
-                    <p className="text-sm text-gray-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
+                    <h3 className="text-xl font-bold text-ink-900">GERSL Management</h3>
+                    <p className="text-ink-600">Budget vs Actual Analysis</p>
+                    <p className="text-sm text-ink-500">For the Period: January 1, 2025 - {new Date().toLocaleDateString('en-GB')}</p>
                   </div>
 
                   {/* Revenue Comparison */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="border border-ink-100 rounded-lg overflow-hidden">
                     <div className="bg-green-50 px-4 py-3 border-b border-green-200">
                       <h4 className="font-bold text-green-900">Revenue Budget vs Actual</h4>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
-                          <tr className="bg-gray-50 border-b border-gray-200">
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-900">Account</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">Budget</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">Actual</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">Variance</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">%</th>
+                          <tr className="bg-ink-50 border-b border-ink-100">
+                            <th className="px-4 py-3 text-left text-sm font-bold text-ink-900">Account</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">Budget</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">Actual</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">Variance</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">%</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -5664,10 +5654,10 @@ const FinancePage = () => {
                             const variance = acc.balance - budget;
                             const percentVar = ((variance / budget) * 100).toFixed(1);
                             return (
-                              <tr key={acc.id} className="border-b border-gray-100 hover:bg-gray-50">
-                                <td className="px-4 py-2 text-sm text-gray-700">{acc.name}</td>
-                                <td className="px-4 py-2 text-sm text-right text-gray-900">LKR {budget.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
-                                <td className="px-4 py-2 text-sm text-right font-semibold text-gray-900">LKR {acc.balance.toLocaleString()}</td>
+                              <tr key={acc.id} className="border-b border-ink-100 hover:bg-ink-50">
+                                <td className="px-4 py-2 text-sm text-ink-700">{acc.name}</td>
+                                <td className="px-4 py-2 text-sm text-right text-ink-900">LKR {budget.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                                <td className="px-4 py-2 text-sm text-right font-semibold text-ink-900">LKR {acc.balance.toLocaleString()}</td>
                                 <td className={`px-4 py-2 text-sm text-right font-semibold ${variance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                   LKR {variance.toLocaleString(undefined, {maximumFractionDigits: 0})}
                                 </td>
@@ -5678,8 +5668,8 @@ const FinancePage = () => {
                             );
                           })}
                           <tr className="bg-green-50 border-t-2 border-green-300 font-bold">
-                            <td className="px-4 py-3 text-gray-900">Total Revenue</td>
-                            <td className="px-4 py-3 text-right text-gray-900">LKR {(totalRevenue * 1.1).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                            <td className="px-4 py-3 text-ink-900">Total Revenue</td>
+                            <td className="px-4 py-3 text-right text-ink-900">LKR {(totalRevenue * 1.1).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
                             <td className="px-4 py-3 text-right text-green-600">LKR {totalRevenue.toLocaleString()}</td>
                             <td className="px-4 py-3 text-right text-red-600">LKR {(totalRevenue - (totalRevenue * 1.1)).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
                             <td className="px-4 py-3 text-right text-red-600">-9.1%</td>
@@ -5690,19 +5680,19 @@ const FinancePage = () => {
                   </div>
 
                   {/* Expense Comparison */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="border border-ink-100 rounded-lg overflow-hidden">
                     <div className="bg-red-50 px-4 py-3 border-b border-red-200">
                       <h4 className="font-bold text-red-900">Expense Budget vs Actual</h4>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
-                          <tr className="bg-gray-50 border-b border-gray-200">
-                            <th className="px-4 py-3 text-left text-sm font-bold text-gray-900">Account</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">Budget</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">Actual</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">Variance</th>
-                            <th className="px-4 py-3 text-right text-sm font-bold text-gray-900">%</th>
+                          <tr className="bg-ink-50 border-b border-ink-100">
+                            <th className="px-4 py-3 text-left text-sm font-bold text-ink-900">Account</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">Budget</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">Actual</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">Variance</th>
+                            <th className="px-4 py-3 text-right text-sm font-bold text-ink-900">%</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -5711,10 +5701,10 @@ const FinancePage = () => {
                             const variance = budget - acc.balance; // For expenses, under budget is positive
                             const percentVar = ((variance / budget) * 100).toFixed(1);
                             return (
-                              <tr key={acc.id} className="border-b border-gray-100 hover:bg-gray-50">
-                                <td className="px-4 py-2 text-sm text-gray-700">{acc.name}</td>
-                                <td className="px-4 py-2 text-sm text-right text-gray-900">LKR {budget.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
-                                <td className="px-4 py-2 text-sm text-right font-semibold text-gray-900">LKR {acc.balance.toLocaleString()}</td>
+                              <tr key={acc.id} className="border-b border-ink-100 hover:bg-ink-50">
+                                <td className="px-4 py-2 text-sm text-ink-700">{acc.name}</td>
+                                <td className="px-4 py-2 text-sm text-right text-ink-900">LKR {budget.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                                <td className="px-4 py-2 text-sm text-right font-semibold text-ink-900">LKR {acc.balance.toLocaleString()}</td>
                                 <td className={`px-4 py-2 text-sm text-right font-semibold ${variance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                   LKR {variance.toLocaleString(undefined, {maximumFractionDigits: 0})}
                                 </td>
@@ -5725,8 +5715,8 @@ const FinancePage = () => {
                             );
                           })}
                           <tr className="bg-red-50 border-t-2 border-red-300 font-bold">
-                            <td className="px-4 py-3 text-gray-900">Total Expenses</td>
-                            <td className="px-4 py-3 text-right text-gray-900">LKR {(totalExpenses * 0.95).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                            <td className="px-4 py-3 text-ink-900">Total Expenses</td>
+                            <td className="px-4 py-3 text-right text-ink-900">LKR {(totalExpenses * 0.95).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
                             <td className="px-4 py-3 text-right text-red-600">LKR {totalExpenses.toLocaleString()}</td>
                             <td className="px-4 py-3 text-right text-red-600">LKR {((totalExpenses * 0.95) - totalExpenses).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
                             <td className="px-4 py-3 text-right text-red-600">-5.0%</td>
@@ -5738,22 +5728,22 @@ const FinancePage = () => {
 
                   {/* Summary */}
                   <div className="bg-gradient-to-r from-indigo-50 to-purple-100 p-6 rounded-xl border-2 border-indigo-200">
-                    <h4 className="font-bold text-gray-900 mb-4 text-lg">Budget Performance Summary</h4>
+                    <h4 className="font-bold text-ink-900 mb-4 text-lg">Budget Performance Summary</h4>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-white p-4 rounded-lg">
-                        <p className="text-sm text-gray-600 mb-1">Revenue Performance</p>
+                        <p className="text-sm text-ink-600 mb-1">Revenue Performance</p>
                         <p className="text-2xl font-bold text-red-600">-9.1%</p>
-                        <p className="text-xs text-gray-500 mt-1">Below budget</p>
+                        <p className="text-xs text-ink-500 mt-1">Below budget</p>
                       </div>
                       <div className="bg-white p-4 rounded-lg">
-                        <p className="text-sm text-gray-600 mb-1">Expense Control</p>
+                        <p className="text-sm text-ink-600 mb-1">Expense Control</p>
                         <p className="text-2xl font-bold text-red-600">-5.0%</p>
-                        <p className="text-xs text-gray-500 mt-1">Over budget</p>
+                        <p className="text-xs text-ink-500 mt-1">Over budget</p>
                       </div>
                       <div className="bg-white p-4 rounded-lg">
-                        <p className="text-sm text-gray-600 mb-1">Net Position</p>
+                        <p className="text-sm text-ink-600 mb-1">Net Position</p>
                         <p className="text-2xl font-bold text-orange-600">-14.1%</p>
-                        <p className="text-xs text-gray-500 mt-1">Below target</p>
+                        <p className="text-xs text-ink-500 mt-1">Below target</p>
                       </div>
                     </div>
                   </div>
@@ -5762,10 +5752,10 @@ const FinancePage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between">
+            <div className="border-t border-ink-100 p-4 bg-ink-50 flex items-center justify-between">
               <button
                 onClick={() => setShowReportModal(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -5834,11 +5824,11 @@ const FinancePage = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donor Organization *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donor Organization *</label>
                   <select
                     name="donorName"
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select donor...</option>
                     {partners && partners.length > 0 ? (
@@ -5860,7 +5850,7 @@ const FinancePage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Link to Proposal (Optional)</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Link to Proposal (Optional)</label>
                   <select
                     name="proposalId"
                     onChange={(e) => {
@@ -5876,7 +5866,7 @@ const FinancePage = () => {
                         }
                       }
                     }}
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   >
                     <option value="">Not linked to proposal</option>
                     {proposals && proposals.length > 0 && proposals.map(proposal => (
@@ -5885,17 +5875,17 @@ const FinancePage = () => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">Link this grant to an approved proposal</p>
+                  <p className="text-xs text-ink-500 mt-1">Link this grant to an approved proposal</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Project Category *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Project Category *</label>
                   <select
                     name="projectCategory"
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select project category...</option>
                     <option value="Care for Clean Water">Care for Clean Water</option>
@@ -5910,11 +5900,11 @@ const FinancePage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Programme Area *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Programme Area *</label>
                   <select
                     name="programmeArea"
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select programme area...</option>
                     <option value="Child Protection">Child Protection</option>
@@ -5931,23 +5921,23 @@ const FinancePage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Pledged Amount *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Pledged Amount *</label>
                   <input
                     type="number"
                     name="pledgeAmount"
                     required
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                     placeholder="0.00"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Currency</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Currency</label>
                   <select
                     name="currency"
                     defaultValue="LKR"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   >
                     {SUPPORTED_CURRENCIES.map(curr => (
                       <option key={curr.code} value={curr.code}>{curr.code} - {curr.name}</option>
@@ -5958,54 +5948,54 @@ const FinancePage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Pledge Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Pledge Date *</label>
                   <input
                     type="date"
                     name="pledgeDate"
                     required
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Expected Receipt Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Expected Receipt Date *</label>
                   <input
                     type="date"
                     name="expectedReceiptDate"
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Amount Already Received (Optional)</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Amount Already Received (Optional)</label>
                 <input
                   type="number"
                   name="receivedAmount"
                   min="0"
                   step="0.01"
                   defaultValue="0"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
                   placeholder="0.00"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Notes</label>
                 <textarea
                   name="notes"
                   rows="3"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none resize-none"
                   placeholder="Additional notes about this grant..."
                 ></textarea>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 <button
                   type="button"
                   onClick={() => setShowAddGrant(false)}
-                  className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -6044,7 +6034,7 @@ const FinancePage = () => {
                     ? 'bg-green-100 text-green-700'
                     : selectedGrant.status === 'Partially Received'
                     ? 'bg-orange-100 text-orange-700'
-                    : 'bg-gray-100 text-gray-700'
+                    : 'bg-ink-100 text-ink-700'
                 }`}>
                   {selectedGrant.status}
                 </span>
@@ -6052,14 +6042,14 @@ const FinancePage = () => {
 
               {/* Donor & Project Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Donor Organization</p>
-                  <p className="text-lg font-bold text-gray-900">{selectedGrant.donorName}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Donor Organization</p>
+                  <p className="text-lg font-bold text-ink-900">{selectedGrant.donorName}</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Project Category</p>
-                  <p className="text-lg font-bold text-gray-900">{selectedGrant.projectCategory || selectedGrant.projectName}</p>
-                  <p className="text-xs text-gray-600 mt-1">{selectedGrant.programmeArea}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Project Category</p>
+                  <p className="text-lg font-bold text-ink-900">{selectedGrant.projectCategory || selectedGrant.projectName}</p>
+                  <p className="text-xs text-ink-600 mt-1">{selectedGrant.programmeArea}</p>
                 </div>
               </div>
 
@@ -6076,22 +6066,22 @@ const FinancePage = () => {
 
               {/* Financial Summary */}
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4">
-                <h3 className="font-bold text-gray-900 mb-3">Financial Summary</h3>
+                <h3 className="font-bold text-ink-900 mb-3">Financial Summary</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Pledged Amount</p>
+                    <p className="text-xs text-ink-600 mb-1">Pledged Amount</p>
                     <p className="text-xl font-bold text-blue-600">
                       LKR {selectedGrant.pledgeAmount.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Received</p>
+                    <p className="text-xs text-ink-600 mb-1">Received</p>
                     <p className="text-xl font-bold text-green-600">
                       LKR {selectedGrant.receivedAmount.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Outstanding</p>
+                    <p className="text-xs text-ink-600 mb-1">Outstanding</p>
                     <p className="text-xl font-bold text-orange-600">
                       LKR {(selectedGrant.pledgeAmount - selectedGrant.receivedAmount).toLocaleString()}
                     </p>
@@ -6099,8 +6089,8 @@ const FinancePage = () => {
                 </div>
                 <div className="mt-3">
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Completion</span>
-                    <span className="font-bold text-gray-900">
+                    <span className="text-ink-600">Completion</span>
+                    <span className="font-bold text-ink-900">
                       {((selectedGrant.receivedAmount / selectedGrant.pledgeAmount) * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -6115,15 +6105,15 @@ const FinancePage = () => {
 
               {/* Dates */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Pledge Date</p>
-                  <p className="text-sm font-semibold text-gray-900">
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Pledge Date</p>
+                  <p className="text-sm font-semibold text-ink-900">
                     {new Date(selectedGrant.pledgeDate).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Expected Receipt Date</p>
-                  <p className="text-sm font-semibold text-gray-900">
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Expected Receipt Date</p>
+                  <p className="text-sm font-semibold text-ink-900">
                     {new Date(selectedGrant.expectedReceiptDate).toLocaleDateString()}
                   </p>
                 </div>
@@ -6131,9 +6121,9 @@ const FinancePage = () => {
 
               {/* Notes */}
               {selectedGrant.notes && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-2">Notes</p>
-                  <p className="text-sm text-gray-900">{selectedGrant.notes}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-2">Notes</p>
+                  <p className="text-sm text-ink-900">{selectedGrant.notes}</p>
                 </div>
               )}
 
@@ -6150,7 +6140,7 @@ const FinancePage = () => {
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 {selectedGrant.status !== 'Fully Received' && (
                   <button
                     onClick={() => {
@@ -6165,7 +6155,7 @@ const FinancePage = () => {
                 )}
                 <button
                   onClick={() => setShowGrantDetail(false)}
-                  className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Close
                 </button>
@@ -6205,18 +6195,18 @@ const FinancePage = () => {
               className="p-6 space-y-4"
             >
               {/* Grant Info */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm font-semibold text-gray-900 mb-2">{selectedGrant.donorName}</p>
-                <p className="text-xs text-gray-600">{selectedGrant.projectName}</p>
-                <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-gray-200">
+              <div className="bg-ink-50 rounded-lg p-4">
+                <p className="text-sm font-semibold text-ink-900 mb-2">{selectedGrant.donorName}</p>
+                <p className="text-xs text-ink-600">{selectedGrant.projectName}</p>
+                <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-ink-100">
                   <div>
-                    <p className="text-xs text-gray-600">Outstanding Amount</p>
+                    <p className="text-xs text-ink-600">Outstanding Amount</p>
                     <p className="text-lg font-bold text-orange-600">
                       LKR {(selectedGrant.pledgeAmount - selectedGrant.receivedAmount).toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">Already Received</p>
+                    <p className="text-xs text-ink-600">Already Received</p>
                     <p className="text-lg font-bold text-green-600">
                       LKR {selectedGrant.receivedAmount.toLocaleString()}
                     </p>
@@ -6225,7 +6215,7 @@ const FinancePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Receipt Amount *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Receipt Amount *</label>
                 <input
                   type="number"
                   name="amount"
@@ -6233,40 +6223,40 @@ const FinancePage = () => {
                   min="0.01"
                   max={selectedGrant.pledgeAmount - selectedGrant.receivedAmount}
                   step="0.01"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                   placeholder="0.00"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   Maximum: LKR {(selectedGrant.pledgeAmount - selectedGrant.receivedAmount).toLocaleString()}
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Receipt Date *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Receipt Date *</label>
                 <input
                   type="date"
                   name="receiptDate"
                   required
                   defaultValue={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Notes</label>
                 <textarea
                   name="notes"
                   rows="3"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                   placeholder="Transaction reference, payment method, etc..."
                 ></textarea>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 <button
                   type="button"
                   onClick={() => setShowRecordReceipt(false)}
-                  className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -6324,22 +6314,22 @@ const FinancePage = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Asset Code *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Asset Code *</label>
                   <input
                     type="text"
                     name="assetCode"
                     required
                     placeholder="e.g., VEH-001, COMP-001"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Asset Type *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Asset Type *</label>
                   <select
                     name="assetType"
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select type...</option>
                     <option value="Vehicles">Vehicles</option>
@@ -6354,30 +6344,30 @@ const FinancePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Asset Name *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Asset Name *</label>
                 <input
                   type="text"
                   name="assetName"
                   required
                   placeholder="e.g., Toyota Hiace Van, Dell Laptop"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Acquisition Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Acquisition Date *</label>
                   <input
                     type="date"
                     name="acquisitionDate"
                     required
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Cost (LKR) *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Cost (LKR) *</label>
                   <input
                     type="number"
                     name="cost"
@@ -6385,14 +6375,14 @@ const FinancePage = () => {
                     min="0"
                     step="0.01"
                     placeholder="0.00"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Depreciation Method *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Depreciation Method *</label>
                   <select
                     name="depreciationMethod"
                     required
@@ -6418,7 +6408,7 @@ const FinancePage = () => {
                         lifeInput.value = '';
                       }
                     }}
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select method...</option>
                     <option value="Reducing Balance">Reducing Balance (GERSL Standard 20%)</option>
@@ -6427,7 +6417,7 @@ const FinancePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Depreciation Rate (%) *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Depreciation Rate (%) *</label>
                   <input
                     type="number"
                     name="depreciationRate"
@@ -6436,43 +6426,43 @@ const FinancePage = () => {
                     step="0.01"
                     placeholder="20.00"
                     defaultValue="20"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   />
-                  <p className="text-xs text-gray-500 mt-1">For Reducing Balance method</p>
+                  <p className="text-xs text-ink-500 mt-1">For Reducing Balance method</p>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Useful Life (Years)</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Useful Life (Years)</label>
                 <input
                   type="number"
                   name="usefulLife"
                   min="1"
                   placeholder="5"
                   disabled
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none disabled:bg-gray-100"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none disabled:bg-ink-100"
                 />
-                <p className="text-xs text-gray-500 mt-1">For Straight Line method</p>
+                <p className="text-xs text-ink-500 mt-1">For Straight Line method</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Location *</label>
                   <input
                     type="text"
                     name="location"
                     required
                     placeholder="e.g., Head Office, Regional Office"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Condition *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Condition *</label>
                   <select
                     name="condition"
                     required
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select condition...</option>
                     <option value="Excellent">Excellent</option>
@@ -6484,20 +6474,20 @@ const FinancePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Notes</label>
                 <textarea
                   name="notes"
                   rows="3"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
                   placeholder="Additional information about the asset..."
                 ></textarea>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 <button
                   type="button"
                   onClick={() => setShowAddAsset(false)}
-                  className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -6530,7 +6520,7 @@ const FinancePage = () => {
             </div>
             <div className="p-6 space-y-4">
               {/* Asset Type & Status */}
-              <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+              <div className="flex items-center justify-between pb-4 border-b border-ink-100">
                 <span className="inline-flex px-3 py-1.5 rounded-full text-sm font-semibold bg-blue-100 text-blue-700">
                   {selectedAsset.assetType}
                 </span>
@@ -6549,22 +6539,22 @@ const FinancePage = () => {
 
               {/* Financial Summary */}
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4">
-                <h3 className="font-bold text-gray-900 mb-3">Financial Summary</h3>
+                <h3 className="font-bold text-ink-900 mb-3">Financial Summary</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Original Cost</p>
+                    <p className="text-xs text-ink-600 mb-1">Original Cost</p>
                     <p className="text-xl font-bold text-blue-600">
                       LKR {selectedAsset.cost.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Accumulated Depreciation</p>
+                    <p className="text-xs text-ink-600 mb-1">Accumulated Depreciation</p>
                     <p className="text-xl font-bold text-red-600">
                       LKR {selectedAsset.accumulatedDepreciation.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Written Down Value</p>
+                    <p className="text-xs text-ink-600 mb-1">Written Down Value</p>
                     <p className="text-xl font-bold text-green-600">
                       LKR {selectedAsset.writtenDownValue.toLocaleString()}
                     </p>
@@ -6572,8 +6562,8 @@ const FinancePage = () => {
                 </div>
                 <div className="mt-3">
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Depreciation</span>
-                    <span className="font-bold text-gray-900">
+                    <span className="text-ink-600">Depreciation</span>
+                    <span className="font-bold text-ink-900">
                       {((selectedAsset.accumulatedDepreciation / selectedAsset.cost) * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -6588,39 +6578,39 @@ const FinancePage = () => {
 
               {/* Depreciation Details */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Depreciation Method</p>
-                  <p className="text-sm font-semibold text-gray-900">{selectedAsset.depreciationMethod}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Depreciation Method</p>
+                  <p className="text-sm font-semibold text-ink-900">{selectedAsset.depreciationMethod}</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Depreciation Rate</p>
-                  <p className="text-sm font-semibold text-gray-900">{selectedAsset.depreciationRate}% per annum</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Depreciation Rate</p>
+                  <p className="text-sm font-semibold text-ink-900">{selectedAsset.depreciationRate}% per annum</p>
                 </div>
               </div>
 
               {/* Dates & Location */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Acquisition Date</p>
-                  <p className="text-sm font-semibold text-gray-900">
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Acquisition Date</p>
+                  <p className="text-sm font-semibold text-ink-900">
                     {new Date(selectedAsset.acquisitionDate).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-1">Location</p>
-                  <p className="text-sm font-semibold text-gray-900">{selectedAsset.location}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-1">Location</p>
+                  <p className="text-sm font-semibold text-ink-900">{selectedAsset.location}</p>
                 </div>
               </div>
 
               {/* Notes */}
               {selectedAsset.notes && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs text-gray-600 mb-2">Notes</p>
-                  <p className="text-sm text-gray-900">{selectedAsset.notes}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <p className="text-xs text-ink-600 mb-2">Notes</p>
+                  <p className="text-sm text-ink-900">{selectedAsset.notes}</p>
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 <button
                   onClick={() => {
                     setShowAssetDetail(false);
@@ -6633,7 +6623,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   onClick={() => setShowAssetDetail(false)}
-                  className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Close
                 </button>
@@ -6662,38 +6652,38 @@ const FinancePage = () => {
               <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-xl p-4 mb-4">
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Original Cost</p>
+                    <p className="text-xs text-ink-600 mb-1">Original Cost</p>
                     <p className="text-lg font-bold text-purple-600">
                       LKR {selectedAsset.cost.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Method</p>
+                    <p className="text-xs text-ink-600 mb-1">Method</p>
                     <p className="text-lg font-bold text-purple-600">{selectedAsset.depreciationMethod}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Rate</p>
+                    <p className="text-xs text-ink-600 mb-1">Rate</p>
                     <p className="text-lg font-bold text-purple-600">{selectedAsset.depreciationRate}% p.a.</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-ink-50 border-b border-ink-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Year</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Opening Balance</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Depreciation</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Accumulated Depr.</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Closing Balance</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase">Year</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-700 uppercase">Opening Balance</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-700 uppercase">Depreciation</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-700 uppercase">Accumulated Depr.</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-ink-700 uppercase">Closing Balance</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {getDepreciationSchedule(selectedAsset.id, 10).map((entry) => (
-                      <tr key={entry.year} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 font-semibold text-gray-900">{entry.year}</td>
-                        <td className="px-4 py-3 text-right text-gray-900">
+                      <tr key={entry.year} className="hover:bg-ink-50 transition-colors">
+                        <td className="px-4 py-3 font-semibold text-ink-900">{entry.year}</td>
+                        <td className="px-4 py-3 text-right text-ink-900">
                           LKR {entry.openingBalance.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 text-right font-semibold text-red-600">
@@ -6711,10 +6701,10 @@ const FinancePage = () => {
                 </table>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowDepreciationSchedule(false)}
-                  className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Close
                 </button>
@@ -6729,7 +6719,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="bg-white/20 p-3 rounded-lg">
@@ -6755,27 +6745,27 @@ const FinancePage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Bank Name */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Bank Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={bankAccountForm.bankName}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, bankName: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                       placeholder="e.g., Commercial Bank"
                     />
                   </div>
 
                   {/* Account Type */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Account Type <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={bankAccountForm.accountType}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, accountType: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                     >
                       <option value="Checking">Checking Account</option>
                       <option value="Savings">Savings Account</option>
@@ -6786,70 +6776,70 @@ const FinancePage = () => {
 
                   {/* Account Number */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Account Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={bankAccountForm.accountNumber}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, accountNumber: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                       placeholder="e.g., 1234567890"
                     />
                   </div>
 
                   {/* Account Holder Name */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Account Holder Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={bankAccountForm.accountHolderName}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, accountHolderName: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                       placeholder="e.g., GERSL Organization"
                     />
                   </div>
 
                   {/* Branch Code */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Branch Code
                     </label>
                     <input
                       type="text"
                       value={bankAccountForm.branchCode}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, branchCode: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                       placeholder="e.g., 001"
                     />
                   </div>
 
                   {/* SWIFT Code */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       SWIFT Code
                     </label>
                     <input
                       type="text"
                       value={bankAccountForm.swiftCode}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, swiftCode: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                       placeholder="e.g., CCEYLKLX"
                     />
                   </div>
 
                   {/* Opening Balance */}
                   <div className="col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Opening Balance (LKR)
                     </label>
                     <input
                       type="number"
                       value={bankAccountForm.openingBalance}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, openingBalance: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
                       placeholder="0.00"
                       step="0.01"
                     />
@@ -6859,10 +6849,10 @@ const FinancePage = () => {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex justify-end gap-3">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex justify-end gap-3">
               <button
                 onClick={() => setShowAddBankAccount(false)}
-                className="px-6 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition font-semibold"
+                className="px-6 py-2.5 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition font-semibold"
               >
                 Cancel
               </button>

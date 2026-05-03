@@ -12,7 +12,7 @@ const STATUS_BADGE = {
   Posted: 'bg-green-100 text-green-700',
   'Pending-Approval': 'bg-yellow-100 text-yellow-800',
   Rejected: 'bg-red-100 text-red-700',
-  Reversed: 'bg-gray-200 text-gray-700'
+  Reversed: 'bg-gray-200 text-ink-700'
 };
 
 const fmt = (v, currency = 'LKR') => {
@@ -109,53 +109,53 @@ export default function CashBookPage() {
     catch (e) { alert(e?.message || 'Cancel failed'); }
   };
 
-  if (loading) return <div className="p-6 text-sm text-gray-500">Loading…</div>;
+  if (loading) return <div className="p-6 text-sm text-ink-500">Loading…</div>;
   if (error)   return <div className="p-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">{error}</div>;
-  if (!account) return <div className="p-6 text-sm text-gray-500">Account not found.</div>;
+  if (!account) return <div className="p-6 text-sm text-ink-500">Account not found.</div>;
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-5">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <Link to="/admin/finance/cash/accounts" className="text-sm text-blue-600 hover:underline">&larr; Cash accounts</Link>
-          <h1 className="text-2xl font-semibold text-gray-900 mt-1">{account.name}</h1>
-          <p className="text-sm text-gray-500">
+          <Link to="/admin/finance/cash/accounts" className="text-sm text-navy-700 hover:underline">&larr; Cash accounts</Link>
+          <h1 className="text-h1 text-ink-900 mt-1">{account.name}</h1>
+          <p className="text-sm text-ink-500">
             {account.type} · {account.location || '—'} · Custodian {account.custodian?.fullName || '—'}
           </p>
         </div>
         <div className="text-right">
-          <div className="text-xs uppercase text-gray-500">Current balance</div>
-          <div className="text-2xl font-semibold text-gray-900">{fmt(account.currentBalance, account.currency)}</div>
+          <div className="text-xs uppercase text-ink-500">Current balance</div>
+          <div className="text-h1 text-ink-900">{fmt(account.currentBalance, account.currency)}</div>
           {account.type === 'PettyCash' && account.imprestLimit != null && (
-            <div className="text-xs text-gray-500">Imprest {fmt(account.imprestLimit, account.currency)}</div>
+            <div className="text-xs text-ink-500">Imprest {fmt(account.imprestLimit, account.currency)}</div>
           )}
         </div>
       </header>
 
-      <section className="flex flex-wrap items-end gap-3 bg-white border border-gray-200 rounded-md p-3">
+      <section className="flex flex-wrap items-end gap-3 bg-white border border-ink-100 rounded-md p-3">
         <label className="text-sm">
-          <span className="text-xs uppercase text-gray-500 block">From</span>
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="rounded-md border border-gray-300 px-2 py-1 text-sm" />
+          <span className="text-xs uppercase text-ink-500 block">From</span>
+          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="rounded-md border border-ink-200 px-2 py-1 text-sm" />
         </label>
         <label className="text-sm">
-          <span className="text-xs uppercase text-gray-500 block">To</span>
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="rounded-md border border-gray-300 px-2 py-1 text-sm" />
+          <span className="text-xs uppercase text-ink-500 block">To</span>
+          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="rounded-md border border-ink-200 px-2 py-1 text-sm" />
         </label>
-        <button onClick={load} className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Apply</button>
+        <button onClick={load} className="px-3 py-1.5 text-sm border border-ink-200 rounded-md hover:bg-ink-50">Apply</button>
         <a
           href={CashAPI.cashBookReportUrl(id, 'html', { from, to })}
           target="_blank"
           rel="noreferrer"
-          className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+          className="px-3 py-1.5 text-sm border border-ink-200 rounded-md hover:bg-ink-50"
         >Print preview</a>
         <a
           href={CashAPI.cashBookReportUrl(id, 'csv', { from, to })}
-          className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+          className="px-3 py-1.5 text-sm border border-ink-200 rounded-md hover:bg-ink-50"
         >Download CSV</a>
         <div className="ml-auto flex gap-2">
           {canRecord && (
             <>
-              <button onClick={() => setShowRecord(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Record receipt / payment</button>
+              <button onClick={() => setShowRecord(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition">Record receipt / payment</button>
               <button onClick={() => setShowTransfer(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Transfer</button>
             </>
           )}
@@ -174,46 +174,46 @@ export default function CashBookPage() {
         </div>
       </section>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Voucher</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Particulars</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Receipt</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payment</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Balance</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Date</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Voucher</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Type</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Particulars</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Receipt</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Payment</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Balance</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            <tr className="bg-gray-50">
-              <td className="px-3 py-2 text-sm text-gray-700" colSpan={6}><em>Opening balance for period</em></td>
+          <tbody className="bg-white divide-y divide-ink-100">
+            <tr className="bg-ink-50">
+              <td className="px-3 py-2 text-sm text-ink-700" colSpan={6}><em>Opening balance for period</em></td>
               <td className="px-3 py-2 text-sm text-right font-medium">{fmt(opening, account.currency)}</td>
               <td colSpan={2}></td>
             </tr>
             {display.length === 0 && (
-              <tr><td colSpan={9} className="px-3 py-6 text-center text-sm text-gray-500">No transactions in window.</td></tr>
+              <tr><td colSpan={9} className="px-3 py-6 text-center text-sm text-ink-500">No transactions in window.</td></tr>
             )}
             {display.map(r => (
               <tr key={r.id} className={r.status === 'Reversed' ? 'opacity-60 line-through' : ''}>
-                <td className="px-3 py-2 text-sm text-gray-700">{new Date(r.date).toLocaleDateString()}</td>
-                <td className="px-3 py-2 text-sm font-mono text-gray-700">{r.voucherNo || '—'}</td>
+                <td className="px-3 py-2 text-sm text-ink-700">{new Date(r.date).toLocaleDateString()}</td>
+                <td className="px-3 py-2 text-sm font-mono text-ink-700">{r.voucherNo || '—'}</td>
                 <td className="px-3 py-2 text-sm">{r.transactionType}</td>
                 <td className="px-3 py-2 text-sm">
-                  <div className="text-gray-900">{r.particulars || '—'}</div>
+                  <div className="text-ink-900">{r.particulars || '—'}</div>
                   {r.reference && (
-                    <div className="text-xs text-gray-500">{r.reference.type}{r.reference.id ? ` #${r.reference.id}` : ''}</div>
+                    <div className="text-xs text-ink-500">{r.reference.type}{r.reference.id ? ` #${r.reference.id}` : ''}</div>
                   )}
                 </td>
                 <td className="px-3 py-2 text-sm text-right text-green-700">{r.receipt != null ? fmt(r.receipt, account.currency) : ''}</td>
                 <td className="px-3 py-2 text-sm text-right text-red-700">{r.payment != null ? fmt(r.payment, account.currency) : ''}</td>
                 <td className="px-3 py-2 text-sm text-right">{r.runningBalance != null ? fmt(r.runningBalance, account.currency) : '—'}</td>
                 <td className="px-3 py-2">
-                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[r.status] || 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[r.status] || 'bg-ink-100 text-ink-700'}`}>
                     {r.status}
                   </span>
                 </td>
@@ -232,14 +232,14 @@ export default function CashBookPage() {
             ))}
           </tbody>
           <tfoot>
-            <tr className="bg-gray-50">
-              <td colSpan={4} className="px-3 py-2 text-sm text-right text-gray-600">Period totals</td>
+            <tr className="bg-ink-50">
+              <td colSpan={4} className="px-3 py-2 text-sm text-right text-ink-600">Period totals</td>
               <td className="px-3 py-2 text-sm text-right text-green-700">{fmt(totals.receipts, account.currency)}</td>
               <td className="px-3 py-2 text-sm text-right text-red-700">{fmt(totals.payments, account.currency)}</td>
               <td className="px-3 py-2 text-sm text-right">{fmt(closing, account.currency)}</td>
               <td colSpan={2}></td>
             </tr>
-            <tr className="bg-gray-100 font-semibold">
+            <tr className="bg-ink-100 font-semibold">
               <td colSpan={6} className="px-3 py-2 text-sm text-right">Closing balance</td>
               <td className="px-3 py-2 text-sm text-right">{fmt(closing, account.currency)}</td>
               <td colSpan={2}></td>
@@ -248,37 +248,37 @@ export default function CashBookPage() {
         </table>
       </div>
 
-      <section className="bg-white border border-gray-200 rounded-md">
-        <div className="px-4 py-3 border-b border-gray-200 font-semibold text-sm">Cash counts</div>
+      <section className="bg-white border border-ink-100 rounded-md">
+        <div className="px-4 py-3 border-b border-ink-100 font-semibold text-sm">Cash counts</div>
         <div className="p-4 text-sm space-y-2">
-          {counts.length === 0 && <div className="text-gray-500">No counts yet.</div>}
+          {counts.length === 0 && <div className="text-ink-500">No counts yet.</div>}
           {counts.map(c => (
-            <div key={c.id} className="border border-gray-200 rounded-md p-3">
+            <div key={c.id} className="border border-ink-100 rounded-md p-3">
               <div className="flex items-center justify-between">
                 <div>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     c.status === 'Approved' ? 'bg-green-100 text-green-700' :
                     c.status === 'Submitted' ? 'bg-yellow-100 text-yellow-800' :
                     c.status === 'Disputed' ? 'bg-red-100 text-red-700' :
-                    'bg-gray-100 text-gray-700'
+                    'bg-ink-100 text-ink-700'
                   }`}>{c.status}</span>
-                  <span className="ml-2 text-gray-700">
+                  <span className="ml-2 text-ink-700">
                     Expected {fmt(c.expectedBalance, account.currency)}
                     {c.countedBalance != null && <> · Counted {fmt(c.countedBalance, account.currency)}</>}
                     {c.variance != null && <>
                       {' · '}
-                      <span className={Number(c.variance) === 0 ? 'text-gray-700' : Number(c.variance) > 0 ? 'text-green-700' : 'text-red-700'}>
+                      <span className={Number(c.variance) === 0 ? 'text-ink-700' : Number(c.variance) > 0 ? 'text-green-700' : 'text-red-700'}>
                         Variance {Number(c.variance) > 0 ? '+' : ''}{Number(c.variance).toLocaleString()}
                       </span>
                     </>}
                   </span>
-                  <span className="ml-2 text-gray-500 text-xs">{new Date(c.occurredAt).toLocaleDateString()}</span>
+                  <span className="ml-2 text-ink-500 text-xs">{new Date(c.occurredAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex gap-2">
                   {c.status === 'Pending' && (
                     <>
-                      <button onClick={() => { setActiveCount(c); setShowCount(true); }} className="text-sm text-blue-600 hover:underline">Submit</button>
-                      <button onClick={() => onCancelCount(c.id)} className="text-sm text-gray-500 hover:underline">Cancel</button>
+                      <button onClick={() => { setActiveCount(c); setShowCount(true); }} className="text-sm text-navy-700 hover:underline">Submit</button>
+                      <button onClick={() => onCancelCount(c.id)} className="text-sm text-ink-500 hover:underline">Cancel</button>
                     </>
                   )}
                   {c.status === 'Submitted' && canApproveCount && c.countedBy !== user?.id && (
@@ -291,7 +291,7 @@ export default function CashBookPage() {
               </div>
               {c.disputeReason && <div className="text-xs text-red-700 mt-1">Disputed: {c.disputeReason}</div>}
               {c.adjustmentTx && (
-                <div className="text-xs text-gray-500 mt-1">Posted adjustment {c.adjustmentTx.voucherNo} · balance now {fmt(c.adjustmentTx.balanceAfter, account.currency)}</div>
+                <div className="text-xs text-ink-500 mt-1">Posted adjustment {c.adjustmentTx.voucherNo} · balance now {fmt(c.adjustmentTx.balanceAfter, account.currency)}</div>
               )}
             </div>
           ))}
@@ -331,27 +331,27 @@ export default function CashBookPage() {
       )}
 
       {account.type === 'PettyCash' && replenishments.length > 0 && (
-        <section className="bg-white border border-gray-200 rounded-md">
-          <div className="px-4 py-3 border-b border-gray-200 font-semibold text-sm">Replenishments</div>
+        <section className="bg-white border border-ink-100 rounded-md">
+          <div className="px-4 py-3 border-b border-ink-100 font-semibold text-sm">Replenishments</div>
           <div className="p-4 text-sm space-y-2">
             {replenishments.map(r => (
-              <div key={r.id} className="border border-gray-200 rounded-md p-3 flex items-center justify-between">
+              <div key={r.id} className="border border-ink-100 rounded-md p-3 flex items-center justify-between">
                 <div>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                     r.status === 'Disbursed' ? 'bg-green-100 text-green-700' :
                     r.status === 'Approved'  ? 'bg-blue-100 text-blue-700' :
                     r.status === 'Requested' ? 'bg-yellow-100 text-yellow-800' :
                     r.status === 'Rejected'  ? 'bg-red-100 text-red-700' :
-                    'bg-gray-100 text-gray-700'
+                    'bg-ink-100 text-ink-700'
                   }`}>{r.status}</span>
-                  <span className="ml-2 text-gray-700">
+                  <span className="ml-2 text-ink-700">
                     {fmt(r.approvedAmount ?? r.requestedAmount, r.currency)}
                     {r.sourceAccount && <> · from {r.sourceAccount.name}</>}
                   </span>
-                  <span className="ml-2 text-xs text-gray-500">{new Date(r.requestedAt).toLocaleDateString()}</span>
+                  <span className="ml-2 text-xs text-ink-500">{new Date(r.requestedAt).toLocaleDateString()}</span>
                 </div>
                 {r.disbursementTx && (
-                  <span className="text-xs text-gray-500">{r.disbursementTx.voucherNo}</span>
+                  <span className="text-xs text-ink-500">{r.disbursementTx.voucherNo}</span>
                 )}
               </div>
             ))}
