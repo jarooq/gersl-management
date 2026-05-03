@@ -83,13 +83,18 @@ export const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Default server error
+  // Default server error.
+  // In production we hide the message; opt-in to see it by sending the
+  // x-debug-errors: 1 header. Useful for diagnosing prod-only issues.
+  const showDetail =
+    process.env.NODE_ENV === 'development' ||
+    req.headers['x-debug-errors'] === '1';
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'development'
-      ? err.message
-      : 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    message: showDetail ? err.message : 'Internal server error',
+    error:   showDetail ? err.stack   : undefined,
+    name:    showDetail ? err.name    : undefined,
+    code:    showDetail ? err.code    : undefined,
   });
 };
 
