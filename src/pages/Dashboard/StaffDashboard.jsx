@@ -203,29 +203,29 @@ const StaffDashboard = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">
-          Welcome back, {user?.name || 'Team Member'}!
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      {/* Welcome — quiet navy header */}
+      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-6 text-white shadow-card">
+        <p className="text-xs font-medium uppercase tracking-wider text-mission-300 mb-1.5">My workspace</p>
+        <h1 className="text-h1 leading-tight">
+          Welcome back, {user?.name || 'Team Member'}.
         </h1>
-        <p className="text-indigo-100">
+        <p className="text-sm text-ink-200 mt-1.5">
           {activeTab === 'overview'
-            ? "Here's your productivity overview for today"
-            : "View your employment contract and HR information"
-          }
+            ? "Your productivity overview for today."
+            : "View your employment contract and HR information."}
         </p>
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-        <div className="flex border-b border-gray-200">
+      <div className="bg-white rounded-lg2 border border-ink-100 shadow-card">
+        <div className="flex border-b border-ink-100">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 px-6 py-3 font-medium text-sm transition-colors ${
+            className={`flex-1 px-6 py-3 font-medium text-sm transition ${
               activeTab === 'overview'
-                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'text-navy-900 border-b-2 border-mission-500 bg-ink-50'
+                : 'text-ink-500 hover:text-ink-900 hover:bg-ink-50'
             }`}
           >
             <div className="flex items-center justify-center gap-2">
@@ -235,10 +235,10 @@ const StaffDashboard = () => {
           </button>
           <button
             onClick={() => setActiveTab('my-hr-info')}
-            className={`flex-1 px-6 py-3 font-medium text-sm transition-colors ${
+            className={`flex-1 px-6 py-3 font-medium text-sm transition ${
               activeTab === 'my-hr-info'
-                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'text-navy-900 border-b-2 border-mission-500 bg-ink-50'
+                : 'text-ink-500 hover:text-ink-900 hover:bg-ink-50'
             }`}
           >
             <div className="flex items-center justify-center gap-2">
@@ -425,18 +425,18 @@ const StaffDashboard = () => {
             </div>
           </div>
 
-          {/* Performance Card */}
-          <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-sm p-6 text-white">
+          {/* Performance Card — mission accent */}
+          <div className="bg-mission-50 border border-mission-200 rounded-lg2 p-6 shadow-card">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp size={20} />
-              <h3 className="font-bold">This Week</h3>
+              <TrendingUp size={18} className="text-mission-700" />
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-mission-700">This Week</h3>
             </div>
-            <div className="text-3xl font-bold mb-1">{stats.completed}</div>
-            <p className="text-green-100 text-sm">Tasks completed</p>
-            <div className="mt-4 pt-4 border-t border-green-400/30">
+            <div className="text-3xl font-bold text-mission-900 mb-1">{stats.completed}</div>
+            <p className="text-sm text-ink-600">Tasks completed</p>
+            <div className="mt-4 pt-4 border-t border-mission-200/60">
               <div className="flex justify-between text-sm">
-                <span className="text-green-100">Completion Rate</span>
-                <span className="font-bold">{completionRate}%</span>
+                <span className="text-ink-600">Completion Rate</span>
+                <span className="font-bold text-mission-800">{completionRate}%</span>
               </div>
             </div>
           </div>

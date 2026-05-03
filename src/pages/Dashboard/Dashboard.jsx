@@ -362,67 +362,41 @@ const Dashboard = () => {
   }, [orphans, projects, pendingProposals, campaigns]);
 
   return (
-    <div className="space-y-6">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32 animate-pulse" style={{ animationDelay: '1s' }}></div>
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      {/* Hero — navy mission band with quick actions */}
+      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
+        <div className="absolute -top-24 -right-16 w-72 h-72 bg-mission-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-16 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            {/* Welcome Section */}
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-                  <Heart className="w-7 h-7 text-white animate-pulse" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold mb-1">
-                    Welcome back, {currentUser?.fullName?.split(' ')[0] || 'User'}!
-                  </h1>
-                  <p className="text-blue-100 flex items-center gap-2">
-                    <Calendar size={16} />
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-                  </p>
-                </div>
-              </div>
-              <p className="text-lg text-blue-50 max-w-2xl leading-relaxed">
-                Empowering communities through humanitarian action. Monitor your organization's impact and manage operations efficiently.
-              </p>
-            </div>
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium uppercase tracking-wider text-mission-300 mb-2">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            </p>
+            <h1 className="text-display leading-tight">
+              Welcome back, {currentUser?.fullName?.split(' ')[0] || 'User'}.
+            </h1>
+            <p className="text-base text-ink-200 mt-2 max-w-xl">
+              Your impact dashboard — monitor outcomes, manage operations, serve communities.
+            </p>
+          </div>
 
-            {/* Quick Actions */}
-            <div className="grid grid-cols-2 gap-3">
-              <Link
-                to="/orphans"
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 p-4 rounded-xl transition-all flex flex-col items-center gap-2 border border-white/30"
-              >
-                <Baby size={24} />
-                <span className="text-sm font-semibold">Orphans</span>
-              </Link>
-              <Link
-                to="/projects"
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 p-4 rounded-xl transition-all flex flex-col items-center gap-2 border border-white/30"
-              >
-                <Briefcase size={24} />
-                <span className="text-sm font-semibold">Projects</span>
-              </Link>
-              <Link
-                to="/campaigns"
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 p-4 rounded-xl transition-all flex flex-col items-center gap-2 border border-white/30"
-              >
-                <Heart size={24} />
-                <span className="text-sm font-semibold">Campaigns</span>
-              </Link>
-              <Link
-                to="/finance"
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 p-4 rounded-xl transition-all flex flex-col items-center gap-2 border border-white/30"
-              >
-                <Wallet size={24} />
-                <span className="text-sm font-semibold">Finance</span>
-              </Link>
-            </div>
+          <div className="grid grid-cols-2 gap-2.5 w-full lg:w-auto">
+            {[
+              { to: '/admin/orphans',   icon: Baby,      label: 'Orphans' },
+              { to: '/admin/projects',  icon: Briefcase, label: 'Projects' },
+              { to: '/admin/campaigns', icon: Heart,     label: 'Campaigns' },
+              { to: '/admin/finance',   icon: Wallet,    label: 'Finance' },
+            ].map((q) => {
+              const QIcon = q.icon;
+              return (
+                <Link key={q.to} to={q.to}
+                  className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-md px-4 py-2.5 flex items-center gap-2.5 transition">
+                  <QIcon size={16} className="text-mission-300" />
+                  <span className="text-sm font-medium">{q.label}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -476,98 +450,67 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Key Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Orphans Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all group">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
-              <Baby className="text-white" size={28} />
-            </div>
-            <Link to="/orphans" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <ChevronRight className="text-gray-400" size={20} />
-            </Link>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Active Orphans</p>
-            <p className="text-4xl font-bold text-gray-900 mb-2">{activeOrphans}</p>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-600">of {orphans.length} total</span>
-              <div className="flex items-center gap-1 text-green-600">
-                <TrendingUp size={14} />
-                <span className="font-semibold">Active</span>
+      {/* Key Metrics — mission-amber accent on the impact-focused cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Beneficiaries (mission accent — primary impact metric) */}
+        <div className="bg-mission-50 border border-mission-200 rounded-lg2 p-5 shadow-card relative overflow-hidden">
+          <div className="absolute -top-4 -right-4 w-24 h-24 bg-mission-200/50 rounded-full blur-2xl pointer-events-none" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-md bg-mission-500 text-white flex items-center justify-center">
+                <Users size={20} />
               </div>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-mission-700">Impact</span>
             </div>
+            <p className="text-xs font-medium text-ink-600 mb-1">Lives Reached</p>
+            <p className="text-3xl font-bold text-mission-900">{totalBeneficiaries.toLocaleString()}</p>
+            <p className="text-xs text-ink-600 mt-1.5">{new Set(orphans.map(o => o.district)).size} districts · Sri Lanka</p>
           </div>
         </div>
 
-        {/* Projects Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all group">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
-              <Briefcase className="text-white" size={28} />
+        {/* Orphans */}
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 rounded-md bg-pink-50 border border-pink-200 text-pink-700 flex items-center justify-center">
+              <Baby size={20} />
             </div>
-            <Link to="/projects" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <ChevronRight className="text-gray-400" size={20} />
+            <Link to="/admin/orphans" className="text-ink-400 hover:text-navy-700">
+              <ChevronRight size={18} />
             </Link>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Active Projects</p>
-            <p className="text-4xl font-bold text-gray-900 mb-2">{activeProjects}</p>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-600">of {projects.length} total</span>
-              <div className="flex items-center gap-1 text-blue-600">
-                <TrendingUp size={14} />
-                <span className="font-semibold">In Progress</span>
-              </div>
-            </div>
-          </div>
+          <p className="text-xs font-medium text-ink-500 mb-1">Active Orphans</p>
+          <p className="text-3xl font-bold text-ink-900">{activeOrphans}</p>
+          <p className="text-xs text-ink-500 mt-1.5">of {orphans.length} total · being cared for</p>
         </div>
 
-        {/* Campaigns Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all group">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
-              <Heart className="text-white" size={28} />
+        {/* Projects */}
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 rounded-md bg-primary-50 border border-primary-200 text-primary-700 flex items-center justify-center">
+              <Briefcase size={20} />
             </div>
-            <Link to="/campaigns" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <ChevronRight className="text-gray-400" size={20} />
+            <Link to="/admin/projects" className="text-ink-400 hover:text-navy-700">
+              <ChevronRight size={18} />
             </Link>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Active Campaigns</p>
-            <p className="text-4xl font-bold text-gray-900 mb-2">{activeCampaigns}</p>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-600">{campaignProgress.toFixed(0)}% funded</span>
-              <div className="flex items-center gap-1 text-green-600">
-                <DollarSign size={14} />
-                <span className="font-semibold">${(totalCampaignRaised / 1000).toFixed(0)}K</span>
-              </div>
-            </div>
-          </div>
+          <p className="text-xs font-medium text-ink-500 mb-1">Active Projects</p>
+          <p className="text-3xl font-bold text-ink-900">{activeProjects}</p>
+          <p className="text-xs text-ink-500 mt-1.5">of {projects.length} total · in progress</p>
         </div>
 
-        {/* Beneficiaries Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all group">
-          <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
-              <Users className="text-white" size={28} />
+        {/* Campaigns */}
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 rounded-md bg-success-50 border border-success-600/20 text-success-700 flex items-center justify-center">
+              <Heart size={20} />
             </div>
-            <div className="p-2">
-              <Globe className="text-gray-400" size={20} />
-            </div>
+            <Link to="/admin/campaigns" className="text-ink-400 hover:text-navy-700">
+              <ChevronRight size={18} />
+            </Link>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Total Beneficiaries</p>
-            <p className="text-4xl font-bold text-gray-900 mb-2">{totalBeneficiaries.toLocaleString()}</p>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-600">{new Set(orphans.map(o => o.district)).size} districts</span>
-              <div className="flex items-center gap-1 text-purple-600">
-                <MapPin size={14} />
-                <span className="font-semibold">Sri Lanka</span>
-              </div>
-            </div>
-          </div>
+          <p className="text-xs font-medium text-ink-500 mb-1">Active Campaigns</p>
+          <p className="text-3xl font-bold text-ink-900">{activeCampaigns}</p>
+          <p className="text-xs text-ink-500 mt-1.5">{campaignProgress.toFixed(0)}% funded · ${(totalCampaignRaised / 1000).toFixed(0)}K raised</p>
         </div>
       </div>
 
@@ -736,7 +679,7 @@ const Dashboard = () => {
       )}
 
       {/* Finance Overview Section */}
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6">
+      <div className="bg-white border border-ink-100 rounded-lg2 p-6 shadow-card">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-3 bg-green-500 rounded-xl shadow-lg">
             <Wallet className="w-6 h-6 text-white" />
@@ -937,7 +880,7 @@ const Dashboard = () => {
       </div>
 
       {/* Donor Engagement Section */}
-      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl p-6">
+      <div className="bg-white border border-ink-100 rounded-lg2 p-6 shadow-card">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-indigo-500 rounded-xl shadow-lg">
@@ -1160,36 +1103,32 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Impact Summary Banner */}
-      <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-2xl">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* Impact Summary Banner — navy with mission accent */}
+      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
+        <div className="absolute -top-12 -right-12 w-64 h-64 bg-mission-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-              <Award className="w-8 h-8 text-white" />
+            <div className="w-12 h-12 bg-mission-500 rounded-md flex items-center justify-center shadow-lift">
+              <Award className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-1">Making a Difference</h3>
-              <p className="text-blue-100">Your organization's impact summary</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-mission-300 mb-1">Lifetime impact</p>
+              <h3 className="text-h2 leading-tight">Making a difference, together.</h3>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
-              <p className="text-3xl font-bold">{orphans.length}</p>
-              <p className="text-xs text-blue-100 mt-1 font-semibold">Total Orphans</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
-              <p className="text-3xl font-bold">{totalBeneficiaries.toLocaleString()}</p>
-              <p className="text-xs text-blue-100 mt-1 font-semibold">Beneficiaries</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
-              <p className="text-3xl font-bold">{projects.length}</p>
-              <p className="text-xs text-blue-100 mt-1 font-semibold">Projects</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30">
-              <p className="text-3xl font-bold">{activePartners}</p>
-              <p className="text-xs text-blue-100 mt-1 font-semibold">Partners</p>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { value: orphans.length, label: 'Orphans' },
+              { value: totalBeneficiaries.toLocaleString(), label: 'Beneficiaries' },
+              { value: projects.length, label: 'Projects' },
+              { value: activePartners, label: 'Partners' },
+            ].map((s) => (
+              <div key={s.label} className="bg-white/5 border border-white/10 rounded-md px-4 py-3 text-center min-w-[7rem]">
+                <p className="text-2xl font-bold text-white">{s.value}</p>
+                <p className="text-[11px] text-ink-200 mt-0.5 font-medium uppercase tracking-wider">{s.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

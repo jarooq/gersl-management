@@ -180,12 +180,13 @@ const ExecutiveDashboard = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">Executive Dashboard</h1>
-        <p className="text-purple-100">
-          Organization-wide analytics and performance metrics
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      {/* Header — navy executive band */}
+      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-6 text-white shadow-card">
+        <p className="text-xs font-medium uppercase tracking-wider text-mission-300 mb-1.5">Strategic view</p>
+        <h1 className="text-h1 leading-tight">Executive dashboard</h1>
+        <p className="text-sm text-ink-200 mt-1.5">
+          Organization-wide analytics and performance metrics.
         </p>
       </div>
 
