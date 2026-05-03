@@ -20,8 +20,8 @@ const SocialMediaPage = () => {
   const [engagementItems, setEngagementItems] = useState([]);
 
   return (
-    <div className="space-y-4">
-      {/* Hero Banner */}
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Hero Header */}
       <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3 min-w-0">
@@ -29,29 +29,26 @@ const SocialMediaPage = () => {
               <Share2 className="w-5 h-5 text-mission-300" />
             </div>
             <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Public Engagement</p>
               <h1 className="text-h2 font-bold leading-tight">Social Media Management</h1>
               <p className="text-ink-200 text-sm mt-0.5">Manage your social media presence and engagement</p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <div className="flex gap-3">
-              <Link
-                to="/admin/social-media/settings"
-                className="px-4 py-3 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all font-bold flex items-center gap-2"
-              >
-                <Settings size={20} />
-                Settings
-              </Link>
-              <button
-                onClick={() => setShowSchedulePost(true)}
-                className="px-6 py-3 bg-white text-sky-600 rounded-lg hover:shadow-card transition-all font-bold flex items-center gap-2"
-              >
-                <Plus size={20} />
-                Schedule Post
-              </button>
+            <Link
+              to="/admin/social-media/settings"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-white/10 hover:bg-white/15 border border-white/20 text-white transition"
+            >
+              <Settings size={16} /> Settings
+            </Link>
+            <button
+              onClick={() => setShowSchedulePost(true)}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
+            >
+              <Plus size={16} /> Schedule Post
+            </button>
           </div>
         </div>
-      </div>
       </div>
 
       {/* Quick Actions */}

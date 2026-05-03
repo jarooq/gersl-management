@@ -120,53 +120,27 @@ const ApprovalsPage = () => {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header Banner */}
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Hero Header */}
       <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
-              <CheckCircle className="w-5 h-5 text-mission-300" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-h2 font-bold leading-tight">Approval Centre</h1>
-              <p className="text-ink-200 text-sm mt-0.5">{stats.myPending} items awaiting your approval • {stats.pending} total pending</p>
-            </div>
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+            <CheckCircle className="w-5 h-5 text-mission-300" />
           </div>
-          
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations · Approvals</p>
+            <h1 className="text-h2 font-bold leading-tight">Approval Centre</h1>
+            <p className="text-ink-200 text-sm mt-0.5">{stats.myPending} items awaiting your approval · {stats.pending} total pending</p>
+          </div>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard
-          icon={Clock}
-          label="Pending Approvals"
-          value={stats.pending}
-          color="bg-yellow-500"
-          trend="+12%"
-        />
-        <StatCard
-          icon={CheckCircle}
-          label="Approved This Month"
-          value={stats.approved}
-          color="bg-green-500"
-          trend="+8%"
-        />
-        <StatCard
-          icon={XCircle}
-          label="Rejected"
-          value={stats.rejected}
-          color="bg-red-500"
-          trend="-3%"
-        />
-        <StatCard
-          icon={User}
-          label="Awaiting Your Review"
-          value={stats.myPending}
-          color="bg-purple-500"
-          trend="Action Required"
-        />
+        <StatCard icon={Clock}       label="Pending Approvals"     value={stats.pending}   tone="warn"    trend="+12%" />
+        <StatCard icon={CheckCircle} label="Approved This Month"   value={stats.approved}  tone="success" trend="+8%" />
+        <StatCard icon={XCircle}     label="Rejected"              value={stats.rejected}  tone="danger"  trend="-3%" />
+        <StatCard icon={User}        label="Awaiting Your Review"  value={stats.myPending} tone="brand"   trend="Action Required" />
       </div>
 
       {/* Tabs and Filters */}
@@ -178,9 +152,9 @@ const ApprovalsPage = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                className={`px-4 py-2 rounded-md font-semibold text-sm transition ${
                   activeTab === tab
-                    ? 'bg-indigo-600 text-white shadow-card'
+                    ? 'bg-navy-900 text-white shadow-card'
                     : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
                 }`}
               >
@@ -195,7 +169,7 @@ const ApprovalsPage = () => {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="px-3 py-2 border border-ink-200 rounded-md text-sm focus:ring-2 focus:ring-navy-700 focus:border-transparent"
             >
               <option value="All">All Types</option>
               <option value="Proposal">Proposals</option>
@@ -208,8 +182,8 @@ const ApprovalsPage = () => {
         {/* Approvals List */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-ink-600">Loading approvals...</p>
+            <div className="w-12 h-12 border-2 border-ink-200 border-t-navy-700 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-ink-600 text-sm">Loading approvals…</p>
           </div>
         ) : filteredApprovals.length === 0 ? (
           <div className="text-center py-12">
@@ -228,9 +202,9 @@ const ApprovalsPage = () => {
               return (
                 <div
                   key={approval.id}
-                  className={`border-2 rounded-xl p-5 transition-all hover:shadow-md ${
+                  className={`border rounded-lg2 p-5 transition hover:shadow-card ${
                     userCanApprove && approval.status === 'pending'
-                      ? 'border-indigo-300 bg-indigo-50/50'
+                      ? 'border-mission-300 bg-mission-50/50'
                       : 'border-ink-100 bg-white'
                   }`}
                 >
@@ -316,7 +290,7 @@ const ApprovalsPage = () => {
                           setSelectedApproval(approval);
                           setShowDetailModal(true);
                         }}
-                        className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition font-semibold flex items-center gap-2"
+                        className="px-3.5 py-2 bg-ink-100 text-ink-700 rounded-md hover:bg-ink-200 transition text-sm font-semibold inline-flex items-center gap-2"
                       >
                         <Eye size={16} />
                         View
@@ -328,7 +302,7 @@ const ApprovalsPage = () => {
                               setSelectedApproval(approval);
                               setShowDetailModal(true);
                             }}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold flex items-center gap-2"
+                            className="px-3.5 py-2 bg-success-600 text-white rounded-md hover:bg-success-700 transition text-sm font-semibold inline-flex items-center gap-2"
                           >
                             <ThumbsUp size={16} />
                             Approve
@@ -338,7 +312,7 @@ const ApprovalsPage = () => {
                               setSelectedApproval(approval);
                               setShowDetailModal(true);
                             }}
-                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold flex items-center gap-2"
+                            className="px-3.5 py-2 bg-danger-600 text-white rounded-md hover:bg-danger-700 transition text-sm font-semibold inline-flex items-center gap-2"
                           >
                             <ThumbsDown size={16} />
                             Reject
@@ -374,24 +348,30 @@ const ApprovalsPage = () => {
 };
 
 // Stat Card Component
-const StatCard = ({ icon: Icon, label, value, color, trend }) => (
-  <div className="bg-white rounded-lg shadow-sm p-4 border border-ink-100 hover:shadow-md transition">
-    <div className="flex items-center justify-between mb-2">
-      <div className={`w-10 h-10 ${color} rounded-lg flex items-center justify-center`}>
-        <Icon className="w-5 h-5 text-white" />
+const StatCard = ({ icon: Icon, label, value, tone = 'brand', trend }) => {
+  const tones = {
+    warn:    { bg: 'bg-mission-50', border: 'border-mission-200', text: 'text-mission-700' },
+    success: { bg: 'bg-success-50', border: 'border-success-600/20', text: 'text-success-700' },
+    danger:  { bg: 'bg-danger-50',  border: 'border-danger-600/20',  text: 'text-danger-700' },
+    brand:   { bg: 'bg-navy-50',    border: 'border-navy-200',       text: 'text-navy-800' },
+  }[tone];
+  const trendCls =
+    trend.startsWith('+') ? 'bg-success-50 text-success-700' :
+    trend.startsWith('-') ? 'bg-danger-50 text-danger-700' :
+                            'bg-mission-50 text-mission-700';
+  return (
+    <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition">
+      <div className="flex items-center justify-between mb-3">
+        <div className={`w-10 h-10 ${tones.bg} ${tones.border} border rounded-md flex items-center justify-center`}>
+          <Icon className={`w-5 h-5 ${tones.text}`} />
+        </div>
+        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${trendCls}`}>{trend}</span>
       </div>
-      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-        trend.startsWith('+') ? 'bg-green-100 text-green-700' :
-        trend.startsWith('-') ? 'bg-red-100 text-red-700' :
-        'bg-purple-100 text-purple-700'
-      }`}>
-        {trend}
-      </span>
+      <p className="text-h1 text-ink-900 mb-0.5">{value}</p>
+      <p className="text-xs text-ink-600 font-medium">{label}</p>
     </div>
-    <p className="text-h1 text-ink-900 mb-0.5">{value}</p>
-    <p className="text-xs text-ink-600 font-medium">{label}</p>
-  </div>
-);
+  );
+};
 
 // Approval Detail Modal Component
 const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onReject, isSubmitting }) => {
@@ -442,12 +422,7 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
               </div>
               <div>
                 <p className="text-ink-600 font-semibold mb-1">Current Stage</p>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  approval.currentStage === 'CEO Initial Review' ? 'bg-purple-100 text-purple-700' :
-                  approval.currentStage === 'Programme Manager Review' ? 'bg-blue-100 text-blue-700' :
-                  approval.currentStage === 'Finance Review' ? 'bg-green-100 text-green-700' :
-                  'bg-indigo-100 text-indigo-700'
-                }`}>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-navy-50 text-navy-800 border-navy-200">
                   {approval.currentStage}
                 </span>
               </div>

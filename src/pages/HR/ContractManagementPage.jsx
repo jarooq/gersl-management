@@ -749,20 +749,18 @@ const ContractManagementPage = () => {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Hero Header */}
       <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
-              <FileSignature className="w-5 h-5 text-mission-300" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-h2 font-bold leading-tight">HR Contract Management</h1>
-              <p className="text-ink-200 text-sm mt-0.5">AI-powered employment agreements, renewals & terminations</p>
-            </div>
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+            <FileSignature className="w-5 h-5 text-mission-300" />
           </div>
-          
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Human Resources · Contracts</p>
+            <h1 className="text-h2 font-bold leading-tight">HR Contract Management</h1>
+            <p className="text-ink-200 text-sm mt-0.5">AI-powered employment agreements, renewals & terminations</p>
+          </div>
         </div>
       </div>
 
