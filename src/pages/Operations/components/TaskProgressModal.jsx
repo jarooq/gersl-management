@@ -223,7 +223,7 @@ const TaskProgressModal = ({ isOpen, onClose, task, onUpdate }) => {
                 </div>
                 <div className="w-full bg-ink-200 rounded-full h-4 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-green-500 to-teal-500 transition-all duration-300"
+                    className="h-full bg-navy-9000 transition-all duration-300"
                     style={{ width: `${formData.progressPercentage}%` }}
                   ></div>
                 </div>

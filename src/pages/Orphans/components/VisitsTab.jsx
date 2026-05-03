@@ -84,7 +84,7 @@ const VisitsTab = ({ orphan }) => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border-2 border-dashed border-pink-300">
+        <div className="text-center py-16 bg-ink-50 rounded-xl border-2 border-dashed border-ink-300">
           <Calendar className="w-16 h-16 text-pink-400 mx-auto mb-4" />
           <p className="text-ink-900 font-semibold mb-1 text-lg">No visits recorded yet</p>
           <p className="text-ink-600 text-sm mb-6">Start tracking visits to monitor {orphan?.fullName}'s progress</p>
@@ -143,7 +143,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
           <div className="flex items-center gap-3 mb-1">
             <h4 className="font-bold text-lg text-ink-900">{formatDate(visit.visitDate)}</h4>
             {visit.rating?.overallRating && (
-              <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full">
+              <div className="flex items-center gap-1 px-3 py-1 bg-ink-50 border border-amber-200 rounded-full">
                 <Star size={14} className="text-amber-500 fill-amber-500" />
                 <span className="text-sm font-bold text-amber-700">{parseFloat(visit.rating.overallRating).toFixed(1)}</span>
               </div>
@@ -237,7 +237,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
 
       {/* Needs Assessment */}
       {visit.needsAssessment?.length > 0 && (
-        <div className="mb-4 p-4 bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-lg">
+        <div className="mb-4 p-4 bg-ink-50 border border-blue-200 rounded-lg">
           <div className="flex items-start gap-2 mb-3">
             <Package size={16} className="text-blue-600 mt-0.5" />
             <p className="text-xs font-semibold text-blue-900 uppercase">Needs Identified</p>

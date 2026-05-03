@@ -188,9 +188,9 @@ const VendorCallsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -307,7 +307,7 @@ const VendorCallsPage = () => {
 
       {/* Vendor Calls Grid */}
       <div className="bg-white rounded-lg2 shadow-card overflow-hidden">
-          <div className="p-6 bg-gradient-to-r from-orange-50 to-pink-50 border-b border-ink-100">
+          <div className="p-6 bg-ink-50 border-b border-ink-100">
             <h2 className="text-2xl font-bold text-ink-800 flex items-center gap-2">
               <Store size={24} className="text-orange-600" />
               Vendor Calls ({filteredCalls.length})
@@ -335,7 +335,7 @@ const VendorCallsPage = () => {
                 {filteredCalls.map((call) => (
                   <div
                     key={call.id}
-                    className="bg-gradient-to-br from-white to-ink-50 rounded-xl p-6 border border-ink-100 hover:shadow-lift transition-all duration-200 cursor-pointer"
+                    className="bg-white rounded-lg2 p-6 border border-ink-100 hover:shadow-card transition cursor-pointer"
                     onClick={() => handleView(call)}
                   >
                     <div className="flex items-start justify-between mb-4">
@@ -563,7 +563,7 @@ const VendorCallsPage = () => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-6 py-3 border-2 border-ink-200 text-ink-700 rounded-xl font-semibold hover:bg-ink-50 transition-all duration-200"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-xl font-semibold hover:bg-ink-50 transition-all duration-200"
                 >
                   Cancel
                 </button>
@@ -597,7 +597,7 @@ const VendorCallsPage = () => {
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="bg-gradient-to-br from-orange-50 to-pink-50 rounded-xl p-6">
+              <div className="bg-ink-50 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-3xl font-bold text-ink-800 mb-2">{selectedCall.title}</h3>

@@ -288,9 +288,9 @@ const ReportsPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-8 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
 
         <div className="relative z-10">
           <div className="flex items-center justify-between">
@@ -375,7 +375,7 @@ const ReportsPage = () => {
       {/* Quick Stats from All Modules */}
       <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-navy-9000 rounded-lg flex items-center justify-center">
             <Database size={20} className="text-white" />
           </div>
           <div>
@@ -437,7 +437,7 @@ const ReportsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <button
                   onClick={() => setShowGenerateModal(true)}
-                  className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-300 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 transition-all">
@@ -450,7 +450,7 @@ const ReportsPage = () => {
 
                 <button
                   onClick={() => setShowScheduleModal(true)}
-                  className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-300 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-all">
@@ -463,7 +463,7 @@ const ReportsPage = () => {
 
                 <button
                   onClick={() => setActiveTab('catalog')}
-                  className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-300 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-all">
@@ -474,7 +474,7 @@ const ReportsPage = () => {
                   </div>
                 </button>
 
-                <button className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-orange-400 hover:bg-orange-50 transition-all group">
+                <button className="p-6 border-2 border-dashed border-ink-300 rounded-xl hover:border-orange-400 hover:bg-orange-50 transition-all group">
                   <div className="text-center">
                     <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-all">
                       <Share2 className="text-orange-600" size={32} />
@@ -487,7 +487,7 @@ const ReportsPage = () => {
 
               {/* Module Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
+                <div className="bg-ink-50 rounded-xl p-6 border border-ink-200">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-ink-900">Financial Reports</h3>
                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
@@ -508,7 +508,7 @@ const ReportsPage = () => {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200">
+                <div className="bg-ink-50 rounded-xl p-6 border border-ink-200">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-ink-900">Projects & MEAL</h3>
                     <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
@@ -529,7 +529,7 @@ const ReportsPage = () => {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
+                <div className="bg-ink-50 rounded-xl p-6 border border-ink-200">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-ink-900">HR & Operations</h3>
                     <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
@@ -649,7 +649,7 @@ const ReportsPage = () => {
                           }}
                         >
                           <div className="flex items-start justify-between mb-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-all">
+                            <div className="w-12 h-12 bg-navy-9000 rounded-lg flex items-center justify-center group- transition-all">
                               <FileBarChart size={24} className="text-white" />
                             </div>
                             <button
@@ -775,9 +775,9 @@ const ReportsPage = () => {
           {/* AI Reports Tab */}
           {activeTab === 'ai-reports' && (
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border-2 border-purple-200">
+              <div className="bg-ink-50 rounded-xl p-6 border border-ink-200">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-navy-9000 rounded-lg flex items-center justify-center">
                     <Zap size={24} className="text-white" />
                   </div>
                   <div>
@@ -1202,7 +1202,7 @@ const ReportsPage = () => {
                     {['PDF', 'Excel', 'CSV'].map(format => (
                       <button
                         key={format}
-                        className="p-3 border-2 border-ink-200 hover:border-purple-400 rounded-lg font-semibold"
+                        className="p-3 border border-ink-200 hover:border-purple-400 rounded-lg font-semibold"
                       >
                         {format}
                       </button>

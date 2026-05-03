@@ -171,9 +171,9 @@ const MEALPage = () => {
   return (
     <div className="space-y-4">
       {/* Teal Gradient Hero Banner */}
-      <div className="bg-gradient-to-r from-teal-500 via-teal-600 to-cyan-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -195,7 +195,7 @@ const MEALPage = () => {
           <div
             key={index}
             className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
@@ -203,7 +203,7 @@ const MEALPage = () => {
                 <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                 <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group- transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
@@ -304,7 +304,7 @@ const MEALPage = () => {
                       <tr
                         key={indicator.id}
                         className="border-b border-ink-100 hover:bg-ink-50 transition-colors"
-                        style={{ animationDelay: `${index * 0.02}s` }}
+                        
                       >
                         <td className="p-3">
                           <span className="text-xs font-mono text-ink-600 bg-ink-100 px-2 py-1 rounded">
@@ -475,7 +475,7 @@ const MEALPage = () => {
                     <tr
                       key={evaluation.id}
                       className="border-b border-ink-100 hover:bg-ink-50 transition-colors"
-                      style={{ animationDelay: `${index * 0.02}s` }}
+                      
                     >
                       <td className="p-3">
                         <p className="font-semibold text-sm text-ink-900">{evaluation.title}</p>
@@ -1335,7 +1335,7 @@ const AddComplaintModal = ({ projects, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 border-2 border-ink-200 text-ink-700 rounded-xl hover:bg-ink-50 transition-all font-semibold"
+              className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-xl hover:bg-ink-50 transition-all font-semibold"
             >
               Cancel
             </button>

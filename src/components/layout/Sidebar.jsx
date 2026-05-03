@@ -169,7 +169,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-50
         w-64 h-screen flex flex-col
-        bg-gradient-to-b from-navy-900 to-navy-800 text-ink-100
+        bg-navy-900 text-ink-100
         border-r border-navy-900
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}

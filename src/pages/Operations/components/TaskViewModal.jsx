@@ -176,7 +176,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
 
           {/* Procurement Details */}
           {task.requiresProcurement && (
-            <div className="p-5 bg-purple-50 border-2 border-purple-200 rounded-xl">
+            <div className="p-5 bg-purple-50 border border-ink-200 rounded-xl">
               <h3 className="text-lg font-bold text-purple-900 mb-4 flex items-center gap-2">
                 <Package size={20} />
                 Procurement Details
@@ -208,7 +208,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
             (task.beneficiarySelectionMethod && task.beneficiarySelectionMethod !== 'None') ||
             task.selectionCriteria
           ) && (
-            <div className="p-5 bg-blue-50 border-2 border-blue-200 rounded-xl">
+            <div className="p-5 bg-blue-50 border border-ink-200 rounded-xl">
               <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
                 <Users size={20} />
                 Beneficiary Information
@@ -248,7 +248,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
 
           {/* Distribution Details */}
           {task.distributionType && task.distributionType !== 'None' && (
-            <div className="p-5 bg-green-50 border-2 border-green-200 rounded-xl">
+            <div className="p-5 bg-green-50 border border-ink-200 rounded-xl">
               <h3 className="text-lg font-bold text-green-900 mb-4 flex items-center gap-2">
                 <Gift size={20} />
                 Distribution Details
@@ -291,7 +291,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
 
           {/* Training Details */}
           {task.taskType === 'Training' && task.trainingType && (
-            <div className="p-5 bg-indigo-50 border-2 border-indigo-200 rounded-xl">
+            <div className="p-5 bg-indigo-50 border border-ink-200 rounded-xl">
               <h3 className="text-lg font-bold text-indigo-900 mb-4 flex items-center gap-2">
                 <GraduationCap size={20} />
                 Training Details
@@ -328,7 +328,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
 
           {/* Media Coverage */}
           {task.mediaCoverageRequired && (
-            <div className="p-5 bg-cyan-50 border-2 border-cyan-200 rounded-xl">
+            <div className="p-5 bg-cyan-50 border border-ink-200 rounded-xl">
               <h3 className="text-lg font-bold text-cyan-900 mb-4 flex items-center gap-2">
                 <Megaphone size={20} />
                 Media Coverage

@@ -621,7 +621,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-3">
             {departmentDistribution.map((dept, index) => (
-              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-medium text-ink-700">{dept.name}</span>
                   <span className="text-xs font-bold text-ink-900">{dept.count} staff</span>
@@ -857,7 +857,7 @@ const HRPage = () => {
                   <div
                     key={member.id}
                     className="card-modern group p-4"
-                    style={{ animationDelay: `${index * 0.05}s` }}
+                    
                   >
                     <div className="flex items-start gap-3 mb-3">
                       <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-card group- transition-transform">
@@ -1027,7 +1027,7 @@ const HRPage = () => {
                   <div
                     key={leave.id}
                     className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -1118,7 +1118,7 @@ const HRPage = () => {
               </div>
 
               {/* Map View Placeholder */}
-              <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 border-2 border-dashed border-purple-300 mb-6">
+              <div className="bg-ink-50 rounded-xl p-8 border-2 border-dashed border-ink-300 mb-6">
                 <div className="text-center">
                   <Map className="w-16 h-16 mx-auto mb-4 text-purple-400" />
                   <h3 className="text-lg font-bold text-ink-900 mb-2">Real-time Staff Movement Map</h3>
@@ -1292,7 +1292,7 @@ const HRPage = () => {
               </div>
 
               {/* Office Location Info */}
-              <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 mb-6">
+              <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-6 bg-ink-50 border border-ink-200 mb-6">
                 <div className="flex items-start gap-4">
                   <div className="bg-green-100 p-3 rounded-xl">
                     <MapPin className="text-green-600" size={24} />
@@ -1801,7 +1801,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-3">
             {weeklyAttendanceTrend.days.map((item, index) => (
-              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" >
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="font-medium text-ink-700">{item.day}</span>
                   <span className="text-ink-600">{item.count}/{stats.totalStaff}</span>
@@ -1835,7 +1835,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-3">
             {departmentDistribution.map((item, index) => (
-              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" >
                 <div className="flex items-center justify-between text-xs mb-1">
                   <div className="flex items-center gap-2">
                     <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${item.color}`}></div>
@@ -1872,7 +1872,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-4">
             {leaveStatistics.types.map((item, index) => (
-              <div key={index} className="p-3 bg-ink-50 rounded-lg border border-ink-100" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="p-3 bg-ink-50 rounded-lg border border-ink-100" >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${item.color}`}></div>
@@ -1919,7 +1919,7 @@ const HRPage = () => {
               { metric: 'Vehicle Utilization', value: 0, target: 0, status: 'neutral' },
               { metric: 'Staff Satisfaction', value: 0, target: 0, status: 'neutral' }
             ].map((item, index) => (
-              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" >
                 <div className="flex items-center justify-between text-xs mb-2">
                   <span className="font-medium text-ink-700">{item.metric}</span>
                   <div className="flex items-center gap-2">
@@ -2576,7 +2576,7 @@ const HRPage = () => {
               <div className="flex gap-3 pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowOnboardingModal(false)}
-                  className="flex-1 px-4 py-3 border-2 border-ink-200 text-ink-700 font-semibold rounded-lg hover:bg-ink-50 transition"
+                  className="flex-1 px-4 py-3 border border-ink-200 text-ink-700 font-semibold rounded-lg hover:bg-ink-50 transition"
                 >
                   Cancel
                 </button>
@@ -2692,7 +2692,7 @@ const HRPage = () => {
               <div className="flex gap-3 pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowAppraisalModal(false)}
-                  className="flex-1 px-4 py-3 border-2 border-ink-200 text-ink-700 font-semibold rounded-lg hover:bg-ink-50 transition"
+                  className="flex-1 px-4 py-3 border border-ink-200 text-ink-700 font-semibold rounded-lg hover:bg-ink-50 transition"
                 >
                   Cancel
                 </button>

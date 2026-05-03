@@ -298,7 +298,7 @@ const MyTasksPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-card">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">My Tasks</h1>
@@ -519,7 +519,7 @@ const MyTasksPage = () => {
           {tasksByProject.map((projectGroup) => (
             <div key={projectGroup.id} className="bg-white rounded-lg border border-ink-100 overflow-hidden">
               {/* Project Header */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-ink-100 px-5 py-4">
+              <div className="bg-ink-50 border-b border-ink-100 px-5 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="bg-blue-600 rounded-lg p-2">

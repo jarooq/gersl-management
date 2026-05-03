@@ -237,7 +237,7 @@ const ProjectDetailPage = () => {
               </div>
 
               {/* Progress */}
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg2 shadow-card p-6">
+              <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-6 flex items-center gap-2">
                   <TrendingUp className="text-purple-600" size={22} />
                   Project Progress
@@ -402,7 +402,7 @@ const ProjectDetailPage = () => {
                   {teamMembers.map(member => (
                     <div
                       key={member.id}
-                      className="border-2 border-ink-100 rounded-xl p-4 hover:shadow-card hover:border-blue-300 transition-all bg-gradient-to-br from-white to-ink-50"
+                      className="border border-ink-100 rounded-lg2 p-4 hover:shadow-card hover:border-navy-300 transition bg-white"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-start gap-3">
@@ -455,7 +455,7 @@ const ProjectDetailPage = () => {
 
         {activeTab === 'financial' && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg2 shadow-card p-6">
+            <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
               <h3 className="text-lg font-bold text-ink-900 mb-6 flex items-center gap-2">
                 <DollarSign className="text-green-600" size={22} />
                 Financial Overview
@@ -523,7 +523,7 @@ const ProjectDetailPage = () => {
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-gradient-to-r from-blue-50 to-purple-50">
+                        <tr className="bg-ink-50">
                           <th className="text-left py-4 px-4 text-sm font-bold text-ink-700">Date</th>
                           <th className="text-left py-4 px-4 text-sm font-bold text-ink-700">Category</th>
                           <th className="text-left py-4 px-4 text-sm font-bold text-ink-700">Description</th>
@@ -746,7 +746,7 @@ const ProjectDetailPage = () => {
           <div className="space-y-6">
             {/* MEAL Overview Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-200 rounded-lg2 shadow-card p-6">
+              <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-teal-500 rounded-xl">
                     <Target size={24} className="text-white" />
@@ -757,7 +757,7 @@ const ProjectDetailPage = () => {
                 <p className="text-xs text-ink-600 mt-1">Performance metrics</p>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg2 shadow-card p-6">
+              <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-blue-500 rounded-xl">
                     <FileCheck size={24} className="text-white" />
@@ -768,7 +768,7 @@ const ProjectDetailPage = () => {
                 <p className="text-xs text-ink-600 mt-1">Assessments completed</p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-lg2 shadow-card p-6">
+              <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-orange-500 rounded-xl">
                     <MessageSquareWarning size={24} className="text-white" />
@@ -967,7 +967,7 @@ const ProjectDetailPage = () => {
         {activeTab === 'compliance' && (
           <div className="space-y-6">
             {/* Compliance Overview */}
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-lg2 shadow-card p-6">
+            <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-4 bg-purple-500 rounded-xl">
                   <Shield size={32} className="text-white" />
@@ -1032,7 +1032,7 @@ const ProjectDetailPage = () => {
                 ) : (
                   <div className="space-y-3">
                     {projectIncidents.map((incident) => (
-                      <div key={incident.id} className="border-2 border-ink-100 rounded-xl p-4 hover:shadow-md hover:border-red-300 transition-all bg-gradient-to-r from-red-50 to-orange-50">
+                      <div key={incident.id} className="border-2 border-ink-100 rounded-xl p-4 hover:shadow-md hover:border-red-300 transition-all bg-ink-50">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
@@ -1077,7 +1077,7 @@ const ProjectDetailPage = () => {
             </div>
 
             {/* Note about policies and training */}
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+            <div className="bg-blue-50 border border-ink-200 rounded-xl p-4">
               <div className="flex items-start gap-3">
                 <Activity size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>

@@ -43,7 +43,7 @@ const ProjectStats = ({ stats }) => {
         <div
           key={index}
           className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-          style={{ animationDelay: `${index * 0.1}s` }}
+          
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
@@ -51,7 +51,7 @@ const ProjectStats = ({ stats }) => {
               <h3 className="text-3xl font-bold text-ink-900">{stat.value}</h3>
               <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
             </div>
-            <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+            <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group- transition-transform duration-200 flex-shrink-0`}>
               <stat.icon className="text-white" size={24} />
             </div>
           </div>

@@ -98,7 +98,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 p-6 text-white sticky top-0 z-10">
+        <div className="bg-navy-900 p-6 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Sparkles className="w-7 h-7" />

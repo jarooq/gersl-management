@@ -125,7 +125,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
 
         {/* Next Task */}
         {project.nextTask && (
-          <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 rounded-lg shadow-sm">
+          <div className="mb-4 p-3 bg-ink-50 border-l-4 border-blue-500 rounded-lg shadow-sm">
             <p className="text-xs text-blue-600 font-semibold mb-1">Next Task</p>
             <p className="text-sm font-medium text-ink-900">{project.nextTask}</p>
           </div>

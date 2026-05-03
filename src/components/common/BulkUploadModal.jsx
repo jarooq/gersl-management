@@ -125,7 +125,7 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 p-6 text-white sticky top-0 z-10">
+        <div className="bg-navy-900 p-6 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Upload className="w-6 h-6" />

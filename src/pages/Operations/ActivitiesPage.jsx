@@ -200,7 +200,7 @@ const ActivitiesPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">In Progress</p>
@@ -213,7 +213,7 @@ const ActivitiesPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Completed</p>
@@ -226,7 +226,7 @@ const ActivitiesPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Participants</p>
@@ -251,7 +251,7 @@ const ActivitiesPage = () => {
             <div
               key={activity.id}
               className="bg-white border border-ink-100 rounded-lg2 shadow-card p-5"
-              style={{ animationDelay: `${index * 0.05}s` }}
+              
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -650,7 +650,7 @@ const ActivitiesPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {selectedActivity.photos.map((photo) => (
                     <div key={photo.id} className="border border-ink-100 rounded-lg overflow-hidden hover:border-green-400 transition-colors">
-                      <div className="aspect-video bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center">
+                      <div className="aspect-video bg-ink-50 flex items-center justify-center">
                         <Camera size={48} className="text-green-600" />
                       </div>
                       <div className="p-4">

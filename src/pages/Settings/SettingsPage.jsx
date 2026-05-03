@@ -94,9 +94,9 @@ const SettingsPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-lift relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-8 text-white shadow-lift relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32" ></div>
 
         <div className="relative z-10">
           <div className="flex items-center gap-4 mb-4">
@@ -728,7 +728,7 @@ const RolesTab = ({
                 );
 
                 return (
-                  <div key={groupName} className="bg-gradient-to-br from-ink-50 to-ink-100 rounded-xl p-5 border border-ink-100">
+                  <div key={groupName} className="bg-ink-50 rounded-xl p-5 border border-ink-100">
                     {/* Group Header */}
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-bold text-ink-900 flex items-center gap-2">

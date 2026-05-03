@@ -496,9 +496,9 @@ const CampaignsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-fuchsia-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -683,7 +683,7 @@ const CampaignsPage = () => {
       <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-purple-100 to-blue-100">
+            <thead className="bg-ink-50">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Campaign</th>
                 <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Type</th>
@@ -985,7 +985,7 @@ const CampaignsPage = () => {
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3">
                       <label className="flex-1 cursor-pointer">
-                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all">
+                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all">
                           <Upload className="w-5 h-5 text-ink-500" />
                           <span className="text-sm text-ink-600">
                             {imageFile ? imageFile.name : 'Choose image or drag here'}
@@ -1094,7 +1094,7 @@ const CampaignsPage = () => {
                 <p className="text-ink-600">{viewingCampaign.description}</p>
               </div>
 
-              <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg">
+              <div className="bg-ink-50 p-6 rounded-lg">
                 <h3 className="font-semibold text-ink-700 mb-4">Fundraising Progress</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
@@ -1295,7 +1295,7 @@ const CampaignsPage = () => {
                         Package Image
                       </label>
                       <div className="mt-1">
-                        <label className="flex items-center justify-center px-4 py-2 border-2 border-dashed border-ink-200 rounded-lg cursor-pointer hover:border-purple-500 transition-colors">
+                        <label className="flex items-center justify-center px-4 py-2 border-2 border-dashed border-ink-300 rounded-lg cursor-pointer hover:border-purple-500 transition-colors">
                           <Upload className="w-5 h-5 text-ink-400 mr-2" />
                           <span className="text-sm text-ink-600">
                             {packageImageFile ? packageImageFile.name : 'Upload image'}

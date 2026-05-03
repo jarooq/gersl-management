@@ -589,7 +589,7 @@ const Step4Review = ({ formData, orphan, partners }) => {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+      <div className="bg-ink-50 border border-purple-200 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <Sparkles className="text-purple-600 flex-shrink-0 mt-0.5" size={20} />
           <div>

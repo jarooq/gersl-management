@@ -215,7 +215,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
             />
 
             {/* Progress Ratings */}
-            <div className="bg-gradient-to-br from-pink-50 to-rose-50 p-6 rounded-xl border border-pink-200">
+            <div className="bg-ink-50 p-6 rounded-xl border border-pink-200">
               <h3 className="font-bold text-lg text-ink-900 mb-4 flex items-center gap-2">
                 <Star size={20} className="text-pink-600" />
                 Progress Ratings (1-5 Stars)
@@ -231,7 +231,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                           key={star}
                           type="button"
                           onClick={() => handleRatingChange(key, star)}
-                          className="transition-transform hover:scale-110"
+                          className="transition-transform "
                         >
                           <Star
                             size={32}
@@ -316,7 +316,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
 };
 
 const MediaUploadSection = ({ title, type, icon: Icon, preview, onUpload, onRemove, color }) => (
-  <div className="border-2 border-dashed border-ink-200 rounded-xl p-6">
+  <div className="border-2 border-dashed border-ink-300 rounded-xl p-6">
     <h3 className="font-bold text-ink-900 mb-4 flex items-center gap-2">
       <Icon size={20} className={`text-${color}-600`} />
       {title}
@@ -342,7 +342,7 @@ const MediaUploadSection = ({ title, type, icon: Icon, preview, onUpload, onRemo
     </div>
 
     <label className="cursor-pointer">
-      <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-200 rounded-lg hover:border-pink-400 hover:bg-pink-50 transition-all">
+      <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-300 rounded-lg hover:border-pink-400 hover:bg-pink-50 transition-all">
         <Upload size={18} className="text-ink-400" />
         <span className="text-sm text-ink-600">Click to upload {type}</span>
       </div>
@@ -411,7 +411,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
   };
 
   return (
-    <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50">
+    <div className="border-2 border-dashed border-ink-300 rounded-xl p-6 bg-ink-50">
       <h3 className="font-bold text-lg text-ink-900 mb-4 flex items-center gap-2">
         <Package size={20} className="text-blue-600" />
         Needs Assessment
@@ -456,7 +456,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
       )}
 
       {/* Add New Need Form */}
-      <div className="bg-white border-2 border-dashed border-blue-200 rounded-lg p-4 space-y-3">
+      <div className="bg-white border-2 border-dashed border-ink-300 rounded-lg p-4 space-y-3">
         <p className="text-sm font-semibold text-ink-700 mb-3">Add New Need</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

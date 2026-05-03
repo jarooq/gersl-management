@@ -22,9 +22,9 @@ const SocialMediaPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -60,7 +60,7 @@ const SocialMediaPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <button
           onClick={() => setShowCalendar(true)}
-          className="p-4 bg-white border-2 border-blue-200 rounded-xl hover:shadow-card transition-all "
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -72,7 +72,7 @@ const SocialMediaPage = () => {
 
         <button
           onClick={() => setShowAnalytics(true)}
-          className="p-4 bg-white border-2 border-purple-200 rounded-xl hover:shadow-card transition-all "
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
@@ -84,7 +84,7 @@ const SocialMediaPage = () => {
 
         <button
           onClick={() => setShowSchedulePost(true)}
-          className="p-4 bg-white border-2 border-pink-200 rounded-xl hover:shadow-card transition-all "
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
@@ -96,7 +96,7 @@ const SocialMediaPage = () => {
 
         <button
           onClick={() => setShowEngagement(true)}
-          className="p-4 bg-white border-2 border-green-200 rounded-xl hover:shadow-card transition-all "
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -125,7 +125,7 @@ const SocialMediaPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Engagement Rate</p>
@@ -141,7 +141,7 @@ const SocialMediaPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Posts This Month</p>
@@ -157,7 +157,7 @@ const SocialMediaPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Reach</p>
@@ -178,7 +178,7 @@ const SocialMediaPage = () => {
       <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
         <h2 className="text-sm font-bold text-ink-900 mb-6">Social Media Accounts</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 border-2 border-blue-200 rounded-xl hover:shadow-card transition-shadow">
+          <div className="p-4 border border-ink-200 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                 <Facebook className="text-white" size={20} />
@@ -200,9 +200,9 @@ const SocialMediaPage = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-pink-200 rounded-xl hover:shadow-card transition-shadow">
+          <div className="p-4 border border-ink-200 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-navy-9000 rounded-lg flex items-center justify-center">
                 <Instagram className="text-white" size={20} />
               </div>
               <div>
@@ -222,7 +222,7 @@ const SocialMediaPage = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-sky-200 rounded-xl hover:shadow-card transition-shadow">
+          <div className="p-4 border border-ink-200 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-sky-500 rounded-lg flex items-center justify-center">
                 <Twitter className="text-white" size={20} />
@@ -461,7 +461,7 @@ const SocialMediaPage = () => {
             <div className="p-6 space-y-6">
               {/* Overview Stats */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl">
+                <div className="p-4 bg-ink-50 border border-blue-200 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-blue-700">Total Reach</span>
                     <Eye size={18} className="text-blue-600" />
@@ -470,7 +470,7 @@ const SocialMediaPage = () => {
                   <p className="text-xs text-blue-600 mt-1">0%</p>
                 </div>
 
-                <div className="p-4 bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-xl">
+                <div className="p-4 bg-ink-50 border border-pink-200 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-pink-700">Engagement</span>
                     <Heart size={18} className="text-pink-600" />
@@ -479,7 +479,7 @@ const SocialMediaPage = () => {
                   <p className="text-xs text-pink-600 mt-1">0% engagement rate</p>
                 </div>
 
-                <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl">
+                <div className="p-4 bg-ink-50 border border-green-200 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-green-700">New Followers</span>
                     <Users size={18} className="text-green-600" />
@@ -488,7 +488,7 @@ const SocialMediaPage = () => {
                   <p className="text-xs text-green-600 mt-1">This month</p>
                 </div>
 
-                <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl">
+                <div className="p-4 bg-ink-50 border border-purple-200 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-purple-700">Shares</span>
                     <Share size={18} className="text-purple-600" />
@@ -746,7 +746,7 @@ const SocialMediaPage = () => {
                   }`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-ink-400 to-ink-600 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-navy-900 rounded-full flex items-center justify-center">
                           <span className="text-white font-bold text-sm">
                             {item.user.split(' ').map(n => n[0]).join('')}
                           </span>

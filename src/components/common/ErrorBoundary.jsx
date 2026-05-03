@@ -8,7 +8,7 @@ import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
  */
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-ink-50 p-4">
       <div className="bg-white rounded-lg2 shadow-pop p-8 max-w-2xl w-full">
         <div className="flex items-center justify-center mb-6">
           <div className="bg-red-100 p-4 rounded-full">

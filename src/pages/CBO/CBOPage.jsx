@@ -78,9 +78,9 @@ const CBOPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -455,7 +455,7 @@ const VolunteerCard = ({ volunteer }) => {
       {/* Avatar and Status */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+          <div className="w-12 h-12 bg-navy-9000 rounded-full flex items-center justify-center text-white font-bold shadow-md">
             {getInitials(volunteer.fullName)}
           </div>
           <div>
@@ -919,7 +919,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
 
           {/* GER Form Enhanced Fields */}
           {proposal.projectTier && (
-            <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <div className="mb-4 p-4 bg-ink-50 rounded-lg border border-blue-200">
               <p className="text-xs font-semibold text-ink-700 mb-3">📋 GER Proposal Details</p>
 
               <div className="grid grid-cols-2 gap-4 mb-3">
@@ -2437,7 +2437,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             </div>
 
             {formData.budgetBreakdown.length === 0 ? (
-              <div className="text-center py-8 bg-ink-50 rounded-lg border-2 border-dashed border-ink-200">
+              <div className="text-center py-8 bg-ink-50 rounded-lg border-2 border-dashed border-ink-300">
                 <DollarSign className="h-12 w-12 text-ink-400 mx-auto mb-2" />
                 <p className="text-ink-500 text-sm">No budget items added yet.</p>
                 <p className="text-ink-400 text-xs mt-1">Click "Add Line Item" to start building your budget breakdown.</p>

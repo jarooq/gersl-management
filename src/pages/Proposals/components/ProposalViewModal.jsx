@@ -296,7 +296,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
         <div className="absolute top-5 left-0 right-0 h-1 bg-ink-200" style={{ zIndex: 0 }}></div>
         {/* Progress Bar Fill */}
         <div
-          className="absolute top-5 left-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-500"
+          className="absolute top-5 left-0 h-1 bg-navy-9000 transition-all duration-500"
           style={{
             width: `${(currentStepIndex / (workflowSteps.length - 1)) * 100}%`,
             zIndex: 1
@@ -318,9 +318,9 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {/* Icon Circle */}
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
-                  ${isCompleted ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-card scale-110` :
-                    isCurrent ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-lift scale-125` :
-                    isRejected || isDonorRejected ? 'bg-red-500 text-white' :
+                  ${isCompleted ? 'bg-navy-900 text-white shadow-card' :
+                    isCurrent ? 'bg-mission-500 text-navy-900 shadow-lift' :
+                    isRejected || isDonorRejected ? 'bg-danger-500 text-white' :
                     'bg-ink-200 text-ink-400'}
                 `}>
                   {isCompleted ? (
@@ -480,7 +480,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
             <div className="space-y-6">
               {/* Key Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
+                <div className="bg-ink-50 p-4 rounded-xl border border-green-200">
                   <div className="flex items-center justify-between mb-2">
                     <DollarSign className="text-green-600" size={24} />
                     <span className="text-xs font-semibold text-green-700">BUDGET</span>
@@ -489,7 +489,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <p className="text-xs text-green-700 mt-1">Total Requested</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
+                <div className="bg-ink-50 p-4 rounded-xl border border-blue-200">
                   <div className="flex items-center justify-between mb-2">
                     <Users className="text-blue-600" size={24} />
                     <span className="text-xs font-semibold text-blue-700">REACH</span>
@@ -498,7 +498,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <p className="text-xs text-blue-700 mt-1">Target Beneficiaries</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
+                <div className="bg-ink-50 p-4 rounded-xl border border-purple-200">
                   <div className="flex items-center justify-between mb-2">
                     <Calendar className="text-purple-600" size={24} />
                     <span className="text-xs font-semibold text-purple-700">DURATION</span>
@@ -507,7 +507,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <p className="text-xs text-purple-700 mt-1">Months</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
+                <div className="bg-ink-50 p-4 rounded-xl border border-orange-200">
                   <div className="flex items-center justify-between mb-2">
                     <TrendingUp className="text-orange-600" size={24} />
                     <span className="text-xs font-semibold text-orange-700">EFFICIENCY</span>
@@ -742,7 +742,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {/* MEAL Data Tab */}
           {activeTab === 'meal' && proposal.resultsFramework && (
             <div className="space-y-4">
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+              <div className="bg-ink-50 border border-blue-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Target size={20} className="text-blue-600" />
                   Results Framework - Indicators
@@ -782,7 +782,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {/* Budget Breakdown Tab */}
           {activeTab === 'budget' && proposal.budgetBreakdown && (
             <div className="space-y-4">
-              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
+              <div className="bg-ink-50 border border-purple-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <DollarSign size={20} className="text-purple-600" />
                   Budget Breakdown
@@ -822,7 +822,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {/* Safeguarding Tab */}
           {activeTab === 'safeguarding' && proposal.safeguarding && (
             <div className="space-y-4">
-              <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-6">
+              <div className="bg-ink-50 border border-orange-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Shield size={20} className="text-orange-600" />
                   Safeguarding Compliance
@@ -864,7 +864,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
               <div className="relative pl-8">
                 {/* Vertical line */}
-                <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 to-purple-500"></div>
+                <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-navy-9000"></div>
 
                 {/* Timeline Events */}
                 {proposal.createdAt && (
@@ -912,7 +912,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {proposal.status === 'Approved' && (
                   <div className="relative mb-6">
                     <div className="absolute left-[-1.4rem] w-6 h-6 bg-emerald-500 rounded-full border-4 border-white shadow-card"></div>
-                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-emerald-200">
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-ink-200">
                       <div className="flex items-center gap-2 mb-1">
                         <CheckCircle2 size={16} className="text-emerald-600" />
                         <span className="font-semibold text-ink-900">Proposal Approved</span>
@@ -926,7 +926,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {proposal.status === 'Submitted to Donor' && (
                   <div className="relative mb-6">
                     <div className="absolute left-[-1.4rem] w-6 h-6 bg-purple-500 rounded-full border-4 border-white shadow-card"></div>
-                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-purple-200">
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-ink-200">
                       <div className="flex items-center gap-2 mb-1">
                         <Mail size={16} className="text-purple-600" />
                         <span className="font-semibold text-ink-900">Sent to Donor</span>
@@ -940,7 +940,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {proposal.status === 'Donor Approved' && (
                   <div className="relative mb-6">
                     <div className="absolute left-[-1.4rem] w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-card"></div>
-                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-indigo-200">
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-ink-200">
                       <div className="flex items-center gap-2 mb-1">
                         <ThumbsUp size={16} className="text-indigo-600" />
                         <span className="font-semibold text-ink-900">Donor Approved</span>
@@ -954,7 +954,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {proposal.linkedProjectId && (
                   <div className="relative mb-6">
                     <div className="absolute left-[-1.4rem] w-6 h-6 bg-navy-900 rounded-full border-4 border-white shadow-lift"></div>
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg shadow-card border-2 border-indigo-300">
+                    <div className="bg-ink-50 p-4 rounded-lg shadow-card border-2 border-indigo-300">
                       <div className="flex items-center gap-2 mb-1">
                         <Rocket size={16} className="text-indigo-700" />
                         <span className="font-semibold text-ink-900">Project Created</span>
@@ -978,7 +978,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
         </div>
 
         {/* Workflow Actions Section - Always show */}
-        <div className="border-t border-ink-100 p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="border-t border-ink-100 p-6 bg-ink-50">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <MessageSquare size={20} className="text-indigo-600" />
             Workflow Actions

@@ -219,9 +219,9 @@ const BeneficiariesPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -305,7 +305,7 @@ const BeneficiariesPage = () => {
             <div
               key={index}
               className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex-1">
@@ -313,7 +313,7 @@ const BeneficiariesPage = () => {
                   <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                   <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
                 </div>
-                <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+                <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group- transition-transform duration-200 flex-shrink-0`}>
                   <stat.icon className="text-white" size={18} />
                 </div>
               </div>
@@ -384,7 +384,7 @@ const BeneficiariesPage = () => {
               <div
                 key={index}
                 className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex-1">
@@ -392,7 +392,7 @@ const BeneficiariesPage = () => {
                     <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                     <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
                   </div>
-                  <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+                  <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group- transition-transform duration-200 flex-shrink-0`}>
                     <stat.icon className="text-white" size={18} />
                   </div>
                 </div>
@@ -434,7 +434,7 @@ const BeneficiariesPage = () => {
                 }
 
                 return analytics.topDistricts.map((item, index) => (
-                  <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={index} className="" >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium text-ink-700">{item.district}</span>
                       <span className="text-xs font-bold text-ink-900">{item.count} beneficiaries</span>
@@ -490,7 +490,7 @@ const BeneficiariesPage = () => {
                 return topTypes.map(([type, count], index) => {
                   const percentage = Math.round((count / beneficiaries.length) * 100);
                   return (
-                    <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div key={index} className="" >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-medium text-ink-700">{type}</span>
                         <span className="text-xs font-bold text-ink-900">{count} beneficiaries</span>
@@ -550,7 +550,7 @@ const BeneficiariesPage = () => {
                   { range: 'LKR 100,000 - 200,000', count: range3, percent: Math.round((range3 / totalWithSupport) * 100), color: 'from-orange-500 to-amber-600' },
                   { range: 'LKR 200,000+', count: range4, percent: Math.round((range4 / totalWithSupport) * 100), color: 'from-purple-500 to-indigo-600' }
                 ].filter(item => item.count > 0).map((item, index) => (
-                  <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={index} className="" >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium text-ink-700">{item.range}</span>
                       <span className="text-xs font-bold text-ink-900">{item.count} beneficiaries</span>
@@ -779,7 +779,7 @@ const BeneficiariesPage = () => {
                       <tr
                         key={beneficiary.id}
                         className="hover:bg-ink-50 transition-colors"
-                        style={{ animationDelay: `${index * 0.03}s` }}
+                        
                       >
                         <td className="px-4 py-3">
                           <div className="flex flex-col">
@@ -879,7 +879,7 @@ const BeneficiariesPage = () => {
                   <div
                     key={beneficiary.id}
                     className="bg-white border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow"
-                    style={{ animationDelay: `${index * 0.05}s` }}
+                    
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">

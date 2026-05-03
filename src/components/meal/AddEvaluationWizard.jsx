@@ -248,7 +248,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
-                  className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   placeholder="e.g., Midterm Evaluation - Education Project 2024"
                 />
               </div>
@@ -262,7 +262,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   >
                     <option value="Baseline">Baseline</option>
                     <option value="Midterm">Midterm</option>
@@ -285,7 +285,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     value={formData.projectId}
                     onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   >
                     <option value="">Select project...</option>
                     {projects.map(project => (
@@ -307,7 +307,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     value={formData.evaluator}
                     onChange={(e) => setFormData({ ...formData, evaluator: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     placeholder="MEAL Officer name"
                   />
                 </div>
@@ -321,7 +321,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     step="0.01"
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     placeholder="e.g., 150000"
                   />
                 </div>
@@ -337,7 +337,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
@@ -349,7 +349,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
@@ -361,7 +361,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   >
                     <option value="Planned">Planned</option>
                     <option value="In Progress">In Progress</option>
@@ -377,7 +377,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
           {currentStep === 2 && (
             <div className="space-y-5 ">
               {/* AI Methodology Generator */}
-              <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-4">
+              <div className="bg-ink-50 border border-ink-200 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <Sparkles className="text-purple-600 flex-shrink-0 mt-1" size={20} />
                   <div className="flex-1">
@@ -406,13 +406,13 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                   value={formData.methodology}
                   onChange={(e) => setFormData({ ...formData, methodology: e.target.value })}
                   rows={10}
-                  className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono text-sm"
                   placeholder="Describe your data collection methods, sampling approach, tools, and analysis techniques..."
                 />
               </div>
 
               {/* AI Objectives Generator */}
-              <div className="bg-gradient-to-r from-green-50 to-teal-50 border-2 border-green-200 rounded-xl p-4">
+              <div className="bg-ink-50 border border-ink-200 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <Sparkles className="text-green-600 flex-shrink-0 mt-1" size={20} />
                   <div className="flex-1">
@@ -445,7 +445,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     value={newObjective}
                     onChange={(e) => setNewObjective(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addObjective())}
-                    className="flex-1 px-4 py-2 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     placeholder="Type an objective and press Enter..."
                   />
                   <button
@@ -502,7 +502,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                   value={formData.findings}
                   onChange={(e) => setFormData({ ...formData, findings: e.target.value })}
                   rows={6}
-                  className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   placeholder="Document main findings and results from the evaluation..."
                 />
               </div>
@@ -515,7 +515,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                   value={formData.recommendations}
                   onChange={(e) => setFormData({ ...formData, recommendations: e.target.value })}
                   rows={6}
-                  className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   placeholder="List key recommendations based on evaluation findings..."
                 />
               </div>
@@ -528,7 +528,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                   <select
                     value={formData.reportStatus}
                     onChange={(e) => setFormData({ ...formData, reportStatus: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   >
                     <option value="Pending">Pending</option>
                     <option value="Draft">Draft</option>
@@ -545,7 +545,7 @@ Integration of quantitative econometric analysis with qualitative case studies`;
                     type="url"
                     value={formData.reportUrl}
                     onChange={(e) => setFormData({ ...formData, reportUrl: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     placeholder="https://..."
                   />
                 </div>

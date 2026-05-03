@@ -104,7 +104,7 @@ const ReportsTab = ({ orphan }) => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-dashed border-blue-300">
+        <div className="text-center py-16 bg-ink-50 rounded-xl border-2 border-dashed border-ink-300">
           <FileText className="w-16 h-16 text-blue-400 mx-auto mb-4" />
           <p className="text-ink-900 font-semibold mb-1 text-lg">No reports generated yet</p>
           <p className="text-ink-600 text-sm mb-6">Create progress reports to share with partners and sponsors</p>
@@ -250,7 +250,7 @@ const ReportCard = ({ report, onDelete, onDownload, onPreview }) => {
 
       {/* AI Summary Preview */}
       {report.aiGeneratedSummary && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
+        <div className="mb-4 p-3 bg-ink-50 border border-purple-200 rounded-lg">
           <p className="text-xs font-semibold text-purple-900 mb-1 flex items-center gap-1">
             <TrendingUp size={12} />
             AI Summary
@@ -346,7 +346,7 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Orphan Information */}
-          <div className="bg-gradient-to-br from-pink-50 to-blue-50 rounded-xl p-5 border-2 border-pink-200">
+          <div className="bg-ink-50 rounded-xl p-5 border border-ink-200">
             <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
               <div className="w-2 h-8 bg-pink-600 rounded"></div>
               Orphan Information
@@ -372,7 +372,7 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
           </div>
 
           {/* Report Period */}
-          <div className="bg-blue-50 rounded-xl p-5 border-2 border-blue-200">
+          <div className="bg-blue-50 rounded-xl p-5 border border-ink-200">
             <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
               <Calendar className="text-blue-600" size={20} />
               Report Period
@@ -384,7 +384,7 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
 
           {/* Partner Info */}
           {report.partner && (
-            <div className="bg-green-50 rounded-xl p-5 border-2 border-green-200">
+            <div className="bg-green-50 rounded-xl p-5 border border-ink-200">
               <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Mail className="text-green-600" size={20} />
                 Recipient Partner
@@ -398,7 +398,7 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
 
           {/* AI Summary */}
           {report.aiGeneratedSummary && (
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-5 border-2 border-purple-200">
+            <div className="bg-ink-50 rounded-xl p-5 border border-ink-200">
               <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <TrendingUp className="text-purple-600" size={20} />
                 Progress Summary
@@ -439,7 +439,7 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
 
           {/* Additional Notes */}
           {report.notes && (
-            <div className="bg-yellow-50 rounded-xl p-5 border-2 border-yellow-200">
+            <div className="bg-yellow-50 rounded-xl p-5 border border-ink-200">
               <h3 className="text-lg font-bold text-ink-900 mb-4">Additional Notes</h3>
               <p className="text-ink-700 leading-relaxed whitespace-pre-wrap">{report.notes}</p>
             </div>

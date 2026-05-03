@@ -44,7 +44,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
             {/* Left Column */}
             <div className="space-y-6">
               {/* Basic Information */}
-              <div className="bg-gradient-to-br from-ink-50 to-ink-100 rounded-xl p-5 border border-ink-100">
+              <div className="bg-ink-50 rounded-xl p-5 border border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Building2 size={20} className="text-red-600" />
                   Basic Information
@@ -91,7 +91,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
               </div>
 
               {/* Contact Information */}
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-5 border border-blue-200">
+              <div className="bg-ink-50 rounded-xl p-5 border border-blue-200">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Mail size={20} className="text-blue-600" />
                   Contact Information
@@ -141,7 +141,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
               </div>
 
               {/* Location */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-5 border border-orange-200">
+              <div className="bg-ink-50 rounded-xl p-5 border border-orange-200">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <MapPin size={20} className="text-orange-600" />
                   Location
@@ -164,7 +164,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
             {/* Right Column */}
             <div className="space-y-6">
               {/* Focus Areas */}
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-5 border border-purple-200">
+              <div className="bg-ink-50 rounded-xl p-5 border border-purple-200">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Target size={20} className="text-purple-600" />
                   Focus Areas
@@ -187,7 +187,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
                       focusAreasArray.map((area, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-lg text-sm font-semibold border border-purple-300"
+                          className="px-3 py-2 bg-ink-50 text-purple-700 rounded-lg text-sm font-semibold border border-purple-300"
                         >
                           {area}
                         </span>
@@ -200,7 +200,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
               </div>
 
               {/* Financial Overview */}
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 border border-green-200">
+              <div className="bg-ink-50 rounded-xl p-5 border border-green-200">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <DollarSign size={20} className="text-green-600" />
                   Financial Overview
@@ -232,7 +232,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
 
               {/* Additional Notes */}
               {partner.notes && (
-                <div className="bg-gradient-to-br from-ink-50 to-slate-50 rounded-xl p-5 border border-ink-100">
+                <div className="bg-ink-50 rounded-xl p-5 border border-ink-100">
                   <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                     <Heart size={20} className="text-ink-600" />
                     Additional Notes

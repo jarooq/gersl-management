@@ -426,7 +426,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 <div className="pt-3 border-t">
                   <div className="w-full bg-ink-200 rounded-full h-3">
                     <div
-                      className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all"
+                      className="bg-navy-9000 h-3 rounded-full transition-all"
                       style={{ width: `${budgetUsed}%` }}
                     ></div>
                   </div>

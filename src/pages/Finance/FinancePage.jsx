@@ -723,7 +723,7 @@ const FinancePage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-2">Total Expenses (YTD)</p>
@@ -740,7 +740,7 @@ const FinancePage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-2">Net Income</p>
@@ -761,7 +761,7 @@ const FinancePage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-2">Cash & Bank Balance</p>
@@ -790,7 +790,7 @@ const FinancePage = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <button
           onClick={() => setShowAddInvoice(true)}
-          className="p-4 bg-white border-2 border-green-200 rounded-xl hover:shadow-card transition-all text-left"
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -805,7 +805,7 @@ const FinancePage = () => {
 
         <button
           onClick={() => setShowAddExpense(true)}
-          className="p-4 bg-white border-2 border-red-200 rounded-xl hover:shadow-card transition-all text-left"
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
@@ -820,7 +820,7 @@ const FinancePage = () => {
 
         <button
           onClick={() => setShowAddJournalEntry(true)}
-          className="p-4 bg-white border-2 border-blue-200 rounded-xl hover:shadow-card transition-all text-left"
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -835,7 +835,7 @@ const FinancePage = () => {
 
         <button
           onClick={() => setShowBankReconciliation(true)}
-          className="p-4 bg-white border-2 border-purple-200 rounded-xl hover:shadow-card transition-all text-left"
+          className="p-4 bg-white border border-ink-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
@@ -886,7 +886,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               {/* A/R and A/P Summary */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+                <div className="p-6 bg-ink-50 border border-green-200 rounded-xl">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-bold text-green-900">Accounts Receivable</h3>
                     <ArrowDownRight size={20} className="text-green-600" />
@@ -936,7 +936,7 @@ const FinancePage = () => {
                   </div>
                 </div>
 
-                <div className="p-6 bg-gradient-to-br from-red-50 to-rose-50 border border-red-200 rounded-xl">
+                <div className="p-6 bg-ink-50 border border-red-200 rounded-xl">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-bold text-red-900">Accounts Payable</h3>
                     <ArrowUpRight size={20} className="text-red-600" />
@@ -1057,7 +1057,7 @@ const FinancePage = () => {
                   </div>
                   <div className="space-y-3">
                     {expenseDistribution.map((item, index) => (
-                      <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+                      <div key={index} className="" >
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-sm font-medium text-ink-700">{item.category}</span>
                           <span className="text-sm font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
@@ -1475,7 +1475,7 @@ const FinancePage = () => {
               ))}
 
               {/* Accounting Equation */}
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-6">
+              <div className="bg-ink-50 border border-ink-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-4">Accounting Equation</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                   <div className="bg-white rounded-lg p-4 border border-blue-200">
@@ -1516,7 +1516,7 @@ const FinancePage = () => {
 
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-blue-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-blue-900">Total Cost</p>
                     <Package size={20} className="text-blue-600" />
@@ -1527,7 +1527,7 @@ const FinancePage = () => {
                   <p className="text-xs text-blue-700 mt-1">{getAssetTotals().totalAssets} active assets</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-red-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-red-900">Accumulated Depreciation</p>
                     <Depreciation size={20} className="text-red-600" />
@@ -1538,7 +1538,7 @@ const FinancePage = () => {
                   <p className="text-xs text-red-700 mt-1">Total depreciation to date</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-green-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-green-900">Written Down Value</p>
                     <TrendingUp size={20} className="text-green-600" />
@@ -1549,7 +1549,7 @@ const FinancePage = () => {
                   <p className="text-xs text-green-700 mt-1">Current asset value</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-orange-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-orange-900">Current Year Depreciation</p>
                     <Calendar size={20} className="text-orange-600" />
@@ -1686,7 +1686,7 @@ const FinancePage = () => {
 
               {/* Summary by Asset Type */}
               {Object.keys(getSummaryByType()).length > 0 && (
-                <div className="bg-gradient-to-br from-ink-50 to-slate-50 border border-ink-100 rounded-xl p-6">
+                <div className="bg-ink-50 border border-ink-100 rounded-xl p-6">
                   <h3 className="text-lg font-bold text-ink-900 mb-4">Summary by Asset Type</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {Object.entries(getSummaryByType()).map(([assetType, summary]) => (
@@ -1743,7 +1743,7 @@ const FinancePage = () => {
 
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-blue-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-blue-900">Total Pledged</p>
                     <HandCoins size={20} className="text-blue-600" />
@@ -1754,7 +1754,7 @@ const FinancePage = () => {
                   <p className="text-xs text-blue-700 mt-1">{getGrantTotals().total} grants</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-green-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-green-900">Total Received</p>
                     <CheckCircle size={20} className="text-green-600" />
@@ -1765,7 +1765,7 @@ const FinancePage = () => {
                   <p className="text-xs text-green-700 mt-1">{getGrantTotals().fullyReceived} fully received</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-orange-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-orange-900">Outstanding</p>
                     <Clock size={20} className="text-orange-600" />
@@ -1776,7 +1776,7 @@ const FinancePage = () => {
                   <p className="text-xs text-orange-700 mt-1">{getGrantTotals().partiallyReceived} partially received</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-xl p-4">
+                <div className="bg-ink-50 border border-red-200 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-semibold text-red-900">Overdue</p>
                     <AlertCircle size={20} className="text-red-600" />
@@ -1920,7 +1920,7 @@ const FinancePage = () => {
 
               {/* Overdue Grants Alert */}
               {getOverdue().length > 0 && (
-                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                <div className="bg-red-50 border border-ink-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <AlertCircle size={24} className="text-red-600 flex-shrink-0 mt-0.5" />
                     <div>
@@ -2214,7 +2214,7 @@ const FinancePage = () => {
               <div className="space-y-4">
                 {journalEntries.map((entry) => (
                   <div key={entry.id} className="bg-white border border-ink-100 rounded-xl overflow-hidden hover:shadow-card transition-shadow">
-                    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
+                    <div className="p-4 bg-ink-50 border-b border-blue-200">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-sm font-bold text-blue-900">{entry.entryNo}</span>
@@ -2393,7 +2393,7 @@ const FinancePage = () => {
                   { name: 'Trial Balance', desc: 'Verify debits equal credits', icon: CheckCircle, color: 'teal' },
                 ].map((report, idx) => (
                   <div key={idx} className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-card hover:border-ink-200 transition-all group">
-                    <div className={`w-12 h-12 bg-${report.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <div className={`w-12 h-12 bg-${report.color}-100 rounded-lg flex items-center justify-center mb-4 group- transition-transform`}>
                       <report.icon className={`text-${report.color}-600`} size={24} />
                     </div>
                     <h3 className="font-bold text-ink-900 mb-2">{report.name}</h3>
@@ -2411,7 +2411,7 @@ const FinancePage = () => {
 
               {/* Sample P&L */}
               <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
-                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200">
+                <div className="p-4 bg-ink-50 border-b border-green-200">
                   <h3 className="text-lg font-bold text-green-900">Profit & Loss Statement (Year to Date)</h3>
                   <p className="text-sm text-green-700">January 1, 2025 - November 7, 2025</p>
                 </div>
@@ -2445,7 +2445,7 @@ const FinancePage = () => {
                       </div>
                     </div>
 
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+                    <div className="bg-ink-50 p-4 rounded-lg">
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-bold text-ink-900">Net Income</span>
                         <span className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -2490,7 +2490,7 @@ const FinancePage = () => {
             {/* Modal Body */}
             <div className="p-6 space-y-6">
               {/* Bill Summary */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+              <div className="bg-ink-50 border border-blue-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-4">Bill Summary</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -2659,7 +2659,7 @@ const FinancePage = () => {
                   />
                   <label
                     htmlFor="payment-attachment-upload"
-                    className="block border-2 border-dashed border-ink-200 rounded-lg p-6 text-center hover:border-green-500 hover:bg-green-50 transition-all cursor-pointer"
+                    className="block border-2 border-dashed border-ink-300 rounded-lg p-6 text-center hover:border-green-500 hover:bg-green-50 transition-all cursor-pointer"
                   >
                     <Upload className="mx-auto text-ink-400 mb-2" size={32} />
                     <p className="text-sm text-ink-600">Click to upload or drag and drop</p>
@@ -3304,7 +3304,7 @@ const FinancePage = () => {
                 </button>
               </div>
 
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-ink-50 border border-green-200 rounded-lg p-4">
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-sm text-ink-600">Total Invoice Amount</p>
@@ -3591,7 +3591,7 @@ const FinancePage = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
+                <div className="grid grid-cols-3 gap-4 bg-ink-50 rounded-lg p-4">
                   <div className="text-center">
                     <p className="text-sm text-ink-600 mb-1">Total Debits</p>
                     <p className="text-2xl font-bold text-blue-600">LKR 0.00</p>
@@ -3679,7 +3679,7 @@ const FinancePage = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6">
+              <div className="grid grid-cols-3 gap-4 bg-ink-50 rounded-lg p-6">
                 <div className="text-center">
                   <p className="text-sm text-ink-600 mb-1">System Balance</p>
                   <p className="text-2xl font-bold text-purple-600">LKR 45.0M</p>
@@ -3793,7 +3793,7 @@ const FinancePage = () => {
 
             <div className="p-6 space-y-6">
               {/* Account Information Card */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+              <div className="bg-ink-50 rounded-xl p-6 border border-blue-200">
                 <h3 className="text-lg font-bold text-ink-900 mb-4">Account Information</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
@@ -3818,7 +3818,7 @@ const FinancePage = () => {
               </div>
 
               {/* Current Balance Card */}
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+              <div className="bg-ink-50 rounded-xl p-6 border border-green-200">
                 <h3 className="text-lg font-bold text-ink-900 mb-2">Current Balance</h3>
                 <p className="text-4xl font-bold text-green-600">
                   LKR {(selectedAccount.balance / 1000000).toFixed(2)}M
@@ -4115,7 +4115,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-ink-700 to-ink-900 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-2xl z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Edit Account</h2>
@@ -4291,7 +4291,7 @@ const FinancePage = () => {
                   <Trash2 size={18} />
                   Deactivate Account
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-ink-700 to-ink-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Save Changes
                 </button>
               </div>
@@ -4530,7 +4530,7 @@ const FinancePage = () => {
                 />
                 <label
                   htmlFor="bill-attachment-upload"
-                  className="block border-2 border-dashed border-ink-200 rounded-lg p-6 text-center hover:border-red-400 hover:bg-red-50 transition-all cursor-pointer"
+                  className="block border-2 border-dashed border-ink-300 rounded-lg p-6 text-center hover:border-red-400 hover:bg-red-50 transition-all cursor-pointer"
                 >
                   <Upload className="mx-auto text-ink-400 mb-2" size={32} />
                   <p className="text-sm text-ink-600">Click to upload bill documents</p>
@@ -4873,7 +4873,7 @@ const FinancePage = () => {
               </div>
 
               {/* Amount Summary */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
+              <div className="bg-ink-50 border border-green-200 rounded-xl p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <p className="text-sm text-ink-600 mb-1">Invoice Amount</p>
@@ -5342,7 +5342,7 @@ const FinancePage = () => {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-6 rounded-xl border-2 border-blue-200">
+                  <div className="bg-ink-50 p-6 rounded-xl border border-ink-200">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-h1 text-ink-900">Net Income</span>
                       <span className={`text-3xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -5407,7 +5407,7 @@ const FinancePage = () => {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-indigo-50 to-purple-100 p-6 rounded-xl border-2 border-indigo-200">
+                  <div className="bg-ink-50 p-6 rounded-xl border border-ink-200">
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-bold text-ink-900">Total Liabilities + Equity</span>
                       <span className="text-2xl font-bold text-indigo-600">
@@ -5603,7 +5603,7 @@ const FinancePage = () => {
                   </div>
 
                   {/* Net Change in Cash */}
-                  <div className="bg-gradient-to-r from-indigo-50 to-blue-100 p-6 rounded-xl border-2 border-indigo-200">
+                  <div className="bg-ink-50 p-6 rounded-xl border border-ink-200">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-semibold text-ink-900">Net Change in Cash</span>
@@ -5727,7 +5727,7 @@ const FinancePage = () => {
                   </div>
 
                   {/* Summary */}
-                  <div className="bg-gradient-to-r from-indigo-50 to-purple-100 p-6 rounded-xl border-2 border-indigo-200">
+                  <div className="bg-ink-50 p-6 rounded-xl border border-ink-200">
                     <h4 className="font-bold text-ink-900 mb-4 text-lg">Budget Performance Summary</h4>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-white p-4 rounded-lg">
@@ -5995,7 +5995,7 @@ const FinancePage = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddGrant(false)}
-                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -6065,7 +6065,7 @@ const FinancePage = () => {
               )}
 
               {/* Financial Summary */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4">
+              <div className="bg-ink-50 border border-ink-200 rounded-xl p-4">
                 <h3 className="font-bold text-ink-900 mb-3">Financial Summary</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
@@ -6155,7 +6155,7 @@ const FinancePage = () => {
                 )}
                 <button
                   onClick={() => setShowGrantDetail(false)}
-                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Close
                 </button>
@@ -6256,7 +6256,7 @@ const FinancePage = () => {
                 <button
                   type="button"
                   onClick={() => setShowRecordReceipt(false)}
-                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -6487,7 +6487,7 @@ const FinancePage = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddAsset(false)}
-                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -6538,7 +6538,7 @@ const FinancePage = () => {
               </div>
 
               {/* Financial Summary */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4">
+              <div className="bg-ink-50 border border-ink-200 rounded-xl p-4">
                 <h3 className="font-bold text-ink-900 mb-3">Financial Summary</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
@@ -6623,7 +6623,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   onClick={() => setShowAssetDetail(false)}
-                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Close
                 </button>
@@ -6649,7 +6649,7 @@ const FinancePage = () => {
               </div>
             </div>
             <div className="p-6 space-y-4">
-              <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-xl p-4 mb-4">
+              <div className="bg-ink-50 border border-ink-200 rounded-xl p-4 mb-4">
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <p className="text-xs text-ink-600 mb-1">Original Cost</p>
@@ -6704,7 +6704,7 @@ const FinancePage = () => {
               <div className="flex justify-end gap-3 pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowDepreciationSchedule(false)}
-                  className="px-6 py-2 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Close
                 </button>
@@ -6852,7 +6852,7 @@ const FinancePage = () => {
             <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex justify-end gap-3">
               <button
                 onClick={() => setShowAddBankAccount(false)}
-                className="px-6 py-2.5 border-2 border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition font-semibold"
+                className="px-6 py-2.5 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition font-semibold"
               >
                 Cancel
               </button>

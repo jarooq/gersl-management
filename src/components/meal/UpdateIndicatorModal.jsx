@@ -121,7 +121,7 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
             </div>
 
             {/* Progress Visualization */}
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-ink-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm font-semibold text-ink-700">Progress to Target</p>
                 <p className={`text-2xl font-bold ${getProgressColor()}`}>

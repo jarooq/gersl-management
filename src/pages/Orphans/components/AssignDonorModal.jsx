@@ -176,7 +176,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
               <select
                 value={selectedPartner}
                 onChange={(e) => setSelectedPartner(e.target.value)}
-                className="w-full px-4 py-3 pr-10 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white"
+                className="w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white"
               >
                 <option value="">-- Choose a Partner --</option>
                 {partners.map((partner) => (
@@ -222,7 +222,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
                 disabled={!selectedPartner}
-                className={`w-full px-4 py-3 pr-10 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none ${
+                className={`w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none ${
                   !selectedPartner ? 'bg-ink-100 cursor-not-allowed' : 'bg-white'
                 }`}
               >
@@ -283,7 +283,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
                 value={supportType}
                 readOnly
                 placeholder="Automatically filled based on project"
-                className="w-full px-4 py-3 border-2 border-ink-200 rounded-lg bg-ink-50 text-ink-700 font-semibold cursor-not-allowed"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg bg-ink-50 text-ink-700 font-semibold cursor-not-allowed"
               />
               {supportType && (
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -296,7 +296,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
 
           {/* Summary Card */}
           {selectedPartner && selectedProject && supportType && (
-            <div className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
+            <div className="p-4 bg-ink-50 border-2 border-green-300 rounded-xl">
               <h3 className="text-sm font-bold text-ink-900 mb-3 flex items-center gap-2">
                 <DollarSign size={16} className="text-green-600" />
                 Assignment Summary

@@ -68,7 +68,7 @@ const OrphanMapView = ({ orphans, onView }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Map Section */}
         <div className="lg:col-span-2">
-          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-8 border-2 border-blue-200 relative overflow-hidden">
+          <div className="bg-ink-50 rounded-xl p-8 border border-ink-200 relative overflow-hidden">
             <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-lg shadow-md z-10">
               <h3 className="text-lg font-bold text-ink-900">Sri Lanka - Orphan Distribution</h3>
               <p className="text-sm text-ink-600">{orphans.length} orphans across {Object.values(districtCounts).filter(d => d.count > 0).length} districts</p>
@@ -223,7 +223,7 @@ const OrphanMapView = ({ orphans, onView }) => {
                   <div
                     key={orphan.id}
                     className="bg-white border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                    style={{ animationDelay: `${index * 0.05}s` }}
+                    
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-12 h-12 bg-pink-50 border border-pink-200 text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-md flex-shrink-0">
@@ -258,7 +258,7 @@ const OrphanMapView = ({ orphans, onView }) => {
               </div>
             </div>
           ) : (
-            <div className="bg-ink-50 rounded-lg p-8 text-center h-full flex flex-col items-center justify-center border-2 border-dashed border-ink-200">
+            <div className="bg-ink-50 rounded-lg p-8 text-center h-full flex flex-col items-center justify-center border-2 border-dashed border-ink-300">
               <MapPin className="w-16 h-16 text-ink-400 mb-4" />
               <h3 className="text-lg font-bold text-ink-900 mb-2">Select a District</h3>
               <p className="text-sm text-ink-600 mb-4">Click on any district marker on the map to view orphans in that area</p>

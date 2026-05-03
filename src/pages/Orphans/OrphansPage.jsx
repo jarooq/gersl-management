@@ -161,46 +161,40 @@ const OrphansPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-pink-500 via-pink-600 to-rose-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Orphan Care Management</h1>
-                <p className="text-pink-100 text-sm">Supporting {stats.totalOrphans} children with love and care</p>
-              </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center">
+              <Heart className="w-5 h-5 text-mission-300" />
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowBulkUpload(true)}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
-              >
-                <Upload size={18} />
-                Bulk Upload
-              </button>
-              <button
-                onClick={() => setShowNeedsReport(true)}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
-              >
-                <ClipboardList size={18} />
-                Needs Report
-              </button>
-              <button
-                onClick={() => {
-                  setOrphanToEdit(null);
-                  setShowAddForm(true);
-                }}
-                className="btn-primary bg-white text-pink-600 hover:bg-pink-50 shadow-card flex items-center gap-2 text-sm px-4 py-2"
-              >
-                <Plus size={18} />
-                Add Orphan
-              </button>
+            <div>
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Orphan Care</p>
+              <h1 className="text-h2 font-bold leading-tight">Orphan Care Management</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Supporting {stats.totalOrphans} children with compassion</p>
             </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowBulkUpload(true)}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-white/10 hover:bg-white/15 border border-white/20 text-white transition"
+            >
+              <Upload size={16} />
+              Bulk Upload
+            </button>
+            <button
+              onClick={() => setShowNeedsReport(true)}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-white/10 hover:bg-white/15 border border-white/20 text-white transition"
+            >
+              <ClipboardList size={16} />
+              Needs Report
+            </button>
+            <button
+              onClick={() => { setOrphanToEdit(null); setShowAddForm(true); }}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
+            >
+              <Plus size={16} />
+              Add Orphan
+            </button>
           </div>
         </div>
       </div>
@@ -238,59 +232,36 @@ const OrphansPage = () => {
           }).length;
 
           return [
-            {
-              title: 'Age 0-5 Years',
-              value: age0to5,
-              icon: Baby,
-              gradient: 'from-blue-500 to-cyan-600',
-              change: 'Infants & toddlers',
-              subtitle: 'youngest group'
-            },
-            {
-              title: 'Age 6-12 Years',
-              value: age6to12,
-              icon: Users,
-              gradient: 'from-purple-500 to-indigo-600',
-              change: 'School-age children',
-              subtitle: 'primary education'
-            },
-            {
-              title: 'Age 13-18 Years',
-              value: age13to18,
-              icon: Users,
-              gradient: 'from-orange-500 to-amber-600',
-              change: 'Teenagers',
-              subtitle: 'secondary education'
-            },
-            {
-              title: 'Urgent Cases',
-              value: urgentCases,
-              icon: AlertCircle,
-              gradient: 'from-red-500 to-rose-600',
-              change: 'Need immediate attention',
-              subtitle: 'priority visits'
-            }
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-ink-600 mb-1">{stat.title}</p>
-                  <h3 className="text-h1 text-ink-900">{stat.value}</h3>
-                  <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
+            { title: 'Age 0-5 Years',  value: age0to5,    icon: Baby,         tone: 'blue',    change: 'Infants & toddlers',     subtitle: 'youngest group' },
+            { title: 'Age 6-12 Years', value: age6to12,   icon: Users,        tone: 'indigo',  change: 'School-age children',    subtitle: 'primary education' },
+            { title: 'Age 13-18 Years',value: age13to18,  icon: Users,        tone: 'amber',   change: 'Teenagers',              subtitle: 'secondary education' },
+            { title: 'Urgent Cases',   value: urgentCases,icon: AlertCircle,  tone: 'red',     change: 'Need immediate attention',subtitle: 'priority visits' }
+          ].map((stat, index) => {
+            const StatIcon = stat.icon;
+            const tone = {
+              blue:   { bg: 'bg-blue-50',   border: 'border-blue-200',   text: 'text-blue-700' },
+              indigo: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700' },
+              amber:  { bg: 'bg-mission-50',border: 'border-mission-200',text: 'text-mission-700' },
+              red:    { bg: 'bg-danger-50', border: 'border-danger-200', text: 'text-danger-700' },
+            }[stat.tone];
+            return (
+              <div key={index} className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold text-ink-600 mb-1">{stat.title}</p>
+                    <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                    <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
+                  </div>
+                  <div className={`${tone.bg} ${tone.border} border p-2.5 rounded-md flex-shrink-0`}>
+                    <StatIcon className={tone.text} size={18} />
+                  </div>
                 </div>
-                <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
-                  <stat.icon className="text-white" size={18} />
+                <div className="flex items-center justify-between pt-2 border-t border-ink-100">
+                  <span className="text-xs font-medium text-ink-600">{stat.change}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-2 border-t border-ink-100">
-                <span className="text-xs font-medium text-ink-600">{stat.change}</span>
-              </div>
-            </div>
-          ));
+            );
+          });
         })()}
       </div>
 
@@ -325,19 +296,13 @@ const OrphansPage = () => {
                 const count = orphans.filter(o => o.district === district).length;
                 const percent = stats.totalOrphans > 0 ? Math.round((count / stats.totalOrphans) * 100) : 0;
                 return (
-                  <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={index} className="" >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium text-ink-700">{district}</span>
                       <span className="text-xs font-bold text-ink-900">{count} children</span>
                     </div>
                     <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
-                      <div className={`h-1.5 rounded-full transition-all duration-500 bg-gradient-to-r ${
-                        index === 0 ? 'from-purple-500 to-indigo-600' :
-                        index === 1 ? 'from-blue-500 to-cyan-600' :
-                        index === 2 ? 'from-green-500 to-emerald-600' :
-                        index === 3 ? 'from-orange-500 to-amber-600' :
-                        'from-pink-500 to-rose-600'
-                      }`} style={{ width: `${percent}%` }}></div>
+                      <div className="h-1.5 rounded-full transition-all duration-500 bg-navy-900" style={{ width: `${percent}%` }}></div>
                     </div>
                   </div>
                 );
@@ -413,18 +378,18 @@ const OrphansPage = () => {
               }
 
               return [
-                { range: 'LKR 5,000 - 10,000', count: range1, percent: Math.round((range1 / totalWithStipend) * 100), color: 'from-blue-500 to-cyan-600' },
-                { range: 'LKR 10,000 - 15,000', count: range2, percent: Math.round((range2 / totalWithStipend) * 100), color: 'from-green-500 to-emerald-600' },
-                { range: 'LKR 15,000 - 20,000', count: range3, percent: Math.round((range3 / totalWithStipend) * 100), color: 'from-orange-500 to-amber-600' },
-                { range: 'LKR 20,000+', count: range4, percent: Math.round((range4 / totalWithStipend) * 100), color: 'from-purple-500 to-indigo-600' }
+                { range: 'LKR 5,000 - 10,000', count: range1, percent: Math.round((range1 / totalWithStipend) * 100) },
+                { range: 'LKR 10,000 - 15,000', count: range2, percent: Math.round((range2 / totalWithStipend) * 100) },
+                { range: 'LKR 15,000 - 20,000', count: range3, percent: Math.round((range3 / totalWithStipend) * 100) },
+                { range: 'LKR 20,000+', count: range4, percent: Math.round((range4 / totalWithStipend) * 100) }
               ].filter(item => item.count > 0).map((item, index) => (
-                <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
+                <div key={index}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-ink-700">{item.range}</span>
                     <span className="text-xs font-bold text-ink-900">{item.count} children</span>
                   </div>
                   <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
-                    <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
+                    <div className="h-1.5 rounded-full bg-navy-900 transition-all duration-500"
                       style={{ width: `${item.percent}%` }}></div>
                   </div>
                 </div>
@@ -542,7 +507,7 @@ const OrphansPage = () => {
             <div
               key={orphan.id}
               className=""
-              style={{ animationDelay: `${index * 0.05}s` }}
+              
             >
               {viewMode === 'grid' ? (
                 <OrphanCard

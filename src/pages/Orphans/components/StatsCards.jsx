@@ -51,7 +51,7 @@ const StatsCards = ({ stats }) => {
         <div
           key={index}
           className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-          style={{ animationDelay: `${index * 0.1}s` }}
+          
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
@@ -64,7 +64,7 @@ const StatsCards = ({ stats }) => {
               </div>
               <p className="text-xs text-ink-500 mt-1">{stat.change}</p>
             </div>
-            <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+            <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group- transition-transform duration-200 flex-shrink-0`}>
               <stat.icon className="text-white" size={18} />
             </div>
           </div>

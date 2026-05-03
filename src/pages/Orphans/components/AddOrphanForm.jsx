@@ -1184,7 +1184,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         </div>
                       </div>
                     ) : (
-                      <div className="w-24 h-32 bg-ink-200 rounded-lg border-2 border-dashed border-ink-400 flex items-center justify-center">
+                      <div className="w-24 h-32 bg-ink-200 rounded-lg border-2 border-dashed border-ink-300 flex items-center justify-center">
                         <User className="w-8 h-8 text-ink-400" />
                       </div>
                     )}

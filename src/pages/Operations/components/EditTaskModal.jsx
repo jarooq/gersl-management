@@ -116,7 +116,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-ink-600 to-ink-800 text-white p-6 rounded-t-2xl">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-2xl">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">Edit Task</h2>
@@ -342,7 +342,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               className={`flex-1 px-6 py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
                 loading
                   ? 'bg-ink-300 text-ink-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-ink-600 to-ink-800 text-white '
+                  : 'bg-navy-900 text-white '
               }`}
             >
               <Save size={18} />

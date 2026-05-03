@@ -962,7 +962,7 @@ const PersonalInfoTab = ({ orphan }) => (
         <SectionHeader icon={DollarSign} title={`Assigned Partners (${orphan.assignedPartners.length})`} />
         <div className="space-y-4 mt-4">
           {orphan.assignedPartners.map((assignment, index) => (
-            <div key={index} className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4">
+            <div key={index} className="bg-ink-50 border border-ink-200 rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-bold text-ink-900 flex items-center gap-2">
                   <Building2 size={18} className="text-green-600" />
@@ -1126,7 +1126,7 @@ const DocumentsTab = ({ orphan }) => {
       <SectionHeader icon={FolderOpen} title="Uploaded Documents" />
 
       {documents.length === 0 ? (
-        <div className="text-center py-12 bg-ink-50 rounded-lg border-2 border-dashed border-ink-200">
+        <div className="text-center py-12 bg-ink-50 rounded-lg border-2 border-dashed border-ink-300">
           <FolderOpen size={48} className="mx-auto text-ink-400 mb-3" />
           <p className="text-ink-500 font-medium">No documents uploaded yet</p>
           <p className="text-ink-400 text-sm mt-1">Documents uploaded during orphan registration will appear here</p>
@@ -1234,7 +1234,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
 
   if (partnerSupports.length === 0) {
     return (
-      <div className="text-center py-16 bg-ink-50 rounded-xl border-2 border-dashed border-ink-200">
+      <div className="text-center py-16 bg-ink-50 rounded-xl border-2 border-dashed border-ink-300">
         <Building2 className="w-12 h-12 text-ink-400 mx-auto mb-3" />
         <p className="text-ink-900 font-semibold mb-2">No partners assigned yet</p>
         <p className="text-ink-500 text-sm">Use the <span className="font-bold text-green-600">"Assign Partner"</span> button below to get started</p>
@@ -1258,7 +1258,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
             <select
               value={selectedPartnerIndex}
               onChange={(e) => setSelectedPartnerIndex(parseInt(e.target.value))}
-              className="w-full px-4 py-3 pr-10 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white text-ink-900 font-semibold"
+              className="w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white text-ink-900 font-semibold"
             >
               {partnerSupports.map((assignment, index) => (
                 <option key={index} value={index}>
@@ -1397,7 +1397,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-ink-50 rounded-xl border-2 border-dashed border-ink-200">
+            <div className="text-center py-12 bg-ink-50 rounded-xl border-2 border-dashed border-ink-300">
               <Package className="w-10 h-10 text-ink-400 mx-auto mb-3" />
               <p className="text-ink-600 text-sm mb-3">No support entries yet for this partner</p>
               <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-semibold">

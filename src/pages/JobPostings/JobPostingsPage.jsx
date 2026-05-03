@@ -237,9 +237,9 @@ const JobPostingsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-purple-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -288,7 +288,7 @@ const JobPostingsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Open Positions</p>
@@ -313,7 +313,7 @@ const JobPostingsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Applications</p>
@@ -338,7 +338,7 @@ const JobPostingsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Draft Postings</p>
@@ -423,7 +423,7 @@ const JobPostingsPage = () => {
       <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-fuchsia-100 to-purple-100">
+            <thead className="bg-ink-50">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Job Title</th>
                 <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Department</th>

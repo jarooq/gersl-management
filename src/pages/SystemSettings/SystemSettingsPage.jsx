@@ -232,9 +232,9 @@ const SystemSettingsPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-ink-700 via-slate-700 to-zinc-700 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -2371,7 +2371,7 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
     { value: 'from-green-500 to-teal-600', label: 'Green', preview: 'bg-navy-900' },
     { value: 'from-orange-500 to-red-600', label: 'Orange', preview: 'bg-navy-900' },
     { value: 'from-indigo-500 to-purple-600', label: 'Indigo', preview: 'bg-navy-900' },
-    { value: 'from-yellow-400 to-orange-500', label: 'Yellow', preview: 'bg-gradient-to-r from-yellow-400 to-orange-500' },
+    { value: 'from-yellow-400 to-orange-500', label: 'Yellow', preview: 'bg-navy-9000' },
   ];
 
   return (
@@ -2438,7 +2438,7 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
       </div>
 
       {departments.length === 0 && (
-        <div className="text-center py-12 border-2 border-dashed border-ink-200 rounded-lg">
+        <div className="text-center py-12 border-2 border-dashed border-ink-300 rounded-lg">
           <Building2 className="w-12 h-12 text-ink-400 mx-auto mb-3" />
           <p className="text-ink-600">No departments yet. Add your first department to get started.</p>
         </div>
@@ -2532,7 +2532,7 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
       </div>
 
       {positions.length === 0 && (
-        <div className="text-center py-12 border-2 border-dashed border-ink-200 rounded-lg">
+        <div className="text-center py-12 border-2 border-dashed border-ink-300 rounded-lg">
           <Briefcase className="w-12 h-12 text-ink-400 mx-auto mb-3" />
           <p className="text-ink-600">No positions yet. Add your first position to get started.</p>
         </div>

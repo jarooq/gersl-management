@@ -455,7 +455,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         const Icon = coverageType?.icon || FileText;
 
                         return (
-                          <div key={index} className="flex items-center bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-3">
+                          <div key={index} className="flex items-center bg-ink-50 border border-purple-200 rounded-lg p-3">
                             <Icon className="h-5 w-5 text-purple-600 mr-3" />
                             <span className="font-medium text-ink-900">{type}</span>
                           </div>

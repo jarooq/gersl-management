@@ -275,9 +275,9 @@ const PayrollPage = () => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -304,7 +304,7 @@ const PayrollPage = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Records</p>
@@ -329,7 +329,7 @@ const PayrollPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Pending</p>
@@ -339,7 +339,7 @@ const PayrollPage = () => {
               </div>
               <p className="text-xs text-ink-500 mt-1">Awaiting processing</p>
             </div>
-            <div className="bg-mission-100 border border-mission-200 text-mission-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-mission-100 border border-mission-200 text-mission-700 p-2.5 rounded-lg shadow-sm transform group- transition-transform duration-200 flex-shrink-0">
               <Clock className="text-white" size={18} />
             </div>
           </div>
@@ -354,7 +354,7 @@ const PayrollPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Processed</p>
@@ -379,7 +379,7 @@ const PayrollPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Amount</p>
@@ -389,7 +389,7 @@ const PayrollPage = () => {
               </div>
               <p className="text-xs text-ink-500 mt-1">Net payroll total</p>
             </div>
-            <div className="bg-violet-50 border border-violet-200 text-violet-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-violet-50 border border-violet-200 text-violet-700 p-2.5 rounded-lg shadow-sm transform group- transition-transform duration-200 flex-shrink-0">
               <Wallet className="text-white" size={18} />
             </div>
           </div>

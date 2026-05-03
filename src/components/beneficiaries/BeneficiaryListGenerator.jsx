@@ -217,7 +217,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
           {/* Filters Section */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
+          <div className="bg-ink-50 rounded-xl p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Filter className="text-blue-600" size={20} />
@@ -241,7 +241,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
                 <select
                   value={filters.district}
                   onChange={(e) => handleFilterChange('district', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Districts</option>
                   {allDistricts.map(district => (
@@ -259,7 +259,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
                 <select
                   value={filters.beneficiaryType}
                   onChange={(e) => handleFilterChange('beneficiaryType', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Types</option>
                   {BENEFICIARY_TYPES.map(type => (
@@ -277,7 +277,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
                 <select
                   value={filters.ageRange}
                   onChange={(e) => handleFilterChange('ageRange', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {AGE_RANGES.map(range => (
                     <option key={range.label} value={range.label}>{range.label}</option>
@@ -294,7 +294,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
                 <select
                   value={filters.supportStatus}
                   onChange={(e) => handleFilterChange('supportStatus', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="all">All Beneficiaries</option>
                   <option value="with_support">With Support History</option>
@@ -314,7 +314,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
                   placeholder="Search by name, NIC, or district..."
                   value={filters.searchQuery}
                   onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>

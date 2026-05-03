@@ -709,7 +709,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
               </div>
 
               {formData.budgetBreakdown.length === 0 ? (
-                <div className="text-center py-8 bg-white rounded-lg border-2 border-dashed border-ink-200">
+                <div className="text-center py-8 bg-white rounded-lg border-2 border-dashed border-ink-300">
                   <DollarSign className="h-12 w-12 text-ink-400 mx-auto mb-2" />
                   <p className="text-ink-500 text-sm">No budget items added yet.</p>
                   <p className="text-ink-400 text-xs mt-1">Click "Add Line Item" to start building your budget breakdown.</p>
@@ -1794,9 +1794,9 @@ const ProposalsPage = () => {
   return (
     <div className="space-y-4">
       {/* Indigo Gradient Hero Banner */}
-      <div className="bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -1818,7 +1818,7 @@ const ProposalsPage = () => {
           <div
             key={index}
             className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex-1">
@@ -1826,7 +1826,7 @@ const ProposalsPage = () => {
                 <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                 <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group- transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
@@ -1923,7 +1923,7 @@ const ProposalsPage = () => {
                 <div
                   key={proposal.id}
                   className="card-modern group p-5"
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1 mr-3">
@@ -2002,7 +2002,7 @@ const ProposalsPage = () => {
                   </div>
 
                   {/* Lead Writer */}
-                  <div className="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500 rounded-lg">
+                  <div className="mb-4 p-3 bg-ink-50 border-l-4 border-indigo-500 rounded-lg">
                     <div className="flex items-center gap-2">
                       <User size={14} className="text-indigo-600" />
                       <p className="text-xs font-semibold text-indigo-700">Lead Writer: {proposal.leadWriter}</p>
@@ -2085,7 +2085,7 @@ const ProposalsPage = () => {
                   <div
                     key={column.status}
                     className=""
-                    style={{ animationDelay: `${colIndex * 0.1}s` }}
+                    
                   >
                     <div className={`bg-${column.color}-50 border border-${column.color}-200 rounded-lg p-3 mb-3`}>
                       <div className="flex items-center gap-2 mb-1">
@@ -2099,7 +2099,7 @@ const ProposalsPage = () => {
                         <div
                           key={proposal.id}
                           className="bg-white border border-ink-100 rounded-lg2 shadow-card p-3"
-                          style={{ animationDelay: `${(colIndex * 0.1) + (index * 0.05)}s` }}
+                          
                         >
                           <h4 className="font-bold text-xs text-ink-900 mb-1 line-clamp-2">{proposal.title}</h4>
                           <p className="text-xs text-ink-600 mb-2">{proposal.donor}</p>

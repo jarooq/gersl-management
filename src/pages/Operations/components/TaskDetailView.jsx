@@ -128,7 +128,7 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
   const OverviewTab = () => (
     <div className="space-y-6">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+      <div className="bg-ink-50 rounded-lg p-6 border border-blue-200">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <h3 className="text-h1 text-ink-900 mb-2">{task.taskName}</h3>

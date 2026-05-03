@@ -364,7 +364,7 @@ const Dashboard = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Hero — navy mission band with quick actions */}
-      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
         <div className="absolute -top-24 -right-16 w-72 h-72 bg-mission-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-16 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -516,7 +516,7 @@ const Dashboard = () => {
 
       {/* Secondary Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-4">
+        <div className="bg-ink-50 border border-orange-200 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-orange-500 rounded-lg shadow-md">
               <UserCheck className="text-white" size={20} />
@@ -528,7 +528,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-4">
+        <div className="bg-ink-50 border border-purple-200 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-purple-500 rounded-lg shadow-md">
               <Handshake className="text-white" size={20} />
@@ -540,7 +540,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-4">
+        <div className="bg-ink-50 border border-blue-200 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-blue-500 rounded-lg shadow-md">
               <FileText className="text-white" size={20} />
@@ -552,7 +552,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-4">
+        <div className="bg-ink-50 border border-green-200 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-green-500 rounded-lg shadow-md">
               <DollarSign className="text-white" size={20} />
@@ -834,7 +834,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <Link
             to="/finance/invoices"
-            className="bg-white rounded-xl p-4 border-2 border-blue-200 hover:border-blue-400 transition-all shadow-sm hover:shadow-md"
+            className="bg-white rounded-xl p-4 border border-ink-200 hover:border-blue-400 transition-all shadow-sm hover:shadow-md"
           >
             <div className="flex items-center justify-between mb-2">
               <FileText className="text-blue-600" size={20} />
@@ -849,7 +849,7 @@ const Dashboard = () => {
 
           <Link
             to="/finance/bills"
-            className="bg-white rounded-xl p-4 border-2 border-orange-200 hover:border-orange-400 transition-all shadow-sm hover:shadow-md"
+            className="bg-white rounded-xl p-4 border border-ink-200 hover:border-orange-400 transition-all shadow-sm hover:shadow-md"
           >
             <div className="flex items-center justify-between mb-2">
               <FileText className="text-orange-600" size={20} />
@@ -864,7 +864,7 @@ const Dashboard = () => {
 
           <Link
             to="/finance/purchase-orders"
-            className="bg-white rounded-xl p-4 border-2 border-purple-200 hover:border-purple-400 transition-all shadow-sm hover:shadow-md"
+            className="bg-white rounded-xl p-4 border border-ink-200 hover:border-purple-400 transition-all shadow-sm hover:shadow-md"
           >
             <div className="flex items-center justify-between mb-2">
               <Package className="text-purple-600" size={20} />
@@ -986,7 +986,7 @@ const Dashboard = () => {
 
         {/* Donor Retention Insight */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <div className="bg-white rounded-xl p-4 border-2 border-green-200 hover:border-green-400 transition-all shadow-sm">
+          <div className="bg-white rounded-xl p-4 border border-ink-200 hover:border-green-400 transition-all shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               <CheckCircle className="text-green-600" size={24} />
               <div>
@@ -999,7 +999,7 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-4 border-2 border-blue-200 hover:border-blue-400 transition-all shadow-sm">
+          <div className="bg-white rounded-xl p-4 border border-ink-200 hover:border-blue-400 transition-all shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               <TrendingUp className="text-blue-600" size={24} />
               <div>
@@ -1104,7 +1104,7 @@ const Dashboard = () => {
       </div>
 
       {/* Impact Summary Banner — navy with mission accent */}
-      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
         <div className="absolute -top-12 -right-12 w-64 h-64 bg-mission-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">

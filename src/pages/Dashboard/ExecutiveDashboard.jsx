@@ -182,7 +182,7 @@ const ExecutiveDashboard = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header — navy executive band */}
-      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-6 text-white shadow-card">
+      <div className="bg-navy-900 rounded-lg2 p-6 text-white shadow-card">
         <p className="text-xs font-medium uppercase tracking-wider text-mission-300 mb-1.5">Strategic view</p>
         <h1 className="text-h1 leading-tight">Executive dashboard</h1>
         <p className="text-sm text-ink-200 mt-1.5">

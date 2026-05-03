@@ -205,7 +205,7 @@ const StaffDashboard = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Welcome — quiet navy header */}
-      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 rounded-lg2 p-6 text-white shadow-card">
+      <div className="bg-navy-900 rounded-lg2 p-6 text-white shadow-card">
         <p className="text-xs font-medium uppercase tracking-wider text-mission-300 mb-1.5">My workspace</p>
         <h1 className="text-h1 leading-tight">
           Welcome back, {user?.name || 'Team Member'}.

@@ -260,7 +260,7 @@ const AddContributionModal = ({ isOpen, onClose, onAdd, partners }) => {
 
             {/* Summary Box */}
             {formData.amount && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-ink-50 border border-green-200 rounded-lg p-4">
                 <h4 className="text-sm font-bold text-ink-900 mb-2">Contribution Summary</h4>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">

@@ -586,7 +586,7 @@ const TasksPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">In Progress</p>
@@ -599,7 +599,7 @@ const TasksPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Completed</p>
@@ -612,7 +612,7 @@ const TasksPage = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-sm font-semibold text-ink-600 mb-2">Overdue</p>
@@ -746,7 +746,7 @@ const TasksPage = () => {
                 <div
                   key={task.id}
                   className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4"
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  
                 >
                   {/* Task Header */}
                   <div className="flex items-start justify-between mb-3">

@@ -190,9 +190,9 @@ const JobPostingsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-500 via-blue-600 to-purple-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
+      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -308,7 +308,7 @@ const JobPostingsPage = () => {
 
       {/* Job Postings Grid */}
       <div className="bg-white rounded-lg2 shadow-card overflow-hidden">
-          <div className="p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-ink-100">
+          <div className="p-6 bg-ink-50 border-b border-ink-100">
             <h2 className="text-2xl font-bold text-ink-800 flex items-center gap-2">
               <Briefcase size={24} className="text-indigo-600" />
               Job Postings ({filteredJobs.length})
@@ -336,7 +336,7 @@ const JobPostingsPage = () => {
                 {filteredJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="bg-gradient-to-br from-white to-ink-50 rounded-xl p-6 border border-ink-100 hover:shadow-lift transition-all duration-200 cursor-pointer"
+                    className="bg-white rounded-lg2 p-6 border border-ink-100 hover:shadow-card transition cursor-pointer"
                     onClick={() => handleView(job)}
                   >
                     <div className="flex items-start justify-between mb-4">
@@ -570,7 +570,7 @@ const JobPostingsPage = () => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-6 py-3 border-2 border-ink-200 text-ink-700 rounded-xl font-semibold hover:bg-ink-50 transition-all duration-200"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-xl font-semibold hover:bg-ink-50 transition-all duration-200"
                 >
                   Cancel
                 </button>
@@ -604,7 +604,7 @@ const JobPostingsPage = () => {
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6">
+              <div className="bg-ink-50 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-3xl font-bold text-ink-800 mb-2">{selectedJob.title}</h3>

@@ -523,7 +523,7 @@ const CoordinatorDetailsPage = () => {
             <div className="p-6 space-y-6">
               {/* Metrics Grid */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
+                <div className="bg-ink-50 rounded-xl p-4 border border-blue-200">
                   <div className="text-sm font-medium text-blue-600 mb-1">Current Workload</div>
                   <div className="text-3xl font-bold text-blue-900">
                     {selectedCoordinator.current_workload || 0}
@@ -531,7 +531,7 @@ const CoordinatorDetailsPage = () => {
                   <div className="text-xs text-blue-600 mt-1">orphans assigned</div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
+                <div className="bg-ink-50 rounded-xl p-4 border border-purple-200">
                   <div className="text-sm font-medium text-purple-600 mb-1">Max Capacity</div>
                   <div className="text-3xl font-bold text-purple-900">
                     {selectedCoordinator.max_orphan_capacity || 50}
@@ -539,7 +539,7 @@ const CoordinatorDetailsPage = () => {
                   <div className="text-xs text-purple-600 mt-1">maximum capacity</div>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+                <div className="bg-ink-50 rounded-xl p-4 border border-green-200">
                   <div className="text-sm font-medium text-green-600 mb-1">Available</div>
                   <div className="text-3xl font-bold text-green-900">
                     {(selectedCoordinator.max_orphan_capacity || 50) - (selectedCoordinator.current_workload || 0)}
@@ -560,9 +560,9 @@ const CoordinatorDetailsPage = () => {
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       ((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100 < 60
-                        ? 'bg-gradient-to-r from-green-400 to-green-600'
+                        ? 'bg-navy-900'
                         : ((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100 < 80
-                        ? 'bg-gradient-to-r from-yellow-400 to-orange-500'
+                        ? 'bg-navy-9000'
                         : 'bg-navy-900'
                     }`}
                     style={{
