@@ -112,9 +112,9 @@ const MyTasksPage = () => {
       'In Progress': 'bg-blue-100 text-blue-800 border-blue-200',
       'Completed': 'bg-green-100 text-green-800 border-green-200',
       'Cancelled': 'bg-red-100 text-red-800 border-red-200',
-      'On Hold': 'bg-gray-100 text-gray-800 border-gray-200'
+      'On Hold': 'bg-ink-100 text-gray-800 border-ink-100'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800 border-gray-200';
+    return colors[status] || 'bg-ink-100 text-gray-800 border-ink-100';
   }, []);
 
   const getPriorityColor = useCallback((priority) => {
@@ -124,7 +124,7 @@ const MyTasksPage = () => {
       'High': 'text-orange-600',
       'Urgent': 'text-red-600'
     };
-    return colors[priority] || 'text-gray-600';
+    return colors[priority] || 'text-ink-600';
   }, []);
 
   const getStatusIcon = useCallback((status) => {
@@ -164,7 +164,7 @@ const MyTasksPage = () => {
     } else if (diffDays <= 7) {
       return { text: formattedDate, color: 'text-blue-600', label: `Due in ${diffDays} days` };
     } else {
-      return { text: formattedDate, color: 'text-gray-600', label: `Due in ${diffDays} days` };
+      return { text: formattedDate, color: 'text-ink-600', label: `Due in ${diffDays} days` };
     }
   }, []);
 
@@ -289,14 +289,14 @@ const MyTasksPage = () => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your tasks...</p>
+          <p className="text-ink-600">Loading your tasks...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-lg">
         <div className="flex items-center justify-between">
@@ -319,12 +319,12 @@ const MyTasksPage = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-6 gap-4">
-        <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-lg border border-ink-100 p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
             <ListTodo className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">{stats.total}</span>
+            <span className="text-h1 text-ink-900">{stats.total}</span>
           </div>
-          <p className="text-sm text-gray-600">Total Tasks</p>
+          <p className="text-sm text-ink-600">Total Tasks</p>
         </div>
 
         <div className="bg-yellow-50 rounded-lg border border-yellow-200 p-4 hover:shadow-md transition-shadow">
@@ -369,11 +369,11 @@ const MyTasksPage = () => {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-white rounded-lg border border-ink-100 p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+            <Filter className="w-5 h-5 text-ink-600" />
+            <h3 className="text-lg font-semibold text-ink-900">Filters</h3>
             {stats.projects > 0 && (
               <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
                 {stats.projects} {stats.projects === 1 ? 'Project' : 'Projects'}
@@ -382,13 +382,13 @@ const MyTasksPage = () => {
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+          <div className="flex items-center gap-2 bg-ink-100 rounded-lg p-1">
             <button
               onClick={() => setViewMode('grouped')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 viewMode === 'grouped'
                   ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-ink-600 hover:text-ink-900'
               }`}
             >
               <Briefcase className="w-4 h-4 inline mr-2" />
@@ -399,7 +399,7 @@ const MyTasksPage = () => {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 viewMode === 'list'
                   ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-ink-600 hover:text-ink-900'
               }`}
             >
               <ListTodo className="w-4 h-4 inline mr-2" />
@@ -411,26 +411,26 @@ const MyTasksPage = () => {
         <div className="grid grid-cols-5 gap-4">
           {/* Search */}
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+            <label className="block text-sm font-medium text-ink-700 mb-2">Search</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search tasks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
 
           {/* Project Filter */}
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Project</label>
+            <label className="block text-sm font-medium text-ink-700 mb-2">Project</label>
             <select
               value={filterProject}
               onChange={(e) => setFilterProject(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">All Projects</option>
               {projects.map((project) => (
@@ -443,11 +443,11 @@ const MyTasksPage = () => {
 
           {/* Status Filter */}
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <label className="block text-sm font-medium text-ink-700 mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">All Statuses</option>
               <option value="Pending">Pending</option>
@@ -459,11 +459,11 @@ const MyTasksPage = () => {
 
           {/* Priority Filter */}
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+            <label className="block text-sm font-medium text-ink-700 mb-2">Priority</label>
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">All Priorities</option>
               <option value="Low">Low</option>
@@ -475,11 +475,11 @@ const MyTasksPage = () => {
 
           {/* Sort By */}
           <div className="col-span-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+            <label className="block text-sm font-medium text-ink-700 mb-2">Sort By</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="dueDate">Due Date</option>
               <option value="priority">Priority</option>
@@ -504,10 +504,10 @@ const MyTasksPage = () => {
 
       {/* Tasks List */}
       {filteredTasks.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-          <ClipboardCheck className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No tasks found</h3>
-          <p className="text-gray-600">
+        <div className="bg-white rounded-lg border border-ink-100 p-12 text-center">
+          <ClipboardCheck className="w-16 h-16 text-ink-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-ink-900 mb-2">No tasks found</h3>
+          <p className="text-ink-600">
             {tasks.length === 0
               ? "You don't have any assigned tasks yet."
               : 'No tasks match your current filters. Try adjusting your search criteria.'}
@@ -517,19 +517,19 @@ const MyTasksPage = () => {
         // Grouped by Project View
         <div className="space-y-6">
           {tasksByProject.map((projectGroup) => (
-            <div key={projectGroup.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div key={projectGroup.id} className="bg-white rounded-lg border border-ink-100 overflow-hidden">
               {/* Project Header */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 px-5 py-4">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-ink-100 px-5 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="bg-blue-600 rounded-lg p-2">
                       <Briefcase className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-900">
+                      <h2 className="text-lg font-bold text-ink-900">
                         {projectGroup.code ? `${projectGroup.code} - ${projectGroup.name}` : projectGroup.name}
                       </h2>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-ink-600">
                         {projectGroup.tasks.length} {projectGroup.tasks.length === 1 ? 'task' : 'tasks'}
                       </p>
                     </div>
@@ -550,7 +550,7 @@ const MyTasksPage = () => {
                     <div
                       key={task.id}
                       className={`rounded-lg border ${
-                        isOverdue ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'
+                        isOverdue ? 'border-red-300 bg-red-50' : 'border-ink-100 bg-ink-50'
                       } p-4 hover:shadow-md transition-all`}
                     >
                       <div className="flex items-start justify-between">
@@ -562,17 +562,17 @@ const MyTasksPage = () => {
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h3 className="text-lg font-semibold text-gray-900">{task.taskName}</h3>
+                                <h3 className="text-lg font-semibold text-ink-900">{task.taskName}</h3>
                                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
                                   {task.status}
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                              <p className="text-sm text-ink-600 mb-3 line-clamp-2">
                                 {task.description || 'No description provided'}
                               </p>
 
                               {/* Task Details */}
-                              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                              <div className="flex flex-wrap items-center gap-4 text-sm text-ink-600">
                                 <div className="flex items-center gap-1">
                                   <Briefcase className="w-4 h-4" />
                                   <span>{task.taskType}</span>
@@ -624,7 +624,7 @@ const MyTasksPage = () => {
                                   ? 'bg-green-100 text-green-700'
                                   : task.mediaCoverageStatus === 'In Progress'
                                   ? 'bg-yellow-100 text-yellow-700'
-                                  : 'bg-gray-100 text-gray-700'
+                                  : 'bg-ink-100 text-ink-700'
                               }`}>
                                 {task.mediaCoverageStatus || 'Pending'}
                               </span>
@@ -690,7 +690,7 @@ const MyTasksPage = () => {
               <div
                 key={task.id}
                 className={`bg-white rounded-lg border ${
-                  isOverdue ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                  isOverdue ? 'border-red-300 bg-red-50' : 'border-ink-100'
                 } p-4 hover:shadow-md transition-all`}
               >
                 <div className="flex items-start justify-between">
@@ -702,17 +702,17 @@ const MyTasksPage = () => {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-semibold text-gray-900">{task.taskName}</h3>
+                          <h3 className="text-lg font-semibold text-ink-900">{task.taskName}</h3>
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
                             {task.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        <p className="text-sm text-ink-600 mb-3 line-clamp-2">
                           {task.description || 'No description provided'}
                         </p>
 
                         {/* Task Details */}
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-ink-600">
                           <div className="flex items-center gap-1">
                             <Briefcase className="w-4 h-4" />
                             <span>{task.taskType}</span>

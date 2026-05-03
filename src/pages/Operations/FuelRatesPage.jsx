@@ -71,94 +71,94 @@ export default function FuelRatesPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold text-gray-900">Fuel rates</h1>
-        <p className="text-sm text-gray-500">Per-km reimbursement rates by vehicle type, effective-dated.</p>
+        <h1 className="text-h1 text-ink-900">Fuel rates</h1>
+        <p className="text-sm text-ink-500">Per-km reimbursement rates by vehicle type, effective-dated.</p>
       </header>
 
-      <form onSubmit={submit} className="bg-white border border-gray-200 rounded-md p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+      <form onSubmit={submit} className="bg-white border border-ink-100 rounded-md p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Vehicle type</span>
+          <span className="text-xs uppercase text-ink-500">Vehicle type</span>
           <select
             value={draft.vehicleType}
             onChange={(e) => setDraft({ ...draft, vehicleType: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           >
             {TYPES.map(t => <option key={t}>{t}</option>)}
           </select>
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Rate per km</span>
+          <span className="text-xs uppercase text-ink-500">Rate per km</span>
           <input
             type="number"
             step="0.01"
             min={0}
             value={draft.ratePerKm}
             onChange={(e) => setDraft({ ...draft, ratePerKm: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
             required
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Currency</span>
+          <span className="text-xs uppercase text-ink-500">Currency</span>
           <input
             value={draft.currency}
             onChange={(e) => setDraft({ ...draft, currency: e.target.value.toUpperCase().slice(0, 8) })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Effective from</span>
+          <span className="text-xs uppercase text-ink-500">Effective from</span>
           <input
             type="date"
             value={draft.effectiveFrom}
             onChange={(e) => setDraft({ ...draft, effectiveFrom: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
             required
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Effective to (blank = open)</span>
+          <span className="text-xs uppercase text-ink-500">Effective to (blank = open)</span>
           <input
             type="date"
             value={draft.effectiveTo}
             onChange={(e) => setDraft({ ...draft, effectiveTo: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block sm:col-span-3">
-          <span className="text-xs uppercase text-gray-500">Notes</span>
+          <span className="text-xs uppercase text-ink-500">Notes</span>
           <input
             value={draft.notes}
             onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         {error && <div className="sm:col-span-3 bg-red-50 border border-red-200 text-red-700 rounded-md p-2">{error}</div>}
         <div className="sm:col-span-3 flex justify-end gap-2">
           {editingId && (
-            <button type="button" onClick={() => { setEditingId(null); setDraft(empty); }} className="px-3 py-1.5 text-sm border border-gray-300 rounded-md">Cancel</button>
+            <button type="button" onClick={() => { setEditingId(null); setDraft(empty); }} className="px-3 py-1.5 text-sm border border-ink-200 rounded-md">Cancel</button>
           )}
-          <button type="submit" className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+          <button type="submit" className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition">
             {editingId ? 'Save rate' : 'Add rate'}
           </button>
         </div>
       </form>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vehicle</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Rate</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Currency</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">From</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">To</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Vehicle</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Rate</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Currency</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">From</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">To</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={6} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
-            {!loading && rows.length === 0 && <tr><td colSpan={6} className="p-4 text-center text-sm text-gray-500">No rates configured.</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={6} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
+            {!loading && rows.length === 0 && <tr><td colSpan={6} className="p-4 text-center text-sm text-ink-500">No rates configured.</td></tr>}
             {rows.map(r => (
               <tr key={r.id}>
                 <td className="px-3 py-2 text-sm">{r.vehicleType}</td>

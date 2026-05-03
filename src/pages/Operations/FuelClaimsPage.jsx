@@ -3,13 +3,13 @@ import { MovementAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 
 const STATUS_BADGE = {
-  Draft:     'bg-gray-100 text-gray-700',
+  Draft:     'bg-ink-100 text-ink-700',
   Submitted: 'bg-yellow-100 text-yellow-800',
   Approved:  'bg-green-100 text-green-700',
   Rejected:  'bg-red-100 text-red-700',
   Paid:      'bg-emerald-100 text-emerald-800',
   Merged:    'bg-purple-100 text-purple-700',
-  Cancelled: 'bg-gray-200 text-gray-600'
+  Cancelled: 'bg-gray-200 text-ink-600'
 };
 
 const APPROVER_ROLES = new Set([
@@ -88,55 +88,55 @@ export default function FuelClaimsPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold text-gray-900">Fuel claims</h1>
-        <p className="text-sm text-gray-500">Auto-derived from Returned movements; lunch-hour deductions applied.</p>
+        <h1 className="text-h1 text-ink-900">Fuel claims</h1>
+        <p className="text-sm text-ink-500">Auto-derived from Returned movements; lunch-hour deductions applied.</p>
       </header>
 
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="flex gap-2 border-b border-ink-100">
         <button
           onClick={() => setTab('mine')}
-          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'mine' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'mine' ? 'border-blue-600 text-blue-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
         >My claims</button>
         {isApprover && (
           <button
             onClick={() => setTab('pending')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'pending' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'pending' ? 'border-blue-600 text-blue-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
           >Pending approval</button>
         )}
       </div>
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Staff</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Trip</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Distance</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Rate</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Lunch ded.</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Net</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Staff</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Trip</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Distance</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Rate</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Lunch ded.</th>
+              <th className="px-3 py-2 text-right text-xs font-medium text-ink-500 uppercase">Net</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={8} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={8} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
             {!loading && rows.length === 0 && (
-              <tr><td colSpan={8} className="p-6 text-center text-sm text-gray-500">No claims.</td></tr>
+              <tr><td colSpan={8} className="p-6 text-center text-sm text-ink-500">No claims.</td></tr>
             )}
             {rows.map(c => {
               const dups = duplicates[c.id] || [];
               return (
                 <tr key={c.id} className={c.status === 'Cancelled' ? 'opacity-60' : ''}>
                   <td className="px-3 py-2 text-sm">
-                    <div className="text-gray-900">{c.staff?.fullName || `#${c.userId}`}</div>
-                    {c.passengers?.length > 0 && <div className="text-xs text-gray-500">+ {c.passengers.length} passenger(s)</div>}
+                    <div className="text-ink-900">{c.staff?.fullName || `#${c.userId}`}</div>
+                    {c.passengers?.length > 0 && <div className="text-xs text-ink-500">+ {c.passengers.length} passenger(s)</div>}
                   </td>
                   <td className="px-3 py-2 text-sm">
-                    <div className="text-gray-900">{c.movement?.fromLocation} → {c.movement?.toLocation}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-ink-900">{c.movement?.fromLocation} → {c.movement?.toLocation}</div>
+                    <div className="text-xs text-ink-500">
                       {c.vehicleType}{c.vehicle?.plateNo ? ` · ${c.vehicle.plateNo}` : ''}
                       {c.movement?.departureAt ? ` · ${new Date(c.movement.departureAt).toLocaleDateString()}` : ''}
                     </div>
@@ -179,7 +179,7 @@ export default function FuelClaimsPage() {
                       </>
                     )}
                     {c.userId === user?.id && !['Paid', 'Cancelled', 'Rejected', 'Merged'].includes(c.status) && (
-                      <button disabled={busy} onClick={() => onCancel(c)} className="text-gray-500 hover:underline">Cancel</button>
+                      <button disabled={busy} onClick={() => onCancel(c)} className="text-ink-500 hover:underline">Cancel</button>
                     )}
                   </td>
                 </tr>

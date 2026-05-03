@@ -118,7 +118,7 @@ const ActivitiesPage = () => {
       case 'Scheduled':
         return <AlertCircle size={16} className="text-purple-600" />;
       default:
-        return <Clock size={16} className="text-gray-600" />;
+        return <Clock size={16} className="text-ink-600" />;
     }
   };
 
@@ -131,7 +131,7 @@ const ActivitiesPage = () => {
       case 'Scheduled':
         return 'bg-purple-100 text-purple-700 border-purple-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -168,82 +168,72 @@ const ActivitiesPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Target className="w-5 h-5 animate-pulse" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Advanced Activities Management</h1>
-                <p className="text-purple-100 text-sm">Full lifecycle management with resources, attendance, and reporting</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowAddActivity(true)}
-              className="px-6 py-3 bg-white text-purple-600 rounded-lg hover:shadow-lg transition-all font-bold flex items-center gap-2"
-            >
-              <Plus size={20} />
-              New Activity
-            </button>
-          </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Operations · Activities</p>
+          <h1 className="text-h1 text-ink-900">Activities Management</h1>
+          <p className="text-sm text-ink-500 mt-1">Full lifecycle management with resources, attendance, and reporting.</p>
         </div>
+        <button
+          onClick={() => setShowAddActivity(true)}
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-navy-900 hover:bg-navy-800 rounded-md shadow-card transition shrink-0"
+        >
+          <Plus size={16} />
+          New Activity
+        </button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat-card group cursor-pointer animate-slide-up">
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer">
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">Total Activities</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.total}</h3>
-              <p className="text-xs text-gray-500 mt-1">Across all projects</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">Total Activities</p>
+              <h3 className="text-h1 text-ink-900">{stats.total}</h3>
+              <p className="text-xs text-ink-500 mt-1">Across all projects</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <Target className="text-white" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">In Progress</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.inProgress}</h3>
-              <p className="text-xs text-gray-500 mt-1">Currently active</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">In Progress</p>
+              <h3 className="text-h1 text-ink-900">{stats.inProgress}</h3>
+              <p className="text-xs text-ink-500 mt-1">Currently active</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-pink-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <Clock className="text-white" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">Completed</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.completed}</h3>
-              <p className="text-xs text-gray-500 mt-1">This quarter</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">Completed</p>
+              <h3 className="text-h1 text-ink-900">{stats.completed}</h3>
+              <p className="text-xs text-ink-500 mt-1">This quarter</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <CheckCircle className="text-white" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">Participants</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.participants}</h3>
-              <p className="text-xs text-gray-500 mt-1">Total reached</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">Participants</p>
+              <h3 className="text-h1 text-ink-900">{stats.participants}</h3>
+              <p className="text-xs text-ink-500 mt-1">Total reached</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <Users className="text-white" size={18} />
             </div>
           </div>
@@ -251,28 +241,28 @@ const ActivitiesPage = () => {
       </div>
 
       {/* Activities List */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-bold text-gray-900">Activities</h2>
+          <h2 className="text-sm font-bold text-ink-900">Activities</h2>
         </div>
 
         <div className="space-y-4">
           {activities.map((activity, index) => (
             <div
               key={activity.id}
-              className="card-modern p-5 animate-slide-up"
+              className="bg-white border border-ink-100 rounded-lg2 shadow-card p-5"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-bold text-lg text-gray-900">{activity.name}</h3>
+                    <h3 className="font-bold text-lg text-ink-900">{activity.name}</h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-bold border flex items-center gap-1 ${getStatusColor(activity.status)}`}>
                       {getStatusIcon(activity.status)}
                       {activity.status}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 font-medium">{activity.project}</p>
+                  <p className="text-sm text-ink-600 font-medium">{activity.project}</p>
                 </div>
               </div>
 
@@ -282,8 +272,8 @@ const ActivitiesPage = () => {
                     <Calendar size={16} className="text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Start Date</p>
-                    <p className="text-sm font-semibold text-gray-900">{activity.startDate}</p>
+                    <p className="text-xs text-ink-500">Start Date</p>
+                    <p className="text-sm font-semibold text-ink-900">{activity.startDate}</p>
                   </div>
                 </div>
 
@@ -292,8 +282,8 @@ const ActivitiesPage = () => {
                     <Calendar size={16} className="text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">End Date</p>
-                    <p className="text-sm font-semibold text-gray-900">{activity.endDate}</p>
+                    <p className="text-xs text-ink-500">End Date</p>
+                    <p className="text-sm font-semibold text-ink-900">{activity.endDate}</p>
                   </div>
                 </div>
 
@@ -302,8 +292,8 @@ const ActivitiesPage = () => {
                     <MapPin size={16} className="text-green-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Location</p>
-                    <p className="text-sm font-semibold text-gray-900">{activity.location}</p>
+                    <p className="text-xs text-ink-500">Location</p>
+                    <p className="text-sm font-semibold text-ink-900">{activity.location}</p>
                   </div>
                 </div>
 
@@ -312,8 +302,8 @@ const ActivitiesPage = () => {
                     <Users size={16} className="text-orange-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Participants</p>
-                    <p className="text-sm font-semibold text-gray-900">{activity.participants}</p>
+                    <p className="text-xs text-ink-500">Participants</p>
+                    <p className="text-sm font-semibold text-ink-900">{activity.participants}</p>
                   </div>
                 </div>
 
@@ -322,8 +312,8 @@ const ActivitiesPage = () => {
                     <DollarSign size={16} className="text-pink-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Budget</p>
-                    <p className="text-sm font-semibold text-gray-900">LKR {activity.budget.toLocaleString()}</p>
+                    <p className="text-xs text-ink-500">Budget</p>
+                    <p className="text-sm font-semibold text-ink-900">LKR {activity.budget.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -331,7 +321,7 @@ const ActivitiesPage = () => {
               {/* Progress Bar */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold text-gray-700">Progress</span>
+                  <span className="text-sm font-semibold text-ink-700">Progress</span>
                   <span className="text-sm font-bold text-purple-600">{activity.completion}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1.5">
@@ -389,7 +379,7 @@ const ActivitiesPage = () => {
       {showActivityDetail && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{selectedActivity.name}</h2>
@@ -406,37 +396,37 @@ const ActivitiesPage = () => {
 
             <div className="p-4 space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-2">Description</h3>
-                <p className="text-gray-700">{selectedActivity.description}</p>
+                <h3 className="text-sm font-bold text-ink-900 mb-2">Description</h3>
+                <p className="text-ink-700">{selectedActivity.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Location</p>
-                  <p className="font-semibold text-gray-900">{selectedActivity.location}</p>
+                  <p className="text-sm text-ink-600 mb-1">Location</p>
+                  <p className="font-semibold text-ink-900">{selectedActivity.location}</p>
                 </div>
                 <div className="p-4 bg-purple-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Status</p>
+                  <p className="text-sm text-ink-600 mb-1">Status</p>
                   <span className={`px-3 py-1 rounded-full text-sm font-bold border inline-flex items-center gap-1 ${getStatusColor(selectedActivity.status)}`}>
                     {getStatusIcon(selectedActivity.status)}
                     {selectedActivity.status}
                   </span>
                 </div>
                 <div className="p-4 bg-green-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Duration</p>
-                  <p className="font-semibold text-gray-900">{selectedActivity.startDate} - {selectedActivity.endDate}</p>
+                  <p className="text-sm text-ink-600 mb-1">Duration</p>
+                  <p className="font-semibold text-ink-900">{selectedActivity.startDate} - {selectedActivity.endDate}</p>
                 </div>
                 <div className="p-4 bg-orange-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Expected Participants</p>
-                  <p className="font-semibold text-gray-900">{selectedActivity.participants}</p>
+                  <p className="text-sm text-ink-600 mb-1">Expected Participants</p>
+                  <p className="font-semibold text-ink-900">{selectedActivity.participants}</p>
                 </div>
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
               <button
                 onClick={() => setShowActivityDetail(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -449,7 +439,7 @@ const ActivitiesPage = () => {
       {showResourcePlanning && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Resource Planning</h2>
@@ -468,17 +458,17 @@ const ActivitiesPage = () => {
               <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total Budget</p>
-                    <p className="text-2xl font-bold text-gray-900">LKR {selectedActivity.budget.toLocaleString()}</p>
+                    <p className="text-sm text-ink-600">Total Budget</p>
+                    <p className="text-h1 text-ink-900">LKR {selectedActivity.budget.toLocaleString()}</p>
                   </div>
                   <DollarSign size={18} className="text-blue-600" />
                 </div>
               </div>
 
-              <h3 className="text-sm font-bold text-gray-900 mb-4">Resource Allocation</h3>
+              <h3 className="text-sm font-bold text-ink-900 mb-4">Resource Allocation</h3>
               <div className="space-y-3">
                 {selectedActivity.resources.map((resource, idx) => (
-                  <div key={idx} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
+                  <div key={idx} className="p-4 border border-ink-100 rounded-lg hover:border-blue-300 transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
@@ -486,15 +476,15 @@ const ActivitiesPage = () => {
                             <Package size={18} className="text-blue-600" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{resource.item}</p>
-                            <p className="text-sm text-gray-600">{resource.type}</p>
+                            <p className="font-semibold text-ink-900">{resource.item}</p>
+                            <p className="text-sm text-ink-600">{resource.type}</p>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="text-right">
-                          <p className="text-sm text-gray-600">Quantity</p>
-                          <p className="font-bold text-gray-900">{resource.quantity}</p>
+                          <p className="text-sm text-ink-600">Quantity</p>
+                          <p className="font-bold text-ink-900">{resource.quantity}</p>
                         </div>
                         <div>
                           {resource.allocated ? (
@@ -516,13 +506,13 @@ const ActivitiesPage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
                 Add Resource
               </button>
               <button
                 onClick={() => setShowResourcePlanning(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -535,7 +525,7 @@ const ActivitiesPage = () => {
       {showAttendance && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-pink-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Attendance Tracking</h2>
@@ -553,40 +543,40 @@ const ActivitiesPage = () => {
             <div className="p-4">
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Total Expected</p>
-                  <p className="text-2xl font-bold text-gray-900">{selectedActivity.participants}</p>
+                  <p className="text-sm text-ink-600 mb-1">Total Expected</p>
+                  <p className="text-h1 text-ink-900">{selectedActivity.participants}</p>
                 </div>
                 <div className="p-4 bg-green-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Present</p>
+                  <p className="text-sm text-ink-600 mb-1">Present</p>
                   <p className="text-2xl font-bold text-green-600">
                     {selectedActivity.attendance.filter(a => a.status === 'Present').length}
                   </p>
                 </div>
                 <div className="p-4 bg-red-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Absent</p>
+                  <p className="text-sm text-ink-600 mb-1">Absent</p>
                   <p className="text-2xl font-bold text-red-600">
                     {selectedActivity.attendance.filter(a => a.status === 'Absent').length}
                   </p>
                 </div>
               </div>
 
-              <h3 className="text-sm font-bold text-gray-900 mb-4">Attendance Records</h3>
+              <h3 className="text-sm font-bold text-ink-900 mb-4">Attendance Records</h3>
               {selectedActivity.attendance.length > 0 ? (
                 <div className="space-y-2">
                   {selectedActivity.attendance.map((record) => (
-                    <div key={record.id} className="p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
+                    <div key={record.id} className="p-4 border border-ink-100 rounded-lg hover:border-purple-300 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                             <Users size={18} className="text-purple-600" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{record.name}</p>
-                            <p className="text-sm text-gray-600">{record.role}</p>
+                            <p className="font-semibold text-ink-900">{record.name}</p>
+                            <p className="text-sm text-ink-600">{record.role}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <p className="text-sm text-gray-600">{record.date}</p>
+                          <p className="text-sm text-ink-600">{record.date}</p>
                           {record.status === 'Present' ? (
                             <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1">
                               <CheckCircle size={12} />
@@ -604,20 +594,20 @@ const ActivitiesPage = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <UserCheck size={48} className="mx-auto mb-2 text-gray-400" />
+                <div className="text-center py-8 text-ink-500">
+                  <UserCheck size={48} className="mx-auto mb-2 text-ink-400" />
                   <p>No attendance records yet</p>
                 </div>
               )}
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
               <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold">
                 Mark Attendance
               </button>
               <button
                 onClick={() => setShowAttendance(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -630,7 +620,7 @@ const ActivitiesPage = () => {
       {showPhotos && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-teal-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Photo Documentation</h2>
@@ -648,7 +638,7 @@ const ActivitiesPage = () => {
             <div className="p-4">
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-bold text-gray-900">Gallery ({selectedActivity.photos.length} photos)</h3>
+                  <h3 className="text-sm font-bold text-ink-900">Gallery ({selectedActivity.photos.length} photos)</h3>
                   <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2">
                     <Camera size={18} />
                     Upload Photos
@@ -659,30 +649,30 @@ const ActivitiesPage = () => {
               {selectedActivity.photos.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {selectedActivity.photos.map((photo) => (
-                    <div key={photo.id} className="border border-gray-200 rounded-lg overflow-hidden hover:border-green-400 transition-colors">
+                    <div key={photo.id} className="border border-ink-100 rounded-lg overflow-hidden hover:border-green-400 transition-colors">
                       <div className="aspect-video bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center">
                         <Camera size={48} className="text-green-600" />
                       </div>
                       <div className="p-4">
-                        <p className="font-semibold text-gray-900 mb-1">{photo.title}</p>
-                        <p className="text-sm text-gray-600">{photo.date}</p>
+                        <p className="font-semibold text-ink-900 mb-1">{photo.title}</p>
+                        <p className="text-sm text-ink-600">{photo.date}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-500">
-                  <Camera size={64} className="mx-auto mb-3 text-gray-400" />
+                <div className="text-center py-12 text-ink-500">
+                  <Camera size={64} className="mx-auto mb-3 text-ink-400" />
                   <p className="text-lg font-semibold mb-1">No photos yet</p>
                   <p className="text-sm">Upload photos to document this activity</p>
                 </div>
               )}
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl">
               <button
                 onClick={() => setShowPhotos(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -695,7 +685,7 @@ const ActivitiesPage = () => {
       {showReport && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-red-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Activity Report</h2>
@@ -713,25 +703,25 @@ const ActivitiesPage = () => {
             <div className="p-4 space-y-4">
               {/* Report Summary */}
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-4">Report Summary</h3>
+                <h3 className="text-sm font-bold text-ink-900 mb-4">Report Summary</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Activity Status</p>
-                    <p className="font-bold text-gray-900">{selectedActivity.status}</p>
+                    <p className="text-sm text-ink-600 mb-1">Activity Status</p>
+                    <p className="font-bold text-ink-900">{selectedActivity.status}</p>
                   </div>
                   <div className="p-4 bg-purple-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Completion Rate</p>
-                    <p className="font-bold text-gray-900">{selectedActivity.completion}%</p>
+                    <p className="text-sm text-ink-600 mb-1">Completion Rate</p>
+                    <p className="font-bold text-ink-900">{selectedActivity.completion}%</p>
                   </div>
                   <div className="p-4 bg-green-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Resources Allocated</p>
-                    <p className="font-bold text-gray-900">
+                    <p className="text-sm text-ink-600 mb-1">Resources Allocated</p>
+                    <p className="font-bold text-ink-900">
                       {selectedActivity.resources.filter(r => r.allocated).length} / {selectedActivity.resources.length}
                     </p>
                   </div>
                   <div className="p-4 bg-orange-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Attendance Rate</p>
-                    <p className="font-bold text-gray-900">
+                    <p className="text-sm text-ink-600 mb-1">Attendance Rate</p>
+                    <p className="font-bold text-ink-900">
                       {selectedActivity.attendance.length > 0
                         ? Math.round((selectedActivity.attendance.filter(a => a.status === 'Present').length / selectedActivity.attendance.length) * 100)
                         : 0}%
@@ -742,11 +732,11 @@ const ActivitiesPage = () => {
 
               {/* Performance Metrics */}
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-4">Performance Metrics</h3>
+                <h3 className="text-sm font-bold text-ink-900 mb-4">Performance Metrics</h3>
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-gray-700">Overall Progress</span>
+                      <span className="text-sm font-semibold text-ink-700">Overall Progress</span>
                       <span className="text-sm font-bold text-purple-600">{selectedActivity.completion}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
@@ -759,7 +749,7 @@ const ActivitiesPage = () => {
 
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-gray-700">Resource Allocation</span>
+                      <span className="text-sm font-semibold text-ink-700">Resource Allocation</span>
                       <span className="text-sm font-bold text-green-600">
                         {Math.round((selectedActivity.resources.filter(r => r.allocated).length / selectedActivity.resources.length) * 100)}%
                       </span>
@@ -776,29 +766,29 @@ const ActivitiesPage = () => {
 
               {/* Key Highlights */}
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-3">Key Highlights</h3>
+                <h3 className="text-sm font-bold text-ink-900 mb-3">Key Highlights</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2">
                     <CheckCircle size={18} className="text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">
+                    <span className="text-ink-700">
                       {selectedActivity.participants} participants expected for this activity
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle size={18} className="text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">
+                    <span className="text-ink-700">
                       {selectedActivity.resources.length} resources allocated across {[...new Set(selectedActivity.resources.map(r => r.type))].length} categories
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle size={18} className="text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">
+                    <span className="text-ink-700">
                       {selectedActivity.photos.length} photos documenting the activity
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle size={18} className="text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">
+                    <span className="text-ink-700">
                       Budget: LKR {selectedActivity.budget.toLocaleString()}
                     </span>
                   </li>
@@ -806,14 +796,14 @@ const ActivitiesPage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
               <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-semibold flex items-center gap-2">
                 <Download size={18} />
                 Download Report
               </button>
               <button
                 onClick={() => setShowReport(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -826,7 +816,7 @@ const ActivitiesPage = () => {
       {showAddActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">Create New Activity</h2>
@@ -845,39 +835,39 @@ const ActivitiesPage = () => {
               <form className="space-y-4">
                 {/* Activity Details */}
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900 mb-4">Activity Details</h3>
+                  <h3 className="text-sm font-bold text-ink-900 mb-4">Activity Details</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Activity Name *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Activity Name *</label>
                       <input
                         type="text"
                         name="name"
                         value={newActivity.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         placeholder="Enter activity name"
                       />
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Description *</label>
                       <textarea
                         name="description"
                         value={newActivity.description}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         rows="3"
                         placeholder="Enter activity description"
                       ></textarea>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Project *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Project *</label>
                       <select
                         name="project"
                         value={newActivity.project}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       >
                         <option value="">Select project</option>
                         <option value="Child Protection Initiative">Child Protection Initiative</option>
@@ -889,12 +879,12 @@ const ActivitiesPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Status *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Status *</label>
                       <select
                         name="status"
                         value={newActivity.status}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       >
                         <option value="Planning">Planning</option>
                         <option value="Scheduled">Scheduled</option>
@@ -904,73 +894,73 @@ const ActivitiesPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Start Date *</label>
                       <input
                         type="date"
                         name="startDate"
                         value={newActivity.startDate}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">End Date *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">End Date *</label>
                       <input
                         type="date"
                         name="endDate"
                         value={newActivity.endDate}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Location *</label>
                       <input
                         type="text"
                         name="location"
                         value={newActivity.location}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         placeholder="Enter location"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Expected Participants</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Expected Participants</label>
                       <input
                         type="number"
                         name="participants"
                         value={newActivity.participants}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         placeholder="0"
                         min="0"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Budget (LKR)</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Budget (LKR)</label>
                       <input
                         type="number"
                         name="budget"
                         value={newActivity.budget}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         placeholder="0"
                         min="0"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Completion %</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Completion %</label>
                       <input
                         type="number"
                         name="completion"
                         value={newActivity.completion}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                         placeholder="0"
                         min="0"
                         max="100"
@@ -988,13 +978,13 @@ const ActivitiesPage = () => {
               </form>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
               <button
                 onClick={() => {
                   resetActivityForm();
                   setShowAddActivity(false);
                 }}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Cancel
               </button>

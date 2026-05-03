@@ -144,7 +144,7 @@ const TasksPage = () => {
       case 'To Do':
         return <AlertCircle size={14} className="text-orange-600" />;
       default:
-        return <Clock size={14} className="text-gray-600" />;
+        return <Clock size={14} className="text-ink-600" />;
     }
   }, []);
 
@@ -157,7 +157,7 @@ const TasksPage = () => {
       case 'To Do':
         return 'bg-orange-100 text-orange-700 border-orange-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   }, []);
 
@@ -170,7 +170,7 @@ const TasksPage = () => {
       case 'Low':
         return 'text-blue-600';
       default:
-        return 'text-gray-600';
+        return 'text-ink-600';
     }
   }, []);
 
@@ -528,108 +528,98 @@ const TasksPage = () => {
   ];
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-indigo-500 via-blue-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <ClipboardCheck className="w-5 h-5 animate-pulse" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Advanced Task Management</h1>
-                <p className="text-indigo-100 text-sm">Organize, track, and collaborate on tasks</p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowAdvancedFilters(true)}
-                className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white rounded-lg hover:bg-opacity-30 transition-all font-bold flex items-center gap-2"
-                title="Advanced Filters"
-              >
-                <Filter size={20} />
-                Filters
-              </button>
-              <button
-                onClick={handleExportCSV}
-                disabled={!tasks || tasks.length === 0}
-                className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white rounded-lg hover:bg-opacity-30 transition-all font-bold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Export all tasks to CSV"
-              >
-                <Download size={20} />
-                Export CSV
-              </button>
-              <button
-                onClick={() => setShowTemplates(true)}
-                className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white rounded-lg hover:bg-opacity-30 transition-all font-bold flex items-center gap-2"
-              >
-                <LayoutGrid size={20} />
-                Templates
-              </button>
-              <button
-                onClick={() => setShowAddTask(true)}
-                className="px-6 py-3 bg-white text-indigo-600 rounded-lg hover:shadow-lg transition-all font-bold flex items-center gap-2"
-              >
-                <Plus size={20} />
-                New Task
-              </button>
-            </div>
-          </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Operations · Tasks</p>
+          <h1 className="text-h1 text-ink-900">Task Management</h1>
+          <p className="text-sm text-ink-500 mt-1">Organize, track, and collaborate on tasks across teams.</p>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <button
+            onClick={() => setShowAdvancedFilters(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
+            title="Advanced Filters"
+          >
+            <Filter size={16} />
+            Filters
+          </button>
+          <button
+            onClick={handleExportCSV}
+            disabled={!tasks || tasks.length === 0}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Export all tasks to CSV"
+          >
+            <Download size={16} />
+            Export
+          </button>
+          <button
+            onClick={() => setShowTemplates(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
+          >
+            <LayoutGrid size={16} />
+            Templates
+          </button>
+          <button
+            onClick={() => setShowAddTask(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-navy-900 hover:bg-navy-800 rounded-md shadow-card transition"
+          >
+            <Plus size={16} />
+            New Task
+          </button>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat-card group cursor-pointer animate-slide-up">
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer">
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">Total Tasks</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.total}</h3>
-              <p className="text-xs text-gray-500 mt-1">All projects</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">Total Tasks</p>
+              <h3 className="text-h1 text-ink-900">{stats.total}</h3>
+              <p className="text-xs text-ink-500 mt-1">All projects</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <ClipboardCheck className="text-white" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">In Progress</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.inProgress}</h3>
-              <p className="text-xs text-gray-500 mt-1">Active tasks</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">In Progress</p>
+              <h3 className="text-h1 text-ink-900">{stats.inProgress}</h3>
+              <p className="text-xs text-ink-500 mt-1">Active tasks</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <Clock className="text-white" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">Completed</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.completed}</h3>
-              <p className="text-xs text-gray-500 mt-1">This month</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">Completed</p>
+              <h3 className="text-h1 text-ink-900">{stats.completed}</h3>
+              <p className="text-xs text-ink-500 mt-1">This month</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <CheckCircle className="text-white" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">Overdue</p>
-              <h3 className="text-2xl font-bold text-gray-900">{stats.overdue}</h3>
-              <p className="text-xs text-gray-500 mt-1">Needs attention</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">Overdue</p>
+              <h3 className="text-h1 text-ink-900">{stats.overdue}</h3>
+              <p className="text-xs text-ink-500 mt-1">Needs attention</p>
             </div>
-            <div className="bg-gradient-to-br from-red-500 to-orange-600 p-3 rounded-xl shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
               <AlertCircle className="text-white" size={18} />
             </div>
           </div>
@@ -637,14 +627,14 @@ const TasksPage = () => {
       </div>
 
       {/* View Toggle & Filters */}
-      <div className="flex items-center justify-between bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <div className="flex items-center justify-between bg-white rounded-xl shadow-sm border border-ink-100 p-4">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode('list')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
               viewMode === 'list'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
             }`}
           >
             <List size={18} />
@@ -655,7 +645,7 @@ const TasksPage = () => {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
               viewMode === 'kanban'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
             }`}
           >
             <LayoutGrid size={18} />
@@ -663,7 +653,7 @@ const TasksPage = () => {
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-semibold">
+          <button className="flex items-center gap-2 px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all font-semibold">
             <Filter size={18} />
             Filter
           </button>
@@ -672,7 +662,7 @@ const TasksPage = () => {
 
       {/* List View */}
       {viewMode === 'list' && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           {/* Bulk Actions Toolbar */}
           {selectedTaskIds.size > 0 && (
             <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
@@ -718,7 +708,7 @@ const TasksPage = () => {
           )}
 
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-sm font-bold text-gray-900">My Tasks</h2>
+            <h2 className="text-sm font-bold text-ink-900">My Tasks</h2>
             {tasks.length > 0 && (
               <button
                 onClick={selectedTaskIds.size === tasks.length ? deselectAllTasks : selectAllTasks}
@@ -755,7 +745,7 @@ const TasksPage = () => {
               return (
                 <div
                   key={task.id}
-                  className="card-modern p-4 animate-slide-up"
+                  className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   {/* Task Header */}
@@ -767,25 +757,25 @@ const TasksPage = () => {
                           e.stopPropagation();
                           toggleTaskSelection(task.id);
                         }}
-                        className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        className="p-1 hover:bg-ink-100 rounded transition-colors"
                       >
                         {selectedTaskIds.has(task.id) ? (
                           <CheckSquare size={18} className="text-indigo-600" />
                         ) : (
-                          <Square size={18} className="text-gray-400" />
+                          <Square size={18} className="text-ink-400" />
                         )}
                       </button>
                       <button
                         onClick={() => toggleTaskExpanded(task.id)}
-                        className="hover:bg-gray-100 rounded p-1 transition-colors"
+                        className="hover:bg-ink-100 rounded p-1 transition-colors"
                       >
                         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                       </button>
                       <div className="flex-1">
-                        <h3 className="font-bold text-gray-900 hover:text-indigo-600 cursor-pointer" onClick={() => openTaskDetail(task)}>
+                        <h3 className="font-bold text-ink-900 hover:text-indigo-600 cursor-pointer" onClick={() => openTaskDetail(task)}>
                           {task.title}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-ink-600">
                           {task.project?.projectName || 'No Project'}
                         </p>
                       </div>
@@ -809,8 +799,8 @@ const TasksPage = () => {
                         <Users size={14} className="text-blue-600" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-gray-500">Assigned to</p>
-                        <p className="text-sm font-semibold text-gray-900 truncate">
+                        <p className="text-xs text-ink-500">Assigned to</p>
+                        <p className="text-sm font-semibold text-ink-900 truncate">
                           {task.assignee?.fullName || task.assignee?.name || 'Unassigned'}
                         </p>
                       </div>
@@ -821,8 +811,8 @@ const TasksPage = () => {
                         <Calendar size={14} className="text-purple-600" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-gray-500">Due Date</p>
-                        <p className="text-sm font-semibold text-gray-900">{task.dueDate}</p>
+                        <p className="text-xs text-ink-500">Due Date</p>
+                        <p className="text-sm font-semibold text-ink-900">{task.dueDate}</p>
                       </div>
                     </div>
 
@@ -831,8 +821,8 @@ const TasksPage = () => {
                         <Clock size={14} className="text-green-600" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-gray-500">Time Tracked</p>
-                        <p className="text-sm font-semibold text-gray-900">{formatTime(task.timeTracked)} / {formatTime(task.timeEstimate)}</p>
+                        <p className="text-xs text-ink-500">Time Tracked</p>
+                        <p className="text-sm font-semibold text-ink-900">{formatTime(task.timeTracked)} / {formatTime(task.timeEstimate)}</p>
                       </div>
                     </div>
 
@@ -841,8 +831,8 @@ const TasksPage = () => {
                         <ClipboardCheck size={14} className="text-orange-600" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-gray-500">Subtasks</p>
-                        <p className="text-sm font-semibold text-gray-900">{completedSubtasks}/{totalSubtasks}</p>
+                        <p className="text-xs text-ink-500">Subtasks</p>
+                        <p className="text-sm font-semibold text-ink-900">{completedSubtasks}/{totalSubtasks}</p>
                       </div>
                     </div>
                   </div>
@@ -850,7 +840,7 @@ const TasksPage = () => {
                   {/* Progress Bar */}
                   <div className="ml-8 mb-3">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-semibold text-gray-700">Progress</span>
+                      <span className="text-xs font-semibold text-ink-700">Progress</span>
                       <span className="text-xs font-bold text-indigo-600">{task.progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
@@ -870,19 +860,19 @@ const TasksPage = () => {
                         </span>
                       ))}
                       {task.comments?.length > 0 && (
-                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                        <span className="flex items-center gap-1 text-xs text-ink-500">
                           <MessageSquare size={14} />
                           {task.comments.length}
                         </span>
                       )}
                       {task.attachments.length > 0 && (
-                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                        <span className="flex items-center gap-1 text-xs text-ink-500">
                           <Paperclip size={14} />
                           {task.attachments.length}
                         </span>
                       )}
                       {task.dependencies.length > 0 && (
-                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                        <span className="flex items-center gap-1 text-xs text-ink-500">
                           <LinkIcon size={14} />
                           {task.dependencies.length}
                         </span>
@@ -901,7 +891,7 @@ const TasksPage = () => {
                           e.stopPropagation();
                           handleEditTask(task);
                         }}
-                        className="flex items-center gap-1 px-3 py-1 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-all text-xs font-semibold"
+                        className="flex items-center gap-1 px-3 py-1 bg-ink-50 text-ink-700 rounded-lg hover:bg-ink-100 transition-all text-xs font-semibold"
                       >
                         <Edit2 size={14} />
                         Edit
@@ -921,8 +911,8 @@ const TasksPage = () => {
 
                   {/* Expanded View - Subtasks */}
                   {isExpanded && (
-                    <div className="mt-4 ml-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <h4 className="text-sm font-bold text-gray-900 mb-3">Subtasks</h4>
+                    <div className="mt-4 ml-8 p-4 bg-ink-50 rounded-lg border border-ink-100">
+                      <h4 className="text-sm font-bold text-ink-900 mb-3">Subtasks</h4>
                       <div className="space-y-2">
                         {task.subtasks?.map((subtask) => (
                           <div key={subtask.id} className="flex items-center gap-2">
@@ -932,7 +922,7 @@ const TasksPage = () => {
                               className="w-4 h-4 text-indigo-600 rounded"
                               readOnly
                             />
-                            <span className={`text-sm ${subtask.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                            <span className={`text-sm ${subtask.completed ? 'line-through text-ink-500' : 'text-ink-900'}`}>
                               {subtask.title}
                             </span>
                           </div>
@@ -953,10 +943,10 @@ const TasksPage = () => {
           {columns.map((column) => {
             const columnTasks = tasks.filter(t => t?.status === column.id);
             return (
-              <div key={column.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+              <div key={column.id} className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-bold text-gray-900">{column.title}</h3>
-                  <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">
+                  <h3 className="text-sm font-bold text-ink-900">{column.title}</h3>
+                  <span className="px-2 py-1 bg-ink-100 text-ink-700 rounded-full text-xs font-bold">
                     {columnTasks.length}
                   </span>
                 </div>
@@ -964,23 +954,23 @@ const TasksPage = () => {
                   {columnTasks.map((task) => (
                     <div
                       key={task.id}
-                      className="p-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer"
+                      className="p-3 bg-ink-50 border border-ink-100 rounded-lg hover:shadow-md transition-all cursor-pointer"
                       onClick={() => openTaskDetail(task)}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-semibold text-sm text-gray-900">{task.title}</h4>
+                        <h4 className="font-semibold text-sm text-ink-900">{task.title}</h4>
                         <Flag size={14} className={getPriorityColor(task.priority)} />
                       </div>
-                      <p className="text-xs text-gray-600 mb-2">{task.project?.projectName || 'No Project'}</p>
+                      <p className="text-xs text-ink-600 mb-2">{task.project?.projectName || 'No Project'}</p>
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center text-xs font-bold text-indigo-700">
                           {task.assignee?.avatar || task.assignee?.fullName?.[0] || '?'}
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-ink-500">
                           {task.assignee?.fullName || task.assignee?.name || 'Unassigned'}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center justify-between text-xs text-ink-500">
                         <span className="flex items-center gap-1">
                           <Calendar size={12} />
                           {task.dueDate}
@@ -1150,7 +1140,7 @@ const TasksPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">Task Templates</h2>
@@ -1170,19 +1160,19 @@ const TasksPage = () => {
                 {taskTemplates.map((template) => (
                   <div
                     key={template.id}
-                    className="p-5 border-2 border-gray-200 rounded-xl hover:border-indigo-400 hover:shadow-lg transition-all cursor-pointer group"
+                    className="p-5 border-2 border-ink-100 rounded-xl hover:border-indigo-400 hover:shadow-lg transition-all cursor-pointer group"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="font-bold text-lg text-gray-900 group-hover:text-indigo-600 transition-colors">
+                          <h3 className="font-bold text-lg text-ink-900 group-hover:text-indigo-600 transition-colors">
                             {template.name}
                           </h3>
-                          <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs font-bold">
+                          <span className="px-2 py-0.5 bg-ink-100 text-ink-600 rounded-full text-xs font-bold">
                             {template.category}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                        <p className="text-sm text-ink-600 mb-3">{template.description}</p>
                       </div>
                     </div>
 
@@ -1194,11 +1184,11 @@ const TasksPage = () => {
                             {template.priority}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1 text-gray-600">
+                        <div className="flex items-center gap-1 text-ink-600">
                           <Clock size={14} />
                           <span className="text-xs font-semibold">{formatTime(template.timeEstimate)}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-gray-600">
+                        <div className="flex items-center gap-1 text-ink-600">
                           <ClipboardCheck size={14} />
                           <span className="text-xs font-semibold">{template.subtasks.length} subtasks</span>
                         </div>
@@ -1213,12 +1203,12 @@ const TasksPage = () => {
                       </div>
                     </div>
 
-                    <div className="border-t border-gray-200 pt-3">
-                      <p className="text-xs font-semibold text-gray-600 mb-2">Subtasks:</p>
+                    <div className="border-t border-ink-100 pt-3">
+                      <p className="text-xs font-semibold text-ink-600 mb-2">Subtasks:</p>
                       <div className="space-y-1 max-h-32 overflow-y-auto">
                         {template.subtasks.map((subtask, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-xs text-gray-700">
-                            <CheckCircle size={12} className="text-gray-400 flex-shrink-0" />
+                          <div key={idx} className="flex items-center gap-2 text-xs text-ink-700">
+                            <CheckCircle size={12} className="text-ink-400 flex-shrink-0" />
                             <span>{subtask.title}</span>
                           </div>
                         ))}
@@ -1238,10 +1228,10 @@ const TasksPage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl">
               <button
                 onClick={() => setShowTemplates(false)}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               >
                 Close
               </button>
@@ -1259,18 +1249,18 @@ const TasksPage = () => {
                 <AlertCircle className="text-red-600" size={24} />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Confirm Bulk Delete</h3>
-                <p className="text-sm text-gray-600">This action cannot be undone</p>
+                <h3 className="text-lg font-bold text-ink-900">Confirm Bulk Delete</h3>
+                <p className="text-sm text-ink-600">This action cannot be undone</p>
               </div>
             </div>
-            <p className="text-gray-700 mb-6">
+            <p className="text-ink-700 mb-6">
               Are you sure you want to delete <strong>{selectedTaskIds.size}</strong> selected task(s)?
               All data associated with these tasks will be permanently removed.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowBulkConfirmation(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
               >
                 Cancel
               </button>

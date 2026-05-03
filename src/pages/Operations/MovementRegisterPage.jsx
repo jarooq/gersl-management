@@ -4,12 +4,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import NewMovementModal from './components/NewMovementModal';
 
 const STATUS_BADGE = {
-  Planned:    'bg-gray-100 text-gray-700',
+  Planned:    'bg-ink-100 text-ink-700',
   Approved:   'bg-blue-100 text-blue-700',
   InMovement: 'bg-indigo-100 text-indigo-700',
   Arrived:    'bg-teal-100 text-teal-700',
   Returned:   'bg-green-100 text-green-700',
-  Cancelled:  'bg-gray-200 text-gray-600',
+  Cancelled:  'bg-gray-200 text-ink-600',
   Rejected:   'bg-red-100 text-red-700'
 };
 
@@ -91,76 +91,76 @@ export default function MovementRegisterPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       <header className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Movement register</h1>
-          <p className="text-sm text-gray-500">Field-trip log: plan, depart, arrive, return.</p>
+          <h1 className="text-h1 text-ink-900">Movement register</h1>
+          <p className="text-sm text-ink-500">Field-trip log: plan, depart, arrive, return.</p>
         </div>
         <button
           onClick={() => setShowNew(true)}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
         >New movement</button>
       </header>
 
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="flex gap-2 border-b border-ink-100">
         <button
           onClick={() => setTab('mine')}
-          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'mine' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+          className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'mine' ? 'border-blue-600 text-blue-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
         >My movements</button>
         {isApprover && (
           <button
             onClick={() => setTab('team')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'team' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'team' ? 'border-blue-600 text-blue-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
           >Team queue</button>
         )}
       </div>
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Staff</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Route</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Purpose</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vehicle</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Planned</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actual</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Staff</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Route</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Purpose</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Vehicle</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Planned</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Actual</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={8} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={8} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
             {!loading && rows.length === 0 && (
-              <tr><td colSpan={8} className="p-6 text-center text-sm text-gray-500">No movements.</td></tr>
+              <tr><td colSpan={8} className="p-6 text-center text-sm text-ink-500">No movements.</td></tr>
             )}
             {rows.map(m => {
               const isOwn = m.userId === user?.id;
               return (
                 <tr key={m.id}>
                   <td className="px-3 py-2 text-sm">
-                    <div className="text-gray-900">{m.staff?.fullName || `#${m.userId}`}</div>
-                    {m.isPassenger && <div className="text-xs text-gray-500">passenger</div>}
+                    <div className="text-ink-900">{m.staff?.fullName || `#${m.userId}`}</div>
+                    {m.isPassenger && <div className="text-xs text-ink-500">passenger</div>}
                   </td>
                   <td className="px-3 py-2 text-sm">
-                    <div className="text-gray-900">{m.fromLocation} → {m.toLocation}</div>
-                    {m.distanceKm != null && <div className="text-xs text-gray-500">{Number(m.distanceKm).toLocaleString()} km</div>}
+                    <div className="text-ink-900">{m.fromLocation} → {m.toLocation}</div>
+                    {m.distanceKm != null && <div className="text-xs text-ink-500">{Number(m.distanceKm).toLocaleString()} km</div>}
                   </td>
-                  <td className="px-3 py-2 text-sm text-gray-700">{m.purpose || '—'}</td>
-                  <td className="px-3 py-2 text-sm text-gray-700">
+                  <td className="px-3 py-2 text-sm text-ink-700">{m.purpose || '—'}</td>
+                  <td className="px-3 py-2 text-sm text-ink-700">
                     {m.vehicle ? `${m.vehicle.type}${m.vehicle.plateNo ? ` ${m.vehicle.plateNo}` : ''}` : '—'}
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-600">
+                  <td className="px-3 py-2 text-xs text-ink-600">
                     {m.plannedDepartureAt && <div>Dep {fmtTime(m.plannedDepartureAt)}</div>}
                     {m.plannedReturnAt && <div>Ret {fmtTime(m.plannedReturnAt)}</div>}
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-600">
+                  <td className="px-3 py-2 text-xs text-ink-600">
                     {m.departureAt && <div>Dep {fmtTime(m.departureAt)}</div>}
                     {m.arrivalAt && <div>Arr {fmtTime(m.arrivalAt)}</div>}
                     {m.returnAt && <div>Ret {fmtTime(m.returnAt)}</div>}
                   </td>
                   <td className="px-3 py-2">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[m.status] || 'bg-gray-100'}`}>
+                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[m.status] || 'bg-ink-100'}`}>
                       {m.status}
                     </span>
                   </td>
@@ -181,7 +181,7 @@ export default function MovementRegisterPage() {
                       <button disabled={busy} onClick={() => onReturn(m)} className="text-emerald-700 hover:underline">Return</button>
                     )}
                     {isOwn && !['Returned', 'Cancelled', 'Rejected'].includes(m.status) && (
-                      <button disabled={busy} onClick={() => onCancel(m)} className="text-gray-500 hover:underline">Cancel</button>
+                      <button disabled={busy} onClick={() => onCancel(m)} className="text-ink-500 hover:underline">Cancel</button>
                     )}
                     {isOwn && m.status === 'Returned' && !m.isPassenger && (
                       <button disabled={busy} onClick={() => onClaimFuel(m)} className="text-amber-700 hover:underline">Claim fuel</button>

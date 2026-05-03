@@ -105,31 +105,21 @@ const ProjectsPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 animate-pulse" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Project Management</h1>
-                <p className="text-blue-100 text-sm">Manage projects, tasks, and milestones</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="btn-primary bg-white text-blue-600 hover:bg-blue-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
-            >
-              <Plus size={18} />
-              New Project
-            </button>
-          </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Operations · Projects</p>
+          <h1 className="text-h1 text-ink-900">Project Management</h1>
+          <p className="text-sm text-ink-500 mt-1">Manage projects, tasks, and milestones across the portfolio.</p>
         </div>
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-navy-900 hover:bg-navy-800 rounded-md shadow-card transition shrink-0"
+        >
+          <Plus size={16} />
+          New Project
+        </button>
       </div>
 
       {/* Stats Cards */}
@@ -238,21 +228,21 @@ const ProjectsPage = () => {
         })().map((stat, index) => (
           <div
             key={index}
-            className="stat-card group cursor-pointer animate-slide-up"
+            className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
-                <p className="text-xs font-semibold text-gray-600 mb-2">{stat.title}</p>
-                <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
+                <p className="text-xs font-semibold text-ink-600 mb-2">{stat.title}</p>
+                <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
               </div>
               <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-xs font-medium text-gray-600">{stat.change}</span>
+            <div className="flex items-center justify-between pt-3 border-t border-ink-100">
+              <span className="text-xs font-medium text-ink-600">{stat.change}</span>
             </div>
           </div>
         ))}
@@ -261,17 +251,17 @@ const ProjectsPage = () => {
       {/* Charts and Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Budget Distribution Chart */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <BarChart3 className="text-green-600" size={18} />
                 Budget Distribution by Programme
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Allocated funds across programmes</p>
+              <p className="text-xs text-ink-600 mt-1">Allocated funds across programmes</p>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-gray-900">{stats.totalBudget.toLocaleString()}</div>
+              <div className="text-xl font-bold text-ink-900">{stats.totalBudget.toLocaleString()}</div>
               <div className="text-xs text-green-600">Total Budget</div>
             </div>
           </div>
@@ -279,10 +269,10 @@ const ProjectsPage = () => {
             {[].map((item, index) => (
               <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-gray-700">{item.programme}</span>
-                  <span className="text-xs font-bold text-gray-900">${(item.budget / 1000).toFixed(0)}K</span>
+                  <span className="text-xs font-medium text-ink-700">{item.programme}</span>
+                  <span className="text-xs font-bold text-ink-900">${(item.budget / 1000).toFixed(0)}K</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                   <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
                     style={{ width: `${item.percent}%` }}></div>
                 </div>
@@ -292,14 +282,14 @@ const ProjectsPage = () => {
         </div>
 
         {/* Project Status Overview */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <PieChart className="text-blue-600" size={18} />
                 Project Status Distribution
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Current project stages</p>
+              <p className="text-xs text-ink-600 mt-1">Current project stages</p>
             </div>
           </div>
           <div className="space-y-4">
@@ -310,14 +300,14 @@ const ProjectsPage = () => {
               { status: 'Completed', count: stats.completed || 0, percent: stats.total > 0 ? Math.round(((stats.completed || 0) / stats.total) * 100) : 0, color: 'bg-gray-500' },
               { status: 'Closing', count: stats.closing, percent: stats.total > 0 ? Math.round((stats.closing / stats.total) * 100) : 0, color: 'bg-purple-500' }
             ].filter(item => item.count > 0).map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-ink-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                  <span className="text-sm font-medium text-gray-700">{item.status}</span>
+                  <span className="text-sm font-medium text-ink-700">{item.status}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-sm font-bold text-gray-900">{item.count} projects</span>
-                  <span className="text-xs text-gray-600 bg-white px-2 py-1 rounded">{item.percent}%</span>
+                  <span className="text-sm font-bold text-ink-900">{item.count} projects</span>
+                  <span className="text-xs text-ink-600 bg-white px-2 py-1 rounded">{item.percent}%</span>
                 </div>
               </div>
             ))}
@@ -325,14 +315,14 @@ const ProjectsPage = () => {
         </div>
 
         {/* Timeline Trends */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <LineChart className="text-purple-600" size={18} />
                 Project Completion Trend
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Last 6 months</p>
+              <p className="text-xs text-ink-600 mt-1">Last 6 months</p>
             </div>
             {(() => {
               // Calculate completion rate trend
@@ -357,12 +347,12 @@ const ProjectsPage = () => {
               return (
                 <div className="text-right">
                   <div className={`text-xl font-bold flex items-center gap-1 ${
-                    completionRate > 0 ? 'text-green-600' : 'text-gray-400'
+                    completionRate > 0 ? 'text-green-600' : 'text-ink-400'
                   }`}>
                     {completionRate > 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
                     {completionRate}%
                   </div>
-                  <div className="text-xs text-gray-600">Completion rate</div>
+                  <div className="text-xs text-ink-600">Completion rate</div>
                 </div>
               );
             })()}
@@ -399,7 +389,7 @@ const ProjectsPage = () => {
 
               if (monthsData.every(m => m.completed === 0 && m.started === 0)) {
                 return (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-ink-500 text-sm">
                     No project activity in the last 6 months
                   </div>
                 );
@@ -409,7 +399,7 @@ const ProjectsPage = () => {
 
               return monthsData.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
-                  <span className="text-xs font-medium text-gray-600 w-20">{item.month}</span>
+                  <span className="text-xs font-medium text-ink-600 w-20">{item.month}</span>
                   <div className="flex-1 flex gap-1">
                     <div className="bg-green-500 h-8 rounded transition-all duration-300"
                       style={{ width: `${(item.completed / maxValue) * 100}%` }}
@@ -418,32 +408,32 @@ const ProjectsPage = () => {
                       style={{ width: `${(item.started / maxValue) * 100}%` }}
                       title={`${item.started} started`}></div>
                   </div>
-                  <span className="text-xs text-gray-500 w-16 text-right">{item.completed} done</span>
+                  <span className="text-xs text-ink-500 w-16 text-right">{item.completed} done</span>
                 </div>
               ));
             })()}
           </div>
-          <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-ink-100">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded"></div>
-              <span className="text-xs text-gray-600">Completed</span>
+              <span className="text-xs text-ink-600">Completed</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-blue-200 rounded"></div>
-              <span className="text-xs text-gray-600">Started</span>
+              <span className="text-xs text-ink-600">Started</span>
             </div>
           </div>
         </div>
 
         {/* Project Performance Metrics */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <Zap className="text-yellow-600" size={18} />
                 Performance Metrics
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Key performance indicators</p>
+              <p className="text-xs text-ink-600 mt-1">Key performance indicators</p>
             </div>
             {(() => {
               if (projects.length === 0) return null;
@@ -490,7 +480,7 @@ const ProjectsPage = () => {
                   }`}>
                     {successRate}%
                   </div>
-                  <div className="text-xs text-gray-600">Success Rate</div>
+                  <div className="text-xs text-ink-600">Success Rate</div>
                 </div>
               );
             })()}
@@ -499,7 +489,7 @@ const ProjectsPage = () => {
             {(() => {
               if (projects.length === 0) {
                 return (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-ink-500 text-sm">
                     No performance data available
                   </div>
                 );
@@ -548,15 +538,15 @@ const ProjectsPage = () => {
               ].map((item, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-gray-700">{item.metric}</span>
+                  <span className="text-xs font-medium text-ink-700">{item.metric}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-900">{item.value}%</span>
+                    <span className="text-xs font-bold text-ink-900">{item.value}%</span>
                     {item.status === 'above' && (
                       <TrendingUp className="text-green-600" size={14} />
                     )}
                   </div>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                   <div
                     className={`h-1.5 rounded-full transition-all duration-500 ${
                       item.value >= item.target
@@ -567,7 +557,7 @@ const ProjectsPage = () => {
                   ></div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-gray-500">Target: {item.target}%</span>
+                  <span className="text-xs text-ink-500">Target: {item.target}%</span>
                   <span className={`text-xs font-medium ${
                     item.value >= item.target ? 'text-green-600' : 'text-orange-600'
                   }`}>
@@ -613,8 +603,8 @@ const ProjectsPage = () => {
         </div>
       ) : (
         <div className="text-center py-12 bg-white rounded-lg shadow">
-          <p className="text-gray-500 text-lg">No projects found matching your criteria</p>
-          <p className="text-gray-400 text-sm mt-2">Try adjusting your filters or search query</p>
+          <p className="text-ink-500 text-lg">No projects found matching your criteria</p>
+          <p className="text-ink-400 text-sm mt-2">Try adjusting your filters or search query</p>
         </div>
       )}
 
