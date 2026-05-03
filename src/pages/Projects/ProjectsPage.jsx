@@ -106,20 +106,29 @@ const ProjectsPage = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
-      {/* Header */}
-      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Operations · Projects</p>
-          <h1 className="text-h1 text-ink-900">Project Management</h1>
-          <p className="text-sm text-ink-500 mt-1">Manage projects, tasks, and milestones across the portfolio.</p>
+      {/* Hero Header */}
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center">
+              <Target className="w-5 h-5 text-mission-300" />
+            </div>
+            <div>
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations · Projects</p>
+              <h1 className="text-h2 font-bold leading-tight">Project Management</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Manage projects, tasks, and milestones across the portfolio.</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
+            >
+              <Plus size={16} />
+              New Project
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-navy-900 hover:bg-navy-800 rounded-md shadow-card transition shrink-0"
-        >
-          <Plus size={16} />
-          New Project
-        </button>
       </div>
 
       {/* Stats Cards */}
@@ -192,60 +201,37 @@ const ProjectsPage = () => {
           const onTimeRate = stats.active > 0 ? Math.round((onScheduleProjects / stats.active) * 100) : 0;
 
           return [
-            {
-              title: 'On Schedule',
-              value: onScheduleProjects,
-              icon: Clock,
-              gradient: 'from-green-500 to-emerald-600',
-              change: `${onTimeRate}% on time`,
-              subtitle: 'projects tracking'
-            },
-            {
-              title: 'At Risk',
-              value: atRiskProjects,
-              icon: AlertCircle,
-              gradient: 'from-yellow-500 to-orange-600',
-              change: 'Need attention',
-              subtitle: 'delayed projects'
-            },
-            {
-              title: 'Completed This Year',
-              value: completedThisYear,
-              icon: CheckCircle,
-              gradient: 'from-blue-500 to-cyan-600',
-              change: `+${completedThisMonth} this month`,
-              subtitle: 'successfully closed'
-            },
-            {
-              title: 'Active Locations',
-              value: activeLocations,
-              icon: MapPin,
-              gradient: 'from-purple-500 to-indigo-600',
-              change: `${provinces} ${provinces === 1 ? 'province' : 'provinces'}`,
-              subtitle: 'field presence'
-            }
+            { title: 'On Schedule',         value: onScheduleProjects, icon: Clock,        tone: 'green',  change: `${onTimeRate}% on time`,    subtitle: 'projects tracking' },
+            { title: 'At Risk',             value: atRiskProjects,     icon: AlertCircle,  tone: 'amber',  change: 'Need attention',             subtitle: 'delayed projects' },
+            { title: 'Completed This Year', value: completedThisYear,  icon: CheckCircle,  tone: 'blue',   change: `+${completedThisMonth} this month`, subtitle: 'successfully closed' },
+            { title: 'Active Locations',    value: activeLocations,    icon: MapPin,       tone: 'indigo', change: `${provinces} ${provinces === 1 ? 'province' : 'provinces'}`, subtitle: 'field presence' }
           ];
-        })().map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
-            
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1">
-                <p className="text-xs font-semibold text-ink-600 mb-2">{stat.title}</p>
-                <h3 className="text-h1 text-ink-900">{stat.value}</h3>
-                <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
+        })().map((stat, index) => {
+          const StatIcon = stat.icon;
+          const tone = {
+            green:  { bg: 'bg-success-50', border: 'border-success-200', text: 'text-success-700' },
+            amber:  { bg: 'bg-mission-50', border: 'border-mission-200', text: 'text-mission-700' },
+            blue:   { bg: 'bg-blue-50',    border: 'border-blue-200',    text: 'text-blue-700' },
+            indigo: { bg: 'bg-indigo-50',  border: 'border-indigo-200',  text: 'text-indigo-700' },
+          }[stat.tone];
+          return (
+            <div key={index} className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-ink-600 mb-2">{stat.title}</p>
+                  <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                  <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
+                </div>
+                <div className={`${tone.bg} ${tone.border} border p-2.5 rounded-md flex-shrink-0`}>
+                  <StatIcon className={tone.text} size={18} />
+                </div>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group- transition-transform duration-200 flex-shrink-0`}>
-                <stat.icon className="text-white" size={18} />
+              <div className="flex items-center justify-between pt-3 border-t border-ink-100">
+                <span className="text-xs font-medium text-ink-600">{stat.change}</span>
               </div>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-ink-100">
-              <span className="text-xs font-medium text-ink-600">{stat.change}</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Charts and Analytics */}

@@ -159,7 +159,7 @@ const OrphansPage = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Hero Header */}
       <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
         <div className="flex items-center justify-between flex-wrap gap-3">
