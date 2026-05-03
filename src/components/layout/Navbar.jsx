@@ -1,109 +1,92 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Bell, LogOut, Menu, X, Search, Heart } from 'lucide-react';
+import React from 'react';
+import { LogOut, Menu, Search } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import NotificationBell from '../notifications/NotificationBell';
 
-const Navbar = ({ toggleSidebar }) => {
+// === GERSL Navbar v2 ===
+// White bar, navy brand on the left, user/notifications on the right.
+// Subtle bottom border separates it from page content.
+
+const Navbar = ({ toggleSidebar, onCommandOpen }) => {
   const { currentUser, logout } = useAuth();
-  const location = useLocation();
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-  };
-
-  const notifications = [
-    { id: 1, type: 'info', message: 'New orphan visit scheduled', time: '5m ago' },
-    { id: 2, type: 'success', message: 'Project milestone completed', time: '1h ago' },
-    { id: 3, type: 'warning', message: 'Budget review pending', time: '2h ago' },
-  ];
+  const initials = (currentUser?.fullName || currentUser?.name || '?')
+    .split(' ').map(s => s[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
 
   return (
-    <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-      <div className="px-4 lg:px-6 py-3">
-        <div className="flex justify-between items-center">
-          {/* Left - Menu button + Logo and Title */}
-          <div className="flex items-center gap-3">
-            {/* Sidebar Toggle Button for Mobile */}
-            <button
-              onClick={toggleSidebar}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              aria-label="Toggle sidebar"
-            >
-              <Menu size={24} className="text-gray-700" />
-            </button>
+    <header className="bg-white border-b border-ink-100 sticky top-0 z-40">
+      <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-4">
+        {/* Left — burger + brand */}
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            onClick={toggleSidebar}
+            className="lg:hidden p-2 -ml-2 rounded-md text-ink-700 hover:bg-ink-50"
+            aria-label="Toggle sidebar"
+          >
+            <Menu size={20} />
+          </button>
 
-            <img
-              src="/Logo.png"
-              alt="Global Ehsan Relief"
-              className="h-10 w-10 object-contain"
-            />
-            <div>
-              <h1 className="text-lg font-bold text-gray-900">Global Ehsan Relief - Sri Lanka</h1>
-              <p className="text-xs text-gray-500 hidden sm:block">Management System</p>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <img src="/Logo.png" alt="Global Ehsan Relief" className="h-9 w-9 object-contain shrink-0" />
+            <div className="min-w-0">
+              <h1 className="text-sm font-semibold text-ink-900 truncate leading-tight">
+                Global Ehsan Relief <span className="text-ink-500 font-normal">· Sri Lanka</span>
+              </h1>
+              <p className="text-[11px] text-ink-500 hidden sm:block leading-tight">Management System</p>
             </div>
-          </div>
-
-          {/* Right - User actions */}
-          <div className="flex items-center gap-3">
-            {/* Notifications */}
-            <NotificationBell />
-
-            {/* User Profile */}
-            <div className="hidden md:flex items-center gap-3 pl-3 border-l border-gray-200">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-gray-900">{currentUser?.name}</p>
-                <p className="text-xs text-gray-500">{currentUser?.role}</p>
-              </div>
-              <div className="text-2xl bg-gradient-to-br from-blue-500 to-blue-600 w-10 h-10 rounded-lg flex items-center justify-center shadow-md">
-                {currentUser?.avatar}
-              </div>
-            </div>
-
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="hidden md:flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium"
-            >
-              <LogOut size={18} />
-              <span>Logout</span>
-            </button>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={() => setShowMobileMenu(!showMobileMenu)}
-            >
-              {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
-            </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {showMobileMenu && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4 animate-slide-down">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="text-2xl bg-gradient-to-br from-blue-500 to-blue-600 w-10 h-10 rounded-lg flex items-center justify-center shadow-md">
-                {currentUser?.avatar}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">{currentUser?.name}</p>
-                <p className="text-xs text-gray-500">{currentUser?.role}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium"
-            >
-              <LogOut size={18} />
-              <span>Logout</span>
-            </button>
-          </div>
+        {/* Center — command palette hint (md+) */}
+        {onCommandOpen && (
+          <button
+            onClick={onCommandOpen}
+            className="hidden md:flex items-center gap-2 text-sm text-ink-500 bg-ink-50 hover:bg-ink-100 border border-ink-100 px-3 py-1.5 rounded-md transition w-72 max-w-xs"
+          >
+            <Search size={15} className="text-ink-400" />
+            <span>Search anything…</span>
+            <span className="ml-auto text-[10px] text-ink-400 font-mono border border-ink-200 rounded px-1.5 py-0.5 bg-white">⌘K</span>
+          </button>
         )}
+
+        {/* Right — notifications + user + logout */}
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+
+          {/* User chip */}
+          <div className="hidden md:flex items-center gap-2.5 pl-3 ml-1 border-l border-ink-100">
+            <div className="text-right hidden lg:block leading-tight">
+              <p className="text-[13px] font-semibold text-ink-900">
+                {currentUser?.fullName || currentUser?.name || '—'}
+              </p>
+              <p className="text-[11px] text-ink-500">{currentUser?.role}</p>
+            </div>
+            <div className="w-9 h-9 rounded-md bg-navy-900 text-white flex items-center justify-center text-sm font-semibold shadow-card">
+              {initials}
+            </div>
+          </div>
+
+          {/* Logout */}
+          <button
+            onClick={logout}
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-ink-700 hover:text-danger-700 hover:bg-danger-50 rounded-md transition"
+            aria-label="Logout"
+          >
+            <LogOut size={16} />
+            <span>Logout</span>
+          </button>
+
+          {/* Mobile logout — icon only */}
+          <button
+            onClick={logout}
+            className="md:hidden p-2 text-ink-700 hover:text-danger-700 hover:bg-danger-50 rounded-md"
+            aria-label="Logout"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 

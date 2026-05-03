@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogIn, Heart, Users, TrendingUp, Shield } from 'lucide-react';
+import { LogIn, Heart, Users, Sparkles, ShieldCheck } from 'lucide-react';
+
+// === Login v2 — NGO professional ===
+// Two-column layout: navy mission panel on the left, white sign-in card on
+// the right. Mobile collapses to a single column with a compact brand strip.
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -15,177 +19,143 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-
-    // Simulate loading for smooth UX
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     const result = await login(username, password);
-    if (result.success) {
-      // Navigate to /admin root, which will redirect to appropriate dashboard based on permissions
-      navigate('/admin');
-    } else {
-      setError(result.message);
-    }
+    if (result.success) navigate('/admin');
+    else setError(result.message);
     setIsLoading(false);
   };
 
-  const features = [
-    { icon: Heart, label: 'Orphan Care', color: 'text-pink-500' },
-    { icon: Users, label: 'Team Management', color: 'text-blue-500' },
-    { icon: TrendingUp, label: 'Project Tracking', color: 'text-green-500' },
-    { icon: Shield, label: 'Secure & Reliable', color: 'text-purple-500' },
+  const pillars = [
+    { icon: Heart,      label: 'Compassionate care' },
+    { icon: Users,      label: 'Community-led' },
+    { icon: Sparkles,   label: 'Transparent impact' },
+    { icon: ShieldCheck,label: 'Accountable stewardship' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-      </div>
+    <div className="min-h-screen grid lg:grid-cols-5 bg-ink-50 text-ink-900">
+      {/* === Left mission panel — navy, decorative === */}
+      <div className="hidden lg:flex lg:col-span-2 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 text-white p-12 flex-col justify-between relative overflow-hidden">
+        {/* Subtle decorative ornament */}
+        <div className="absolute -top-32 -left-24 w-96 h-96 rounded-full bg-mission-500/10 blur-3xl" />
+        <div className="absolute -bottom-32 -right-16 w-80 h-80 rounded-full bg-primary-500/10 blur-3xl" />
 
-      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-8 relative z-10">
-        {/* Left side - Branding and features */}
-        <div className="hidden lg:flex flex-col justify-center text-white space-y-8 animate-fade-in">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl">
-                <Heart className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">Global Ehsan Relief - Sri Lanka</h1>
-                <p className="text-blue-100 text-sm">Management System</p>
-                <p className="text-blue-200 text-xs mt-1">65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka</p>
-              </div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-12">
+            <img src="/Logo.png" alt="GERSL" className="h-12 w-12 object-contain" />
+            <div>
+              <h2 className="text-lg font-semibold leading-tight">Global Ehsan Relief</h2>
+              <p className="text-xs text-ink-200">Sri Lanka</p>
             </div>
-            <h2 className="text-3xl font-bold leading-tight">
-              Empowering Communities<br />Through Compassion
-            </h2>
-            <p className="text-blue-100 text-lg">
-              A comprehensive platform for managing charity operations, tracking projects, and making a lasting impact.
-            </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <feature.icon className={`w-8 h-8 ${feature.color} mb-2`} />
-                <p className="text-sm font-medium">{feature.label}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-            <p className="text-sm text-blue-100 mb-2">Trusted by organizations worldwide</p>
-            <p className="text-2xl font-bold">10,000+ Lives Impacted</p>
-          </div>
+          <h1 className="text-display leading-tight">
+            Serving with <span className="text-mission-400">compassion</span>,
+            measured in <span className="text-mission-400">impact</span>.
+          </h1>
+          <p className="text-base text-ink-200 mt-5 max-w-md leading-relaxed">
+            A unified platform for orphan care, beneficiary support, finance, and field operations —
+            built for the staff who do the work.
+          </p>
         </div>
 
-        {/* Right side - Login form */}
-        <div className="flex items-center justify-center animate-scale-in">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-            <div className="text-center mb-8">
-              <div className="lg:hidden flex flex-col items-center justify-center gap-2 mb-4">
-                <div className="bg-blue-600 p-2 rounded-lg">
-                  <Heart className="w-6 h-6 text-white" />
-                </div>
-                <h1 className="text-xl font-bold text-gray-900 text-center">Global Ehsan Relief - Sri Lanka</h1>
+        <div className="relative z-10 grid grid-cols-2 gap-3">
+          {pillars.map((p) => {
+            const PillarIcon = p.icon;
+            return (
+              <div key={p.label} className="flex items-center gap-2.5 text-sm text-ink-100">
+                <span className="w-8 h-8 rounded-md bg-white/5 border border-white/10 flex items-center justify-center text-mission-400">
+                  <PillarIcon className="w-4 h-4" />
+                </span>
+                <span>{p.label}</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-              <p className="text-gray-600">Sign in to continue to your dashboard</p>
+            );
+          })}
+        </div>
+
+        <div className="relative z-10 text-xs text-ink-300">
+          <p>65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka</p>
+          <p className="mt-1">© {new Date().getFullYear()} Global Ehsan Relief — All rights reserved.</p>
+        </div>
+      </div>
+
+      {/* === Right sign-in column === */}
+      <div className="lg:col-span-3 flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-sm">
+          {/* Mobile brand strip */}
+          <div className="flex lg:hidden items-center gap-2.5 mb-8">
+            <img src="/Logo.png" alt="GERSL" className="h-10 w-10 object-contain" />
+            <div>
+              <h2 className="text-sm font-semibold text-ink-900 leading-tight">Global Ehsan Relief</h2>
+              <p className="text-[11px] text-ink-500">Sri Lanka · Management System</p>
             </div>
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {error && (
-                <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg text-sm animate-slide-down flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
-                  <span>{error}</span>
-                </div>
-              )}
+          <div className="mb-8">
+            <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1.5">Welcome back</p>
+            <h1 className="text-h1 text-ink-900">Sign in</h1>
+            <p className="text-sm text-ink-500 mt-1">Use your staff credentials to continue.</p>
+          </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="input-modern"
-                  placeholder="Enter your username"
-                  required
-                  disabled={isLoading}
-                />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-danger-50 border border-danger-600/20 text-danger-700 rounded-md px-3 py-2.5 text-sm flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0" />
+                <span>{error}</span>
               </div>
+            )}
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="input-modern"
-                  placeholder="Enter your password"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-
-              <button
-                type="submit"
+            <label className="block">
+              <span className="block text-xs font-medium text-ink-700 mb-1">Username</span>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full border border-ink-200 bg-white px-3 py-2.5 rounded-md text-sm text-ink-900 placeholder-ink-400 focus:outline-none focus:border-navy-600 focus:ring-2 focus:ring-navy-600/20 disabled:bg-ink-50"
+                placeholder="e.g. admin"
+                autoComplete="username"
+                required
                 disabled={isLoading}
-                className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Signing in...</span>
-                  </>
-                ) : (
-                  <>
-                    <LogIn size={20} />
-                    <span>Sign In</span>
-                  </>
-                )}
-              </button>
-            </form>
+              />
+            </label>
 
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-xs text-gray-500 font-semibold mb-3 text-center">Demo Credentials</p>
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="bg-blue-50 rounded-lg p-2.5 text-center border border-blue-100">
-                  <p className="font-semibold text-blue-900 mb-1">Admin</p>
-                  <p className="text-blue-600">admin</p>
-                  <p className="text-blue-600">admin123</p>
-                </div>
-                <div className="bg-purple-50 rounded-lg p-2.5 text-center border border-purple-100">
-                  <p className="font-semibold text-purple-900 mb-1">CEO</p>
-                  <p className="text-purple-600">ceo</p>
-                  <p className="text-purple-600">ceo123</p>
-                </div>
-                <div className="bg-green-50 rounded-lg p-2.5 text-center border border-green-100">
-                  <p className="font-semibold text-green-900 mb-1">PM</p>
-                  <p className="text-green-600">progmanager</p>
-                  <p className="text-green-600">pm123</p>
-                </div>
-              </div>
-            </div>
-          </div>
+            <label className="block">
+              <span className="block text-xs font-medium text-ink-700 mb-1">Password</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-ink-200 bg-white px-3 py-2.5 rounded-md text-sm text-ink-900 placeholder-ink-400 focus:outline-none focus:border-navy-600 focus:ring-2 focus:ring-navy-600/20 disabled:bg-ink-50"
+                placeholder="••••••••"
+                autoComplete="current-password"
+                required
+                disabled={isLoading}
+              />
+            </label>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full inline-flex items-center justify-center gap-2 bg-navy-900 hover:bg-navy-800 text-white text-sm font-medium px-4 py-2.5 rounded-md shadow-card transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Signing in…
+                </>
+              ) : (
+                <>
+                  <LogIn size={16} />
+                  Sign in
+                </>
+              )}
+            </button>
+          </form>
+
+          <p className="mt-8 text-[11px] text-ink-400 lg:hidden">
+            © {new Date().getFullYear()} Global Ehsan Relief · Sri Lanka
+          </p>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 py-4 text-center text-white/80 text-xs">
-        <p className="font-semibold">Global Ehsan Relief - Sri Lanka</p>
-        <p className="mt-1">65 Abdul Majeed Road, Kinniya-04, Trincomalee, Sri Lanka</p>
-        <p className="mt-2">&copy; {new Date().getFullYear()} All rights reserved.</p>
       </div>
     </div>
   );

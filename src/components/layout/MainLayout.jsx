@@ -6,22 +6,16 @@ import Sidebar from './Sidebar';
 const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar toggleSidebar={toggleSidebar} />
-      <div className="flex">
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
-        <main className="flex-1 p-4 md:p-8">
-          <Outlet />
-        </main>
+    <div className="min-h-screen bg-ink-50 text-ink-900">
+      <div className="flex h-screen overflow-hidden">
+        <Sidebar isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Navbar toggleSidebar={() => setIsSidebarOpen((v) => !v)} />
+          <main className="flex-1 overflow-y-auto">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );

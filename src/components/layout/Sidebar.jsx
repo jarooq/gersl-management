@@ -1,51 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Baby,
-  Briefcase,
-  DollarSign,
-  Users,
-  FileText,
-  HeartHandshake,
-  Shield,
-  BarChart,
-  Settings,
-  Users2,
-  ChevronDown,
-  ChevronRight,
-  Share2,
-  FileBarChart,
-  FolderKanban,
-  Target,
-  ClipboardCheck,
-  CheckCircle,
-  Clock,
-  Calendar,
-  Award,
-  MapPin,
-  UserPlus,
-  TrendingUp,
-  Megaphone,
-  Store,
-  X,
-  UserCheck,
-  Wallet,
-  Activity,
-  ShoppingCart
+  LayoutDashboard, Baby, Briefcase, DollarSign, Users, FileText, HeartHandshake,
+  Shield, BarChart, Settings, Users2, ChevronDown, ChevronRight, Share2,
+  FileBarChart, FolderKanban, Target, ClipboardCheck, CheckCircle, Clock,
+  Calendar, Award, MapPin, UserPlus, TrendingUp, Megaphone, Store, X,
+  UserCheck, Wallet, Activity, ShoppingCart,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
 
+// === GERSL Sidebar v2 — navy shell, ink text, mission-amber active accent ===
+//
+// Visual rules:
+//   - Background: navy-900 with a subtle vertical gradient down to navy-800.
+//   - Body text: ink-100 → navy-50 on hover.
+//   - Active item: white text + navy-700 fill + 3px mission-500 left border.
+//   - Module icons keep their semantic colour but at lower saturation
+//     (text-mission-300, text-success-400 etc.) to read on a dark bg.
+
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const location = useLocation();
-  const { hasPermission, hasAnyPermission, currentUser } = useAuth();
+  const { hasPermission, currentUser } = useAuth();
 
-  console.log('🔍 SIDEBAR - currentUser:', currentUser);
-  console.log('🔍 SIDEBAR - currentUser.role:', currentUser?.role);
-  console.log('🔍 SIDEBAR - currentUser.permissions:', currentUser?.permissions);
-
-  // Auto-detect which dropdown should be open based on current path
   const getInitialDropdown = () => {
     if (location.pathname.startsWith('/admin/orphans') ||
         location.pathname.startsWith('/admin/coordinators')) return 'orphan care';
@@ -61,240 +38,187 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         location.pathname.startsWith('/admin/job-postings') ||
         location.pathname.startsWith('/admin/vendor-calls')) return 'public engagement';
     if (location.pathname.startsWith('/admin/hr')) return 'human resources';
+    if (location.pathname.startsWith('/admin/procurement')) return 'procurement';
     return null;
   };
 
   const [openDropdown, setOpenDropdown] = useState(getInitialDropdown());
+  const toggleDropdown = (label) => setOpenDropdown(openDropdown === label ? null : label);
 
-  const toggleDropdown = (label) => {
-    setOpenDropdown(openDropdown === label ? null : label);
+  // Module icon tints — subtle, work on dark bg.
+  const ICON = {
+    blue:    'text-primary-300',
+    pink:    'text-pink-300',
+    emerald: 'text-emerald-300',
+    purple:  'text-violet-300',
+    green:   'text-emerald-300',
+    fuchsia: 'text-fuchsia-300',
+    amber:   'text-mission-300',
+    orange:  'text-mission-300',
+    indigo:  'text-indigo-300',
+    teal:    'text-teal-300',
+    sky:     'text-sky-300',
+    gray:    'text-ink-300',
   };
 
   const menuItems = [
-    { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.DASHBOARD_VIEW },
-    { path: '/admin/my-dashboard', icon: Activity, label: 'My Dashboard', color: 'text-indigo-600', bgColor: 'bg-indigo-50', showOnlyWithoutPermission: PERMISSIONS.DASHBOARD_VIEW },
+    { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', icc: ICON.blue, permission: PERMISSIONS.DASHBOARD_VIEW },
+    { path: '/admin/my-dashboard', icon: Activity, label: 'My Dashboard', icc: ICON.indigo, showOnlyWithoutPermission: PERMISSIONS.DASHBOARD_VIEW },
     {
-      label: 'Orphan Care',
-      icon: Baby,
-      color: 'text-pink-600',
-      bgColor: 'bg-pink-50',
-      hasSubmenu: true,
+      label: 'Orphan Care', icon: Baby, icc: ICON.pink, hasSubmenu: true,
       subItems: [
-        { path: '/admin/orphans', icon: Baby, label: 'Orphan Management', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.ORPHANS_VIEW },
-        { path: '/admin/coordinators', icon: UserCheck, label: 'Coordinators', color: 'text-pink-600', bgColor: 'bg-pink-50', permission: PERMISSIONS.ORPHANS_VIEW },
+        { path: '/admin/orphans', icon: Baby, label: 'Orphan Management', icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
+        { path: '/admin/coordinators', icon: UserCheck, label: 'Coordinators', icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
       ]
     },
-    { path: '/admin/beneficiaries', icon: Users, label: 'Beneficiaries', color: 'text-blue-600', bgColor: 'bg-blue-50', permission: PERMISSIONS.BENEFICIARIES_VIEW },
+    { path: '/admin/beneficiaries', icon: Users, label: 'Beneficiaries', icc: ICON.blue, permission: PERMISSIONS.BENEFICIARIES_VIEW },
     {
-      label: 'Fund Development',
-      icon: Award,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      hasSubmenu: true,
+      label: 'Fund Development', icon: Award, icc: ICON.emerald, hasSubmenu: true,
       subItems: [
-        { path: '/admin/partners', icon: HeartHandshake, label: 'Partners', color: 'text-emerald-600', bgColor: 'bg-emerald-50', permission: PERMISSIONS.PARTNERS_VIEW },
-        { path: '/admin/proposals', icon: FileText, label: 'Proposals', color: 'text-emerald-600', bgColor: 'bg-emerald-50', permission: PERMISSIONS.PROPOSALS_VIEW },
+        { path: '/admin/partners', icon: HeartHandshake, label: 'Partners', icc: ICON.emerald, permission: PERMISSIONS.PARTNERS_VIEW },
+        { path: '/admin/proposals', icon: FileText, label: 'Proposals', icc: ICON.emerald, permission: PERMISSIONS.PROPOSALS_VIEW },
       ]
     },
     {
-      label: 'Operations',
-      icon: Briefcase,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-      hasSubmenu: true,
+      label: 'Operations', icon: Briefcase, icc: ICON.purple, hasSubmenu: true,
       subItems: [
-        { path: '/admin/projects', icon: FolderKanban, label: 'Projects', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.PROJECTS_VIEW },
-        { path: '/admin/operations/activities', icon: Target, label: 'Activities', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES },
-        { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'All Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
-        { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', color: 'text-purple-600', bgColor: 'bg-purple-50' }, // No permission required - available to all users
-        { path: '/admin/operations/movements', icon: MapPin, label: 'Movement Register', color: 'text-purple-600', bgColor: 'bg-purple-50' },
-        { path: '/admin/operations/fuel-claims', icon: DollarSign, label: 'Fuel Claims', color: 'text-purple-600', bgColor: 'bg-purple-50' },
-        { path: '/admin/operations/fuel-rates', icon: Settings, label: 'Fuel Rates', color: 'text-purple-600', bgColor: 'bg-purple-50' },
-        { path: '/admin/approvals', icon: CheckCircle, label: 'Approvals', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.APPROVALS_VIEW },
-        { path: '/admin/compliance', icon: Shield, label: 'Compliance & Safeguarding', color: 'text-purple-600', bgColor: 'bg-purple-50', permission: PERMISSIONS.COMPLIANCE_VIEW },
+        { path: '/admin/projects', icon: FolderKanban, label: 'Projects', icc: ICON.purple, permission: PERMISSIONS.PROJECTS_VIEW },
+        { path: '/admin/operations/activities', icon: Target, label: 'Activities', icc: ICON.purple, permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES },
+        { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'All Tasks', icc: ICON.purple, permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
+        { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', icc: ICON.purple },
+        { path: '/admin/operations/movements', icon: MapPin, label: 'Movement Register', icc: ICON.purple },
+        { path: '/admin/operations/fuel-claims', icon: DollarSign, label: 'Fuel Claims', icc: ICON.purple },
+        { path: '/admin/operations/fuel-rates', icon: Settings, label: 'Fuel Rates', icc: ICON.purple },
+        { path: '/admin/approvals', icon: CheckCircle, label: 'Approvals', icc: ICON.purple, permission: PERMISSIONS.APPROVALS_VIEW },
+        { path: '/admin/compliance', icon: Shield, label: 'Compliance & Safeguarding', icc: ICON.purple, permission: PERMISSIONS.COMPLIANCE_VIEW },
       ]
     },
-    { path: '/admin/finance', icon: DollarSign, label: 'Finance', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.FINANCE_VIEW },
-    { path: '/admin/finance/cash/accounts', icon: Wallet, label: 'Cash Accounts', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.CASH_ACCOUNTS_VIEW },
-    { path: '/admin/finance/cash/replenishments', icon: HeartHandshake, label: 'Cash Replenishments', color: 'text-green-600', bgColor: 'bg-green-50', permission: PERMISSIONS.CASH_REPLENISHMENT_REQUEST },
+    { path: '/admin/finance', icon: DollarSign, label: 'Finance', icc: ICON.green, permission: PERMISSIONS.FINANCE_VIEW },
+    { path: '/admin/finance/cash/accounts', icon: Wallet, label: 'Cash Accounts', icc: ICON.green, permission: PERMISSIONS.CASH_ACCOUNTS_VIEW },
+    { path: '/admin/finance/cash/replenishments', icon: HeartHandshake, label: 'Cash Replenishments', icc: ICON.green, permission: PERMISSIONS.CASH_REPLENISHMENT_REQUEST },
     {
-      label: 'Public Engagement',
-      icon: Megaphone,
-      color: 'text-fuchsia-600',
-      bgColor: 'bg-fuchsia-50',
-      hasSubmenu: true,
+      label: 'Public Engagement', icon: Megaphone, icc: ICON.fuchsia, hasSubmenu: true,
       subItems: [
-        { path: '/admin/campaigns', icon: Megaphone, label: 'Campaigns', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.CAMPAIGNS_VIEW },
-        { path: '/admin/donations', icon: DollarSign, label: 'Donations', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.DONATIONS_VIEW },
-        { path: '/admin/job-postings', icon: Briefcase, label: 'Job Postings', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.JOB_POSTINGS_VIEW },
-        { path: '/admin/vendor-calls', icon: Store, label: 'Vendor Calls', color: 'text-fuchsia-600', bgColor: 'bg-fuchsia-50', permission: PERMISSIONS.VENDOR_CALLS_VIEW },
+        { path: '/admin/campaigns', icon: Megaphone, label: 'Campaigns', icc: ICON.fuchsia, permission: PERMISSIONS.CAMPAIGNS_VIEW },
+        { path: '/admin/donations', icon: DollarSign, label: 'Donations', icc: ICON.fuchsia, permission: PERMISSIONS.DONATIONS_VIEW },
+        { path: '/admin/job-postings', icon: Briefcase, label: 'Job Postings', icc: ICON.fuchsia, permission: PERMISSIONS.JOB_POSTINGS_VIEW },
+        { path: '/admin/vendor-calls', icon: Store, label: 'Vendor Calls', icc: ICON.fuchsia, permission: PERMISSIONS.VENDOR_CALLS_VIEW },
       ]
     },
     {
-      label: 'Procurement',
-      icon: ShoppingCart,
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
-      hasSubmenu: true,
+      label: 'Procurement', icon: ShoppingCart, icc: ICON.amber, hasSubmenu: true,
       subItems: [
-        { path: '/admin/procurement/dashboard', icon: BarChart, label: 'Dashboard', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_DASHBOARD_VIEW },
-        { path: '/admin/procurement/inbox', icon: ClipboardCheck, label: 'Inbox', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_REQUEST_VIEW },
-        { path: '/admin/procurement/vendors', icon: Store, label: 'Vendors', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_VENDOR_VIEW },
-        { path: '/admin/procurement/thresholds', icon: Settings, label: 'Thresholds', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.PROCUREMENT_THRESHOLDS_MANAGE },
+        { path: '/admin/procurement/dashboard', icon: BarChart, label: 'Dashboard', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_DASHBOARD_VIEW },
+        { path: '/admin/procurement/inbox', icon: ClipboardCheck, label: 'Inbox', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_REQUEST_VIEW },
+        { path: '/admin/procurement/vendors', icon: Store, label: 'Vendors', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_VENDOR_VIEW },
+        { path: '/admin/procurement/thresholds', icon: Settings, label: 'Thresholds', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_THRESHOLDS_MANAGE },
       ]
     },
     {
-      label: 'Human Resources',
-      icon: Users,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
-      hasSubmenu: true,
+      label: 'Human Resources', icon: Users, icc: ICON.orange, hasSubmenu: true,
       subItems: [
-        { path: '/admin/hr', icon: Users, label: 'HR Overview', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW },
-        { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/corrections', icon: ClipboardCheck, label: 'Attendance Corrections', color: 'text-orange-600', bgColor: 'bg-orange-50' },
-        { path: '/admin/hr/live-map', icon: MapPin, label: 'Live staff map', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/shifts', icon: Calendar, label: 'Shift roster', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/movement-segments', icon: MapPin, label: 'Movement segments', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
-        { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
-        { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.HR_MANAGE_CONTRACTS },
-        { path: '/admin/hr/payroll', icon: Wallet, label: 'Payroll', color: 'text-orange-600', bgColor: 'bg-orange-50', permission: PERMISSIONS.FINANCE_VIEW_PAYROLL },
+        { path: '/admin/hr', icon: Users, label: 'HR Overview', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
+        { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/corrections', icon: ClipboardCheck, label: 'Attendance Corrections', icc: ICON.orange },
+        { path: '/admin/hr/live-map', icon: MapPin, label: 'Live staff map', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/shifts', icon: Calendar, label: 'Shift roster', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/movement-segments', icon: MapPin, label: 'Movement segments', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
+        { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
+        { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
+        { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_CONTRACTS },
+        { path: '/admin/hr/payroll', icon: Wallet, label: 'Payroll', icc: ICON.orange, permission: PERMISSIONS.FINANCE_VIEW_PAYROLL },
       ]
     },
-    { path: '/admin/cbo', icon: Users2, label: 'CBO Partners', color: 'text-indigo-600', bgColor: 'bg-indigo-50', permission: PERMISSIONS.CBO_VIEW },
-    { path: '/admin/meal', icon: BarChart, label: 'MEAL', color: 'text-teal-600', bgColor: 'bg-teal-50', permission: PERMISSIONS.MEAL_VIEW },
-    { path: '/admin/social-media', icon: Share2, label: 'Social Media', color: 'text-sky-600', bgColor: 'bg-sky-50', permission: PERMISSIONS.SOCIAL_MEDIA_VIEW },
-    { path: '/admin/announcements', icon: Megaphone, label: 'Announcements', color: 'text-pink-600', bgColor: 'bg-pink-50' },
-    { path: '/admin/reports', icon: FileBarChart, label: 'Reports', color: 'text-amber-600', bgColor: 'bg-amber-50', permission: PERMISSIONS.REPORTS_VIEW },
-    { path: '/admin/settings', icon: Settings, label: 'Settings', color: 'text-gray-600', bgColor: 'bg-gray-50', permission: PERMISSIONS.SETTINGS_VIEW },
+    { path: '/admin/cbo', icon: Users2, label: 'CBO Partners', icc: ICON.indigo, permission: PERMISSIONS.CBO_VIEW },
+    { path: '/admin/meal', icon: BarChart, label: 'MEAL', icc: ICON.teal, permission: PERMISSIONS.MEAL_VIEW },
+    { path: '/admin/social-media', icon: Share2, label: 'Social Media', icc: ICON.sky, permission: PERMISSIONS.SOCIAL_MEDIA_VIEW },
+    { path: '/admin/announcements', icon: Megaphone, label: 'Announcements', icc: ICON.pink },
+    { path: '/admin/reports', icon: FileBarChart, label: 'Reports', icc: ICON.amber, permission: PERMISSIONS.REPORTS_VIEW },
+    { path: '/admin/settings', icon: Settings, label: 'Settings', icc: ICON.gray, permission: PERMISSIONS.SETTINGS_VIEW },
   ];
 
-  // If no user is logged in, show empty menu
-  if (!currentUser) {
-    console.log('⚠️ SIDEBAR - No currentUser, showing empty menu');
-    return null; // Don't render sidebar if not logged in
-  }
+  if (!currentUser) return null;
 
-  // Check if user has wildcard permission (grants access to everything)
-  // Ensure permissions is an array before calling .some()
-  const hasWildcardPermission = Array.isArray(currentUser.permissions) &&
+  const hasWildcard = Array.isArray(currentUser.permissions) &&
     currentUser.permissions.some(p => p.permissionKey === '*');
 
-  console.log('🔍 SIDEBAR - currentUser.permissions:', currentUser?.permissions?.length || 0, 'permissions');
-  console.log('🔍 SIDEBAR - hasWildcardPermission:', hasWildcardPermission);
-  console.log('🔍 SIDEBAR - Will filter menu items:', !hasWildcardPermission);
-
-  // Filter menu items based on user permissions
-  // If user has wildcard permission (*), show all items
-  const filteredMenuItems = hasWildcardPermission ? menuItems : menuItems.filter((item) => {
+  const filteredMenuItems = hasWildcard ? menuItems : menuItems.filter((item) => {
     if (item.hasSubmenu) {
-      // Filter sub-items and only show the parent if at least one sub-item is accessible
-      const accessibleSubItems = item.subItems.filter((subItem) =>
-        !subItem.permission || hasPermission(subItem.permission)
-      );
-      if (accessibleSubItems.length > 0) {
-        // Return item with filtered sub-items
-        item.subItems = accessibleSubItems;
-        return true;
-      }
+      const accessible = item.subItems.filter((s) => !s.permission || hasPermission(s.permission));
+      if (accessible.length > 0) { item.subItems = accessible; return true; }
       return false;
-    } else {
-      // Handle showOnlyWithoutPermission (for items that should hide when user has a specific permission)
-      if (item.showOnlyWithoutPermission) {
-        return !hasPermission(item.showOnlyWithoutPermission);
-      }
-
-      // For regular items, check if user has permission
-      // If no permission is specified, show to everyone
-      return !item.permission || hasPermission(item.permission);
     }
+    if (item.showOnlyWithoutPermission) return !hasPermission(item.showOnlyWithoutPermission);
+    return !item.permission || hasPermission(item.permission);
   });
 
-  // Close sidebar when route changes on mobile
-  useEffect(() => {
-    if (closeSidebar) {
-      closeSidebar();
-    }
-  }, [location.pathname]);
+  useEffect(() => { if (closeSidebar) closeSidebar(); }, [location.pathname]); // eslint-disable-line
+
+  // Active row classes — used for both top-level and sub-items.
+  const activeRow   = 'bg-navy-700 text-white shadow-card border-l-[3px] border-mission-500';
+  const inactiveRow = 'text-ink-100 hover:bg-navy-800 hover:text-white border-l-[3px] border-transparent';
+  const activeSub   = 'bg-navy-800 text-white border-l-2 border-mission-500';
+  const inactiveSub = 'text-ink-200 hover:bg-navy-800/50 hover:text-white border-l-2 border-transparent';
 
   return (
     <>
-      {/* Mobile Overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={closeSidebar}
-        />
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={closeSidebar} />
       )}
 
-      {/* Sidebar */}
-      <div className={`
+      <aside className={`
         fixed lg:static inset-y-0 left-0 z-50
-        w-64 bg-white border-r border-gray-200 h-full overflow-y-auto
+        w-64 h-screen overflow-y-auto
+        bg-gradient-to-b from-navy-900 to-navy-800 text-ink-100
+        border-r border-navy-900
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Mobile Close Button */}
-        <div className="lg:hidden flex justify-end p-4 border-b border-gray-200">
-          <button
-            onClick={closeSidebar}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="Close sidebar"
-          >
-            <X size={20} />
+        {/* Brand block — visible on mobile, hidden on desktop where Navbar shows it */}
+        <div className="lg:hidden flex items-center justify-between px-5 py-4 border-b border-navy-800">
+          <div className="flex items-center gap-2">
+            <img src="/Logo.png" alt="GERSL" className="h-8 w-8 object-contain" />
+            <span className="text-sm font-semibold text-white">GERSL</span>
+          </div>
+          <button onClick={closeSidebar}
+            className="p-1.5 rounded-md text-ink-200 hover:bg-navy-800 hover:text-white">
+            <X size={18} />
           </button>
         </div>
 
-        <nav className="py-4 px-3">
-        <div className="space-y-1">
+        <nav className="py-3 px-2.5 space-y-0.5">
           {filteredMenuItems.map((item, index) => {
             if (item.hasSubmenu) {
-              // Dropdown menu item (Operations)
-              const isAnySubItemActive = item.subItems.some(subItem => location.pathname === subItem.path);
-              const isOpen = openDropdown === item.label.toLowerCase();
-
+              const isActive = item.subItems.some(sub => location.pathname === sub.path);
+              const isOpen2 = openDropdown === item.label.toLowerCase();
               return (
                 <div key={index}>
                   <button
                     onClick={() => toggleDropdown(item.label.toLowerCase())}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                      isAnySubItemActive
-                        ? `${item.bgColor} ${item.color} shadow-sm font-semibold`
-                        : 'text-gray-700 hover:bg-gray-50 font-medium'
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-r-md text-sm font-medium transition ${
+                      isActive ? activeRow : inactiveRow
                     }`}
                   >
-                    <div className={`transition-transform duration-200 ${isAnySubItemActive ? 'scale-110' : 'group-hover:scale-105'}`}>
-                      <item.icon size={20} />
-                    </div>
+                    <item.icon size={18} className={isActive ? 'text-mission-300' : item.icc} />
                     <span className="flex-1 text-left">{item.label}</span>
-                    {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                    {isOpen2 ? <ChevronDown size={14} className="text-ink-300" /> : <ChevronRight size={14} className="text-ink-400" />}
                   </button>
-
-                  {/* Sub-menu items */}
-                  {isOpen && (
-                    <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 pl-2">
-                      {item.subItems.map((subItem) => (
+                  {isOpen2 && (
+                    <div className="mt-0.5 mb-1 space-y-0.5">
+                      {item.subItems.map((sub) => (
                         <NavLink
-                          key={subItem.path}
-                          to={subItem.path}
-                          className={({ isActive }) =>
-                            `flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 group ${
-                              isActive
-                                ? `${subItem.bgColor} ${subItem.color} shadow-sm font-semibold`
-                                : 'text-gray-600 hover:bg-gray-50 font-medium'
+                          key={sub.path}
+                          to={sub.path}
+                          className={({ isActive: a }) =>
+                            `flex items-center gap-3 pl-9 pr-3 py-1.5 rounded-r-md text-[13px] transition ${
+                              a ? activeSub : inactiveSub
                             }`
                           }
                         >
-                          {({ isActive }) => (
+                          {({ isActive: a }) => (
                             <>
-                              <div className={`transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`}>
-                                <subItem.icon size={18} />
-                              </div>
-                              <span className="text-sm">{subItem.label}</span>
-                              {isActive && (
-                                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-current animate-pulse"></div>
-                              )}
+                              <sub.icon size={14} className={a ? 'text-mission-300' : sub.icc} />
+                              <span>{sub.label}</span>
                             </>
                           )}
                         </NavLink>
@@ -303,38 +227,36 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
                   )}
                 </div>
               );
-            } else {
-              // Regular menu item
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                      isActive
-                        ? `${item.bgColor} ${item.color} shadow-sm font-semibold`
-                        : 'text-gray-700 hover:bg-gray-50 font-medium'
-                    }`
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      <div className={`transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`}>
-                        <item.icon size={20} />
-                      </div>
-                      <span>{item.label}</span>
-                      {isActive && (
-                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-current animate-pulse"></div>
-                      )}
-                    </>
-                  )}
-                </NavLink>
-              );
             }
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-r-md text-sm font-medium transition ${
+                    isActive ? activeRow : inactiveRow
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <item.icon size={18} className={isActive ? 'text-mission-300' : item.icc} />
+                    <span>{item.label}</span>
+                  </>
+                )}
+              </NavLink>
+            );
           })}
+        </nav>
+
+        {/* Footer — small mission credo (visual signature, NGO-appropriate) */}
+        <div className="px-5 py-4 border-t border-navy-800 mt-2">
+          <p className="text-[11px] text-ink-300 leading-relaxed">
+            <span className="text-mission-300 font-semibold">Global Ehsan Relief</span> · Sri Lanka
+          </p>
+          <p className="text-[10px] text-ink-400 mt-0.5">Serving with compassion since 2015</p>
         </div>
-      </nav>
-      </div>
+      </aside>
     </>
   );
 };
