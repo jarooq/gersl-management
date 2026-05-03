@@ -564,13 +564,15 @@ const HRPage = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
-      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Human Resources</p>
-          <h1 className="text-h1 text-ink-900">HR Management</h1>
-          <p className="text-sm text-ink-500 mt-1">Managing {stats.totalStaff} team members across the organization.</p>
-        </div>
-      </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="min-w-0">
+                  <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Human Resources</p>
+                  <h1 className="text-h2 font-bold leading-tight">HR Management</h1>
+                  <p className="text-ink-200 text-sm mt-0.5">Managing {stats.totalStaff} team members across the organization.</p>
+                </div>
+              </div>
+            </div>
 
       {/* Primary Stats — flat NGO design */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

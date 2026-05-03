@@ -530,13 +530,14 @@ const TasksPage = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
-      <div className="border-b border-ink-100 pb-5 mb-2 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Operations · Tasks</p>
-          <h1 className="text-h1 text-ink-900">Task Management</h1>
-          <p className="text-sm text-ink-500 mt-1">Organize, track, and collaborate on tasks across teams.</p>
-        </div>
-        <div className="flex gap-2 shrink-0">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="min-w-0">
+                  <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations · Tasks</p>
+                  <h1 className="text-h2 font-bold leading-tight">Task Management</h1>
+                  <p className="text-ink-200 text-sm mt-0.5">Organize, track, and collaborate on tasks across teams.</p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0"><div className="flex gap-2 shrink-0">
           <button
             onClick={() => setShowAdvancedFilters(true)}
             className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
@@ -567,8 +568,9 @@ const TasksPage = () => {
           >
             <Plus size={16} />
             New Task
-          </button>
-        </div>
+          </button></div>
+              </div>
+            </div>
       </div>
 
       {/* Stats Cards */}

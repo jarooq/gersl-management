@@ -159,20 +159,16 @@ const AppraisalPage = () => {
   };
 
   return (
-    <div className="p-8 bg-ink-50 min-h-screen">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Hero Banner */}
-      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
-        <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold mb-1">Performance Appraisal</h1>
-              <p className="text-purple-100 text-sm">Track and manage employee performance evaluations</p>
-            </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+            <TrendingUp className="w-5 h-5 text-mission-300" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-h2 font-bold leading-tight">Performance Appraisal</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Track and manage employee performance evaluations</p>
           </div>
         </div>
       </div>

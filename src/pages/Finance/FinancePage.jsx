@@ -698,11 +698,15 @@ const FinancePage = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
-      <div className="border-b border-ink-100 pb-5 mb-2">
-        <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">Finance · Accounting</p>
-        <h1 className="text-h1 text-ink-900">Financial Management</h1>
-        <p className="text-sm text-ink-500 mt-1">Complete accounting and financial control across the organisation.</p>
-      </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="min-w-0">
+                  <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Finance · Accounting</p>
+                  <h1 className="text-h2 font-bold leading-tight">Financial Management</h1>
+                  <p className="text-ink-200 text-sm mt-0.5">Complete accounting and financial control across the organisation.</p>
+                </div>
+              </div>
+            </div>
 
       {/* QuickBooks Dashboard Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

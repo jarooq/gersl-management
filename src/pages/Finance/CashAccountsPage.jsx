@@ -60,19 +60,22 @@ export default function CashAccountsPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-5">
-      <header className="flex items-start justify-between">
-        <div>
-          <h1 className="text-h1 text-ink-900">Cash accounts</h1>
-          <p className="text-sm text-ink-500">Locker, cash book, and petty cash floats. Transactions are recorded separately.</p>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Finance · Cash</p>
+            <h1 className="text-h2 font-bold leading-tight">Cash Accounts</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Locker, cash book, and petty cash floats. Transactions are recorded separately.</p>
+          </div>
+          {canManage && (
+            <button
+              onClick={() => { setEditing(null); setShowForm(true); }}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
+            >Add Account</button>
+          )}
         </div>
-        {canManage && (
-          <button
-            onClick={() => { setEditing(null); setShowForm(true); }}
-            className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
-          >Add account</button>
-        )}
-      </header>
+      </div>
 
       {summary && (
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">

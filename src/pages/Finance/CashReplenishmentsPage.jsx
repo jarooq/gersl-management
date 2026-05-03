@@ -82,10 +82,15 @@ export default function CashReplenishmentsPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <header>
-        <h1 className="text-h1 text-ink-900">Replenishment queue</h1>
-        <p className="text-sm text-ink-500">Petty cash imprest top-ups.</p>
-      </header>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Finance · Cash</p>
+            <h1 className="text-h2 font-bold leading-tight">Replenishment Queue</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Petty cash imprest top-ups.</p>
+          </div>
+        </div>
+      </div>
 
       <div className="flex items-center gap-2">
         <label className="text-sm">

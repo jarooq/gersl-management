@@ -142,23 +142,20 @@ const CompliancePage = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Hero Header */}
-      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Shield className="w-5 h-5" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Compliance & Safeguarding</h1>
-                <p className="text-emerald-100 text-sm">Maintaining highest standards in child protection and organizational compliance</p>
-              </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+              <Shield className="w-5 h-5 text-mission-300" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-h2 font-bold leading-tight">Compliance & Safeguarding</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Maintaining highest standards in child protection and organizational compliance</p>
             </div>
           </div>
+          
         </div>
       </div>
 

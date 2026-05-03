@@ -63,17 +63,20 @@ export default function VendorsPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <header className="flex items-start justify-between mb-4">
-        <div>
-          <h1 className="text-h1 text-ink-900">Vendor master</h1>
-          <p className="text-sm text-ink-500">Approved vendor list, due diligence, and blacklist control.</p>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Procurement · Vendors</p>
+            <h1 className="text-h2 font-bold leading-tight">Vendor Master</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Approved vendor list, due diligence, and blacklist control.</p>
+          </div>
+          <button
+            onClick={() => { setEditing(null); setShowForm(true); }}
+            className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
+          >Add Vendor</button>
         </div>
-        <button
-          onClick={() => { setEditing(null); setShowForm(true); }}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
-        >Add vendor</button>
-      </header>
+      </div>
 
       <form onSubmit={onSearch} className="flex gap-2 mb-4">
         <input

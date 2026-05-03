@@ -87,10 +87,15 @@ export default function FuelClaimsPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <header>
-        <h1 className="text-h1 text-ink-900">Fuel claims</h1>
-        <p className="text-sm text-ink-500">Auto-derived from Returned movements; lunch-hour deductions applied.</p>
-      </header>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations</p>
+            <h1 className="text-h2 font-bold leading-tight">Fuel Claims</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Auto-derived from Returned movements; lunch-hour deductions applied.</p>
+          </div>
+        </div>
+      </div>
 
       <div className="flex gap-2 border-b border-ink-100">
         <button

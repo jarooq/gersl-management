@@ -77,15 +77,20 @@ export default function ProcurementInboxPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <header className="mb-6">
-        <h1 className="text-h1 text-ink-900">Procurement Inbox</h1>
-        <p className="text-sm text-ink-500 mt-1">
-          {isManager
-            ? 'Assign incoming procurement requests to officers and choose the procurement method.'
-            : 'Requests assigned to you. Pick one to start the RFQ flow.'}
-        </p>
-      </header>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Procurement</p>
+            <h1 className="text-h2 font-bold leading-tight">Procurement Inbox</h1>
+            <p className="text-ink-200 text-sm mt-0.5">
+              {isManager
+                ? 'Assign incoming procurement requests to officers and choose the procurement method.'
+                : 'Requests assigned to you. Pick one to start the RFQ flow.'}
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div className="flex gap-2 mb-4 border-b border-ink-100">
         {isManager && (

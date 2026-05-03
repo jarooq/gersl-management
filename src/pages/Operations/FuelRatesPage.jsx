@@ -70,10 +70,15 @@ export default function FuelRatesPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <header>
-        <h1 className="text-h1 text-ink-900">Fuel rates</h1>
-        <p className="text-sm text-ink-500">Per-km reimbursement rates by vehicle type, effective-dated.</p>
-      </header>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations</p>
+            <h1 className="text-h2 font-bold leading-tight">Fuel Rates</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Per-km reimbursement rates by vehicle type, effective-dated.</p>
+          </div>
+        </div>
+      </div>
 
       <form onSubmit={submit} className="bg-white border border-ink-100 rounded-md p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
         <label className="block">

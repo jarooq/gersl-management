@@ -198,28 +198,23 @@ const PartnersPage = () => {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Red Gradient Hero Banner */}
-      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <HeartHandshake className="w-5 h-5" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Partners & Donors</h1>
-                <p className="text-red-100 text-sm">Building lasting relationships with {stats.activePartners} active partners</p>
-              </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Hero Header */}
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+              <HeartHandshake className="w-5 h-5 text-mission-300" />
             </div>
-            <button
-              onClick={() => setShowAddPartnerModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-semibold transition-all border border-white/30 hover:border-white/50 shadow-card hover:shadow-lift"
-            >
-              <Plus size={20} />
-              <span>Add Partner</span>
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Fund Development</p>
+              <h1 className="text-h2 font-bold leading-tight">Partners & Donors</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Building lasting relationships with {stats.activePartners} active partners</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button onClick={() => setShowAddPartnerModal(true)} className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition">
+              <Plus size={16} /> Add Partner
             </button>
           </div>
         </div>

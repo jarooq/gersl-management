@@ -11,20 +11,36 @@ import React from 'react';
 const cn = (...c) => c.filter(Boolean).join(' ');
 
 // -----------------------------------------------------------------------------
-// PageHeader — top of every admin page.
+// PageHeader — canonical navy hero band at the top of every admin page.
+//   <PageHeader
+//     icon={Heart}
+//     eyebrow="Orphan Care"
+//     title="Orphan Care Management"
+//     subtitle="Supporting 312 children with compassion"
+//     actions={<Button variant="mission">Add Orphan</Button>}
+//   />
 // -----------------------------------------------------------------------------
-export function PageHeader({ title, subtitle, eyebrow, actions, children }) {
+export function PageHeader({ icon: Icon, title, subtitle, eyebrow, actions, children }) {
   return (
-    <div className="border-b border-ink-100 pb-5 mb-6 flex items-start justify-between gap-4">
-      <div className="min-w-0">
-        {eyebrow && (
-          <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">{eyebrow}</p>
-        )}
-        <h1 className="text-h1 text-ink-900 truncate">{title}</h1>
-        {subtitle && <p className="text-sm text-ink-500 mt-1">{subtitle}</p>}
-        {children}
+    <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          {Icon && (
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+              <Icon className="w-5 h-5 text-mission-300" />
+            </div>
+          )}
+          <div className="min-w-0">
+            {eyebrow && (
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">{eyebrow}</p>
+            )}
+            <h1 className="text-h2 font-bold leading-tight truncate">{title}</h1>
+            {subtitle && <p className="text-ink-200 text-sm mt-0.5">{subtitle}</p>}
+            {children}
+          </div>
+        </div>
+        {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
       </div>
-      {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
     </div>
   );
 }
@@ -34,7 +50,7 @@ export function PageHeader({ title, subtitle, eyebrow, actions, children }) {
 // -----------------------------------------------------------------------------
 export function PageWrap({ children, className }) {
   return (
-    <div className={cn('p-6 max-w-7xl mx-auto', className)}>{children}</div>
+    <div className={cn('p-6 max-w-7xl mx-auto space-y-4', className)}>{children}</div>
   );
 }
 
@@ -92,7 +108,8 @@ export function Button({
     secondary: 'bg-white border border-ink-200 text-ink-800 hover:bg-ink-50',
     ghost:     'text-ink-700 hover:bg-ink-50',
     danger:    'bg-danger-600 hover:bg-danger-700 text-white shadow-card',
-    mission:   'bg-mission-500 hover:bg-mission-600 text-white shadow-card',
+    mission:   'bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card',
+    onNavy:    'bg-white/10 hover:bg-white/15 border border-white/20 text-white',
     link:      'text-navy-700 hover:underline',
   };
   return (

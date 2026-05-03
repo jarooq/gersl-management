@@ -286,41 +286,27 @@ const ReportsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Hero Header */}
-      <div className="bg-navy-900 rounded-xl p-8 text-white shadow-card relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
-
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <FileBarChart className="w-6 h-6" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold">Reports & Analytics</h1>
-                  <p className="text-indigo-100 text-sm mt-1">Comprehensive reporting across all modules</p>
-                </div>
-              </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+              <FileBarChart className="w-5 h-5 text-mission-300" />
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowScheduleModal(true)}
-                className="flex items-center gap-2 px-5 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-lg hover:bg-white/20 transition-all font-semibold"
-              >
-                <Clock size={20} />
-                Schedule
-              </button>
-              <button
-                onClick={() => setShowGenerateModal(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 rounded-lg hover:shadow-lift transition-all font-semibold"
-              >
-                <Plus size={20} />
-                Generate Report
-              </button>
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Reports</p>
+              <h1 className="text-h2 font-bold leading-tight">Reports & Analytics</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Comprehensive reporting across all modules</p>
             </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button onClick={() => setShowScheduleModal(true)} className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-white/10 hover:bg-white/15 border border-white/20 text-white transition">
+              <Clock size={16} /> Schedule
+            </button>
+            <button onClick={() => setShowGenerateModal(true)} className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition">
+              <Plus size={16} /> Generate Report
+            </button>
           </div>
         </div>
       </div>

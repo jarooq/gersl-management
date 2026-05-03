@@ -159,37 +159,24 @@ const ProjectDetailPage = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="border-b border-ink-100 pb-5 flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3 min-w-0">
-          <button
-            onClick={() => navigate('/admin/projects')}
-            className="p-2 -ml-2 text-ink-500 hover:text-navy-700 rounded-md transition"
-            aria-label="Back to projects"
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-wider text-navy-700 mb-1">
-              {project.programmeArea} · {project.projectCode}
-            </p>
-            <h1 className="text-h1 text-ink-900 truncate">{project.name}</h1>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(project.status)}`}>
-            <CheckCircle size={12} />
-            {project.status}
-          </span>
-          <button className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 hover:bg-ink-50 rounded-md transition">
-            <Edit size={14} />
-            Edit
-          </button>
-          <button className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-danger-700 bg-white border border-ink-200 hover:bg-danger-50 hover:border-danger-200 rounded-md transition">
-            <Trash2 size={14} />
-            Delete
-          </button>
-        </div>
-      </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="min-w-0">
+                  <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">{project.programmeArea} · {project.projectCode}</p>
+                  <h1 className="text-h2 font-bold leading-tight">{project.name}</h1>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-white/10 hover:bg-white/15 border border-white/20 rounded-md transition">
+                    <Edit size={14} />
+                    Edit
+                  </button>
+                  <button className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-danger-600 hover:bg-danger-700 rounded-md transition">
+                    <Trash2 size={14} />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
 
       {/* Tabs - Modern rounded style */}
       <div className="bg-white rounded-xl shadow-card p-2 mb-6">

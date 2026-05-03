@@ -89,16 +89,19 @@ export default function MovementRegisterPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <header className="flex items-start justify-between">
-        <div>
-          <h1 className="text-h1 text-ink-900">Movement register</h1>
-          <p className="text-sm text-ink-500">Field-trip log: plan, depart, arrive, return.</p>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations</p>
+            <h1 className="text-h2 font-bold leading-tight">Movement Register</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Field-trip log: plan, depart, arrive, return.</p>
+          </div>
+          <button
+            onClick={() => setShowNew(true)}
+            className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
+          >New Movement</button>
         </div>
-        <button
-          onClick={() => setShowNew(true)}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
-        >New movement</button>
-      </header>
+      </div>
 
       <div className="flex gap-2 border-b border-ink-100">
         <button

@@ -296,22 +296,28 @@ const MyTasksPage = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Hero Banner */}
-      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">My Tasks</h1>
-            <p className="text-blue-100">Manage and track your assigned tasks</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-white bg-opacity-20 rounded-lg px-4 py-2">
-              <p className="text-sm text-blue-100">Total Tasks</p>
-              <p className="text-3xl font-bold">{stats.total}</p>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Hero Header */}
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+              <ListTodo className="w-5 h-5 text-mission-300" />
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg px-4 py-2">
-              <p className="text-sm text-blue-100">In Progress</p>
-              <p className="text-3xl font-bold">{stats.inProgress}</p>
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations</p>
+              <h1 className="text-h2 font-bold leading-tight">My Tasks</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Manage and track your assigned tasks</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="bg-white/10 border border-white/20 rounded-md px-4 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-mission-300">Total</p>
+              <p className="text-2xl font-bold">{stats.total}</p>
+            </div>
+            <div className="bg-white/10 border border-white/20 rounded-md px-4 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-mission-300">In Progress</p>
+              <p className="text-2xl font-bold">{stats.inProgress}</p>
             </div>
           </div>
         </div>

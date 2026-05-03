@@ -92,21 +92,17 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Hero Header */}
-      <div className="bg-navy-900 rounded-xl p-8 text-white shadow-lift relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32" ></div>
-
-        <div className="relative z-10">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg2 flex items-center justify-center">
-              <SettingsIcon className="w-8 h-8 animate-spin-slow" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Settings & Administration</h1>
-              <p className="text-white/90 text-lg">Manage users, roles, permissions, and system configuration</p>
-            </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+            <SettingsIcon className="w-5 h-5 text-mission-300" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Administration</p>
+            <h1 className="text-h2 font-bold leading-tight">Settings & Administration</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Manage users, roles, permissions, and system configuration</p>
           </div>
         </div>
       </div>
@@ -188,7 +184,7 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="p-6 max-w-7xl mx-auto space-y-4">
           {activeTab === 'users' && (
             <UsersTab
               users={filteredUsers}

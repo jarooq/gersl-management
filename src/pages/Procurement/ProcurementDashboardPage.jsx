@@ -42,11 +42,16 @@ export default function ProcurementDashboardPage() {
   const pending = data.pendingActions || {};
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
-      <header>
-        <h1 className="text-h1 text-ink-900">Procurement dashboard</h1>
-        <p className="text-sm text-ink-500">Activity since {new Date(data.from).toLocaleDateString()}.</p>
-      </header>
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Procurement</p>
+            <h1 className="text-h2 font-bold leading-tight">Procurement Dashboard</h1>
+            <p className="text-ink-200 text-sm mt-0.5">Activity since {new Date(data.from).toLocaleDateString()}.</p>
+          </div>
+        </div>
+      </div>
 
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Tile label="Avg cycle (days)" value={data.avgCycleDays ?? '—'} sub="PR → PO Issued" />

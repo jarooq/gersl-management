@@ -188,25 +188,23 @@ const JobPostingsPage = () => {
   };
 
   return (
-    <div className="p-8 bg-ink-50 min-h-screen">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Hero Section */}
-      <div className="bg-navy-900 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" ></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Briefcase className="w-5 h-5" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">Call for Vacancy</h1>
-                <p className="text-blue-100 text-sm">Manage job postings and recruitment</p>
-              </div>
+      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-mission-500/15 border border-mission-500/30 rounded-lg2 flex items-center justify-center shrink-0">
+              <Briefcase className="w-5 h-5 text-mission-300" />
             </div>
+            <div className="min-w-0">
+              <h1 className="text-h2 font-bold leading-tight">Call for Vacancy</h1>
+              <p className="text-ink-200 text-sm mt-0.5">Manage job postings and recruitment</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowModal(true)}
-              className="bg-white/20 backdrop-blur-lg text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/30 transition-all duration-200 flex items-center gap-2 border border-white/30"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
             >
               <Plus size={20} />
               Post Job
