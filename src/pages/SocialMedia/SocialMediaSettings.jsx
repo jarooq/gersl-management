@@ -125,17 +125,17 @@ const SocialMediaSettings = () => {
   const connection = connections[activeTab];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-ink-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-600 rounded-xl flex items-center justify-center">
               <Settings className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Social Media Integration Settings</h1>
-              <p className="text-sm text-gray-600">Connect and manage your social media accounts</p>
+              <h1 className="text-h1 text-ink-900">Social Media Integration Settings</h1>
+              <p className="text-sm text-ink-600">Connect and manage your social media accounts</p>
             </div>
           </div>
         </div>
@@ -152,20 +152,20 @@ const SocialMediaSettings = () => {
                 className={`p-4 rounded-xl border-2 transition-all ${
                   isConnected
                     ? `border-${platform.color}-300 bg-${platform.color}-50`
-                    : 'border-gray-200 bg-white'
+                    : 'border-ink-100 bg-white'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Icon size={20} className={`text-${platform.color}-600`} />
-                    <span className="font-bold text-gray-900">{platform.name}</span>
+                    <span className="font-bold text-ink-900">{platform.name}</span>
                   </div>
                   {isConnected && (
                     <Check size={16} className="text-green-600" />
                   )}
                 </div>
                 <div className={`text-xs font-semibold ${
-                  isConnected ? 'text-green-600' : 'text-gray-500'
+                  isConnected ? 'text-green-600' : 'text-ink-500'
                 }`}>
                   {isConnected ? 'Connected' : 'Not Connected'}
                 </div>
@@ -175,9 +175,9 @@ const SocialMediaSettings = () => {
         </div>
 
         {/* Main Configuration Area */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100">
           {/* Platform Tabs */}
-          <div className="border-b border-gray-200">
+          <div className="border-b border-ink-100">
             <div className="flex overflow-x-auto">
               {platforms.map((platform) => {
                 const Icon = platform.icon;
@@ -190,7 +190,7 @@ const SocialMediaSettings = () => {
                     className={`flex items-center gap-2 px-6 py-4 font-semibold transition-all border-b-2 ${
                       isActive
                         ? `border-${platform.color}-600 text-${platform.color}-600`
-                        : 'border-transparent text-gray-600 hover:text-gray-900'
+                        : 'border-transparent text-ink-600 hover:text-ink-900'
                     }`}
                   >
                     <Icon size={18} />
@@ -229,7 +229,7 @@ const SocialMediaSettings = () => {
             {activeTab === 'facebook' && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Facebook Page ID
                   </label>
                   <input
@@ -240,15 +240,15 @@ const SocialMediaSettings = () => {
                       facebook: { ...prev.facebook, pageId: e.target.value }
                     }))}
                     placeholder="Enter your Facebook Page ID"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-ink-500 mt-1">
                     Find this in your Facebook Page Settings &gt; About
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Page Access Token
                   </label>
                   <input
@@ -259,15 +259,15 @@ const SocialMediaSettings = () => {
                       facebook: { ...prev.facebook, accessToken: e.target.value }
                     }))}
                     placeholder="Enter your Page Access Token"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-ink-500 mt-1">
                     Generate this from the Facebook Graph API Explorer
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Page Name
                   </label>
                   <input
@@ -278,7 +278,7 @@ const SocialMediaSettings = () => {
                       facebook: { ...prev.facebook, pageName: e.target.value }
                     }))}
                     placeholder="Your Facebook Page Name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -297,7 +297,7 @@ const SocialMediaSettings = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Instagram Business Account ID
                   </label>
                   <input
@@ -308,12 +308,12 @@ const SocialMediaSettings = () => {
                       instagram: { ...prev.instagram, businessAccountId: e.target.value }
                     }))}
                     placeholder="Enter your Instagram Business Account ID"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Access Token
                   </label>
                   <input
@@ -324,12 +324,12 @@ const SocialMediaSettings = () => {
                       instagram: { ...prev.instagram, accessToken: e.target.value }
                     }))}
                     placeholder="Enter your Instagram Access Token"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Instagram Username
                   </label>
                   <input
@@ -340,7 +340,7 @@ const SocialMediaSettings = () => {
                       instagram: { ...prev.instagram, username: e.target.value }
                     }))}
                     placeholder="@yourusername"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
                   />
                 </div>
               </div>
@@ -350,7 +350,7 @@ const SocialMediaSettings = () => {
             {activeTab === 'twitter' && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     API Key (Consumer Key)
                   </label>
                   <input
@@ -361,12 +361,12 @@ const SocialMediaSettings = () => {
                       twitter: { ...prev.twitter, apiKey: e.target.value }
                     }))}
                     placeholder="Enter your Twitter API Key"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     API Secret (Consumer Secret)
                   </label>
                   <input
@@ -377,12 +377,12 @@ const SocialMediaSettings = () => {
                       twitter: { ...prev.twitter, apiSecret: e.target.value }
                     }))}
                     placeholder="Enter your Twitter API Secret"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Access Token
                   </label>
                   <input
@@ -393,12 +393,12 @@ const SocialMediaSettings = () => {
                       twitter: { ...prev.twitter, accessToken: e.target.value }
                     }))}
                     placeholder="Enter your Access Token"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Access Token Secret
                   </label>
                   <input
@@ -409,12 +409,12 @@ const SocialMediaSettings = () => {
                       twitter: { ...prev.twitter, accessTokenSecret: e.target.value }
                     }))}
                     placeholder="Enter your Access Token Secret"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Twitter Username
                   </label>
                   <input
@@ -425,7 +425,7 @@ const SocialMediaSettings = () => {
                       twitter: { ...prev.twitter, username: e.target.value }
                     }))}
                     placeholder="@yourusername"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
                   />
                 </div>
               </div>
@@ -435,7 +435,7 @@ const SocialMediaSettings = () => {
             {activeTab === 'linkedin' && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Organization ID
                   </label>
                   <input
@@ -446,12 +446,12 @@ const SocialMediaSettings = () => {
                       linkedin: { ...prev.linkedin, organizationId: e.target.value }
                     }))}
                     placeholder="Enter your LinkedIn Organization ID"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Access Token
                   </label>
                   <input
@@ -462,15 +462,15 @@ const SocialMediaSettings = () => {
                       linkedin: { ...prev.linkedin, accessToken: e.target.value }
                     }))}
                     placeholder="Enter your LinkedIn Access Token"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-ink-500 mt-1">
                     Requires OAuth 2.0 authentication
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Company Name
                   </label>
                   <input
@@ -481,7 +481,7 @@ const SocialMediaSettings = () => {
                       linkedin: { ...prev.linkedin, companyName: e.target.value }
                     }))}
                     placeholder="Your Company Name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -505,7 +505,7 @@ const SocialMediaSettings = () => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
+            <div className="flex items-center gap-3 pt-4 border-t border-ink-100">
               {connection.connected ? (
                 <>
                   <button
@@ -545,12 +545,12 @@ const SocialMediaSettings = () => {
         </div>
 
         {/* Integration Guide */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Integration Guide</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6">
+          <h2 className="text-lg font-bold text-ink-900 mb-4">Quick Integration Guide</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">Facebook Integration:</h3>
-              <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+              <h3 className="font-bold text-ink-900 mb-2">Facebook Integration:</h3>
+              <ol className="text-sm text-ink-700 space-y-1 list-decimal list-inside">
                 <li>Create a Facebook App at developers.facebook.com</li>
                 <li>Add your Facebook Page as a test user</li>
                 <li>Generate a Page Access Token with required permissions</li>
@@ -559,8 +559,8 @@ const SocialMediaSettings = () => {
               </ol>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">Instagram Integration:</h3>
-              <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+              <h3 className="font-bold text-ink-900 mb-2">Instagram Integration:</h3>
+              <ol className="text-sm text-ink-700 space-y-1 list-decimal list-inside">
                 <li>Convert your Instagram account to a Business Account</li>
                 <li>Link it to your Facebook Page</li>
                 <li>Use Facebook Graph API to get the Instagram Business Account ID</li>
@@ -569,8 +569,8 @@ const SocialMediaSettings = () => {
               </ol>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">Twitter Integration:</h3>
-              <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+              <h3 className="font-bold text-ink-900 mb-2">Twitter Integration:</h3>
+              <ol className="text-sm text-ink-700 space-y-1 list-decimal list-inside">
                 <li>Create a Twitter Developer Account</li>
                 <li>Create a new App in the Developer Portal</li>
                 <li>Generate API Keys and Access Tokens</li>
@@ -579,8 +579,8 @@ const SocialMediaSettings = () => {
               </ol>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">LinkedIn Integration:</h3>
-              <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+              <h3 className="font-bold text-ink-900 mb-2">LinkedIn Integration:</h3>
+              <ol className="text-sm text-ink-700 space-y-1 list-decimal list-inside">
                 <li>Create a LinkedIn App at linkedin.com/developers</li>
                 <li>Add your organization as verified</li>
                 <li>Request necessary OAuth scopes (w_organization_social)</li>

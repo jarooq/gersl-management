@@ -116,11 +116,11 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="px-5 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="px-5 py-4 border-b border-ink-100">
+          <h2 className="text-lg font-semibold text-ink-900">
             {createdRfq ? `RFQ ${createdRfq.rfqNumber} — Draft created` : 'Create RFQ'}
           </h2>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-ink-500 mt-1">
             {requisition.requisitionNumber || `PR-${requisition.id}`} — {requisition.title}
           </p>
         </div>
@@ -129,66 +129,66 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
           {!createdRfq && (
             <form onSubmit={submitDraft} className="space-y-4">
               <label className="block">
-                <span className="text-sm font-medium text-gray-700">Scope of work</span>
+                <span className="text-sm font-medium text-ink-700">Scope of work</span>
                 <textarea
                   rows={3}
                   value={scopeOfWork}
                   onChange={(e) => setScopeOfWork(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label className="block">
-                  <span className="text-sm font-medium text-gray-700">Closing date</span>
+                  <span className="text-sm font-medium text-ink-700">Closing date</span>
                   <input
                     type="datetime-local"
                     value={closingDate}
                     onChange={(e) => setClosingDate(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </label>
                 <label className="block">
-                  <span className="text-sm font-medium text-gray-700">Payment terms</span>
+                  <span className="text-sm font-medium text-ink-700">Payment terms</span>
                   <input
                     type="text"
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </label>
               </div>
 
               <label className="block">
-                <span className="text-sm font-medium text-gray-700">Terms of delivery</span>
+                <span className="text-sm font-medium text-ink-700">Terms of delivery</span>
                 <input
                   type="text"
                   value={termsOfDelivery}
                   onChange={(e) => setTermsOfDelivery(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </label>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">
-                    Invite vendors <span className="text-gray-400">({selectedIds.size} selected)</span>
+                  <span className="text-sm font-medium text-ink-700">
+                    Invite vendors <span className="text-ink-400">({selectedIds.size} selected)</span>
                   </span>
                   <input
                     placeholder="Search vendors…"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="text-sm rounded-md border border-gray-300 px-2 py-1 w-48"
+                    className="text-sm rounded-md border border-ink-200 px-2 py-1 w-48"
                   />
                 </div>
-                <div className="border border-gray-200 rounded-md max-h-56 overflow-y-auto divide-y divide-gray-100">
-                  {loading && <div className="p-3 text-sm text-gray-500">Loading vendors…</div>}
+                <div className="border border-ink-100 rounded-md max-h-56 overflow-y-auto divide-y divide-ink-100">
+                  {loading && <div className="p-3 text-sm text-ink-500">Loading vendors…</div>}
                   {!loading && filteredVendors.length === 0 && (
-                    <div className="p-3 text-sm text-gray-500">No active vendors found.</div>
+                    <div className="p-3 text-sm text-ink-500">No active vendors found.</div>
                   )}
                   {!loading && filteredVendors.map(v => (
-                    <label key={v.id} className="flex items-start gap-3 px-3 py-2 cursor-pointer hover:bg-gray-50">
+                    <label key={v.id} className="flex items-start gap-3 px-3 py-2 cursor-pointer hover:bg-ink-50">
                       <input
                         type="checkbox"
                         checked={selectedIds.has(v.id)}
@@ -196,8 +196,8 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
                         className="mt-0.5"
                       />
                       <div className="text-sm">
-                        <div className="font-medium text-gray-900">{v.vendorName}</div>
-                        <div className="text-gray-500 text-xs">
+                        <div className="font-medium text-ink-900">{v.vendorName}</div>
+                        <div className="text-ink-500 text-xs">
                           {v.vendorType || '—'} • {v.email || 'no email'} • {v.phone || ''}
                         </div>
                       </div>
@@ -217,12 +217,12 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
               <div className="bg-green-50 border border-green-200 text-green-800 rounded-md p-3 text-sm">
                 Draft RFQ <strong>{createdRfq.rfqNumber}</strong> created with {createdRfq.invitations?.length || 0} vendor(s).
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-ink-600">
                 Click <em>Send</em> to mark the RFQ as Sent and email each invited vendor, or
                 <button
                   type="button"
                   onClick={() => { onCreated?.(); navigate(`/admin/procurement/rfqs/${createdRfq.id}`); }}
-                  className="text-blue-600 hover:underline ml-1"
+                  className="text-navy-700 hover:underline ml-1"
                 >open the workspace</button>
                 to record quotations.
               </p>
@@ -233,10 +233,10 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2">
+        <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
           >
             {createdRfq ? 'Close' : 'Cancel'}
           </button>
@@ -245,7 +245,7 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
               type="button"
               onClick={submitDraft}
               disabled={submitting || loading}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition disabled:opacity-50"
             >
               {submitting ? 'Creating…' : 'Create draft'}
             </button>

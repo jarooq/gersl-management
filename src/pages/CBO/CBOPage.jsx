@@ -76,16 +76,16 @@ const CBOPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Users2 className="w-5 h-5 animate-pulse" />
+                <Users2 className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">CBO Partners & Volunteers</h1>
@@ -129,8 +129,8 @@ const CBOPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-xl shadow-sm border border-ink-100 mb-6">
+        <div className="border-b border-ink-100">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => (
               <button
@@ -139,12 +139,12 @@ const CBOPage = () => {
                 className={`flex items-center gap-2 px-6 py-4 font-semibold transition-all relative whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    : 'text-ink-600 hover:text-gray-800 hover:bg-ink-50'
                 }`}
               >
                 <tab.icon size={20} />
                 <span>{tab.name}</span>
-                <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-bold">
+                <span className="ml-1 px-2 py-0.5 bg-ink-100 text-ink-600 text-xs rounded-full font-bold">
                   {tab.count}
                 </span>
               </button>
@@ -153,17 +153,17 @@ const CBOPage = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="p-4 bg-gray-50 border-b border-gray-200">
+        <div className="p-4 bg-ink-50 border-b border-ink-100">
           <div className="flex gap-3 flex-wrap">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={18} />
                 <input
                   type="text"
                   placeholder={`Search ${activeTab === 'cbos' ? 'CBOs' : activeTab === 'volunteers' ? 'volunteers' : 'activities'}...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -171,7 +171,7 @@ const CBOPage = () => {
               <select
                 value={filterDistrict}
                 onChange={(e) => setFilterDistrict(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
                 {districts.map(district => (
                   <option key={district} value={district}>{district}</option>
@@ -231,15 +231,15 @@ const StatCard = ({ icon: Icon, label, value, subValue, color }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition">
+    <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-5 hover:shadow-md transition">
       <div className="flex items-start justify-between mb-3">
         <div className={`p-3 bg-gradient-to-br ${colorClasses[color]} rounded-lg shadow-md`}>
           <Icon className="text-white" size={24} />
         </div>
       </div>
       <p className="text-2xl font-bold text-gray-800 mb-1">{value}</p>
-      <p className="text-sm text-gray-600 font-medium">{label}</p>
-      <p className="text-xs text-gray-500 mt-1">{subValue}</p>
+      <p className="text-sm text-ink-600 font-medium">{label}</p>
+      <p className="text-xs text-ink-500 mt-1">{subValue}</p>
     </div>
   );
 };
@@ -259,7 +259,7 @@ const CBOsTab = ({ cbos, searchTerm, filterDistrict }) => {
         <CBOCard key={cbo.id} cbo={cbo} />
       ))}
       {filteredCBOs.length === 0 && (
-        <div className="col-span-2 text-center py-12 text-gray-500">
+        <div className="col-span-2 text-center py-12 text-ink-500">
           <Building2 size={48} className="mx-auto mb-3 opacity-30" />
           <p className="text-lg font-semibold">No CBOs found</p>
           <p className="text-sm">Try adjusting your search or filters</p>
@@ -275,8 +275,8 @@ const CBOCard = ({ cbo }) => {
     switch (status) {
       case 'Active': return 'bg-green-100 text-green-700 border-green-200';
       case 'Pending': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'Inactive': return 'bg-gray-100 text-gray-700 border-gray-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Inactive': return 'bg-ink-100 text-ink-700 border-ink-100';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -285,7 +285,7 @@ const CBOCard = ({ cbo }) => {
       case 'High': return 'text-green-600';
       case 'Medium': return 'text-yellow-600';
       case 'Low': return 'text-red-600';
-      default: return 'text-gray-600';
+      default: return 'text-ink-600';
     }
   };
 
@@ -298,7 +298,7 @@ const CBOCard = ({ cbo }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition">
+    <div className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-lg transition">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
@@ -313,25 +313,25 @@ const CBOCard = ({ cbo }) => {
       </div>
 
       {/* Type and Registration */}
-      <div className="mb-4 pb-4 border-b border-gray-100">
-        <p className="text-sm text-gray-600 mb-1">{cbo.type}</p>
-        <p className="text-xs text-gray-500">Reg: {cbo.registrationNumber}</p>
+      <div className="mb-4 pb-4 border-b border-ink-100">
+        <p className="text-sm text-ink-600 mb-1">{cbo.type}</p>
+        <p className="text-xs text-ink-500">Reg: {cbo.registrationNumber}</p>
       </div>
 
       {/* Contact Person */}
       <div className="mb-4">
-        <p className="text-xs text-gray-500 mb-2 font-semibold">Contact Person</p>
+        <p className="text-xs text-ink-500 mb-2 font-semibold">Contact Person</p>
         <p className="text-sm font-semibold text-gray-800 mb-1">{cbo.contactPerson}</p>
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-ink-600">
             <Mail size={12} />
             <span>{cbo.email}</span>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-ink-600">
             <Phone size={12} />
             <span>{cbo.phone}</span>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-ink-600">
             <MapPin size={12} />
             <span>{cbo.district}</span>
           </div>
@@ -340,7 +340,7 @@ const CBOCard = ({ cbo }) => {
 
       {/* Focus Areas */}
       <div className="mb-4">
-        <p className="text-xs text-gray-500 mb-2 font-semibold">Focus Areas</p>
+        <p className="text-xs text-ink-500 mb-2 font-semibold">Focus Areas</p>
         <div className="flex flex-wrap gap-1">
           {cbo.focusAreas.map((area, index) => (
             <span key={index} className="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-md font-medium">
@@ -351,18 +351,18 @@ const CBOCard = ({ cbo }) => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-4 pb-4 border-b border-gray-100">
+      <div className="grid grid-cols-3 gap-3 mb-4 pb-4 border-b border-ink-100">
         <div className="text-center">
           <p className="text-lg font-bold text-purple-600">{cbo.projectsCount}</p>
-          <p className="text-xs text-gray-500">Projects</p>
+          <p className="text-xs text-ink-500">Projects</p>
         </div>
         <div className="text-center">
           <p className="text-lg font-bold text-indigo-600">{cbo.volunteersCount}</p>
-          <p className="text-xs text-gray-500">Volunteers</p>
+          <p className="text-xs text-ink-500">Volunteers</p>
         </div>
         <div className="text-center">
           <p className={`text-lg font-bold ${getCapacityColor(cbo.capacity)}`}>{cbo.capacity}</p>
-          <p className="text-xs text-gray-500">Capacity</p>
+          <p className="text-xs text-ink-500">Capacity</p>
         </div>
       </div>
 
@@ -380,18 +380,18 @@ const CBOCard = ({ cbo }) => {
                 MOU {isMOUExpiringSoon() ? 'Expiring Soon' : 'Active'}
               </p>
             </div>
-            <p className="text-xs text-gray-600">Expires: {cbo.mouExpiryDate}</p>
+            <p className="text-xs text-ink-600">Expires: {cbo.mouExpiryDate}</p>
           </div>
         ) : (
-          <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
-            <p className="text-xs text-gray-600">No MOU in place</p>
+          <div className="p-3 bg-ink-50 border border-ink-100 rounded-lg">
+            <p className="text-xs text-ink-600">No MOU in place</p>
           </div>
         )}
       </div>
 
       {/* Partnership Since */}
-      <p className="text-xs text-gray-500">
-        Partner since: <span className="font-semibold text-gray-700">{cbo.partnershipDate}</span>
+      <p className="text-xs text-ink-500">
+        Partner since: <span className="font-semibold text-ink-700">{cbo.partnershipDate}</span>
       </p>
     </div>
   );
@@ -412,7 +412,7 @@ const VolunteersTab = ({ volunteers, searchTerm, filterDistrict }) => {
         <VolunteerCard key={volunteer.id} volunteer={volunteer} />
       ))}
       {filteredVolunteers.length === 0 && (
-        <div className="col-span-3 text-center py-12 text-gray-500">
+        <div className="col-span-3 text-center py-12 text-ink-500">
           <Users2 size={48} className="mx-auto mb-3 opacity-30" />
           <p className="text-lg font-semibold">No volunteers found</p>
           <p className="text-sm">Try adjusting your search or filters</p>
@@ -431,8 +431,8 @@ const VolunteerCard = ({ volunteer }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Active': return 'bg-green-100 text-green-700 border-green-200';
-      case 'Inactive': return 'bg-gray-100 text-gray-700 border-gray-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Inactive': return 'bg-ink-100 text-ink-700 border-ink-100';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -451,7 +451,7 @@ const VolunteerCard = ({ volunteer }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition">
+    <div className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-lg transition">
       {/* Avatar and Status */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -471,17 +471,17 @@ const VolunteerCard = ({ volunteer }) => {
       </div>
 
       {/* Contact Info */}
-      <div className="mb-4 pb-4 border-b border-gray-100">
+      <div className="mb-4 pb-4 border-b border-ink-100">
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-ink-600">
             <Mail size={12} />
             <span className="truncate">{volunteer.email}</span>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-ink-600">
             <Phone size={12} />
             <span>{volunteer.phone}</span>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-ink-600">
             <MapPin size={12} />
             <span>{volunteer.district}</span>
           </div>
@@ -490,13 +490,13 @@ const VolunteerCard = ({ volunteer }) => {
 
       {/* CBO Affiliation */}
       <div className="mb-3">
-        <p className="text-xs text-gray-500 mb-1 font-semibold">CBO Affiliation</p>
-        <p className="text-xs text-gray-700 font-medium">{volunteer.cboAffiliation}</p>
+        <p className="text-xs text-ink-500 mb-1 font-semibold">CBO Affiliation</p>
+        <p className="text-xs text-ink-700 font-medium">{volunteer.cboAffiliation}</p>
       </div>
 
       {/* Skills */}
       <div className="mb-4">
-        <p className="text-xs text-gray-500 mb-2 font-semibold">Skills</p>
+        <p className="text-xs text-ink-500 mb-2 font-semibold">Skills</p>
         <div className="flex flex-wrap gap-1">
           {volunteer.skills.map((skill, index) => (
             <span key={index} className="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-medium">
@@ -516,27 +516,27 @@ const VolunteerCard = ({ volunteer }) => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 mb-3">
-        <div className="text-center p-2 bg-gray-50 rounded-lg">
+        <div className="text-center p-2 bg-ink-50 rounded-lg">
           <p className="text-lg font-bold text-purple-600">{volunteer.hoursContributed}</p>
-          <p className="text-xs text-gray-500">Hours</p>
+          <p className="text-xs text-ink-500">Hours</p>
         </div>
-        <div className="text-center p-2 bg-gray-50 rounded-lg">
+        <div className="text-center p-2 bg-ink-50 rounded-lg">
           <p className="text-lg font-bold text-indigo-600">{volunteer.projectsParticipated}</p>
-          <p className="text-xs text-gray-500">Projects</p>
+          <p className="text-xs text-ink-500">Projects</p>
         </div>
       </div>
 
       {/* Background Check */}
       <div className="flex items-center justify-between text-xs">
-        <span className="text-gray-500">Background Check:</span>
+        <span className="text-ink-500">Background Check:</span>
         <span className={`font-semibold ${volunteer.backgroundCheck === 'Completed' ? 'text-green-600' : 'text-yellow-600'}`}>
           {volunteer.backgroundCheck}
         </span>
       </div>
 
       {/* Joined Date */}
-      <p className="text-xs text-gray-500 mt-2">
-        Joined: <span className="font-semibold text-gray-700">{volunteer.joinedDate}</span>
+      <p className="text-xs text-ink-500 mt-2">
+        Joined: <span className="font-semibold text-ink-700">{volunteer.joinedDate}</span>
       </p>
     </div>
   );
@@ -554,18 +554,18 @@ const ActivitiesTab = ({ activities, searchTerm }) => {
       case 'Completed': return 'bg-green-100 text-green-700 border-green-200';
       case 'Ongoing': return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'Planned': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
   return (
     <div className="space-y-4">
       {filteredActivities.map(activity => (
-        <div key={activity.id} className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition">
+        <div key={activity.id} className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-lg transition">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <h3 className="text-lg font-bold text-gray-800 mb-1">{activity.activityName}</h3>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-ink-600">
                 <Calendar size={14} />
                 <span>{activity.date}</span>
               </div>
@@ -576,16 +576,16 @@ const ActivitiesTab = ({ activities, searchTerm }) => {
           </div>
 
           {/* CBO */}
-          <div className="mb-4 pb-4 border-b border-gray-100">
+          <div className="mb-4 pb-4 border-b border-ink-100">
             <div className="flex items-center gap-2 text-sm">
               <Building2 size={16} className="text-purple-600" />
-              <span className="font-semibold text-gray-700">{activity.cbo}</span>
+              <span className="font-semibold text-ink-700">{activity.cbo}</span>
             </div>
           </div>
 
           {/* Volunteers */}
           <div className="mb-4">
-            <p className="text-xs text-gray-500 mb-2 font-semibold">Volunteers Participated</p>
+            <p className="text-xs text-ink-500 mb-2 font-semibold">Volunteers Participated</p>
             <div className="flex flex-wrap gap-2">
               {activity.volunteers.map((volunteer, index) => (
                 <span key={index} className="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium flex items-center gap-1">
@@ -598,7 +598,7 @@ const ActivitiesTab = ({ activities, searchTerm }) => {
 
           {/* Hours */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2 text-sm text-ink-600">
               <Clock size={16} className="text-green-600" />
               <span className="font-semibold">{activity.hoursLogged} hours logged</span>
             </div>
@@ -610,7 +610,7 @@ const ActivitiesTab = ({ activities, searchTerm }) => {
         </div>
       ))}
       {filteredActivities.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-ink-500">
           <Activity size={48} className="mx-auto mb-3 opacity-30" />
           <p className="text-lg font-semibold">No activities found</p>
           <p className="text-sm">Try adjusting your search</p>
@@ -632,7 +632,7 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
       case 'Approved': return 'bg-green-100 text-green-700 border-green-200';
       case 'Pending Review': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       case 'Rejected': return 'bg-red-100 text-red-700 border-red-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -648,19 +648,19 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
       case 'Good': return 'text-blue-600';
       case 'Satisfactory': return 'text-yellow-600';
       case 'Needs Improvement': return 'text-red-600';
-      default: return 'text-gray-600';
+      default: return 'text-ink-600';
     }
   };
 
   return (
     <div className="space-y-4">
       {filteredAssessments.map(assessment => (
-        <div key={assessment.id} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+        <div key={assessment.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-lg transition">
           {/* Header */}
           <div className="flex items-start justify-between mb-5">
             <div className="flex-1">
               <h3 className="text-xl font-bold text-gray-800 mb-2">{assessment.cboName}</h3>
-              <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-4 text-sm text-ink-600">
                 <div className="flex items-center gap-1">
                   <Calendar size={14} />
                   <span>Assessed: {assessment.assessmentDate}</span>
@@ -679,18 +679,18 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
                 <p className={`text-3xl font-bold ${getScoreColor(assessment.overallScore)}`}>
                   {assessment.overallScore}
                 </p>
-                <p className="text-xs text-gray-500">Overall Score</p>
+                <p className="text-xs text-ink-500">Overall Score</p>
               </div>
             </div>
           </div>
 
           {/* Category Scores */}
-          <div className="mb-5 pb-5 border-b border-gray-100">
-            <p className="text-sm font-semibold text-gray-700 mb-3">Category Assessments</p>
+          <div className="mb-5 pb-5 border-b border-ink-100">
+            <p className="text-sm font-semibold text-ink-700 mb-3">Category Assessments</p>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
               {Object.entries(assessment.categories).map(([category, data]) => (
-                <div key={category} className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-xs text-gray-500 capitalize mb-1">{category}</p>
+                <div key={category} className="p-3 bg-ink-50 rounded-lg">
+                  <p className="text-xs text-ink-500 capitalize mb-1">{category}</p>
                   <p className={`text-2xl font-bold ${getScoreColor(data.score)}`}>{data.score}</p>
                   <p className={`text-xs font-semibold ${getCategoryStatusColor(data.status)}`}>
                     {data.status}
@@ -703,13 +703,13 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
           {/* Recommendations */}
           <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
             <p className="text-xs font-semibold text-blue-700 mb-1">Recommendations</p>
-            <p className="text-sm text-gray-700">{assessment.recommendations}</p>
+            <p className="text-sm text-ink-700">{assessment.recommendations}</p>
           </div>
 
           {/* Documents & Validity */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-500 mb-1">Documents Submitted</p>
+              <p className="text-xs text-ink-500 mb-1">Documents Submitted</p>
               <div className="flex flex-wrap gap-1">
                 {assessment.documents.map((doc, index) => (
                   <span key={index} className="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-md font-medium">
@@ -719,14 +719,14 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xs text-gray-500">Valid Until</p>
-              <p className="text-sm font-semibold text-gray-700">{assessment.validUntil}</p>
+              <p className="text-xs text-ink-500">Valid Until</p>
+              <p className="text-sm font-semibold text-ink-700">{assessment.validUntil}</p>
             </div>
           </div>
         </div>
       ))}
       {filteredAssessments.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-ink-500">
           <ClipboardCheck size={48} className="mx-auto mb-3 opacity-30" />
           <p className="text-lg font-semibold">No assessments found</p>
           <p className="text-sm">Try adjusting your search</p>
@@ -836,11 +836,11 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
     if (status?.includes('CEO')) return 'bg-blue-100 text-blue-700 border-blue-200';
     if (status?.includes('Fundraising')) return 'bg-yellow-100 text-yellow-700 border-yellow-200';
     if (status?.includes('Donor Pending')) return 'bg-orange-100 text-orange-700 border-orange-200';
-    return 'bg-gray-100 text-gray-700 border-gray-200';
+    return 'bg-ink-100 text-ink-700 border-ink-100';
   };
 
   const getWorkflowStageIcon = (stage, stepStage) => {
-    if (stage === stepStage) return <div className="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></div>;
+    if (stage === stepStage) return <div className="w-3 h-3 bg-blue-600 rounded-full"></div>;
     const proposal = filteredProposals[0]; // For checking completion
     if (stepStage === 'fundraising' && proposal?.fundraisingStatus === 'Approved') return <CheckCircle size={16} className="text-green-600" />;
     if (stepStage === 'fundraising' && proposal?.fundraisingStatus === 'Rejected') return <AlertCircle size={16} className="text-red-600" />;
@@ -855,7 +855,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
   return (
     <div className="space-y-4">
       {filteredProposals.map(proposal => (
-        <div key={proposal.id} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+        <div key={proposal.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-lg transition">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
@@ -892,7 +892,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 )}
               </div>
 
-              <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-4 text-sm text-ink-600">
                 <div className="flex items-center gap-1">
                   <Building2 size={14} />
                   <span>{proposal.programmeArea}</span>
@@ -913,33 +913,33 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
           </div>
 
           {/* Summary */}
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-700">{proposal.summary}</p>
+          <div className="mb-4 p-3 bg-ink-50 rounded-lg">
+            <p className="text-sm text-ink-700">{proposal.summary}</p>
           </div>
 
           {/* GER Form Enhanced Fields */}
           {proposal.projectTier && (
             <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-              <p className="text-xs font-semibold text-gray-700 mb-3">📋 GER Proposal Details</p>
+              <p className="text-xs font-semibold text-ink-700 mb-3">📋 GER Proposal Details</p>
 
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Project Tier</p>
+                  <p className="text-xs text-ink-500 mb-1">Project Tier</p>
                   <p className="text-sm font-semibold text-gray-800">{proposal.projectTier}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Sector/Theme</p>
+                  <p className="text-xs text-ink-500 mb-1">Sector/Theme</p>
                   <p className="text-sm font-semibold text-gray-800">{proposal.sectorTheme}</p>
                 </div>
                 {proposal.startDate && (
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Project Period</p>
+                    <p className="text-xs text-ink-500 mb-1">Project Period</p>
                     <p className="text-sm font-semibold text-gray-800">{proposal.startDate} to {proposal.endDate}</p>
                   </div>
                 )}
                 {proposal.mealFocalPoint && (
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">MEAL Focal Point</p>
+                    <p className="text-xs text-ink-500 mb-1">MEAL Focal Point</p>
                     <p className="text-sm font-semibold text-gray-800">{proposal.mealFocalPoint}</p>
                   </div>
                 )}
@@ -947,72 +947,72 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
 
               {proposal.overallGoal && (
                 <div className="mb-3">
-                  <p className="text-xs text-gray-500 mb-1">Overall Goal</p>
-                  <p className="text-sm text-gray-700 italic">"{proposal.overallGoal}"</p>
+                  <p className="text-xs text-ink-500 mb-1">Overall Goal</p>
+                  <p className="text-sm text-ink-700 italic">"{proposal.overallGoal}"</p>
                 </div>
               )}
 
               {proposal.problemStatement && (
                 <div className="mb-3">
-                  <p className="text-xs text-gray-500 mb-1">Problem Statement</p>
-                  <p className="text-sm text-gray-700">{proposal.problemStatement}</p>
+                  <p className="text-xs text-ink-500 mb-1">Problem Statement</p>
+                  <p className="text-sm text-ink-700">{proposal.problemStatement}</p>
                 </div>
               )}
 
               {proposal.proposedSolution && (
                 <div className="mb-3">
-                  <p className="text-xs text-gray-500 mb-1">Proposed Solution</p>
-                  <p className="text-sm text-gray-700">{proposal.proposedSolution}</p>
+                  <p className="text-xs text-ink-500 mb-1">Proposed Solution</p>
+                  <p className="text-sm text-ink-700">{proposal.proposedSolution}</p>
                 </div>
               )}
 
               {proposal.keyBeneficiariesDescription && (
                 <div className="mb-3">
-                  <p className="text-xs text-gray-500 mb-1">Target Beneficiaries Description</p>
-                  <p className="text-sm text-gray-700">{proposal.keyBeneficiariesDescription}</p>
+                  <p className="text-xs text-ink-500 mb-1">Target Beneficiaries Description</p>
+                  <p className="text-sm text-ink-700">{proposal.keyBeneficiariesDescription}</p>
                 </div>
               )}
 
               {proposal.needsAssessmentData && (
                 <div className="mb-3">
-                  <p className="text-xs text-gray-500 mb-1">Needs Assessment</p>
-                  <p className="text-sm text-gray-700">{proposal.needsAssessmentData}</p>
+                  <p className="text-xs text-ink-500 mb-1">Needs Assessment</p>
+                  <p className="text-sm text-ink-700">{proposal.needsAssessmentData}</p>
                 </div>
               )}
 
               {proposal.strategicAlignment && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Strategic Alignment</p>
-                  <p className="text-sm text-gray-700">{proposal.strategicAlignment}</p>
+                  <p className="text-xs text-ink-500 mb-1">Strategic Alignment</p>
+                  <p className="text-sm text-ink-700">{proposal.strategicAlignment}</p>
                 </div>
               )}
             </div>
           )}
 
           {/* Budget & Beneficiaries */}
-          <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-gray-100">
+          <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-ink-100">
             <div className="text-center p-3 bg-green-50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Requested Budget</p>
+              <p className="text-xs text-ink-500 mb-1">Requested Budget</p>
               <p className="text-lg font-bold text-green-600">
                 LKR {proposal.requestedBudget.toLocaleString()}
               </p>
             </div>
             <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Duration</p>
+              <p className="text-xs text-ink-500 mb-1">Duration</p>
               <p className="text-lg font-bold text-blue-600">{proposal.duration}</p>
             </div>
             <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Target Beneficiaries</p>
+              <p className="text-xs text-ink-500 mb-1">Target Beneficiaries</p>
               <p className="text-lg font-bold text-purple-600">{proposal.targetBeneficiaries}</p>
             </div>
           </div>
 
           {/* Objectives */}
           <div className="mb-4">
-            <p className="text-xs font-semibold text-gray-700 mb-2">Objectives</p>
+            <p className="text-xs font-semibold text-ink-700 mb-2">Objectives</p>
             <div className="space-y-1">
               {proposal.objectives.map((objective, index) => (
-                <div key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                <div key={index} className="flex items-start gap-2 text-sm text-ink-700">
                   <Target size={14} className="text-purple-600 mt-0.5 flex-shrink-0" />
                   <span>{objective}</span>
                 </div>
@@ -1022,7 +1022,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
 
           {/* Key Activities */}
           <div className="mb-4">
-            <p className="text-xs font-semibold text-gray-700 mb-2">Key Activities</p>
+            <p className="text-xs font-semibold text-ink-700 mb-2">Key Activities</p>
             <div className="flex flex-wrap gap-1">
               {proposal.keyActivities.map((activity, index) => (
                 <span key={index} className="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-md font-medium">
@@ -1033,16 +1033,16 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
           </div>
 
           {/* Approval Workflow Visualization */}
-          <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-xs font-semibold text-gray-700 mb-3">Approval Workflow</p>
+          <div className="mb-4 p-4 bg-ink-50 rounded-lg border border-ink-100">
+            <p className="text-xs font-semibold text-ink-700 mb-3">Approval Workflow</p>
 
             {/* Workflow Steps */}
             <div className="flex items-center justify-between mb-4">
               {/* Step 1: Fundraising */}
               <div className="flex flex-col items-center flex-1">
                 {getWorkflowStageIcon(proposal.workflowStage, 'fundraising')}
-                <p className="text-xs font-medium text-gray-600 mt-1">Fundraising</p>
-                <p className={`text-xs mt-0.5 ${proposal.fundraisingStatus === 'Approved' ? 'text-green-600' : proposal.fundraisingStatus === 'Rejected' ? 'text-red-600' : 'text-gray-400'}`}>
+                <p className="text-xs font-medium text-ink-600 mt-1">Fundraising</p>
+                <p className={`text-xs mt-0.5 ${proposal.fundraisingStatus === 'Approved' ? 'text-green-600' : proposal.fundraisingStatus === 'Rejected' ? 'text-red-600' : 'text-ink-400'}`}>
                   {proposal.fundraisingStatus}
                 </p>
               </div>
@@ -1052,8 +1052,8 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {/* Step 2: CEO */}
               <div className="flex flex-col items-center flex-1">
                 {getWorkflowStageIcon(proposal.workflowStage, 'ceo')}
-                <p className="text-xs font-medium text-gray-600 mt-1">CEO</p>
-                <p className={`text-xs mt-0.5 ${proposal.ceoStatus === 'Approved' ? 'text-green-600' : proposal.ceoStatus === 'Rejected' ? 'text-red-600' : 'text-gray-400'}`}>
+                <p className="text-xs font-medium text-ink-600 mt-1">CEO</p>
+                <p className={`text-xs mt-0.5 ${proposal.ceoStatus === 'Approved' ? 'text-green-600' : proposal.ceoStatus === 'Rejected' ? 'text-red-600' : 'text-ink-400'}`}>
                   {proposal.ceoStatus}
                 </p>
               </div>
@@ -1063,8 +1063,8 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {/* Step 3: Donor */}
               <div className="flex flex-col items-center flex-1">
                 {getWorkflowStageIcon(proposal.workflowStage, 'donor')}
-                <p className="text-xs font-medium text-gray-600 mt-1">Donor</p>
-                <p className={`text-xs mt-0.5 ${proposal.donorStatus === 'Approved' ? 'text-green-600' : proposal.donorStatus === 'Rejected' ? 'text-red-600' : 'text-gray-400'}`}>
+                <p className="text-xs font-medium text-ink-600 mt-1">Donor</p>
+                <p className={`text-xs mt-0.5 ${proposal.donorStatus === 'Approved' ? 'text-green-600' : proposal.donorStatus === 'Rejected' ? 'text-red-600' : 'text-ink-400'}`}>
                   {proposal.donorStatus}
                 </p>
               </div>
@@ -1074,8 +1074,8 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {/* Step 4: Converted */}
               <div className="flex flex-col items-center flex-1">
                 {getWorkflowStageIcon(proposal.workflowStage, 'converted')}
-                <p className="text-xs font-medium text-gray-600 mt-1">Project</p>
-                <p className={`text-xs mt-0.5 ${proposal.convertedToProject ? 'text-purple-600' : 'text-gray-400'}`}>
+                <p className="text-xs font-medium text-ink-600 mt-1">Project</p>
+                <p className={`text-xs mt-0.5 ${proposal.convertedToProject ? 'text-purple-600' : 'text-ink-400'}`}>
                   {proposal.convertedToProject ? 'Converted' : 'Pending'}
                 </p>
               </div>
@@ -1087,15 +1087,15 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {proposal.fundraisingStatus !== 'Pending' && (
                 <div className={`p-2 rounded ${proposal.fundraisingStatus === 'Approved' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
                   <div className="flex items-center justify-between mb-1">
-                    <p className="text-xs font-semibold text-gray-700">Fundraising Review</p>
-                    <p className="text-xs text-gray-600">{proposal.fundraisingReviewDate}</p>
+                    <p className="text-xs font-semibold text-ink-700">Fundraising Review</p>
+                    <p className="text-xs text-ink-600">{proposal.fundraisingReviewDate}</p>
                   </div>
-                  <p className="text-xs text-gray-600">Reviewer: {proposal.fundraisingReviewer}</p>
+                  <p className="text-xs text-ink-600">Reviewer: {proposal.fundraisingReviewer}</p>
                   {proposal.fundraisingScore && (
-                    <p className="text-xs text-gray-600">Score: {proposal.fundraisingScore}/100</p>
+                    <p className="text-xs text-ink-600">Score: {proposal.fundraisingScore}/100</p>
                   )}
                   {proposal.fundraisingComments && (
-                    <p className="text-xs text-gray-700 mt-1 italic">"{proposal.fundraisingComments}"</p>
+                    <p className="text-xs text-ink-700 mt-1 italic">"{proposal.fundraisingComments}"</p>
                   )}
                 </div>
               )}
@@ -1104,15 +1104,15 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {proposal.ceoStatus !== 'Pending' && (
                 <div className={`p-2 rounded ${proposal.ceoStatus === 'Approved' ? 'bg-blue-50 border border-blue-200' : 'bg-red-50 border border-red-200'}`}>
                   <div className="flex items-center justify-between mb-1">
-                    <p className="text-xs font-semibold text-gray-700">CEO Approval</p>
-                    <p className="text-xs text-gray-600">{proposal.ceoApprovalDate}</p>
+                    <p className="text-xs font-semibold text-ink-700">CEO Approval</p>
+                    <p className="text-xs text-ink-600">{proposal.ceoApprovalDate}</p>
                   </div>
-                  <p className="text-xs text-gray-600">Approver: {proposal.ceoApprover}</p>
+                  <p className="text-xs text-ink-600">Approver: {proposal.ceoApprover}</p>
                   {proposal.approvedBudget && (
-                    <p className="text-xs text-gray-600">Approved Budget: LKR {proposal.approvedBudget.toLocaleString()}</p>
+                    <p className="text-xs text-ink-600">Approved Budget: LKR {proposal.approvedBudget.toLocaleString()}</p>
                   )}
                   {proposal.ceoComments && (
-                    <p className="text-xs text-gray-700 mt-1 italic">"{proposal.ceoComments}"</p>
+                    <p className="text-xs text-ink-700 mt-1 italic">"{proposal.ceoComments}"</p>
                   )}
                 </div>
               )}
@@ -1121,10 +1121,10 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {proposal.donorStatus !== 'Pending' && (
                 <div className={`p-2 rounded ${proposal.donorStatus === 'Approved' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
                   <div className="flex items-center justify-between mb-1">
-                    <p className="text-xs font-semibold text-gray-700">Donor Decision</p>
-                    <p className="text-xs text-gray-600">{proposal.donorApprovalDate}</p>
+                    <p className="text-xs font-semibold text-ink-700">Donor Decision</p>
+                    <p className="text-xs text-ink-600">{proposal.donorApprovalDate}</p>
                   </div>
-                  <p className="text-xs text-gray-600">Donor: {proposal.donorName}</p>
+                  <p className="text-xs text-ink-600">Donor: {proposal.donorName}</p>
                   {proposal.donorStatus === 'Approved' && proposal.approvedBudget && (
                     <p className="text-xs font-semibold text-green-700">Final Budget: LKR {proposal.approvedBudget.toLocaleString()}</p>
                   )}
@@ -1135,14 +1135,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               {proposal.convertedToProject && (
                 <div className="p-2 rounded bg-purple-50 border border-purple-200">
                   <p className="text-xs font-semibold text-purple-700">✓ Converted to Project #{proposal.projectId}</p>
-                  <p className="text-xs text-gray-600">Start Date: {proposal.projectStartDate}</p>
+                  <p className="text-xs text-ink-600">Start Date: {proposal.projectStartDate}</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Action Button */}
-          <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="mt-4 pt-4 border-t border-ink-100">
             <button
               onClick={() => {
                 setSelectedProposal(proposal);
@@ -1156,14 +1156,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
           </div>
 
           {/* Submitted By */}
-          <div className="flex items-center justify-between text-xs text-gray-600 mt-3">
+          <div className="flex items-center justify-between text-xs text-ink-600 mt-3">
             <span>Submitted by: <span className="font-semibold">{proposal.submittedBy}</span> ({proposal.submitterRole})</span>
             <span>Date: {proposal.submissionDate}</span>
           </div>
         </div>
       ))}
       {filteredProposals.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-ink-500">
           <FileText size={48} className="mx-auto mb-3 opacity-30" />
           <p className="text-lg font-semibold">No proposals found</p>
           <p className="text-sm">Try adjusting your search</p>
@@ -1184,7 +1184,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div className="p-6 border-b border-ink-100 bg-gradient-to-r from-indigo-500 to-purple-600">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
@@ -1217,14 +1217,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Proposal Code <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.proposalCode}
                     onChange={(e) => setFormData({ ...formData, proposalCode: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="PROP-2024-001"
                     required
                     disabled={isLoading}
@@ -1232,14 +1232,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Lead Writer <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.leadWriter}
                     onChange={(e) => setFormData({ ...formData, leadWriter: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="John Doe"
                     required
                     disabled={isLoading}
@@ -1247,14 +1247,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Proposal Title <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="Enter proposal title"
                     required
                     disabled={isLoading}
@@ -1262,14 +1262,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Donor Organization <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.donor}
                     onChange={(e) => setFormData({ ...formData, donor: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="UNICEF, World Bank, etc."
                     required
                     disabled={isLoading}
@@ -1277,13 +1277,13 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Programme Area <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.programmeArea}
                     onChange={(e) => setFormData({ ...formData, programmeArea: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -1300,14 +1300,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Budget Requested (LKR) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
                     value={formData.budgetRequested}
                     onChange={(e) => setFormData({ ...formData, budgetRequested: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="5000000"
                     required
                     disabled={isLoading}
@@ -1317,14 +1317,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Target Beneficiaries <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
                     value={formData.targetBeneficiaries}
                     onChange={(e) => setFormData({ ...formData, targetBeneficiaries: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="500"
                     required
                     disabled={isLoading}
@@ -1333,14 +1333,14 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Duration (Months) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     placeholder="12"
                     required
                     disabled={isLoading}
@@ -1349,13 +1349,13 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Priority <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -1366,13 +1366,13 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Status <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -1389,7 +1389,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                   disabled={isLoading}
                 >
                   Cancel
@@ -1435,8 +1435,8 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
       case 'Active': return 'bg-green-100 text-green-700 border-green-200';
       case 'Closing': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       case 'Completed': return 'bg-blue-100 text-blue-700 border-blue-200';
-      case 'On Hold': return 'bg-gray-100 text-gray-700 border-gray-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'On Hold': return 'bg-ink-100 text-ink-700 border-ink-100';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -1444,8 +1444,8 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
     switch (status) {
       case 'Completed': return 'text-green-600';
       case 'In Progress': return 'text-blue-600';
-      case 'Pending': return 'text-gray-400';
-      default: return 'text-gray-400';
+      case 'Pending': return 'text-ink-400';
+      default: return 'text-ink-400';
     }
   };
 
@@ -1456,13 +1456,13 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
         const beneficiaryProgress = ((project.actualBeneficiaries / project.targetBeneficiaries) * 100).toFixed(1);
 
         return (
-          <div key={project.id} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+          <div key={project.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-lg transition">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-800 mb-1">{project.projectTitle}</h3>
                 <p className="text-sm text-purple-600 font-semibold mb-2">{project.cboName}</p>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-4 text-sm text-ink-600">
                   <div className="flex items-center gap-1">
                     <Building2 size={14} />
                     <span>{project.programmeArea}</span>
@@ -1485,7 +1485,7 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
             {/* Progress Bar */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-xs font-semibold text-gray-700">Project Progress</p>
+                <p className="text-xs font-semibold text-ink-700">Project Progress</p>
                 <p className="text-xs font-bold text-purple-600">{project.progress}%</p>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -1497,27 +1497,27 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
             </div>
 
             {/* Budget & Beneficiaries */}
-            <div className="grid grid-cols-4 gap-3 mb-4 pb-4 border-b border-gray-100">
-              <div className="text-center p-2 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500 mb-1">Budget</p>
-                <p className="text-sm font-bold text-gray-700">
+            <div className="grid grid-cols-4 gap-3 mb-4 pb-4 border-b border-ink-100">
+              <div className="text-center p-2 bg-ink-50 rounded-lg">
+                <p className="text-xs text-ink-500 mb-1">Budget</p>
+                <p className="text-sm font-bold text-ink-700">
                   {(project.budget / 1000000).toFixed(1)}M
                 </p>
               </div>
               <div className="text-center p-2 bg-green-50 rounded-lg">
-                <p className="text-xs text-gray-500 mb-1">Spent</p>
+                <p className="text-xs text-ink-500 mb-1">Spent</p>
                 <p className="text-sm font-bold text-green-600">
                   {(project.spent / 1000000).toFixed(1)}M ({budgetUsed}%)
                 </p>
               </div>
               <div className="text-center p-2 bg-blue-50 rounded-lg">
-                <p className="text-xs text-gray-500 mb-1">Target</p>
+                <p className="text-xs text-ink-500 mb-1">Target</p>
                 <p className="text-sm font-bold text-blue-600">
                   {project.targetBeneficiaries}
                 </p>
               </div>
               <div className="text-center p-2 bg-purple-50 rounded-lg">
-                <p className="text-xs text-gray-500 mb-1">Reached</p>
+                <p className="text-xs text-ink-500 mb-1">Reached</p>
                 <p className="text-sm font-bold text-purple-600">
                   {project.actualBeneficiaries} ({beneficiaryProgress}%)
                 </p>
@@ -1525,36 +1525,36 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
             </div>
 
             {/* Team */}
-            <div className="grid grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="grid grid-cols-2 gap-3 mb-4 pb-4 border-b border-ink-100">
               <div className="flex items-center gap-2">
                 <UserPlus size={14} className="text-purple-600" />
                 <div>
-                  <p className="text-xs text-gray-500">Project Manager</p>
-                  <p className="text-sm font-semibold text-gray-700">{project.projectManager}</p>
+                  <p className="text-xs text-ink-500">Project Manager</p>
+                  <p className="text-sm font-semibold text-ink-700">{project.projectManager}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle size={14} className="text-green-600" />
                 <div>
-                  <p className="text-xs text-gray-500">GERSL Focal Person</p>
-                  <p className="text-sm font-semibold text-gray-700">{project.gerslFocalPerson}</p>
+                  <p className="text-xs text-ink-500">GERSL Focal Person</p>
+                  <p className="text-sm font-semibold text-ink-700">{project.gerslFocalPerson}</p>
                 </div>
               </div>
             </div>
 
             {/* Milestones */}
             <div className="mb-4">
-              <p className="text-xs font-semibold text-gray-700 mb-2">Milestones</p>
+              <p className="text-xs font-semibold text-ink-700 mb-2">Milestones</p>
               <div className="space-y-2">
                 {project.milestones.map(milestone => (
                   <div key={milestone.id} className="flex items-center gap-3 text-sm">
-                    <div className={`p-1 rounded ${milestone.status === 'Completed' ? 'bg-green-100' : milestone.status === 'In Progress' ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                    <div className={`p-1 rounded ${milestone.status === 'Completed' ? 'bg-green-100' : milestone.status === 'In Progress' ? 'bg-blue-100' : 'bg-ink-100'}`}>
                       <CheckSquare size={14} className={getMilestoneStatusColor(milestone.status)} />
                     </div>
                     <div className="flex-1">
-                      <p className="text-gray-700">{milestone.name}</p>
+                      <p className="text-ink-700">{milestone.name}</p>
                     </div>
-                    <span className="text-xs text-gray-500">{milestone.date}</span>
+                    <span className="text-xs text-ink-500">{milestone.date}</span>
                   </div>
                 ))}
               </div>
@@ -1568,7 +1568,7 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
                   Active Issues ({project.issues.length})
                 </p>
                 {project.issues.map(issue => (
-                  <div key={issue.id} className="text-xs text-gray-700 mb-1">
+                  <div key={issue.id} className="text-xs text-ink-700 mb-1">
                     • {issue.issue} <span className="font-semibold">({issue.severity})</span> - {issue.status}
                   </div>
                 ))}
@@ -1576,13 +1576,13 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
             )}
 
             {/* Reporting */}
-            <div className="flex items-center justify-between mt-4 text-xs text-gray-600">
+            <div className="flex items-center justify-between mt-4 text-xs text-ink-600">
               <span>Last Report: {project.lastReportDate}</span>
               <span className="font-semibold text-purple-600">Next Report Due: {project.nextReportDue}</span>
             </div>
 
             {/* CFM Tracking Button */}
-            <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="mt-4 pt-4 border-t border-ink-100">
               <button
                 onClick={() => handleOpenCFM(project)}
                 className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg hover:from-orange-600 hover:to-red-700 transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
@@ -1595,7 +1595,7 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
         );
       })}
       {filteredProjects.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-ink-500">
           <Briefcase size={48} className="mx-auto mb-3 opacity-30" />
           <p className="text-lg font-semibold">No projects found</p>
           <p className="text-sm">Try adjusting your search</p>
@@ -1665,7 +1665,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
       case 'Suggestion': return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'Positive': return 'bg-green-100 text-green-700 border-green-200';
       case 'Query': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -1674,7 +1674,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
       case 'High': return 'text-red-600';
       case 'Medium': return 'text-yellow-600';
       case 'Low': return 'text-green-600';
-      default: return 'text-gray-600';
+      default: return 'text-ink-600';
     }
   };
 
@@ -1701,13 +1701,13 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
         </div>
 
         {/* View Tabs */}
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-ink-100">
           <button
             onClick={() => setActiveView('list')}
             className={`flex-1 px-4 py-3 font-semibold transition ${
               activeView === 'list'
                 ? 'bg-white text-orange-600 border-b-2 border-orange-600'
-                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                : 'bg-ink-50 text-ink-600 hover:bg-ink-100'
             }`}
           >
             Feedback Log ({cfmLog.length})
@@ -1717,7 +1717,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
             className={`flex-1 px-4 py-3 font-semibold transition ${
               activeView === 'add'
                 ? 'bg-white text-orange-600 border-b-2 border-orange-600'
-                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                : 'bg-ink-50 text-ink-600 hover:bg-ink-100'
             }`}
           >
             Add New Feedback
@@ -1732,21 +1732,21 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                   <p className="text-2xl font-bold text-orange-600">{cfmLog.length}</p>
-                  <p className="text-xs text-gray-600">Total Feedback</p>
+                  <p className="text-xs text-ink-600">Total Feedback</p>
                 </div>
                 <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
                   <p className="text-2xl font-bold text-yellow-600">{openFeedback.length}</p>
-                  <p className="text-xs text-gray-600">Open/Pending</p>
+                  <p className="text-xs text-ink-600">Open/Pending</p>
                 </div>
                 <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                   <p className="text-2xl font-bold text-green-600">{resolvedFeedback.length}</p>
-                  <p className="text-xs text-gray-600">Resolved</p>
+                  <p className="text-xs text-ink-600">Resolved</p>
                 </div>
               </div>
 
               {/* Feedback List */}
               {cfmLog.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-ink-500">
                   <MessageSquare size={48} className="mx-auto mb-3 opacity-30" />
                   <p className="text-lg font-semibold">No feedback recorded yet</p>
                   <p className="text-sm">Click "Add New Feedback" to start tracking community feedback</p>
@@ -1754,28 +1754,28 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
               ) : (
                 <div className="space-y-3">
                   {cfmLog.map((feedback) => (
-                    <div key={feedback.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div key={feedback.id} className="bg-ink-50 rounded-lg p-4 border border-ink-100">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${getFeedbackTypeColor(feedback.feedbackType)}`}>
                             {feedback.feedbackType}
                           </span>
-                          <span className="text-xs text-gray-500">via {feedback.channel}</span>
+                          <span className="text-xs text-ink-500">via {feedback.channel}</span>
                           <span className={`text-xs font-semibold ${getSeverityColor(feedback.severity)}`}>
                             {feedback.severity} Severity
                           </span>
                         </div>
-                        <span className="text-xs text-gray-500">{feedback.date}</span>
+                        <span className="text-xs text-ink-500">{feedback.date}</span>
                       </div>
 
-                      <p className="text-sm text-gray-700 mb-2">{feedback.description}</p>
+                      <p className="text-sm text-ink-700 mb-2">{feedback.description}</p>
 
                       <div className="flex items-center justify-between text-xs">
                         <div>
-                          <span className="text-gray-500">Reported by: </span>
-                          <span className="font-semibold text-gray-700">{feedback.reportedBy}</span>
-                          <span className="text-gray-500 ml-3">Contact: </span>
-                          <span className="text-gray-700">{feedback.contactInfo}</span>
+                          <span className="text-ink-500">Reported by: </span>
+                          <span className="font-semibold text-ink-700">{feedback.reportedBy}</span>
+                          <span className="text-ink-500 ml-3">Contact: </span>
+                          <span className="text-ink-700">{feedback.contactInfo}</span>
                         </div>
 
                         {feedback.status === 'Resolved' ? (
@@ -1793,11 +1793,11 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                       </div>
 
                       {feedback.status === 'Resolved' && (
-                        <div className="mt-3 pt-3 border-t border-gray-200">
-                          <p className="text-xs text-gray-600 mb-1">
+                        <div className="mt-3 pt-3 border-t border-ink-100">
+                          <p className="text-xs text-ink-600 mb-1">
                             <span className="font-semibold">Action Taken:</span> {feedback.actionTaken}
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-ink-600">
                             <span className="font-semibold">Resolved By:</span> {feedback.responsiblePerson} on {feedback.dateResolved}
                           </p>
                         </div>
@@ -1812,13 +1812,13 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
             <form onSubmit={handleSubmitFeedback} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Feedback Type *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-1">Feedback Type *</label>
                   <select
                     name="feedbackType"
                     value={formData.feedbackType}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="Complaint">Complaint</option>
                     <option value="Suggestion">Suggestion</option>
@@ -1828,13 +1828,13 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Channel *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-1">Channel *</label>
                   <select
                     name="channel"
                     value={formData.channel}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="Hotline">Hotline</option>
                     <option value="WhatsApp">WhatsApp</option>
@@ -1847,13 +1847,13 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Severity *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Severity *</label>
                 <select
                   name="severity"
                   value={formData.severity}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -1862,7 +1862,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Description *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Description *</label>
                 <textarea
                   name="description"
                   value={formData.description}
@@ -1870,13 +1870,13 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                   required
                   rows="4"
                   placeholder="Detailed description of the feedback or complaint..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Reported By *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-1">Reported By *</label>
                   <input
                     type="text"
                     name="reportedBy"
@@ -1884,12 +1884,12 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                     onChange={handleInputChange}
                     required
                     placeholder="Name of person reporting"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Contact Info *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-1">Contact Info *</label>
                   <input
                     type="text"
                     name="contactInfo"
@@ -1897,7 +1897,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                     onChange={handleInputChange}
                     required
                     placeholder="Phone or email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -1906,7 +1906,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                 <button
                   type="button"
                   onClick={() => setActiveView('list')}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -2266,12 +2266,12 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">CBO Partner *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">CBO Partner *</label>
                 <select
                   required
                   value={formData.cboId}
                   onChange={handleCBOChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <option value="">Select CBO...</option>
                   {cboPartners.map(cbo => (
@@ -2281,37 +2281,37 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">District</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">District</label>
                 <input
                   type="text"
                   value={formData.district}
                   readOnly
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg bg-ink-50"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Proposal Title *</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Proposal Title *</label>
               <input
                 type="text"
                 name="proposalTitle"
                 required
                 value={formData.proposalTitle}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Enter proposal title..."
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Programme Area *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Programme Area *</label>
                 <select
                   name="programmeArea"
                   value={formData.programmeArea}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <option value="Education">Education</option>
                   <option value="Health">Health</option>
@@ -2325,12 +2325,12 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Project Tier</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Project Tier</label>
                 <select
                   name="projectTier"
                   value={formData.projectTier}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <option value="Tier 1">Tier 1 (Comprehensive)</option>
                   <option value="Tier 2">Tier 2 (Moderate)</option>
@@ -2338,38 +2338,38 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Sector/Theme</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Sector/Theme</label>
                 <input
                   type="text"
                   name="sectorTheme"
                   value={formData.sectorTheme}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Budget (LKR) *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Budget (LKR) *</label>
                 <input
                   type="number"
                   name="requestedBudget"
                   required
                   value={formData.requestedBudget}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="2500000"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Duration</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Duration</label>
                 <select
                   name="duration"
                   value={formData.duration}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <option value="6 months">6 months</option>
                   <option value="9 months">9 months</option>
@@ -2381,14 +2381,14 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Target Beneficiaries *</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Target Beneficiaries *</label>
                 <input
                   type="number"
                   name="targetBeneficiaries"
                   required
                   value={formData.targetBeneficiaries}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="150"
                 />
               </div>
@@ -2396,24 +2396,24 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Start Date</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Start Date</label>
                 <input
                   type="date"
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">End Date</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">End Date</label>
                 <input
                   type="date"
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -2437,33 +2437,33 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             </div>
 
             {formData.budgetBreakdown.length === 0 ? (
-              <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500 text-sm">No budget items added yet.</p>
-                <p className="text-gray-400 text-xs mt-1">Click "Add Line Item" to start building your budget breakdown.</p>
+              <div className="text-center py-8 bg-ink-50 rounded-lg border-2 border-dashed border-ink-200">
+                <DollarSign className="h-12 w-12 text-ink-400 mx-auto mb-2" />
+                <p className="text-ink-500 text-sm">No budget items added yet.</p>
+                <p className="text-ink-400 text-xs mt-1">Click "Add Line Item" to start building your budget breakdown.</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100 border-b border-gray-200">
-                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Category</th>
-                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Description</th>
-                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Quantity</th>
-                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Unit Cost (LKR)</th>
-                        <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Total Cost (LKR)</th>
-                        <th className="px-3 py-2 text-center text-xs font-semibold text-gray-700">Action</th>
+                      <tr className="bg-ink-100 border-b border-ink-100">
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Category</th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Description</th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Quantity</th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Unit Cost (LKR)</th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Total Cost (LKR)</th>
+                        <th className="px-3 py-2 text-center text-xs font-semibold text-ink-700">Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {formData.budgetBreakdown.map((item, index) => (
-                        <tr key={item.id} className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                        <tr key={item.id} className={`border-b border-ink-100 ${index % 2 === 0 ? 'bg-white' : 'bg-ink-50'}`}>
                           <td className="px-3 py-2">
                             <select
                               value={item.category}
                               onChange={(e) => updateBudgetItem(item.id, 'category', e.target.value)}
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
                             >
                               <option value="Personnel">Personnel</option>
                               <option value="Equipment">Equipment</option>
@@ -2482,7 +2482,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={item.description}
                               onChange={(e) => updateBudgetItem(item.id, 'description', e.target.value)}
                               placeholder="Item description..."
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
                             />
                           </td>
                           <td className="px-3 py-2">
@@ -2491,7 +2491,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={item.quantity}
                               onChange={(e) => updateBudgetItem(item.id, 'quantity', e.target.value)}
                               min="1"
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
                             />
                           </td>
                           <td className="px-3 py-2">
@@ -2500,7 +2500,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={item.unitCost}
                               onChange={(e) => updateBudgetItem(item.id, 'unitCost', e.target.value)}
                               min="0"
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
                             />
                           </td>
                           <td className="px-3 py-2">
@@ -2526,7 +2526,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 {/* Budget Summary */}
                 <div className="mt-4 bg-green-50 rounded-lg p-4 border border-green-200">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-700">Budget by Category:</span>
+                    <span className="text-sm font-semibold text-ink-700">Budget by Category:</span>
                   </div>
                   <div className="grid grid-cols-3 gap-3 mb-3">
                     {['Personnel', 'Equipment', 'Materials', 'Activities', 'Transport', 'Training', 'Monitoring', 'Administrative', 'Other'].map(category => {
@@ -2536,7 +2536,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       if (categoryTotal > 0) {
                         return (
                           <div key={category} className="text-xs">
-                            <span className="text-gray-600">{category}:</span>
+                            <span className="text-ink-600">{category}:</span>
                             <span className="font-semibold text-green-700 ml-1">
                               LKR {categoryTotal.toLocaleString()}
                             </span>
@@ -2553,7 +2553,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                         LKR {parseFloat(formData.requestedBudget || 0).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-ink-500 mt-1">
                       Cost per beneficiary: LKR {formData.targetBeneficiaries > 0
                         ? (parseFloat(formData.requestedBudget || 0) / parseInt(formData.targetBeneficiaries)).toLocaleString(undefined, {maximumFractionDigits: 2})
                         : '0'}
@@ -2569,62 +2569,62 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Executive Summary</h3>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Summary (250 words) *</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Summary (250 words) *</label>
               <textarea
                 name="summary"
                 required
                 rows="3"
                 value={formData.summary}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Brief project summary..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Overall Goal</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Overall Goal</label>
               <input
                 type="text"
                 name="overallGoal"
                 value={formData.overallGoal}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Main project goal..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Problem Statement</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Problem Statement</label>
               <textarea
                 name="problemStatement"
                 rows="3"
                 value={formData.problemStatement}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Describe the problem this project addresses..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Proposed Solution</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Proposed Solution</label>
               <textarea
                 name="proposedSolution"
                 rows="3"
                 value={formData.proposedSolution}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Describe your proposed solution approach..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Target Beneficiaries Description</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Target Beneficiaries Description</label>
               <textarea
                 name="keyBeneficiariesDescription"
                 rows="2"
                 value={formData.keyBeneficiariesDescription}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Detailed description of target beneficiaries..."
               />
             </div>
@@ -2635,25 +2635,25 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Project Justification</h3>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Needs Assessment Data</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Needs Assessment Data</label>
               <textarea
                 name="needsAssessmentData"
                 rows="2"
                 value={formData.needsAssessmentData}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Evidence from needs assessment..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Strategic Alignment</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-1">Strategic Alignment</label>
               <textarea
                 name="strategicAlignment"
                 rows="2"
                 value={formData.strategicAlignment}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Alignment with GER strategies, SDGs, etc..."
               />
             </div>
@@ -2664,12 +2664,12 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Objectives</h3>
             {[0, 1, 2].map(index => (
               <div key={index}>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Objective {index + 1}</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Objective {index + 1}</label>
                 <input
                   type="text"
                   value={formData.objectives[index]}
                   onChange={(e) => handleObjectiveChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder={`Enter objective ${index + 1}...`}
                 />
               </div>
@@ -2681,12 +2681,12 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Key Activities</h3>
             {[0, 1, 2].map(index => (
               <div key={index}>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Activity {index + 1}</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-1">Activity {index + 1}</label>
                 <input
                   type="text"
                   value={formData.keyActivities[index]}
                   onChange={(e) => handleActivityChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder={`Enter activity ${index + 1}...`}
                 />
               </div>
@@ -2711,7 +2711,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             </div>
 
             {formData.resultsFramework.length === 0 ? (
-              <div className="text-center py-6 text-gray-500">
+              <div className="text-center py-6 text-ink-500">
                 <Target size={40} className="mx-auto mb-2 opacity-30" />
                 <p className="text-sm">No indicators added yet. Click "Add Indicator" to start building your results framework.</p>
               </div>
@@ -2726,11 +2726,11 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 grid grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Level</label>
+                            <label className="block text-xs font-semibold text-ink-700 mb-1">Level</label>
                             <select
                               value={indicator.level}
                               onChange={(e) => updateIndicator(indicator.id, 'level', e.target.value)}
-                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="Activity">Activity</option>
                               <option value="Output">Output</option>
@@ -2738,13 +2738,13 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Standard Indicator</label>
+                            <label className="block text-xs font-semibold text-ink-700 mb-1">Standard Indicator</label>
                             <select
                               onChange={(e) => {
                                 const selected = programmeIndicators.find(ind => ind.indicator === e.target.value);
                                 if (selected) selectStandardIndicator(indicator.id, selected);
                               }}
-                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="">Select from bank...</option>
                               {programmeIndicators
@@ -2766,45 +2766,45 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
                       <div className="space-y-2">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Indicator Description</label>
+                          <label className="block text-xs font-semibold text-ink-700 mb-1">Indicator Description</label>
                           <input
                             type="text"
                             value={indicator.indicator}
                             onChange={(e) => updateIndicator(indicator.id, 'indicator', e.target.value)}
                             placeholder="e.g., # children receiving school kits/support"
-                            className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
 
                         <div className="grid grid-cols-3 gap-2">
                           <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Baseline</label>
+                            <label className="block text-xs font-semibold text-ink-700 mb-1">Baseline</label>
                             <input
                               type="text"
                               value={indicator.baseline}
                               onChange={(e) => updateIndicator(indicator.id, 'baseline', e.target.value)}
                               placeholder="0"
-                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Target</label>
+                            <label className="block text-xs font-semibold text-ink-700 mb-1">Target</label>
                             <input
                               type="text"
                               value={indicator.target}
                               onChange={(e) => updateIndicator(indicator.id, 'target', e.target.value)}
                               placeholder="100"
-                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Means of Verification</label>
+                            <label className="block text-xs font-semibold text-ink-700 mb-1">Means of Verification</label>
                             <input
                               type="text"
                               value={indicator.meansOfVerification}
                               onChange={(e) => updateIndicator(indicator.id, 'meansOfVerification', e.target.value)}
                               placeholder="Distribution list"
-                              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
                             />
                           </div>
                         </div>
@@ -2825,60 +2825,60 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
             <div className="grid grid-cols-5 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Direct Male</label>
+                <label className="block text-xs font-semibold text-ink-700 mb-1">Direct Male</label>
                 <input
                   type="number"
                   value={formData.beneficiaryBreakdown.directMale}
                   onChange={(e) => handleBeneficiaryChange('directMale', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Direct Female</label>
+                <label className="block text-xs font-semibold text-ink-700 mb-1">Direct Female</label>
                 <input
                   type="number"
                   value={formData.beneficiaryBreakdown.directFemale}
                   onChange={(e) => handleBeneficiaryChange('directFemale', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Direct Children</label>
+                <label className="block text-xs font-semibold text-ink-700 mb-1">Direct Children</label>
                 <input
                   type="number"
                   value={formData.beneficiaryBreakdown.directChildren}
                   onChange={(e) => handleBeneficiaryChange('directChildren', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Direct PWD</label>
+                <label className="block text-xs font-semibold text-ink-700 mb-1">Direct PWD</label>
                 <input
                   type="number"
                   value={formData.beneficiaryBreakdown.directPWD}
                   onChange={(e) => handleBeneficiaryChange('directPWD', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Indirect Total</label>
+                <label className="block text-xs font-semibold text-ink-700 mb-1">Indirect Total</label>
                 <input
                   type="number"
                   value={formData.beneficiaryBreakdown.indirectTotal}
                   onChange={(e) => handleBeneficiaryChange('indirectTotal', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
                 />
               </div>
             </div>
 
             <div className="bg-white rounded p-3 border border-green-200">
               <div className="flex justify-between text-sm">
-                <span className="font-semibold text-gray-700">Total Direct Beneficiaries:</span>
+                <span className="font-semibold text-ink-700">Total Direct Beneficiaries:</span>
                 <span className="font-bold text-green-700">
                   {(parseInt(formData.beneficiaryBreakdown.directMale) || 0) +
                    (parseInt(formData.beneficiaryBreakdown.directFemale) || 0) +
@@ -2894,7 +2894,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               <TrendingUp className="text-indigo-600" size={20} />
               Theory of Change
             </h3>
-            <p className="text-xs text-gray-600 mb-3">
+            <p className="text-xs text-ink-600 mb-3">
               Map how your inputs lead to activities, outputs, outcomes, and ultimately impact. Include key assumptions and risks.
             </p>
 
@@ -2918,7 +2918,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={input}
                       onChange={(e) => handleToCArrayChange('inputs', index, e.target.value)}
                       placeholder="e.g., Staff, budget, materials"
-                      className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
                     />
                     {formData.theoryOfChange.inputs.length > 1 && (
                       <button
@@ -2952,7 +2952,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={activity}
                       onChange={(e) => handleToCArrayChange('activities', index, e.target.value)}
                       placeholder="e.g., Distribute school kits"
-                      className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
                     />
                     {formData.theoryOfChange.activities.length > 1 && (
                       <button
@@ -2986,7 +2986,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={output}
                       onChange={(e) => handleToCArrayChange('outputs', index, e.target.value)}
                       placeholder="e.g., 150 children equipped"
-                      className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
                     />
                     {formData.theoryOfChange.outputs.length > 1 && (
                       <button
@@ -3020,7 +3020,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={outcome}
                       onChange={(e) => handleToCArrayChange('outcomes', index, e.target.value)}
                       placeholder="e.g., Improved school attendance"
-                      className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
                     />
                     {formData.theoryOfChange.outcomes.length > 1 && (
                       <button
@@ -3044,7 +3044,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 onChange={(e) => handleToCImpactChange(e.target.value)}
                 rows="2"
                 placeholder="e.g., Reduced educational inequality and improved life outcomes for orphaned children"
-                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
@@ -3068,7 +3068,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={assumption}
                       onChange={(e) => handleToCArrayChange('assumptions', index, e.target.value)}
                       placeholder="e.g., Parents support education"
-                      className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-yellow-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-yellow-500"
                     />
                     {formData.theoryOfChange.assumptions.length > 1 && (
                       <button
@@ -3102,7 +3102,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={risk}
                       onChange={(e) => handleToCArrayChange('risks', index, e.target.value)}
                       placeholder="e.g., Supply chain delays"
-                      className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-red-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-red-500"
                     />
                     {formData.theoryOfChange.risks.length > 1 && (
                       <button
@@ -3140,7 +3140,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               <CheckSquare className="text-red-600" size={20} />
               Safeguarding Compliance Checklist
             </h3>
-            <p className="text-xs text-gray-600 mb-3">
+            <p className="text-xs text-ink-600 mb-3">
               Confirm that your project adheres to GER safeguarding standards. All items must be checked for comprehensive projects (Tier 1).
             </p>
 
@@ -3151,7 +3151,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.dataProtection
                     ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-gray-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3163,7 +3163,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   />
                   <div>
                     <p className="text-sm font-semibold text-gray-800">Data Protection</p>
-                    <p className="text-xs text-gray-600">Personal data encrypted, stored securely, GDPR compliant</p>
+                    <p className="text-xs text-ink-600">Personal data encrypted, stored securely, GDPR compliant</p>
                   </div>
                 </div>
               </div>
@@ -3173,7 +3173,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.informedConsent
                     ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-gray-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3185,7 +3185,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   />
                   <div>
                     <p className="text-sm font-semibold text-gray-800">Informed Consent</p>
-                    <p className="text-xs text-gray-600">Written consent forms for all beneficiaries/guardians</p>
+                    <p className="text-xs text-ink-600">Written consent forms for all beneficiaries/guardians</p>
                   </div>
                 </div>
               </div>
@@ -3195,7 +3195,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.childSafeguarding
                     ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-gray-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3207,7 +3207,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   />
                   <div>
                     <p className="text-sm font-semibold text-gray-800">Child Safeguarding</p>
-                    <p className="text-xs text-gray-600">Child protection policy in place, staff trained</p>
+                    <p className="text-xs text-ink-600">Child protection policy in place, staff trained</p>
                   </div>
                 </div>
               </div>
@@ -3217,7 +3217,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.incidentReporting
                     ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-gray-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3229,7 +3229,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   />
                   <div>
                     <p className="text-sm font-semibold text-gray-800">Incident Reporting</p>
-                    <p className="text-xs text-gray-600">Clear reporting mechanism for safeguarding concerns</p>
+                    <p className="text-xs text-ink-600">Clear reporting mechanism for safeguarding concerns</p>
                   </div>
                 </div>
               </div>
@@ -3239,7 +3239,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.backgroundChecks
                     ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-gray-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3251,7 +3251,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   />
                   <div>
                     <p className="text-sm font-semibold text-gray-800">Background Checks</p>
-                    <p className="text-xs text-gray-600">All staff working with vulnerable groups screened</p>
+                    <p className="text-xs text-ink-600">All staff working with vulnerable groups screened</p>
                   </div>
                 </div>
               </div>
@@ -3261,7 +3261,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.codeOfConduct
                     ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-gray-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3273,7 +3273,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   />
                   <div>
                     <p className="text-sm font-semibold text-gray-800">Code of Conduct</p>
-                    <p className="text-xs text-gray-600">Staff signed code of conduct, zero tolerance policy</p>
+                    <p className="text-xs text-ink-600">Staff signed code of conduct, zero tolerance policy</p>
                   </div>
                 </div>
               </div>
@@ -3287,14 +3287,14 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 value={formData.safeguarding.safeguardingFocalPerson}
                 onChange={(e) => handleSafeguardingFocalPerson(e.target.value)}
                 placeholder="Name and contact of designated safeguarding officer"
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-red-500"
+                className="w-full px-3 py-2 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-red-500"
               />
             </div>
 
             {/* CFM Channels */}
             <div className="bg-white rounded-lg p-3 border border-red-200">
               <label className="block text-sm font-semibold text-red-700 mb-2">Community Feedback Channels *</label>
-              <p className="text-xs text-gray-600 mb-2">Select all channels available for beneficiaries to provide feedback or report concerns:</p>
+              <p className="text-xs text-ink-600 mb-2">Select all channels available for beneficiaries to provide feedback or report concerns:</p>
               <div className="grid grid-cols-3 gap-2">
                 {['Hotline', 'WhatsApp', 'Email', 'Complaint Box', 'In-Person', 'SMS'].map(channel => (
                   <div
@@ -3303,7 +3303,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className={`px-3 py-2 rounded-lg border-2 cursor-pointer transition text-center ${
                       formData.safeguarding.cfmChannels.includes(channel)
                         ? 'border-red-500 bg-red-50 text-red-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        : 'border-ink-200 bg-white text-ink-700 hover:border-gray-400'
                     }`}
                   >
                     <p className="text-xs font-semibold">{channel}</p>
@@ -3315,12 +3315,12 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             {/* Compliance Summary */}
             <div className="bg-white rounded-lg p-3 border border-red-200">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-700">Compliance Status:</span>
+                <span className="text-sm font-semibold text-ink-700">Compliance Status:</span>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-800">
                     {Object.values(formData.safeguarding).filter(v => v === true).length} / 6
                   </span>
-                  <span className="text-xs text-gray-600">items checked</span>
+                  <span className="text-xs text-ink-600">items checked</span>
                 </div>
               </div>
               {formData.projectTier === 'Tier 1' && Object.values(formData.safeguarding).filter(v => v === true).length < 6 && (
@@ -3336,7 +3336,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+              className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
             >
               Cancel
             </button>

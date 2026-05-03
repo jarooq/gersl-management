@@ -402,10 +402,10 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Stats Summary Bar */}
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
+      <div className="bg-white rounded-xl shadow-md border border-ink-100 p-4">
         <div className="flex items-center gap-2 mb-3">
           <Zap className="text-yellow-500" size={20} />
-          <h3 className="text-sm font-bold text-gray-900">Today's Pulse</h3>
+          <h3 className="text-sm font-bold text-ink-900">Today's Pulse</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="flex items-center gap-3">
@@ -413,8 +413,8 @@ const Dashboard = () => {
               <DollarSign className="text-green-600" size={18} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">Today's Donations</p>
-              <p className="text-lg font-bold text-gray-900">${(todaysDonations / 1000).toFixed(1)}K</p>
+              <p className="text-xs text-ink-500 font-medium">Today's Donations</p>
+              <p className="text-lg font-bold text-ink-900">${(todaysDonations / 1000).toFixed(1)}K</p>
             </div>
           </div>
 
@@ -423,18 +423,18 @@ const Dashboard = () => {
               <Baby className="text-blue-600" size={18} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">New This Week</p>
-              <p className="text-lg font-bold text-gray-900">{weeklyNewOrphans} orphans</p>
+              <p className="text-xs text-ink-500 font-medium">New This Week</p>
+              <p className="text-lg font-bold text-ink-900">{weeklyNewOrphans} orphans</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${upcomingDeadlines > 0 ? 'bg-orange-100' : 'bg-gray-100'}`}>
-              <Clock className={upcomingDeadlines > 0 ? 'text-orange-600' : 'text-gray-400'} size={18} />
+            <div className={`p-2 rounded-lg ${upcomingDeadlines > 0 ? 'bg-orange-100' : 'bg-ink-100'}`}>
+              <Clock className={upcomingDeadlines > 0 ? 'text-orange-600' : 'text-ink-400'} size={18} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">Due Next 7 Days</p>
-              <p className="text-lg font-bold text-gray-900">{upcomingDeadlines} {upcomingDeadlines === 1 ? 'project' : 'projects'}</p>
+              <p className="text-xs text-ink-500 font-medium">Due Next 7 Days</p>
+              <p className="text-lg font-bold text-ink-900">{upcomingDeadlines} {upcomingDeadlines === 1 ? 'project' : 'projects'}</p>
             </div>
           </div>
 
@@ -443,8 +443,8 @@ const Dashboard = () => {
               <Flame className="text-purple-600" size={18} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">Monthly Burn Rate</p>
-              <p className="text-lg font-bold text-gray-900">LKR {(monthlyExpenses / 1000).toFixed(0)}K</p>
+              <p className="text-xs text-ink-500 font-medium">Monthly Burn Rate</p>
+              <p className="text-lg font-bold text-ink-900">LKR {(monthlyExpenses / 1000).toFixed(0)}K</p>
             </div>
           </div>
         </div>
@@ -522,8 +522,8 @@ const Dashboard = () => {
               <UserCheck className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{activeStaff}</p>
-              <p className="text-xs font-semibold text-gray-600">Active Staff</p>
+              <p className="text-h1 text-ink-900">{activeStaff}</p>
+              <p className="text-xs font-semibold text-ink-600">Active Staff</p>
             </div>
           </div>
         </div>
@@ -534,8 +534,8 @@ const Dashboard = () => {
               <Handshake className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{activePartners}</p>
-              <p className="text-xs font-semibold text-gray-600">Active Partners</p>
+              <p className="text-h1 text-ink-900">{activePartners}</p>
+              <p className="text-xs font-semibold text-ink-600">Active Partners</p>
             </div>
           </div>
         </div>
@@ -546,8 +546,8 @@ const Dashboard = () => {
               <FileText className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{proposals.length}</p>
-              <p className="text-xs font-semibold text-gray-600">Total Proposals</p>
+              <p className="text-h1 text-ink-900">{proposals.length}</p>
+              <p className="text-xs font-semibold text-ink-600">Total Proposals</p>
             </div>
           </div>
         </div>
@@ -558,8 +558,8 @@ const Dashboard = () => {
               <DollarSign className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{(totalBudget / 1000000).toFixed(1)}M</p>
-              <p className="text-xs font-semibold text-gray-600">Total Budget (LKR)</p>
+              <p className="text-h1 text-ink-900">{(totalBudget / 1000000).toFixed(1)}M</p>
+              <p className="text-xs font-semibold text-ink-600">Total Budget (LKR)</p>
             </div>
           </div>
         </div>
@@ -568,14 +568,14 @@ const Dashboard = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Project Timeline Chart */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                 <BarChart3 className="text-blue-600" size={22} />
                 Project Timeline
               </h3>
-              <p className="text-sm text-gray-500 mt-1">Monthly project starts and budgets</p>
+              <p className="text-sm text-ink-500 mt-1">Monthly project starts and budgets</p>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={250}>
@@ -598,14 +598,14 @@ const Dashboard = () => {
         </div>
 
         {/* Budget by Programme */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                 <Package className="text-purple-600" size={22} />
                 Budget by Programme
               </h3>
-              <p className="text-sm text-gray-500 mt-1">Resource allocation across programmes</p>
+              <p className="text-sm text-ink-500 mt-1">Resource allocation across programmes</p>
             </div>
           </div>
           {budgetByProgrammeData.length > 0 ? (
@@ -632,7 +632,7 @@ const Dashboard = () => {
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[250px] flex items-center justify-center text-gray-400">
+            <div className="h-[250px] flex items-center justify-center text-ink-400">
               <div className="text-center">
                 <Package size={48} className="mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No programme data available</p>
@@ -644,14 +644,14 @@ const Dashboard = () => {
 
       {/* Campaign Progress Chart */}
       {campaignProgressData.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                 <Heart className="text-red-600" size={22} />
                 Campaign Fundraising Progress
               </h3>
-              <p className="text-sm text-gray-500 mt-1">Top performing active campaigns</p>
+              <p className="text-sm text-ink-500 mt-1">Top performing active campaigns</p>
             </div>
             <Link to="/campaigns" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
               View all <ChevronRight size={16} />
@@ -685,8 +685,8 @@ const Dashboard = () => {
             <Wallet className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-gray-900">Financial Overview</h3>
-            <p className="text-sm text-gray-600">Real-time financial metrics and cash flow</p>
+            <h3 className="text-xl font-bold text-ink-900">Financial Overview</h3>
+            <p className="text-sm text-ink-600">Real-time financial metrics and cash flow</p>
           </div>
         </div>
 
@@ -695,12 +695,12 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl p-4 shadow-md border border-green-100">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="text-green-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Total Expenses</p>
+              <p className="text-xs font-semibold text-ink-500">Total Expenses</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-h1 text-ink-900">
               LKR {(financeStats.totalExpenses / 1000).toFixed(0)}K
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               Paid: LKR {(financeStats.paidExpenses / 1000).toFixed(0)}K
             </p>
           </div>
@@ -708,9 +708,9 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl p-4 shadow-md border border-orange-100">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="text-orange-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Pending Expenses</p>
+              <p className="text-xs font-semibold text-ink-500">Pending Expenses</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-h1 text-ink-900">
               LKR {(financeStats.pendingExpenses / 1000).toFixed(0)}K
             </p>
             <p className="text-xs text-orange-600 mt-1 font-semibold">
@@ -721,12 +721,12 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl p-4 shadow-md border border-blue-100">
             <div className="flex items-center gap-2 mb-2">
               <BarChart3 className="text-blue-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Budget Utilization</p>
+              <p className="text-xs font-semibold text-ink-500">Budget Utilization</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-h1 text-ink-900">
               {financeStats.budgetUtilization}%
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               {(financeStats.totalSpent / 1000000).toFixed(1)}M / {(financeStats.totalBudget / 1000000).toFixed(1)}M LKR
             </p>
           </div>
@@ -734,12 +734,12 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl p-4 shadow-md border border-purple-100">
             <div className="flex items-center gap-2 mb-2">
               <Users className="text-purple-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Payroll Processed</p>
+              <p className="text-xs font-semibold text-ink-500">Payroll Processed</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-h1 text-ink-900">
               LKR {(financeStats.processedPayroll / 1000).toFixed(0)}K
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               of {(financeStats.totalPayroll / 1000).toFixed(0)}K total
             </p>
           </div>
@@ -748,13 +748,13 @@ const Dashboard = () => {
         {/* Finance Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Monthly Expense Trend */}
-          <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+          <div className="bg-white rounded-xl shadow-md p-5 border border-ink-100">
             <div className="mb-4">
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-ink-900 flex items-center gap-2">
                 <TrendingUp className="text-green-600" size={20} />
                 Monthly Expense Trend
               </h4>
-              <p className="text-xs text-gray-500 mt-1">Expenses vs Budget (2025)</p>
+              <p className="text-xs text-ink-500 mt-1">Expenses vs Budget (2025)</p>
             </div>
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={monthlyExpenseData}>
@@ -788,13 +788,13 @@ const Dashboard = () => {
           </div>
 
           {/* Expense by Category */}
-          <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+          <div className="bg-white rounded-xl shadow-md p-5 border border-ink-100">
             <div className="mb-4">
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-ink-900 flex items-center gap-2">
                 <Package className="text-purple-600" size={20} />
                 Expenses by Category
               </h4>
-              <p className="text-xs text-gray-500 mt-1">Top spending categories</p>
+              <p className="text-xs text-ink-500 mt-1">Top spending categories</p>
             </div>
             {expenseCategoryData.length > 0 ? (
               <ResponsiveContainer width="100%" height={220}>
@@ -820,7 +820,7 @@ const Dashboard = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[220px] flex items-center justify-center text-gray-400">
+              <div className="h-[220px] flex items-center justify-center text-ink-400">
                 <div className="text-center">
                   <Package size={40} className="mx-auto mb-2 opacity-50" />
                   <p className="text-xs">No expense data</p>
@@ -838,10 +838,10 @@ const Dashboard = () => {
           >
             <div className="flex items-center justify-between mb-2">
               <FileText className="text-blue-600" size={20} />
-              <ChevronRight className="text-gray-400" size={18} />
+              <ChevronRight className="text-ink-400" size={18} />
             </div>
-            <p className="text-xl font-bold text-gray-900">{invoices.length}</p>
-            <p className="text-xs font-semibold text-gray-600">Total Invoices</p>
+            <p className="text-xl font-bold text-ink-900">{invoices.length}</p>
+            <p className="text-xs font-semibold text-ink-600">Total Invoices</p>
             <p className="text-xs text-blue-600 mt-1">
               {invoices.filter(i => i.status === 'Pending').length} pending
             </p>
@@ -853,10 +853,10 @@ const Dashboard = () => {
           >
             <div className="flex items-center justify-between mb-2">
               <FileText className="text-orange-600" size={20} />
-              <ChevronRight className="text-gray-400" size={18} />
+              <ChevronRight className="text-ink-400" size={18} />
             </div>
-            <p className="text-xl font-bold text-gray-900">{bills.length}</p>
-            <p className="text-xs font-semibold text-gray-600">Total Bills</p>
+            <p className="text-xl font-bold text-ink-900">{bills.length}</p>
+            <p className="text-xs font-semibold text-ink-600">Total Bills</p>
             <p className="text-xs text-orange-600 mt-1">
               {bills.filter(b => b.status === 'Unpaid').length} unpaid
             </p>
@@ -868,10 +868,10 @@ const Dashboard = () => {
           >
             <div className="flex items-center justify-between mb-2">
               <Package className="text-purple-600" size={20} />
-              <ChevronRight className="text-gray-400" size={18} />
+              <ChevronRight className="text-ink-400" size={18} />
             </div>
-            <p className="text-xl font-bold text-gray-900">{purchaseOrders.length}</p>
-            <p className="text-xs font-semibold text-gray-600">Purchase Orders</p>
+            <p className="text-xl font-bold text-ink-900">{purchaseOrders.length}</p>
+            <p className="text-xs font-semibold text-ink-600">Purchase Orders</p>
             <p className="text-xs text-purple-600 mt-1">
               {financeStats.pendingPOs} pending approval
             </p>
@@ -887,8 +887,8 @@ const Dashboard = () => {
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Donor Engagement</h3>
-              <p className="text-sm text-gray-600">Donor relationships and contribution metrics</p>
+              <h3 className="text-xl font-bold text-ink-900">Donor Engagement</h3>
+              <p className="text-sm text-ink-600">Donor relationships and contribution metrics</p>
             </div>
           </div>
           <Link to="/orphans" className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
@@ -901,50 +901,50 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl p-4 shadow-md border border-indigo-100">
             <div className="flex items-center gap-2 mb-2">
               <Users className="text-indigo-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Total Donors</p>
+              <p className="text-xs font-semibold text-ink-500">Total Donors</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{totalDonors}</p>
-            <p className="text-xs text-gray-500 mt-1">Active supporters</p>
+            <p className="text-h1 text-ink-900">{totalDonors}</p>
+            <p className="text-xs text-ink-500 mt-1">Active supporters</p>
           </div>
 
           <div className="bg-white rounded-xl p-4 shadow-md border border-green-100">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="text-green-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Sponsorships</p>
+              <p className="text-xs font-semibold text-ink-500">Sponsorships</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{orphansWithDonors.length}</p>
-            <p className="text-xs text-gray-500 mt-1">Orphans sponsored</p>
+            <p className="text-h1 text-ink-900">{orphansWithDonors.length}</p>
+            <p className="text-xs text-ink-500 mt-1">Orphans sponsored</p>
           </div>
 
           <div className="bg-white rounded-xl p-4 shadow-md border border-blue-100">
             <div className="flex items-center gap-2 mb-2">
               <Target className="text-blue-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Coverage Rate</p>
+              <p className="text-xs font-semibold text-ink-500">Coverage Rate</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-h1 text-ink-900">
               {orphans.length > 0 ? ((orphansWithDonors.length / orphans.length) * 100).toFixed(0) : 0}%
             </p>
-            <p className="text-xs text-gray-500 mt-1">Orphans with donors</p>
+            <p className="text-xs text-ink-500 mt-1">Orphans with donors</p>
           </div>
 
           <div className="bg-white rounded-xl p-4 shadow-md border border-purple-100">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="text-purple-600" size={18} />
-              <p className="text-xs font-semibold text-gray-500">Campaign Total</p>
+              <p className="text-xs font-semibold text-ink-500">Campaign Total</p>
             </div>
-            <p className="text-2xl font-bold text-gray-900">${(totalCampaignRaised / 1000).toFixed(0)}K</p>
-            <p className="text-xs text-gray-500 mt-1">Raised via campaigns</p>
+            <p className="text-h1 text-ink-900">${(totalCampaignRaised / 1000).toFixed(0)}K</p>
+            <p className="text-xs text-ink-500 mt-1">Raised via campaigns</p>
           </div>
         </div>
 
         {/* Recent Donations */}
-        <div className="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-md p-5 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <h4 className="text-base font-bold text-ink-900 flex items-center gap-2">
               <Heart className="text-red-600" size={20} />
               Recent Campaign Activity
             </h4>
-            <span className="text-xs text-gray-500">{recentDonations.length} recent updates</span>
+            <span className="text-xs text-ink-500">{recentDonations.length} recent updates</span>
           </div>
 
           {recentDonations.length > 0 ? (
@@ -961,23 +961,23 @@ const Dashboard = () => {
                         <Heart className="text-white" size={16} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{donation.campaign}</p>
+                        <p className="text-sm font-semibold text-ink-900 truncate">{donation.campaign}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <Clock size={10} className="text-gray-400 flex-shrink-0" />
-                          <p className="text-xs text-gray-500">{timeString}</p>
+                          <Clock size={10} className="text-ink-400 flex-shrink-0" />
+                          <p className="text-xs text-ink-500">{timeString}</p>
                         </div>
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0 ml-3">
                       <p className="text-sm font-bold text-indigo-600">${(donation.amount / 1000).toFixed(1)}K</p>
-                      <p className="text-xs text-gray-500">raised</p>
+                      <p className="text-xs text-ink-500">raised</p>
                     </div>
                   </div>
                 );
               })}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-400">
+            <div className="text-center py-8 text-ink-400">
               <Heart size={40} className="mx-auto mb-2 opacity-50" />
               <p className="text-sm">No recent campaign activity</p>
             </div>
@@ -990,11 +990,11 @@ const Dashboard = () => {
             <div className="flex items-center gap-3 mb-3">
               <CheckCircle className="text-green-600" size={24} />
               <div>
-                <p className="text-2xl font-bold text-gray-900">{totalDonors}</p>
-                <p className="text-xs font-semibold text-gray-600">Active Donor Base</p>
+                <p className="text-h1 text-ink-900">{totalDonors}</p>
+                <p className="text-xs font-semibold text-ink-600">Active Donor Base</p>
               </div>
             </div>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-ink-600 leading-relaxed">
               Current active donors supporting orphan sponsorships and campaigns
             </p>
           </div>
@@ -1003,13 +1003,13 @@ const Dashboard = () => {
             <div className="flex items-center gap-3 mb-3">
               <TrendingUp className="text-blue-600" size={24} />
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-h1 text-ink-900">
                   {orphans.length > 0 ? ((orphansWithDonors.length / orphans.length) * 100).toFixed(0) : 0}%
                 </p>
-                <p className="text-xs font-semibold text-gray-600">Sponsorship Coverage</p>
+                <p className="text-xs font-semibold text-ink-600">Sponsorship Coverage</p>
               </div>
             </div>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-ink-600 leading-relaxed">
               {orphansWithDonors.length} of {orphans.length} orphans have active sponsors
             </p>
           </div>
@@ -1019,9 +1019,9 @@ const Dashboard = () => {
       {/* Activity Feed & Urgent Items */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
               <Activity className="text-blue-600" size={22} />
               Recent Activity
             </h3>
@@ -1040,16 +1040,16 @@ const Dashboard = () => {
                     <activity.icon size={18} className={activity.color} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 leading-snug">{activity.title}</p>
+                    <p className="text-sm font-medium text-ink-900 leading-snug">{activity.title}</p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <Clock size={12} className="text-gray-400" />
-                      <p className="text-xs text-gray-500">{activity.time}</p>
+                      <Clock size={12} className="text-ink-400" />
+                      <p className="text-xs text-ink-500">{activity.time}</p>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 text-gray-400">
+              <div className="text-center py-12 text-ink-400">
                 <Activity size={48} className="mx-auto mb-3 opacity-50" />
                 <p className="text-sm">No recent activity</p>
               </div>
@@ -1058,9 +1058,9 @@ const Dashboard = () => {
         </div>
 
         {/* Urgent Items */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
               <Bell className="text-orange-600" size={22} />
               Urgent Items
             </h3>
@@ -1086,17 +1086,17 @@ const Dashboard = () => {
                     <item.icon size={18} className="text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900">{item.title}</p>
-                    <p className="text-xs text-gray-600 mt-0.5">{item.description}</p>
+                    <p className="text-sm font-bold text-ink-900">{item.title}</p>
+                    <p className="text-xs text-ink-600 mt-0.5">{item.description}</p>
                   </div>
-                  <ChevronRight size={20} className="text-gray-400 flex-shrink-0" />
+                  <ChevronRight size={20} className="text-ink-400 flex-shrink-0" />
                 </Link>
               ))
             ) : (
-              <div className="text-center py-12 text-gray-400">
+              <div className="text-center py-12 text-ink-400">
                 <CheckCircle size={48} className="mx-auto mb-3 opacity-50 text-green-400" />
                 <p className="text-sm font-semibold text-green-600">All caught up!</p>
-                <p className="text-xs text-gray-500 mt-1">No urgent items at this time</p>
+                <p className="text-xs text-ink-500 mt-1">No urgent items at this time</p>
               </div>
             )}
           </div>

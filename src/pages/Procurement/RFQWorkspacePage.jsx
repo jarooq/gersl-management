@@ -12,14 +12,14 @@ const formatMoney = (amount, currency = 'LKR') => {
 };
 
 const STATUS_BADGE = {
-  Draft: 'bg-gray-100 text-gray-700',
+  Draft: 'bg-ink-100 text-ink-700',
   Sent: 'bg-blue-100 text-blue-700',
   Closed: 'bg-green-100 text-green-700',
   Cancelled: 'bg-red-100 text-red-700'
 };
 
 const BA_STATUS_BADGE = {
-  Draft: 'bg-gray-100 text-gray-700',
+  Draft: 'bg-ink-100 text-ink-700',
   Submitted: 'bg-blue-100 text-blue-700',
   Approved: 'bg-green-100 text-green-700',
   Rejected: 'bg-red-100 text-red-700'
@@ -117,80 +117,80 @@ export default function RFQWorkspacePage() {
     }
   };
 
-  if (loading) return <div className="p-6 text-sm text-gray-500">Loading…</div>;
+  if (loading) return <div className="p-6 text-sm text-ink-500">Loading…</div>;
   if (error)   return <div className="p-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">{error}</div>;
-  if (!rfq)    return <div className="p-6 text-sm text-gray-500">RFQ not found.</div>;
+  if (!rfq)    return <div className="p-6 text-sm text-ink-500">RFQ not found.</div>;
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <header className="flex items-start justify-between">
         <div>
-          <Link to="/admin/procurement/inbox" className="text-sm text-blue-600 hover:underline">&larr; Back to Inbox</Link>
-          <h1 className="text-2xl font-semibold text-gray-900 mt-1">{rfq.rfqNumber}</h1>
-          <p className="text-sm text-gray-500">
+          <Link to="/admin/procurement/inbox" className="text-sm text-navy-700 hover:underline">&larr; Back to Inbox</Link>
+          <h1 className="text-h1 text-ink-900 mt-1">{rfq.rfqNumber}</h1>
+          <p className="text-sm text-ink-500">
             {rfq.requisition?.requisitionNumber || `PR-${rfq.requisitionId}`} — {rfq.requisition?.title || ''}
           </p>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[rfq.status] || 'bg-gray-100 text-gray-700'}`}>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[rfq.status] || 'bg-ink-100 text-ink-700'}`}>
           {rfq.status}
         </span>
       </header>
 
-      <section className="bg-white border border-gray-200 rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+      <section className="bg-white border border-ink-100 rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
         <div>
-          <div className="text-gray-500 text-xs">Closing date</div>
-          <div className="text-gray-900">{rfq.closingDate ? new Date(rfq.closingDate).toLocaleString() : '—'}</div>
+          <div className="text-ink-500 text-xs">Closing date</div>
+          <div className="text-ink-900">{rfq.closingDate ? new Date(rfq.closingDate).toLocaleString() : '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500 text-xs">Payment terms</div>
-          <div className="text-gray-900">{rfq.paymentTerms || '—'}</div>
+          <div className="text-ink-500 text-xs">Payment terms</div>
+          <div className="text-ink-900">{rfq.paymentTerms || '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500 text-xs">Delivery terms</div>
-          <div className="text-gray-900">{rfq.termsOfDelivery || '—'}</div>
+          <div className="text-ink-500 text-xs">Delivery terms</div>
+          <div className="text-ink-900">{rfq.termsOfDelivery || '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500 text-xs">Invited vendors</div>
-          <div className="text-gray-900">{invitedVendors.length}</div>
+          <div className="text-ink-500 text-xs">Invited vendors</div>
+          <div className="text-ink-900">{invitedVendors.length}</div>
         </div>
       </section>
 
-      <section className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-gray-900">Quotations</h2>
+      <section className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-ink-900">Quotations</h2>
           {!approvedBA && (
             <button
               onClick={() => setShowQuotationModal(true)}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+              className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
             >
               Record quotation
             </button>
           )}
         </div>
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Delivery</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Validity</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Compliance</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Received</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Vendor</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Total</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Delivery</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Validity</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Compliance</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Received</th>
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
+          <tbody className="bg-white divide-y divide-ink-100">
             {quotations.length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-6 text-center text-sm text-gray-500">No quotations recorded yet.</td></tr>
+              <tr><td colSpan={7} className="px-4 py-6 text-center text-sm text-ink-500">No quotations recorded yet.</td></tr>
             )}
             {quotations.map(q => (
               <tr key={q.id}>
-                <td className="px-4 py-2 text-sm text-gray-900">{q.vendor?.vendorName || `#${q.vendorId}`}</td>
-                <td className="px-4 py-2 text-sm text-gray-900 font-medium">{formatMoney(q.totalAmount, q.currency)}</td>
-                <td className="px-4 py-2 text-sm text-gray-600">{q.deliveryDays != null ? `${q.deliveryDays} days` : '—'}</td>
-                <td className="px-4 py-2 text-sm text-gray-600">{q.validityDays != null ? `${q.validityDays} days` : '—'}</td>
-                <td className="px-4 py-2 text-sm text-gray-600">{q.technicalComplianceScore != null ? `${q.technicalComplianceScore}/100` : '—'}</td>
-                <td className="px-4 py-2 text-sm text-gray-600">{q.receivedAt ? new Date(q.receivedAt).toLocaleDateString() : '—'}</td>
+                <td className="px-4 py-2 text-sm text-ink-900">{q.vendor?.vendorName || `#${q.vendorId}`}</td>
+                <td className="px-4 py-2 text-sm text-ink-900 font-medium">{formatMoney(q.totalAmount, q.currency)}</td>
+                <td className="px-4 py-2 text-sm text-ink-600">{q.deliveryDays != null ? `${q.deliveryDays} days` : '—'}</td>
+                <td className="px-4 py-2 text-sm text-ink-600">{q.validityDays != null ? `${q.validityDays} days` : '—'}</td>
+                <td className="px-4 py-2 text-sm text-ink-600">{q.technicalComplianceScore != null ? `${q.technicalComplianceScore}/100` : '—'}</td>
+                <td className="px-4 py-2 text-sm text-ink-600">{q.receivedAt ? new Date(q.receivedAt).toLocaleDateString() : '—'}</td>
                 <td className="px-4 py-2 text-right">
                   {!q.isLocked && !approvedBA && (
                     <button
@@ -200,7 +200,7 @@ export default function RFQWorkspacePage() {
                       Edit
                     </button>
                   )}
-                  {q.isLocked && <span className="text-xs text-gray-400">Locked</span>}
+                  {q.isLocked && <span className="text-xs text-ink-400">Locked</span>}
                 </td>
               </tr>
             ))}
@@ -213,9 +213,9 @@ export default function RFQWorkspacePage() {
         )}
       </section>
 
-      <section className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-gray-900">Bid Analysis</h2>
+      <section className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-ink-900">Bid Analysis</h2>
           {!approvedBA && quotations.length >= 1 && (
             <button
               onClick={() => setShowBidAnalysisModal(true)}
@@ -226,20 +226,20 @@ export default function RFQWorkspacePage() {
           )}
         </div>
         <div className="px-4 py-3 text-sm">
-          {bidAnalyses.length === 0 && <div className="text-gray-500">No bid analysis yet.</div>}
+          {bidAnalyses.length === 0 && <div className="text-ink-500">No bid analysis yet.</div>}
           {bidAnalyses.map(ba => (
-            <div key={ba.id} className="border border-gray-200 rounded-md p-3 mb-2">
+            <div key={ba.id} className="border border-ink-100 rounded-md p-3 mb-2">
               <div className="flex items-center justify-between">
                 <div>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${BA_STATUS_BADGE[ba.status]}`}>{ba.status}</span>
-                  <span className="ml-2 text-gray-700">
+                  <span className="ml-2 text-ink-700">
                     Recommended: <strong>{ba.recommendedVendor?.vendorName || '—'}</strong>
                   </span>
-                  <span className="ml-2 text-gray-500 text-xs">by {ba.preparer?.fullName || '—'}</span>
+                  <span className="ml-2 text-ink-500 text-xs">by {ba.preparer?.fullName || '—'}</span>
                 </div>
                 <div className="flex gap-2">
                   {ba.status === 'Draft' && (
-                    <button onClick={() => onSubmit(ba.id)} className="text-sm text-blue-600 hover:underline">Submit</button>
+                    <button onClick={() => onSubmit(ba.id)} className="text-sm text-navy-700 hover:underline">Submit</button>
                   )}
                   {ba.status === 'Submitted' && (
                     <>
@@ -255,7 +255,7 @@ export default function RFQWorkspacePage() {
                   )}
                 </div>
               </div>
-              {ba.rationale && <p className="text-xs text-gray-600 mt-2">{ba.rationale}</p>}
+              {ba.rationale && <p className="text-xs text-ink-600 mt-2">{ba.rationale}</p>}
               {ba.rejectionReason && <p className="text-xs text-red-700 mt-2">Rejected: {ba.rejectionReason}</p>}
             </div>
           ))}

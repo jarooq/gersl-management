@@ -92,11 +92,11 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32" style={{ animationDelay: '1s' }}></div>
 
         <div className="relative z-10">
           <div className="flex items-center gap-4 mb-4">
@@ -116,8 +116,8 @@ const SettingsPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Users</p>
-              <p className="text-3xl font-bold text-gray-900">{users.length}</p>
+              <p className="text-sm text-ink-600 mb-1">Total Users</p>
+              <p className="text-3xl font-bold text-ink-900">{users.length}</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <Users className="w-6 h-6 text-blue-600" />
@@ -128,7 +128,7 @@ const SettingsPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Active Users</p>
+              <p className="text-sm text-ink-600 mb-1">Active Users</p>
               <p className="text-3xl font-bold text-green-600">{users.filter(u => u.status === 'Active').length}</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -140,8 +140,8 @@ const SettingsPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Roles</p>
-              <p className="text-3xl font-bold text-gray-900">{Object.keys(roles).length}</p>
+              <p className="text-sm text-ink-600 mb-1">Total Roles</p>
+              <p className="text-3xl font-bold text-ink-900">{Object.keys(roles).length}</p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <Shield className="w-6 h-6 text-purple-600" />
@@ -152,8 +152,8 @@ const SettingsPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Departments</p>
-              <p className="text-3xl font-bold text-gray-900">{new Set(users.filter(u => u.department).map(u => u.department)).size}</p>
+              <p className="text-sm text-ink-600 mb-1">Departments</p>
+              <p className="text-3xl font-bold text-ink-900">{new Set(users.filter(u => u.department).map(u => u.department)).size}</p>
             </div>
             <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
               <SettingsIcon className="w-6 h-6 text-indigo-600" />
@@ -164,7 +164,7 @@ const SettingsPage = () => {
 
       {/* Tabs */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-ink-100">
           <div className="flex">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -176,7 +176,7 @@ const SettingsPage = () => {
                     flex items-center gap-3 px-8 py-4 font-semibold transition-all duration-200
                     ${activeTab === tab.id
                       ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-600'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
                     }
                   `}
                 >
@@ -290,22 +290,22 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
       {/* Search and Filter Bar */}
       <div className="flex items-center gap-4">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
           <input
             type="text"
             placeholder="Search users by name, username, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
         </div>
 
         <div className="flex items-center gap-2">
-          <Filter className="text-gray-400 w-5 h-5" />
+          <Filter className="text-ink-400 w-5 h-5" />
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
             <option value="All">All Roles</option>
             {Object.keys(roles).map(role => (
@@ -324,21 +324,21 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
       </div>
 
       {/* Users Table */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">User</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Role</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Department</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Last Login</th>
-              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">User</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Role</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Department</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Last Login</th>
+              <th className="px-6 py-4 text-right text-xs font-semibold text-ink-600 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-ink-100">
             {users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50 transition">
+              <tr key={user.id} className="hover:bg-ink-50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
@@ -349,8 +349,8 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
                       </div>
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-semibold text-gray-900">{user.fullName || user.username}</div>
-                      <div className="text-sm text-gray-500">{user.email}</div>
+                      <div className="text-sm font-semibold text-ink-900">{user.fullName || user.username}</div>
+                      <div className="text-sm text-ink-500">{user.email}</div>
                     </div>
                   </div>
                 </td>
@@ -359,19 +359,19 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
                     {user.role}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-700">
                   {user.department || '-'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                     user.status === 'Active' ? 'bg-green-100 text-green-800' :
-                    user.status === 'Inactive' ? 'bg-gray-100 text-gray-800' :
+                    user.status === 'Inactive' ? 'bg-ink-100 text-gray-800' :
                     'bg-red-100 text-red-800'
                   }`}>
                     {user.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-700">
                   {user.lastLogin || 'Never'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -395,9 +395,9 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
 
         {users.length === 0 && (
           <div className="text-center py-12">
-            <Users className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-            <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria.</p>
+            <Users className="mx-auto h-12 w-12 text-ink-400" />
+            <h3 className="mt-2 text-sm font-medium text-ink-900">No users found</h3>
+            <p className="mt-1 text-sm text-ink-500">Try adjusting your search or filter criteria.</p>
           </div>
         )}
       </div>
@@ -530,12 +530,12 @@ const RolesTab = ({
   };
 
   const getPermissionColor = (permission) => {
-    if (!permission) return 'text-gray-600';
+    if (!permission) return 'text-ink-600';
     const permissionStr = String(permission).toUpperCase();
     if (permissionStr.includes('DELETE')) return 'text-red-600';
     if (permissionStr.includes('APPROVE')) return 'text-green-600';
     if (permissionStr.includes('CREATE') || permissionStr.includes('EDIT')) return 'text-blue-600';
-    if (permissionStr.includes('VIEW')) return 'text-gray-600';
+    if (permissionStr.includes('VIEW')) return 'text-ink-600';
     return 'text-purple-600';
   };
 
@@ -569,7 +569,7 @@ const RolesTab = ({
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-lg p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900">Roles</h3>
+              <h3 className="font-bold text-ink-900">Roles</h3>
               <button
                 onClick={() => setShowAddRoleModal(true)}
                 className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
@@ -593,7 +593,7 @@ const RolesTab = ({
                       className={`w-full text-left px-4 py-3 rounded-lg transition-all cursor-pointer ${
                         selectedRole?.id === role.id
                           ? 'bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-lg'
-                          : 'hover:bg-gray-50 text-gray-700'
+                          : 'hover:bg-ink-50 text-ink-700'
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -609,7 +609,7 @@ const RolesTab = ({
                               </span>
                             )}
                           </div>
-                          <div className={`text-xs ${selectedRole?.id === role.id ? 'text-purple-200' : 'text-gray-500'}`}>
+                          <div className={`text-xs ${selectedRole?.id === role.id ? 'text-purple-200' : 'text-ink-500'}`}>
                             {permCount} permissions
                           </div>
                         </div>
@@ -653,7 +653,7 @@ const RolesTab = ({
               })}
 
               {(!roles || roles.length === 0) && (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-ink-500">
                   <Shield className="w-12 h-12 mx-auto mb-2 opacity-50" />
                   <p className="text-sm">No roles found</p>
                 </div>
@@ -668,18 +668,18 @@ const RolesTab = ({
             {/* Role Header */}
             {selectedRole ? (
               <>
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-ink-100">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-ink-900 flex items-center gap-2">
                     {selectedRole?.name || selectedRole}
                     {selectedRole?.is_system_role && (
                       <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">SYSTEM ROLE</span>
                     )}
                   </h3>
                   {selectedRole?.description && (
-                    <p className="text-sm text-gray-600 mt-1">{selectedRole.description}</p>
+                    <p className="text-sm text-ink-600 mt-1">{selectedRole.description}</p>
                   )}
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-ink-500 mt-1">
                     {selectedRole?.permissions?.length || 0} permissions assigned
                   </p>
                 </div>
@@ -697,7 +697,7 @@ const RolesTab = ({
                   <>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
                     >
                       <X size={16} />
                       Cancel
@@ -728,13 +728,13 @@ const RolesTab = ({
                 );
 
                 return (
-                  <div key={groupName} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200">
+                  <div key={groupName} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-ink-100">
                     {/* Group Header */}
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                      <h4 className="font-bold text-ink-900 flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${someSelected ? 'bg-green-500' : 'bg-gray-300'}`} />
                         {groupName}
-                        <span className="text-xs font-normal text-gray-500">
+                        <span className="text-xs font-normal text-ink-500">
                           ({groupPermissions.filter(perm => activePerms.some(p => p.id === perm.id)).length}/{groupPermissions.length})
                         </span>
                       </h4>
@@ -768,7 +768,7 @@ const RolesTab = ({
                             className={`flex items-center gap-3 px-4 py-2 rounded-lg border transition-all ${
                               hasPermission
                                 ? 'bg-green-50 border-green-200'
-                                : 'bg-white border-gray-200'
+                                : 'bg-white border-ink-100'
                             }`}
                           >
                             {isEditing ? (
@@ -796,8 +796,8 @@ const RolesTab = ({
             ) : (
               <div className="text-center py-16">
                 <Shield className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a Role</h3>
-                <p className="text-gray-500">Choose a role from the list to view and manage its permissions</p>
+                <h3 className="text-lg font-semibold text-ink-900 mb-2">Select a Role</h3>
+                <p className="text-ink-500">Choose a role from the list to view and manage its permissions</p>
               </div>
             )}
           </div>
@@ -829,18 +829,18 @@ const SystemTab = ({ systemSettings }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">System Settings</h3>
+        <h3 className="text-lg font-semibold text-ink-900 mb-4">System Settings</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {Object.entries(systemSettings).map(([key, value]) => (
-            <div key={key} className="bg-gray-50 rounded-lg p-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+            <div key={key} className="bg-ink-50 rounded-lg p-4">
+              <label className="block text-sm font-medium text-ink-700 mb-2 capitalize">
                 {key.replace(/([A-Z])/g, ' $1').trim()}
               </label>
               <input
                 type="text"
                 value={value}
                 disabled
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg bg-white"
               />
             </div>
           ))}

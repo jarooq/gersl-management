@@ -46,7 +46,7 @@ const VisitsTab = ({ orphan }) => {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader className="w-8 h-8 text-pink-600 animate-spin" />
-        <span className="ml-3 text-gray-600">Loading visit logs...</span>
+        <span className="ml-3 text-ink-600">Loading visit logs...</span>
       </div>
     );
   }
@@ -59,8 +59,8 @@ const VisitsTab = ({ orphan }) => {
             <Calendar size={24} className="text-pink-600" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Visit History</h3>
-            <p className="text-sm text-gray-600">{visitLogs.length} total visits recorded</p>
+            <h3 className="text-lg font-bold text-ink-900">Visit History</h3>
+            <p className="text-sm text-ink-600">{visitLogs.length} total visits recorded</p>
           </div>
         </div>
         <button
@@ -86,8 +86,8 @@ const VisitsTab = ({ orphan }) => {
       ) : (
         <div className="text-center py-16 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border-2 border-dashed border-pink-300">
           <Calendar className="w-16 h-16 text-pink-400 mx-auto mb-4" />
-          <p className="text-gray-900 font-semibold mb-1 text-lg">No visits recorded yet</p>
-          <p className="text-gray-600 text-sm mb-6">Start tracking visits to monitor {orphan?.fullName}'s progress</p>
+          <p className="text-ink-900 font-semibold mb-1 text-lg">No visits recorded yet</p>
+          <p className="text-ink-600 text-sm mb-6">Start tracking visits to monitor {orphan?.fullName}'s progress</p>
           <button
             onClick={() => setShowModal(true)}
             className="px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition text-sm font-semibold shadow-md"
@@ -136,12 +136,12 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
   const hasRating = rating.educationalProgress || rating.healthWellbeing || rating.socialDevelopment || rating.behavioralProgress;
 
   return (
-    <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200">
+    <div className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-lg transition-all duration-200">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h4 className="font-bold text-lg text-gray-900">{formatDate(visit.visitDate)}</h4>
+            <h4 className="font-bold text-lg text-ink-900">{formatDate(visit.visitDate)}</h4>
             {visit.rating?.overallRating && (
               <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full">
                 <Star size={14} className="text-amber-500 fill-amber-500" />
@@ -149,7 +149,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
               </div>
             )}
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-ink-600">
             <span className="font-medium">Coordinator:</span> {visit.coordinator?.fullName || visit.coordinator?.username || 'N/A'}
           </p>
         </div>
@@ -209,7 +209,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
             <FileText size={16} className="text-blue-600 mt-0.5" />
             <p className="text-xs font-semibold text-blue-900 uppercase">Visit Notes</p>
           </div>
-          <p className="text-sm text-gray-700 leading-relaxed">{visit.visitNotes}</p>
+          <p className="text-sm text-ink-700 leading-relaxed">{visit.visitNotes}</p>
         </div>
       )}
 
@@ -220,7 +220,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
             <Eye size={16} className="text-purple-600 mt-0.5" />
             <p className="text-xs font-semibold text-purple-900 uppercase">Observations</p>
           </div>
-          <p className="text-sm text-gray-700 leading-relaxed">{visit.observations}</p>
+          <p className="text-sm text-ink-700 leading-relaxed">{visit.observations}</p>
         </div>
       )}
 
@@ -231,7 +231,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
             <Star size={16} className="text-amber-600 mt-0.5" />
             <p className="text-xs font-semibold text-amber-900 uppercase">Progress Notes</p>
           </div>
-          <p className="text-sm text-gray-700 leading-relaxed">{rating.notes}</p>
+          <p className="text-sm text-ink-700 leading-relaxed">{rating.notes}</p>
         </div>
       )}
 
@@ -246,7 +246,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
             {visit.needsAssessment.map((need, index) => (
               <div key={index} className="bg-white border border-blue-200 rounded-lg p-3">
                 <div className="flex items-start justify-between gap-2 mb-1">
-                  <h5 className="font-semibold text-gray-900 text-sm">{need.needType}</h5>
+                  <h5 className="font-semibold text-ink-900 text-sm">{need.needType}</h5>
                   <div className="flex gap-1 flex-shrink-0">
                     <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">
                       {need.needCategory}
@@ -255,7 +255,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
                       need.urgency === 'Critical' ? 'bg-red-100 text-red-700 border-red-300' :
                       need.urgency === 'High' ? 'bg-orange-100 text-orange-700 border-orange-300' :
                       need.urgency === 'Medium' ? 'bg-yellow-100 text-yellow-700 border-yellow-300' :
-                      'bg-gray-100 text-gray-700 border-gray-300'
+                      'bg-ink-100 text-ink-700 border-ink-200'
                     }`}>
                       <AlertCircle size={10} className="inline mr-0.5" />
                       {need.urgency}
@@ -263,9 +263,9 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
                   </div>
                 </div>
                 {need.description && (
-                  <p className="text-xs text-gray-600 mb-2">{need.description}</p>
+                  <p className="text-xs text-ink-600 mb-2">{need.description}</p>
                 )}
-                <div className="flex gap-3 text-xs text-gray-700">
+                <div className="flex gap-3 text-xs text-ink-700">
                   {need.quantity && <span className="font-medium">Qty: {need.quantity}</span>}
                   {need.estimatedCost && (
                     <span className="font-medium">
@@ -322,7 +322,7 @@ const RatingBadge = ({ label, value, color }) => {
 
   return (
     <div className={`${colorClasses[color]} border rounded-lg p-3`}>
-      <p className="text-xs text-gray-600 mb-1">{label}</p>
+      <p className="text-xs text-ink-600 mb-1">{label}</p>
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
@@ -357,7 +357,7 @@ const MediaSection = ({ title, media, color, onImageClick }) => {
             <img
               src={src}
               alt={`${title} ${index + 1}`}
-              className="w-full h-20 object-cover rounded-lg border-2 border-gray-200 hover:border-pink-400 transition-all group-hover:scale-105"
+              className="w-full h-20 object-cover rounded-lg border-2 border-ink-100 hover:border-pink-400 transition-all group-hover:scale-105"
               onError={(e) => {
                 e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23f3f4f6" width="100" height="100"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%239ca3af" font-size="12"%3ENo Image%3C/text%3E%3C/svg%3E';
               }}

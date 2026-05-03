@@ -289,8 +289,8 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
   // Workflow Tracker Component
   const WorkflowTracker = () => (
-    <div className="bg-white border-b border-gray-200 p-6">
-      <h3 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proposal Workflow</h3>
+    <div className="bg-white border-b border-ink-100 p-6">
+      <h3 className="text-sm font-semibold text-ink-700 mb-4 uppercase tracking-wide">Proposal Workflow</h3>
       <div className="relative">
         {/* Progress Bar Background */}
         <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200" style={{ zIndex: 0 }}></div>
@@ -319,9 +319,9 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
                   ${isCompleted ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-lg scale-110` :
-                    isCurrent ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-xl animate-pulse scale-125` :
+                    isCurrent ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-xl scale-125` :
                     isRejected || isDonorRejected ? 'bg-red-500 text-white' :
-                    'bg-gray-200 text-gray-400'}
+                    'bg-gray-200 text-ink-400'}
                 `}>
                   {isCompleted ? (
                     <CheckCircle size={20} className="animate-scale-in" />
@@ -335,12 +335,12 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {/* Label */}
                 <div className="mt-2 text-center">
                   <p className={`text-xs font-semibold transition-colors ${
-                    isCompleted || isCurrent ? 'text-gray-900' : 'text-gray-400'
+                    isCompleted || isCurrent ? 'text-ink-900' : 'text-ink-400'
                   }`}>
                     {step.label}
                   </p>
                   {isCurrent && (
-                    <p className="text-[10px] text-blue-600 font-bold mt-0.5 animate-pulse">
+                    <p className="text-[10px] text-blue-600 font-bold mt-0.5">
                       Current
                     </p>
                   )}
@@ -370,7 +370,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-700 text-white p-6 rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-2">{proposal.title}</h2>
@@ -403,13 +403,13 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
         <div className="p-6 space-y-6">
           {/* Tabs */}
-          <div className="flex border-b border-gray-200 overflow-x-auto">
+          <div className="flex border-b border-ink-100 overflow-x-auto">
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
                 activeTab === 'overview'
                   ? 'border-b-2 border-indigo-600 text-indigo-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               Overview
@@ -420,7 +420,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'meal'
                     ? 'border-b-2 border-indigo-600 text-indigo-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    : 'text-ink-500 hover:text-ink-700'
                 }`}
               >
                 <BarChart3 size={16} />
@@ -436,7 +436,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'budget'
                     ? 'border-b-2 border-indigo-600 text-indigo-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    : 'text-ink-500 hover:text-ink-700'
                 }`}
               >
                 <DollarSign size={16} />
@@ -452,7 +452,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'safeguarding'
                     ? 'border-b-2 border-indigo-600 text-indigo-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    : 'text-ink-500 hover:text-ink-700'
                 }`}
               >
                 <Shield size={16} />
@@ -467,7 +467,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                 activeTab === 'timeline'
                   ? 'border-b-2 border-indigo-600 text-indigo-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <Calendar size={16} />
@@ -518,31 +518,31 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
               </div>
 
               {/* Proposal Details */}
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <div className="bg-white border border-ink-100 rounded-xl p-6">
+                <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <FileText size={20} className="text-indigo-600" />
                   Proposal Details
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Programme Area</p>
-                    <p className="font-semibold text-gray-900">{proposal.programmeArea || 'Not specified'}</p>
+                    <p className="text-sm text-ink-500 mb-1">Programme Area</p>
+                    <p className="font-semibold text-ink-900">{proposal.programmeArea || 'Not specified'}</p>
                   </div>
                   {proposal.projectTier && (
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">Project Tier</p>
-                      <p className="font-semibold text-gray-900">{proposal.projectTier}</p>
+                      <p className="text-sm text-ink-500 mb-1">Project Tier</p>
+                      <p className="font-semibold text-ink-900">{proposal.projectTier}</p>
                     </div>
                   )}
                   {proposal.sectorTheme && (
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">Sector Theme</p>
-                      <p className="font-semibold text-gray-900">{proposal.sectorTheme}</p>
+                      <p className="text-sm text-ink-500 mb-1">Sector Theme</p>
+                      <p className="font-semibold text-ink-900">{proposal.sectorTheme}</p>
                     </div>
                   )}
                   {proposal.district && Array.isArray(proposal.district) && proposal.district.length > 0 && (
                     <div className="md:col-span-2 lg:col-span-3">
-                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                      <p className="text-sm text-ink-500 mb-1 flex items-center gap-1">
                         <MapPin size={14} />
                         Target Districts
                       </p>
@@ -556,13 +556,13 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Lead Writer</p>
-                    <p className="font-semibold text-gray-900">{proposal.leadWriter || 'Not specified'}</p>
+                    <p className="text-sm text-ink-500 mb-1">Lead Writer</p>
+                    <p className="font-semibold text-ink-900">{proposal.leadWriter || 'Not specified'}</p>
                   </div>
                   {proposal.submissionDate && (
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">Submission Date</p>
-                      <p className="font-semibold text-gray-900">
+                      <p className="text-sm text-ink-500 mb-1">Submission Date</p>
+                      <p className="font-semibold text-ink-900">
                         {new Date(proposal.submissionDate).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'long',
@@ -572,7 +572,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Priority</p>
+                    <p className="text-sm text-ink-500 mb-1">Priority</p>
                     <p className={`font-semibold ${
                       proposal.priority === 'High' ? 'text-red-600' :
                       proposal.priority === 'Medium' ? 'text-orange-600' :
@@ -583,7 +583,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   </div>
                   {proposal.startDate && (
                     <div>
-                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                      <p className="text-sm text-ink-500 mb-1 flex items-center gap-1">
                         <Calendar size={14} />
                         Start Date
                       </p>
@@ -598,7 +598,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   )}
                   {proposal.endDate && (
                     <div>
-                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                      <p className="text-sm text-ink-500 mb-1 flex items-center gap-1">
                         <Calendar size={14} />
                         End Date
                       </p>
@@ -613,11 +613,11 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   )}
                   {proposal.cboName && (
                     <div>
-                      <p className="text-sm text-gray-500 mb-1 flex items-center gap-1">
+                      <p className="text-sm text-ink-500 mb-1 flex items-center gap-1">
                         <Building2 size={14} />
                         CBO Partner
                       </p>
-                      <p className="font-semibold text-gray-900">{proposal.cboName}</p>
+                      <p className="font-semibold text-ink-900">{proposal.cboName}</p>
                     </div>
                   )}
                 </div>
@@ -625,34 +625,34 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
               {/* Project Description */}
               {(proposal.summary || proposal.problemStatement || proposal.proposedSolution || proposal.overallGoal) && (
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="bg-white border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                     <MessageSquare size={20} className="text-purple-600" />
                     Project Description
                   </h3>
                   <div className="space-y-4">
                     {proposal.summary && (
                       <div>
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Summary</p>
-                        <p className="text-gray-900 leading-relaxed">{proposal.summary}</p>
+                        <p className="text-sm font-semibold text-ink-700 mb-2">Summary</p>
+                        <p className="text-ink-900 leading-relaxed">{proposal.summary}</p>
                       </div>
                     )}
                     {proposal.problemStatement && (
                       <div>
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Problem Statement</p>
-                        <p className="text-gray-900 leading-relaxed">{proposal.problemStatement}</p>
+                        <p className="text-sm font-semibold text-ink-700 mb-2">Problem Statement</p>
+                        <p className="text-ink-900 leading-relaxed">{proposal.problemStatement}</p>
                       </div>
                     )}
                     {proposal.proposedSolution && (
                       <div>
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Proposed Solution</p>
-                        <p className="text-gray-900 leading-relaxed">{proposal.proposedSolution}</p>
+                        <p className="text-sm font-semibold text-ink-700 mb-2">Proposed Solution</p>
+                        <p className="text-ink-900 leading-relaxed">{proposal.proposedSolution}</p>
                       </div>
                     )}
                     {proposal.overallGoal && (
                       <div>
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Overall Goal</p>
-                        <p className="text-gray-900 leading-relaxed">{proposal.overallGoal}</p>
+                        <p className="text-sm font-semibold text-ink-700 mb-2">Overall Goal</p>
+                        <p className="text-ink-900 leading-relaxed">{proposal.overallGoal}</p>
                       </div>
                     )}
                   </div>
@@ -661,8 +661,8 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
               {/* Objectives */}
               {proposal.objectives && Array.isArray(proposal.objectives) && proposal.objectives.length > 0 && (
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="bg-white border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                     <Target size={20} className="text-blue-600" />
                     Objectives
                     <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs">
@@ -675,7 +675,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                         <div className="flex-shrink-0 w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                           {index + 1}
                         </div>
-                        <p className="text-gray-900 flex-1">{typeof obj === 'string' ? obj : obj.objective || obj.description}</p>
+                        <p className="text-ink-900 flex-1">{typeof obj === 'string' ? obj : obj.objective || obj.description}</p>
                       </div>
                     ))}
                   </div>
@@ -684,8 +684,8 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
               {/* Key Activities */}
               {proposal.keyActivities && Array.isArray(proposal.keyActivities) && proposal.keyActivities.length > 0 && (
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="bg-white border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                     <TrendingUp size={20} className="text-green-600" />
                     Key Activities
                     <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">
@@ -698,7 +698,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                         <div className="flex-shrink-0 w-7 h-7 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                           {index + 1}
                         </div>
-                        <p className="text-gray-900 flex-1">{typeof activity === 'string' ? activity : activity.activity || activity.description}</p>
+                        <p className="text-ink-900 flex-1">{typeof activity === 'string' ? activity : activity.activity || activity.description}</p>
                       </div>
                     ))}
                   </div>
@@ -707,8 +707,8 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
               {/* Beneficiary Breakdown */}
               {proposal.beneficiaryBreakdown && (
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="bg-white border border-ink-100 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                     <Users2 size={20} className="text-green-600" />
                     Beneficiary Breakdown
                   </h3>
@@ -743,7 +743,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {activeTab === 'meal' && proposal.resultsFramework && (
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Target size={20} className="text-blue-600" />
                   Results Framework - Indicators
                 </h3>
@@ -755,19 +755,19 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                           <span className="text-sm font-bold text-blue-700">{index + 1}</span>
                         </div>
                         <div className="flex-1">
-                          <p className="font-semibold text-gray-900 mb-2">{indicator.indicator}</p>
+                          <p className="font-semibold text-ink-900 mb-2">{indicator.indicator}</p>
                           <div className="grid grid-cols-3 gap-3">
                             <div>
-                              <p className="text-xs text-gray-500">Baseline</p>
-                              <p className="font-bold text-gray-900">{indicator.baseline}</p>
+                              <p className="text-xs text-ink-500">Baseline</p>
+                              <p className="font-bold text-ink-900">{indicator.baseline}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Target</p>
+                              <p className="text-xs text-ink-500">Target</p>
                               <p className="font-bold text-green-600">{indicator.target}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Means of Verification</p>
-                              <p className="text-sm text-gray-700">{indicator.meansOfVerification}</p>
+                              <p className="text-xs text-ink-500">Means of Verification</p>
+                              <p className="text-sm text-ink-700">{indicator.meansOfVerification}</p>
                             </div>
                           </div>
                         </div>
@@ -783,7 +783,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {activeTab === 'budget' && proposal.budgetBreakdown && (
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <DollarSign size={20} className="text-purple-600" />
                   Budget Breakdown
                 </h3>
@@ -791,25 +791,25 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <table className="w-full">
                     <thead>
                       <tr className="border-b-2 border-purple-200">
-                        <th className="text-left p-3 text-sm font-bold text-gray-700">Category</th>
-                        <th className="text-left p-3 text-sm font-bold text-gray-700">Item Description</th>
-                        <th className="text-right p-3 text-sm font-bold text-gray-700">Unit Cost</th>
-                        <th className="text-center p-3 text-sm font-bold text-gray-700">Quantity</th>
-                        <th className="text-right p-3 text-sm font-bold text-gray-700">Total Cost</th>
+                        <th className="text-left p-3 text-sm font-bold text-ink-700">Category</th>
+                        <th className="text-left p-3 text-sm font-bold text-ink-700">Item Description</th>
+                        <th className="text-right p-3 text-sm font-bold text-ink-700">Unit Cost</th>
+                        <th className="text-center p-3 text-sm font-bold text-ink-700">Quantity</th>
+                        <th className="text-right p-3 text-sm font-bold text-ink-700">Total Cost</th>
                       </tr>
                     </thead>
                     <tbody>
                       {proposal.budgetBreakdown.map((item, index) => (
-                        <tr key={index} className="border-b border-gray-100 hover:bg-purple-50">
-                          <td className="p-3 text-sm font-semibold text-gray-900">{item.category}</td>
-                          <td className="p-3 text-sm text-gray-700">{item.itemDescription}</td>
-                          <td className="p-3 text-sm text-right text-gray-900">LKR {item.unitCost?.toLocaleString()}</td>
-                          <td className="p-3 text-sm text-center text-gray-900">{item.quantity}</td>
+                        <tr key={index} className="border-b border-ink-100 hover:bg-purple-50">
+                          <td className="p-3 text-sm font-semibold text-ink-900">{item.category}</td>
+                          <td className="p-3 text-sm text-ink-700">{item.itemDescription}</td>
+                          <td className="p-3 text-sm text-right text-ink-900">LKR {item.unitCost?.toLocaleString()}</td>
+                          <td className="p-3 text-sm text-center text-ink-900">{item.quantity}</td>
                           <td className="p-3 text-sm text-right font-bold text-purple-900">LKR {item.totalCost?.toLocaleString()}</td>
                         </tr>
                       ))}
                       <tr className="bg-purple-100 font-bold">
-                        <td colSpan="4" className="p-3 text-right text-gray-900">TOTAL BUDGET:</td>
+                        <td colSpan="4" className="p-3 text-right text-ink-900">TOTAL BUDGET:</td>
                         <td className="p-3 text-right text-purple-900">LKR {totalBudget.toLocaleString()}</td>
                       </tr>
                     </tbody>
@@ -823,7 +823,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {activeTab === 'safeguarding' && proposal.safeguarding && (
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Shield size={20} className="text-orange-600" />
                   Safeguarding Compliance
                 </h3>
@@ -840,7 +840,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                             <AlertCircle className="text-red-600" size={20} />
                           )}
                         </div>
-                        <p className="font-semibold text-gray-900">{item.item}</p>
+                        <p className="font-semibold text-ink-900">{item.item}</p>
                       </div>
                       <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                         item.status === 'Yes' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -857,7 +857,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           {/* Timeline Tab */}
           {activeTab === 'timeline' && (
             <div className="space-y-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Calendar size={20} className="text-indigo-600" />
                 Proposal Timeline
               </h3>
@@ -870,12 +870,12 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {proposal.createdAt && (
                   <div className="relative mb-6">
                     <div className="absolute left-[-1.4rem] w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg"></div>
-                    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-ink-100">
                       <div className="flex items-center gap-2 mb-1">
                         <FileEdit size={16} className="text-blue-600" />
-                        <span className="font-semibold text-gray-900">Proposal Created</span>
+                        <span className="font-semibold text-ink-900">Proposal Created</span>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-ink-600">
                         {new Date(proposal.createdAt).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'long',
@@ -884,7 +884,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                           minute: '2-digit'
                         })}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Created by: {proposal.creator?.fullName || 'Unknown'}</p>
+                      <p className="text-xs text-ink-500 mt-1">Created by: {proposal.creator?.fullName || 'Unknown'}</p>
                     </div>
                   </div>
                 )}
@@ -892,32 +892,32 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {proposal.submissionDate && (
                   <div className="relative mb-6">
                     <div className="absolute left-[-1.4rem] w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
-                    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="bg-white p-4 rounded-lg shadow-md border border-ink-100">
                       <div className="flex items-center gap-2 mb-1">
                         <Send size={16} className="text-green-600" />
-                        <span className="font-semibold text-gray-900">Proposal Submitted</span>
+                        <span className="font-semibold text-ink-900">Proposal Submitted</span>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-ink-600">
                         {new Date(proposal.submissionDate).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'long',
                           year: 'numeric'
                         })}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Submitted by: {proposal.leadWriter || 'Unknown'}</p>
+                      <p className="text-xs text-ink-500 mt-1">Submitted by: {proposal.leadWriter || 'Unknown'}</p>
                     </div>
                   </div>
                 )}
 
                 {proposal.status === 'Approved' && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-emerald-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-emerald-500 rounded-full border-4 border-white shadow-lg"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border-2 border-emerald-200">
                       <div className="flex items-center gap-2 mb-1">
                         <CheckCircle2 size={16} className="text-emerald-600" />
-                        <span className="font-semibold text-gray-900">Proposal Approved</span>
+                        <span className="font-semibold text-ink-900">Proposal Approved</span>
                       </div>
-                      <p className="text-sm text-gray-600">Current Status</p>
+                      <p className="text-sm text-ink-600">Current Status</p>
                       <p className="text-xs text-emerald-700 mt-1 font-semibold">✓ Ready to submit to donor</p>
                     </div>
                   </div>
@@ -925,13 +925,13 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.status === 'Submitted to Donor' && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-purple-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-purple-500 rounded-full border-4 border-white shadow-lg"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border-2 border-purple-200">
                       <div className="flex items-center gap-2 mb-1">
                         <Mail size={16} className="text-purple-600" />
-                        <span className="font-semibold text-gray-900">Sent to Donor</span>
+                        <span className="font-semibold text-ink-900">Sent to Donor</span>
                       </div>
-                      <p className="text-sm text-gray-600">Current Status</p>
+                      <p className="text-sm text-ink-600">Current Status</p>
                       <p className="text-xs text-purple-700 mt-1 font-semibold">⏳ Awaiting donor decision</p>
                     </div>
                   </div>
@@ -939,13 +939,13 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.status === 'Donor Approved' && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-lg"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border-2 border-indigo-200">
                       <div className="flex items-center gap-2 mb-1">
                         <ThumbsUp size={16} className="text-indigo-600" />
-                        <span className="font-semibold text-gray-900">Donor Approved</span>
+                        <span className="font-semibold text-ink-900">Donor Approved</span>
                       </div>
-                      <p className="text-sm text-gray-600">Current Status</p>
+                      <p className="text-sm text-ink-600">Current Status</p>
                       <p className="text-xs text-indigo-700 mt-1 font-semibold">🚀 Ready to convert to project</p>
                     </div>
                   </div>
@@ -957,9 +957,9 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                     <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg shadow-lg border-2 border-indigo-300">
                       <div className="flex items-center gap-2 mb-1">
                         <Rocket size={16} className="text-indigo-700" />
-                        <span className="font-semibold text-gray-900">Project Created</span>
+                        <span className="font-semibold text-ink-900">Project Created</span>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-ink-600">
                         {proposal.convertedToProjectDate && new Date(proposal.convertedToProjectDate).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'long',
@@ -978,7 +978,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
         </div>
 
         {/* Workflow Actions Section - Always show */}
-        <div className="border-t border-gray-200 p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="border-t border-ink-100 p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <MessageSquare size={20} className="text-indigo-600" />
             Workflow Actions
@@ -1158,7 +1158,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           </div>
 
         {/* Footer Actions */}
-        <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl">
+        <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl">
           {/* Success Message */}
           {conversionSuccess && (
             <div className="mb-3 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-center gap-3">
@@ -1203,7 +1203,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 </button>
               </div>
 
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-ink-600">
                 {proposal.status === 'Donor Approved' && canConvertToProject && (
                   <p className="flex items-center gap-2 text-green-700">
                     <CheckCircle size={16} />
@@ -1215,7 +1215,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
                 disabled={converting || workflowLoading}
               >
                 Close
@@ -1270,16 +1270,16 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
       {showCommentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-xl font-bold text-ink-900 mb-4">
               Add Comments
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-ink-600 mb-4">
               Please provide comments for this action (optional):
             </p>
             <textarea
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 min-h-[120px]"
+              className="w-full p-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 min-h-[120px]"
               placeholder="Enter your comments here..."
             />
             <div className="flex justify-end gap-3 mt-4">
@@ -1289,7 +1289,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   setComments('');
                   setWorkflowAction(null);
                 }}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+                className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
                 disabled={workflowLoading}
               >
                 Cancel

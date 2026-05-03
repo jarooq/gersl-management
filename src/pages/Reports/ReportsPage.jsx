@@ -286,11 +286,11 @@ const ReportsPage = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
 
         <div className="relative z-10">
           <div className="flex items-center justify-between">
@@ -327,60 +327,60 @@ const ReportsPage = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
               <FileText className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">All Time</span>
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.totalReports}</h3>
-          <p className="text-sm text-gray-600">Total Reports</p>
+          <h3 className="text-3xl font-bold text-ink-900 mb-1">{stats.totalReports}</h3>
+          <p className="text-sm text-ink-600">Total Reports</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
               <TrendingUp className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">This Month</span>
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.thisMonth}</h3>
-          <p className="text-sm text-gray-600">Generated</p>
+          <h3 className="text-3xl font-bold text-ink-900 mb-1">{stats.thisMonth}</h3>
+          <p className="text-sm text-ink-600">Generated</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
               <Clock className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Upcoming</span>
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.scheduled}</h3>
-          <p className="text-sm text-gray-600">Scheduled</p>
+          <h3 className="text-3xl font-bold text-ink-900 mb-1">{stats.scheduled}</h3>
+          <p className="text-sm text-ink-600">Scheduled</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
               <Download className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Total</span>
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.downloads}</h3>
-          <p className="text-sm text-gray-600">Downloads</p>
+          <h3 className="text-3xl font-bold text-ink-900 mb-1">{stats.downloads}</h3>
+          <p className="text-sm text-ink-600">Downloads</p>
         </div>
       </div>
 
       {/* Quick Stats from All Modules */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
             <Database size={20} className="text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">System Overview</h2>
-            <p className="text-sm text-gray-600">Real-time data across all modules</p>
+            <h2 className="text-xl font-bold text-ink-900">System Overview</h2>
+            <p className="text-sm text-ink-600">Real-time data across all modules</p>
           </div>
         </div>
 
@@ -389,13 +389,13 @@ const ReportsPage = () => {
             const IconComponent = stat.icon;
             const colors = getColorClasses(stat.color).split(' ');
             return (
-              <div key={index} className="text-center p-4 bg-gray-50 rounded-lg hover:shadow-md transition-all">
+              <div key={index} className="text-center p-4 bg-ink-50 rounded-lg hover:shadow-md transition-all">
                 <div className={`w-12 h-12 bg-gradient-to-br ${colors[0]} ${colors[1]} rounded-lg flex items-center justify-center mx-auto mb-3`}>
                   <IconComponent size={20} className="text-white" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                <div className="text-xs text-gray-600 mb-1">{stat.label}</div>
-                <div className="text-xs text-gray-500">{stat.change}</div>
+                <div className="text-h1 text-ink-900 mb-1">{stat.value}</div>
+                <div className="text-xs text-ink-600 mb-1">{stat.label}</div>
+                <div className="text-xs text-ink-500">{stat.change}</div>
               </div>
             );
           })}
@@ -403,8 +403,8 @@ const ReportsPage = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-        <div className="border-b border-gray-200 px-6">
+      <div className="bg-white rounded-xl shadow-sm border border-ink-100">
+        <div className="border-b border-ink-100 px-6">
           <div className="flex gap-8 overflow-x-auto">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -419,7 +419,7 @@ const ReportsPage = () => {
                 className={`flex items-center gap-2 px-4 py-4 border-b-2 transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                    : 'border-transparent text-ink-600 hover:text-ink-900'
                 }`}
               >
                 <tab.icon size={18} />
@@ -437,50 +437,50 @@ const ReportsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <button
                   onClick={() => setShowGenerateModal(true)}
-                  className="p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 transition-all">
                       <Plus className="text-indigo-600" size={32} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">Generate Report</h3>
-                    <p className="text-sm text-gray-600">Create custom report</p>
+                    <h3 className="font-bold text-ink-900 mb-2">Generate Report</h3>
+                    <p className="text-sm text-ink-600">Create custom report</p>
                   </div>
                 </button>
 
                 <button
                   onClick={() => setShowScheduleModal(true)}
-                  className="p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-all">
                       <Calendar className="text-purple-600" size={32} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">Schedule Report</h3>
-                    <p className="text-sm text-gray-600">Automate generation</p>
+                    <h3 className="font-bold text-ink-900 mb-2">Schedule Report</h3>
+                    <p className="text-sm text-ink-600">Automate generation</p>
                   </div>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('catalog')}
-                  className="p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-all">
                       <FileBarChart className="text-green-600" size={32} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">Browse Catalog</h3>
-                    <p className="text-sm text-gray-600">View all report types</p>
+                    <h3 className="font-bold text-ink-900 mb-2">Browse Catalog</h3>
+                    <p className="text-sm text-ink-600">View all report types</p>
                   </div>
                 </button>
 
-                <button className="p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-orange-400 hover:bg-orange-50 transition-all group">
+                <button className="p-6 border-2 border-dashed border-ink-200 rounded-xl hover:border-orange-400 hover:bg-orange-50 transition-all group">
                   <div className="text-center">
                     <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-all">
                       <Share2 className="text-orange-600" size={32} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">Export Data</h3>
-                    <p className="text-sm text-gray-600">Bulk data export</p>
+                    <h3 className="font-bold text-ink-900 mb-2">Export Data</h3>
+                    <p className="text-sm text-ink-600">Bulk data export</p>
                   </div>
                 </button>
               </div>
@@ -489,12 +489,12 @@ const ReportsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-900">Financial Reports</h3>
+                    <h3 className="font-bold text-ink-900">Financial Reports</h3>
                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
                       {reportTypes.financial.length} types
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">Budget, expenses, payroll, and financial analysis</p>
+                  <p className="text-sm text-ink-600 mb-4">Budget, expenses, payroll, and financial analysis</p>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -510,12 +510,12 @@ const ReportsPage = () => {
 
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-900">Projects & MEAL</h3>
+                    <h3 className="font-bold text-ink-900">Projects & MEAL</h3>
                     <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
                       {reportTypes.projects.length + reportTypes.meal.length} types
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">Performance, indicators, and impact assessment</p>
+                  <p className="text-sm text-ink-600 mb-4">Performance, indicators, and impact assessment</p>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -531,12 +531,12 @@ const ReportsPage = () => {
 
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-900">HR & Operations</h3>
+                    <h3 className="font-bold text-ink-900">HR & Operations</h3>
                     <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
                       {reportTypes.hr.length + reportTypes.operations.length} types
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">Staff, attendance, activities, and tasks</p>
+                  <p className="text-sm text-ink-600 mb-4">Staff, attendance, activities, and tasks</p>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -552,9 +552,9 @@ const ReportsPage = () => {
               </div>
 
               {/* Recent Reports */}
-              <div className="bg-gray-50 rounded-xl p-6">
+              <div className="bg-ink-50 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-gray-900">Recent Reports</h2>
+                  <h2 className="text-lg font-bold text-ink-900">Recent Reports</h2>
                   <button
                     onClick={() => setActiveTab('reports')}
                     className="text-sm font-semibold text-indigo-600 hover:text-indigo-700"
@@ -566,8 +566,8 @@ const ReportsPage = () => {
                 {reports.length === 0 ? (
                   <div className="text-center py-12">
                     <FileText className="mx-auto text-gray-300 mb-4" size={64} />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No Reports Yet</h3>
-                    <p className="text-gray-600 mb-4">Generate your first report to get started</p>
+                    <h3 className="text-lg font-semibold text-ink-900 mb-2">No Reports Yet</h3>
+                    <p className="text-ink-600 mb-4">Generate your first report to get started</p>
                     <button
                       onClick={() => setShowGenerateModal(true)}
                       className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
@@ -578,22 +578,22 @@ const ReportsPage = () => {
                 ) : (
                   <div className="space-y-3">
                     {reports.slice(0, 5).map(report => (
-                      <div key={report.id} className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all">
+                      <div key={report.id} className="bg-white p-4 rounded-lg border border-ink-100 hover:shadow-md transition-all">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
                               <FileText className="text-indigo-600" size={20} />
                             </div>
                             <div>
-                              <h4 className="font-semibold text-gray-900">{report.name}</h4>
-                              <p className="text-sm text-gray-600">{report.generatedDate} • {report.format}</p>
+                              <h4 className="font-semibold text-ink-900">{report.name}</h4>
+                              <p className="text-sm text-ink-600">{report.generatedDate} • {report.format}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">{report.downloads} downloads</span>
+                            <span className="text-xs text-ink-500">{report.downloads} downloads</span>
                             <button
                               onClick={() => handleDownloadReport(report.id)}
-                              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                              className="p-2 text-ink-600 hover:bg-ink-100 rounded-lg"
                             >
                               <Download size={18} />
                             </button>
@@ -612,13 +612,13 @@ const ReportsPage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Report Catalog</h2>
-                  <p className="text-gray-600 mt-1">Browse all available report types across modules</p>
+                  <h2 className="text-h1 text-ink-900">Report Catalog</h2>
+                  <p className="text-ink-600 mt-1">Browse all available report types across modules</p>
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-semibold"
+                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-semibold"
                 >
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -632,8 +632,8 @@ const ReportsPage = () => {
                 return (
                   <div key={category} className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-xl font-bold text-gray-900 capitalize">{category} Reports</h3>
-                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-bold">
+                      <h3 className="text-xl font-bold text-ink-900 capitalize">{category} Reports</h3>
+                      <span className="px-3 py-1 bg-ink-100 text-ink-700 rounded-full text-sm font-bold">
                         {types.length} reports
                       </span>
                     </div>
@@ -642,7 +642,7 @@ const ReportsPage = () => {
                       {types.map((reportType) => (
                         <div
                           key={reportType.id}
-                          className="bg-white border-2 border-gray-200 rounded-xl p-5 hover:border-indigo-400 hover:shadow-md transition-all group cursor-pointer"
+                          className="bg-white border-2 border-ink-100 rounded-xl p-5 hover:border-indigo-400 hover:shadow-md transition-all group cursor-pointer"
                           onClick={() => {
                             setSelectedReportType(reportType.id);
                             setShowGenerateModal(true);
@@ -663,10 +663,10 @@ const ReportsPage = () => {
                               <Zap size={20} />
                             </button>
                           </div>
-                          <h4 className="font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                          <h4 className="font-bold text-ink-900 mb-2 group-hover:text-indigo-600 transition-colors">
                             {reportType.name}
                           </h4>
-                          <p className="text-sm text-gray-600">{reportType.desc}</p>
+                          <p className="text-sm text-ink-600">{reportType.desc}</p>
                         </div>
                       ))}
                     </div>
@@ -682,19 +682,19 @@ const ReportsPage = () => {
               {/* Filters */}
               <div className="flex items-center gap-4">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
                   <input
                     type="text"
                     placeholder="Search reports..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -704,10 +704,10 @@ const ReportsPage = () => {
 
               {/* Reports List */}
               {reports.length === 0 ? (
-                <div className="text-center py-16 bg-gray-50 rounded-xl">
+                <div className="text-center py-16 bg-ink-50 rounded-xl">
                   <FileText className="mx-auto text-gray-300 mb-4" size={80} />
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Reports Found</h3>
-                  <p className="text-gray-600 mb-6">Start by generating your first report</p>
+                  <h3 className="text-xl font-bold text-ink-900 mb-2">No Reports Found</h3>
+                  <p className="text-ink-600 mb-6">Start by generating your first report</p>
                   <button
                     onClick={() => setShowGenerateModal(true)}
                     className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
@@ -722,15 +722,15 @@ const ReportsPage = () => {
                     .filter(r => selectedCategory === 'All' || r.category === selectedCategory.toLowerCase())
                     .filter(r => !searchTerm || r.name.toLowerCase().includes(searchTerm.toLowerCase()))
                     .map(report => (
-                      <div key={report.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all">
+                      <div key={report.id} className="bg-white border border-ink-100 rounded-lg p-6 hover:shadow-md transition-all">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-4">
                             <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
                               <FileText className="text-indigo-600" size={24} />
                             </div>
                             <div>
-                              <h3 className="font-bold text-gray-900 text-lg mb-1">{report.name}</h3>
-                              <div className="flex items-center gap-4 text-sm text-gray-600">
+                              <h3 className="font-bold text-ink-900 text-lg mb-1">{report.name}</h3>
+                              <div className="flex items-center gap-4 text-sm text-ink-600">
                                 <span className="flex items-center gap-1">
                                   <Calendar size={14} />
                                   {report.generatedDate}
@@ -744,16 +744,16 @@ const ReportsPage = () => {
                                   {report.downloads || 0} downloads
                                 </span>
                               </div>
-                              <div className="mt-2 text-xs text-gray-500">
+                              <div className="mt-2 text-xs text-ink-500">
                                 Date Range: {report.dateRange.start} to {report.dateRange.end}
                               </div>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                            <button className="p-2 text-ink-600 hover:bg-ink-100 rounded-lg transition-all">
                               <Eye size={20} />
                             </button>
-                            <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                            <button className="p-2 text-ink-600 hover:bg-ink-100 rounded-lg transition-all">
                               <Mail size={20} />
                             </button>
                             <button
@@ -781,11 +781,11 @@ const ReportsPage = () => {
                     <Zap size={24} className="text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">AI-Powered Report Generation</h2>
-                    <p className="text-sm text-gray-600">Generate professional narrative reports using AI</p>
+                    <h2 className="text-xl font-bold text-ink-900">AI-Powered Report Generation</h2>
+                    <p className="text-sm text-ink-600">Generate professional narrative reports using AI</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-700 mb-4">
+                <p className="text-sm text-ink-700 mb-4">
                   Create comprehensive donor reports, progress reports, completion reports, and more with AI assistance.
                   Reports are generated based on your project or proposal data and can be exported in multiple formats.
                 </p>
@@ -804,7 +804,7 @@ const ReportsPage = () => {
 
                     {/* Source Type Toggle */}
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-ink-700 mb-2">
                         Source Type
                       </label>
                       <div className="flex gap-2">
@@ -816,7 +816,7 @@ const ReportsPage = () => {
                           className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
                             sourceType === 'project'
                               ? 'bg-indigo-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
                           }`}
                         >
                           Project
@@ -829,7 +829,7 @@ const ReportsPage = () => {
                           className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
                             sourceType === 'proposal'
                               ? 'bg-indigo-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
                           }`}
                         >
                           Proposal
@@ -840,7 +840,7 @@ const ReportsPage = () => {
                     {/* Project Selection */}
                     {sourceType === 'project' && (
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-ink-700 mb-2">
                           Select Project
                         </label>
                         {projects.projects && projects.projects.length > 0 ? (
@@ -852,18 +852,18 @@ const ReportsPage = () => {
                                 className={`p-3 border rounded cursor-pointer transition-colors ${
                                   selectedProject?.id === project.id
                                     ? 'border-indigo-600 bg-indigo-50'
-                                    : 'border-gray-200 hover:border-indigo-300'
+                                    : 'border-ink-100 hover:border-indigo-300'
                                 }`}
                               >
                                 <p className="font-medium text-sm text-gray-800">{project.name}</p>
                                 {project.donor && (
-                                  <p className="text-xs text-gray-600 mt-1">{project.donor}</p>
+                                  <p className="text-xs text-ink-600 mt-1">{project.donor}</p>
                                 )}
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500 text-center py-4">
+                          <p className="text-sm text-ink-500 text-center py-4">
                             No projects available
                           </p>
                         )}
@@ -873,7 +873,7 @@ const ReportsPage = () => {
                     {/* Proposal Selection */}
                     {sourceType === 'proposal' && (
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-ink-700 mb-2">
                           Select Proposal
                         </label>
                         {proposals.proposals && proposals.proposals.length > 0 ? (
@@ -885,17 +885,17 @@ const ReportsPage = () => {
                                 className={`p-3 border rounded cursor-pointer transition-colors ${
                                   selectedProposal?.id === proposal.id
                                     ? 'border-indigo-600 bg-indigo-50'
-                                    : 'border-gray-200 hover:border-indigo-300'
+                                    : 'border-ink-100 hover:border-indigo-300'
                                 }`}
                               >
                                 <p className="font-medium text-sm text-gray-800">{proposal.title}</p>
                                 {proposal.donor && (
-                                  <p className="text-xs text-gray-600 mt-1">{proposal.donor}</p>
+                                  <p className="text-xs text-ink-600 mt-1">{proposal.donor}</p>
                                 )}
                                 <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded ${
                                   proposal.status === 'Approved' ? 'bg-green-100 text-green-700' :
                                   proposal.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                  'bg-gray-100 text-gray-700'
+                                  'bg-ink-100 text-ink-700'
                                 }`}>
                                   {proposal.status}
                                 </span>
@@ -903,7 +903,7 @@ const ReportsPage = () => {
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500 text-center py-4">
+                          <p className="text-sm text-ink-500 text-center py-4">
                             No proposals available
                           </p>
                         )}
@@ -933,7 +933,7 @@ const ReportsPage = () => {
           {activeTab === 'scheduled' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900">Scheduled Reports</h2>
+                <h2 className="text-xl font-bold text-ink-900">Scheduled Reports</h2>
                 <button
                   onClick={() => setShowScheduleModal(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
@@ -944,10 +944,10 @@ const ReportsPage = () => {
               </div>
 
               {scheduledReports.length === 0 ? (
-                <div className="text-center py-16 bg-gray-50 rounded-xl">
+                <div className="text-center py-16 bg-ink-50 rounded-xl">
                   <Clock className="mx-auto text-gray-300 mb-4" size={80} />
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Scheduled Reports</h3>
-                  <p className="text-gray-600 mb-6">Set up automated report generation</p>
+                  <h3 className="text-xl font-bold text-ink-900 mb-2">No Scheduled Reports</h3>
+                  <p className="text-ink-600 mb-6">Set up automated report generation</p>
                   <button
                     onClick={() => setShowScheduleModal(true)}
                     className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
@@ -959,11 +959,11 @@ const ReportsPage = () => {
               ) : (
                 <div className="grid grid-cols-1 gap-4">
                   {scheduledReports.map(schedule => (
-                    <div key={schedule.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all">
+                    <div key={schedule.id} className="bg-white border border-ink-100 rounded-lg p-6 hover:shadow-md transition-all">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-bold text-gray-900 text-lg mb-2">{schedule.name}</h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <h3 className="font-bold text-ink-900 text-lg mb-2">{schedule.name}</h3>
+                          <div className="flex items-center gap-4 text-sm text-ink-600">
                             <span className="flex items-center gap-1">
                               <Clock size={14} />
                               {schedule.frequency}
@@ -982,7 +982,7 @@ const ReportsPage = () => {
                           <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
                             {schedule.status}
                           </span>
-                          <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                          <button className="p-2 text-ink-600 hover:bg-ink-100 rounded-lg">
                             <Settings size={20} />
                           </button>
                         </div>
@@ -1000,7 +1000,7 @@ const ReportsPage = () => {
       {showGenerateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Generate New Report</h2>
                 <button
@@ -1015,11 +1015,11 @@ const ReportsPage = () => {
             <div className="p-6">
               <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Report Category <span className="text-red-500">*</span>
                   </label>
                   <select
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
                     value={selectedCategory}
                     onChange={(e) => {
                       setSelectedCategory(e.target.value);
@@ -1035,11 +1035,11 @@ const ReportsPage = () => {
 
                 {selectedCategory && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Report Type <span className="text-red-500">*</span>
                     </label>
                     <select
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
                       value={selectedReportType}
                       onChange={(e) => setSelectedReportType(e.target.value)}
                     >
@@ -1049,7 +1049,7 @@ const ReportsPage = () => {
                       ))}
                     </select>
                     {selectedReportType && (
-                      <p className="mt-2 text-sm text-gray-600">
+                      <p className="mt-2 text-sm text-ink-600">
                         {reportTypes[selectedCategory]?.find(t => t.id === selectedReportType)?.desc}
                       </p>
                     )}
@@ -1058,31 +1058,31 @@ const ReportsPage = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Start Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
                       value={dateRange.start}
                       onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       End Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
                       value={dateRange.end}
                       onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Output Format <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-5 gap-3">
@@ -1093,7 +1093,7 @@ const ReportsPage = () => {
                         className={`p-3 border-2 rounded-lg font-semibold transition-all ${
                           selectedFormat === format
                             ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
-                            : 'border-gray-300 hover:border-gray-400'
+                            : 'border-ink-200 hover:border-gray-400'
                         }`}
                       >
                         {format}
@@ -1116,10 +1116,10 @@ const ReportsPage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex justify-end gap-3">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex justify-end gap-3">
               <button
                 onClick={() => setShowGenerateModal(false)}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-semibold"
+                className="px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 font-semibold"
               >
                 Cancel
               </button>
@@ -1140,7 +1140,7 @@ const ReportsPage = () => {
       {showScheduleModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Schedule Automated Report</h2>
                 <button
@@ -1155,17 +1155,17 @@ const ReportsPage = () => {
             <div className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Report Name</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Report Name</label>
                   <input
                     type="text"
                     placeholder="Monthly Financial Summary"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Report Type</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Report Type</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
                     <option value="">Select report type...</option>
                     {Object.entries(reportTypes).map(([category, types]) =>
                       types.map(type => (
@@ -1176,8 +1176,8 @@ const ReportsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Frequency</label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Frequency</label>
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
                     <option>Daily</option>
                     <option>Weekly</option>
                     <option>Monthly</option>
@@ -1187,22 +1187,22 @@ const ReportsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Recipients (Email)</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Recipients (Email)</label>
                   <textarea
                     placeholder="email@example.com, email2@example.com"
                     rows="3"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Separate multiple emails with commas</p>
+                  <p className="text-xs text-ink-500 mt-1">Separate multiple emails with commas</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Format</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Format</label>
                   <div className="grid grid-cols-3 gap-3">
                     {['PDF', 'Excel', 'CSV'].map(format => (
                       <button
                         key={format}
-                        className="p-3 border-2 border-gray-300 hover:border-purple-400 rounded-lg font-semibold"
+                        className="p-3 border-2 border-ink-200 hover:border-purple-400 rounded-lg font-semibold"
                       >
                         {format}
                       </button>
@@ -1212,10 +1212,10 @@ const ReportsPage = () => {
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 rounded-b-2xl flex justify-end gap-3">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl flex justify-end gap-3">
               <button
                 onClick={() => setShowScheduleModal(false)}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-semibold"
+                className="px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 font-semibold"
               >
                 Cancel
               </button>

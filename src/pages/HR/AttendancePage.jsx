@@ -231,7 +231,7 @@ const AttendancePage = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
@@ -251,54 +251,54 @@ const AttendancePage = () => {
 
       {/* Stats Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-primary-50 border border-primary-200 text-primary-700 rounded-md flex items-center justify-center">
               <Clock size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.totalToday}</h3>
-          <p className="text-sm text-gray-600">Total Check-ins Today</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.totalToday}</h3>
+          <p className="text-sm text-ink-600">Total Check-ins Today</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center">
               <CheckCircle size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.present}</h3>
-          <p className="text-sm text-gray-600">Present Staff</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.present}</h3>
+          <p className="text-sm text-ink-600">Present Staff</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center">
               <MapPin size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.gpsCheckIns}</h3>
-          <p className="text-sm text-gray-600">GPS Check-ins</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.gpsCheckIns}</h3>
+          <p className="text-sm text-ink-600">GPS Check-ins</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
               <User size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.officeCheckIns}</h3>
-          <p className="text-sm text-gray-600">Office Check-ins</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.officeCheckIns}</h3>
+          <p className="text-sm text-ink-600">Office Check-ins</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-danger-50 border border-danger-600/20 text-danger-700 rounded-md flex items-center justify-center">
               <AlertCircle size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.late}</h3>
-          <p className="text-sm text-gray-600">Late Arrivals</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.late}</h3>
+          <p className="text-sm text-ink-600">Late Arrivals</p>
         </div>
       </div>
 
@@ -331,13 +331,13 @@ const AttendancePage = () => {
         <div className="flex gap-3 items-center">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
             <input
               type="text"
               placeholder="Search by name, ID, dept..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
+              className="pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
             />
           </div>
 
@@ -346,14 +346,14 @@ const AttendancePage = () => {
             type="date"
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
 
           {/* Type Filter */}
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">All Types</option>
             <option value="office">Office Only</option>
@@ -363,19 +363,19 @@ const AttendancePage = () => {
       </div>
 
       {/* Attendance Records */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">Attendance Records ({allAttendance.length})</h2>
-          <p className="text-sm text-gray-600">Showing results for {filterDate}</p>
+      <div className="bg-white rounded-2xl shadow-sm border border-ink-100">
+        <div className="p-6 border-b border-ink-100 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-ink-900">Attendance Records ({allAttendance.length})</h2>
+          <p className="text-sm text-ink-600">Showing results for {filterDate}</p>
         </div>
 
         <div className="p-6 space-y-4">
           {allAttendance.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle size={32} className="text-gray-400" />
+              <div className="w-16 h-16 bg-ink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertCircle size={32} className="text-ink-400" />
               </div>
-              <p className="text-gray-500 mb-4">No attendance records found</p>
+              <p className="text-ink-500 mb-4">No attendance records found</p>
               <button
                 onClick={() => setShowCheckInModal(true)}
                 className="text-blue-600 hover:text-blue-700 font-semibold"
@@ -385,15 +385,15 @@ const AttendancePage = () => {
             </div>
           ) : (
             allAttendance.map((record, index) => (
-              <div key={`${record.type}-${record.id || index}`} className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all">
+              <div key={`${record.type}-${record.id || index}`} className="border border-ink-100 rounded-xl p-6 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3 flex-1">
                     <div className={`w-12 h-12 ${record.hasGPS ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-primary-50 border border-primary-200 text-primary-700'} text-white rounded-xl flex items-center justify-center`}>
                       {record.hasGPS ? <MapPin size={24} /> : <User size={24} />}
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg">{record.employeeName}</h3>
-                      <p className="text-sm text-gray-600">{record.department} • ID: {record.employeeId}</p>
+                      <h3 className="font-bold text-ink-900 text-lg">{record.employeeName}</h3>
+                      <p className="text-sm text-ink-600">{record.department} • ID: {record.employeeId}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -412,16 +412,16 @@ const AttendancePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar size={16} className="text-gray-400" />
-                    <span className="text-gray-600">Date: {record.date}</span>
+                    <Calendar size={16} className="text-ink-400" />
+                    <span className="text-ink-600">Date: {record.date}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <LogIn size={16} className="text-gray-400" />
-                    <span className="text-gray-600">Check In: {record.checkIn || record.time || 'N/A'}</span>
+                    <LogIn size={16} className="text-ink-400" />
+                    <span className="text-ink-600">Check In: {record.checkIn || record.time || 'N/A'}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <LogOut size={16} className="text-gray-400" />
-                    <span className="text-gray-600">Check Out: {record.checkOut || 'N/A'}</span>
+                    <LogOut size={16} className="text-ink-400" />
+                    <span className="text-ink-600">Check Out: {record.checkOut || 'N/A'}</span>
                   </div>
                 </div>
 
@@ -431,11 +431,11 @@ const AttendancePage = () => {
                     {record.location && (
                       <div className="flex items-center gap-2 text-sm mb-1">
                         <Navigation size={14} className="text-purple-600" />
-                        <span className="text-gray-700">{record.location}</span>
+                        <span className="text-ink-700">{record.location}</span>
                       </div>
                     )}
                     {(record.latitude || record.longitude) && (
-                      <p className="text-xs text-gray-600">Coordinates: {record.latitude}, {record.longitude}</p>
+                      <p className="text-xs text-ink-600">Coordinates: {record.latitude}, {record.longitude}</p>
                     )}
                   </div>
                 )}
@@ -463,11 +463,11 @@ const AttendancePage = () => {
             <div className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Employee *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Employee *</label>
                   <select
                     value={checkInForm.employeeId}
                     onChange={(e) => setCheckInForm({ ...checkInForm, employeeId: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">Select Employee</option>
                     {staff.map(emp => (
@@ -484,7 +484,7 @@ const AttendancePage = () => {
                     onChange={(e) => setCheckInForm({ ...checkInForm, useGPS: e.target.checked })}
                     className="w-4 h-4 text-blue-600 rounded"
                   />
-                  <label htmlFor="useGPS" className="text-sm font-semibold text-gray-700">
+                  <label htmlFor="useGPS" className="text-sm font-semibold text-ink-700">
                     Use GPS Location (Field Staff)
                   </label>
                 </div>
@@ -501,9 +501,9 @@ const AttendancePage = () => {
 
                     {checkInForm.latitude && checkInForm.longitude && (
                       <div className="bg-white rounded-lg p-3">
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Location Captured</p>
-                        <p className="text-xs text-gray-600">Latitude: {checkInForm.latitude}</p>
-                        <p className="text-xs text-gray-600">Longitude: {checkInForm.longitude}</p>
+                        <p className="text-sm font-semibold text-ink-700 mb-2">Location Captured</p>
+                        <p className="text-xs text-ink-600">Latitude: {checkInForm.latitude}</p>
+                        <p className="text-xs text-ink-600">Longitude: {checkInForm.longitude}</p>
                       </div>
                     )}
                   </div>
@@ -519,7 +519,7 @@ const AttendancePage = () => {
                 </button>
                 <button
                   onClick={() => setShowCheckInModal(false)}
-                  className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
                 >
                   Cancel
                 </button>
@@ -547,11 +547,11 @@ const AttendancePage = () => {
             <div className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Employee *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Employee *</label>
                   <select
                     value={checkOutForm.employeeId}
                     onChange={(e) => setCheckOutForm({ ...checkOutForm, employeeId: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">Select Employee</option>
                     {staff.map(emp => (
@@ -568,7 +568,7 @@ const AttendancePage = () => {
                     onChange={(e) => setCheckOutForm({ ...checkOutForm, useGPS: e.target.checked })}
                     className="w-4 h-4 text-orange-600 rounded"
                   />
-                  <label htmlFor="useGPSCheckOut" className="text-sm font-semibold text-gray-700">
+                  <label htmlFor="useGPSCheckOut" className="text-sm font-semibold text-ink-700">
                     Use GPS Location (Field Staff)
                   </label>
                 </div>
@@ -585,9 +585,9 @@ const AttendancePage = () => {
 
                     {checkOutForm.latitude && checkOutForm.longitude && (
                       <div className="bg-white rounded-lg p-3">
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Location Captured</p>
-                        <p className="text-xs text-gray-600">Latitude: {checkOutForm.latitude}</p>
-                        <p className="text-xs text-gray-600">Longitude: {checkOutForm.longitude}</p>
+                        <p className="text-sm font-semibold text-ink-700 mb-2">Location Captured</p>
+                        <p className="text-xs text-ink-600">Latitude: {checkOutForm.latitude}</p>
+                        <p className="text-xs text-ink-600">Longitude: {checkOutForm.longitude}</p>
                       </div>
                     )}
                   </div>
@@ -603,7 +603,7 @@ const AttendancePage = () => {
                 </button>
                 <button
                   onClick={() => setShowCheckOutModal(false)}
-                  className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
                 >
                   Cancel
                 </button>

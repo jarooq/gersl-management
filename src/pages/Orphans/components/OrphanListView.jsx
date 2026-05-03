@@ -5,7 +5,7 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Active': return 'bg-green-100 text-green-700 border-green-200';
-      case 'Inactive': return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Inactive': return 'bg-ink-100 text-ink-700 border-ink-100';
       default: return 'bg-blue-100 text-blue-700 border-blue-200';
     }
   };
@@ -15,12 +15,12 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
       case 'Excellent': return 'text-green-600';
       case 'Good': return 'text-blue-600';
       case 'Average': return 'text-yellow-600';
-      default: return 'text-gray-600';
+      default: return 'text-ink-600';
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow border border-gray-200 p-5">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow border border-ink-100 p-5">
       <div className="flex flex-col md:flex-row gap-4">
         {/* Avatar and Basic Info */}
         <div className="flex items-center gap-4 md:w-1/4">
@@ -28,8 +28,8 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
             {orphan.fullName.charAt(0)}
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-lg text-gray-900 leading-tight">{orphan.fullName}</h3>
-            <p className="text-sm text-gray-500">ID: {orphan.orphanId || `#${orphan.id}`}</p>
+            <h3 className="font-bold text-lg text-ink-900 leading-tight">{orphan.fullName}</h3>
+            <p className="text-sm text-ink-500">ID: {orphan.orphanId || `#${orphan.id}`}</p>
             <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(orphan.status)}`}>
               {orphan.status}
             </span>
@@ -39,49 +39,49 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
         {/* Details Grid */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="flex items-center gap-2 text-sm">
-            <User size={16} className="text-gray-400 flex-shrink-0" />
+            <User size={16} className="text-ink-400 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">Age</p>
-              <p className="font-semibold text-gray-900">{orphan.age} years</p>
+              <p className="text-xs text-ink-500">Age</p>
+              <p className="font-semibold text-ink-900">{orphan.age} years</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <MapPin size={16} className="text-blue-500 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">District</p>
-              <p className="font-semibold text-gray-900">{orphan.district}</p>
+              <p className="text-xs text-ink-500">District</p>
+              <p className="font-semibold text-ink-900">{orphan.district}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <Phone size={16} className="text-green-500 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">Guardian</p>
-              <p className="font-semibold text-gray-900">{orphan.guardianName}</p>
+              <p className="text-xs text-ink-500">Guardian</p>
+              <p className="font-semibold text-ink-900">{orphan.guardianName}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <GraduationCap size={16} className="text-purple-500 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">School</p>
-              <p className="font-semibold text-gray-900">{orphan.schoolName}</p>
+              <p className="text-xs text-ink-500">School</p>
+              <p className="font-semibold text-ink-900">{orphan.schoolName}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <GraduationCap size={16} className="text-indigo-500 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">Grade</p>
-              <p className="font-semibold text-gray-900">{orphan.currentGrade}</p>
+              <p className="text-xs text-ink-500">Grade</p>
+              <p className="font-semibold text-ink-900">{orphan.currentGrade}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <Heart size={16} className="text-red-500 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">Performance</p>
+              <p className="text-xs text-ink-500">Performance</p>
               <p className={`font-semibold ${getPerformanceColor(orphan.academicPerformance)}`}>
                 {orphan.academicPerformance}
               </p>
@@ -91,8 +91,8 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
           <div className="flex items-center gap-2 text-sm md:col-span-2">
             <Calendar size={16} className="text-orange-500 flex-shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">Last Visit</p>
-              <p className="font-semibold text-gray-900">{orphan.lastVisitDate || 'Never'}</p>
+              <p className="text-xs text-ink-500">Last Visit</p>
+              <p className="font-semibold text-ink-900">{orphan.lastVisitDate || 'Never'}</p>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
           </button>
           <button
             onClick={() => onEdit(orphan)}
-            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300"
+            className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200"
             title="Edit"
           >
             <Edit size={18} />

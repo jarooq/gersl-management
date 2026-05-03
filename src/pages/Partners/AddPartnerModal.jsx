@@ -176,13 +176,13 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
           <div className="space-y-6">
             {/* Basic Information */}
             <div>
-              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Building2 size={16} className="text-red-600" />
                 Basic Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Partner/Donor Name *
                   </label>
                   <input
@@ -197,7 +197,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2 flex items-center gap-2">
                     <Image size={16} className="text-red-600" />
                     Partner Logo
                   </label>
@@ -205,7 +205,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                   {/* Logo Preview */}
                   {(logoPreview || formData.logo) && (
                     <div className="mb-3 flex items-center gap-3">
-                      <div className="w-24 h-24 rounded-lg border-2 border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
+                      <div className="w-24 h-24 rounded-lg border-2 border-ink-100 overflow-hidden bg-ink-50 flex items-center justify-center">
                         <img
                           src={logoPreview || formData.logo}
                           alt="Partner logo preview"
@@ -227,14 +227,14 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
 
                   {/* Upload Option */}
                   <div className="mb-3">
-                    <label className="block text-xs font-medium text-gray-600 mb-2">
+                    <label className="block text-xs font-medium text-ink-600 mb-2">
                       Upload Logo
                     </label>
                     <div className="flex items-center gap-2">
                       <label className="flex-1 cursor-pointer">
-                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-red-400 hover:bg-red-50 transition-all">
-                          <Upload size={18} className="text-gray-400" />
-                          <span className="text-sm text-gray-600">Click to upload or drag image</span>
+                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-200 rounded-lg hover:border-red-400 hover:bg-red-50 transition-all">
+                          <Upload size={18} className="text-ink-400" />
+                          <span className="text-sm text-ink-600">Click to upload or drag image</span>
                         </div>
                         <input
                           type="file"
@@ -244,19 +244,19 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                         />
                       </label>
                     </div>
-                    <p className="mt-1 text-xs text-gray-500">Supports: JPG, PNG, GIF (max 2MB)</p>
+                    <p className="mt-1 text-xs text-ink-500">Supports: JPG, PNG, GIF (max 2MB)</p>
                   </div>
 
                   {/* OR Divider */}
                   <div className="flex items-center gap-3 my-3">
                     <div className="flex-1 h-px bg-gray-200"></div>
-                    <span className="text-xs text-gray-400 font-medium">OR</span>
+                    <span className="text-xs text-ink-400 font-medium">OR</span>
                     <div className="flex-1 h-px bg-gray-200"></div>
                   </div>
 
                   {/* URL Option */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-2">
+                    <label className="block text-xs font-medium text-ink-600 mb-2">
                       Enter Logo URL
                     </label>
                     <input
@@ -272,12 +272,12 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                       className="input-modern w-full"
                       placeholder="https://example.com/logo.png"
                     />
-                    <p className="mt-1 text-xs text-gray-500">Enter a direct link to the partner's logo</p>
+                    <p className="mt-1 text-xs text-ink-500">Enter a direct link to the partner's logo</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Category *
                   </label>
                   <select
@@ -294,7 +294,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Type *
                   </label>
                   <select
@@ -311,7 +311,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Status
                   </label>
                   <select
@@ -326,7 +326,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Partnership Start Date
                   </label>
                   <input
@@ -342,13 +342,13 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
 
             {/* Contact Information */}
             <div>
-              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <User size={16} className="text-blue-600" />
                 Contact Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Contact Person *
                   </label>
                   <input
@@ -363,7 +363,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Email *
                   </label>
                   <input
@@ -378,7 +378,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Phone
                   </label>
                   <input
@@ -392,7 +392,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Website
                   </label>
                   <input
@@ -406,7 +406,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Country *
                   </label>
                   <input
@@ -421,7 +421,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Address
                   </label>
                   <input
@@ -438,14 +438,14 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
 
             {/* Focus Areas */}
             <div>
-              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Target size={16} className="text-purple-600" />
                 Focus Areas
               </h3>
 
               {/* Common focus areas */}
               <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Select from common areas
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -458,7 +458,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                       className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                         formData.focusAreas.includes(area)
                           ? 'bg-green-100 text-green-700 border border-green-300'
-                          : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
+                          : 'bg-ink-100 text-ink-700 border border-ink-100 hover:bg-gray-200'
                       }`}
                     >
                       {formData.focusAreas.includes(area) ? '✓ ' : '+ '}{area}
@@ -469,7 +469,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
 
               {/* Custom focus area */}
               <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Or add custom area
                 </label>
                 <div className="flex gap-2">
@@ -499,7 +499,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
               {/* Selected focus areas */}
               {formData.focusAreas.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Selected Focus Areas ({formData.focusAreas.length})
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -525,7 +525,7 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
 
             {/* Additional Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Additional Notes
               </label>
               <textarea
@@ -547,12 +547,12 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
+          <div className="flex gap-3 mt-6 pt-6 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>

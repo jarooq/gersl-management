@@ -145,14 +145,14 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
 
           {/* Task Title */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               Task Title *
             </label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter task title"
               required
             />
@@ -160,13 +160,13 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows={4}
               placeholder="Enter task description"
             />
@@ -175,13 +175,13 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
           {/* Priority and Status */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Priority
               </label>
               <select
                 value={formData.priority}
                 onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -191,13 +191,13 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Status
               </label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="Not Started">Not Started</option>
                 <option value="In Progress">In Progress</option>
@@ -211,43 +211,43 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
           {/* Dates */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Start Date
               </label>
               <input
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Due Date
               </label>
               <input
                 type="date"
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
 
           {/* Assigned Staff Members (Multi-select) */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-semibold text-ink-700 mb-3">
               <Users className="inline mr-2" size={18} />
               Assigned Staff Members (Multiple Selection)
               {!task?.projectId && (
                 <span className="ml-2 text-xs text-amber-600">(Select a project to filter staff)</span>
               )}
               {task?.projectId && (
-                <span className="ml-2 text-xs text-gray-500">(Project Team Members Only)</span>
+                <span className="ml-2 text-xs text-ink-500">(Project Team Members Only)</span>
               )}
             </label>
-            <div className="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto bg-gray-50">
+            <div className="border border-ink-200 rounded-lg p-4 max-h-64 overflow-y-auto bg-ink-50">
               {(() => {
                 // Use either prop-provided or dynamically fetched project team members
                 const effectiveProjectTeamMembers = projectTeamMembers || dynamicProjectTeamMembers;
@@ -275,13 +275,13 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
                             type="checkbox"
                             checked={formData.assignedUsers.includes(userId)}
                             onChange={() => handleAssignedUserToggle(userId)}
-                            className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                            className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-ink-200"
                           />
-                          <span className="ml-3 text-sm font-medium text-gray-900">
+                          <span className="ml-3 text-sm font-medium text-ink-900">
                             {userName}
                           </span>
                           {userRole && (
-                            <span className="ml-auto text-xs text-gray-500">{userRole}</span>
+                            <span className="ml-auto text-xs text-ink-500">{userRole}</span>
                           )}
                         </label>
                       );
@@ -290,7 +290,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
                 ) : (
                   <div className="text-sm text-center py-4">
                     {!effectiveProjectTeamMembers || effectiveProjectTeamMembers.length === 0 ? (
-                      <div className="text-gray-500">
+                      <div className="text-ink-500">
                         <p className="font-semibold">No project team members</p>
                         <p className="text-xs mt-1">This project has no assigned team members</p>
                       </div>
@@ -308,7 +308,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
 
           {/* Progress */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               Progress: {formData.progress}%
             </label>
             <input
@@ -328,11 +328,11 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
+          <div className="flex gap-3 pt-4 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-all"
+              className="flex-1 px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition-all"
             >
               Cancel
             </button>
@@ -341,7 +341,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               disabled={loading}
               className={`flex-1 px-6 py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
                 loading
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  ? 'bg-gray-300 text-ink-500 cursor-not-allowed'
                   : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white hover:from-gray-700 hover:to-gray-900'
               }`}
             >

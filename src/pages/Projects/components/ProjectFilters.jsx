@@ -18,13 +18,13 @@ const ProjectFilters = ({
         {/* Search */}
         <div className="md:col-span-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
             <input
               type="text"
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
         </div>
@@ -34,7 +34,7 @@ const ProjectFilters = ({
           <select
             value={filterProgrammeArea}
             onChange={(e) => setFilterProgrammeArea(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="All">All Programme Areas</option>
             {programmeAreas.map(area => (
@@ -48,7 +48,7 @@ const ProjectFilters = ({
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="All">All Status</option>
             <option value="Planning">Planning</option>
@@ -66,7 +66,7 @@ const ProjectFilters = ({
           className={`p-2 rounded-lg transition ${
             viewMode === 'grid'
               ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
           }`}
         >
           <Grid size={20} />
@@ -76,7 +76,7 @@ const ProjectFilters = ({
           className={`p-2 rounded-lg transition ${
             viewMode === 'list'
               ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
           }`}
         >
           <List size={20} />

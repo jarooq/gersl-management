@@ -138,7 +138,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
           <div className="space-y-6">
             {/* Project Name */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+              <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                 <Briefcase size={16} className="text-blue-600" />
                 Project Name *
               </label>
@@ -148,7 +148,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 placeholder="Enter project name"
               />
             </div>
@@ -156,7 +156,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
             {/* Programme Area & Status */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Target size={16} className="text-purple-600" />
                   Programme Area *
                 </label>
@@ -165,7 +165,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.programmeArea}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 >
                   <option value="">Select Programme Area</option>
                   {programmeAreas.map(area => (
@@ -175,7 +175,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Briefcase size={16} className="text-indigo-600" />
                   Department *
                 </label>
@@ -185,7 +185,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   disabled={loadingDepartments}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none disabled:bg-ink-100 disabled:cursor-not-allowed"
                 >
                   <option value="">
                     {loadingDepartments ? 'Loading departments...' : 'Select Department'}
@@ -200,7 +200,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
             {/* Project Status & Progress */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Target size={16} className="text-green-600" />
                   Project Status *
                 </label>
@@ -209,7 +209,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.status}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 >
                   <option value="Planning">Planning</option>
                   <option value="Implementation">Implementation</option>
@@ -219,7 +219,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Target size={16} className="text-blue-600" />
                   Progress (%) *
                 </label>
@@ -231,7 +231,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   min="0"
                   max="100"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   placeholder="0-100"
                 />
               </div>
@@ -240,7 +240,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
             {/* Budget & Spent */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <DollarSign size={16} className="text-green-600" />
                   Total Budget (LKR) *
                 </label>
@@ -252,13 +252,13 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   required
                   min="0"
                   step="1000"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   placeholder="e.g., 100000"
                 />
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <DollarSign size={16} className="text-orange-600" />
                   Amount Spent (LKR)
                 </label>
@@ -270,11 +270,11 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   min="0"
                   max={formData.budget}
                   step="1000"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   placeholder="e.g., 50000"
                 />
                 {formData.budget && formData.spent && (
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-ink-600 mt-2">
                     Budget utilized: <span className="font-bold">{budgetUsed}%</span>
                   </p>
                 )}
@@ -284,7 +284,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
             {/* Target Beneficiaries & Actual Beneficiaries */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Users size={16} className="text-blue-600" />
                   Target Beneficiaries *
                 </label>
@@ -295,13 +295,13 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   min="0"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   placeholder="e.g., 500"
                 />
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Users size={16} className="text-purple-600" />
                   Current Beneficiaries
                 </label>
@@ -312,7 +312,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   min="0"
                   max={formData.targetBeneficiaries}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   placeholder="e.g., 250"
                 />
               </div>
@@ -320,7 +320,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Progress */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+              <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                 <Target size={16} className="text-blue-600" />
                 Project Progress (%)
               </label>
@@ -331,7 +331,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 onChange={handleChange}
                 min="0"
                 max="100"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 placeholder="0-100"
               />
               <div className="mt-3 w-full bg-gray-200 rounded-full h-2.5">
@@ -344,7 +344,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Donor */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+              <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                 <Heart size={16} className="text-red-600" />
                 Donor/Funding Partner *
               </label>
@@ -354,7 +354,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 value={formData.donor}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 placeholder="Enter donor name"
               />
             </div>
@@ -362,7 +362,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
             {/* Start Date & End Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Calendar size={16} className="text-blue-600" />
                   Start Date *
                 </label>
@@ -372,12 +372,12 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.startDate}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 />
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Calendar size={16} className="text-orange-600" />
                   End Date *
                 </label>
@@ -388,14 +388,14 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   min={formData.startDate}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 />
               </div>
             </div>
 
             {/* Location */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+              <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                 <MapPin size={16} className="text-red-600" />
                 Project Location *
               </label>
@@ -405,15 +405,15 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 value={formData.location}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                 placeholder="Enter location/district"
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <Briefcase size={16} className="text-gray-600" />
+              <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
+                <Briefcase size={16} className="text-ink-600" />
                 Project Description *
               </label>
               <textarea
@@ -422,7 +422,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 onChange={handleChange}
                 required
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
                 placeholder="Describe the project objectives and activities"
               />
             </div>
@@ -430,12 +430,12 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
         </form>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex-shrink-0">
+        <div className="bg-ink-50 px-6 py-4 border-t border-ink-100 flex-shrink-0">
           <div className="flex gap-3">
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
             >
               Cancel
             </button>

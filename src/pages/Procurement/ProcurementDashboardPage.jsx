@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProcurementAPI } from '../../services/api';
 
-const Tile = ({ label, value, sub, color = 'text-gray-900' }) => (
-  <div className="bg-white border border-gray-200 rounded-md p-4">
-    <div className="text-xs uppercase text-gray-500">{label}</div>
+const Tile = ({ label, value, sub, color = 'text-ink-900' }) => (
+  <div className="bg-white border border-ink-100 rounded-md p-4">
+    <div className="text-xs uppercase text-ink-500">{label}</div>
     <div className={`text-2xl font-semibold mt-1 ${color}`}>{value ?? '—'}</div>
-    {sub && <div className="text-xs text-gray-500 mt-1">{sub}</div>}
+    {sub && <div className="text-xs text-ink-500 mt-1">{sub}</div>}
   </div>
 );
 
@@ -34,7 +34,7 @@ export default function ProcurementDashboardPage() {
     return () => { cancelled = true; };
   }, []);
 
-  if (loading) return <div className="p-6 text-sm text-gray-500">Loading…</div>;
+  if (loading) return <div className="p-6 text-sm text-ink-500">Loading…</div>;
   if (error) return <div className="p-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">{error}</div>;
   if (!data) return null;
 
@@ -44,8 +44,8 @@ export default function ProcurementDashboardPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-gray-900">Procurement dashboard</h1>
-        <p className="text-sm text-gray-500">Activity since {new Date(data.from).toLocaleDateString()}.</p>
+        <h1 className="text-h1 text-ink-900">Procurement dashboard</h1>
+        <p className="text-sm text-ink-500">Activity since {new Date(data.from).toLocaleDateString()}.</p>
       </header>
 
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -56,19 +56,19 @@ export default function ProcurementDashboardPage() {
       </section>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white border border-gray-200 rounded-md">
-          <div className="px-4 py-3 border-b border-gray-200 font-semibold text-sm">Top vendors by spend</div>
+        <div className="bg-white border border-ink-100 rounded-md">
+          <div className="px-4 py-3 border-b border-ink-100 font-semibold text-sm">Top vendors by spend</div>
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-ink-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs uppercase text-gray-500">Vendor</th>
-                <th className="px-3 py-2 text-right text-xs uppercase text-gray-500">POs</th>
-                <th className="px-3 py-2 text-right text-xs uppercase text-gray-500">Spend</th>
+                <th className="px-3 py-2 text-left text-xs uppercase text-ink-500">Vendor</th>
+                <th className="px-3 py-2 text-right text-xs uppercase text-ink-500">POs</th>
+                <th className="px-3 py-2 text-right text-xs uppercase text-ink-500">Spend</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-ink-100">
               {(data.spendByVendor || []).length === 0 && (
-                <tr><td colSpan={3} className="p-3 text-center text-gray-500 text-xs">No POs in window.</td></tr>
+                <tr><td colSpan={3} className="p-3 text-center text-ink-500 text-xs">No POs in window.</td></tr>
               )}
               {(data.spendByVendor || []).map(r => (
                 <tr key={r.vendorId}>
@@ -81,19 +81,19 @@ export default function ProcurementDashboardPage() {
           </table>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-md">
-          <div className="px-4 py-3 border-b border-gray-200 font-semibold text-sm">Spend by category</div>
+        <div className="bg-white border border-ink-100 rounded-md">
+          <div className="px-4 py-3 border-b border-ink-100 font-semibold text-sm">Spend by category</div>
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-ink-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs uppercase text-gray-500">Category</th>
-                <th className="px-3 py-2 text-right text-xs uppercase text-gray-500">POs</th>
-                <th className="px-3 py-2 text-right text-xs uppercase text-gray-500">Spend</th>
+                <th className="px-3 py-2 text-left text-xs uppercase text-ink-500">Category</th>
+                <th className="px-3 py-2 text-right text-xs uppercase text-ink-500">POs</th>
+                <th className="px-3 py-2 text-right text-xs uppercase text-ink-500">Spend</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-ink-100">
               {(data.spendByCategory || []).length === 0 && (
-                <tr><td colSpan={3} className="p-3 text-center text-gray-500 text-xs">No data.</td></tr>
+                <tr><td colSpan={3} className="p-3 text-center text-ink-500 text-xs">No data.</td></tr>
               )}
               {(data.spendByCategory || []).map(r => (
                 <tr key={r.category}>
@@ -126,13 +126,13 @@ export default function ProcurementDashboardPage() {
 function CounterPanel({ title, map, extra }) {
   const entries = Object.entries(map || {});
   return (
-    <div className="bg-white border border-gray-200 rounded-md p-4">
-      <div className="text-sm font-semibold text-gray-900 mb-2">{title}</div>
-      {entries.length === 0 && <div className="text-xs text-gray-500">No data</div>}
+    <div className="bg-white border border-ink-100 rounded-md p-4">
+      <div className="text-sm font-semibold text-ink-900 mb-2">{title}</div>
+      {entries.length === 0 && <div className="text-xs text-ink-500">No data</div>}
       <ul className="text-sm space-y-1">
         {entries.map(([status, n]) => (
           <li key={status} className="flex items-center justify-between">
-            <span className="text-gray-700">{status}</span>
+            <span className="text-ink-700">{status}</span>
             <span className="font-medium">{n}</span>
           </li>
         ))}

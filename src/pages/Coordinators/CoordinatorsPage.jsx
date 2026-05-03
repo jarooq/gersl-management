@@ -128,16 +128,16 @@ const CoordinatorsPage = () => {
   const totalVisitsThisMonth = coordinators.reduce((sum, c) => sum + (parseInt(c.visits_last_30_days) || 0), 0);
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <UserCog className="w-5 h-5 animate-pulse" />
+                <UserCog className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Coordinator Management</h1>
@@ -160,25 +160,25 @@ const CoordinatorsPage = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Coordinators */}
-        <div className="stat-card group cursor-pointer animate-slide-up">
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Coordinators</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Coordinators</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{totalCoordinators}</h3>
+                <h3 className="text-h1 text-ink-900">{totalCoordinators}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">{activeCoordinators} active</p>
+              <p className="text-xs text-ink-500 mt-1">{activeCoordinators} active</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Users className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -186,25 +186,25 @@ const CoordinatorsPage = () => {
         </div>
 
         {/* Active Coordinators */}
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Active Coordinators</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Active Coordinators</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{activeCoordinators}</h3>
+                <h3 className="text-h1 text-ink-900">{activeCoordinators}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">{((activeCoordinators / totalCoordinators) * 100 || 0).toFixed(0)}% active rate</p>
+              <p className="text-xs text-ink-500 mt-1">{((activeCoordinators / totalCoordinators) * 100 || 0).toFixed(0)}% active rate</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <UserCheck className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -212,25 +212,25 @@ const CoordinatorsPage = () => {
         </div>
 
         {/* Orphans Assigned */}
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Orphans Assigned</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Orphans Assigned</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{totalOrphansAssigned}</h3>
+                <h3 className="text-h1 text-ink-900">{totalOrphansAssigned}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Total coverage</p>
+              <p className="text-xs text-ink-500 mt-1">Total coverage</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-violet-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Users className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -238,25 +238,25 @@ const CoordinatorsPage = () => {
         </div>
 
         {/* Visits (Last 30 Days) */}
-        <div className="stat-card group cursor-pointer animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Visits (Last 30 Days)</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Visits (Last 30 Days)</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{totalVisitsThisMonth}</h3>
+                <h3 className="text-h1 text-ink-900">{totalVisitsThisMonth}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Field activities</p>
+              <p className="text-xs text-ink-500 mt-1">Field activities</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-500 to-amber-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Calendar className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -271,13 +271,13 @@ const CoordinatorsPage = () => {
           <div className="flex flex-col md:flex-row gap-3">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
               <input
                 type="text"
                 placeholder="Search by name, position, district, or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full pl-10 pr-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
             </div>
 
@@ -288,7 +288,7 @@ const CoordinatorsPage = () => {
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
                 filteredCoordinators.length > 0
                   ? 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-gray-300 text-ink-500 cursor-not-allowed'
               }`}
             >
               <Download size={18} />
@@ -300,11 +300,11 @@ const CoordinatorsPage = () => {
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             {/* Status Filter */}
             <div className="flex items-center gap-2">
-              <Filter className="text-gray-400" size={20} />
+              <Filter className="text-ink-400" size={20} />
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-sm"
+                className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-sm"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active Only</option>
@@ -314,11 +314,11 @@ const CoordinatorsPage = () => {
 
             {/* Sort By */}
             <div className="flex items-center gap-2">
-              <ArrowUpDown className="text-gray-400" size={20} />
+              <ArrowUpDown className="text-ink-400" size={20} />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-sm"
+                className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-sm"
               >
                 <option value="name">Sort by Name</option>
                 <option value="orphans">Sort by Orphans</option>
@@ -330,7 +330,7 @@ const CoordinatorsPage = () => {
             {/* Sort Order Toggle */}
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 border border-ink-200 rounded-lg hover:bg-ink-50 transition-colors text-sm font-medium"
               title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
             >
               <ArrowUpDown size={16} />
@@ -338,7 +338,7 @@ const CoordinatorsPage = () => {
             </button>
 
             {/* Results Count */}
-            <div className="ml-auto text-sm text-gray-600 font-medium">
+            <div className="ml-auto text-sm text-ink-600 font-medium">
               Showing {filteredCoordinators.length} of {coordinators.length} coordinators
             </div>
           </div>
@@ -379,15 +379,15 @@ const CoordinatorsPage = () => {
                       {coordinator.name?.charAt(0) || 'C'}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-lg text-gray-900 leading-tight">{coordinator.name}</h3>
-                      <p className="text-sm text-gray-500 font-medium">{coordinator.position}</p>
+                      <h3 className="font-bold text-lg text-ink-900 leading-tight">{coordinator.name}</h3>
+                      <p className="text-sm text-ink-500 font-medium">{coordinator.position}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={`px-3 py-1.5 rounded-full text-xs font-bold border flex-shrink-0 ${
                       coordinator.is_active_coordinator
                         ? 'bg-green-100 text-green-700 border-green-200'
-                        : 'bg-gray-100 text-gray-700 border-gray-200'
+                        : 'bg-ink-100 text-ink-700 border-ink-100'
                     }`}>
                       {coordinator.is_active_coordinator ? 'Active' : 'Inactive'}
                     </span>
@@ -398,10 +398,10 @@ const CoordinatorsPage = () => {
                           e.stopPropagation();
                           setShowQuickActions(showQuickActions === coordinator.id ? null : coordinator.id);
                         }}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-ink-100 rounded-lg transition-colors"
                         title="Quick Actions"
                       >
-                        <MoreVertical size={18} className="text-gray-600" />
+                        <MoreVertical size={18} className="text-ink-600" />
                       </button>
 
                       {showQuickActions === coordinator.id && (
@@ -415,14 +415,14 @@ const CoordinatorsPage = () => {
                             }}
                           />
                           {/* Dropdown Menu */}
-                          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-20 animate-fade-in">
+                          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-ink-100 py-2 z-20">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 navigate(`/admin/coordinators/${coordinator.id}`);
                                 setShowQuickActions(null);
                               }}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-ink-50 flex items-center gap-3 text-ink-700"
                             >
                               <Eye size={16} className="text-blue-600" />
                               View Details
@@ -433,7 +433,7 @@ const CoordinatorsPage = () => {
                                 navigate(`/admin/coordinators/${coordinator.id}/edit`);
                                 setShowQuickActions(null);
                               }}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-ink-50 flex items-center gap-3 text-ink-700"
                             >
                               <Edit size={16} className="text-green-600" />
                               Edit Coordinator
@@ -444,7 +444,7 @@ const CoordinatorsPage = () => {
                                 navigate(`/admin/coordinators/${coordinator.id}/performance`);
                                 setShowQuickActions(null);
                               }}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-ink-50 flex items-center gap-3 text-ink-700"
                             >
                               <BarChart3 size={16} className="text-purple-600" />
                               View Performance
@@ -456,12 +456,12 @@ const CoordinatorsPage = () => {
                                 navigator.clipboard.writeText(report);
                                 setShowQuickActions(null);
                               }}
-                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-ink-50 flex items-center gap-3 text-ink-700"
                             >
                               <FileText size={16} className="text-orange-600" />
                               Copy Report
                             </button>
-                            <div className="border-t border-gray-200 my-1"></div>
+                            <div className="border-t border-ink-100 my-1"></div>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -485,19 +485,19 @@ const CoordinatorsPage = () => {
 
                 {/* Contact Info */}
                 <div className="space-y-3 mb-5">
-                  <div className="flex items-center gap-3 text-sm text-gray-700">
+                  <div className="flex items-center gap-3 text-sm text-ink-700">
                     <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                       <MapPin size={16} className="text-blue-500" />
                     </div>
                     <span className="font-medium truncate">{coordinator.address || coordinator.district || 'Not specified'}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-gray-700">
+                  <div className="flex items-center gap-3 text-sm text-ink-700">
                     <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Mail size={16} className="text-green-500" />
                     </div>
                     <span className="font-medium truncate">{coordinator.email}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-gray-700">
+                  <div className="flex items-center gap-3 text-sm text-ink-700">
                     <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Phone size={16} className="text-purple-500" />
                     </div>
@@ -511,27 +511,27 @@ const CoordinatorsPage = () => {
                     <p className="text-2xl font-bold text-blue-600">
                       {coordinator.orphans_assigned || 0}
                     </p>
-                    <p className="text-xs text-gray-600 mt-1">Orphans</p>
+                    <p className="text-xs text-ink-600 mt-1">Orphans</p>
                   </div>
                   <div className="text-center bg-green-50 rounded-lg p-3">
                     <p className="text-2xl font-bold text-green-600">
                       {coordinator.visits_last_30_days || 0}
                     </p>
-                    <p className="text-xs text-gray-600 mt-1">Visits</p>
+                    <p className="text-xs text-ink-600 mt-1">Visits</p>
                   </div>
                   <div className="text-center bg-orange-50 rounded-lg p-3">
                     <p className="text-2xl font-bold text-orange-600">
                       {coordinator.pending_tasks || 0}
                     </p>
-                    <p className="text-xs text-gray-600 mt-1">Tasks</p>
+                    <p className="text-xs text-ink-600 mt-1">Tasks</p>
                   </div>
                 </div>
 
                 {/* Workload Progress */}
                 <div className="mb-4">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs font-medium text-gray-600">Workload Capacity</span>
-                    <span className="text-xs font-semibold text-gray-700">
+                    <span className="text-xs font-medium text-ink-600">Workload Capacity</span>
+                    <span className="text-xs font-semibold text-ink-700">
                       {coordinator.current_workload || 0} / {coordinator.max_orphan_capacity || 50}
                     </span>
                   </div>
@@ -555,7 +555,7 @@ const CoordinatorsPage = () => {
                 </div>
 
                 {/* Action Button */}
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-ink-100">
                   <button
                     onClick={() => navigate(`/admin/coordinators/${coordinator.id}`)}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
@@ -573,9 +573,9 @@ const CoordinatorsPage = () => {
       {/* Empty State */}
       {!loading && filteredCoordinators.length === 0 && (
         <div className="text-center py-12">
-          <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No Coordinators Found</h3>
-          <p className="text-gray-500">
+          <Users className="w-16 h-16 text-ink-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-ink-700 mb-2">No Coordinators Found</h3>
+          <p className="text-ink-500">
             {searchQuery ? 'Try adjusting your search criteria' : 'No coordinators available'}
           </p>
         </div>

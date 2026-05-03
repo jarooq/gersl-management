@@ -104,7 +104,7 @@ const PartnersPage = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Active': return 'bg-green-100 text-green-700 border-green-200';
-      case 'Inactive': return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Inactive': return 'bg-ink-100 text-ink-700 border-ink-100';
       default: return 'bg-blue-100 text-blue-700 border-blue-200';
     }
   };
@@ -115,7 +115,7 @@ const PartnersPage = () => {
       case 'Strategic Partner': return 'text-blue-600';
       case 'Implementing Partner': return 'text-green-600';
       case 'Technology Partner': return 'text-orange-600';
-      default: return 'text-gray-600';
+      default: return 'text-ink-600';
     }
   };
 
@@ -125,7 +125,7 @@ const PartnersPage = () => {
       case 'In-Kind': return 'bg-blue-50 text-blue-600 border-blue-200';
       case 'Partnership': return 'bg-purple-50 text-purple-600 border-purple-200';
       case 'Technology Grant': return 'bg-orange-50 text-orange-600 border-orange-200';
-      default: return 'bg-gray-50 text-gray-600 border-gray-200';
+      default: return 'bg-ink-50 text-ink-600 border-ink-100';
     }
   };
 
@@ -170,7 +170,7 @@ const PartnersPage = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading partners...</p>
+          <p className="text-ink-600 font-medium">Loading partners...</p>
         </div>
       </div>
     );
@@ -184,8 +184,8 @@ const PartnersPage = () => {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <HeartHandshake className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Partners</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h2 className="text-h1 text-ink-900 mb-2">Unable to Load Partners</h2>
+          <p className="text-ink-600 mb-4">{error}</p>
           <button
             onClick={() => fetchPartners()}
             className="px-6 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
@@ -198,16 +198,16 @@ const PartnersPage = () => {
   }
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Red Gradient Hero Banner */}
       <div className="bg-gradient-to-r from-red-500 via-red-600 to-rose-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <HeartHandshake className="w-5 h-5 animate-pulse" />
+                <HeartHandshake className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Partners & Donors</h1>
@@ -230,22 +230,22 @@ const PartnersPage = () => {
         {statItems.map((stat, index) => (
           <div
             key={index}
-            className="stat-card group cursor-pointer animate-slide-up"
+            className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
-                <p className="text-xs font-semibold text-gray-600 mb-2">{stat.title}</p>
-                <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
+                <p className="text-xs font-semibold text-ink-600 mb-2">{stat.title}</p>
+                <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
               </div>
               <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-xs font-medium text-gray-600">{stat.change}</span>
-              <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+            <div className="flex items-center justify-between pt-3 border-t border-ink-100">
+              <span className="text-xs font-medium text-ink-600">{stat.change}</span>
+              <ArrowRight size={16} className="text-ink-400 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
         ))}
@@ -254,30 +254,30 @@ const PartnersPage = () => {
       {/* Charts and Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Contribution by Partner Type Chart */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <BarChart3 className="text-green-600" size={18} />
                 Contributions by Partner Type
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Funding sources breakdown</p>
+              <p className="text-xs text-ink-600 mt-1">Funding sources breakdown</p>
             </div>
             <div className="text-right">
               <div className="text-xl font-bold text-green-600">
                 LKR {(stats.totalContributions / 1000000).toFixed(1)}M
               </div>
-              <div className="text-xs text-gray-600">Total</div>
+              <div className="text-xs text-ink-600">Total</div>
             </div>
           </div>
           <div className="space-y-3">
             {[].map((item, index) => (
               <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-gray-700">{item.type}</span>
-                  <span className="text-xs font-bold text-gray-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
+                  <span className="text-xs font-medium text-ink-700">{item.type}</span>
+                  <span className="text-xs font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                   <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
                     style={{ width: `${item.percent}%` }}></div>
                 </div>
@@ -287,26 +287,26 @@ const PartnersPage = () => {
         </div>
 
         {/* Partner Status Distribution */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <PieChart className="text-blue-600" size={18} />
                 Partner Status Overview
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Partnership health</p>
+              <p className="text-xs text-ink-600 mt-1">Partnership health</p>
             </div>
           </div>
           <div className="space-y-4">
             {[].map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-ink-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                  <span className="text-sm font-medium text-gray-700">{item.status}</span>
+                  <span className="text-sm font-medium text-ink-700">{item.status}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-sm font-bold text-gray-900">{item.count} partners</span>
-                  <span className="text-xs text-gray-600 bg-white px-2 py-1 rounded">
+                  <span className="text-sm font-bold text-ink-900">{item.count} partners</span>
+                  <span className="text-xs text-ink-600 bg-white px-2 py-1 rounded">
                     {Math.round((item.count / stats.totalPartners) * 100)}%
                   </span>
                 </div>
@@ -316,27 +316,27 @@ const PartnersPage = () => {
         </div>
 
         {/* Monthly Contributions Trend */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <LineChart className="text-purple-600" size={18} />
                 Contribution Trend
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Last 6 months (millions)</p>
+              <p className="text-xs text-ink-600 mt-1">Last 6 months (millions)</p>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-gray-600 flex items-center gap-1">
+              <div className="text-xl font-bold text-ink-600 flex items-center gap-1">
                 <TrendingUp size={18} />
                 0%
               </div>
-              <div className="text-xs text-gray-600">Growth</div>
+              <div className="text-xs text-ink-600">Growth</div>
             </div>
           </div>
           <div className="space-y-2">
             {[].map((item, index) => (
               <div key={index} className="flex items-center gap-3">
-                <span className="text-xs font-medium text-gray-600 w-20">{item.month}</span>
+                <span className="text-xs font-medium text-ink-600 w-20">{item.month}</span>
                 <div className="flex-1">
                   <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-8 rounded transition-all duration-300 flex items-center justify-end pr-2"
                     style={{ width: `${(item.amount / 20) * 100}%` }}>
@@ -349,27 +349,27 @@ const PartnersPage = () => {
         </div>
 
         {/* Partnership Performance Metrics */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <Heart className="text-red-600" size={18} />
                 Partnership Health
               </h3>
-              <p className="text-xs text-gray-600 mt-1">Key indicators</p>
+              <p className="text-xs text-ink-600 mt-1">Key indicators</p>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-gray-600">No Data</div>
-              <div className="text-xs text-gray-600">Overall</div>
+              <div className="text-xl font-bold text-ink-600">No Data</div>
+              <div className="text-xs text-ink-600">Overall</div>
             </div>
           </div>
           <div className="space-y-4">
             {[].map((item, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-gray-700">{item.metric}</span>
+                  <span className="text-xs font-medium text-ink-700">{item.metric}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-900">{item.value}%</span>
+                    <span className="text-xs font-bold text-ink-900">{item.value}%</span>
                     {item.status === 'above' ? (
                       <TrendingUp className="text-green-600" size={14} />
                     ) : (
@@ -377,7 +377,7 @@ const PartnersPage = () => {
                     )}
                   </div>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                   <div
                     className={`h-1.5 rounded-full transition-all duration-500 ${
                       item.status === 'above'
@@ -388,7 +388,7 @@ const PartnersPage = () => {
                   ></div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-gray-500">Target: {item.target}%</span>
+                  <span className="text-xs text-ink-500">Target: {item.target}%</span>
                   <span className={`text-xs font-medium ${
                     item.status === 'above' ? 'text-green-600' : 'text-orange-600'
                   }`}>
@@ -402,8 +402,8 @@ const PartnersPage = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-xl shadow-lg border border-ink-100">
+        <div className="border-b border-ink-100">
           <div className="flex gap-1 p-2">
             {[
               { id: 'overview', label: 'Partner Directory', icon: Building2 },
@@ -416,7 +416,7 @@ const PartnersPage = () => {
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
                   activeTab === tab.id
                     ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white shadow-md'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
                 <tab.icon size={18} />
@@ -432,7 +432,7 @@ const PartnersPage = () => {
             {/* Search and Filter Bar */}
             <div className="mb-6 flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
                 <input
                   type="text"
                   placeholder="Search partners by name, code, or contact person..."
@@ -470,7 +470,7 @@ const PartnersPage = () => {
               {filteredPartners.map((partner, index) => (
                 <div
                   key={partner.id}
-                  className="card-modern group p-5 animate-slide-up"
+                  className="card-modern group p-5"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex justify-between items-start mb-4">
@@ -479,8 +479,8 @@ const PartnersPage = () => {
                         {partner.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-base text-gray-900 leading-tight truncate">{partner.name}</h3>
-                        <p className="text-xs text-gray-500 font-medium">{partner.partnerCode}</p>
+                        <h3 className="font-bold text-base text-ink-900 leading-tight truncate">{partner.name}</h3>
+                        <p className="text-xs text-ink-500 font-medium">{partner.partnerCode}</p>
                       </div>
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(partner.status)} flex-shrink-0`}>
@@ -495,19 +495,19 @@ const PartnersPage = () => {
                       </div>
                       <span className={`font-semibold ${getCategoryColor(partner.category)}`}>{partner.category}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                    <div className="flex items-center gap-2 text-xs text-ink-700">
                       <div className="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Briefcase size={12} className="text-blue-500" />
                       </div>
                       <span className="font-medium truncate">{partner.type}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                    <div className="flex items-center gap-2 text-xs text-ink-700">
                       <div className="w-6 h-6 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Mail size={12} className="text-green-500" />
                       </div>
                       <span className="font-medium truncate">{partner.contactPerson}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-700">
+                    <div className="flex items-center gap-2 text-xs text-ink-700">
                       <div className="w-6 h-6 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Globe size={12} className="text-orange-500" />
                       </div>
@@ -531,7 +531,7 @@ const PartnersPage = () => {
 
                     return focusAreasArray && focusAreasArray.length > 0 && (
                       <div className="mb-4">
-                        <p className="text-xs font-semibold text-gray-600 mb-2">Focus Areas</p>
+                        <p className="text-xs font-semibold text-ink-600 mb-2">Focus Areas</p>
                         <div className="flex flex-wrap gap-1">
                           {focusAreasArray.slice(0, 3).map((area, idx) => (
                             <span key={idx} className="px-2 py-1 bg-red-50 text-red-600 rounded-md text-xs font-medium border border-red-100">
@@ -544,15 +544,15 @@ const PartnersPage = () => {
                   })()}
 
                   {/* Stats */}
-                  <div className="pt-4 border-t border-gray-200">
+                  <div className="pt-4 border-t border-ink-100">
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
-                        <p className="text-xs text-gray-500 mb-1">Total Contributions</p>
-                        <p className="font-bold text-sm text-gray-900">LKR {((partner.totalContributions || 0) / 1000000).toFixed(1)}M</p>
+                        <p className="text-xs text-ink-500 mb-1">Total Contributions</p>
+                        <p className="font-bold text-sm text-ink-900">LKR {((partner.totalContributions || 0) / 1000000).toFixed(1)}M</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 mb-1">Last Contribution</p>
-                        <p className="font-bold text-sm text-gray-900">
+                        <p className="text-xs text-ink-500 mb-1">Last Contribution</p>
+                        <p className="font-bold text-sm text-ink-900">
                           {partner.lastContribution ? new Date(partner.lastContribution).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : 'N/A'}
                         </p>
                       </div>
@@ -567,7 +567,7 @@ const PartnersPage = () => {
                       </button>
                       <button
                         onClick={() => handleEditPartner(partner)}
-                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95"
+                        className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
                       >
                         <Edit size={16} />
                       </button>
@@ -586,8 +586,8 @@ const PartnersPage = () => {
             {filteredPartners.length === 0 && (
               <div className="text-center py-12">
                 <Building2 className="mx-auto text-gray-300 mb-4" size={64} />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No partners found</h3>
-                <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+                <h3 className="text-xl font-semibold text-ink-900 mb-2">No partners found</h3>
+                <p className="text-ink-600">Try adjusting your search or filter criteria</p>
               </div>
             )}
           </div>
@@ -597,7 +597,7 @@ const PartnersPage = () => {
         {activeTab === 'contributions' && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold text-gray-900">All Contributions</h3>
+              <h3 className="text-lg font-bold text-ink-900">All Contributions</h3>
               <button
                 onClick={() => setShowAddContributionModal(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 font-semibold shadow-lg hover:shadow-xl transition-all"
@@ -609,34 +609,34 @@ const PartnersPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Date</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Partner</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Amount</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Type</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Purpose</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Receipt</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Status</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600">Actions</th>
+                  <tr className="border-b border-ink-100">
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Date</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Partner</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Amount</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Type</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Purpose</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Receipt</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Status</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-ink-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {contributions.sort((a, b) => new Date(b.date) - new Date(a.date)).map((contribution, index) => (
                     <tr
                       key={contribution.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors animate-slide-up"
+                      className="border-b border-ink-100 hover:bg-ink-50 transition-colors"
                       style={{ animationDelay: `${index * 0.03}s` }}
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
-                          <Calendar size={14} className="text-gray-400" />
-                          <span className="text-sm font-medium text-gray-900">
+                          <Calendar size={14} className="text-ink-400" />
+                          <span className="text-sm font-medium text-ink-900">
                             {new Date(contribution.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                           </span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-sm font-semibold text-gray-900">{contribution.partnerName}</span>
+                        <span className="text-sm font-semibold text-ink-900">{contribution.partnerName}</span>
                       </td>
                       <td className="py-3 px-4">
                         <span className="text-sm font-bold text-green-600">
@@ -649,10 +649,10 @@ const PartnersPage = () => {
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-sm text-gray-700 line-clamp-1">{contribution.purpose}</span>
+                        <span className="text-sm text-ink-700 line-clamp-1">{contribution.purpose}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-xs font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        <span className="text-xs font-mono text-ink-600 bg-ink-100 px-2 py-1 rounded">
                           {contribution.receiptNumber}
                         </span>
                       </td>
@@ -664,7 +664,7 @@ const PartnersPage = () => {
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex gap-1">
-                          <button className="p-1.5 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-all">
+                          <button className="p-1.5 bg-ink-100 text-ink-600 rounded hover:bg-gray-200 transition-all">
                             <Eye size={14} />
                           </button>
                           <button
@@ -687,7 +687,7 @@ const PartnersPage = () => {
         {activeTab === 'communications' && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Communication Log</h3>
+              <h3 className="text-lg font-bold text-ink-900">Communication Log</h3>
               <button
                 onClick={() => setShowAddCommunicationModal(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-700 text-white rounded-lg hover:from-blue-700 hover:to-cyan-800 font-semibold shadow-lg hover:shadow-xl transition-all"
@@ -700,7 +700,7 @@ const PartnersPage = () => {
               {communications.sort((a, b) => new Date(b.date) - new Date(a.date)).map((comm, index) => (
                 <div
                   key={comm.id}
-                  className="card-modern p-4 animate-slide-up"
+                  className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -719,9 +719,9 @@ const PartnersPage = () => {
                         } />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-gray-900 mb-1">{comm.subject}</h4>
-                        <p className="text-sm text-gray-600 mb-2">{comm.partnerName}</p>
-                        <p className="text-sm text-gray-700">{comm.summary}</p>
+                        <h4 className="font-bold text-ink-900 mb-1">{comm.subject}</h4>
+                        <p className="text-sm text-ink-600 mb-2">{comm.partnerName}</p>
+                        <p className="text-sm text-ink-700">{comm.summary}</p>
                       </div>
                     </div>
                     <button
@@ -731,9 +731,9 @@ const PartnersPage = () => {
                       <Trash2 size={16} />
                     </button>
                   </div>
-                  <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
-                      <Calendar size={14} className="text-gray-400" />
+                  <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-ink-100">
+                    <div className="flex items-center gap-2 text-xs text-ink-600">
+                      <Calendar size={14} className="text-ink-400" />
                       <span className="font-medium">
                         {new Date(comm.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
@@ -746,7 +746,7 @@ const PartnersPage = () => {
                     }`}>
                       {comm.type}
                     </span>
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                    <div className="flex items-center gap-2 text-xs text-ink-600">
                       <span className="font-medium">By: {comm.contactedBy}</span>
                     </div>
                     {comm.nextFollowUp && (

@@ -136,7 +136,7 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
       'High': 'bg-orange-100 text-orange-800 border-orange-200',
       'Urgent': 'bg-red-100 text-red-800 border-red-200'
     };
-    return colors[priority] || 'bg-gray-100 text-gray-800 border-gray-200';
+    return colors[priority] || 'bg-ink-100 text-gray-800 border-ink-100';
   };
 
   return (
@@ -216,7 +216,7 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
 
             {/* Staff Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Assign To <span className="text-red-500">*</span>
               </label>
 
@@ -229,19 +229,19 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                         <User className="w-6 h-6 text-green-600" />
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-ink-900">
                           {selectedStaff.firstName} {selectedStaff.lastName}
                         </p>
-                        <p className="text-sm text-gray-600">{selectedStaff.position || 'Staff Member'}</p>
+                        <p className="text-sm text-ink-600">{selectedStaff.position || 'Staff Member'}</p>
                         <div className="flex items-center gap-3 mt-1">
                           {selectedStaff.email && (
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <div className="flex items-center gap-1 text-xs text-ink-500">
                               <Mail className="w-3 h-3" />
                               {selectedStaff.email}
                             </div>
                           )}
                           {selectedStaff.phoneNumber && (
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <div className="flex items-center gap-1 text-xs text-ink-500">
                               <Phone className="w-3 h-3" />
                               {selectedStaff.phoneNumber}
                             </div>
@@ -265,25 +265,25 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <>
                   {/* Search Box */}
                   <div className="relative mb-3">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
                     <input
                       type="text"
                       placeholder="Search staff by name, position, department, or email..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   {/* Staff List */}
-                  <div className="border border-gray-200 rounded-lg max-h-64 overflow-y-auto">
+                  <div className="border border-ink-100 rounded-lg max-h-64 overflow-y-auto">
                     {filteredStaff.length === 0 ? (
-                      <div className="p-8 text-center text-gray-500">
-                        <Users className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                      <div className="p-8 text-center text-ink-500">
+                        <Users className="w-12 h-12 mx-auto mb-3 text-ink-400" />
                         <p>No staff members found</p>
                       </div>
                     ) : (
-                      <div className="divide-y divide-gray-200">
+                      <div className="divide-y divide-ink-100">
                         {filteredStaff.map((staffMember) => (
                           <button
                             key={staffMember.id}
@@ -295,15 +295,15 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                               <User className="w-5 h-5 text-blue-600" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900">
+                              <p className="font-medium text-ink-900">
                                 {staffMember.firstName} {staffMember.lastName}
                               </p>
-                              <p className="text-sm text-gray-600">{staffMember.position || 'Staff Member'}</p>
+                              <p className="text-sm text-ink-600">{staffMember.position || 'Staff Member'}</p>
                               {staffMember.department && (
-                                <p className="text-xs text-gray-500">{staffMember.department}</p>
+                                <p className="text-xs text-ink-500">{staffMember.department}</p>
                               )}
                             </div>
-                            <div className="text-right text-xs text-gray-500">
+                            <div className="text-right text-xs text-ink-500">
                               {staffMember.email && <div>{staffMember.email}</div>}
                               {staffMember.phoneNumber && <div>{staffMember.phoneNumber}</div>}
                             </div>
@@ -319,31 +319,31 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
             {/* Due Date and Priority */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Due Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
                   <input
                     type="date"
                     name="dueDate"
                     value={formData.dueDate}
                     onChange={handleChange}
                     required
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Priority
                 </label>
                 <select
                   name="priority"
                   value={formData.priority}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -360,48 +360,48 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
 
             {/* Assignment Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Assignment Notes (Optional)
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <FileText className="absolute left-3 top-3 text-ink-400 w-5 h-5" />
                 <textarea
                   name="assignmentNotes"
                   value={formData.assignmentNotes}
                   onChange={handleChange}
                   rows={4}
                   placeholder="Add any specific instructions or notes for the assigned staff member..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 />
               </div>
             </div>
 
             {/* Assignment Summary */}
             {selectedStaff && formData.dueDate && (
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <div className="bg-ink-50 rounded-lg p-4 border border-ink-100">
+                <h3 className="font-semibold text-ink-900 mb-3 flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600" />
                   Assignment Summary
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Task:</span>
-                    <span className="font-medium text-gray-900">{task.taskName}</span>
+                    <span className="text-ink-600">Task:</span>
+                    <span className="font-medium text-ink-900">{task.taskName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Assigned To:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-ink-600">Assigned To:</span>
+                    <span className="font-medium text-ink-900">
                       {selectedStaff.firstName} {selectedStaff.lastName}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Due Date:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-ink-600">Due Date:</span>
+                    <span className="font-medium text-ink-900">
                       {new Date(formData.dueDate).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Priority:</span>
+                    <span className="text-ink-600">Priority:</span>
                     <span className={`px-2 py-0.5 rounded text-xs font-medium ${getPriorityColor(formData.priority)}`}>
                       {formData.priority}
                     </span>
@@ -413,12 +413,12 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
+        <div className="bg-ink-50 border-t border-ink-100 px-6 py-4 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 disabled:opacity-50"
+            className="px-4 py-2 bg-white border border-ink-200 rounded-lg hover:bg-ink-50 transition-colors text-sm font-medium text-ink-700 disabled:opacity-50"
           >
             Cancel
           </button>

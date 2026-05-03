@@ -83,22 +83,22 @@ export default function RecordQuotationModal({ rfq, vendors = [], existingQuotat
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="px-5 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="px-5 py-4 border-b border-ink-100">
+          <h2 className="text-lg font-semibold text-ink-900">
             {editing ? 'Edit Quotation' : 'Record Quotation'}
           </h2>
-          <p className="text-xs text-gray-500 mt-1">{rfq.rfqNumber}</p>
+          <p className="text-xs text-ink-500 mt-1">{rfq.rfqNumber}</p>
         </div>
 
         <form onSubmit={submit} className="px-5 py-4 overflow-y-auto flex-1 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Vendor</span>
+              <span className="text-sm font-medium text-ink-700">Vendor</span>
               <select
                 value={vendorId}
                 onChange={(e) => setVendorId(e.target.value)}
                 disabled={editing}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
                 required
               >
                 <option value="">Select vendor</option>
@@ -108,64 +108,64 @@ export default function RecordQuotationModal({ rfq, vendors = [], existingQuotat
               </select>
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Currency</span>
+              <span className="text-sm font-medium text-ink-700">Currency</span>
               <input
                 type="text"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value.toUpperCase().slice(0, 8))}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               />
             </label>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Delivery (days)</span>
+              <span className="text-sm font-medium text-ink-700">Delivery (days)</span>
               <input
                 type="number"
                 min={0}
                 value={deliveryDays}
                 onChange={(e) => setDeliveryDays(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               />
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Validity (days)</span>
+              <span className="text-sm font-medium text-ink-700">Validity (days)</span>
               <input
                 type="number"
                 min={0}
                 value={validityDays}
                 onChange={(e) => setValidityDays(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               />
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Tech compliance (0-100)</span>
+              <span className="text-sm font-medium text-ink-700">Tech compliance (0-100)</span>
               <input
                 type="number"
                 min={0}
                 max={100}
                 value={technicalComplianceScore}
                 onChange={(e) => setTechnicalComplianceScore(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               />
             </label>
           </div>
 
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Payment terms</span>
+            <span className="text-sm font-medium text-ink-700">Payment terms</span>
             <input
               type="text"
               value={paymentTerms}
               onChange={(e) => setPaymentTerms(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
             />
           </label>
 
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Line items</span>
-              <button type="button" onClick={addLine} className="text-sm text-blue-600 hover:underline">+ Add line</button>
+              <span className="text-sm font-medium text-ink-700">Line items</span>
+              <button type="button" onClick={addLine} className="text-sm text-navy-700 hover:underline">+ Add line</button>
             </div>
             <div className="mt-2 space-y-2">
               {lines.map((l, i) => (
@@ -174,20 +174,20 @@ export default function RecordQuotationModal({ rfq, vendors = [], existingQuotat
                     placeholder="Item description"
                     value={l.itemDescription}
                     onChange={(e) => updateLine(i, 'itemDescription', e.target.value)}
-                    className="col-span-5 rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    className="col-span-5 rounded-md border border-ink-200 px-2 py-1 text-sm"
                   />
                   <input
                     type="number"
                     placeholder="Qty"
                     value={l.qty}
                     onChange={(e) => updateLine(i, 'qty', e.target.value)}
-                    className="col-span-2 rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    className="col-span-2 rounded-md border border-ink-200 px-2 py-1 text-sm"
                   />
                   <input
                     placeholder="Unit"
                     value={l.unit}
                     onChange={(e) => updateLine(i, 'unit', e.target.value)}
-                    className="col-span-2 rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    className="col-span-2 rounded-md border border-ink-200 px-2 py-1 text-sm"
                   />
                   <input
                     type="number"
@@ -195,7 +195,7 @@ export default function RecordQuotationModal({ rfq, vendors = [], existingQuotat
                     placeholder="Unit price"
                     value={l.unitPrice}
                     onChange={(e) => updateLine(i, 'unitPrice', e.target.value)}
-                    className="col-span-2 rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    className="col-span-2 rounded-md border border-ink-200 px-2 py-1 text-sm"
                   />
                   <button
                     type="button"
@@ -209,25 +209,25 @@ export default function RecordQuotationModal({ rfq, vendors = [], existingQuotat
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Total amount</span>
+              <span className="text-sm font-medium text-ink-700">Total amount</span>
               <input
                 type="number"
                 step="0.01"
                 value={totalAmount}
                 onChange={(e) => setTotalAmount(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
                 required
               />
             </label>
           </div>
 
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Notes</span>
+            <span className="text-sm font-medium text-ink-700">Notes</span>
             <textarea
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
             />
           </label>
 
@@ -236,17 +236,17 @@ export default function RecordQuotationModal({ rfq, vendors = [], existingQuotat
           )}
         </form>
 
-        <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2">
+        <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
           >Cancel</button>
           <button
             type="button"
             onClick={submit}
             disabled={submitting}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition disabled:opacity-50"
           >
             {submitting ? 'Saving…' : (editing ? 'Save' : 'Record')}
           </button>

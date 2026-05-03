@@ -744,7 +744,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
         </div>
 
         {/* Tabs */}
-        <div className="bg-gray-50 border-b border-gray-200 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex-shrink-0 z-10">
+        <div className="bg-ink-50 border-b border-ink-100 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex-shrink-0 z-10">
           <div className="flex min-w-max">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -759,7 +759,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
                   className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold transition-all border-b-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
                     activeTab === tab.id
                       ? 'border-pink-500 text-pink-600 bg-white'
-                      : 'border-transparent text-gray-600 hover:text-pink-600 hover:bg-gray-100'
+                      : 'border-transparent text-ink-600 hover:text-pink-600 hover:bg-ink-100'
                   }`}
                 >
                   <Icon size={18} />
@@ -784,7 +784,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+        <div className="bg-ink-50 px-6 py-3 border-t border-ink-100">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
             {hasPermission('orphans:assign_coordinator') && (
               <button
@@ -832,7 +832,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
             </button>
             <button
               onClick={onClose}
-              className="col-span-2 md:col-span-3 lg:col-span-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-xs font-semibold"
+              className="col-span-2 md:col-span-3 lg:col-span-1 px-3 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition text-xs font-semibold"
             >
               Close
             </button>
@@ -894,7 +894,7 @@ const PersonalInfoTab = ({ orphan }) => (
       {/* Mother Information */}
       {(orphan.orphanType === 'Both Parents' || orphan.orphanType === 'Mother Only') && (
         <div className="mt-4">
-          <h4 className="font-semibold text-gray-900 text-lg flex items-center gap-2 mb-4">
+          <h4 className="font-semibold text-ink-900 text-lg flex items-center gap-2 mb-4">
             <Users size={20} className="text-pink-500" />
             Mother Information
           </h4>
@@ -920,7 +920,7 @@ const PersonalInfoTab = ({ orphan }) => (
 
       {/* Father Information */}
       <div className="mt-4">
-        <h4 className="font-semibold text-gray-900 text-lg flex items-center gap-2 mb-4">
+        <h4 className="font-semibold text-ink-900 text-lg flex items-center gap-2 mb-4">
           <Users size={20} className="text-blue-500" />
           Father Information
         </h4>
@@ -964,7 +964,7 @@ const PersonalInfoTab = ({ orphan }) => (
           {orphan.assignedPartners.map((assignment, index) => (
             <div key={index} className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                <h4 className="font-bold text-ink-900 flex items-center gap-2">
                   <Building2 size={18} className="text-green-600" />
                   {assignment.partner.name}
                 </h4>
@@ -1126,10 +1126,10 @@ const DocumentsTab = ({ orphan }) => {
       <SectionHeader icon={FolderOpen} title="Uploaded Documents" />
 
       {documents.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-          <FolderOpen size={48} className="mx-auto text-gray-400 mb-3" />
-          <p className="text-gray-500 font-medium">No documents uploaded yet</p>
-          <p className="text-gray-400 text-sm mt-1">Documents uploaded during orphan registration will appear here</p>
+        <div className="text-center py-12 bg-ink-50 rounded-lg border-2 border-dashed border-ink-200">
+          <FolderOpen size={48} className="mx-auto text-ink-400 mb-3" />
+          <p className="text-ink-500 font-medium">No documents uploaded yet</p>
+          <p className="text-ink-400 text-sm mt-1">Documents uploaded during orphan registration will appear here</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1142,25 +1142,25 @@ const DocumentsTab = ({ orphan }) => {
               <div
                 key={index}
                 onClick={() => handleDocumentClick(doc.url)}
-                className="bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
+                className="bg-white border-2 border-ink-100 rounded-lg p-4 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
               >
                 <div className="flex items-start gap-3">
                   <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
                     <DocIcon size={24} className="text-blue-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-gray-900 truncate">{typeLabel}</h4>
-                    <p className="text-xs text-gray-500 mt-1 truncate">{doc.filename}</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      <span className="inline-block px-2 py-0.5 bg-gray-100 rounded text-gray-600 font-medium">
+                    <h4 className="font-semibold text-ink-900 truncate">{typeLabel}</h4>
+                    <p className="text-xs text-ink-500 mt-1 truncate">{doc.filename}</p>
+                    <p className="text-xs text-ink-400 mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-ink-100 rounded text-ink-600 font-medium">
                         {fileExt}
                       </span>
                       <span className="ml-2">• {formatDate(doc.uploadedAt)}</span>
                     </p>
                   </div>
-                  <FileDown size={18} className="text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+                  <FileDown size={18} className="text-ink-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
                 </div>
-                <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="mt-3 pt-3 border-t border-ink-100">
                   <button className="text-xs text-blue-600 font-semibold hover:text-blue-700 transition-colors">
                     View/Download
                   </button>
@@ -1228,16 +1228,16 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
       case 'Delivered': return 'bg-blue-100 text-blue-800';
       case 'Pending': return 'bg-yellow-100 text-yellow-800';
       case 'Processing': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-ink-100 text-gray-800';
     }
   };
 
   if (partnerSupports.length === 0) {
     return (
-      <div className="text-center py-16 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-        <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-        <p className="text-gray-900 font-semibold mb-2">No partners assigned yet</p>
-        <p className="text-gray-500 text-sm">Use the <span className="font-bold text-green-600">"Assign Partner"</span> button below to get started</p>
+      <div className="text-center py-16 bg-ink-50 rounded-xl border-2 border-dashed border-ink-200">
+        <Building2 className="w-12 h-12 text-ink-400 mx-auto mb-3" />
+        <p className="text-ink-900 font-semibold mb-2">No partners assigned yet</p>
+        <p className="text-ink-500 text-sm">Use the <span className="font-bold text-green-600">"Assign Partner"</span> button below to get started</p>
       </div>
     );
   }
@@ -1249,8 +1249,8 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
     <div className="space-y-6">
       {/* Partner Selector */}
       {partnerSupports.length > 1 && (
-        <div className="bg-white border-2 border-gray-200 rounded-xl p-4">
-          <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+        <div className="bg-white border-2 border-ink-100 rounded-xl p-4">
+          <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-3">
             <Building2 size={16} className="text-green-600" />
             Select Partner to View Support Records
           </label>
@@ -1258,7 +1258,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
             <select
               value={selectedPartnerIndex}
               onChange={(e) => setSelectedPartnerIndex(parseInt(e.target.value))}
-              className="w-full px-4 py-3 pr-10 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white text-gray-900 font-semibold"
+              className="w-full px-4 py-3 pr-10 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white text-ink-900 font-semibold"
             >
               {partnerSupports.map((assignment, index) => (
                 <option key={index} value={index}>
@@ -1267,7 +1267,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
               ))}
             </select>
             <svg
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-ink-400 pointer-events-none"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -1276,7 +1276,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
             </svg>
           </div>
           <div className="mt-3 flex items-center justify-between text-sm">
-            <span className="text-gray-600">Viewing {selectedPartnerIndex + 1} of {partnerSupports.length} partners</span>
+            <span className="text-ink-600">Viewing {selectedPartnerIndex + 1} of {partnerSupports.length} partners</span>
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">
                 {supportEntries.length} Records
@@ -1290,7 +1290,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
       )}
 
       {/* Selected Partner Display */}
-      <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden">
+      <div className="bg-white border-2 border-ink-100 rounded-2xl overflow-hidden">
         {/* Partner Header */}
         <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -1332,8 +1332,8 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
                 <DollarSign size={20} />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Total Support</p>
-                <p className="text-lg font-bold text-gray-900">LKR {totalAmount.toLocaleString()}</p>
+                <p className="text-xs text-ink-600">Total Support</p>
+                <p className="text-lg font-bold text-ink-900">LKR {totalAmount.toLocaleString()}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1341,8 +1341,8 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
                 <Package size={20} />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Total Records</p>
-                <p className="text-lg font-bold text-gray-900">{supportEntries.length}</p>
+                <p className="text-xs text-ink-600">Total Records</p>
+                <p className="text-lg font-bold text-ink-900">{supportEntries.length}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1350,8 +1350,8 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
                 <Calendar size={20} />
               </div>
               <div>
-                <p className="text-xs text-gray-600">Assigned Date</p>
-                <p className="text-lg font-bold text-gray-900">{selectedPartner.assignedDate || 'N/A'}</p>
+                <p className="text-xs text-ink-600">Assigned Date</p>
+                <p className="text-lg font-bold text-ink-900">{selectedPartner.assignedDate || 'N/A'}</p>
               </div>
             </div>
           </div>
@@ -1360,7 +1360,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
         {/* Support Entries */}
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <h4 className="text-lg font-bold text-ink-900 flex items-center gap-2">
               <Package size={18} />
               Support Records
             </h4>
@@ -1372,18 +1372,18 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
           {supportEntries.length > 0 ? (
             <div className="space-y-3">
               {supportEntries.map((entry) => (
-                <div key={entry.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={entry.id} className="bg-ink-50 border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(entry.status)}`}>
                           {entry.status}
                         </span>
-                        <span className="text-xs text-gray-500">#{entry.receiptNo}</span>
+                        <span className="text-xs text-ink-500">#{entry.receiptNo}</span>
                       </div>
-                      <h5 className="font-bold text-gray-900 mb-1">{entry.category}</h5>
-                      <p className="text-sm text-gray-600 mb-2">{entry.description}</p>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <h5 className="font-bold text-ink-900 mb-1">{entry.category}</h5>
+                      <p className="text-sm text-ink-600 mb-2">{entry.description}</p>
+                      <div className="flex items-center gap-2 text-xs text-ink-500">
                         <Calendar size={12} />
                         <span>{entry.date}</span>
                       </div>
@@ -1397,9 +1397,9 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-              <Package className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 text-sm mb-3">No support entries yet for this partner</p>
+            <div className="text-center py-12 bg-ink-50 rounded-xl border-2 border-dashed border-ink-200">
+              <Package className="w-10 h-10 text-ink-400 mx-auto mb-3" />
+              <p className="text-ink-600 text-sm mb-3">No support entries yet for this partner</p>
               <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-semibold">
                 Add First Entry
               </button>
@@ -1417,18 +1417,18 @@ const SectionHeader = ({ icon: Icon, title }) => (
     <div className="bg-pink-100 p-2 rounded-lg">
       <Icon className="w-5 h-5 text-pink-600" />
     </div>
-    <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+    <h3 className="text-xl font-bold text-ink-900">{title}</h3>
   </div>
 );
 
 const InfoField = ({ label, value, icon: Icon, fullWidth = false }) => (
   <div className={`${fullWidth ? 'md:col-span-2' : ''}`}>
-    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+    <div className="bg-ink-50 p-4 rounded-lg border border-ink-100">
       <div className="flex items-center gap-2 mb-2">
         {Icon && <Icon size={16} className="text-pink-500" />}
-        <p className="text-xs font-semibold text-gray-500 uppercase">{label}</p>
+        <p className="text-xs font-semibold text-ink-500 uppercase">{label}</p>
       </div>
-      <p className="text-sm font-semibold text-gray-900">{value || 'Not provided'}</p>
+      <p className="text-sm font-semibold text-ink-900">{value || 'Not provided'}</p>
     </div>
   </div>
 );

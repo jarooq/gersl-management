@@ -771,23 +771,23 @@ const ContractManagementPage = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Active Agreements</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Active Agreements</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{agreements.filter(a => a.status === 'Active').length}</h3>
+                <h3 className="text-h1 text-ink-900">{agreements.filter(a => a.status === 'Active').length}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Currently active</p>
+              <p className="text-xs text-ink-500 mt-1">Currently active</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <FileSignature className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 <span className="text-xs font-semibold text-blue-600">Active</span>
@@ -796,23 +796,23 @@ const ContractManagementPage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Expiring Soon</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Expiring Soon</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-2xl font-bold text-yellow-600">{expiringContracts.length}</h3>
                 <TrendingUp className="w-3 h-3 text-yellow-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Needs attention</p>
+              <p className="text-xs text-ink-500 mt-1">Needs attention</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <AlertCircle className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
                 <span className="text-xs font-semibold text-yellow-600">Warning</span>
@@ -821,23 +821,23 @@ const ContractManagementPage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Pending Terminations</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Pending Terminations</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-2xl font-bold text-red-600">{terminations.filter(t => t.status === 'Pending Approval').length}</h3>
                 <TrendingUp className="w-3 h-3 text-red-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Awaiting approval</p>
+              <p className="text-xs text-ink-500 mt-1">Awaiting approval</p>
             </div>
             <div className="bg-danger-50 border border-danger-600/20 text-danger-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
               <UserX className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
                 <span className="text-xs font-semibold text-red-600">Pending</span>
@@ -846,23 +846,23 @@ const ContractManagementPage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Pending Resignations</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Pending Resignations</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-2xl font-bold text-purple-600">{resignations.filter(r => r.status === 'Submitted').length}</h3>
                 <TrendingUp className="w-3 h-3 text-purple-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Awaiting review</p>
+              <p className="text-xs text-ink-500 mt-1">Awaiting review</p>
             </div>
             <div className="bg-violet-50 border border-violet-200 text-violet-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
               <LogOut className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
                 <span className="text-xs font-semibold text-purple-600">Submitted</span>
@@ -873,8 +873,8 @@ const ContractManagementPage = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100 mb-6">
+        <div className="border-b border-ink-100">
           <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
             {[
               { id: 'agreements', name: 'Employment Agreements', icon: FileSignature },
@@ -890,11 +890,11 @@ const ContractManagementPage = () => {
                   group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm
                   ${activeTab === tab.id
                     ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-ink-500 hover:text-ink-700 hover:border-ink-200'
                   }
                 `}
               >
-                <tab.icon className={`-ml-0.5 mr-2 h-5 w-5 ${activeTab === tab.id ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500'}`} />
+                <tab.icon className={`-ml-0.5 mr-2 h-5 w-5 ${activeTab === tab.id ? 'text-indigo-500' : 'text-ink-400 group-hover:text-ink-500'}`} />
                 {tab.name}
               </button>
             ))}
@@ -907,7 +907,7 @@ const ContractManagementPage = () => {
           {activeTab === 'agreements' && (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Employment Agreements</h2>
+                <h2 className="text-xl font-semibold text-ink-900">Employment Agreements</h2>
                 <button
                   onClick={() => setShowAgreementModal(true)}
                   className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -920,12 +920,12 @@ const ContractManagementPage = () => {
               {loading ? (
                 <div className="text-center py-8">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                  <p className="mt-2 text-gray-600">Loading...</p>
+                  <p className="mt-2 text-ink-600">Loading...</p>
                 </div>
               ) : agreements.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                  <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-2 text-gray-600">No employment agreements found</p>
+                <div className="text-center py-12 bg-ink-50 rounded-lg">
+                  <FileText className="mx-auto h-12 w-12 text-ink-400" />
+                  <p className="mt-2 text-ink-600">No employment agreements found</p>
                   <button
                     onClick={() => setShowAgreementModal(true)}
                     className="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -936,40 +936,40 @@ const ContractManagementPage = () => {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full divide-y divide-ink-100">
+                    <thead className="bg-ink-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Staff</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Type</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Contract</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Start Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">End Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Salary</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-ink-100">
                       {agreements.map((agreement) => (
-                        <tr key={agreement.id} className="hover:bg-gray-50">
+                        <tr key={agreement.id} className="hover:bg-ink-50">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{getStaffName(agreement.staffId)}</div>
+                            <div className="text-sm font-medium text-ink-900">{getStaffName(agreement.staffId)}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{agreement.agreementType}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{agreement.contractType}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-500">{agreement.agreementType}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-500">{agreement.contractType}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-500">
                             {new Date(agreement.startDate).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-500">
                             {agreement.endDate ? new Date(agreement.endDate).toLocaleDateString() : 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900 font-medium">
                             LKR {parseFloat(agreement.salary).toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                               ${agreement.status === 'Active' ? 'bg-green-100 text-green-800' : ''}
-                              ${agreement.status === 'Draft' ? 'bg-gray-100 text-gray-800' : ''}
+                              ${agreement.status === 'Draft' ? 'bg-ink-100 text-gray-800' : ''}
                               ${agreement.status === 'Expired' ? 'bg-red-100 text-red-800' : ''}
                             `}>
                               {agreement.status}
@@ -1031,7 +1031,7 @@ const ContractManagementPage = () => {
           {activeTab === 'renewals' && (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Contract Renewals</h2>
+                <h2 className="text-xl font-semibold text-ink-900">Contract Renewals</h2>
                 <button
                   onClick={() => setShowRenewalModal(true)}
                   className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -1057,39 +1057,39 @@ const ContractManagementPage = () => {
 
               {/* Renewals Table */}
               {renewals.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                  <TrendingUp className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-2 text-gray-600">No contract renewals found</p>
+                <div className="text-center py-12 bg-ink-50 rounded-lg">
+                  <TrendingUp className="mx-auto h-12 w-12 text-ink-400" />
+                  <p className="mt-2 text-ink-600">No contract renewals found</p>
                 </div>
               ) : (
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+                  <table className="min-w-full divide-y divide-ink-100">
+                    <thead className="bg-ink-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current End Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">New Period</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">New Salary</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Staff</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Current End Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">New Period</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">New Salary</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-ink-100">
                       {renewals.map((renewal) => (
                         <tr key={renewal.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{renewal.staff?.fullName || 'N/A'}</div>
-                            <div className="text-sm text-gray-500">{renewal.staff?.position || ''}</div>
+                            <div className="text-sm font-medium text-ink-900">{renewal.staff?.fullName || 'N/A'}</div>
+                            <div className="text-sm text-ink-500">{renewal.staff?.position || ''}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {renewal.currentEndDate ? new Date(renewal.currentEndDate).toLocaleDateString() : 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {renewal.renewalStartDate && renewal.renewalEndDate
                               ? `${new Date(renewal.renewalStartDate).toLocaleDateString()} - ${new Date(renewal.renewalEndDate).toLocaleDateString()}`
                               : 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             LKR {renewal.newSalary?.toLocaleString() || 'N/A'}
                             {renewal.salaryIncrease && (
                               <span className="ml-2 text-green-600">+{renewal.salaryIncrease}%</span>
@@ -1128,7 +1128,7 @@ const ContractManagementPage = () => {
           {activeTab === 'terminations' && (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Terminations</h2>
+                <h2 className="text-xl font-semibold text-ink-900">Terminations</h2>
                 <button
                   onClick={() => setShowTerminationModal(true)}
                   className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -1140,37 +1140,37 @@ const ContractManagementPage = () => {
 
               {/* Terminations Table */}
               {terminations.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                  <UserX className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-2 text-gray-600">No terminations found</p>
+                <div className="text-center py-12 bg-ink-50 rounded-lg">
+                  <UserX className="mx-auto h-12 w-12 text-ink-400" />
+                  <p className="mt-2 text-ink-600">No terminations found</p>
                 </div>
               ) : (
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+                  <table className="min-w-full divide-y divide-ink-100">
+                    <thead className="bg-ink-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Termination Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Working Day</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Staff</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Type</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Termination Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Final Working Day</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-ink-100">
                       {terminations.map((termination) => (
                         <tr key={termination.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{termination.staff?.fullName || 'N/A'}</div>
-                            <div className="text-sm text-gray-500">{termination.staff?.position || ''}</div>
+                            <div className="text-sm font-medium text-ink-900">{termination.staff?.fullName || 'N/A'}</div>
+                            <div className="text-sm text-ink-500">{termination.staff?.position || ''}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {termination.terminationType || 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {termination.terminationDate ? new Date(termination.terminationDate).toLocaleDateString() : 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {termination.finalWorkingDay ? new Date(termination.finalWorkingDay).toLocaleDateString() : 'N/A'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -1206,7 +1206,7 @@ const ContractManagementPage = () => {
           {activeTab === 'resignations' && (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Resignations</h2>
+                <h2 className="text-xl font-semibold text-ink-900">Resignations</h2>
                 <button
                   onClick={() => setShowResignationModal(true)}
                   className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
@@ -1218,37 +1218,37 @@ const ContractManagementPage = () => {
 
               {/* Resignations Table */}
               {resignations.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                  <LogOut className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-2 text-gray-600">No resignations found</p>
+                <div className="text-center py-12 bg-ink-50 rounded-lg">
+                  <LogOut className="mx-auto h-12 w-12 text-ink-400" />
+                  <p className="mt-2 text-ink-600">No resignations found</p>
                 </div>
               ) : (
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+                  <table className="min-w-full divide-y divide-ink-100">
+                    <thead className="bg-ink-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resignation Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proposed Last Day</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Staff</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Resignation Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Proposed Last Day</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Reason</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-ink-100">
                       {resignations.map((resignation) => (
                         <tr key={resignation.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{resignation.staff?.fullName || 'N/A'}</div>
-                            <div className="text-sm text-gray-500">{resignation.staff?.position || ''}</div>
+                            <div className="text-sm font-medium text-ink-900">{resignation.staff?.fullName || 'N/A'}</div>
+                            <div className="text-sm text-ink-500">{resignation.staff?.position || ''}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {resignation.resignationDate ? new Date(resignation.resignationDate).toLocaleDateString() : 'N/A'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                             {resignation.proposedLastDay ? new Date(resignation.proposedLastDay).toLocaleDateString() : 'N/A'}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-900">
+                          <td className="px-6 py-4 text-sm text-ink-900">
                             <div className="max-w-xs truncate" title={resignation.reason}>
                               {resignation.reasonCategory || resignation.reason || 'N/A'}
                             </div>
@@ -1286,12 +1286,12 @@ const ContractManagementPage = () => {
           {/* Job Description Generator Tab */}
           {activeTab === 'job-desc' && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">AI Job Description Generator</h2>
+              <h2 className="text-xl font-semibold text-ink-900 mb-4">AI Job Description Generator</h2>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Input Form */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Job Details</h3>
+                <div className="bg-white border border-ink-100 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-ink-900 mb-4">Job Details</h3>
 
                   <form onSubmit={handleGenerateJobDesc} className="space-y-4">
                     {/* Employee Selector (Optional) */}
@@ -1307,7 +1307,7 @@ const ContractManagementPage = () => {
                             }
                             setJobDescForm({ ...jobDescForm, basedOnEmployee: isChecked });
                           }}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-ink-200 rounded"
                         />
                         <span className="ml-2 text-sm font-medium text-indigo-900">
                           Base on existing employee position
@@ -1316,11 +1316,11 @@ const ContractManagementPage = () => {
 
                       {jobDescForm.basedOnEmployee && (
                         <div className="mt-3">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Select Employee</label>
+                          <label className="block text-sm font-medium text-ink-700 mb-1">Select Employee</label>
                           <select
                             value={jobDescForm.staffId}
                             onChange={(e) => handleEmployeeSelectForJobDesc(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                           >
                             <option value="">Select an employee</option>
                             {staff.map(s => (
@@ -1337,43 +1337,43 @@ const ContractManagementPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Position Title *</label>
+                      <label className="block text-sm font-medium text-ink-700 mb-1">Position Title *</label>
                       <input
                         type="text"
                         required
                         value={jobDescForm.position}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, position: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="e.g., Senior Project Manager"
                         disabled={jobDescForm.basedOnEmployee && !jobDescForm.staffId}
                       />
                       {jobDescForm.basedOnEmployee && jobDescForm.staffId && (
-                        <p className="text-xs text-gray-500 mt-1">Auto-filled from employee data</p>
+                        <p className="text-xs text-ink-500 mt-1">Auto-filled from employee data</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Department *</label>
+                      <label className="block text-sm font-medium text-ink-700 mb-1">Department *</label>
                       <input
                         type="text"
                         required
                         value={jobDescForm.department}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, department: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="e.g., Programs & Operations"
                         disabled={jobDescForm.basedOnEmployee && !jobDescForm.staffId}
                       />
                       {jobDescForm.basedOnEmployee && jobDescForm.staffId && (
-                        <p className="text-xs text-gray-500 mt-1">Auto-filled from employee data</p>
+                        <p className="text-xs text-ink-500 mt-1">Auto-filled from employee data</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Level</label>
+                      <label className="block text-sm font-medium text-ink-700 mb-1">Level</label>
                       <select
                         value={jobDescForm.level}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, level: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       >
                         <option value="Entry-Level">Entry-Level</option>
                         <option value="Mid-Level">Mid-Level</option>
@@ -1383,23 +1383,23 @@ const ContractManagementPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Key Responsibilities (Optional)</label>
+                      <label className="block text-sm font-medium text-ink-700 mb-1">Key Responsibilities (Optional)</label>
                       <textarea
                         value={jobDescForm.responsibilities}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, responsibilities: e.target.value })}
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Enter key responsibilities, one per line"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Required Qualifications (Optional)</label>
+                      <label className="block text-sm font-medium text-ink-700 mb-1">Required Qualifications (Optional)</label>
                       <textarea
                         value={jobDescForm.qualifications}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, qualifications: e.target.value })}
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Enter required qualifications, one per line"
                       />
                     </div>
@@ -1415,12 +1415,12 @@ const ContractManagementPage = () => {
                 </div>
 
                 {/* Generated Output */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Generated Job Description</h3>
+                <div className="bg-white border border-ink-100 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-ink-900 mb-4">Generated Job Description</h3>
 
                   {generatedJobDesc ? (
                     <div className="prose prose-sm max-w-none">
-                      <div className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap">
+                      <div className="bg-ink-50 p-4 rounded-lg whitespace-pre-wrap">
                         {generatedJobDesc}
                       </div>
                       <div className="mt-4 flex gap-3 flex-wrap">
@@ -1444,9 +1444,9 @@ const ContractManagementPage = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-12 bg-gray-50 rounded-lg">
-                      <Briefcase className="mx-auto h-12 w-12 text-gray-400" />
-                      <p className="mt-2 text-gray-600">Generated job description will appear here</p>
+                    <div className="text-center py-12 bg-ink-50 rounded-lg">
+                      <Briefcase className="mx-auto h-12 w-12 text-ink-400" />
+                      <p className="mt-2 text-ink-600">Generated job description will appear here</p>
                     </div>
                   )}
                 </div>
@@ -1461,8 +1461,8 @@ const ContractManagementPage = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Generate Employment Agreement with AI</h3>
-              <button onClick={() => { setShowAgreementModal(false); resetAgreementForm(); }} className="text-gray-400 hover:text-gray-600">
+              <h3 className="text-xl font-semibold text-ink-900">Generate Employment Agreement with AI</h3>
+              <button onClick={() => { setShowAgreementModal(false); resetAgreementForm(); }} className="text-ink-400 hover:text-ink-600">
                 <XCircle className="h-6 w-6" />
               </button>
             </div>
@@ -1470,12 +1470,12 @@ const ContractManagementPage = () => {
             <form onSubmit={handleGenerateAgreement} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Staff Member *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Staff Member *</label>
                   <select
                     required
                     value={agreementForm.staffId}
                     onChange={(e) => setAgreementForm({ ...agreementForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -1485,11 +1485,11 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Agreement Type</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Agreement Type</label>
                   <select
                     value={agreementForm.agreementType}
                     onChange={(e) => setAgreementForm({ ...agreementForm, agreementType: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="Initial">Initial</option>
                     <option value="Renewal">Renewal</option>
@@ -1498,11 +1498,11 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contract Type</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Contract Type</label>
                   <select
                     value={agreementForm.contractType}
                     onChange={(e) => setAgreementForm({ ...agreementForm, contractType: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="Permanent">Permanent</option>
                     <option value="Contract">Contract</option>
@@ -1512,55 +1512,55 @@ const ContractManagementPage = () => {
 
                 {agreementForm.contractType === 'Contract' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Contract Duration (months)</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Contract Duration (months)</label>
                     <input
                       type="number"
                       value={agreementForm.contractDuration}
                       onChange={(e) => setAgreementForm({ ...agreementForm, contractDuration: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Start Date *</label>
                   <input
                     type="date"
                     required
                     value={agreementForm.startDate}
                     onChange={(e) => setAgreementForm({ ...agreementForm, startDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Salary (LKR) *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Monthly Salary (LKR) *</label>
                   <input
                     type="number"
                     required
                     value={agreementForm.salary}
                     onChange={(e) => setAgreementForm({ ...agreementForm, salary: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Probation Period (months)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Probation Period (months)</label>
                   <input
                     type="number"
                     value={agreementForm.probationPeriod}
                     onChange={(e) => setAgreementForm({ ...agreementForm, probationPeriod: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Working Hours/Day</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Working Hours/Day</label>
                   <input
                     type="number"
                     value={agreementForm.workingHours}
                     onChange={(e) => setAgreementForm({ ...agreementForm, workingHours: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -1584,12 +1584,12 @@ const ContractManagementPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Notes</label>
                 <textarea
                   value={agreementForm.notes}
                   onChange={(e) => setAgreementForm({ ...agreementForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Any additional notes or special conditions"
                 />
               </div>
@@ -1598,7 +1598,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowAgreementModal(false); resetAgreementForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
                 >
                   Cancel
                 </button>
@@ -1619,16 +1619,16 @@ const ContractManagementPage = () => {
       {showViewModal && selectedItem && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+            <div className="sticky top-0 bg-white border-b border-ink-100 px-6 py-4 flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Employment Agreement</h2>
-                <p className="text-sm text-gray-600 mt-1">
+                <h2 className="text-h1 text-ink-900">Employment Agreement</h2>
+                <p className="text-sm text-ink-600 mt-1">
                   {selectedItem.agreementType} - {selectedItem.contractType}
                 </p>
               </div>
               <button
                 onClick={() => { setShowViewModal(false); setSelectedItem(null); }}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-ink-400 hover:text-ink-600"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -1636,74 +1636,74 @@ const ContractManagementPage = () => {
 
             <div className="p-6 space-y-6">
               {/* Agreement Details */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Agreement Information</h3>
+              <div className="bg-ink-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-ink-900 mb-4">Agreement Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Staff Member</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-ink-600">Staff Member</p>
+                    <p className="font-medium text-ink-900">
                       {selectedItem.staff?.fullName || 'N/A'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Position</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-ink-600">Position</p>
+                    <p className="font-medium text-ink-900">
                       {selectedItem.staff?.position || 'N/A'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Department</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-ink-600">Department</p>
+                    <p className="font-medium text-ink-900">
                       {selectedItem.staff?.department || 'N/A'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Status</p>
+                    <p className="text-sm text-ink-600">Status</p>
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       selectedItem.status === 'Active' ? 'bg-green-100 text-green-800' :
                       selectedItem.status === 'Draft' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
+                      'bg-ink-100 text-gray-800'
                     }`}>
                       {selectedItem.status}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Contract Type</p>
-                    <p className="font-medium text-gray-900">{selectedItem.contractType}</p>
+                    <p className="text-sm text-ink-600">Contract Type</p>
+                    <p className="font-medium text-ink-900">{selectedItem.contractType}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Start Date</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-ink-600">Start Date</p>
+                    <p className="font-medium text-ink-900">
                       {selectedItem.startDate ? new Date(selectedItem.startDate).toLocaleDateString() : 'N/A'}
                     </p>
                   </div>
                   {selectedItem.endDate && (
                     <div>
-                      <p className="text-sm text-gray-600">End Date</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-sm text-ink-600">End Date</p>
+                      <p className="font-medium text-ink-900">
                         {new Date(selectedItem.endDate).toLocaleDateString()}
                       </p>
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-600">Monthly Salary</p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm text-ink-600">Monthly Salary</p>
+                    <p className="font-medium text-ink-900">
                       LKR {selectedItem.salary?.toLocaleString() || 'N/A'}
                     </p>
                   </div>
                   {selectedItem.probationPeriod && (
                     <div>
-                      <p className="text-sm text-gray-600">Probation Period</p>
-                      <p className="font-medium text-gray-900">{selectedItem.probationPeriod} months</p>
+                      <p className="text-sm text-ink-600">Probation Period</p>
+                      <p className="font-medium text-ink-900">{selectedItem.probationPeriod} months</p>
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-600">Working Hours/Day</p>
-                    <p className="font-medium text-gray-900">{selectedItem.workingHours || 8} hours</p>
+                    <p className="text-sm text-ink-600">Working Hours/Day</p>
+                    <p className="font-medium text-ink-900">{selectedItem.workingHours || 8} hours</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Working Days/Week</p>
-                    <p className="font-medium text-gray-900">{selectedItem.workingDays || 5} days</p>
+                    <p className="text-sm text-ink-600">Working Days/Week</p>
+                    <p className="font-medium text-ink-900">{selectedItem.workingDays || 5} days</p>
                   </div>
                 </div>
               </div>
@@ -1733,14 +1733,14 @@ const ContractManagementPage = () => {
 
               {/* AI Generated Document Content */}
               {selectedItem.documentContent && (
-                <div className="border border-gray-200 rounded-lg p-6 bg-white">
+                <div className="border border-ink-100 rounded-lg p-6 bg-white">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Agreement Document</h3>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                    <h3 className="text-lg font-semibold text-ink-900">Agreement Document</h3>
+                    <span className="text-xs text-ink-500 bg-ink-100 px-2 py-1 rounded">
                       AI Generated
                     </span>
                   </div>
-                  <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap">
+                  <div className="prose prose-sm max-w-none text-ink-700 whitespace-pre-wrap">
                     {selectedItem.documentContent}
                   </div>
                 </div>
@@ -1770,10 +1770,10 @@ const ContractManagementPage = () => {
               )}
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
+            <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 px-6 py-4 flex justify-end space-x-3">
               <button
                 onClick={() => { setShowViewModal(false); setSelectedItem(null); }}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
               >
                 Close
               </button>
@@ -1794,8 +1794,8 @@ const ContractManagementPage = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Create Contract Renewal</h3>
-              <button onClick={() => { setShowRenewalModal(false); resetRenewalForm(); }} className="text-gray-400 hover:text-gray-600">
+              <h3 className="text-xl font-semibold text-ink-900">Create Contract Renewal</h3>
+              <button onClick={() => { setShowRenewalModal(false); resetRenewalForm(); }} className="text-ink-400 hover:text-ink-600">
                 <XCircle className="h-6 w-6" />
               </button>
             </div>
@@ -1803,12 +1803,12 @@ const ContractManagementPage = () => {
             <form onSubmit={handleCreateRenewal} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Staff Member *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Staff Member *</label>
                   <select
                     required
                     value={renewalForm.staffId}
                     onChange={(e) => setRenewalForm({ ...renewalForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -1818,77 +1818,77 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Renewal Start Date *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Renewal Start Date *</label>
                   <input
                     type="date"
                     required
                     value={renewalForm.renewalStartDate}
                     onChange={(e) => setRenewalForm({ ...renewalForm, renewalStartDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Renewal End Date</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Renewal End Date</label>
                   <input
                     type="date"
                     value={renewalForm.renewalEndDate}
                     onChange={(e) => setRenewalForm({ ...renewalForm, renewalEndDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Contract Duration (months)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">New Contract Duration (months)</label>
                   <input
                     type="number"
                     value={renewalForm.newContractDuration}
                     onChange={(e) => setRenewalForm({ ...renewalForm, newContractDuration: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Salary (LKR) *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">New Salary (LKR) *</label>
                   <input
                     type="number"
                     required
                     value={renewalForm.newSalary}
                     onChange={(e) => setRenewalForm({ ...renewalForm, newSalary: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Salary Increase (%)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Salary Increase (%)</label>
                   <input
                     type="number"
                     step="0.01"
                     value={renewalForm.salaryIncrease}
                     onChange={(e) => setRenewalForm({ ...renewalForm, salaryIncrease: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Performance Highlights</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Performance Highlights</label>
                 <textarea
                   value={renewalForm.performanceHighlights}
                   onChange={(e) => setRenewalForm({ ...renewalForm, performanceHighlights: e.target.value })}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Key achievements and performance highlights"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Notes</label>
                 <textarea
                   value={renewalForm.notes}
                   onChange={(e) => setRenewalForm({ ...renewalForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Any additional notes"
                 />
               </div>
@@ -1897,7 +1897,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowRenewalModal(false); resetRenewalForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
                 >
                   Cancel
                 </button>
@@ -1919,8 +1919,8 @@ const ContractManagementPage = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4 sticky top-0 bg-white pb-4 border-b">
-              <h3 className="text-xl font-semibold text-gray-900">Create Termination</h3>
-              <button onClick={() => { setShowTerminationModal(false); resetTerminationForm(); }} className="text-gray-400 hover:text-gray-600">
+              <h3 className="text-xl font-semibold text-ink-900">Create Termination</h3>
+              <button onClick={() => { setShowTerminationModal(false); resetTerminationForm(); }} className="text-ink-400 hover:text-ink-600">
                 <XCircle className="h-6 w-6" />
               </button>
             </div>
@@ -1928,12 +1928,12 @@ const ContractManagementPage = () => {
             <form onSubmit={handleCreateTermination} className="space-y-4 mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Staff Member *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Staff Member *</label>
                   <select
                     required
                     value={terminationForm.staffId}
                     onChange={(e) => setTerminationForm({ ...terminationForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -1943,12 +1943,12 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Termination Type *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Termination Type *</label>
                   <select
                     required
                     value={terminationForm.terminationType}
                     onChange={(e) => setTerminationForm({ ...terminationForm, terminationType: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   >
                     <option value="Voluntary Resignation">Voluntary Resignation</option>
                     <option value="Termination with Cause">Termination with Cause</option>
@@ -1959,54 +1959,54 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Termination Date *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Termination Date *</label>
                   <input
                     type="date"
                     required
                     value={terminationForm.terminationDate}
                     onChange={(e) => setTerminationForm({ ...terminationForm, terminationDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Notice Date</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Notice Date</label>
                   <input
                     type="date"
                     value={terminationForm.noticeDate}
                     onChange={(e) => setTerminationForm({ ...terminationForm, noticeDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Notice Period (days) *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Notice Period (days) *</label>
                   <input
                     type="number"
                     required
                     value={terminationForm.noticePeriod}
                     onChange={(e) => setTerminationForm({ ...terminationForm, noticePeriod: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Final Working Day *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Final Working Day *</label>
                   <input
                     type="date"
                     required
                     value={terminationForm.finalWorkingDay}
                     onChange={(e) => setTerminationForm({ ...terminationForm, finalWorkingDay: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Reason Category</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Reason Category</label>
                   <select
                     value={terminationForm.reasonCategory}
                     onChange={(e) => setTerminationForm({ ...terminationForm, reasonCategory: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   >
                     <option value="">Select Category</option>
                     <option value="Performance">Performance</option>
@@ -2019,24 +2019,24 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Leave Encashment (days)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Leave Encashment (days)</label>
                   <input
                     type="number"
                     value={terminationForm.leaveEncashment}
                     onChange={(e) => setTerminationForm({ ...terminationForm, leaveEncashment: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Termination *</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Reason for Termination *</label>
                 <textarea
                   required
                   value={terminationForm.reason}
                   onChange={(e) => setTerminationForm({ ...terminationForm, reason: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="Provide detailed reason for termination"
                 />
               </div>
@@ -2047,9 +2047,9 @@ const ContractManagementPage = () => {
                     type="checkbox"
                     checked={terminationForm.exitInterview}
                     onChange={(e) => setTerminationForm({ ...terminationForm, exitInterview: e.target.checked })}
-                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-ink-200 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700">Exit Interview Required</span>
+                  <span className="ml-2 text-sm text-ink-700">Exit Interview Required</span>
                 </label>
 
                 <label className="flex items-center">
@@ -2057,30 +2057,30 @@ const ContractManagementPage = () => {
                     type="checkbox"
                     checked={terminationForm.gratuityEligible}
                     onChange={(e) => setTerminationForm({ ...terminationForm, gratuityEligible: e.target.checked })}
-                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-ink-200 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700">Gratuity Eligible</span>
+                  <span className="ml-2 text-sm text-ink-700">Gratuity Eligible</span>
                 </label>
               </div>
 
               {terminationForm.exitInterview && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-ink-50 rounded-lg">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Exit Interview Date</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Exit Interview Date</label>
                     <input
                       type="date"
                       value={terminationForm.exitInterviewDate}
                       onChange={(e) => setTerminationForm({ ...terminationForm, exitInterviewDate: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Exit Interview Notes</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Exit Interview Notes</label>
                     <textarea
                       value={terminationForm.exitInterviewNotes}
                       onChange={(e) => setTerminationForm({ ...terminationForm, exitInterviewNotes: e.target.value })}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                       placeholder="Exit interview notes and feedback"
                     />
                   </div>
@@ -2088,12 +2088,12 @@ const ContractManagementPage = () => {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Additional Notes</label>
                 <textarea
                   value={terminationForm.notes}
                   onChange={(e) => setTerminationForm({ ...terminationForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="Any additional notes"
                 />
               </div>
@@ -2102,7 +2102,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowTerminationModal(false); resetTerminationForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
                 >
                   Cancel
                 </button>
@@ -2124,8 +2124,8 @@ const ContractManagementPage = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Submit Resignation</h3>
-              <button onClick={() => { setShowResignationModal(false); resetResignationForm(); }} className="text-gray-400 hover:text-gray-600">
+              <h3 className="text-xl font-semibold text-ink-900">Submit Resignation</h3>
+              <button onClick={() => { setShowResignationModal(false); resetResignationForm(); }} className="text-ink-400 hover:text-ink-600">
                 <XCircle className="h-6 w-6" />
               </button>
             </div>
@@ -2139,12 +2139,12 @@ const ContractManagementPage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Staff Member *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Staff Member *</label>
                   <select
                     required
                     value={resignationForm.staffId}
                     onChange={(e) => setResignationForm({ ...resignationForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -2154,44 +2154,44 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Resignation Date *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Resignation Date *</label>
                   <input
                     type="date"
                     required
                     value={resignationForm.resignationDate}
                     onChange={(e) => setResignationForm({ ...resignationForm, resignationDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Notice Period (days) *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Notice Period (days) *</label>
                   <input
                     type="number"
                     required
                     value={resignationForm.noticeRequirement}
                     onChange={(e) => setResignationForm({ ...resignationForm, noticeRequirement: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Proposed Last Day *</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Proposed Last Day *</label>
                   <input
                     type="date"
                     required
                     value={resignationForm.proposedLastDay}
                     onChange={(e) => setResignationForm({ ...resignationForm, proposedLastDay: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Reason Category</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Reason Category</label>
                   <select
                     value={resignationForm.reasonCategory}
                     onChange={(e) => setResignationForm({ ...resignationForm, reasonCategory: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     <option value="">Select Category</option>
                     <option value="Better Opportunity">Better Opportunity</option>
@@ -2204,58 +2204,58 @@ const ContractManagementPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Employer (Optional)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">New Employer (Optional)</label>
                   <input
                     type="text"
                     value={resignationForm.newEmployer}
                     onChange={(e) => setResignationForm({ ...resignationForm, newEmployer: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     placeholder="Company name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Position (Optional)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">New Position (Optional)</label>
                   <input
                     type="text"
                     value={resignationForm.newPosition}
                     onChange={(e) => setResignationForm({ ...resignationForm, newPosition: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     placeholder="Job title"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Resignation *</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Reason for Resignation *</label>
                 <textarea
                   required
                   value={resignationForm.reason}
                   onChange={(e) => setResignationForm({ ...resignationForm, reason: e.target.value })}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Provide detailed reason for resignation"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Handover Plan</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Handover Plan</label>
                 <textarea
                   value={resignationForm.handoverPlan}
                   onChange={(e) => setResignationForm({ ...resignationForm, handoverPlan: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Describe the handover plan for current responsibilities"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+                <label className="block text-sm font-medium text-ink-700 mb-1">Additional Notes</label>
                 <textarea
                   value={resignationForm.notes}
                   onChange={(e) => setResignationForm({ ...resignationForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Any additional notes"
                 />
               </div>
@@ -2264,7 +2264,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowResignationModal(false); resetResignationForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
                 >
                   Cancel
                 </button>

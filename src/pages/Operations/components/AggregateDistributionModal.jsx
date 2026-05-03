@@ -337,10 +337,10 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Distribution Details */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Distribution Details</h3>
+            <h3 className="text-lg font-bold text-ink-900 mb-4">Distribution Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Distribution Date <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -348,12 +348,12 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   name="distributionDate"
                   value={formData.distributionDate}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Total Beneficiaries <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -363,7 +363,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleInputChange}
                   placeholder="e.g., 500"
                   min="1"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -371,11 +371,11 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
 
           {/* Demographic Breakdown */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Demographic Breakdown (Optional)</h3>
-            <p className="text-sm text-gray-600 mb-4">Total must equal {formData.totalBeneficiaries || '0'} beneficiaries</p>
+            <h3 className="text-lg font-bold text-ink-900 mb-2">Demographic Breakdown (Optional)</h3>
+            <p className="text-sm text-ink-600 mb-4">Total must equal {formData.totalBeneficiaries || '0'} beneficiaries</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Male</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Male</label>
                 <input
                   type="number"
                   name="male"
@@ -383,12 +383,12 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Female</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Female</label>
                 <input
                   type="number"
                   name="female"
@@ -396,12 +396,12 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Children</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Children</label>
                 <input
                   type="number"
                   name="children"
@@ -409,12 +409,12 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Elderly</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Elderly</label>
                 <input
                   type="number"
                   name="elderly"
@@ -422,7 +422,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -431,7 +431,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
           {/* Items Distributed */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Items Distributed <span className="text-red-500">*</span></h3>
+              <h3 className="text-lg font-bold text-ink-900">Items Distributed <span className="text-red-500">*</span></h3>
               <button
                 onClick={addItem}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold text-sm"
@@ -448,7 +448,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                     value={item.item}
                     onChange={(e) => handleItemChange(index, 'item', e.target.value)}
                     placeholder="Item name (e.g., Ifthar meal package)"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                   <input
                     type="number"
@@ -456,7 +456,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                     onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                     placeholder="Qty"
                     min="1"
-                    className="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-32 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                   {formData.itemsDistributed.length > 1 && (
                     <button
@@ -475,20 +475,20 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Distributed By */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-3 flex items-center gap-2">
                 <UserCheck size={20} />
                 Distributed By
               </h3>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {staff?.map(member => (
-                  <label key={member.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <label key={member.id} className="flex items-center gap-2 p-2 hover:bg-ink-50 rounded-lg cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.distributedBy.includes(member.id)}
                       onChange={() => handleStaffToggle(member.id, 'distributedBy')}
                       className="w-4 h-4 text-green-600 rounded"
                     />
-                    <span className="text-sm text-gray-900">
+                    <span className="text-sm text-ink-900">
                       {member.name || `${member.firstName} ${member.lastName}`}
                     </span>
                   </label>
@@ -498,26 +498,26 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
 
             {/* Media Team */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-3 flex items-center gap-2">
                 <Camera size={20} />
                 Media Team Present
               </h3>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {staff?.filter(m => m.department === 'Media' || m.role?.includes('Media')).map(member => (
-                  <label key={member.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <label key={member.id} className="flex items-center gap-2 p-2 hover:bg-ink-50 rounded-lg cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.mediaTeamPresent.includes(member.id)}
                       onChange={() => handleStaffToggle(member.id, 'mediaTeamPresent')}
                       className="w-4 h-4 text-green-600 rounded"
                     />
-                    <span className="text-sm text-gray-900">
+                    <span className="text-sm text-ink-900">
                       {member.name || `${member.firstName} ${member.lastName}`}
                     </span>
                   </label>
                 ))}
                 {staff?.filter(m => m.department === 'Media').length === 0 && (
-                  <p className="text-sm text-gray-500 italic">No media team members found</p>
+                  <p className="text-sm text-ink-500 italic">No media team members found</p>
                 )}
               </div>
             </div>
@@ -528,7 +528,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
             {/* Photos */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <ImageIcon size={20} />
                   Photos ({formData.photos.length})
                 </h3>
@@ -541,8 +541,8 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
               </div>
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {formData.photos.map((url, index) => (
-                  <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-700 truncate flex-1">{url}</span>
+                  <div key={index} className="flex items-center gap-2 p-2 bg-ink-50 rounded-lg">
+                    <span className="text-sm text-ink-700 truncate flex-1">{url}</span>
                     <button
                       onClick={() => removePhoto(index)}
                       className="text-red-600 hover:text-red-800"
@@ -552,7 +552,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   </div>
                 ))}
                 {formData.photos.length === 0 && (
-                  <p className="text-sm text-gray-500 italic">No photos added</p>
+                  <p className="text-sm text-ink-500 italic">No photos added</p>
                 )}
               </div>
             </div>
@@ -560,7 +560,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
             {/* Videos */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <Video size={20} />
                   Videos ({formData.videos.length})
                 </h3>
@@ -573,8 +573,8 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
               </div>
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {formData.videos.map((url, index) => (
-                  <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-700 truncate flex-1">{url}</span>
+                  <div key={index} className="flex items-center gap-2 p-2 bg-ink-50 rounded-lg">
+                    <span className="text-sm text-ink-700 truncate flex-1">{url}</span>
                     <button
                       onClick={() => removeVideo(index)}
                       className="text-red-600 hover:text-red-800"
@@ -584,7 +584,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   </div>
                 ))}
                 {formData.videos.length === 0 && (
-                  <p className="text-sm text-gray-500 italic">No videos added</p>
+                  <p className="text-sm text-ink-500 italic">No videos added</p>
                 )}
               </div>
             </div>
@@ -592,23 +592,23 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
 
           {/* Distribution Notes */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Distribution Notes (Optional)</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Distribution Notes (Optional)</label>
             <textarea
               name="distributionNotes"
               value={formData.distributionNotes}
               onChange={handleInputChange}
               placeholder="Any additional notes about the distribution..."
               rows="3"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center">
+        <div className="bg-ink-50 border-t border-ink-100 p-4 flex justify-between items-center">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+            className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
           >
             Cancel
           </button>

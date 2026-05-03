@@ -267,7 +267,7 @@ const PayrollPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading payroll data...</div>
+        <div className="text-ink-500">Loading payroll data...</div>
       </div>
     );
   }
@@ -304,23 +304,23 @@ const PayrollPage = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Records</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Records</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stats.total}</h3>
+                <h3 className="text-h1 text-ink-900">{stats.total}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">All payroll entries</p>
+              <p className="text-xs text-ink-500 mt-1">All payroll entries</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <DollarSign className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 <span className="text-xs font-semibold text-blue-600">Active</span>
@@ -329,23 +329,23 @@ const PayrollPage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Pending</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Pending</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-2xl font-bold text-orange-600">{stats.pending}</h3>
                 <TrendingUp className="w-3 h-3 text-orange-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Awaiting processing</p>
+              <p className="text-xs text-ink-500 mt-1">Awaiting processing</p>
             </div>
             <div className="bg-mission-100 border border-mission-200 text-mission-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
               <Clock className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
                 <span className="text-xs font-semibold text-orange-600">Pending</span>
@@ -354,23 +354,23 @@ const PayrollPage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Processed</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Processed</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-2xl font-bold text-green-600">{stats.processed}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Successfully paid</p>
+              <p className="text-xs text-ink-500 mt-1">Successfully paid</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <CheckCircle className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Complete</span>
@@ -379,23 +379,23 @@ const PayrollPage = () => {
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Amount</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Amount</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">LKR {stats.totalAmount.toLocaleString()}</h3>
+                <h3 className="text-h1 text-ink-900">LKR {stats.totalAmount.toLocaleString()}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Net payroll total</p>
+              <p className="text-xs text-ink-500 mt-1">Net payroll total</p>
             </div>
             <div className="bg-violet-50 border border-violet-200 text-violet-700 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
               <Wallet className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
                 <span className="text-xs font-semibold text-purple-600">Tracked</span>
@@ -409,20 +409,20 @@ const PayrollPage = () => {
       <div className="bg-white p-4 rounded-lg shadow">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-3 text-ink-400" size={20} />
             <input
               type="text"
               placeholder="Search by code or staff name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
           <div>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
               <option value="">All Status</option>
               <option value="Pending">Pending</option>
@@ -436,38 +436,38 @@ const PayrollPage = () => {
       {/* Payroll Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-ink-100">
+            <thead className="bg-ink-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payroll Code</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Payroll Code</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Staff Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Period</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Gross Pay</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Net Pay</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-ink-100">
               {filteredPayrolls.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="7" className="px-6 py-12 text-center text-ink-500">
                     No payroll records found
                   </td>
                 </tr>
               ) : (
                 filteredPayrolls.map((payroll) => (
-                  <tr key={payroll.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <tr key={payroll.id} className="hover:bg-ink-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-ink-900">
                       {payroll.payrollCode}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                       {payroll.staff?.fullName || 'N/A'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-500">
                       {payroll.payPeriodStart ? new Date(payroll.payPeriodStart).toLocaleDateString() : ''} - {payroll.payPeriodEnd ? new Date(payroll.payPeriodEnd).toLocaleDateString() : ''}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-900">
                       LKR {(payroll.grossPay || 0).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
@@ -530,10 +530,10 @@ const PayrollPage = () => {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-h1 text-ink-900">
                   {showEditModal ? 'Edit Payroll' : 'Add New Payroll'}
                 </h2>
-                <button onClick={resetForm} className="text-gray-500 hover:text-gray-700">
+                <button onClick={resetForm} className="text-ink-500 hover:text-ink-700">
                   <X size={24} />
                 </button>
               </div>
@@ -541,7 +541,7 @@ const PayrollPage = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Staff Member * <span className="text-xs text-green-600">(Auto-loads salary & calculates deductions)</span>
                     </label>
                     <select
@@ -549,7 +549,7 @@ const PayrollPage = () => {
                       value={formData.staffId}
                       onChange={handleStaffChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     >
                       <option value="">Select Staff</option>
                       {staff.map(s => (
@@ -561,7 +561,7 @@ const PayrollPage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Pay Period Start *
                     </label>
                     <input
@@ -570,12 +570,12 @@ const PayrollPage = () => {
                       value={formData.payPeriodStart}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Pay Period End *
                     </label>
                     <input
@@ -584,12 +584,12 @@ const PayrollPage = () => {
                       value={formData.payPeriodEnd}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Pay Date
                     </label>
                     <input
@@ -597,12 +597,12 @@ const PayrollPage = () => {
                       name="payDate"
                       value={formData.payDate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Basic Salary (LKR) * <span className="text-xs text-blue-600">(Auto-calculates deductions)</span>
                     </label>
                     <input
@@ -613,12 +613,12 @@ const PayrollPage = () => {
                       required
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Allowances (LKR)
                     </label>
                     <input
@@ -628,12 +628,12 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Overtime (LKR)
                     </label>
                     <input
@@ -643,12 +643,12 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Bonuses (LKR)
                     </label>
                     <input
@@ -658,12 +658,12 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Deductions (LKR)
                     </label>
                     <input
@@ -673,12 +673,12 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Tax Deduction (LKR)
                     </label>
                     <input
@@ -688,12 +688,12 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       EPF Deduction (LKR)
                     </label>
                     <input
@@ -703,12 +703,12 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       ETF Deduction (LKR)
                     </label>
                     <input
@@ -718,19 +718,19 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Payment Method
                     </label>
                     <select
                       name="paymentMethod"
                       value={formData.paymentMethod}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     >
                       <option value="Bank Transfer">Bank Transfer</option>
                       <option value="Cash">Cash</option>
@@ -739,7 +739,7 @@ const PayrollPage = () => {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-700 mb-2">
                       Notes
                     </label>
                     <textarea
@@ -747,21 +747,21 @@ const PayrollPage = () => {
                       value={formData.notes}
                       onChange={handleInputChange}
                       rows="3"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                   </div>
                 </div>
 
                 {/* Calculated Summary */}
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-gray-900 mb-3">Payment Summary</h3>
+                <div className="bg-ink-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-ink-900 mb-3">Payment Summary</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-600">Gross Pay</p>
-                      <p className="text-lg font-bold text-gray-900">LKR {calculateGrossPay().toLocaleString()}</p>
+                      <p className="text-sm text-ink-600">Gross Pay</p>
+                      <p className="text-lg font-bold text-ink-900">LKR {calculateGrossPay().toLocaleString()}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Net Pay</p>
+                      <p className="text-sm text-ink-600">Net Pay</p>
                       <p className="text-lg font-bold text-green-600">LKR {calculateNetPay().toLocaleString()}</p>
                     </div>
                   </div>
@@ -771,7 +771,7 @@ const PayrollPage = () => {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                    className="px-6 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50"
                   >
                     Cancel
                   </button>
@@ -794,8 +794,8 @@ const PayrollPage = () => {
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Payroll Details</h2>
-                <button onClick={resetForm} className="text-gray-500 hover:text-gray-700">
+                <h2 className="text-h1 text-ink-900">Payroll Details</h2>
+                <button onClick={resetForm} className="text-ink-500 hover:text-ink-700">
                   <X size={24} />
                 </button>
               </div>
@@ -803,71 +803,71 @@ const PayrollPage = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Payroll Code</p>
+                    <p className="text-sm text-ink-600">Payroll Code</p>
                     <p className="font-semibold">{selectedPayroll.payrollCode}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Staff Name</p>
+                    <p className="text-sm text-ink-600">Staff Name</p>
                     <p className="font-semibold">{selectedPayroll.staff?.fullName}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Pay Period</p>
+                    <p className="text-sm text-ink-600">Pay Period</p>
                     <p className="font-semibold">
                       {selectedPayroll.payPeriodStart ? new Date(selectedPayroll.payPeriodStart).toLocaleDateString() : ''} - {selectedPayroll.payPeriodEnd ? new Date(selectedPayroll.payPeriodEnd).toLocaleDateString() : ''}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Pay Date</p>
+                    <p className="text-sm text-ink-600">Pay Date</p>
                     <p className="font-semibold">
                       {selectedPayroll.payDate ? new Date(selectedPayroll.payDate).toLocaleDateString() : 'Not Set'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Basic Salary</p>
+                    <p className="text-sm text-ink-600">Basic Salary</p>
                     <p className="font-semibold">LKR {(selectedPayroll.basicSalary || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Allowances</p>
+                    <p className="text-sm text-ink-600">Allowances</p>
                     <p className="font-semibold">LKR {(selectedPayroll.allowances || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Overtime</p>
+                    <p className="text-sm text-ink-600">Overtime</p>
                     <p className="font-semibold">LKR {(selectedPayroll.overtimeAmount || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Bonuses</p>
+                    <p className="text-sm text-ink-600">Bonuses</p>
                     <p className="font-semibold">LKR {(selectedPayroll.bonuses || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Deductions</p>
+                    <p className="text-sm text-ink-600">Deductions</p>
                     <p className="font-semibold text-red-600">LKR {(selectedPayroll.deductions || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Tax</p>
+                    <p className="text-sm text-ink-600">Tax</p>
                     <p className="font-semibold text-red-600">LKR {(selectedPayroll.taxDeduction || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">EPF</p>
+                    <p className="text-sm text-ink-600">EPF</p>
                     <p className="font-semibold text-red-600">LKR {(selectedPayroll.epfDeduction || 0).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">ETF</p>
+                    <p className="text-sm text-ink-600">ETF</p>
                     <p className="font-semibold text-red-600">LKR {(selectedPayroll.etfDeduction || 0).toLocaleString()}</p>
                   </div>
                   <div className="col-span-2 border-t pt-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-gray-600">Gross Pay</p>
-                        <p className="text-xl font-bold text-gray-900">LKR {(selectedPayroll.grossPay || 0).toLocaleString()}</p>
+                        <p className="text-sm text-ink-600">Gross Pay</p>
+                        <p className="text-xl font-bold text-ink-900">LKR {(selectedPayroll.grossPay || 0).toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Net Pay</p>
+                        <p className="text-sm text-ink-600">Net Pay</p>
                         <p className="text-xl font-bold text-green-600">LKR {(selectedPayroll.netPay || 0).toLocaleString()}</p>
                       </div>
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Status</p>
+                    <p className="text-sm text-ink-600">Status</p>
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       selectedPayroll.status === 'Processed' ? 'bg-green-100 text-green-800' :
                       selectedPayroll.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -877,12 +877,12 @@ const PayrollPage = () => {
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Payment Method</p>
+                    <p className="text-sm text-ink-600">Payment Method</p>
                     <p className="font-semibold">{selectedPayroll.paymentMethod}</p>
                   </div>
                   {selectedPayroll.notes && (
                     <div className="col-span-2">
-                      <p className="text-sm text-gray-600">Notes</p>
+                      <p className="text-sm text-ink-600">Notes</p>
                       <p className="font-semibold">{selectedPayroll.notes}</p>
                     </div>
                   )}
@@ -892,7 +892,7 @@ const PayrollPage = () => {
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={resetForm}
-                  className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                  className="px-6 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50"
                 >
                   Close
                 </button>

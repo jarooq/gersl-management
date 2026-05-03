@@ -9,8 +9,8 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
       case 'Implementation': return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'Planning': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       case 'Closing': return 'bg-green-100 text-green-700 border-green-200';
-      case 'Completed': return 'bg-gray-100 text-gray-700 border-gray-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Completed': return 'bg-ink-100 text-ink-700 border-ink-100';
+      default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
   };
 
@@ -28,8 +28,8 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1 mr-3">
-            <h3 className="font-bold text-lg text-gray-900 leading-tight mb-1">{project.name}</h3>
-            <p className="text-sm text-gray-600 font-medium mb-2">{project.programmeArea}</p>
+            <h3 className="font-bold text-lg text-ink-900 leading-tight mb-1">{project.name}</h3>
+            <p className="text-sm text-ink-600 font-medium mb-2">{project.programmeArea}</p>
 
             {/* MEAL Badges - NEW */}
             <div className="flex items-center gap-2 flex-wrap">
@@ -69,11 +69,11 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
         {/* Progress Bar */}
         <div className="mb-5">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-semibold text-gray-600 flex items-center gap-2">
+            <span className="text-sm font-semibold text-ink-600 flex items-center gap-2">
               <Target size={16} className="text-purple-500" />
               Progress
             </span>
-            <span className="text-sm font-bold text-gray-900">{project.progress}%</span>
+            <span className="text-sm font-bold text-ink-900">{project.progress}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2.5 shadow-inner">
             <div
@@ -90,8 +90,8 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
               <DollarSign size={16} className="text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-gray-600 font-medium">Budget</p>
-              <p className="font-bold text-gray-900">LKR {(project.budget / 1000).toFixed(0)}K</p>
+              <p className="text-xs text-ink-600 font-medium">Budget</p>
+              <p className="font-bold text-ink-900">LKR {(project.budget / 1000).toFixed(0)}K</p>
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm p-3 bg-blue-50 rounded-lg border border-blue-100">
@@ -99,8 +99,8 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
               <Users size={16} className="text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-gray-600 font-medium">Beneficiaries</p>
-              <p className="font-bold text-gray-900">{project.beneficiaries}</p>
+              <p className="text-xs text-ink-600 font-medium">Beneficiaries</p>
+              <p className="font-bold text-ink-900">{project.beneficiaries}</p>
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm p-3 bg-purple-50 rounded-lg border border-purple-100">
@@ -108,8 +108,8 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
               <TrendingUp size={16} className="text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-gray-600 font-medium">Spent</p>
-              <p className="font-bold text-gray-900">{budgetPercentage}%</p>
+              <p className="text-xs text-ink-600 font-medium">Spent</p>
+              <p className="font-bold text-ink-900">{budgetPercentage}%</p>
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm p-3 bg-orange-50 rounded-lg border border-orange-100">
@@ -117,8 +117,8 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
               <Calendar size={16} className="text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-gray-600 font-medium">End Date</p>
-              <p className="font-bold text-gray-900">{new Date(project.endDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</p>
+              <p className="text-xs text-ink-600 font-medium">End Date</p>
+              <p className="font-bold text-ink-900">{new Date(project.endDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</p>
             </div>
           </div>
         </div>
@@ -127,12 +127,12 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
         {project.nextTask && (
           <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 rounded-lg shadow-sm">
             <p className="text-xs text-blue-600 font-semibold mb-1">Next Task</p>
-            <p className="text-sm font-medium text-gray-900">{project.nextTask}</p>
+            <p className="text-sm font-medium text-ink-900">{project.nextTask}</p>
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-2 pt-4 border-t border-gray-200">
+        <div className="flex gap-2 pt-4 border-t border-ink-100">
           <button
             onClick={() => navigate(`/admin/projects/${project.id}`)}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
@@ -142,7 +142,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
           </button>
           <button
             onClick={() => onEdit(project)}
-            className="px-3 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all border border-gray-200 hover:border-gray-300 active:scale-95"
+            className="px-3 py-2.5 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
           >
             <Edit size={18} />
           </button>

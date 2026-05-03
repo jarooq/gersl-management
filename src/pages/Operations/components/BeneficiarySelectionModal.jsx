@@ -264,17 +264,17 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
         )}
 
         {/* Search and Filters */}
-        <div className="p-6 space-y-4 border-b border-gray-200">
+        <div className="p-6 space-y-4 border-b border-ink-100">
           {/* Search Bar with Register Button */}
           <div className="flex gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name, NIC, or phone number..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <button
@@ -290,28 +290,28 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
           <div className="flex items-center justify-between">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-semibold"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition font-semibold"
             >
               <Filter size={18} />
               Advanced Filters
               {showFilters ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-ink-600">
               Showing {filteredBeneficiaries.length} of {beneficiaries?.length || 0} beneficiaries
             </div>
           </div>
 
           {/* Advanced Filters */}
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-ink-50 rounded-lg">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Gender</label>
                 <select
                   name="gender"
                   value={filters.gender}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">All</option>
                   <option value="Male">Male</option>
@@ -321,12 +321,12 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Type</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Type</label>
                 <select
                   name="beneficiaryType"
                   value={filters.beneficiaryType}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">All Types</option>
                   {getUniqueValues('beneficiary_type').map(type => (
@@ -336,12 +336,12 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">District</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">District</label>
                 <select
                   name="district"
                   value={filters.district}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">All Districts</option>
                   {getUniqueValues('district').map(district => (
@@ -351,12 +351,12 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Age Range</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Age Range</label>
                 <select
                   name="ageRange"
                   value={filters.ageRange}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">All Ages</option>
                   <option value="0-18">0-18 years</option>
@@ -371,12 +371,12 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
           {/* Selection Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Initial Status</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Initial Status</label>
               <select
                 name="selectionStatus"
                 value={selectionOptions.selectionStatus}
                 onChange={handleSelectionOptionChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="Nominated">Nominated</option>
                 <option value="Screened">Screened</option>
@@ -386,14 +386,14 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Selection Notes (Optional)</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Selection Notes (Optional)</label>
               <input
                 type="text"
                 name="selectionNotes"
                 value={selectionOptions.selectionNotes}
                 onChange={handleSelectionOptionChange}
                 placeholder="e.g., Vulnerability assessment completed"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -408,11 +408,11 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
             </button>
             <button
               onClick={clearSelection}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold text-sm"
+              className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold text-sm"
             >
               Clear Selection
             </button>
-            <div className="flex-1 text-right text-sm font-semibold text-gray-700">
+            <div className="flex-1 text-right text-sm font-semibold text-ink-700">
               {selectedBeneficiaries.length} selected
             </div>
           </div>
@@ -423,13 +423,13 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
           {beneficiariesLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader className="animate-spin text-blue-600" size={32} />
-              <span className="ml-3 text-gray-600">Loading beneficiaries...</span>
+              <span className="ml-3 text-ink-600">Loading beneficiaries...</span>
             </div>
           ) : filteredBeneficiaries.length === 0 ? (
             <div className="text-center py-12">
-              <Users className="mx-auto text-gray-400 mb-4" size={48} />
-              <p className="text-gray-600 font-semibold">No beneficiaries found</p>
-              <p className="text-sm text-gray-500 mt-1">Try adjusting your search or filters</p>
+              <Users className="mx-auto text-ink-400 mb-4" size={48} />
+              <p className="text-ink-600 font-semibold">No beneficiaries found</p>
+              <p className="text-sm text-ink-500 mt-1">Try adjusting your search or filters</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -446,37 +446,37 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                     key={beneficiary.id}
                     className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
                       isExisting
-                        ? 'border-gray-300 bg-gray-100 opacity-60 cursor-not-allowed'
+                        ? 'border-ink-200 bg-ink-100 opacity-60 cursor-not-allowed'
                         : isNewlyRegistered
                         ? 'border-green-500 bg-green-50 shadow-lg'
                         : isSelected
                         ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-blue-300'
+                        : 'border-ink-100 hover:border-blue-300'
                     }`}
                     onClick={() => !isExisting && toggleBeneficiarySelection(beneficiary.id)}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                        <h3 className="font-bold text-ink-900 flex items-center gap-2">
                           {beneficiary.full_name}
                           {isExisting && (
-                            <span className="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
+                            <span className="text-xs bg-gray-200 text-ink-700 px-2 py-0.5 rounded-full">
                               Already Added
                             </span>
                           )}
                           {isNewlyRegistered && (
-                            <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-bold animate-pulse">
+                            <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-bold">
                               Just Registered!
                             </span>
                           )}
                         </h3>
-                        <p className="text-sm text-gray-600">{beneficiary.nic}</p>
+                        <p className="text-sm text-ink-600">{beneficiary.nic}</p>
                       </div>
                       {!isExisting && (
                         <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                           isSelected
                             ? 'bg-blue-600 border-blue-600'
-                            : 'border-gray-300'
+                            : 'border-ink-200'
                         }`}>
                           {isSelected && <CheckCircle size={16} className="text-white" />}
                         </div>
@@ -484,15 +484,15 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="flex items-center gap-1 text-gray-600">
+                      <div className="flex items-center gap-1 text-ink-600">
                         <User size={14} />
                         <span>{beneficiary.gender}, {age ? `${age}y` : 'Age N/A'}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-600">
+                      <div className="flex items-center gap-1 text-ink-600">
                         <Phone size={14} />
                         <span>{beneficiary.primary_phone || 'N/A'}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-600 col-span-2">
+                      <div className="flex items-center gap-1 text-ink-600 col-span-2">
                         <MapPin size={14} />
                         <span className="truncate">{beneficiary.district || 'N/A'}</span>
                       </div>
@@ -513,10 +513,10 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center">
+        <div className="bg-ink-50 border-t border-ink-100 p-4 flex justify-between items-center">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+            className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
           >
             Cancel
           </button>

@@ -124,7 +124,7 @@ const CompliancePage = () => {
       case 'Overdue':
         return 'bg-red-100 text-red-700';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-ink-100 text-ink-700';
     }
   };
 
@@ -137,21 +137,21 @@ const CompliancePage = () => {
       case 'Medium':
         return 'text-yellow-600';
       default:
-        return 'text-gray-600';
+        return 'text-ink-600';
     }
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Shield className="w-5 h-5 animate-pulse" />
+                <Shield className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Compliance & Safeguarding</h1>
@@ -195,8 +195,8 @@ const CompliancePage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100">
+        <div className="border-b border-ink-100">
           <div className="flex gap-1 p-1.5">
             {[
               { id: 'overview', label: 'Overview', icon: ClipboardCheck },
@@ -210,7 +210,7 @@ const CompliancePage = () => {
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
                   activeTab === tab.id
                     ? 'bg-emerald-500 text-white shadow-sm'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
                 <tab.icon size={18} />
@@ -224,7 +224,7 @@ const CompliancePage = () => {
         {activeTab === 'policies' && (
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm font-bold text-gray-900">Policy Documents</h2>
+              <h2 className="text-sm font-bold text-ink-900">Policy Documents</h2>
               <button className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition text-sm">
                 <Plus size={18} />
                 Add Policy
@@ -235,17 +235,17 @@ const CompliancePage = () => {
               {policies.map((policy) => (
                 <div
                   key={policy.id}
-                  className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition border border-gray-200"
+                  className="bg-ink-50 rounded-lg p-4 hover:bg-ink-100 transition border border-ink-100"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-sm font-bold text-gray-900">{policy.title}</h3>
+                        <h3 className="text-sm font-bold text-ink-900">{policy.title}</h3>
                         <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getStatusColor(policy.status)}`}>
                           {policy.status}
                         </span>
                       </div>
-                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-ink-600">
                         <div>Category: <span className="font-semibold">{policy.category}</span></div>
                         <div>Last Review: <span className="font-semibold">{policy.lastReview}</span></div>
                         <div>Next Review: <span className="font-semibold">{policy.nextReview}</span></div>
@@ -258,13 +258,13 @@ const CompliancePage = () => {
                       </div>
                     </div>
                     <div className="flex gap-2 ml-4">
-                      <button className="p-2 text-gray-600 hover:bg-white rounded-lg transition">
+                      <button className="p-2 text-ink-600 hover:bg-white rounded-lg transition">
                         <Eye size={16} />
                       </button>
-                      <button className="p-2 text-gray-600 hover:bg-white rounded-lg transition">
+                      <button className="p-2 text-ink-600 hover:bg-white rounded-lg transition">
                         <Download size={16} />
                       </button>
-                      <button className="p-2 text-gray-600 hover:bg-white rounded-lg transition">
+                      <button className="p-2 text-ink-600 hover:bg-white rounded-lg transition">
                         <Edit2 size={16} />
                       </button>
                     </div>
@@ -278,18 +278,18 @@ const CompliancePage = () => {
         {/* Training Tab */}
         {activeTab === 'training' && (
           <div className="p-4">
-            <h2 className="text-sm font-bold text-gray-900 mb-4">Staff Training Compliance</h2>
+            <h2 className="text-sm font-bold text-ink-900 mb-4">Staff Training Compliance</h2>
             <div className="space-y-4">
               {trainings.map((training) => (
-                <div key={training.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <div key={training.id} className="bg-ink-50 rounded-lg p-4 border border-ink-100">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-bold text-gray-900">{training.title}</h3>
+                    <h3 className="text-sm font-bold text-ink-900">{training.title}</h3>
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getStatusColor(training.status)}`}>
                       {training.status}
                     </span>
                   </div>
                   <div className="mb-2">
-                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                    <div className="flex justify-between text-xs text-ink-600 mb-1">
                       <span>{training.completed}/{training.totalStaff} staff completed</span>
                       <span className="font-bold">{training.completionRate}%</span>
                     </div>
@@ -306,7 +306,7 @@ const CompliancePage = () => {
                       ></div>
                     </div>
                   </div>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-ink-600">
                     Due Date: <span className="font-semibold">{training.dueDate}</span>
                   </div>
                 </div>
@@ -320,16 +320,16 @@ const CompliancePage = () => {
           <div className="p-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Compliance Overview */}
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <div className="bg-ink-50 rounded-lg p-4 border border-ink-100">
+                <h3 className="text-sm font-bold text-ink-900 mb-3 flex items-center gap-2">
                   <CheckCircle className="text-green-600" size={18} />
                   Compliance Overview
                 </h3>
                 <div className="space-y-3">
                   <div>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-600">Overall Compliance Rate</span>
-                      <span className="font-bold text-gray-900">{stats.complianceRate}%</span>
+                      <span className="text-ink-600">Overall Compliance Rate</span>
+                      <span className="font-bold text-ink-900">{stats.complianceRate}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
                       <div
@@ -341,23 +341,23 @@ const CompliancePage = () => {
                   <div className="grid grid-cols-3 gap-2 pt-2">
                     <div className="text-center">
                       <div className="text-xl font-bold text-green-600">{stats.upToDate}</div>
-                      <div className="text-xs text-gray-600">Up to Date</div>
+                      <div className="text-xs text-ink-600">Up to Date</div>
                     </div>
                     <div className="text-center">
                       <div className="text-xl font-bold text-yellow-600">{stats.needsReview}</div>
-                      <div className="text-xs text-gray-600">Needs Review</div>
+                      <div className="text-xs text-ink-600">Needs Review</div>
                     </div>
                     <div className="text-center">
                       <div className="text-xl font-bold text-red-600">{stats.overdue}</div>
-                      <div className="text-xs text-gray-600">Overdue</div>
+                      <div className="text-xs text-ink-600">Overdue</div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Safeguarding Status */}
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <div className="bg-ink-50 rounded-lg p-4 border border-ink-100">
+                <h3 className="text-sm font-bold text-ink-900 mb-3 flex items-center gap-2">
                   <Shield className="text-emerald-600" size={18} />
                   Safeguarding Status
                 </h3>
@@ -366,8 +366,8 @@ const CompliancePage = () => {
                     <CheckCircle className="text-green-600" size={32} />
                   </div>
                   <div className="text-2xl font-bold text-green-600 mb-1">All Clear</div>
-                  <p className="text-xs text-gray-600">No safeguarding incidents reported</p>
-                  <p className="text-xs text-gray-500 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
+                  <p className="text-xs text-ink-600">No safeguarding incidents reported</p>
+                  <p className="text-xs text-ink-500 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
                 </div>
               </div>
             </div>
@@ -381,8 +381,8 @@ const CompliancePage = () => {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <CheckCircle className="text-green-600" size={32} />
               </div>
-              <h3 className="text-sm font-bold text-gray-900 mb-1">No Incidents Reported</h3>
-              <p className="text-xs text-gray-600">Maintaining zero safeguarding incidents</p>
+              <h3 className="text-sm font-bold text-ink-900 mb-1">No Incidents Reported</h3>
+              <p className="text-xs text-ink-600">Maintaining zero safeguarding incidents</p>
             </div>
           </div>
         )}
@@ -393,15 +393,15 @@ const CompliancePage = () => {
 
 // Stat Card Component
 const StatCard = ({ icon: Icon, label, value, subValue, color }) => (
-  <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition">
+  <div className="bg-white rounded-lg shadow-sm p-4 border border-ink-100 hover:shadow-md transition">
     <div className="flex items-center justify-between mb-3">
       <div className={`bg-gradient-to-br ${color} p-2.5 rounded-lg shadow-sm`}>
         <Icon className="text-white" size={18} />
       </div>
     </div>
-    <p className="text-2xl font-bold text-gray-900 mb-0.5">{value}</p>
-    <p className="text-xs text-gray-600 font-medium mb-1">{label}</p>
-    <p className="text-xs text-gray-500">{subValue}</p>
+    <p className="text-h1 text-ink-900 mb-0.5">{value}</p>
+    <p className="text-xs text-ink-600 font-medium mb-1">{label}</p>
+    <p className="text-xs text-ink-500">{subValue}</p>
   </div>
 );
 

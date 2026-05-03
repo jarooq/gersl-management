@@ -113,7 +113,7 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
         </div>
 
         {/* Progress Steps */}
-        <div className="bg-gray-50 px-6 py-4 border-b">
+        <div className="bg-ink-50 px-6 py-4 border-b">
           <div className="flex items-center justify-between">
             <StepIndicator number={1} label="Report Type" active={currentStep === 1} completed={currentStep > 1} />
             <div className="flex-1 h-1 bg-gray-200 mx-2">
@@ -148,17 +148,17 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 border-t flex justify-between items-center">
+        <div className="bg-ink-50 px-6 py-4 border-t flex justify-between items-center">
           <button
             onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
             disabled={currentStep === 1}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 text-ink-700 hover:bg-gray-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={18} />
             Back
           </button>
 
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-ink-600">
             Step {currentStep} of 4
           </div>
 
@@ -202,11 +202,11 @@ const StepIndicator = ({ number, label, active, completed }) => {
       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition ${
         completed ? 'bg-blue-600 text-white' :
         active ? 'bg-blue-600 text-white' :
-        'bg-gray-200 text-gray-500'
+        'bg-gray-200 text-ink-500'
       }`}>
         {completed ? <Check size={20} /> : number}
       </div>
-      <span className={`text-xs font-medium ${active ? 'text-blue-600' : 'text-gray-500'}`}>
+      <span className={`text-xs font-medium ${active ? 'text-blue-600' : 'text-ink-500'}`}>
         {label}
       </span>
     </div>
@@ -217,7 +217,7 @@ const Step1ReportType = ({ formData, setFormData }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
           <Calendar className="text-blue-600" />
           Report Configuration
         </h3>
@@ -225,7 +225,7 @@ const Step1ReportType = ({ formData, setFormData }) => {
 
       {/* Report Type */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Report Type</label>
+        <label className="block text-sm font-semibold text-ink-700 mb-2">Report Type</label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { value: 'monthly', label: 'Monthly', desc: 'Last 30 days' },
@@ -239,11 +239,11 @@ const Step1ReportType = ({ formData, setFormData }) => {
               className={`p-4 border-2 rounded-lg text-left transition ${
                 formData.reportType === type.value
                   ? 'border-blue-600 bg-blue-50'
-                  : 'border-gray-200 hover:border-blue-300'
+                  : 'border-ink-100 hover:border-blue-300'
               }`}
             >
-              <div className="font-semibold text-gray-900">{type.label}</div>
-              <div className="text-xs text-gray-600 mt-1">{type.desc}</div>
+              <div className="font-semibold text-ink-900">{type.label}</div>
+              <div className="text-xs text-ink-600 mt-1">{type.desc}</div>
             </button>
           ))}
         </div>
@@ -252,21 +252,21 @@ const Step1ReportType = ({ formData, setFormData }) => {
       {/* Date Range */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Start Date</label>
           <input
             type="date"
             value={formData.reportPeriodStart}
             onChange={(e) => setFormData(prev => ({ ...prev, reportPeriodStart: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">End Date</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">End Date</label>
           <input
             type="date"
             value={formData.reportPeriodEnd}
             onChange={(e) => setFormData(prev => ({ ...prev, reportPeriodEnd: e.target.value }))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -282,7 +282,7 @@ const Step1ReportType = ({ formData, setFormData }) => {
               onChange={(e) => setFormData(prev => ({ ...prev, includeProgressRatings: e.target.checked }))}
               className="w-4 h-4 text-blue-600 rounded"
             />
-            <span className="text-sm text-gray-700">Include Progress Ratings</span>
+            <span className="text-sm text-ink-700">Include Progress Ratings</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -291,7 +291,7 @@ const Step1ReportType = ({ formData, setFormData }) => {
               onChange={(e) => setFormData(prev => ({ ...prev, includeNeedsAssessment: e.target.checked }))}
               className="w-4 h-4 text-blue-600 rounded"
             />
-            <span className="text-sm text-gray-700">Include Needs Assessment</span>
+            <span className="text-sm text-ink-700">Include Needs Assessment</span>
           </label>
         </div>
       </div>
@@ -303,11 +303,11 @@ const Step2Partner = ({ formData, setFormData, partners }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-ink-900 mb-2 flex items-center gap-2">
           <Users className="text-blue-600" />
           Select Recipient Partner
         </h3>
-        <p className="text-sm text-gray-600">Choose which assigned partner/donor should receive this report</p>
+        <p className="text-sm text-ink-600">Choose which assigned partner/donor should receive this report</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
@@ -320,7 +320,7 @@ const Step2Partner = ({ formData, setFormData, partners }) => {
               className={`p-4 border-2 rounded-lg text-left transition ${
                 formData.partnerId === partner.id
                   ? 'border-blue-600 bg-blue-50'
-                  : 'border-gray-200 hover:border-blue-300'
+                  : 'border-ink-100 hover:border-blue-300'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -328,11 +328,11 @@ const Step2Partner = ({ formData, setFormData, partners }) => {
                   <img src={partner.logo} alt={partner.name} className="w-12 h-12 rounded object-cover" />
                 )}
                 <div className="flex-1">
-                  <div className="font-semibold text-gray-900">{partner.name}</div>
-                  <div className="text-xs text-gray-600 mt-1">{partner.country}</div>
+                  <div className="font-semibold text-ink-900">{partner.name}</div>
+                  <div className="text-xs text-ink-600 mt-1">{partner.country}</div>
                   <div className="mt-2 flex gap-2">
                     {partner.partnerType && (
-                      <span className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
+                      <span className="inline-block px-2 py-1 text-xs bg-ink-100 text-ink-700 rounded">
                         {partner.partnerType}
                       </span>
                     )}
@@ -353,10 +353,10 @@ const Step2Partner = ({ formData, setFormData, partners }) => {
       </div>
 
       {partners.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-900 font-semibold mb-2">No partners assigned yet</p>
-          <p className="text-gray-600 text-sm">This orphan must be assigned to a partner/donor first before generating reports</p>
+        <div className="text-center py-12 bg-ink-50 rounded-lg">
+          <Users className="w-12 h-12 text-ink-400 mx-auto mb-3" />
+          <p className="text-ink-900 font-semibold mb-2">No partners assigned yet</p>
+          <p className="text-ink-600 text-sm">This orphan must be assigned to a partner/donor first before generating reports</p>
         </div>
       )}
     </div>
@@ -409,24 +409,24 @@ const Step3Media = ({ formData, setFormData, visitLogs }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-ink-900 mb-2 flex items-center gap-2">
           <Image className="text-blue-600" />
           Select Media for Report
         </h3>
-        <p className="text-sm text-gray-600">Choose photos, drawings, and letters from visits during the report period</p>
+        <p className="text-sm text-ink-600">Choose photos, drawings, and letters from visits during the report period</p>
       </div>
 
       {/* Photos */}
       {allPhotos.length > 0 && (
         <div>
-          <h4 className="font-semibold text-gray-900 mb-3">Photos ({formData.selectedPhotos.length} selected)</h4>
+          <h4 className="font-semibold text-ink-900 mb-3">Photos ({formData.selectedPhotos.length} selected)</h4>
           <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
             {allPhotos.map((photo, index) => (
               <div
                 key={index}
                 onClick={() => togglePhoto(photo)}
                 className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition ${
-                  formData.selectedPhotos.includes(photo) ? 'border-blue-600' : 'border-gray-200'
+                  formData.selectedPhotos.includes(photo) ? 'border-blue-600' : 'border-ink-100'
                 }`}
               >
                 <img src={photo} alt={`Photo ${index + 1}`} className="w-full h-20 object-cover" />
@@ -446,14 +446,14 @@ const Step3Media = ({ formData, setFormData, visitLogs }) => {
       {/* Drawings */}
       {allDrawings.length > 0 && (
         <div>
-          <h4 className="font-semibold text-gray-900 mb-3">Drawings ({formData.selectedDrawings.length} selected)</h4>
+          <h4 className="font-semibold text-ink-900 mb-3">Drawings ({formData.selectedDrawings.length} selected)</h4>
           <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
             {allDrawings.map((drawing, index) => (
               <div
                 key={index}
                 onClick={() => toggleDrawing(drawing)}
                 className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition ${
-                  formData.selectedDrawings.includes(drawing) ? 'border-purple-600' : 'border-gray-200'
+                  formData.selectedDrawings.includes(drawing) ? 'border-purple-600' : 'border-ink-100'
                 }`}
               >
                 <img src={drawing} alt={`Drawing ${index + 1}`} className="w-full h-20 object-cover" />
@@ -473,14 +473,14 @@ const Step3Media = ({ formData, setFormData, visitLogs }) => {
       {/* Letters */}
       {allLetters.length > 0 && (
         <div>
-          <h4 className="font-semibold text-gray-900 mb-3">Letters ({formData.selectedLetters.length} selected)</h4>
+          <h4 className="font-semibold text-ink-900 mb-3">Letters ({formData.selectedLetters.length} selected)</h4>
           <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
             {allLetters.map((letter, index) => (
               <div
                 key={index}
                 onClick={() => toggleLetter(letter)}
                 className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition ${
-                  formData.selectedLetters.includes(letter) ? 'border-green-600' : 'border-gray-200'
+                  formData.selectedLetters.includes(letter) ? 'border-green-600' : 'border-ink-100'
                 }`}
               >
                 <img src={letter} alt={`Letter ${index + 1}`} className="w-full h-20 object-cover" />
@@ -498,9 +498,9 @@ const Step3Media = ({ formData, setFormData, visitLogs }) => {
       )}
 
       {filteredVisits.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-600">No visits found in the selected date range</p>
+        <div className="text-center py-12 bg-ink-50 rounded-lg">
+          <Calendar className="w-12 h-12 text-ink-400 mx-auto mb-3" />
+          <p className="text-ink-600">No visits found in the selected date range</p>
         </div>
       )}
     </div>
@@ -529,11 +529,11 @@ const Step4Review = ({ formData, orphan, partners }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-ink-900 mb-2 flex items-center gap-2">
           <FileText className="text-blue-600" />
           Review Report Details
         </h3>
-        <p className="text-sm text-gray-600">Please review all information before generating the report</p>
+        <p className="text-sm text-ink-600">Please review all information before generating the report</p>
       </div>
 
       <div className="space-y-4">
@@ -541,9 +541,9 @@ const Step4Review = ({ formData, orphan, partners }) => {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h4 className="font-semibold text-blue-900 mb-2">Report Information</h4>
           <div className="space-y-1 text-sm">
-            <p><span className="text-gray-600">Type:</span> <span className="font-medium">{getReportTypeLabel(formData.reportType)}</span></p>
-            <p><span className="text-gray-600">Period:</span> <span className="font-medium">{formatDate(formData.reportPeriodStart)} - {formatDate(formData.reportPeriodEnd)}</span></p>
-            <p><span className="text-gray-600">Orphan:</span> <span className="font-medium">{orphan?.fullName}</span></p>
+            <p><span className="text-ink-600">Type:</span> <span className="font-medium">{getReportTypeLabel(formData.reportType)}</span></p>
+            <p><span className="text-ink-600">Period:</span> <span className="font-medium">{formatDate(formData.reportPeriodStart)} - {formatDate(formData.reportPeriodEnd)}</span></p>
+            <p><span className="text-ink-600">Orphan:</span> <span className="font-medium">{orphan?.fullName}</span></p>
           </div>
         </div>
 
@@ -557,7 +557,7 @@ const Step4Review = ({ formData, orphan, partners }) => {
               )}
               <div>
                 <p className="font-medium">{selectedPartner.name}</p>
-                <p className="text-xs text-gray-600">{selectedPartner.country}</p>
+                <p className="text-xs text-ink-600">{selectedPartner.country}</p>
               </div>
             </div>
           </div>
@@ -567,9 +567,9 @@ const Step4Review = ({ formData, orphan, partners }) => {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <h4 className="font-semibold text-green-900 mb-2">Selected Media</h4>
           <div className="flex gap-4 text-sm">
-            <span><span className="text-gray-600">Photos:</span> <span className="font-medium">{formData.selectedPhotos.length}</span></span>
-            <span><span className="text-gray-600">Drawings:</span> <span className="font-medium">{formData.selectedDrawings.length}</span></span>
-            <span><span className="text-gray-600">Letters:</span> <span className="font-medium">{formData.selectedLetters.length}</span></span>
+            <span><span className="text-ink-600">Photos:</span> <span className="font-medium">{formData.selectedPhotos.length}</span></span>
+            <span><span className="text-ink-600">Drawings:</span> <span className="font-medium">{formData.selectedDrawings.length}</span></span>
+            <span><span className="text-ink-600">Letters:</span> <span className="font-medium">{formData.selectedLetters.length}</span></span>
           </div>
         </div>
 
@@ -594,7 +594,7 @@ const Step4Review = ({ formData, orphan, partners }) => {
           <Sparkles className="text-purple-600 flex-shrink-0 mt-0.5" size={20} />
           <div>
             <h4 className="font-semibold text-purple-900 mb-1">AI-Powered Generation</h4>
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-ink-700">
               This report will be automatically generated using AI to create a comprehensive narrative summary,
               progress analysis, and recommendations based on visit logs and rating data.
             </p>

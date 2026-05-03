@@ -160,7 +160,7 @@ const VendorCallsPage = () => {
   const getStatusBadge = (status) => {
     const badges = {
       'Active': { label: 'Active', color: 'text-green-700', bgColor: 'bg-green-100', icon: CheckCircle },
-      'Draft': { label: 'Draft', color: 'text-gray-700', bgColor: 'bg-gray-100', icon: FileText },
+      'Draft': { label: 'Draft', color: 'text-ink-700', bgColor: 'bg-ink-100', icon: FileText },
       'Closed': { label: 'Closed', color: 'text-red-700', bgColor: 'bg-red-100', icon: X },
       'Awarded': { label: 'Awarded', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: Target },
       'Cancelled': { label: 'Cancelled', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: AlertCircle }
@@ -175,7 +175,7 @@ const VendorCallsPage = () => {
       'Construction': { color: 'text-orange-700', bgColor: 'bg-orange-100' },
       'Consultancy': { color: 'text-indigo-700', bgColor: 'bg-indigo-100' },
       'Equipment': { color: 'text-green-700', bgColor: 'bg-green-100' },
-      'Other': { color: 'text-gray-700', bgColor: 'bg-gray-100' }
+      'Other': { color: 'text-ink-700', bgColor: 'bg-ink-100' }
     };
     return badges[category] || badges['Other'];
   };
@@ -231,16 +231,16 @@ const VendorCallsPage = () => {
   }, [vendorCalls]);
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Store className="w-5 h-5 animate-pulse" />
+                <Store className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Vendor Calls & Tenders</h1>
@@ -259,100 +259,100 @@ const VendorCallsPage = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer animate-slide-up">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Tenders</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Tenders</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stats.total}</h3>
+                <h3 className="text-h1 text-ink-900">{stats.total}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stats.active} active</p>
+              <p className="text-xs text-ink-500 mt-1">{stats.active} active</p>
             </div>
-            <div className="bg-gradient-to-br from-fuchsia-500 to-pink-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Store className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Budget</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Budget</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">${(stats.totalBudget / 1000).toFixed(0)}K</h3>
+                <h3 className="text-h1 text-ink-900">${(stats.totalBudget / 1000).toFixed(0)}K</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">All tenders</p>
+              <p className="text-xs text-ink-500 mt-1">All tenders</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <DollarSign className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Submissions</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Submissions</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stats.totalSubmissions}</h3>
+                <h3 className="text-h1 text-ink-900">{stats.totalSubmissions}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Total received</p>
+              <p className="text-xs text-ink-500 mt-1">Total received</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Users className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Awarded</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Awarded</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stats.awarded}</h3>
+                <h3 className="text-h1 text-ink-900">{stats.awarded}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stats.draft} draft</p>
+              <p className="text-xs text-ink-500 mt-1">{stats.draft} draft</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Target className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -365,20 +365,20 @@ const VendorCallsPage = () => {
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-3 items-center flex-1 flex-wrap">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search vendor calls..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
             >
               {callStatuses.map(status => (
                 <option key={status} value={status}>{status}</option>
@@ -388,7 +388,7 @@ const VendorCallsPage = () => {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
             >
               <option value="All">All Categories</option>
               {categories.map(category => (
@@ -422,19 +422,19 @@ const VendorCallsPage = () => {
           <table className="w-full">
             <thead className="bg-gradient-to-r from-fuchsia-100 to-pink-100">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Tender</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Category</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Budget</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Deadline</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Submissions</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Status</th>
-                <th className="px-6 py-4 text-center text-sm font-bold text-gray-700">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Tender</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Category</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Budget</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Deadline</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Submissions</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Status</th>
+                <th className="px-6 py-4 text-center text-sm font-bold text-ink-700">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-ink-100">
               {filteredCalls.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="7" className="px-6 py-12 text-center text-ink-500">
                     <Store className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                     <p className="text-lg font-medium">No vendor calls found</p>
                     <p className="text-sm">Create your first tender to start procurement</p>
@@ -449,7 +449,7 @@ const VendorCallsPage = () => {
                       <td className="px-6 py-4">
                         <div>
                           <p className="font-semibold text-gray-800">{call.title}</p>
-                          <p className="text-sm text-gray-500">{call.tenderCode}</p>
+                          <p className="text-sm text-ink-500">{call.tenderCode}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -461,17 +461,17 @@ const VendorCallsPage = () => {
                         {call.budget ? (
                           <p className="font-bold text-green-600">${call.budget.toLocaleString()}</p>
                         ) : (
-                          <p className="text-sm text-gray-400">Not specified</p>
+                          <p className="text-sm text-ink-400">Not specified</p>
                         )}
                       </td>
                       <td className="px-6 py-4">
                         {call.submissionDeadline ? (
-                          <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Clock className="w-4 h-4 text-gray-500" />
+                          <div className="flex items-center gap-1 text-sm text-ink-600">
+                            <Clock className="w-4 h-4 text-ink-500" />
                             {new Date(call.submissionDeadline).toLocaleDateString()}
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-400">No deadline</p>
+                          <p className="text-sm text-ink-400">No deadline</p>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -481,7 +481,7 @@ const VendorCallsPage = () => {
                             {call.submissions.length}
                           </p>
                         ) : (
-                          <p className="text-sm text-gray-400">0</p>
+                          <p className="text-sm text-ink-400">0</p>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -530,7 +530,7 @@ const VendorCallsPage = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">
                   {editingCall ? 'Edit Vendor Call' : 'Create New Vendor Call'}
@@ -547,26 +547,26 @@ const VendorCallsPage = () => {
             <form onSubmit={handleSubmit} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Tender Title *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Tender Title *</label>
                   <input
                     type="text"
                     name="title"
                     value={callForm.title}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="e.g., Supply of Office Equipment"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Category *</label>
                   <select
                     name="category"
                     value={callForm.category}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   >
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -575,7 +575,7 @@ const VendorCallsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Budget ($)</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Budget ($)</label>
                   <input
                     type="number"
                     name="budget"
@@ -583,42 +583,42 @@ const VendorCallsPage = () => {
                     onChange={handleInputChange}
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="50000"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Published Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Published Date *</label>
                   <input
                     type="date"
                     name="publishedDate"
                     value={callForm.publishedDate}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Submission Deadline</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Submission Deadline</label>
                   <input
                     type="date"
                     name="submissionDeadline"
                     value={callForm.submissionDeadline}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Status *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Status *</label>
                   <select
                     name="status"
                     value={callForm.status}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   >
                     <option value="Draft">Draft</option>
                     <option value="Active">Active</option>
@@ -629,48 +629,48 @@ const VendorCallsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Pre-Bid Meeting Date</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Pre-Bid Meeting Date</label>
                   <input
                     type="date"
                     name="preBidMeetingDate"
                     value={callForm.preBidMeetingDate}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Person</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Contact Person</label>
                   <input
                     type="text"
                     name="contactPerson"
                     value={callForm.contactPerson}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="John Doe"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Email</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Contact Email</label>
                   <input
                     type="email"
                     name="contactEmail"
                     value={callForm.contactEmail}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="procurement@organization.org"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Phone</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Contact Phone</label>
                   <input
                     type="tel"
                     name="contactPhone"
                     value={callForm.contactPhone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="+94 XX XXX XXXX"
                   />
                 </div>
@@ -684,67 +684,67 @@ const VendorCallsPage = () => {
                       onChange={handleInputChange}
                       className="w-4 h-4 text-fuchsia-600 focus:ring-fuchsia-500 rounded"
                     />
-                    <span className="text-sm font-medium text-gray-700">Performance Bond Required</span>
+                    <span className="text-sm font-medium text-ink-700">Performance Bond Required</span>
                   </label>
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Description *</label>
                   <textarea
                     name="description"
                     value={callForm.description}
                     onChange={handleInputChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="Detailed description of the tender..."
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Specifications</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Specifications</label>
                   <textarea
                     name="specifications"
                     value={callForm.specifications}
                     onChange={handleInputChange}
                     rows="4"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="Technical specifications (one per line)..."
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Requirements</label>
                   <textarea
                     name="requirements"
                     value={callForm.requirements}
                     onChange={handleInputChange}
                     rows="4"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="Vendor requirements and qualifications..."
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Evaluation Criteria</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Evaluation Criteria</label>
                   <textarea
                     name="evaluationCriteria"
                     value={callForm.evaluationCriteria}
                     onChange={handleInputChange}
                     rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="How submissions will be evaluated..."
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Terms and Conditions</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Terms and Conditions</label>
                   <textarea
                     name="termsAndConditions"
                     value={callForm.termsAndConditions}
                     onChange={handleInputChange}
                     rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="Terms and conditions for this tender..."
                   />
                 </div>
@@ -754,7 +754,7 @@ const VendorCallsPage = () => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition-colors"
                 >
                   Cancel
                 </button>
@@ -775,7 +775,7 @@ const VendorCallsPage = () => {
       {showViewModal && viewingCall && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{viewingCall.title}</h2>
                 <button
@@ -790,18 +790,18 @@ const VendorCallsPage = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-fuchsia-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Tender Code</p>
+                  <p className="text-sm text-ink-600 mb-1">Tender Code</p>
                   <p className="text-lg font-bold text-gray-800">{viewingCall.tenderCode}</p>
                 </div>
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Category</p>
+                  <p className="text-sm text-ink-600 mb-1">Category</p>
                   <p className="text-lg font-bold text-gray-800">{viewingCall.category}</p>
                 </div>
               </div>
 
               {viewingCall.budget && (
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
+                  <p className="text-sm text-ink-600 mb-1 flex items-center gap-1">
                     <DollarSign className="w-4 h-4" />
                     Budget
                   </p>
@@ -810,39 +810,39 @@ const VendorCallsPage = () => {
               )}
 
               <div className="border-t pt-4">
-                <h3 className="font-semibold text-gray-700 mb-2">Description</h3>
-                <p className="text-gray-600 text-sm whitespace-pre-line">{viewingCall.description}</p>
+                <h3 className="font-semibold text-ink-700 mb-2">Description</h3>
+                <p className="text-ink-600 text-sm whitespace-pre-line">{viewingCall.description}</p>
               </div>
 
               {viewingCall.specifications && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-2">Specifications</h3>
-                  <p className="text-gray-600 text-sm whitespace-pre-line">{viewingCall.specifications}</p>
+                  <h3 className="font-semibold text-ink-700 mb-2">Specifications</h3>
+                  <p className="text-ink-600 text-sm whitespace-pre-line">{viewingCall.specifications}</p>
                 </div>
               )}
 
               {viewingCall.requirements && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-2">Requirements</h3>
-                  <p className="text-gray-600 text-sm whitespace-pre-line">{viewingCall.requirements}</p>
+                  <h3 className="font-semibold text-ink-700 mb-2">Requirements</h3>
+                  <p className="text-ink-600 text-sm whitespace-pre-line">{viewingCall.requirements}</p>
                 </div>
               )}
 
               {viewingCall.evaluationCriteria && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-2">Evaluation Criteria</h3>
-                  <p className="text-gray-600 text-sm whitespace-pre-line">{viewingCall.evaluationCriteria}</p>
+                  <h3 className="font-semibold text-ink-700 mb-2">Evaluation Criteria</h3>
+                  <p className="text-ink-600 text-sm whitespace-pre-line">{viewingCall.evaluationCriteria}</p>
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4 border-t pt-4">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Published Date</p>
+                  <p className="text-sm text-ink-600 mb-1">Published Date</p>
                   <p className="font-semibold text-gray-800">{new Date(viewingCall.publishedDate).toLocaleDateString()}</p>
                 </div>
                 {viewingCall.submissionDeadline && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
+                    <p className="text-sm text-ink-600 mb-1 flex items-center gap-1">
                       <Clock className="w-4 h-4" />
                       Submission Deadline
                     </p>
@@ -853,7 +853,7 @@ const VendorCallsPage = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Status</p>
+                  <p className="text-sm text-ink-600 mb-1">Status</p>
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(viewingCall.status).bgColor} ${getStatusBadge(viewingCall.status).color}`}>
                     {viewingCall.status}
                   </span>
@@ -869,16 +869,16 @@ const VendorCallsPage = () => {
 
               {(viewingCall.contactPerson || viewingCall.contactEmail || viewingCall.contactPhone) && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-3">Contact Information</h3>
+                  <h3 className="font-semibold text-ink-700 mb-3">Contact Information</h3>
                   <div className="space-y-2 text-sm">
                     {viewingCall.contactPerson && (
-                      <p className="text-gray-600">Person: <span className="font-medium text-gray-800">{viewingCall.contactPerson}</span></p>
+                      <p className="text-ink-600">Person: <span className="font-medium text-gray-800">{viewingCall.contactPerson}</span></p>
                     )}
                     {viewingCall.contactEmail && (
-                      <p className="text-gray-600">Email: <span className="font-medium text-gray-800">{viewingCall.contactEmail}</span></p>
+                      <p className="text-ink-600">Email: <span className="font-medium text-gray-800">{viewingCall.contactEmail}</span></p>
                     )}
                     {viewingCall.contactPhone && (
-                      <p className="text-gray-600">Phone: <span className="font-medium text-gray-800">{viewingCall.contactPhone}</span></p>
+                      <p className="text-ink-600">Phone: <span className="font-medium text-gray-800">{viewingCall.contactPhone}</span></p>
                     )}
                   </div>
                 </div>
@@ -886,18 +886,18 @@ const VendorCallsPage = () => {
 
               {viewingCall.termsAndConditions && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-2">Terms and Conditions</h3>
-                  <p className="text-gray-600 text-sm whitespace-pre-line bg-gray-50 p-4 rounded-lg">{viewingCall.termsAndConditions}</p>
+                  <h3 className="font-semibold text-ink-700 mb-2">Terms and Conditions</h3>
+                  <p className="text-ink-600 text-sm whitespace-pre-line bg-ink-50 p-4 rounded-lg">{viewingCall.termsAndConditions}</p>
                 </div>
               )}
 
               {viewingCall.submissions && viewingCall.submissions.length > 0 && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <h3 className="font-semibold text-ink-700 mb-3 flex items-center gap-2">
                     <Users className="w-5 h-5 text-fuchsia-600" />
                     Vendor Submissions ({viewingCall.submissions.length})
                   </h3>
-                  <p className="text-sm text-gray-600">Total submissions received for this tender</p>
+                  <p className="text-sm text-ink-600">Total submissions received for this tender</p>
                 </div>
               )}
             </div>

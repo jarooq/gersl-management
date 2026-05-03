@@ -173,7 +173,7 @@ const ExecutiveDashboard = () => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Activity className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-2" />
-          <p className="text-gray-600">Loading executive dashboard...</p>
+          <p className="text-ink-600">Loading executive dashboard...</p>
         </div>
       </div>
     );
@@ -193,34 +193,34 @@ const ExecutiveDashboard = () => {
       {/* Key Performance Indicators */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Projects */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <FolderOpen className="text-blue-600" size={24} />
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">{portfolioMetrics.totalProjects}</div>
-              <div className="text-xs text-gray-500">Total Projects</div>
+              <div className="text-h1 text-ink-900">{portfolioMetrics.totalProjects}</div>
+              <div className="text-xs text-ink-500">Total Projects</div>
             </div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="text-green-600 font-medium">{portfolioMetrics.activeProjects} Active</span>
-            <span className="text-gray-400">•</span>
-            <span className="text-gray-600">{portfolioMetrics.completedProjects} Completed</span>
+            <span className="text-ink-400">•</span>
+            <span className="text-ink-600">{portfolioMetrics.completedProjects} Completed</span>
           </div>
         </div>
 
         {/* Budget Utilization */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <DollarSign className="text-green-600" size={24} />
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-h1 text-ink-900">
                 {portfolioMetrics.budgetUtilization.toFixed(1)}%
               </div>
-              <div className="text-xs text-gray-500">Budget Used</div>
+              <div className="text-xs text-ink-500">Budget Used</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -237,42 +237,42 @@ const ExecutiveDashboard = () => {
         </div>
 
         {/* Task Completion */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <CheckCircle className="text-purple-600" size={24} />
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-h1 text-ink-900">
                 {taskMetrics.completionRate.toFixed(0)}%
               </div>
-              <div className="text-xs text-gray-500">Tasks Complete</div>
+              <div className="text-xs text-ink-500">Tasks Complete</div>
             </div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="text-purple-600 font-medium">{taskMetrics.completedTasks}/{taskMetrics.totalTasks}</span>
-            <span className="text-gray-400">•</span>
+            <span className="text-ink-400">•</span>
             <span className="text-red-600">{taskMetrics.overdueTasks} Overdue</span>
           </div>
         </div>
 
         {/* Proposal Success Rate */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
               <Award className="text-orange-600" size={24} />
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-h1 text-ink-900">
                 {proposalMetrics.approvalRate.toFixed(0)}%
               </div>
-              <div className="text-xs text-gray-500">Approval Rate</div>
+              <div className="text-xs text-ink-500">Approval Rate</div>
             </div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="text-green-600 font-medium">{proposalMetrics.approved} Approved</span>
-            <span className="text-gray-400">•</span>
-            <span className="text-gray-600">{proposalMetrics.pending} Pending</span>
+            <span className="text-ink-400">•</span>
+            <span className="text-ink-600">{proposalMetrics.pending} Pending</span>
           </div>
         </div>
       </div>
@@ -281,20 +281,20 @@ const ExecutiveDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Budget Summary Cards */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Financial Summary</h3>
+          <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+            <h3 className="text-lg font-bold text-ink-900 mb-4">Financial Summary</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-600">Total Budget</span>
-                  <span className="text-lg font-bold text-gray-900">
+                  <span className="text-sm text-ink-600">Total Budget</span>
+                  <span className="text-lg font-bold text-ink-900">
                     ${portfolioMetrics.totalBudget.toLocaleString()}
                   </span>
                 </div>
               </div>
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-600">Budget Spent</span>
+                  <span className="text-sm text-ink-600">Budget Spent</span>
                   <span className="text-lg font-bold text-orange-600">
                     ${portfolioMetrics.budgetSpent.toLocaleString()}
                   </span>
@@ -302,15 +302,15 @@ const ExecutiveDashboard = () => {
               </div>
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-600">Remaining</span>
+                  <span className="text-sm text-ink-600">Remaining</span>
                   <span className="text-lg font-bold text-green-600">
                     ${portfolioMetrics.budgetRemaining.toLocaleString()}
                   </span>
                 </div>
               </div>
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-ink-100">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-600">Proposal Value (Approved)</span>
+                  <span className="text-sm text-ink-600">Proposal Value (Approved)</span>
                   <span className="text-lg font-bold text-blue-600">
                     ${proposalMetrics.approvedValue.toLocaleString()}
                   </span>
@@ -321,8 +321,8 @@ const ExecutiveDashboard = () => {
 
           {/* Alerts */}
           {(taskMetrics.overdueTasks > 0 || taskMetrics.highPriorityTasks > 0) && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <AlertCircle className="text-red-600" size={20} />
                 Attention Required
               </h3>
@@ -351,8 +351,8 @@ const ExecutiveDashboard = () => {
         </div>
 
         {/* Budget Allocation Chart */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Budget Allocation (Top 5 Projects)</h3>
+        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+          <h3 className="text-lg font-bold text-ink-900 mb-4">Budget Allocation (Top 5 Projects)</h3>
           {budgetAllocationData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={budgetAllocationData}>
@@ -366,7 +366,7 @@ const ExecutiveDashboard = () => {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-64 text-gray-500">
+            <div className="flex items-center justify-center h-64 text-ink-500">
               No budget data available
             </div>
           )}
@@ -376,8 +376,8 @@ const ExecutiveDashboard = () => {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Task Completion Trend */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Task Completion Trend</h3>
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+          <h3 className="text-lg font-bold text-ink-900 mb-4">Task Completion Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={taskTrendData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -392,8 +392,8 @@ const ExecutiveDashboard = () => {
         </div>
 
         {/* Project Status Distribution */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Project Status Distribution</h3>
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+          <h3 className="text-lg font-bold text-ink-900 mb-4">Project Status Distribution</h3>
           {projectStatusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -415,7 +415,7 @@ const ExecutiveDashboard = () => {
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-64 text-gray-500">
+            <div className="flex items-center justify-center h-64 text-ink-500">
               No project data available
             </div>
           )}
@@ -423,40 +423,40 @@ const ExecutiveDashboard = () => {
       </div>
 
       {/* Quick Links */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+        <h3 className="text-lg font-bold text-ink-900 mb-4">Quick Actions</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <button
             onClick={() => navigate('/admin/projects')}
             className="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-left"
           >
             <FolderOpen className="text-blue-600 mb-2" size={24} />
-            <div className="font-medium text-gray-900">View Projects</div>
-            <div className="text-xs text-gray-500">{portfolioMetrics.totalProjects} total</div>
+            <div className="font-medium text-ink-900">View Projects</div>
+            <div className="text-xs text-ink-500">{portfolioMetrics.totalProjects} total</div>
           </button>
           <button
             onClick={() => navigate('/admin/operations/tasks')}
             className="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors text-left"
           >
             <Target className="text-purple-600 mb-2" size={24} />
-            <div className="font-medium text-gray-900">View Tasks</div>
-            <div className="text-xs text-gray-500">{taskMetrics.totalTasks} total</div>
+            <div className="font-medium text-ink-900">View Tasks</div>
+            <div className="text-xs text-ink-500">{taskMetrics.totalTasks} total</div>
           </button>
           <button
             onClick={() => navigate('/admin/proposals')}
             className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors text-left"
           >
             <Award className="text-orange-600 mb-2" size={24} />
-            <div className="font-medium text-gray-900">View Proposals</div>
-            <div className="text-xs text-gray-500">{proposalMetrics.total} total</div>
+            <div className="font-medium text-ink-900">View Proposals</div>
+            <div className="text-xs text-ink-500">{proposalMetrics.total} total</div>
           </button>
           <button
             onClick={() => navigate('/admin/finance')}
             className="p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-left"
           >
             <DollarSign className="text-green-600 mb-2" size={24} />
-            <div className="font-medium text-gray-900">Finance</div>
-            <div className="text-xs text-gray-500">Budget overview</div>
+            <div className="font-medium text-ink-900">Finance</div>
+            <div className="text-xs text-ink-500">Budget overview</div>
           </button>
         </div>
       </div>

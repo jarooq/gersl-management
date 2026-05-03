@@ -94,7 +94,7 @@ const NeedsReport = ({ onClose }) => {
       case 'Fulfilled': return 'bg-green-100 text-green-700';
       case 'In Progress': return 'bg-purple-100 text-purple-700';
       case 'Cancelled': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
+      default: return 'bg-ink-100 text-ink-700';
     }
   };
 
@@ -103,8 +103,8 @@ const NeedsReport = ({ onClose }) => {
       case 'Critical': return 'bg-red-100 text-red-700';
       case 'High': return 'bg-orange-100 text-orange-700';
       case 'Medium': return 'bg-yellow-100 text-yellow-700';
-      case 'Low': return 'bg-gray-100 text-gray-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'Low': return 'bg-ink-100 text-ink-700';
+      default: return 'bg-ink-100 text-ink-700';
     }
   };
 
@@ -184,7 +184,7 @@ const NeedsReport = ({ onClose }) => {
 
         {/* Summary Cards */}
         {summary?.overall && (
-          <div className="p-6 bg-gray-50 border-b border-gray-200">
+          <div className="p-6 bg-ink-50 border-b border-ink-100">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
               <SummaryCard
                 label="Total Needs"
@@ -241,10 +241,10 @@ const NeedsReport = ({ onClose }) => {
         )}
 
         {/* Filters */}
-        <div className="p-6 bg-white border-b border-gray-200">
+        <div className="p-6 bg-white border-b border-ink-100">
           <div className="flex items-center gap-3 mb-4">
-            <Filter size={20} className="text-gray-600" />
-            <h3 className="font-semibold text-gray-900">Filters</h3>
+            <Filter size={20} className="text-ink-600" />
+            <h3 className="font-semibold text-ink-900">Filters</h3>
             {(filters.needCategory || filters.urgency || filters.status || filters.searchQuery) && (
               <button
                 onClick={clearFilters}
@@ -257,7 +257,7 @@ const NeedsReport = ({ onClose }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 <Search size={16} className="inline mr-1" />
                 Search
               </label>
@@ -266,18 +266,18 @@ const NeedsReport = ({ onClose }) => {
                 value={filters.searchQuery}
                 onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
                 placeholder="Search needs..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Category
               </label>
               <select
                 value={filters.needCategory}
                 onChange={(e) => handleFilterChange('needCategory', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">All Categories</option>
                 <option value="Education">Education</option>
@@ -291,13 +291,13 @@ const NeedsReport = ({ onClose }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Urgency
               </label>
               <select
                 value={filters.urgency}
                 onChange={(e) => handleFilterChange('urgency', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">All Urgencies</option>
                 <option value="Critical">Critical</option>
@@ -308,13 +308,13 @@ const NeedsReport = ({ onClose }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Status
               </label>
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">All Statuses</option>
                 <option value="Pending">Pending</option>
@@ -328,8 +328,8 @@ const NeedsReport = ({ onClose }) => {
         </div>
 
         {/* Actions Bar */}
-        <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-          <p className="text-sm text-gray-600">
+        <div className="p-4 bg-ink-50 border-b border-ink-100 flex justify-between items-center">
+          <p className="text-sm text-ink-600">
             Showing <span className="font-semibold">{filteredNeeds.length}</span> of{' '}
             <span className="font-semibold">{pagination.total}</span> needs
           </p>
@@ -348,15 +348,15 @@ const NeedsReport = ({ onClose }) => {
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading needs...</p>
+                <p className="text-ink-600">Loading needs...</p>
               </div>
             </div>
           ) : filteredNeeds.length === 0 ? (
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
-                <ClipboardList size={48} className="mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-600 font-medium">No needs found</p>
-                <p className="text-gray-500 text-sm mt-1">
+                <ClipboardList size={48} className="mx-auto text-ink-400 mb-4" />
+                <p className="text-ink-600 font-medium">No needs found</p>
+                <p className="text-ink-500 text-sm mt-1">
                   {filters.needCategory || filters.urgency || filters.status || filters.searchQuery
                     ? 'Try adjusting your filters'
                     : 'No orphan needs have been recorded yet'}
@@ -366,50 +366,50 @@ const NeedsReport = ({ onClose }) => {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                <thead className="bg-ink-50 border-b-2 border-ink-100">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Orphan
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Need Type
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Category
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Qty
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Est. Cost
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Urgency
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">
                       Date
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-ink-100">
                   {filteredNeeds.map((need) => (
                     <tr
                       key={need.id}
-                      className="hover:bg-gray-50 transition cursor-pointer"
+                      className="hover:bg-ink-50 transition cursor-pointer"
                     >
                       <td className="px-4 py-4">
                         <div>
-                          <p className="font-medium text-gray-900">{need.orphan_name}</p>
-                          <p className="text-sm text-gray-500">{need.orphan_district}</p>
+                          <p className="font-medium text-ink-900">{need.orphan_name}</p>
+                          <p className="text-sm text-ink-500">{need.orphan_district}</p>
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <p className="font-medium text-gray-900">{need.need_type}</p>
+                        <p className="font-medium text-ink-900">{need.need_type}</p>
                         {need.description && (
-                          <p className="text-sm text-gray-500 max-w-xs truncate">
+                          <p className="text-sm text-ink-500 max-w-xs truncate">
                             {need.description}
                           </p>
                         )}
@@ -420,15 +420,15 @@ const NeedsReport = ({ onClose }) => {
                         </span>
                       </td>
                       <td className="px-4 py-4">
-                        <span className="font-medium text-gray-900">{need.quantity}</span>
+                        <span className="font-medium text-ink-900">{need.quantity}</span>
                       </td>
                       <td className="px-4 py-4">
                         {need.estimated_cost ? (
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-ink-900">
                             LKR {parseFloat(need.estimated_cost).toLocaleString()}
                           </span>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-ink-400">-</span>
                         )}
                       </td>
                       <td className="px-4 py-4">
@@ -443,10 +443,10 @@ const NeedsReport = ({ onClose }) => {
                         </span>
                       </td>
                       <td className="px-4 py-4">
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-ink-900">
                           {need.recorded_date ? new Date(need.recorded_date).toLocaleDateString() : '-'}
                         </p>
-                        <p className="text-xs text-gray-500">{need.recorded_by_name}</p>
+                        <p className="text-xs text-ink-500">{need.recorded_by_name}</p>
                       </td>
                     </tr>
                   ))}
@@ -458,21 +458,21 @@ const NeedsReport = ({ onClose }) => {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center">
+          <div className="sticky bottom-0 bg-white border-t border-ink-100 p-4 flex justify-between items-center">
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: Math.max(1, prev.page - 1) }))}
               disabled={pagination.page === 1}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-ink-600">
               Page {pagination.page} of {pagination.totalPages}
             </span>
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: Math.min(prev.totalPages, prev.page + 1) }))}
               disabled={pagination.page === pagination.totalPages}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>

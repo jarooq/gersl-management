@@ -68,46 +68,46 @@ export default function RecordGRNModal({ po, onClose, onSaved }) {
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="px-5 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Record Goods Receipt — {po.poNumber}</h2>
-          <p className="text-xs text-gray-500 mt-1">Vendor: {po.vendor?.vendorName || po.vendorName}</p>
+        <div className="px-5 py-4 border-b border-ink-100">
+          <h2 className="text-lg font-semibold text-ink-900">Record Goods Receipt — {po.poNumber}</h2>
+          <p className="text-xs text-ink-500 mt-1">Vendor: {po.vendor?.vendorName || po.vendorName}</p>
         </div>
 
         <div className="px-5 py-4 overflow-y-auto flex-1 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Delivery note #</span>
+              <span className="text-sm font-medium text-ink-700">Delivery note #</span>
               <input
                 value={deliveryNoteNo}
                 onChange={(e) => setDeliveryNoteNo(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               />
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Receiving location</span>
+              <span className="text-sm font-medium text-ink-700">Receiving location</span>
               <input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               />
             </label>
           </div>
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Delivery note photo URL</span>
+            <span className="text-sm font-medium text-ink-700">Delivery note photo URL</span>
             <input
               value={deliveryNoteUrl}
               onChange={(e) => setDeliveryNoteUrl(e.target.value)}
               placeholder="/uploads/..."
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
             />
           </label>
 
           <div>
-            <div className="text-sm font-medium text-gray-700 mb-2">Line receipt</div>
+            <div className="text-sm font-medium text-ink-700 mb-2">Line receipt</div>
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50">
+                  <tr className="bg-ink-50">
                     <th className="text-left px-3 py-2">Item</th>
                     <th className="text-right px-3 py-2">PO Qty</th>
                     <th className="text-right px-3 py-2">Received</th>
@@ -118,35 +118,35 @@ export default function RecordGRNModal({ po, onClose, onSaved }) {
                 <tbody>
                   {lines.map((l, i) => (
                     <tr key={i}>
-                      <td className="px-3 py-2 border-b border-gray-100">{l.itemDescription}</td>
-                      <td className="px-3 py-2 border-b border-gray-100 text-right">{l.maxQty}</td>
-                      <td className="px-3 py-2 border-b border-gray-100">
+                      <td className="px-3 py-2 border-b border-ink-100">{l.itemDescription}</td>
+                      <td className="px-3 py-2 border-b border-ink-100 text-right">{l.maxQty}</td>
+                      <td className="px-3 py-2 border-b border-ink-100">
                         <input
                           type="number"
                           min={0}
                           step="0.01"
                           value={l.qtyReceived}
                           onChange={(e) => updateLine(i, { qtyReceived: e.target.value })}
-                          className="w-24 rounded-md border border-gray-300 px-2 py-1 text-sm text-right"
+                          className="w-24 rounded-md border border-ink-200 px-2 py-1 text-sm text-right"
                         />
                       </td>
-                      <td className="px-3 py-2 border-b border-gray-100">
+                      <td className="px-3 py-2 border-b border-ink-100">
                         <input
                           type="number"
                           min={0}
                           step="0.01"
                           value={l.qtyRejected}
                           onChange={(e) => updateLine(i, { qtyRejected: e.target.value })}
-                          className="w-20 rounded-md border border-gray-300 px-2 py-1 text-sm text-right"
+                          className="w-20 rounded-md border border-ink-200 px-2 py-1 text-sm text-right"
                         />
                       </td>
-                      <td className="px-3 py-2 border-b border-gray-100">
+                      <td className="px-3 py-2 border-b border-ink-100">
                         {Number(l.qtyRejected) > 0 && (
                           <input
                             value={l.rejectionReason}
                             onChange={(e) => updateLine(i, { rejectionReason: e.target.value })}
                             placeholder="Reason"
-                            className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm"
+                            className="w-full rounded-md border border-ink-200 px-2 py-1 text-sm"
                           />
                         )}
                       </td>
@@ -158,12 +158,12 @@ export default function RecordGRNModal({ po, onClose, onSaved }) {
           </div>
 
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Condition notes</span>
+            <span className="text-sm font-medium text-ink-700">Condition notes</span>
             <textarea
               rows={2}
               value={conditionNotes}
               onChange={(e) => setConditionNotes(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
             />
           </label>
 
@@ -172,10 +172,10 @@ export default function RecordGRNModal({ po, onClose, onSaved }) {
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2">
+        <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
           >Cancel</button>
           <button
             onClick={submit}

@@ -60,21 +60,21 @@ export default function AssignToOfficerModal({ requisition, onClose, onAssigned 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-        <div className="px-5 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Assign procurement request</h2>
-          <p className="text-xs text-gray-500 mt-1">
+        <div className="px-5 py-4 border-b border-ink-100">
+          <h2 className="text-lg font-semibold text-ink-900">Assign procurement request</h2>
+          <p className="text-xs text-ink-500 mt-1">
             {requisition.requisitionNumber || `PR-${requisition.id}`} — {requisition.title}
           </p>
         </div>
 
         <form onSubmit={submit} className="px-5 py-4 space-y-4">
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Procurement Officer</span>
+            <span className="text-sm font-medium text-ink-700">Procurement Officer</span>
             <select
               value={officerId}
               onChange={(e) => setOfficerId(e.target.value)}
               disabled={loading}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
               required
             >
               <option value="">{loading ? 'Loading…' : 'Select officer'}</option>
@@ -87,11 +87,11 @@ export default function AssignToOfficerModal({ requisition, onClose, onAssigned 
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Procurement method</span>
+            <span className="text-sm font-medium text-ink-700">Procurement method</span>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
             >
               {METHODS.map(m => (
                 <option key={m.value} value={m.value}>{m.label}</option>
@@ -107,14 +107,14 @@ export default function AssignToOfficerModal({ requisition, onClose, onAssigned 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting || loading}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition disabled:opacity-50"
             >
               {submitting ? 'Assigning…' : 'Assign'}
             </button>

@@ -217,16 +217,16 @@ const BeneficiariesPage = () => {
   }
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 animate-pulse" />
+                <Users className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Beneficiary Management</h1>
@@ -304,14 +304,14 @@ const BeneficiariesPage = () => {
           ].map((stat, index) => (
             <div
               key={index}
-              className="stat-card group cursor-pointer animate-slide-up"
+              className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex-1">
-                  <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
-                  <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+                  <p className="text-xs font-semibold text-ink-600 mb-1">{stat.title}</p>
+                  <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                  <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
                 </div>
                 <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                   <stat.icon className="text-white" size={18} />
@@ -383,21 +383,21 @@ const BeneficiariesPage = () => {
             ].map((stat, index) => (
               <div
                 key={index}
-                className="stat-card group cursor-pointer animate-slide-up"
+                className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex-1">
-                    <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
-                    <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+                    <p className="text-xs font-semibold text-ink-600 mb-1">{stat.title}</p>
+                    <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                    <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
                   </div>
                   <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                     <stat.icon className="text-white" size={18} />
                   </div>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs font-medium text-gray-600">{stat.change}</span>
+                <div className="flex items-center justify-between pt-2 border-t border-ink-100">
+                  <span className="text-xs font-medium text-ink-600">{stat.change}</span>
                 </div>
               </div>
             ));
@@ -409,17 +409,17 @@ const BeneficiariesPage = () => {
       {analytics && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Geographic Distribution */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                   <MapPin className="text-purple-600" size={18} />
                   Geographic Distribution
                 </h3>
-                <p className="text-xs text-gray-600 mt-0.5">Beneficiaries by district</p>
+                <p className="text-xs text-ink-600 mt-0.5">Beneficiaries by district</p>
               </div>
               <div className="text-right">
-                <div className="text-xl font-bold text-gray-900">{stats?.districts_covered || 0}</div>
+                <div className="text-xl font-bold text-ink-900">{stats?.districts_covered || 0}</div>
                 <div className="text-xs text-purple-600">Districts</div>
               </div>
             </div>
@@ -427,7 +427,7 @@ const BeneficiariesPage = () => {
               {(() => {
                 if (!analytics.topDistricts || analytics.topDistricts.length === 0) {
                   return (
-                    <div className="text-center py-8 text-gray-500 text-sm">
+                    <div className="text-center py-8 text-ink-500 text-sm">
                       No geographic data available
                     </div>
                   );
@@ -436,10 +436,10 @@ const BeneficiariesPage = () => {
                 return analytics.topDistricts.map((item, index) => (
                   <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-gray-700">{item.district}</span>
-                      <span className="text-xs font-bold text-gray-900">{item.count} beneficiaries</span>
+                      <span className="text-xs font-medium text-ink-700">{item.district}</span>
+                      <span className="text-xs font-bold text-ink-900">{item.count} beneficiaries</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                       <div className={`h-1.5 rounded-full transition-all duration-500 bg-gradient-to-r ${
                         index === 0 ? 'from-purple-500 to-indigo-600' :
                         index === 1 ? 'from-blue-500 to-cyan-600' :
@@ -455,14 +455,14 @@ const BeneficiariesPage = () => {
           </div>
 
           {/* Beneficiary Type Distribution */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                   <Users className="text-blue-600" size={18} />
                   Beneficiary Type Distribution
                 </h3>
-                <p className="text-xs text-gray-600 mt-0.5">Support categories</p>
+                <p className="text-xs text-ink-600 mt-0.5">Support categories</p>
               </div>
             </div>
             <div className="space-y-2.5">
@@ -481,7 +481,7 @@ const BeneficiariesPage = () => {
 
                 if (topTypes.length === 0) {
                   return (
-                    <div className="text-center py-8 text-gray-500 text-sm">
+                    <div className="text-center py-8 text-ink-500 text-sm">
                       No type data available
                     </div>
                   );
@@ -492,10 +492,10 @@ const BeneficiariesPage = () => {
                   return (
                     <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-gray-700">{type}</span>
-                        <span className="text-xs font-bold text-gray-900">{count} beneficiaries</span>
+                        <span className="text-xs font-medium text-ink-700">{type}</span>
+                        <span className="text-xs font-bold text-ink-900">{count} beneficiaries</span>
                       </div>
-                      <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                      <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                         <div className={`h-1.5 rounded-full transition-all duration-500 bg-gradient-to-r ${
                           index === 0 ? 'from-blue-500 to-cyan-600' :
                           index === 1 ? 'from-green-500 to-emerald-600' :
@@ -511,20 +511,20 @@ const BeneficiariesPage = () => {
           </div>
 
           {/* Support Value Distribution */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                   <DollarSign className="text-green-600" size={18} />
                   Support Value Distribution
                 </h3>
-                <p className="text-xs text-gray-600 mt-0.5">Total support breakdown</p>
+                <p className="text-xs text-ink-600 mt-0.5">Total support breakdown</p>
               </div>
               <div className="text-right">
                 <div className="text-xl font-bold text-green-600">
                   LKR {(beneficiaries.reduce((sum, b) => sum + (b.total_value || 0), 0) / 1000000).toFixed(1)}M
                 </div>
-                <div className="text-xs text-gray-600">Total value</div>
+                <div className="text-xs text-ink-600">Total value</div>
               </div>
             </div>
             <div className="space-y-2.5">
@@ -538,7 +538,7 @@ const BeneficiariesPage = () => {
 
                 if (totalWithSupport === 0) {
                   return (
-                    <div className="text-center py-8 text-gray-500 text-sm">
+                    <div className="text-center py-8 text-ink-500 text-sm">
                       No support value data available
                     </div>
                   );
@@ -552,10 +552,10 @@ const BeneficiariesPage = () => {
                 ].filter(item => item.count > 0).map((item, index) => (
                   <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-gray-700">{item.range}</span>
-                      <span className="text-xs font-bold text-gray-900">{item.count} beneficiaries</span>
+                      <span className="text-xs font-medium text-ink-700">{item.range}</span>
+                      <span className="text-xs font-bold text-ink-900">{item.count} beneficiaries</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                       <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
                         style={{ width: `${item.percent}%` }}></div>
                     </div>
@@ -566,14 +566,14 @@ const BeneficiariesPage = () => {
           </div>
 
           {/* Support Activity Status */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+          <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                   <Activity className="text-orange-600" size={18} />
                   Support Activity Status
                 </h3>
-                <p className="text-xs text-gray-600 mt-0.5">Beneficiary engagement</p>
+                <p className="text-xs text-ink-600 mt-0.5">Beneficiary engagement</p>
               </div>
             </div>
             <div className="space-y-2.5">
@@ -583,14 +583,14 @@ const BeneficiariesPage = () => {
                 { status: 'With Support History', count: beneficiaries.filter(b => b.total_supports > 0).length, color: 'bg-blue-500' },
                 { status: 'New Registrations', count: beneficiaries.filter(b => !b.total_supports || b.total_supports === 0).length, color: 'bg-purple-500' }
               ].map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-2 bg-ink-50 rounded-lg">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${item.color}`}></div>
-                    <span className="text-xs font-medium text-gray-700">{item.status}</span>
+                    <span className="text-xs font-medium text-ink-700">{item.status}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-900">{item.count} people</span>
-                    <span className="text-xs text-gray-600 bg-white px-1.5 py-0.5 rounded">
+                    <span className="text-xs font-bold text-ink-900">{item.count} people</span>
+                    <span className="text-xs text-ink-600 bg-white px-1.5 py-0.5 rounded">
                       {Math.round((item.count / (stats?.total_beneficiaries || 1)) * 100)}%
                     </span>
                   </div>
@@ -602,10 +602,10 @@ const BeneficiariesPage = () => {
       )}
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-lg px-4 py-2 border border-gray-200">
-            <Search size={20} className="text-gray-400" />
+          <div className="flex-1 flex items-center gap-3 bg-ink-50 rounded-lg px-4 py-2 border border-ink-100">
+            <Search size={20} className="text-ink-400" />
             <input
               type="text"
               placeholder="Search by name, NIC, or phone..."
@@ -628,21 +628,21 @@ const BeneficiariesPage = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 showFilters
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
               }`}
             >
               <Filter size={18} />
               Filters
             </button>
 
-            <div className="flex bg-gray-100 rounded-lg p-1">
+            <div className="flex bg-ink-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('table')}
                 className={`p-2 rounded transition-colors ${
                   viewMode === 'table' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
                 }`}
               >
-                <List size={18} className={viewMode === 'table' ? 'text-blue-600' : 'text-gray-600'} />
+                <List size={18} className={viewMode === 'table' ? 'text-blue-600' : 'text-ink-600'} />
               </button>
               <button
                 onClick={() => setViewMode('grid')}
@@ -650,7 +650,7 @@ const BeneficiariesPage = () => {
                   viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
                 }`}
               >
-                <Grid3x3 size={18} className={viewMode === 'grid' ? 'text-blue-600' : 'text-gray-600'} />
+                <Grid3x3 size={18} className={viewMode === 'grid' ? 'text-blue-600' : 'text-ink-600'} />
               </button>
             </div>
           </div>
@@ -658,14 +658,14 @@ const BeneficiariesPage = () => {
 
         {/* Filter Panel */}
         {showFilters && (
-          <div className="mt-4 pt-4 border-t border-gray-200 animate-slide-down">
+          <div className="mt-4 pt-4 border-t border-ink-100">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="form-group">
-                <label className="text-xs font-semibold text-gray-700 mb-2">District</label>
+                <label className="text-xs font-semibold text-ink-700 mb-2">District</label>
                 <select
                   value={selectedDistrict}
                   onChange={(e) => handleDistrictChange(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Districts</option>
                   {districts.map((district) => (
@@ -677,12 +677,12 @@ const BeneficiariesPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="text-xs font-semibold text-gray-700 mb-2">Division</label>
+                <label className="text-xs font-semibold text-ink-700 mb-2">Division</label>
                 <select
                   value={filters.division}
                   onChange={(e) => handleFilterChange('division', e.target.value)}
                   disabled={!selectedDistrict}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-ink-100 disabled:cursor-not-allowed"
                 >
                   <option value="">All Divisions</option>
                   {divisions.map((division) => (
@@ -694,11 +694,11 @@ const BeneficiariesPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="text-xs font-semibold text-gray-700 mb-2">Vulnerability Status</label>
+                <label className="text-xs font-semibold text-ink-700 mb-2">Vulnerability Status</label>
                 <select
                   value={filters.isVulnerable}
                   onChange={(e) => handleFilterChange('isVulnerable', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All</option>
                   <option value="true">Vulnerable Only</option>
@@ -707,11 +707,11 @@ const BeneficiariesPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="text-xs font-semibold text-gray-700 mb-2">Status</label>
+                <label className="text-xs font-semibold text-ink-700 mb-2">Status</label>
                 <select
                   value={filters.isActive}
                   onChange={(e) => handleFilterChange('isActive', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="true">Active</option>
                   <option value="false">Inactive</option>
@@ -723,7 +723,7 @@ const BeneficiariesPage = () => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleClearFilters}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-ink-700 hover:bg-ink-100 rounded-lg transition-colors"
               >
                 <X size={16} />
                 Clear All Filters
@@ -734,19 +734,19 @@ const BeneficiariesPage = () => {
       </div>
 
       {/* Beneficiaries Content */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100 overflow-hidden">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-600 text-sm">Loading beneficiaries...</p>
+            <p className="text-ink-600 text-sm">Loading beneficiaries...</p>
           </div>
         ) : beneficiaries.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-            <div className="bg-gray-100 p-6 rounded-full mb-4">
-              <Users className="w-12 h-12 text-gray-400" />
+            <div className="bg-ink-100 p-6 rounded-full mb-4">
+              <Users className="w-12 h-12 text-ink-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Beneficiaries Found</h3>
-            <p className="text-gray-500 text-sm mb-6">Try adjusting your search or filters.</p>
+            <h3 className="text-lg font-semibold text-ink-900 mb-2">No Beneficiaries Found</h3>
+            <p className="text-ink-500 text-sm mb-6">Try adjusting your search or filters.</p>
             {canCreate && (
               <button
                 onClick={() => setShowAddModal(true)}
@@ -763,27 +763,27 @@ const BeneficiariesPage = () => {
             {viewMode === 'table' && (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-ink-50 border-b border-ink-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">NIC</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Location</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Support History</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">NIC</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">Contact</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">Location</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">Support History</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-700 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {beneficiaries.map((beneficiary, index) => (
                       <tr
                         key={beneficiary.id}
-                        className="hover:bg-gray-50 transition-colors animate-slide-up"
+                        className="hover:bg-ink-50 transition-colors"
                         style={{ animationDelay: `${index * 0.03}s` }}
                       >
                         <td className="px-4 py-3">
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium text-gray-900">{beneficiary.nic}</span>
+                            <span className="text-sm font-medium text-ink-900">{beneficiary.nic}</span>
                             {beneficiary.is_vulnerable && (
                               <span className="inline-flex items-center gap-1 text-xs text-orange-600 mt-1">
                                 <AlertTriangle size={12} />
@@ -794,18 +794,18 @@ const BeneficiariesPage = () => {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium text-gray-900">{beneficiary.full_name}</span>
-                            <span className="text-xs text-gray-500">{beneficiary.gender || 'N/A'}</span>
+                            <span className="text-sm font-medium text-ink-900">{beneficiary.full_name}</span>
+                            <span className="text-xs text-ink-500">{beneficiary.gender || 'N/A'}</span>
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2 text-sm text-ink-600">
                             <Phone size={14} />
                             {beneficiary.primary_phone || 'N/A'}
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2 text-sm text-ink-600">
                             <MapPin size={14} />
                             {beneficiary.district && beneficiary.division
                               ? `${beneficiary.division}, ${beneficiary.district}`
@@ -817,7 +817,7 @@ const BeneficiariesPage = () => {
                             className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
                               beneficiary.is_active
                                 ? 'bg-green-100 text-green-700'
-                                : 'bg-gray-100 text-gray-700'
+                                : 'bg-ink-100 text-ink-700'
                             }`}
                           >
                             {beneficiary.is_active ? <CheckCircle size={12} /> : <Clock size={12} />}
@@ -825,7 +825,7 @@ const BeneficiariesPage = () => {
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex flex-col gap-1 text-xs text-gray-600">
+                          <div className="flex flex-col gap-1 text-xs text-ink-600">
                             <div className="flex items-center gap-1">
                               <FileText size={12} />
                               {beneficiary.total_supports || 0} supports
@@ -878,19 +878,19 @@ const BeneficiariesPage = () => {
                 {beneficiaries.map((beneficiary, index) => (
                   <div
                     key={beneficiary.id}
-                    className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow animate-slide-up"
+                    className="bg-white border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-sm mb-1">{beneficiary.full_name}</h3>
-                        <p className="text-xs text-gray-500">{beneficiary.nic}</p>
+                        <h3 className="font-semibold text-ink-900 text-sm mb-1">{beneficiary.full_name}</h3>
+                        <p className="text-xs text-ink-500">{beneficiary.nic}</p>
                       </div>
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
                           beneficiary.is_active
                             ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700'
+                            : 'bg-ink-100 text-ink-700'
                         }`}
                       >
                         {beneficiary.is_active ? 'Active' : 'Inactive'}
@@ -898,11 +898,11 @@ const BeneficiariesPage = () => {
                     </div>
 
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <div className="flex items-center gap-2 text-xs text-ink-600">
                         <Phone size={12} />
                         {beneficiary.primary_phone || 'N/A'}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <div className="flex items-center gap-2 text-xs text-ink-600">
                         <MapPin size={12} />
                         {beneficiary.district || 'N/A'}
                       </div>
@@ -914,10 +914,10 @@ const BeneficiariesPage = () => {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <div className="text-xs text-gray-600">
+                    <div className="flex items-center justify-between pt-3 border-t border-ink-100">
+                      <div className="text-xs text-ink-600">
                         <div>{beneficiary.total_supports || 0} supports</div>
-                        <div className="font-medium text-gray-900">LKR {(beneficiary.total_value || 0).toLocaleString()}</div>
+                        <div className="font-medium text-ink-900">LKR {(beneficiary.total_value || 0).toLocaleString()}</div>
                       </div>
                       <div className="flex items-center gap-1">
                         <button
@@ -954,22 +954,22 @@ const BeneficiariesPage = () => {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50">
-                <div className="text-sm text-gray-600">
+              <div className="flex items-center justify-between px-4 py-3 border-t border-ink-100 bg-ink-50">
+                <div className="text-sm text-ink-600">
                   Showing page {pagination.currentPage} of {pagination.totalPages} ({pagination.totalRecords} total)
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-lg hover:bg-ink-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-lg hover:bg-ink-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Next
                   </button>

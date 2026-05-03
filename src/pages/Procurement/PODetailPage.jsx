@@ -4,7 +4,7 @@ import { ProcurementAPI } from '../../services/api';
 import RecordGRNModal from './components/RecordGRNModal';
 
 const STATUS_BADGE = {
-  Draft: 'bg-gray-100 text-gray-700',
+  Draft: 'bg-ink-100 text-ink-700',
   'Pending-Approval': 'bg-yellow-100 text-yellow-800',
   Approved: 'bg-blue-100 text-blue-700',
   Issued: 'bg-indigo-100 text-indigo-700',
@@ -89,44 +89,44 @@ export default function PODetailPage() {
     action(() => ProcurementAPI.resolveMatch(matchId, { reason, force: 'Matched' }));
   };
 
-  if (loading) return <div className="p-6 text-sm text-gray-500">Loading…</div>;
+  if (loading) return <div className="p-6 text-sm text-ink-500">Loading…</div>;
   if (error)   return <div className="p-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">{error}</div>;
-  if (!po)     return <div className="p-6 text-sm text-gray-500">PO not found.</div>;
+  if (!po)     return <div className="p-6 text-sm text-ink-500">PO not found.</div>;
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-5">
       <header className="flex items-start justify-between">
         <div>
-          <Link to="/admin/procurement/inbox" className="text-sm text-blue-600 hover:underline">&larr; Procurement</Link>
-          <h1 className="text-2xl font-semibold text-gray-900 mt-1">{po.poNumber}</h1>
-          <p className="text-sm text-gray-500">
+          <Link to="/admin/procurement/inbox" className="text-sm text-navy-700 hover:underline">&larr; Procurement</Link>
+          <h1 className="text-h1 text-ink-900 mt-1">{po.poNumber}</h1>
+          <p className="text-sm text-ink-500">
             {po.requisition?.requisitionNumber || `PR-${po.requisitionId}`} — {po.requisition?.title || ''}
           </p>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[po.status] || 'bg-gray-100 text-gray-700'}`}>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[po.status] || 'bg-ink-100 text-ink-700'}`}>
           {po.status}
         </span>
       </header>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white border border-gray-200 rounded p-4 text-sm">
-          <div className="text-gray-500 text-xs uppercase mb-1">Vendor</div>
-          <div className="font-medium text-gray-900">{po.vendor?.vendorName || po.vendorName || '—'}</div>
-          <div className="text-gray-600">{po.vendor?.email || ''}</div>
-          <div className="text-gray-600">{po.vendor?.phone || ''}</div>
+        <div className="bg-white border border-ink-100 rounded p-4 text-sm">
+          <div className="text-ink-500 text-xs uppercase mb-1">Vendor</div>
+          <div className="font-medium text-ink-900">{po.vendor?.vendorName || po.vendorName || '—'}</div>
+          <div className="text-ink-600">{po.vendor?.email || ''}</div>
+          <div className="text-ink-600">{po.vendor?.phone || ''}</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded p-4 text-sm">
-          <div className="text-gray-500 text-xs uppercase mb-1">Delivery</div>
+        <div className="bg-white border border-ink-100 rounded p-4 text-sm">
+          <div className="text-ink-500 text-xs uppercase mb-1">Delivery</div>
           <div>By: {po.deliveryDate ? new Date(po.deliveryDate).toLocaleDateString() : '—'}</div>
-          <div className="text-gray-600">{po.deliveryAddress || '—'}</div>
-          <div className="text-gray-600">Terms: {po.paymentTerms || '—'}</div>
+          <div className="text-ink-600">{po.deliveryAddress || '—'}</div>
+          <div className="text-ink-600">Terms: {po.paymentTerms || '—'}</div>
         </div>
       </section>
 
-      <section className="bg-white border border-gray-200 rounded overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-200 font-semibold">Line items</div>
+      <section className="bg-white border border-ink-100 rounded overflow-hidden">
+        <div className="px-4 py-3 border-b border-ink-100 font-semibold">Line items</div>
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-50">
+          <thead className="bg-ink-50">
             <tr>
               <th className="text-left px-4 py-2">Description</th>
               <th className="text-right px-4 py-2">Qty</th>
@@ -135,9 +135,9 @@ export default function PODetailPage() {
               <th className="text-right px-4 py-2">Line Total</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-ink-100">
             {(po.lines || []).length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-6 text-center text-gray-500">No line items.</td></tr>
+              <tr><td colSpan={5} className="px-4 py-6 text-center text-ink-500">No line items.</td></tr>
             )}
             {(po.lines || []).map(l => (
               <tr key={l.id}>
@@ -150,15 +150,15 @@ export default function PODetailPage() {
             ))}
           </tbody>
           <tfoot>
-            <tr className="bg-gray-50">
-              <td colSpan={4} className="px-4 py-2 text-right text-gray-600">Subtotal</td>
+            <tr className="bg-ink-50">
+              <td colSpan={4} className="px-4 py-2 text-right text-ink-600">Subtotal</td>
               <td className="px-4 py-2 text-right">{fmt(po.subtotal, po.currency)}</td>
             </tr>
-            <tr className="bg-gray-50">
-              <td colSpan={4} className="px-4 py-2 text-right text-gray-600">Tax</td>
+            <tr className="bg-ink-50">
+              <td colSpan={4} className="px-4 py-2 text-right text-ink-600">Tax</td>
               <td className="px-4 py-2 text-right">{fmt(po.tax, po.currency)}</td>
             </tr>
-            <tr className="bg-gray-100 font-semibold">
+            <tr className="bg-ink-100 font-semibold">
               <td colSpan={4} className="px-4 py-2 text-right">Total</td>
               <td className="px-4 py-2 text-right">{fmt(po.totalAmount, po.currency)}</td>
             </tr>
@@ -217,20 +217,20 @@ export default function PODetailPage() {
           <button
             disabled={busy}
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded hover:bg-ink-50"
           >Cancel PO</button>
         )}
         <a
           href={ProcurementAPI.poPreviewUrl(id)}
           target="_blank"
           rel="noreferrer"
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50"
+          className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded hover:bg-ink-50"
         >Preview / print</a>
       </section>
 
-      <section className="bg-white border border-gray-200 rounded">
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-gray-900">Goods Receipts</h2>
+      <section className="bg-white border border-ink-100 rounded">
+        <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-ink-900">Goods Receipts</h2>
           {['Issued', 'Acknowledged', 'Partial-Received'].includes(po.status) && (
             <button
               onClick={() => setShowGrnModal(true)}
@@ -239,9 +239,9 @@ export default function PODetailPage() {
           )}
         </div>
         <div className="p-4 text-sm space-y-2">
-          {grns.length === 0 && <div className="text-gray-500">No GRNs yet.</div>}
+          {grns.length === 0 && <div className="text-ink-500">No GRNs yet.</div>}
           {grns.map(g => (
-            <div key={g.id} className="border border-gray-200 rounded-md p-3">
+            <div key={g.id} className="border border-ink-100 rounded-md p-3">
               <div className="flex items-center justify-between">
                 <div>
                   <strong>{g.grnNumber || `GRN #${g.id}`}</strong>
@@ -249,9 +249,9 @@ export default function PODetailPage() {
                     g.status === 'Verified' ? 'bg-green-100 text-green-700' :
                     g.status === 'Partial'  ? 'bg-yellow-100 text-yellow-800' :
                     g.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                    'bg-gray-100 text-gray-700'
+                    'bg-ink-100 text-ink-700'
                   }`}>{g.status}</span>
-                  <span className="ml-2 text-gray-500 text-xs">{new Date(g.receivedAt).toLocaleDateString()}</span>
+                  <span className="ml-2 text-ink-500 text-xs">{new Date(g.receivedAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex gap-2">
                   {g.status === 'Draft' && (
@@ -261,11 +261,11 @@ export default function PODetailPage() {
                     </>
                   )}
                   {(g.status === 'Verified' || g.status === 'Partial') && (
-                    <button onClick={() => onCreateMatch(g.id)} disabled={busy} className="text-sm text-blue-600 hover:underline">Run 3-way match</button>
+                    <button onClick={() => onCreateMatch(g.id)} disabled={busy} className="text-sm text-navy-700 hover:underline">Run 3-way match</button>
                   )}
                 </div>
               </div>
-              {g.deliveryNoteNo && <div className="text-xs text-gray-500 mt-1">Delivery note: {g.deliveryNoteNo}</div>}
+              {g.deliveryNoteNo && <div className="text-xs text-ink-500 mt-1">Delivery note: {g.deliveryNoteNo}</div>}
               {g.rejectionReason && <div className="text-xs text-red-700 mt-1">Rejected: {g.rejectionReason}</div>}
             </div>
           ))}
@@ -273,24 +273,24 @@ export default function PODetailPage() {
       </section>
 
       {matches.length > 0 && (
-        <section className="bg-white border border-gray-200 rounded">
-          <div className="px-4 py-3 border-b border-gray-200 font-semibold">Three-way matches</div>
+        <section className="bg-white border border-ink-100 rounded">
+          <div className="px-4 py-3 border-b border-ink-100 font-semibold">Three-way matches</div>
           <div className="p-4 text-sm space-y-2">
             {matches.map(m => (
-              <div key={m.id} className="border border-gray-200 rounded-md p-3">
+              <div key={m.id} className="border border-ink-100 rounded-md p-3">
                 <div className="flex items-center justify-between">
                   <div>
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                       m.status === 'Matched' ? 'bg-green-100 text-green-700' :
                       m.status === 'Discrepancy' ? 'bg-red-100 text-red-700' :
                       m.status === 'Overridden' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-700'
+                      'bg-ink-100 text-ink-700'
                     }`}>{m.status}</span>
-                    <span className="ml-2 text-gray-700">
+                    <span className="ml-2 text-ink-700">
                       Qty {m.qtyMatch ? '✓' : '✗'} · Price {m.priceMatch ? '✓' : '✗'} · Vendor {m.vendorMatch ? '✓' : '✗'}
                     </span>
                     {m.varianceAmount != null && Number(m.varianceAmount) !== 0 && (
-                      <span className="ml-2 text-gray-500 text-xs">Variance: {Number(m.varianceAmount).toLocaleString()}</span>
+                      <span className="ml-2 text-ink-500 text-xs">Variance: {Number(m.varianceAmount).toLocaleString()}</span>
                     )}
                   </div>
                   {m.status === 'Discrepancy' && (
@@ -304,7 +304,7 @@ export default function PODetailPage() {
         </section>
       )}
 
-      <section className="text-xs text-gray-500 grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <section className="text-xs text-ink-500 grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div>Created by {po.creator?.fullName || '—'}</div>
         <div>Approved by {po.approver?.fullName || '—'}{po.approvalDate ? ` on ${new Date(po.approvalDate).toLocaleDateString()}` : ''}</div>
         <div>Issued by {po.issuer?.fullName || '—'}{po.issuedAt ? ` on ${new Date(po.issuedAt).toLocaleDateString()}` : ''}</div>

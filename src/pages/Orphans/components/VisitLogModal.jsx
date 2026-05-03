@@ -161,7 +161,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
           <div className="p-6 space-y-6">
             {/* Visit Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 <Calendar size={16} className="inline mr-2" />
                 Visit Date *
               </label>
@@ -172,13 +172,13 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 onChange={handleChange}
                 required
                 max={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
               />
             </div>
 
             {/* Visit Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 <FileText size={16} className="inline mr-2" />
                 Visit Notes
               </label>
@@ -187,14 +187,14 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 value={formData.visitNotes}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="General notes about the visit..."
               />
             </div>
 
             {/* Observations */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 <Eye size={16} className="inline mr-2" />
                 Observations
               </label>
@@ -203,7 +203,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 value={formData.observations}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="Key observations, changes noticed, concerns..."
               />
             </div>
@@ -216,7 +216,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
 
             {/* Progress Ratings */}
             <div className="bg-gradient-to-br from-pink-50 to-rose-50 p-6 rounded-xl border border-pink-200">
-              <h3 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="font-bold text-lg text-ink-900 mb-4 flex items-center gap-2">
                 <Star size={20} className="text-pink-600" />
                 Progress Ratings (1-5 Stars)
               </h3>
@@ -224,7 +224,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
               <div className="space-y-4">
                 {ratingCategories.map(({ key, label, color }) => (
                   <div key={key}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-2">{label}</label>
                     <div className="flex gap-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -240,7 +240,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                           />
                         </button>
                       ))}
-                      <span className="ml-4 self-center text-sm font-semibold text-gray-600">
+                      <span className="ml-4 self-center text-sm font-semibold text-ink-600">
                         {formData.rating[key] > 0 ? `${formData.rating[key]} / 5` : 'Not rated'}
                       </span>
                     </div>
@@ -248,12 +248,12 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 ))}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Rating Notes</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-2">Rating Notes</label>
                   <textarea
                     value={formData.rating.notes}
                     onChange={(e) => handleRatingChange('notes', e.target.value)}
                     rows={2}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                     placeholder="Additional notes about progress..."
                   />
                 </div>
@@ -293,11 +293,11 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
           </div>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+          <div className="bg-ink-50 px-6 py-4 flex justify-end gap-3 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition font-semibold"
+              className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition font-semibold"
             >
               Cancel
             </button>
@@ -316,8 +316,8 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
 };
 
 const MediaUploadSection = ({ title, type, icon: Icon, preview, onUpload, onRemove, color }) => (
-  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6">
-    <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+  <div className="border-2 border-dashed border-ink-200 rounded-xl p-6">
+    <h3 className="font-bold text-ink-900 mb-4 flex items-center gap-2">
       <Icon size={20} className={`text-${color}-600`} />
       {title}
     </h3>
@@ -328,7 +328,7 @@ const MediaUploadSection = ({ title, type, icon: Icon, preview, onUpload, onRemo
           <img
             src={src}
             alt={`${type} ${index + 1}`}
-            className="w-24 h-24 object-cover rounded-lg border-2 border-gray-200"
+            className="w-24 h-24 object-cover rounded-lg border-2 border-ink-100"
           />
           <button
             type="button"
@@ -342,9 +342,9 @@ const MediaUploadSection = ({ title, type, icon: Icon, preview, onUpload, onRemo
     </div>
 
     <label className="cursor-pointer">
-      <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-pink-400 hover:bg-pink-50 transition-all">
-        <Upload size={18} className="text-gray-400" />
-        <span className="text-sm text-gray-600">Click to upload {type}</span>
+      <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-200 rounded-lg hover:border-pink-400 hover:bg-pink-50 transition-all">
+        <Upload size={18} className="text-ink-400" />
+        <span className="text-sm text-ink-600">Click to upload {type}</span>
       </div>
       <input
         type="file"
@@ -354,7 +354,7 @@ const MediaUploadSection = ({ title, type, icon: Icon, preview, onUpload, onRemo
         className="hidden"
       />
     </label>
-    <p className="mt-2 text-xs text-gray-500">Supports: JPG, PNG, GIF (max 5MB per file)</p>
+    <p className="mt-2 text-xs text-ink-500">Supports: JPG, PNG, GIF (max 5MB per file)</p>
   </div>
 );
 
@@ -405,14 +405,14 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
       case 'Critical': return 'bg-red-100 text-red-700 border-red-300';
       case 'High': return 'bg-orange-100 text-orange-700 border-orange-300';
       case 'Medium': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
-      case 'Low': return 'bg-gray-100 text-gray-700 border-gray-300';
-      default: return 'bg-gray-100 text-gray-700 border-gray-300';
+      case 'Low': return 'bg-ink-100 text-ink-700 border-ink-200';
+      default: return 'bg-ink-100 text-ink-700 border-ink-200';
     }
   };
 
   return (
     <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50">
-      <h3 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+      <h3 className="font-bold text-lg text-ink-900 mb-4 flex items-center gap-2">
         <Package size={20} className="text-blue-600" />
         Needs Assessment
       </h3>
@@ -423,11 +423,11 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
           {needsAssessment.map((need) => (
             <div
               key={need.id}
-              className="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-start"
+              className="bg-white border border-ink-100 rounded-lg p-4 flex justify-between items-start"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h4 className="font-semibold text-gray-900">{need.needType}</h4>
+                  <h4 className="font-semibold text-ink-900">{need.needType}</h4>
                   <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">
                     {need.needCategory}
                   </span>
@@ -436,9 +436,9 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
                   </span>
                 </div>
                 {need.description && (
-                  <p className="text-sm text-gray-600 mb-2">{need.description}</p>
+                  <p className="text-sm text-ink-600 mb-2">{need.description}</p>
                 )}
-                <div className="flex gap-4 text-sm text-gray-700">
+                <div className="flex gap-4 text-sm text-ink-700">
                   {need.quantity && <span>Qty: {need.quantity}</span>}
                   {need.estimatedCost && <span>Est. Cost: LKR {parseFloat(need.estimatedCost).toLocaleString()}</span>}
                 </div>
@@ -457,11 +457,11 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
 
       {/* Add New Need Form */}
       <div className="bg-white border-2 border-dashed border-blue-200 rounded-lg p-4 space-y-3">
-        <p className="text-sm font-semibold text-gray-700 mb-3">Add New Need</p>
+        <p className="text-sm font-semibold text-ink-700 mb-3">Add New Need</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-ink-700 mb-1">
               Need Type *
             </label>
             <input
@@ -469,18 +469,18 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               value={newNeed.needType}
               onChange={(e) => setNewNeed({ ...newNeed, needType: e.target.value })}
               placeholder="e.g., School uniform, Medicine, Books"
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-ink-700 mb-1">
               Category *
             </label>
             <select
               value={newNeed.needCategory}
               onChange={(e) => setNewNeed({ ...newNeed, needCategory: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Select Category</option>
               {needCategories.map(cat => (
@@ -490,7 +490,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-ink-700 mb-1">
               Quantity
             </label>
             <input
@@ -498,12 +498,12 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               value={newNeed.quantity}
               onChange={(e) => setNewNeed({ ...newNeed, quantity: e.target.value })}
               placeholder="e.g., 2, 1 set, 3 bottles"
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-ink-700 mb-1">
               Estimated Cost (LKR)
             </label>
             <input
@@ -511,18 +511,18 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               value={newNeed.estimatedCost}
               onChange={(e) => setNewNeed({ ...newNeed, estimatedCost: e.target.value })}
               placeholder="e.g., 5000"
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-ink-700 mb-1">
               Urgency
             </label>
             <select
               value={newNeed.urgency}
               onChange={(e) => setNewNeed({ ...newNeed, urgency: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               {urgencyLevels.map(level => (
                 <option key={level} value={level}>{level}</option>
@@ -531,7 +531,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-ink-700 mb-1">
               Description
             </label>
             <textarea
@@ -539,7 +539,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               onChange={(e) => setNewNeed({ ...newNeed, description: e.target.value })}
               rows={2}
               placeholder="Additional details about this need..."
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
@@ -555,7 +555,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
       </div>
 
       {needsAssessment.length === 0 && (
-        <p className="text-sm text-gray-500 text-center mt-3">
+        <p className="text-sm text-ink-500 text-center mt-3">
           No needs recorded yet. Add needs identified during this visit.
         </p>
       )}

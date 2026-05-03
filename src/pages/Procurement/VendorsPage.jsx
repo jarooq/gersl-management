@@ -4,7 +4,7 @@ import VendorFormModal from './components/VendorFormModal';
 
 const STATUS_BADGE = {
   Active: 'bg-green-100 text-green-700',
-  Inactive: 'bg-gray-100 text-gray-700',
+  Inactive: 'bg-ink-100 text-ink-700',
   Blacklisted: 'bg-red-100 text-red-700',
   Suspended: 'bg-yellow-100 text-yellow-800',
   PendingDocs: 'bg-blue-100 text-blue-700'
@@ -66,12 +66,12 @@ export default function VendorsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <header className="flex items-start justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Vendor master</h1>
-          <p className="text-sm text-gray-500">Approved vendor list, due diligence, and blacklist control.</p>
+          <h1 className="text-h1 text-ink-900">Vendor master</h1>
+          <p className="text-sm text-ink-500">Approved vendor list, due diligence, and blacklist control.</p>
         </div>
         <button
           onClick={() => { setEditing(null); setShowForm(true); }}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition"
         >Add vendor</button>
       </header>
 
@@ -80,12 +80,12 @@ export default function VendorsPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search name / code / email"
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm w-72"
+          className="rounded-md border border-ink-200 px-3 py-2 text-sm w-72"
         />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+          className="rounded-md border border-ink-200 px-3 py-2 text-sm"
         >
           <option value="">All statuses</option>
           <option>Active</option>
@@ -94,48 +94,48 @@ export default function VendorsPage() {
           <option>Blacklisted</option>
           <option>PendingDocs</option>
         </select>
-        <button className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Search</button>
+        <button className="px-4 py-2 text-sm font-medium text-ink-700 border border-ink-200 rounded-md hover:bg-ink-50">Search</button>
       </form>
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm mb-3">{error}</div>}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Categories</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Due diligence</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Code</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Vendor</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Categories</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Due diligence</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={6} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={6} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
             {!loading && rows.length === 0 && (
-              <tr><td colSpan={6} className="p-6 text-center text-sm text-gray-500">No vendors yet.</td></tr>
+              <tr><td colSpan={6} className="p-6 text-center text-sm text-ink-500">No vendors yet.</td></tr>
             )}
             {!loading && rows.map(v => (
               <tr key={v.id}>
-                <td className="px-4 py-2 text-sm font-mono text-gray-700">{v.vendorCode || '—'}</td>
+                <td className="px-4 py-2 text-sm font-mono text-ink-700">{v.vendorCode || '—'}</td>
                 <td className="px-4 py-2 text-sm">
-                  <div className="font-medium text-gray-900">{v.vendorName}</div>
-                  <div className="text-xs text-gray-500">{v.email || ''}{v.phone ? ` · ${v.phone}` : ''}</div>
+                  <div className="font-medium text-ink-900">{v.vendorName}</div>
+                  <div className="text-xs text-ink-500">{v.email || ''}{v.phone ? ` · ${v.phone}` : ''}</div>
                 </td>
-                <td className="px-4 py-2 text-xs text-gray-600">{(v.categories || []).join(', ') || '—'}</td>
+                <td className="px-4 py-2 text-xs text-ink-600">{(v.categories || []).join(', ') || '—'}</td>
                 <td className="px-4 py-2">
-                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[v.status] || 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[v.status] || 'bg-ink-100 text-ink-700'}`}>
                     {v.status}
                   </span>
                 </td>
                 <td className="px-4 py-2">
-                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${DD_BADGE[v.dueDiligenceStatus] || 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${DD_BADGE[v.dueDiligenceStatus] || 'bg-ink-100 text-ink-700'}`}>
                     {v.dueDiligenceStatus}
                   </span>
                 </td>
                 <td className="px-4 py-2 text-sm space-x-2">
-                  <button onClick={() => { setEditing(v); setShowForm(true); }} className="text-blue-600 hover:underline">Edit</button>
+                  <button onClick={() => { setEditing(v); setShowForm(true); }} className="text-navy-700 hover:underline">Edit</button>
                   {v.dueDiligenceStatus !== 'Cleared' && (
                     <button onClick={() => onDueDiligence(v, 'Cleared')} className="text-green-700 hover:underline">Clear DD</button>
                   )}

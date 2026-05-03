@@ -112,30 +112,30 @@ export default function BidAnalysisModal({ rfq, quotations = [], existing = null
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] flex flex-col">
-        <div className="px-5 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{editing ? 'Edit Bid Analysis' : 'Build Bid Analysis'}</h2>
-          <p className="text-xs text-gray-500 mt-1">{rfq.rfqNumber} — {quotations.length} quotation(s)</p>
+        <div className="px-5 py-4 border-b border-ink-100">
+          <h2 className="text-lg font-semibold text-ink-900">{editing ? 'Edit Bid Analysis' : 'Build Bid Analysis'}</h2>
+          <p className="text-xs text-ink-500 mt-1">{rfq.rfqNumber} — {quotations.length} quotation(s)</p>
         </div>
 
         <div className="px-5 py-4 overflow-y-auto flex-1 space-y-5">
           <div>
-            <h3 className="text-sm font-semibold text-gray-700">Scoring criteria (weights must total 100)</h3>
+            <h3 className="text-sm font-semibold text-ink-700">Scoring criteria (weights must total 100)</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2">
               {Object.keys(criteria).map(key => (
                 <label key={key} className="block">
-                  <span className="text-xs uppercase text-gray-500">{key}</span>
+                  <span className="text-xs uppercase text-ink-500">{key}</span>
                   <input
                     type="number"
                     min={0}
                     max={100}
                     value={criteria[key]}
                     onChange={(e) => updateCriterionWeight(key, e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    className="mt-1 block w-full rounded-md border border-ink-200 px-2 py-1 text-sm"
                   />
                 </label>
               ))}
             </div>
-            <div className={`text-xs mt-1 ${Math.abs(weightTotal - 100) > 0.01 ? 'text-red-600' : 'text-gray-500'}`}>
+            <div className={`text-xs mt-1 ${Math.abs(weightTotal - 100) > 0.01 ? 'text-red-600' : 'text-ink-500'}`}>
               Total weight: {weightTotal}
             </div>
           </div>
@@ -144,39 +144,39 @@ export default function BidAnalysisModal({ rfq, quotations = [], existing = null
             <table className="min-w-full text-sm border-collapse">
               <thead>
                 <tr>
-                  <th className="text-left px-3 py-2 border-b border-gray-200">Vendor</th>
+                  <th className="text-left px-3 py-2 border-b border-ink-100">Vendor</th>
                   {Object.keys(criteria).map(k => (
-                    <th key={k} className="text-left px-3 py-2 border-b border-gray-200 text-xs uppercase text-gray-600">
-                      {k} <span className="text-gray-400">({criteria[k]})</span>
+                    <th key={k} className="text-left px-3 py-2 border-b border-ink-100 text-xs uppercase text-ink-600">
+                      {k} <span className="text-ink-400">({criteria[k]})</span>
                     </th>
                   ))}
-                  <th className="text-right px-3 py-2 border-b border-gray-200 text-xs uppercase text-gray-600">Weighted total</th>
-                  <th className="text-center px-3 py-2 border-b border-gray-200 text-xs uppercase text-gray-600">Recommend</th>
+                  <th className="text-right px-3 py-2 border-b border-ink-100 text-xs uppercase text-ink-600">Weighted total</th>
+                  <th className="text-center px-3 py-2 border-b border-ink-100 text-xs uppercase text-ink-600">Recommend</th>
                 </tr>
               </thead>
               <tbody>
                 {quotations.map(q => (
                   <tr key={q.vendorId}>
-                    <td className="px-3 py-2 border-b border-gray-100">
-                      <div className="font-medium text-gray-900">{q.vendor?.vendorName || `#${q.vendorId}`}</div>
-                      <div className="text-xs text-gray-500">{q.currency} {Number(q.totalAmount).toLocaleString()}</div>
+                    <td className="px-3 py-2 border-b border-ink-100">
+                      <div className="font-medium text-ink-900">{q.vendor?.vendorName || `#${q.vendorId}`}</div>
+                      <div className="text-xs text-ink-500">{q.currency} {Number(q.totalAmount).toLocaleString()}</div>
                     </td>
                     {Object.keys(criteria).map(k => (
-                      <td key={k} className="px-2 py-2 border-b border-gray-100">
+                      <td key={k} className="px-2 py-2 border-b border-ink-100">
                         <input
                           type="number"
                           min={0}
                           max={100}
                           value={scores[`${q.vendorId}:${k}`] ?? ''}
                           onChange={(e) => updateScore(q.vendorId, k, e.target.value)}
-                          className="w-20 rounded-md border border-gray-300 px-2 py-1 text-sm"
+                          className="w-20 rounded-md border border-ink-200 px-2 py-1 text-sm"
                         />
                       </td>
                     ))}
-                    <td className="px-3 py-2 border-b border-gray-100 text-right font-semibold">
+                    <td className="px-3 py-2 border-b border-ink-100 text-right font-semibold">
                       {weightedTotals[q.vendorId] ?? 0}
                     </td>
-                    <td className="px-3 py-2 border-b border-gray-100 text-center">
+                    <td className="px-3 py-2 border-b border-ink-100 text-center">
                       <input
                         type="radio"
                         name="recommended"
@@ -191,12 +191,12 @@ export default function BidAnalysisModal({ rfq, quotations = [], existing = null
           </div>
 
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Rationale</span>
+            <span className="text-sm font-medium text-ink-700">Rationale</span>
             <textarea
               rows={3}
               value={rationale}
               onChange={(e) => setRationale(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm"
               placeholder="Why this vendor was selected — price/quality trade-off, compliance notes…"
             />
           </label>
@@ -206,10 +206,10 @@ export default function BidAnalysisModal({ rfq, quotations = [], existing = null
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2">
+        <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50"
           >Cancel</button>
           <button
             type="button"

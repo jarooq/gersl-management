@@ -169,9 +169,9 @@ const VendorCallsPage = () => {
   const getStatusBadge = (status) => {
     const badges = {
       'Open': 'bg-green-100 text-green-800',
-      'Closed': 'bg-gray-100 text-gray-800'
+      'Closed': 'bg-ink-100 text-gray-800'
     };
-    return badges[status] || 'bg-gray-100 text-gray-800';
+    return badges[status] || 'bg-ink-100 text-gray-800';
   };
 
   const getCategoryBadge = (category) => {
@@ -182,20 +182,20 @@ const VendorCallsPage = () => {
       'Supplies': 'bg-green-100 text-green-800',
       'Construction': 'bg-red-100 text-red-800'
     };
-    return badges[category] || 'bg-gray-100 text-gray-800';
+    return badges[category] || 'bg-ink-100 text-gray-800';
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Store className="w-5 h-5 animate-pulse" />
+                <Store className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Call for Vendors</h1>
@@ -221,7 +221,7 @@ const VendorCallsPage = () => {
                 <Store className="text-orange-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Calls</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Total Calls</h3>
             <p className="text-3xl font-bold text-gray-800">{stats.totalCalls}</p>
           </div>
 
@@ -231,7 +231,7 @@ const VendorCallsPage = () => {
                 <CheckCircle className="text-green-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Open Calls</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Open Calls</h3>
             <p className="text-3xl font-bold text-gray-800">{stats.openCalls}</p>
           </div>
 
@@ -241,17 +241,17 @@ const VendorCallsPage = () => {
                 <Users className="text-purple-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Bids</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Total Bids</h3>
             <p className="text-3xl font-bold text-gray-800">{stats.totalBids}</p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-gray-500">
             <div className="flex items-center justify-between mb-3">
-              <div className="bg-gray-100 p-3 rounded-xl">
-                <XCircle className="text-gray-600" size={24} />
+              <div className="bg-ink-100 p-3 rounded-xl">
+                <XCircle className="text-ink-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Closed Calls</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Closed Calls</h3>
             <p className="text-3xl font-bold text-gray-800">{stats.closedCalls}</p>
           </div>
       </div>
@@ -261,13 +261,13 @@ const VendorCallsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
                 <input
                   type="text"
                   placeholder="Search by title or category..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -275,7 +275,7 @@ const VendorCallsPage = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="All">All Status</option>
               <option value="Open">Open</option>
@@ -285,7 +285,7 @@ const VendorCallsPage = () => {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="All">All Categories</option>
               <option value="Goods">Goods</option>
@@ -307,7 +307,7 @@ const VendorCallsPage = () => {
 
       {/* Vendor Calls Grid */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 bg-gradient-to-r from-orange-50 to-pink-50 border-b border-gray-200">
+          <div className="p-6 bg-gradient-to-r from-orange-50 to-pink-50 border-b border-ink-100">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
               <Store size={24} className="text-orange-600" />
               Vendor Calls ({filteredCalls.length})
@@ -316,11 +316,11 @@ const VendorCallsPage = () => {
 
           {filteredCalls.length === 0 ? (
             <div className="text-center py-16 px-4">
-              <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Store size={40} className="text-gray-400" />
+              <div className="bg-ink-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Store size={40} className="text-ink-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No Vendor Calls Yet</h3>
-              <p className="text-gray-500 mb-6">Create your first vendor call to start procurement</p>
+              <h3 className="text-xl font-semibold text-ink-700 mb-2">No Vendor Calls Yet</h3>
+              <p className="text-ink-500 mb-6">Create your first vendor call to start procurement</p>
               <button
                 onClick={() => setShowModal(true)}
                 className="bg-gradient-to-r from-orange-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-700 hover:to-pink-700 transition-all duration-200 inline-flex items-center gap-2"
@@ -335,7 +335,7 @@ const VendorCallsPage = () => {
                 {filteredCalls.map((call) => (
                   <div
                     key={call.id}
-                    className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border border-gray-200 hover:shadow-xl transition-all duration-200 cursor-pointer"
+                    className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border border-ink-100 hover:shadow-xl transition-all duration-200 cursor-pointer"
                     onClick={() => handleView(call)}
                   >
                     <div className="flex items-start justify-between mb-4">
@@ -351,33 +351,33 @@ const VendorCallsPage = () => {
                     </div>
 
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-sm text-ink-600">
                         <Calendar size={16} className="text-orange-600" />
                         <span>Created: {call.createdDate}</span>
                       </div>
                       {call.deadline && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-2 text-sm text-ink-600">
                           <Clock size={16} className="text-red-600" />
                           <span>Deadline: {call.deadline}</span>
                         </div>
                       )}
                       {call.budget && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-2 text-sm text-ink-600">
                           <DollarSign size={16} className="text-green-600" />
                           <span>Budget: {call.budget}</span>
                         </div>
                       )}
                       {call.deliveryLocation && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-2 text-sm text-ink-600">
                           <Package size={16} className="text-blue-600" />
                           <span className="truncate">{call.deliveryLocation}</span>
                         </div>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Users size={16} className="text-gray-400" />
+                    <div className="flex items-center justify-between pt-4 border-t border-ink-100">
+                      <div className="flex items-center gap-2 text-sm text-ink-600">
+                        <Users size={16} className="text-ink-400" />
                         <span className="font-semibold">{call.bids || 0} bids</span>
                       </div>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
@@ -410,7 +410,7 @@ const VendorCallsPage = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-pink-600 text-white p-6 rounded-t-2xl flex items-center justify-between">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 {editingCall ? <Edit size={24} /> : <Plus size={24} />}
                 {editingCall ? 'Edit Vendor Call' : 'Create New Vendor Call'}
@@ -426,27 +426,27 @@ const VendorCallsPage = () => {
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Call Title <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={vendorForm.title}
                     onChange={(e) => setVendorForm({ ...vendorForm, title: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. Supply of Educational Materials"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Category <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={vendorForm.category}
                     onChange={(e) => setVendorForm({ ...vendorForm, category: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
                   >
                     <option value="Goods">Goods</option>
@@ -458,79 +458,79 @@ const VendorCallsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Budget Range</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Budget Range</label>
                   <input
                     type="text"
                     value={vendorForm.budget}
                     onChange={(e) => setVendorForm({ ...vendorForm, budget: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. $10,000 - $15,000"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Submission Deadline</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Submission Deadline</label>
                   <input
                     type="date"
                     value={vendorForm.deadline}
                     onChange={(e) => setVendorForm({ ...vendorForm, deadline: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Delivery Location</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Delivery Location</label>
                   <input
                     type="text"
                     value={vendorForm.deliveryLocation}
                     onChange={(e) => setVendorForm({ ...vendorForm, deliveryLocation: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. Nairobi Regional Office"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Project ID</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Project ID</label>
                   <input
                     type="text"
                     value={vendorForm.projectId}
                     onChange={(e) => setVendorForm({ ...vendorForm, projectId: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="Link to project (optional)"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Email</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Contact Email</label>
                   <input
                     type="email"
                     value={vendorForm.contactEmail}
                     onChange={(e) => setVendorForm({ ...vendorForm, contactEmail: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="procurement@organization.org"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Phone</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Contact Phone</label>
                   <input
                     type="tel"
                     value={vendorForm.contactPhone}
                     onChange={(e) => setVendorForm({ ...vendorForm, contactPhone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="+254 123 456 789"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={vendorForm.description}
                   onChange={(e) => setVendorForm({ ...vendorForm, description: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="4"
                   placeholder="Provide a detailed description of what you're procuring..."
                   required
@@ -538,32 +538,32 @@ const VendorCallsPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Requirements</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Requirements</label>
                 <textarea
                   value={vendorForm.requirements}
                   onChange={(e) => setVendorForm({ ...vendorForm, requirements: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="4"
                   placeholder="List the vendor qualifications and requirements..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Technical Specifications</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Technical Specifications</label>
                 <textarea
                   value={vendorForm.specifications}
                   onChange={(e) => setVendorForm({ ...vendorForm, specifications: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="4"
                   placeholder="Provide detailed technical specifications..."
                 />
               </div>
 
-              <div className="flex gap-4 pt-4 border-t border-gray-200">
+              <div className="flex gap-4 pt-4 border-t border-ink-100">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
+                  className="flex-1 px-6 py-3 border-2 border-ink-200 text-ink-700 rounded-xl font-semibold hover:bg-ink-50 transition-all duration-200"
                 >
                   Cancel
                 </button>
@@ -583,7 +583,7 @@ const VendorCallsPage = () => {
       {showViewModal && selectedCall && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-pink-600 text-white p-6 rounded-t-2xl flex items-center justify-between">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Eye size={24} />
                 Vendor Call Details
@@ -611,43 +611,43 @@ const VendorCallsPage = () => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-2 text-gray-700">
+                  <div className="flex items-center gap-2 text-ink-700">
                     <Calendar size={18} className="text-orange-600" />
                     <div>
-                      <p className="text-xs text-gray-500">Created</p>
+                      <p className="text-xs text-ink-500">Created</p>
                       <p className="text-sm font-semibold">{selectedCall.createdDate}</p>
                     </div>
                   </div>
                   {selectedCall.deadline && (
-                    <div className="flex items-center gap-2 text-gray-700">
+                    <div className="flex items-center gap-2 text-ink-700">
                       <Clock size={18} className="text-red-600" />
                       <div>
-                        <p className="text-xs text-gray-500">Deadline</p>
+                        <p className="text-xs text-ink-500">Deadline</p>
                         <p className="text-sm font-semibold">{selectedCall.deadline}</p>
                       </div>
                     </div>
                   )}
                   {selectedCall.budget && (
-                    <div className="flex items-center gap-2 text-gray-700">
+                    <div className="flex items-center gap-2 text-ink-700">
                       <DollarSign size={18} className="text-green-600" />
                       <div>
-                        <p className="text-xs text-gray-500">Budget</p>
+                        <p className="text-xs text-ink-500">Budget</p>
                         <p className="text-sm font-semibold">{selectedCall.budget}</p>
                       </div>
                     </div>
                   )}
-                  <div className="flex items-center gap-2 text-gray-700">
+                  <div className="flex items-center gap-2 text-ink-700">
                     <Users size={18} className="text-purple-600" />
                     <div>
-                      <p className="text-xs text-gray-500">Bids Received</p>
+                      <p className="text-xs text-ink-500">Bids Received</p>
                       <p className="text-sm font-semibold">{selectedCall.bids || 0}</p>
                     </div>
                   </div>
                   {selectedCall.deliveryLocation && (
-                    <div className="flex items-center gap-2 text-gray-700 col-span-2">
+                    <div className="flex items-center gap-2 text-ink-700 col-span-2">
                       <Package size={18} className="text-blue-600" />
                       <div>
-                        <p className="text-xs text-gray-500">Delivery Location</p>
+                        <p className="text-xs text-ink-500">Delivery Location</p>
                         <p className="text-sm font-semibold">{selectedCall.deliveryLocation}</p>
                       </div>
                     </div>
@@ -658,35 +658,35 @@ const VendorCallsPage = () => {
               {selectedCall.description && (
                 <div>
                   <h4 className="text-lg font-bold text-gray-800 mb-3">Description</h4>
-                  <p className="text-gray-600 whitespace-pre-line">{selectedCall.description}</p>
+                  <p className="text-ink-600 whitespace-pre-line">{selectedCall.description}</p>
                 </div>
               )}
 
               {selectedCall.requirements && (
                 <div>
                   <h4 className="text-lg font-bold text-gray-800 mb-3">Vendor Requirements</h4>
-                  <p className="text-gray-600 whitespace-pre-line">{selectedCall.requirements}</p>
+                  <p className="text-ink-600 whitespace-pre-line">{selectedCall.requirements}</p>
                 </div>
               )}
 
               {selectedCall.specifications && (
                 <div>
                   <h4 className="text-lg font-bold text-gray-800 mb-3">Technical Specifications</h4>
-                  <p className="text-gray-600 whitespace-pre-line">{selectedCall.specifications}</p>
+                  <p className="text-ink-600 whitespace-pre-line">{selectedCall.specifications}</p>
                 </div>
               )}
 
               {(selectedCall.contactEmail || selectedCall.contactPhone) && (
-                <div className="bg-gray-50 rounded-xl p-4">
+                <div className="bg-ink-50 rounded-xl p-4">
                   <h4 className="text-lg font-bold text-gray-800 mb-3">Contact Information</h4>
                   <div className="space-y-2">
                     {selectedCall.contactEmail && (
-                      <p className="text-gray-600">
+                      <p className="text-ink-600">
                         <span className="font-semibold">Email:</span> {selectedCall.contactEmail}
                       </p>
                     )}
                     {selectedCall.contactPhone && (
-                      <p className="text-gray-600">
+                      <p className="text-ink-600">
                         <span className="font-semibold">Phone:</span> {selectedCall.contactPhone}
                       </p>
                     )}

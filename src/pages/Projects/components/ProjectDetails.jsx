@@ -107,8 +107,8 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     switch (status) {
       case 'Completed': return <CheckCircle size={16} className="text-green-500" />;
       case 'In Progress': return <Clock size={16} className="text-blue-500" />;
-      case 'Pending': return <AlertCircle size={16} className="text-gray-400" />;
-      default: return <Clock size={16} className="text-gray-400" />;
+      case 'Pending': return <AlertCircle size={16} className="text-ink-400" />;
+      default: return <Clock size={16} className="text-ink-400" />;
     }
   };
 
@@ -116,8 +116,8 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     switch (status) {
       case 'Completed': return 'bg-green-100 text-green-800';
       case 'In Progress': return 'bg-blue-100 text-blue-800';
-      case 'Pending': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-gray-100 text-gray-600';
+      case 'Pending': return 'bg-ink-100 text-ink-600';
+      default: return 'bg-ink-100 text-ink-600';
     }
   };
 
@@ -154,7 +154,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
       case 'Suggestion': return 'bg-blue-100 text-blue-700 border-blue-300';
       case 'Positive': return 'bg-green-100 text-green-700 border-green-300';
       case 'Query': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
-      default: return 'bg-gray-100 text-gray-700 border-gray-300';
+      default: return 'bg-ink-100 text-ink-700 border-ink-200';
     }
   };
 
@@ -163,7 +163,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
       case 'High': return 'text-red-600';
       case 'Medium': return 'text-orange-600';
       case 'Low': return 'text-green-600';
-      default: return 'text-gray-600';
+      default: return 'text-ink-600';
     }
   };
 
@@ -174,7 +174,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
       case 'High': return 'text-orange-600 bg-orange-50 border-orange-200';
       case 'Medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
       case 'Low': return 'text-blue-600 bg-blue-50 border-blue-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      default: return 'text-ink-600 bg-ink-50 border-ink-100';
     }
   };
 
@@ -286,13 +286,13 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
 
         <div className="p-6 space-y-6">
           {/* Tabs */}
-          <div className="flex border-b border-gray-200">
+          <div className="flex border-b border-ink-100">
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-6 py-3 font-semibold transition ${
                 activeTab === 'overview'
                   ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               Overview
@@ -302,7 +302,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 ${
                 activeTab === 'meal'
                   ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <BarChart3 size={16} />
@@ -318,7 +318,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 ${
                 activeTab === 'cfm'
                   ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <MessageSquare size={16} />
@@ -334,7 +334,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               className={`px-6 py-3 font-semibold transition ${
                 activeTab === 'tasks'
                   ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               Tasks
@@ -344,7 +344,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 ${
                 activeTab === 'timeline'
                   ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <GanttChartSquare size={16} />
@@ -398,7 +398,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               </div>
               {project.description && (
                 <div className="mt-4 pt-4 border-t">
-                  <p className="text-sm text-gray-600">{project.description}</p>
+                  <p className="text-sm text-ink-600">{project.description}</p>
                 </div>
               )}
             </CardContent>
@@ -412,15 +412,15 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Budget</span>
-                  <span className="font-bold text-gray-900">LKR {project.budget.toLocaleString()}</span>
+                  <span className="text-ink-600">Total Budget</span>
+                  <span className="font-bold text-ink-900">LKR {project.budget.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Spent</span>
+                  <span className="text-ink-600">Spent</span>
                   <span className="font-bold text-blue-600">LKR {project.spent.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Remaining</span>
+                  <span className="text-ink-600">Remaining</span>
                   <span className="font-bold text-green-600">LKR {(project.budget - project.spent).toLocaleString()}</span>
                 </div>
                 <div className="pt-3 border-t">
@@ -430,7 +430,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                       style={{ width: `${budgetUsed}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-500 text-center mt-2">{budgetUsed}% of budget used</p>
+                  <p className="text-xs text-ink-500 text-center mt-2">{budgetUsed}% of budget used</p>
                 </div>
               </div>
             </CardContent>
@@ -445,7 +445,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Results Framework</CardTitle>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-ink-500">
                       {resultsFramework.length || 0} indicators
                     </span>
                   </div>
@@ -454,7 +454,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   {resultsFramework && resultsFramework.length > 0 ? (
                     <div className="space-y-4">
                       {resultsFramework.map((indicator, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div key={index} className="border border-ink-100 rounded-lg p-4">
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">
@@ -462,26 +462,26 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                               </span>
                             </div>
                           </div>
-                          <h4 className="font-semibold text-gray-900 mb-2">{indicator.indicator}</h4>
+                          <h4 className="font-semibold text-ink-900 mb-2">{indicator.indicator}</h4>
                           <div className="grid grid-cols-3 gap-3 text-sm">
                             <div>
-                              <span className="text-gray-500">Baseline:</span>
-                              <span className="font-semibold text-gray-900 ml-1">{indicator.baseline}</span>
+                              <span className="text-ink-500">Baseline:</span>
+                              <span className="font-semibold text-ink-900 ml-1">{indicator.baseline}</span>
                             </div>
                             <div>
-                              <span className="text-gray-500">Target:</span>
+                              <span className="text-ink-500">Target:</span>
                               <span className="font-semibold text-green-600 ml-1">{indicator.target}</span>
                             </div>
                             <div>
-                              <span className="text-gray-500">MoV:</span>
-                              <span className="text-gray-700 ml-1 text-xs">{indicator.meansOfVerification}</span>
+                              <span className="text-ink-500">MoV:</span>
+                              <span className="text-ink-700 ml-1 text-xs">{indicator.meansOfVerification}</span>
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No indicators defined yet</p>
+                    <p className="text-center text-ink-500 py-8">No indicators defined yet</p>
                   )}
                 </CardContent>
               </Card>
@@ -497,35 +497,35 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                         <p className="text-2xl font-bold text-blue-600">
                           {project.beneficiaryBreakdown.directMale || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Direct Male</p>
+                        <p className="text-xs text-ink-600 mt-1">Direct Male</p>
                       </div>
                       <div className="text-center p-4 bg-pink-50 rounded-lg">
                         <p className="text-2xl font-bold text-pink-600">
                           {project.beneficiaryBreakdown.directFemale || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Direct Female</p>
+                        <p className="text-xs text-ink-600 mt-1">Direct Female</p>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <p className="text-2xl font-bold text-purple-600">
                           {project.beneficiaryBreakdown.directChildren || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Children</p>
+                        <p className="text-xs text-ink-600 mt-1">Children</p>
                       </div>
                       <div className="text-center p-4 bg-green-50 rounded-lg">
                         <p className="text-2xl font-bold text-green-600">
                           {project.beneficiaryBreakdown.directPWD || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">PWD</p>
+                        <p className="text-xs text-ink-600 mt-1">PWD</p>
                       </div>
                       <div className="text-center p-4 bg-orange-50 rounded-lg">
                         <p className="text-2xl font-bold text-orange-600">
                           {project.beneficiaryBreakdown.indirectTotal || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Indirect</p>
+                        <p className="text-xs text-ink-600 mt-1">Indirect</p>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No beneficiary data available</p>
+                    <p className="text-center text-ink-500 py-8">No beneficiary data available</p>
                   )}
                 </CardContent>
               </Card>
@@ -552,28 +552,28 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   {project.cfmLog && project.cfmLog.length > 0 ? (
                     <div className="space-y-4">
                       {project.cfmLog.map((feedback) => (
-                        <div key={feedback.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div key={feedback.id} className="bg-ink-50 rounded-lg p-4 border border-ink-100">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${getFeedbackTypeColor(feedback.feedbackType)}`}>
                                 {feedback.feedbackType}
                               </span>
-                              <span className="text-xs text-gray-500">via {feedback.channel}</span>
+                              <span className="text-xs text-ink-500">via {feedback.channel}</span>
                               <span className={`text-xs font-semibold ${getSeverityColor(feedback.severity)}`}>
                                 {feedback.severity} Severity
                               </span>
                             </div>
-                            <span className="text-xs text-gray-500">{feedback.date}</span>
+                            <span className="text-xs text-ink-500">{feedback.date}</span>
                           </div>
 
-                          <p className="text-sm text-gray-700 mb-2">{feedback.description}</p>
+                          <p className="text-sm text-ink-700 mb-2">{feedback.description}</p>
 
                           <div className="flex items-center justify-between text-xs">
                             <div>
-                              <span className="text-gray-500">Reported by: </span>
-                              <span className="font-semibold text-gray-700">{feedback.reportedBy}</span>
-                              <span className="text-gray-500 ml-3">Contact: </span>
-                              <span className="text-gray-700">{feedback.contactInfo}</span>
+                              <span className="text-ink-500">Reported by: </span>
+                              <span className="font-semibold text-ink-700">{feedback.reportedBy}</span>
+                              <span className="text-ink-500 ml-3">Contact: </span>
+                              <span className="text-ink-700">{feedback.contactInfo}</span>
                             </div>
 
                             {feedback.status === 'Resolved' ? (
@@ -591,11 +591,11 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                           </div>
 
                           {feedback.status === 'Resolved' && (
-                            <div className="mt-3 pt-3 border-t border-gray-200">
-                              <p className="text-xs text-gray-600 mb-1">
+                            <div className="mt-3 pt-3 border-t border-ink-100">
+                              <p className="text-xs text-ink-600 mb-1">
                                 <span className="font-semibold">Action Taken:</span> {feedback.actionTaken}
                               </p>
-                              <p className="text-xs text-gray-600">
+                              <p className="text-xs text-ink-600">
                                 <span className="font-semibold">Resolved By:</span> {feedback.responsiblePerson} on {feedback.dateResolved}
                               </p>
                             </div>
@@ -604,7 +604,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No feedback logged yet</p>
+                    <p className="text-center text-ink-500 py-8">No feedback logged yet</p>
                   )}
                 </CardContent>
               </Card>
@@ -659,17 +659,17 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                     {projectTasks.map((task) => {
                       const dueDateInfo = getDueDateLabel(task.dueDate);
                       return (
-                        <div key={task.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition bg-white shadow-sm">
+                        <div key={task.id} className="border border-ink-100 rounded-lg p-4 hover:border-blue-300 transition bg-white shadow-sm">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-start gap-3 flex-1">
                               {getTaskStatusIcon(task.status)}
                               <div className="flex-1">
-                                <h4 className="font-semibold text-gray-900">{task.title || task.name}</h4>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <h4 className="font-semibold text-ink-900">{task.title || task.name}</h4>
+                                <p className="text-sm text-ink-600 mt-1">
                                   {task.assignedTo ? `Assigned to: ${task.assignedTo}` : 'Not assigned'}
                                 </p>
                                 {task.taskType && (
-                                  <span className="inline-block mt-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                  <span className="inline-block mt-1 text-xs text-ink-500 bg-ink-100 px-2 py-1 rounded">
                                     {task.taskType}
                                   </span>
                                 )}
@@ -694,8 +694,8 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
 
                           <div className="mb-3">
                             <div className="flex justify-between items-center mb-1">
-                              <span className="text-xs text-gray-500">Progress</span>
-                              <span className="text-xs font-bold text-gray-900">{task.progress || 0}%</span>
+                              <span className="text-xs text-ink-500">Progress</span>
+                              <span className="text-xs font-bold text-ink-900">{task.progress || 0}%</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2">
                               <div
@@ -705,13 +705,13 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                          <div className="flex items-center justify-between text-xs text-ink-500 mb-3">
                             <span>Start: {task.startDate || 'N/A'}</span>
                             <span>Due: {task.dueDate || task.endDate || 'N/A'}</span>
                           </div>
 
                           {/* Action Buttons */}
-                          <div className="flex gap-2 pt-3 border-t border-gray-200">
+                          <div className="flex gap-2 pt-3 border-t border-ink-100">
                             <button
                               onClick={() => handleViewTask(task)}
                               className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm font-semibold"
@@ -723,7 +723,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                               <>
                                 <button
                                   onClick={() => handleEditTask(task)}
-                                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition text-sm font-semibold"
+                                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-ink-50 text-ink-600 rounded-lg hover:bg-ink-100 transition text-sm font-semibold"
                                 >
                                   <Edit size={16} />
                                   Edit
@@ -765,7 +765,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                     })}
                   </div>
                 ) : (
-                  <p className="text-center text-gray-500 py-8">No tasks added yet</p>
+                  <p className="text-center text-ink-500 py-8">No tasks added yet</p>
                 )}
               </CardContent>
             </Card>
@@ -787,7 +787,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
           <div className="flex gap-3 pt-4">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
             >
               Close
             </button>
@@ -828,12 +828,12 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
               <form onSubmit={handleCFMSubmit} className="p-6 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Feedback Type *</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-1">Feedback Type *</label>
                     <select
                       value={cfmFormData.feedbackType}
                       onChange={(e) => setCfmFormData({...cfmFormData, feedbackType: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="Complaint">Complaint</option>
                       <option value="Suggestion">Suggestion</option>
@@ -843,12 +843,12 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Channel *</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-1">Channel *</label>
                     <select
                       value={cfmFormData.channel}
                       onChange={(e) => setCfmFormData({...cfmFormData, channel: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="Hotline">Hotline</option>
                       <option value="Email">Email</option>
@@ -861,12 +861,12 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Severity *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-1">Severity *</label>
                   <select
                     value={cfmFormData.severity}
                     onChange={(e) => setCfmFormData({...cfmFormData, severity: e.target.value})}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -875,38 +875,38 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Description *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-1">Description *</label>
                   <textarea
                     value={cfmFormData.description}
                     onChange={(e) => setCfmFormData({...cfmFormData, description: e.target.value})}
                     required
                     rows="4"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                     placeholder="Describe the feedback in detail..."
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Reported By *</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-1">Reported By *</label>
                     <input
                       type="text"
                       value={cfmFormData.reportedBy}
                       onChange={(e) => setCfmFormData({...cfmFormData, reportedBy: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                       placeholder="Name of person reporting"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Contact Info *</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-1">Contact Info *</label>
                     <input
                       type="text"
                       value={cfmFormData.contactInfo}
                       onChange={(e) => setCfmFormData({...cfmFormData, contactInfo: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                       placeholder="Phone/Email"
                     />
                   </div>
@@ -916,7 +916,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   <button
                     type="button"
                     onClick={() => setShowCFMModal(false)}
-                    className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+                    className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
                   >
                     Cancel
                   </button>
@@ -1154,15 +1154,15 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
 };
 
 const OverviewCard = ({ icon: Icon, label, value, color, subtitle }) => (
-  <div className="bg-white rounded-lg border border-gray-200 p-4">
+  <div className="bg-white rounded-lg border border-ink-100 p-4">
     <div className="flex items-center gap-3">
       <div className={`${color} p-3 rounded-lg`}>
         <Icon className="text-white" size={20} />
       </div>
       <div>
-        <p className="text-xs text-gray-500 uppercase">{label}</p>
-        <p className="text-xl font-bold text-gray-900">{value}</p>
-        {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+        <p className="text-xs text-ink-500 uppercase">{label}</p>
+        <p className="text-xl font-bold text-ink-900">{value}</p>
+        {subtitle && <p className="text-xs text-ink-500">{subtitle}</p>}
       </div>
     </div>
   </div>
@@ -1172,8 +1172,8 @@ const InfoItem = ({ icon: Icon, label, value }) => (
   <div className="flex items-start gap-3">
     <Icon size={18} className="text-blue-500 mt-0.5" />
     <div>
-      <p className="text-xs text-gray-500 uppercase">{label}</p>
-      <p className="text-sm font-semibold text-gray-900">{value || 'N/A'}</p>
+      <p className="text-xs text-ink-500 uppercase">{label}</p>
+      <p className="text-sm font-semibold text-ink-900">{value || 'N/A'}</p>
     </div>
   </div>
 );

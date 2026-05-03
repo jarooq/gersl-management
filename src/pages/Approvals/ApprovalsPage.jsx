@@ -77,7 +77,7 @@ const ApprovalsPage = () => {
       case 'proposal': return 'text-purple-600 bg-purple-50';
       case 'project': return 'text-blue-600 bg-blue-50';
       case 'finance': return 'text-green-600 bg-green-50';
-      default: return 'text-gray-600 bg-gray-50';
+      default: return 'text-ink-600 bg-ink-50';
     }
   };
 
@@ -87,7 +87,7 @@ const ApprovalsPage = () => {
       case 'Programme Manager Review': return 'bg-blue-100 text-blue-700';
       case 'Finance Review': return 'bg-green-100 text-green-700';
       case 'CEO Final Approval': return 'bg-indigo-100 text-indigo-700';
-      default: return 'bg-gray-100 text-gray-700';
+      default: return 'bg-ink-100 text-ink-700';
     }
   };
 
@@ -120,16 +120,16 @@ const ApprovalsPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 animate-pulse" />
+                <CheckCircle className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Approval Centre</h1>
@@ -186,7 +186,7 @@ const ApprovalsPage = () => {
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                   activeTab === tab
                     ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -196,11 +196,11 @@ const ApprovalsPage = () => {
 
           {/* Filter */}
           <div className="flex items-center gap-2">
-            <Filter size={18} className="text-gray-600" />
+            <Filter size={18} className="text-ink-600" />
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
               <option value="All">All Types</option>
               <option value="Proposal">Proposals</option>
@@ -214,15 +214,15 @@ const ApprovalsPage = () => {
         {loading ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading approvals...</p>
+            <p className="text-ink-600">Loading approvals...</p>
           </div>
         ) : filteredApprovals.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-gray-400" />
+            <div className="w-16 h-16 bg-ink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8 text-ink-400" />
             </div>
-            <p className="text-gray-600 text-lg font-semibold">No {activeTab} approvals</p>
-            <p className="text-gray-500 text-sm mt-1">Items will appear here when they require approval</p>
+            <p className="text-ink-600 text-lg font-semibold">No {activeTab} approvals</p>
+            <p className="text-ink-500 text-sm mt-1">Items will appear here when they require approval</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -236,7 +236,7 @@ const ApprovalsPage = () => {
                   className={`border-2 rounded-xl p-5 transition-all hover:shadow-md ${
                     userCanApprove && approval.status === 'pending'
                       ? 'border-indigo-300 bg-indigo-50/50'
-                      : 'border-gray-200 bg-white'
+                      : 'border-ink-100 bg-white'
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -249,39 +249,39 @@ const ApprovalsPage = () => {
                       {/* Content */}
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-bold text-gray-900">{approval.itemTitle}</h3>
+                          <h3 className="text-lg font-bold text-ink-900">{approval.itemTitle}</h3>
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStageColor(approval.currentStage)}`}>
                             {approval.currentStage}
                           </span>
                           {userCanApprove && approval.status === 'pending' && (
-                            <span className="px-2 py-1 bg-purple-500 text-white rounded-full text-xs font-bold animate-pulse">
+                            <span className="px-2 py-1 bg-purple-500 text-white rounded-full text-xs font-bold">
                               YOUR TURN
                             </span>
                           )}
                         </div>
 
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-3">
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-ink-600">
                             <FileText size={14} />
                             <span className="font-semibold">{approval.itemCode}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-ink-600">
                             <User size={14} />
                             <span>Submitted by {approval.submittedBy}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-ink-600">
                             <Calendar size={14} />
                             <span>{new Date(approval.submittedDate).toLocaleDateString()}</span>
                           </div>
                           {approval.itemType === 'finance' || approval.itemType === 'proposal' ? (
-                            <div className="flex items-center gap-2 text-gray-600">
+                            <div className="flex items-center gap-2 text-ink-600">
                               <DollarSign size={14} />
                               <span className="font-semibold">
                                 LKR {parseFloat(approval.amount || 0).toLocaleString()}
                               </span>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2 text-gray-600">
+                            <div className="flex items-center gap-2 text-ink-600">
                               <TrendingUp size={14} />
                               <span>{approval.priority || 'Medium'} Priority</span>
                             </div>
@@ -290,11 +290,11 @@ const ApprovalsPage = () => {
 
                         {/* Approval History */}
                         {approval.approvalHistory && approval.approvalHistory.length > 0 && (
-                          <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                            <p className="text-xs font-semibold text-gray-700 mb-2">Approval Trail:</p>
+                          <div className="bg-ink-50 rounded-lg p-3 mb-3">
+                            <p className="text-xs font-semibold text-ink-700 mb-2">Approval Trail:</p>
                             <div className="space-y-1">
                               {approval.approvalHistory.map((history, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-xs text-gray-600">
+                                <div key={idx} className="flex items-center gap-2 text-xs text-ink-600">
                                   {history.action === 'approved' ? (
                                     <CheckCircle size={12} className="text-green-600" />
                                   ) : (
@@ -302,7 +302,7 @@ const ApprovalsPage = () => {
                                   )}
                                   <span className="font-semibold">{history.reviewerRole}</span>
                                   <span>{history.action}</span>
-                                  <span className="text-gray-400">• {new Date(history.date).toLocaleDateString()}</span>
+                                  <span className="text-ink-400">• {new Date(history.date).toLocaleDateString()}</span>
                                   {history.comment && (
                                     <span className="italic">"{history.comment}"</span>
                                   )}
@@ -321,7 +321,7 @@ const ApprovalsPage = () => {
                           setSelectedApproval(approval);
                           setShowDetailModal(true);
                         }}
-                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center gap-2"
+                        className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center gap-2"
                       >
                         <Eye size={16} />
                         View
@@ -380,7 +380,7 @@ const ApprovalsPage = () => {
 
 // Stat Card Component
 const StatCard = ({ icon: Icon, label, value, color, trend }) => (
-  <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition">
+  <div className="bg-white rounded-lg shadow-sm p-4 border border-ink-100 hover:shadow-md transition">
     <div className="flex items-center justify-between mb-2">
       <div className={`w-10 h-10 ${color} rounded-lg flex items-center justify-center`}>
         <Icon className="w-5 h-5 text-white" />
@@ -393,8 +393,8 @@ const StatCard = ({ icon: Icon, label, value, color, trend }) => (
         {trend}
       </span>
     </div>
-    <p className="text-2xl font-bold text-gray-900 mb-0.5">{value}</p>
-    <p className="text-xs text-gray-600 font-medium">{label}</p>
+    <p className="text-h1 text-ink-900 mb-0.5">{value}</p>
+    <p className="text-xs text-ink-600 font-medium">{label}</p>
   </div>
 );
 
@@ -434,19 +434,19 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Item Information */}
-          <div className="bg-gray-50 rounded-xl p-5">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">{approval.itemTitle}</h3>
+          <div className="bg-ink-50 rounded-xl p-5">
+            <h3 className="text-xl font-bold text-ink-900 mb-4">{approval.itemTitle}</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-gray-600 font-semibold mb-1">Type</p>
-                <p className="text-gray-900 capitalize">{approval.itemType}</p>
+                <p className="text-ink-600 font-semibold mb-1">Type</p>
+                <p className="text-ink-900 capitalize">{approval.itemType}</p>
               </div>
               <div>
-                <p className="text-gray-600 font-semibold mb-1">Code</p>
-                <p className="text-gray-900">{approval.itemCode}</p>
+                <p className="text-ink-600 font-semibold mb-1">Code</p>
+                <p className="text-ink-900">{approval.itemCode}</p>
               </div>
               <div>
-                <p className="text-gray-600 font-semibold mb-1">Current Stage</p>
+                <p className="text-ink-600 font-semibold mb-1">Current Stage</p>
                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                   approval.currentStage === 'CEO Initial Review' ? 'bg-purple-100 text-purple-700' :
                   approval.currentStage === 'Programme Manager Review' ? 'bg-blue-100 text-blue-700' :
@@ -457,17 +457,17 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
                 </span>
               </div>
               <div>
-                <p className="text-gray-600 font-semibold mb-1">Submitted By</p>
-                <p className="text-gray-900">{approval.submittedBy}</p>
+                <p className="text-ink-600 font-semibold mb-1">Submitted By</p>
+                <p className="text-ink-900">{approval.submittedBy}</p>
               </div>
               <div>
-                <p className="text-gray-600 font-semibold mb-1">Submission Date</p>
-                <p className="text-gray-900">{new Date(approval.submittedDate).toLocaleString()}</p>
+                <p className="text-ink-600 font-semibold mb-1">Submission Date</p>
+                <p className="text-ink-900">{new Date(approval.submittedDate).toLocaleString()}</p>
               </div>
               {(approval.itemType === 'finance' || approval.itemType === 'proposal') && (
                 <div>
-                  <p className="text-gray-600 font-semibold mb-1">Amount</p>
-                  <p className="text-gray-900 font-bold">
+                  <p className="text-ink-600 font-semibold mb-1">Amount</p>
+                  <p className="text-ink-900 font-bold">
                     LKR {parseFloat(approval.amount || 0).toLocaleString()}
                   </p>
                 </div>
@@ -478,8 +478,8 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
           {/* Description/Summary */}
           {approval.description && (
             <div>
-              <h4 className="text-lg font-bold text-gray-900 mb-2">Description</h4>
-              <p className="text-gray-700 bg-white rounded-lg p-4 border border-gray-200">
+              <h4 className="text-lg font-bold text-ink-900 mb-2">Description</h4>
+              <p className="text-ink-700 bg-white rounded-lg p-4 border border-ink-100">
                 {approval.description}
               </p>
             </div>
@@ -488,10 +488,10 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
           {/* Approval History */}
           {approval.approvalHistory && approval.approvalHistory.length > 0 && (
             <div>
-              <h4 className="text-lg font-bold text-gray-900 mb-3">Approval Trail</h4>
+              <h4 className="text-lg font-bold text-ink-900 mb-3">Approval Trail</h4>
               <div className="space-y-3">
                 {approval.approvalHistory.map((history, idx) => (
-                  <div key={idx} className="flex items-start gap-3 bg-white rounded-lg p-4 border border-gray-200">
+                  <div key={idx} className="flex items-start gap-3 bg-white rounded-lg p-4 border border-ink-100">
                     {history.action === 'approved' ? (
                       <CheckCircle size={20} className="text-green-600 mt-0.5" />
                     ) : (
@@ -499,14 +499,14 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
                     )}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-gray-900">{history.reviewerRole}</span>
-                        <span className="text-gray-600">{history.action}</span>
-                        <span className="text-gray-400 text-sm">
+                        <span className="font-bold text-ink-900">{history.reviewerRole}</span>
+                        <span className="text-ink-600">{history.action}</span>
+                        <span className="text-ink-400 text-sm">
                           • {new Date(history.date).toLocaleString()}
                         </span>
                       </div>
                       {history.comment && (
-                        <p className="text-gray-700 italic text-sm">"{history.comment}"</p>
+                        <p className="text-ink-700 italic text-sm">"{history.comment}"</p>
                       )}
                     </div>
                   </div>
@@ -518,24 +518,24 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
           {/* Comment Section */}
           {canApprove && approval.status === 'pending' && (
             <div>
-              <h4 className="text-lg font-bold text-gray-900 mb-2">Your Review</h4>
+              <h4 className="text-lg font-bold text-ink-900 mb-2">Your Review</h4>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Add your comments or feedback (required for rejection)..."
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
           )}
         </div>
 
         {/* Footer Actions */}
-        <div className="sticky bottom-0 bg-gray-50 px-6 py-4 rounded-b-2xl border-t border-gray-200">
+        <div className="sticky bottom-0 bg-ink-50 px-6 py-4 rounded-b-2xl border-t border-ink-100">
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition font-semibold"
+              className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition font-semibold"
               disabled={isSubmitting}
             >
               Close

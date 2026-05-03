@@ -466,7 +466,7 @@ const TaskFormModal = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-blue-700 text-white p-6 rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">
@@ -510,11 +510,11 @@ const TaskFormModal = ({
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900">Basic Task Information</h3>
+              <h3 className="text-lg font-bold text-ink-900">Basic Task Information</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Project <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -522,7 +522,7 @@ const TaskFormModal = ({
                     value={formData.projectId}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.projectId ? 'border-red-300' : 'border-gray-300'
+                      errors.projectId ? 'border-red-300' : 'border-ink-200'
                     }`}
                   >
                     <option value="">Select a project</option>
@@ -538,7 +538,7 @@ const TaskFormModal = ({
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Task Title <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -548,7 +548,7 @@ const TaskFormModal = ({
                     onChange={handleInputChange}
                     placeholder="Enter task title"
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.title ? 'border-red-300' : 'border-gray-300'
+                      errors.title ? 'border-red-300' : 'border-ink-200'
                     }`}
                   />
                   {errors.title && (
@@ -557,7 +557,7 @@ const TaskFormModal = ({
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Description <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -567,7 +567,7 @@ const TaskFormModal = ({
                     placeholder="Enter detailed task description"
                     rows="3"
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.description ? 'border-red-300' : 'border-gray-300'
+                      errors.description ? 'border-red-300' : 'border-ink-200'
                     }`}
                   />
                   {errors.description && (
@@ -576,12 +576,12 @@ const TaskFormModal = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Priority</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Priority</label>
                   <select
                     name="priority"
                     value={formData.priority}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -591,12 +591,12 @@ const TaskFormModal = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Status</label>
                   <select
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option value="Not Started">Not Started</option>
                     <option value="In Progress">In Progress</option>
@@ -606,18 +606,18 @@ const TaskFormModal = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Start Date</label>
                   <input
                     type="date"
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Due Date <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -626,7 +626,7 @@ const TaskFormModal = ({
                     value={formData.dueDate}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.dueDate ? 'border-red-300' : 'border-gray-300'
+                      errors.dueDate ? 'border-red-300' : 'border-ink-200'
                     }`}
                   />
                   {errors.dueDate && (
@@ -635,17 +635,17 @@ const TaskFormModal = ({
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-ink-700 mb-3">
                     <Users className="inline mr-2" size={18} />
                     Assign Staff Members (Multiple Selection)
                     {((projectTeamMembers && projectTeamMembers.length > 0) || (dynamicProjectTeamMembers && dynamicProjectTeamMembers.length > 0)) && (
-                      <span className="ml-2 text-xs text-gray-500">(Project Team Members Only)</span>
+                      <span className="ml-2 text-xs text-ink-500">(Project Team Members Only)</span>
                     )}
                     {!formData.projectId && (
                       <span className="ml-2 text-xs text-amber-600">(Select a project to filter staff)</span>
                     )}
                   </label>
-                  <div className="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto bg-gray-50">
+                  <div className="border border-ink-200 rounded-lg p-4 max-h-64 overflow-y-auto bg-ink-50">
                     {(() => {
                       // Use either prop-provided or dynamically fetched project team members
                       const effectiveProjectTeamMembers = projectTeamMembers || dynamicProjectTeamMembers;
@@ -673,13 +673,13 @@ const TaskFormModal = ({
                                   type="checkbox"
                                   checked={formData.assignedUsers.includes(userId)}
                                   onChange={() => handleAssignedUserToggle(userId)}
-                                  className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                                  className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-ink-200"
                                 />
-                                <span className="ml-3 text-sm font-medium text-gray-900">
+                                <span className="ml-3 text-sm font-medium text-ink-900">
                                   {userName}
                                 </span>
                                 {userRole && (
-                                  <span className="ml-auto text-xs text-gray-500">{userRole}</span>
+                                  <span className="ml-auto text-xs text-ink-500">{userRole}</span>
                                 )}
                               </label>
                             );
@@ -688,12 +688,12 @@ const TaskFormModal = ({
                       ) : (
                         <div className="text-sm text-center py-4">
                           {!formData.projectId ? (
-                            <div className="text-gray-500">
+                            <div className="text-ink-500">
                               <p className="font-semibold">No project selected</p>
                               <p className="text-xs mt-1">Select a project above to see team members</p>
                             </div>
                           ) : (
-                            <div className="text-gray-500">
+                            <div className="text-ink-500">
                               <p className="font-semibold">No project team members</p>
                               <p className="text-xs mt-1">This project has no assigned team members</p>
                             </div>
@@ -715,11 +715,11 @@ const TaskFormModal = ({
           {/* Step 2: Task Type & Specific Fields */}
           {currentStep === 2 && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900">Task Type & Details</h3>
+              <h3 className="text-lg font-bold text-ink-900">Task Type & Details</h3>
 
               {/* Task Type Selection */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">Select Task Type</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-3">Select Task Type</label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {taskTypes.map(type => {
                     const Icon = type.icon;
@@ -732,11 +732,11 @@ const TaskFormModal = ({
                         className={`p-4 rounded-lg border-2 transition-all text-left ${
                           isSelected
                             ? `border-${type.color}-500 bg-${type.color}-50`
-                            : 'border-gray-200 hover:border-gray-300'
+                            : 'border-ink-100 hover:border-ink-200'
                         }`}
                       >
-                        <Icon className={`mb-2 ${isSelected ? `text-${type.color}-600` : 'text-gray-400'}`} size={24} />
-                        <p className={`font-semibold text-sm ${isSelected ? `text-${type.color}-900` : 'text-gray-700'}`}>
+                        <Icon className={`mb-2 ${isSelected ? `text-${type.color}-600` : 'text-ink-400'}`} size={24} />
+                        <p className={`font-semibold text-sm ${isSelected ? `text-${type.color}-900` : 'text-ink-700'}`}>
                           {type.label}
                         </p>
                       </button>
@@ -754,7 +754,7 @@ const TaskFormModal = ({
                   </h4>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Items to Procure <span className="text-red-500">*</span>
                     </label>
                     <textarea
@@ -764,7 +764,7 @@ const TaskFormModal = ({
                       placeholder="List items to procure (e.g., 500 food packs, Medical supplies)"
                       rows="2"
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
-                        errors.procurementItems ? 'border-red-300' : 'border-gray-300'
+                        errors.procurementItems ? 'border-red-300' : 'border-ink-200'
                       }`}
                     />
                     {errors.procurementItems && (
@@ -773,7 +773,7 @@ const TaskFormModal = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Estimated Budget</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Estimated Budget</label>
                     <input
                       type="number"
                       name="estimatedBudget"
@@ -781,7 +781,7 @@ const TaskFormModal = ({
                       onChange={handleInputChange}
                       placeholder="0.00"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                 </div>
@@ -796,12 +796,12 @@ const TaskFormModal = ({
                   </h4>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Tracking Mode</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Tracking Mode</label>
                     <select
                       name="beneficiaryTrackingMode"
                       value={formData.beneficiaryTrackingMode}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="None">None</option>
                       <option value="Aggregate">Aggregate (Count only - Ifthar meals)</option>
@@ -810,7 +810,7 @@ const TaskFormModal = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Target Beneficiaries <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -820,7 +820,7 @@ const TaskFormModal = ({
                       onChange={handleInputChange}
                       placeholder="Number of beneficiaries"
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                        errors.targetBeneficiaries ? 'border-red-300' : 'border-gray-300'
+                        errors.targetBeneficiaries ? 'border-red-300' : 'border-ink-200'
                       }`}
                     />
                     {errors.targetBeneficiaries && (
@@ -831,12 +831,12 @@ const TaskFormModal = ({
                   {formData.beneficiaryTrackingMode === 'Individual' && (
                     <>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Selection Method</label>
+                        <label className="block text-sm font-semibold text-ink-700 mb-2">Selection Method</label>
                         <select
                           name="beneficiarySelectionMethod"
                           value={formData.beneficiarySelectionMethod}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                           <option value="">Select method</option>
                           <option value="Manual Selection">Manual Selection</option>
@@ -849,14 +849,14 @@ const TaskFormModal = ({
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Selection Criteria</label>
+                        <label className="block text-sm font-semibold text-ink-700 mb-2">Selection Criteria</label>
                         <textarea
                           name="selectionCriteria"
                           value={formData.selectionCriteria}
                           onChange={handleInputChange}
                           placeholder="Describe criteria for selecting beneficiaries"
                           rows="2"
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                       </div>
                     </>
@@ -873,12 +873,12 @@ const TaskFormModal = ({
                   </h4>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Distribution Type</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Distribution Type</label>
                     <select
                       name="distributionType"
                       value={formData.distributionType}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     >
                       <option value="None">None</option>
                       <option value="In-Kind">In-Kind (Food, supplies)</option>
@@ -890,7 +890,7 @@ const TaskFormModal = ({
 
                   {(formData.distributionType === 'In-Kind' || formData.distributionType === 'Mixed') && (
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">
                         Items to Distribute <span className="text-red-500">*</span>
                       </label>
                       <textarea
@@ -900,7 +900,7 @@ const TaskFormModal = ({
                         placeholder="List items (e.g., 5kg rice, 1L oil, 1kg dhal)"
                         rows="2"
                         className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                          errors.distributionItems ? 'border-red-300' : 'border-gray-300'
+                          errors.distributionItems ? 'border-red-300' : 'border-ink-200'
                         }`}
                       />
                       {errors.distributionItems && (
@@ -911,7 +911,7 @@ const TaskFormModal = ({
 
                   {(formData.distributionType === 'Cash' || formData.distributionType === 'Mixed') && (
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Cash Amount (per beneficiary)</label>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Cash Amount (per beneficiary)</label>
                       <input
                         type="number"
                         name="cashAmount"
@@ -919,31 +919,31 @@ const TaskFormModal = ({
                         onChange={handleInputChange}
                         placeholder="0.00"
                         step="0.01"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       />
                     </div>
                   )}
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Distribution Date</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Distribution Date</label>
                     <input
                       type="date"
                       name="distributionDate"
                       value={formData.distributionDate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Distribution Location</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Distribution Location</label>
                     <input
                       type="text"
                       name="distributionLocation"
                       value={formData.distributionLocation}
                       onChange={handleInputChange}
                       placeholder="Enter location"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     />
                   </div>
                 </div>
@@ -958,7 +958,7 @@ const TaskFormModal = ({
                   </h4>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Training Type <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -968,7 +968,7 @@ const TaskFormModal = ({
                       onChange={handleInputChange}
                       placeholder="e.g., Livelihood Skills, Child Protection"
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                        errors.trainingType ? 'border-red-300' : 'border-gray-300'
+                        errors.trainingType ? 'border-red-300' : 'border-ink-200'
                       }`}
                     />
                     {errors.trainingType && (
@@ -977,14 +977,14 @@ const TaskFormModal = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Duration (hours)</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Duration (hours)</label>
                     <input
                       type="number"
                       name="trainingDuration"
                       value={formData.trainingDuration}
                       onChange={handleInputChange}
                       placeholder="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                   </div>
 
@@ -996,7 +996,7 @@ const TaskFormModal = ({
                       onChange={handleInputChange}
                       className="w-4 h-4 text-indigo-600 rounded"
                     />
-                    <label className="text-sm font-semibold text-gray-700">Certificate Provided</label>
+                    <label className="text-sm font-semibold text-ink-700">Certificate Provided</label>
                   </div>
                 </div>
               )}
@@ -1006,7 +1006,7 @@ const TaskFormModal = ({
           {/* Step 3: Media Coverage */}
           {currentStep === 3 && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900">Media Coverage (Optional)</h3>
+              <h3 className="text-lg font-bold text-ink-900">Media Coverage (Optional)</h3>
 
               <div className="flex items-center gap-2">
                 <input
@@ -1016,13 +1016,13 @@ const TaskFormModal = ({
                   onChange={handleInputChange}
                   className="w-4 h-4 text-indigo-600 rounded"
                 />
-                <label className="text-sm font-semibold text-gray-700">Media Coverage Required</label>
+                <label className="text-sm font-semibold text-ink-700">Media Coverage Required</label>
               </div>
 
               {formData.mediaCoverageRequired && (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Media Coverage Type</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-3">Media Coverage Type</label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       {mediaTypes.map(type => (
                         <button
@@ -1032,7 +1032,7 @@ const TaskFormModal = ({
                           className={`p-3 rounded-lg border-2 transition-all text-sm font-semibold ${
                             formData.mediaCoverageType.includes(type)
                               ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
-                              : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                              : 'border-ink-100 text-ink-700 hover:border-ink-200'
                           }`}
                         >
                           {formData.mediaCoverageType.includes(type) && (
@@ -1045,7 +1045,7 @@ const TaskFormModal = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Assign Media Team</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-3">Assign Media Team</label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {(projectTeamMembers || dynamicProjectTeamMembers)?.filter(teamMember =>
                         teamMember.user?.department === 'Media' || teamMember.user?.role?.includes('Media') || teamMember.role?.includes('Media')
@@ -1062,7 +1062,7 @@ const TaskFormModal = ({
                             className={`p-3 rounded-lg border-2 transition-all text-left ${
                               formData.mediaTeamAssigned.includes(userId)
                                 ? 'border-indigo-500 bg-indigo-50'
-                                : 'border-gray-200 hover:border-gray-300'
+                                : 'border-ink-100 hover:border-ink-200'
                             }`}
                           >
                             <div className="flex items-center gap-2">
@@ -1070,10 +1070,10 @@ const TaskFormModal = ({
                                 <CheckCircle className="text-indigo-600" size={18} />
                               )}
                               <div>
-                                <p className="font-semibold text-sm text-gray-900">
+                                <p className="font-semibold text-sm text-ink-900">
                                   {userName}
                                 </p>
-                                <p className="text-xs text-gray-600">{userRole}</p>
+                                <p className="text-xs text-ink-600">{userRole}</p>
                               </div>
                             </div>
                           </button>
@@ -1083,7 +1083,7 @@ const TaskFormModal = ({
                     {(!(projectTeamMembers || dynamicProjectTeamMembers) || (projectTeamMembers || dynamicProjectTeamMembers).filter(teamMember =>
                       teamMember.user?.department === 'Media' || teamMember.user?.role?.includes('Media') || teamMember.role?.includes('Media')
                     ).length === 0) && (
-                      <p className="text-sm text-gray-500 italic">No media team members found in this project</p>
+                      <p className="text-sm text-ink-500 italic">No media team members found in this project</p>
                     )}
                   </div>
                 </>
@@ -1099,10 +1099,10 @@ const TaskFormModal = ({
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+        <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
           <button
             onClick={currentStep === 1 ? onClose : handleBack}
-            className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+            className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
           >
             {currentStep === 1 ? 'Cancel' : 'Back'}
           </button>

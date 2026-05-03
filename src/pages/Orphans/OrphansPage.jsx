@@ -159,16 +159,16 @@ const OrphansPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-pink-500 via-pink-600 to-rose-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5 animate-pulse" />
+                <Heart className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Orphan Care Management</h1>
@@ -273,21 +273,21 @@ const OrphansPage = () => {
           ].map((stat, index) => (
             <div
               key={index}
-              className="stat-card group cursor-pointer animate-slide-up"
+              className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex-1">
-                  <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
-                  <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+                  <p className="text-xs font-semibold text-ink-600 mb-1">{stat.title}</p>
+                  <h3 className="text-h1 text-ink-900">{stat.value}</h3>
+                  <p className="text-xs text-ink-500 mt-0.5">{stat.subtitle}</p>
                 </div>
                 <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                   <stat.icon className="text-white" size={18} />
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                <span className="text-xs font-medium text-gray-600">{stat.change}</span>
+              <div className="flex items-center justify-between pt-2 border-t border-ink-100">
+                <span className="text-xs font-medium text-ink-600">{stat.change}</span>
               </div>
             </div>
           ));
@@ -297,17 +297,17 @@ const OrphansPage = () => {
       {/* Charts and Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* District Distribution Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <MapPin className="text-purple-600" size={18} />
                 Geographic Distribution
               </h3>
-              <p className="text-xs text-gray-600 mt-0.5">Orphans by district</p>
+              <p className="text-xs text-ink-600 mt-0.5">Orphans by district</p>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-gray-900">{districts.length}</div>
+              <div className="text-xl font-bold text-ink-900">{districts.length}</div>
               <div className="text-xs text-purple-600">Districts</div>
             </div>
           </div>
@@ -315,7 +315,7 @@ const OrphansPage = () => {
             {(() => {
               if (stats.totalOrphans === 0) {
                 return (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-ink-500 text-sm">
                     No geographic data available
                   </div>
                 );
@@ -327,10 +327,10 @@ const OrphansPage = () => {
                 return (
                   <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-gray-700">{district}</span>
-                      <span className="text-xs font-bold text-gray-900">{count} children</span>
+                      <span className="text-xs font-medium text-ink-700">{district}</span>
+                      <span className="text-xs font-bold text-ink-900">{count} children</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                       <div className={`h-1.5 rounded-full transition-all duration-500 bg-gradient-to-r ${
                         index === 0 ? 'from-purple-500 to-indigo-600' :
                         index === 1 ? 'from-blue-500 to-cyan-600' :
@@ -347,14 +347,14 @@ const OrphansPage = () => {
         </div>
 
         {/* Visit Status Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <Calendar className="text-green-600" size={18} />
                 Visit Status Overview
               </h3>
-              <p className="text-xs text-gray-600 mt-0.5">Current visit tracking</p>
+              <p className="text-xs text-ink-600 mt-0.5">Current visit tracking</p>
             </div>
           </div>
           <div className="space-y-2.5">
@@ -364,14 +364,14 @@ const OrphansPage = () => {
               { status: 'Overdue Visit', count: Math.max(0, Math.floor(stats.needsVisit * 0.4)), color: 'bg-red-500' },
               { status: 'Up to Date', count: stats.totalOrphans - stats.needsVisit, color: 'bg-blue-500' }
             ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-2 bg-ink-50 rounded-lg">
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${item.color}`}></div>
-                  <span className="text-xs font-medium text-gray-700">{item.status}</span>
+                  <span className="text-xs font-medium text-ink-700">{item.status}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-gray-900">{item.count} children</span>
-                  <span className="text-xs text-gray-600 bg-white px-1.5 py-0.5 rounded">
+                  <span className="text-xs font-bold text-ink-900">{item.count} children</span>
+                  <span className="text-xs text-ink-600 bg-white px-1.5 py-0.5 rounded">
                     {Math.round((item.count / stats.totalOrphans) * 100)}%
                   </span>
                 </div>
@@ -381,18 +381,18 @@ const OrphansPage = () => {
         </div>
 
         {/* Monthly Stipend Trend */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <Wallet className="text-blue-600" size={18} />
                 Monthly Stipend Distribution
               </h3>
-              <p className="text-xs text-gray-600 mt-0.5">Support breakdown</p>
+              <p className="text-xs text-ink-600 mt-0.5">Support breakdown</p>
             </div>
             <div className="text-right">
               <div className="text-xl font-bold text-blue-600">LKR {(stats.totalStipend / 1000000).toFixed(1)}M</div>
-              <div className="text-xs text-gray-600">Total monthly</div>
+              <div className="text-xs text-ink-600">Total monthly</div>
             </div>
           </div>
           <div className="space-y-2.5">
@@ -406,7 +406,7 @@ const OrphansPage = () => {
 
               if (totalWithStipend === 0) {
                 return (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-ink-500 text-sm">
                     No stipend data available
                   </div>
                 );
@@ -420,10 +420,10 @@ const OrphansPage = () => {
               ].filter(item => item.count > 0).map((item, index) => (
                 <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium text-gray-700">{item.range}</span>
-                    <span className="text-xs font-bold text-gray-900">{item.count} children</span>
+                    <span className="text-xs font-medium text-ink-700">{item.range}</span>
+                    <span className="text-xs font-bold text-ink-900">{item.count} children</span>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                     <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
                       style={{ width: `${item.percent}%` }}></div>
                   </div>
@@ -434,25 +434,25 @@ const OrphansPage = () => {
         </div>
 
         {/* Care Program Performance */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 animate-slide-up">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
                 <Heart className="text-pink-600" size={18} />
                 Care Program Performance
               </h3>
-              <p className="text-xs text-gray-600 mt-0.5">Quality indicators</p>
+              <p className="text-xs text-ink-600 mt-0.5">Quality indicators</p>
             </div>
             <div className="text-right">
               <div className="text-xl font-bold text-pink-600">{stats.visitRate}%</div>
-              <div className="text-xs text-gray-600">Visit rate</div>
+              <div className="text-xs text-ink-600">Visit rate</div>
             </div>
           </div>
           <div className="space-y-3">
             {(() => {
               if (stats.totalOrphans === 0) {
                 return (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-ink-500 text-sm">
                     No performance data available
                   </div>
                 );
@@ -478,9 +478,9 @@ const OrphansPage = () => {
               ].map((item, index) => (
                 <div key={index}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium text-gray-700">{item.metric}</span>
+                    <span className="text-xs font-medium text-ink-700">{item.metric}</span>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-gray-900">{item.value}%</span>
+                      <span className="text-xs font-bold text-ink-900">{item.value}%</span>
                       {item.status === 'above' ? (
                         <CheckCircle className="text-green-600" size={12} />
                       ) : (
@@ -488,7 +488,7 @@ const OrphansPage = () => {
                       )}
                     </div>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                     <div
                       className={`h-1.5 rounded-full transition-all duration-500 ${
                         item.status === 'above'
@@ -499,7 +499,7 @@ const OrphansPage = () => {
                     ></div>
                   </div>
                   <div className="flex items-center justify-between mt-0.5">
-                    <span className="text-xs text-gray-500">Target: {item.target}%</span>
+                    <span className="text-xs text-ink-500">Target: {item.target}%</span>
                     <span className={`text-xs font-medium ${
                       item.status === 'above' ? 'text-green-600' : 'text-yellow-600'
                     }`}>
@@ -565,12 +565,12 @@ const OrphansPage = () => {
       ) : (
         <div className="card-modern text-center py-16 animate-scale-in">
           <div className="flex flex-col items-center gap-4">
-            <div className="bg-gray-100 p-6 rounded-full">
-              <Heart className="w-12 h-12 text-gray-400" />
+            <div className="bg-ink-100 p-6 rounded-full">
+              <Heart className="w-12 h-12 text-ink-400" />
             </div>
             <div>
-              <p className="text-gray-900 text-lg font-semibold">No orphans found</p>
-              <p className="text-gray-500 text-sm mt-2">Try adjusting your filters or search query</p>
+              <p className="text-ink-900 text-lg font-semibold">No orphans found</p>
+              <p className="text-ink-500 text-sm mt-2">Try adjusting your filters or search query</p>
             </div>
             <button
               onClick={() => {

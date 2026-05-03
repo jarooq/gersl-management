@@ -154,16 +154,16 @@ const DonationsPage = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-purple-500 via-pink-600 to-fuchsia-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <DollarSign className="w-5 h-5 animate-pulse" />
+                <DollarSign className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Donations & Donors</h1>
@@ -189,7 +189,7 @@ const DonationsPage = () => {
                 <DollarSign className="text-green-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Amount</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Total Amount</h3>
             <p className="text-3xl font-bold text-gray-800">${stats.totalAmount.toLocaleString()}</p>
           </div>
 
@@ -199,7 +199,7 @@ const DonationsPage = () => {
                 <Receipt className="text-blue-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Donations</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Total Donations</h3>
             <p className="text-3xl font-bold text-gray-800">{stats.totalDonations}</p>
           </div>
 
@@ -209,7 +209,7 @@ const DonationsPage = () => {
                 <TrendingUp className="text-purple-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Average Donation</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Average Donation</h3>
             <p className="text-3xl font-bold text-gray-800">${stats.averageDonation.toLocaleString()}</p>
           </div>
 
@@ -219,7 +219,7 @@ const DonationsPage = () => {
                 <Users className="text-pink-600" size={24} />
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Donors</h3>
+            <h3 className="text-ink-600 text-sm font-medium mb-1">Total Donors</h3>
             <p className="text-3xl font-bold text-gray-800">{donors.length}</p>
           </div>
       </div>
@@ -229,13 +229,13 @@ const DonationsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
                 <input
                   type="text"
                   placeholder="Search by donor name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -243,7 +243,7 @@ const DonationsPage = () => {
             <select
               value={methodFilter}
               onChange={(e) => setMethodFilter(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               <option value="All">All Methods</option>
               <option value="Credit Card">Credit Card</option>
@@ -255,7 +255,7 @@ const DonationsPage = () => {
             <select
               value={campaignFilter}
               onChange={(e) => setCampaignFilter(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               <option value="All">All Campaigns</option>
               {campaigns.map(campaign => (
@@ -277,7 +277,7 @@ const DonationsPage = () => {
           {/* Donations List */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-200">
+              <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-ink-100">
                 <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                   <Receipt size={24} className="text-purple-600" />
                   Recent Donations ({filteredDonations.length})
@@ -287,11 +287,11 @@ const DonationsPage = () => {
               <div className="overflow-x-auto">
                 {filteredDonations.length === 0 ? (
                   <div className="text-center py-16 px-4">
-                    <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Receipt size={40} className="text-gray-400" />
+                    <div className="bg-ink-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Receipt size={40} className="text-ink-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">No Donations Yet</h3>
-                    <p className="text-gray-500 mb-6">Start recording donations to track fundraising progress</p>
+                    <h3 className="text-xl font-semibold text-ink-700 mb-2">No Donations Yet</h3>
+                    <p className="text-ink-500 mb-6">Start recording donations to track fundraising progress</p>
                     <button
                       onClick={() => setShowDonationModal(true)}
                       className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-200 inline-flex items-center gap-2"
@@ -302,37 +302,37 @@ const DonationsPage = () => {
                   </div>
                 ) : (
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-ink-50 border-b border-ink-100">
                       <tr>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Donor</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Campaign</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Method</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Receipt</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Date</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Donor</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Campaign</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Amount</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Method</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-ink-600 uppercase tracking-wider">Receipt</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-ink-100">
                       {filteredDonations.map((donation) => {
                         const campaign = campaigns.find(c => c.id === donation.campaignId);
                         const donor = donors.find(d => d.email === donation.email);
 
                         return (
-                          <tr key={donation.id} className="hover:bg-gray-50 transition-colors duration-150">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                          <tr key={donation.id} className="hover:bg-ink-50 transition-colors duration-150">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-600">
                               <div className="flex items-center gap-2">
-                                <Calendar size={14} className="text-gray-400" />
+                                <Calendar size={14} className="text-ink-400" />
                                 {donation.date}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-gray-900">{donation.donorName}</div>
-                              <div className="text-xs text-gray-500 flex items-center gap-1">
+                              <div className="text-sm font-medium text-ink-900">{donation.donorName}</div>
+                              <div className="text-xs text-ink-500 flex items-center gap-1">
                                 <Mail size={12} />
                                 {donation.email}
                               </div>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
+                            <td className="px-6 py-4 text-sm text-ink-600">
                               <div className="max-w-xs truncate">{campaign?.title || 'N/A'}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -346,7 +346,7 @@ const DonationsPage = () => {
                                 {donation.paymentMethod}
                               </span>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-600 font-mono">
                               {donation.receiptNumber}
                             </td>
                           </tr>
@@ -362,7 +362,7 @@ const DonationsPage = () => {
           {/* Top Donors Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="p-6 bg-gradient-to-r from-pink-50 to-purple-50 border-b border-gray-200">
+              <div className="p-6 bg-gradient-to-r from-pink-50 to-purple-50 border-b border-ink-100">
                 <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                   <Users size={20} className="text-pink-600" />
                   Top Donors
@@ -373,7 +373,7 @@ const DonationsPage = () => {
                 {topDonors.length === 0 ? (
                   <div className="text-center py-8">
                     <Users size={40} className="text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500 text-sm">No donors yet</p>
+                    <p className="text-ink-500 text-sm">No donors yet</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -388,10 +388,10 @@ const DonationsPage = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-800 truncate">{donor.name}</p>
-                          <p className="text-sm text-gray-600 font-bold">${donor.totalDonations.toLocaleString()}</p>
-                          <p className="text-xs text-gray-500">{donor.donationCount} donations</p>
+                          <p className="text-sm text-ink-600 font-bold">${donor.totalDonations.toLocaleString()}</p>
+                          <p className="text-xs text-ink-500">{donor.donationCount} donations</p>
                         </div>
-                        <Eye size={16} className="text-gray-400" />
+                        <Eye size={16} className="text-ink-400" />
                       </div>
                     ))}
                   </div>
@@ -405,7 +405,7 @@ const DonationsPage = () => {
       {showDonationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-t-2xl flex items-center justify-between">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Plus size={24} />
                 Record New Donation
@@ -421,13 +421,13 @@ const DonationsPage = () => {
             <form onSubmit={handleSubmitDonation} className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Campaign <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={donationForm.campaignId}
                     onChange={(e) => setDonationForm({ ...donationForm, campaignId: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     required
                   >
                     <option value="">Select Campaign</option>
@@ -438,14 +438,14 @@ const DonationsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Amount <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
                     value={donationForm.amount}
                     onChange={(e) => setDonationForm({ ...donationForm, amount: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="0.00"
                     min="0"
                     step="0.01"
@@ -454,50 +454,50 @@ const DonationsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Donor Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={donationForm.donorName}
                     onChange={(e) => setDonationForm({ ...donationForm, donorName: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="John Doe"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     value={donationForm.email}
                     onChange={(e) => setDonationForm({ ...donationForm, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="john@example.com"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Phone</label>
                   <input
                     type="tel"
                     value={donationForm.phone}
                     onChange={(e) => setDonationForm({ ...donationForm, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="+1 234 567 8900"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Payment Method</label>
                   <select
                     value={donationForm.paymentMethod}
                     onChange={(e) => setDonationForm({ ...donationForm, paymentMethod: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   >
                     <option value="Credit Card">Credit Card</option>
                     <option value="Bank Transfer">Bank Transfer</option>
@@ -508,11 +508,11 @@ const DonationsPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                <label className="block text-sm font-semibold text-ink-700 mb-2">Notes</label>
                 <textarea
                   value={donationForm.notes}
                   onChange={(e) => setDonationForm({ ...donationForm, notes: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   rows="3"
                   placeholder="Additional notes or comments..."
                 />
@@ -526,16 +526,16 @@ const DonationsPage = () => {
                   onChange={(e) => setDonationForm({ ...donationForm, isAnonymous: e.target.checked })}
                   className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
                 />
-                <label htmlFor="anonymous" className="text-sm font-medium text-gray-700">
+                <label htmlFor="anonymous" className="text-sm font-medium text-ink-700">
                   Anonymous Donation
                 </label>
               </div>
 
-              <div className="flex gap-4 pt-4 border-t border-gray-200">
+              <div className="flex gap-4 pt-4 border-t border-ink-100">
                 <button
                   type="button"
                   onClick={() => setShowDonationModal(false)}
-                  className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
+                  className="flex-1 px-6 py-3 border-2 border-ink-200 text-ink-700 rounded-xl font-semibold hover:bg-ink-50 transition-all duration-200"
                 >
                   Cancel
                 </button>
@@ -555,7 +555,7 @@ const DonationsPage = () => {
       {showDonorModal && selectedDonor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-pink-600 to-purple-600 text-white p-6 rounded-t-2xl flex items-center justify-between">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Users size={24} />
                 Donor Details
@@ -573,12 +573,12 @@ const DonationsPage = () => {
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">{selectedDonor.name}</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-ink-600">
                     <Mail size={18} className="text-pink-600" />
                     <span>{selectedDonor.email}</span>
                   </div>
                   {selectedDonor.phone && (
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-ink-600">
                       <Phone size={18} className="text-purple-600" />
                       <span>{selectedDonor.phone}</span>
                     </div>
@@ -588,15 +588,15 @@ const DonationsPage = () => {
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   <div className="text-center p-4 bg-white rounded-xl">
                     <p className="text-2xl font-bold text-green-600">${selectedDonor.totalDonations.toLocaleString()}</p>
-                    <p className="text-sm text-gray-600 mt-1">Total Donated</p>
+                    <p className="text-sm text-ink-600 mt-1">Total Donated</p>
                   </div>
                   <div className="text-center p-4 bg-white rounded-xl">
                     <p className="text-2xl font-bold text-blue-600">{selectedDonor.donationCount}</p>
-                    <p className="text-sm text-gray-600 mt-1">Donations</p>
+                    <p className="text-sm text-ink-600 mt-1">Donations</p>
                   </div>
                   <div className="text-center p-4 bg-white rounded-xl">
                     <p className="text-2xl font-bold text-purple-600">${(selectedDonor.totalDonations / selectedDonor.donationCount).toFixed(0)}</p>
-                    <p className="text-sm text-gray-600 mt-1">Average</p>
+                    <p className="text-sm text-ink-600 mt-1">Average</p>
                   </div>
                 </div>
               </div>
@@ -610,14 +610,14 @@ const DonationsPage = () => {
                     .map(donation => {
                       const campaign = campaigns.find(c => c.id === donation.campaignId);
                       return (
-                        <div key={donation.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                        <div key={donation.id} className="flex items-center justify-between p-4 bg-ink-50 rounded-xl">
                           <div>
                             <p className="font-semibold text-gray-800">{campaign?.title || 'N/A'}</p>
-                            <p className="text-sm text-gray-600">{donation.date}</p>
+                            <p className="text-sm text-ink-600">{donation.date}</p>
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-bold text-green-600">${donation.amount.toLocaleString()}</p>
-                            <p className="text-xs text-gray-500">{donation.paymentMethod}</p>
+                            <p className="text-xs text-ink-500">{donation.paymentMethod}</p>
                           </div>
                         </div>
                       );

@@ -223,7 +223,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
       'Rejected': { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle }
     };
 
-    const badge = badges[status] || { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle };
+    const badge = badges[status] || { bg: 'bg-ink-100', text: 'text-gray-800', icon: AlertCircle };
     const Icon = badge.icon;
 
     return (
@@ -239,7 +239,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
   // ============================================
   const getProcurementStatusBadge = (status) => {
     const badges = {
-      'Not Required': 'bg-gray-100 text-gray-800',
+      'Not Required': 'bg-ink-100 text-gray-800',
       'Budget Requested': 'bg-yellow-100 text-yellow-800',
       'Budget Approved': 'bg-green-100 text-green-800',
       'Budget Rejected': 'bg-red-100 text-red-800',
@@ -248,7 +248,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
     };
 
     return (
-      <span className={`px-3 py-1 rounded-full text-sm font-medium ${badges[status] || 'bg-gray-100 text-gray-800'}`}>
+      <span className={`px-3 py-1 rounded-full text-sm font-medium ${badges[status] || 'bg-ink-100 text-gray-800'}`}>
         {status || 'Not Required'}
       </span>
     );
@@ -274,7 +274,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-indigo-700">
+        <div className="px-6 py-4 border-b border-ink-100 bg-gradient-to-r from-blue-600 to-indigo-700">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-white">Budget Request Workflow</h2>
@@ -315,14 +315,14 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
         )}
 
         {/* Tabs */}
-        <div className="px-6 pt-4 border-b border-gray-200">
+        <div className="px-6 pt-4 border-b border-ink-100">
           <div className="flex space-x-1">
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                 activeTab === 'overview'
-                  ? 'bg-white text-blue-600 border-t border-x border-gray-200'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-white text-blue-600 border-t border-x border-ink-100'
+                  : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
               }`}
             >
               <Eye className="h-4 w-4 inline mr-2" />
@@ -334,8 +334,8 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                 onClick={() => setActiveTab('request')}
                 className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                   activeTab === 'request'
-                    ? 'bg-white text-blue-600 border-t border-x border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'bg-white text-blue-600 border-t border-x border-ink-100'
+                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
                 }`}
               >
                 <Send className="h-4 w-4 inline mr-2" />
@@ -348,8 +348,8 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                 onClick={() => setActiveTab('approve')}
                 className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                   activeTab === 'approve'
-                    ? 'bg-white text-blue-600 border-t border-x border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'bg-white text-blue-600 border-t border-x border-ink-100'
+                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
                 }`}
               >
                 <ThumbsUp className="h-4 w-4 inline mr-2" />
@@ -416,29 +416,29 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
 
               {/* Request Details */}
               {task?.budgetRequestedAmount && (
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <div className="bg-white border border-ink-100 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center">
                     <FileText className="h-5 w-5 mr-2 text-blue-600" />
                     Request Details
                   </h3>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                      <label className="block text-sm font-medium text-ink-600 mb-1">
                         Requested By
                       </label>
-                      <div className="flex items-center text-gray-900">
-                        <User className="h-4 w-4 mr-2 text-gray-400" />
+                      <div className="flex items-center text-ink-900">
+                        <User className="h-4 w-4 mr-2 text-ink-400" />
                         {task.budgetRequestedBy ? `User #${task.budgetRequestedBy}` : 'N/A'}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                      <label className="block text-sm font-medium text-ink-600 mb-1">
                         Requested Date
                       </label>
-                      <div className="flex items-center text-gray-900">
-                        <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                      <div className="flex items-center text-ink-900">
+                        <Calendar className="h-4 w-4 mr-2 text-ink-400" />
                         {task.budgetRequestedAt
                           ? new Date(task.budgetRequestedAt).toLocaleDateString()
                           : 'N/A'}
@@ -446,10 +446,10 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                     </div>
 
                     <div className="col-span-2">
-                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                      <label className="block text-sm font-medium text-ink-600 mb-1">
                         Request Notes
                       </label>
-                      <p className="text-gray-900 bg-gray-50 p-3 rounded border border-gray-200">
+                      <p className="text-ink-900 bg-ink-50 p-3 rounded border border-ink-100">
                         {task.budgetRequestNotes || 'No notes provided'}
                       </p>
                     </div>
@@ -557,9 +557,9 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
               {/* No Request Yet */}
               {!task?.budgetRequestedAmount && (
                 <div className="text-center py-12">
-                  <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Budget Request Yet</h3>
-                  <p className="text-gray-600 mb-4">
+                  <Package className="h-16 w-16 text-ink-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-ink-900 mb-2">No Budget Request Yet</h3>
+                  <p className="text-ink-600 mb-4">
                     This task requires procurement but no budget has been requested yet.
                   </p>
                   <button
@@ -592,12 +592,12 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Requested Amount <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <DollarSign className="h-5 w-5 text-gray-400" />
+                      <DollarSign className="h-5 w-5 text-ink-400" />
                     </div>
                     <input
                       type="number"
@@ -609,13 +609,13 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                         ...prev,
                         budgetRequestedAmount: e.target.value
                       }))}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Request Notes
                   </label>
                   <textarea
@@ -626,7 +626,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                       ...prev,
                       budgetRequestNotes: e.target.value
                     }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -669,23 +669,23 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
               </div>
 
               {/* Request Summary */}
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">Request Summary</h3>
+              <div className="bg-white border border-ink-100 rounded-lg p-4">
+                <h3 className="font-semibold text-ink-900 mb-3">Request Summary</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Requested Amount:</span>
-                    <span className="font-medium text-gray-900">{formatCurrency(task.budgetRequestedAmount)}</span>
+                    <span className="text-ink-600">Requested Amount:</span>
+                    <span className="font-medium text-ink-900">{formatCurrency(task.budgetRequestedAmount)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Requested Date:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-ink-600">Requested Date:</span>
+                    <span className="font-medium text-ink-900">
                       {task.budgetRequestedAt ? new Date(task.budgetRequestedAt).toLocaleDateString() : 'N/A'}
                     </span>
                   </div>
                   {task.budgetRequestNotes && (
-                    <div className="pt-2 border-t border-gray-200">
-                      <span className="text-gray-600">Notes:</span>
-                      <p className="text-gray-900 mt-1 bg-gray-50 p-2 rounded">
+                    <div className="pt-2 border-t border-ink-100">
+                      <span className="text-ink-600">Notes:</span>
+                      <p className="text-ink-900 mt-1 bg-ink-50 p-2 rounded">
                         {task.budgetRequestNotes}
                       </p>
                     </div>
@@ -715,10 +715,10 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
+        <div className="px-6 py-4 border-t border-ink-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
           >
             Close
           </button>
@@ -731,18 +731,18 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
       {showApprovalModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Approve Budget Request</h3>
+            <div className="px-6 py-4 border-b border-ink-100">
+              <h3 className="text-lg font-semibold text-ink-900">Approve Budget Request</h3>
             </div>
 
             <div className="px-6 py-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Allocated Amount <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <DollarSign className="h-5 w-5 text-gray-400" />
+                    <DollarSign className="h-5 w-5 text-ink-400" />
                   </div>
                   <input
                     type="number"
@@ -754,16 +754,16 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                       ...prev,
                       budgetAllocated: e.target.value
                     }))}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   Requested: {formatCurrency(task?.budgetRequestedAmount)}
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Approval ID (Optional)
                 </label>
                 <input
@@ -774,12 +774,12 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                     ...prev,
                     budgetApprovalId: e.target.value
                   }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Approval Notes
                 </label>
                 <textarea
@@ -790,15 +790,15 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                     ...prev,
                     budgetApprovalNotes: e.target.value
                   }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-ink-100 flex justify-end space-x-3">
               <button
                 onClick={() => setShowApprovalModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
               >
                 Cancel
               </button>
@@ -820,8 +820,8 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
       {showRejectionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Reject Budget Request</h3>
+            <div className="px-6 py-4 border-b border-ink-100">
+              <h3 className="text-lg font-semibold text-ink-900">Reject Budget Request</h3>
             </div>
 
             <div className="px-6 py-4 space-y-4">
@@ -832,7 +832,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Rejection Reason <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -843,15 +843,15 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                     ...prev,
                     budgetApprovalNotes: e.target.value
                   }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-ink-100 flex justify-end space-x-3">
               <button
                 onClick={() => setShowRejectionModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
               >
                 Cancel
               </button>

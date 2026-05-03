@@ -710,7 +710,7 @@ const FinancePage = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-2">Total Revenue (YTD)</p>
-              <h3 className="text-2xl font-bold text-ink-900">LKR {(totalRevenue / 1000000).toFixed(1)}M</h3>
+              <h3 className="text-h1 text-ink-900">LKR {(totalRevenue / 1000000).toFixed(1)}M</h3>
               <p className="text-xs text-ink-500 mt-1">From grants & donations</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
@@ -727,7 +727,7 @@ const FinancePage = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-2">Total Expenses (YTD)</p>
-              <h3 className="text-2xl font-bold text-ink-900">LKR {(totalExpenses / 1000000).toFixed(1)}M</h3>
+              <h3 className="text-h1 text-ink-900">LKR {(totalExpenses / 1000000).toFixed(1)}M</h3>
               <p className="text-xs text-ink-500 mt-1">All categories</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
@@ -765,7 +765,7 @@ const FinancePage = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-2">Cash & Bank Balance</p>
-              <h3 className="text-2xl font-bold text-ink-900">LKR {(cashBalance / 1000000).toFixed(1)}M</h3>
+              <h3 className="text-h1 text-ink-900">LKR {(cashBalance / 1000000).toFixed(1)}M</h3>
               <p className="text-xs text-ink-500 mt-1">Available funds</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-3 rounded-md">
@@ -1392,7 +1392,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Chart of Accounts</h2>
+                  <h2 className="text-h1 text-ink-900">Chart of Accounts</h2>
                   <p className="text-sm text-ink-600">Complete list of all accounts in the system</p>
                 </div>
                 <button
@@ -1502,7 +1502,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Fixed Assets Register</h2>
+                  <h2 className="text-h1 text-ink-900">Fixed Assets Register</h2>
                   <p className="text-sm text-ink-600">Property, Plant & Equipment (PPE) with automatic depreciation tracking</p>
                 </div>
                 <button
@@ -1729,7 +1729,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Grant Receivables</h2>
+                  <h2 className="text-h1 text-ink-900">Grant Receivables</h2>
                   <p className="text-sm text-ink-600">Track pledged grants and receipts from donors</p>
                 </div>
                 <button
@@ -1964,7 +1964,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Invoices</h2>
+                  <h2 className="text-h1 text-ink-900">Invoices</h2>
                   <p className="text-sm text-ink-600">Manage client invoices and receivables</p>
                 </div>
                 <button
@@ -2067,7 +2067,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Bills & Payments</h2>
+                  <h2 className="text-h1 text-ink-900">Bills & Payments</h2>
                   <p className="text-sm text-ink-600">Manage vendor bills and payables</p>
                 </div>
                 <button
@@ -2199,7 +2199,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Journal Entries</h2>
+                  <h2 className="text-h1 text-ink-900">Journal Entries</h2>
                   <p className="text-sm text-ink-600">Manual accounting entries and adjustments</p>
                 </div>
                 <button
@@ -2278,7 +2278,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Bank Accounts</h2>
+                  <h2 className="text-h1 text-ink-900">Bank Accounts</h2>
                   <p className="text-sm text-ink-600">Manage bank accounts and reconciliation</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -2371,7 +2371,7 @@ const FinancePage = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-ink-900">Financial Reports</h2>
+                  <h2 className="text-h1 text-ink-900">Financial Reports</h2>
                   <p className="text-sm text-ink-600">Generate and view financial statements</p>
                 </div>
                 <button
@@ -5344,7 +5344,7 @@ const FinancePage = () => {
 
                   <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-6 rounded-xl border-2 border-blue-200">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-2xl font-bold text-ink-900">Net Income</span>
+                      <span className="text-h1 text-ink-900">Net Income</span>
                       <span className={`text-3xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         LKR {netIncome.toLocaleString()}
                       </span>

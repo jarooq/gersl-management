@@ -389,7 +389,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Orphan ID
                   </label>
                   <div className="flex items-center gap-2">
@@ -404,7 +404,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </div>
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -422,7 +422,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Date of Birth <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -439,19 +439,19 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Age</label>
                   <input
                     type="number"
                     name="age"
                     value={formData.age}
                     onChange={handleChange}
-                    className="input-modern bg-gray-50"
+                    className="input-modern bg-ink-50"
                     placeholder="Auto-calculated"
                     readOnly
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Gender <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -476,7 +476,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     District <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -497,7 +497,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Address <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -515,13 +515,13 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">DS Division</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">DS Division</label>
                   <select
                     name="dsDivision"
                     value={formData.dsDivision}
                     onChange={handleDSDivisionChange}
                     disabled={!formData.district}
-                    className="input-modern disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="input-modern disabled:bg-ink-100 disabled:cursor-not-allowed"
                   >
                     <option value="">Select DS Division</option>
                     {divisions.map(division => (
@@ -530,13 +530,13 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">GN Division</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">GN Division</label>
                   <select
                     name="gnDivision"
                     value={formData.gnDivision}
                     onChange={handleChange}
                     disabled={!formData.dsDivision}
-                    className="input-modern disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="input-modern disabled:bg-ink-100 disabled:cursor-not-allowed"
                   >
                     <option value="">Select GN Division</option>
                     {gnDivisions.map(gnDivision => (
@@ -545,7 +545,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Latitude</label>
                   <input
                     type="number"
                     step="0.0001"
@@ -557,7 +557,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Longitude</label>
                   <input
                     type="number"
                     step="0.0001"
@@ -569,7 +569,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Assign Coordinator
                   </label>
                   <select
@@ -585,7 +585,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-ink-500 mt-1">
                     Assign a field coordinator to this orphan for regular visits and monitoring
                   </p>
                 </div>
@@ -600,7 +600,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Guardian Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -618,7 +618,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Guardian NIC <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -636,7 +636,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Contact Number <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -666,7 +666,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               {/* Orphan Type */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Orphan Type</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Orphan Type</label>
                   <select
                     name="orphanType"
                     value={formData.orphanType}
@@ -682,10 +682,10 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
 
               {/* Mother Information */}
               <div className="space-y-4">
-                <h4 className="text-md font-semibold text-gray-700 mt-4">Mother's Information</h4>
+                <h4 className="text-md font-semibold text-ink-700 mt-4">Mother's Information</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mother's Name</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Mother's Name</label>
                     <input
                       type="text"
                       name="motherName"
@@ -696,7 +696,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mother's NIC No.</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Mother's NIC No.</label>
                     <input
                       type="text"
                       name="motherNIC"
@@ -707,7 +707,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mother's Occupation</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Mother's Occupation</label>
                     <input
                       type="text"
                       name="motherOccupation"
@@ -718,7 +718,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mother's Monthly Income (LKR)</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Mother's Monthly Income (LKR)</label>
                     <input
                       type="number"
                       name="motherMonthlyIncome"
@@ -736,7 +736,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     <h5 className="text-sm font-semibold text-red-900">Mother's Death Details</h5>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Cause of Death</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">Cause of Death</label>
                         <input
                           type="text"
                           name="motherCauseOfDeath"
@@ -747,7 +747,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Date of Death</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">Date of Death</label>
                         <input
                           type="date"
                           name="motherDateOfDeath"
@@ -757,7 +757,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Place of Death</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">Place of Death</label>
                         <input
                           type="text"
                           name="motherPlaceOfDeath"
@@ -768,7 +768,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">DC No.</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">DC No.</label>
                         <input
                           type="text"
                           name="motherDCNo"
@@ -785,10 +785,10 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
 
               {/* Father Information */}
               <div className="space-y-4">
-                <h4 className="text-md font-semibold text-gray-700 mt-4">Father's Information</h4>
+                <h4 className="text-md font-semibold text-ink-700 mt-4">Father's Information</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Father's Name</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Father's Name</label>
                     <input
                       type="text"
                       name="fatherName"
@@ -799,7 +799,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Father's Previous Occupation</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">Father's Previous Occupation</label>
                     <input
                       type="text"
                       name="fatherPreviousOccupation"
@@ -817,7 +817,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                     <h5 className="text-sm font-semibold text-red-900">Father's Death Details</h5>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Cause of Death</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">Cause of Death</label>
                         <input
                           type="text"
                           name="fatherCauseOfDeath"
@@ -828,7 +828,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Date of Death</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">Date of Death</label>
                         <input
                           type="date"
                           name="fatherDateOfDeath"
@@ -838,7 +838,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Place of Death</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">Place of Death</label>
                         <input
                           type="text"
                           name="fatherPlaceOfDeath"
@@ -849,7 +849,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">DC No.</label>
+                        <label className="block text-sm font-medium text-ink-700 mb-1">DC No.</label>
                         <input
                           type="text"
                           name="fatherDCNo"
@@ -873,7 +873,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Education Level</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Education Level</label>
                   <select
                     name="educationLevel"
                     value={formData.educationLevel}
@@ -888,7 +888,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     Class/Grade <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -909,7 +909,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     School / Madrasa Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -927,7 +927,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">School/Madrasa Address</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">School/Madrasa Address</label>
                   <input
                     type="text"
                     name="schoolAddress"
@@ -938,7 +938,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">School Contact</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">School Contact</label>
                   <input
                     type="text"
                     name="schoolContact"
@@ -949,7 +949,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Favourite Subjects</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Favourite Subjects</label>
                   <input
                     type="text"
                     name="favouriteSubjects"
@@ -960,7 +960,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Child's Dream / Ambition</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Child's Dream / Ambition</label>
                   <input
                     type="text"
                     name="childDreamAmbition"
@@ -971,7 +971,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Academic Performance</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Academic Performance</label>
                   <select
                     name="academicPerformance"
                     value={formData.academicPerformance}
@@ -995,7 +995,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Level of Life</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Level of Life</label>
                   <select
                     name="levelOfLife"
                     value={formData.levelOfLife}
@@ -1008,7 +1008,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">House Type</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">House Type</label>
                   <select
                     name="houseType"
                     value={formData.houseType}
@@ -1021,7 +1021,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">House Status</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">House Status</label>
                   <select
                     name="houseStatus"
                     value={formData.houseStatus}
@@ -1035,7 +1035,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Any Other Social Concerns</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Any Other Social Concerns</label>
                   <input
                     type="text"
                     name="socialConcerns"
@@ -1056,7 +1056,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">General Health Status</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">General Health Status</label>
                   <select
                     name="generalHealthStatus"
                     value={formData.generalHealthStatus}
@@ -1069,7 +1069,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Existing Illness / Medical Condition</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Existing Illness / Medical Condition</label>
                   <input
                     type="text"
                     name="existingIllness"
@@ -1080,7 +1080,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Cost of Treatment (LKR)</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Cost of Treatment (LKR)</label>
                   <input
                     type="number"
                     name="treatmentCost"
@@ -1091,7 +1091,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Who Pays for the Treatment?</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Who Pays for the Treatment?</label>
                   <input
                     type="text"
                     name="treatmentPayer"
@@ -1102,7 +1102,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Disabilities / Special Needs</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Disabilities / Special Needs</label>
                   <select
                     name="hasDisabilities"
                     value={formData.hasDisabilities}
@@ -1115,7 +1115,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
                 {formData.hasDisabilities === 'Yes' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">If Yes, Specify</label>
+                    <label className="block text-sm font-medium text-ink-700 mb-1">If Yes, Specify</label>
                     <input
                       type="text"
                       name="disabilityDetails"
@@ -1127,7 +1127,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                   </div>
                 )}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Immunization Card Status</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1">Immunization Card Status</label>
                   <select
                     name="immunizationStatus"
                     value={formData.immunizationStatus}
@@ -1153,7 +1153,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               <div className="bg-pink-50 p-4 rounded-lg">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-ink-700 mb-1">
                       3. Profile Photo (PP Size) <span className="text-pink-500">*</span>
                     </label>
                     <input
@@ -1168,7 +1168,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         <AlertCircle size={12} /> {errors.profilePhoto}
                       </p>
                     ) : (
-                      <p className="text-xs text-gray-500 mt-1">Passport size photo (JPEG, PNG)</p>
+                      <p className="text-xs text-ink-500 mt-1">Passport size photo (JPEG, PNG)</p>
                     )}
                   </div>
                   <div className="flex items-center justify-center">
@@ -1185,7 +1185,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                       </div>
                     ) : (
                       <div className="w-24 h-32 bg-gray-200 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center">
-                        <User className="w-8 h-8 text-gray-400" />
+                        <User className="w-8 h-8 text-ink-400" />
                       </div>
                     )}
                   </div>
@@ -1195,7 +1195,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
               {/* Other Documents */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     1. Birth Certificate (BC) <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1217,7 +1217,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     2. Death Certificate (DC) <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1239,7 +1239,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     4. Guardian NIC
                   </label>
                   <input
@@ -1257,7 +1257,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     5. School/Madrasa Letter
                   </label>
                   <input
@@ -1275,7 +1275,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     6. Drawing/Letter from Child
                   </label>
                   <input
@@ -1293,7 +1293,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     7. Other Document 1
                   </label>
                   <input
@@ -1311,7 +1311,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-ink-700 mb-1">
                     8. Other Document 2
                   </label>
                   <input
@@ -1334,7 +1334,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
         </form>
 
         {/* Footer - Fixed at bottom */}
-        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+        <div className="bg-ink-50 px-6 py-4 border-t border-ink-100 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}

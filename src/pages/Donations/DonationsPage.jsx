@@ -178,7 +178,7 @@ const DonationsPage = () => {
       'Completed': { label: 'Completed', color: 'text-green-700', bgColor: 'bg-green-100', icon: CheckCircle },
       'Pending': { label: 'Pending', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: Clock },
       'Failed': { label: 'Failed', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircle },
-      'Refunded': { label: 'Refunded', color: 'text-gray-700', bgColor: 'bg-gray-100', icon: AlertCircle }
+      'Refunded': { label: 'Refunded', color: 'text-ink-700', bgColor: 'bg-ink-100', icon: AlertCircle }
     };
     return badges[status] || badges['Pending'];
   };
@@ -250,26 +250,26 @@ const DonationsPage = () => {
 
   if (!stats) {
     return (
-      <div className="p-8 bg-gray-50 min-h-screen flex items-center justify-center">
+      <div className="p-8 bg-ink-50 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading donations...</p>
+          <p className="mt-4 text-ink-600">Loading donations...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5 animate-pulse" />
+                <Heart className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">Donation Management</h1>
@@ -291,22 +291,22 @@ const DonationsPage = () => {
         <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Donations</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Donations</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stats.total}</h3>
+                <h3 className="text-h1 text-ink-900">{stats.total}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stats.completed} completed</p>
+              <p className="text-xs text-ink-500 mt-1">{stats.completed} completed</p>
             </div>
-            <div className="bg-gradient-to-br from-fuchsia-500 to-pink-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Heart className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -316,22 +316,22 @@ const DonationsPage = () => {
         <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Total Amount</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Total Amount</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">${(stats.totalAmount / 1000).toFixed(0)}K</h3>
+                <h3 className="text-h1 text-ink-900">${(stats.totalAmount / 1000).toFixed(0)}K</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Completed donations</p>
+              <p className="text-xs text-ink-500 mt-1">Completed donations</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <DollarSign className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -341,22 +341,22 @@ const DonationsPage = () => {
         <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Average Donation</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Average Donation</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">${stats.avgDonation.toLocaleString()}</h3>
+                <h3 className="text-h1 text-ink-900">${stats.avgDonation.toLocaleString()}</h3>
                 <TrendingUp className="w-3 h-3 text-green-600" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Per donor</p>
+              <p className="text-xs text-ink-500 mt-1">Per donor</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <BarChart3 className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 <span className="text-xs font-semibold text-green-600">Good</span>
               </div>
             </div>
@@ -366,21 +366,21 @@ const DonationsPage = () => {
         <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">Pending</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">Pending</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stats.pending}</h3>
+                <h3 className="text-h1 text-ink-900">{stats.pending}</h3>
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stats.failed} failed</p>
+              <p className="text-xs text-ink-500 mt-1">{stats.failed} failed</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-500 to-amber-600 p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
               <Clock className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
                 <span className="text-xs font-semibold text-yellow-600">Monitor</span>
               </div>
             </div>
@@ -442,20 +442,20 @@ const DonationsPage = () => {
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-3 items-center flex-1 flex-wrap">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search donations..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
             >
               {paymentStatuses.map(status => (
                 <option key={status} value={status}>{status}</option>
@@ -465,7 +465,7 @@ const DonationsPage = () => {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
             >
               <option value="All">All Types</option>
               {donorTypes.map(type => (
@@ -476,7 +476,7 @@ const DonationsPage = () => {
             <select
               value={campaignFilter}
               onChange={(e) => setCampaignFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
             >
               <option value="All">All Campaigns</option>
               {campaigns.map(campaign => (
@@ -510,19 +510,19 @@ const DonationsPage = () => {
           <table className="w-full">
             <thead className="bg-gradient-to-r from-fuchsia-100 to-pink-100">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Donor</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Campaign</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Payment</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Date</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Status</th>
-                <th className="px-6 py-4 text-center text-sm font-bold text-gray-700">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Donor</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Amount</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Campaign</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Payment</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Date</th>
+                <th className="px-6 py-4 text-left text-sm font-bold text-ink-700">Status</th>
+                <th className="px-6 py-4 text-center text-sm font-bold text-ink-700">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-ink-100">
               {filteredDonations.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="7" className="px-6 py-12 text-center text-ink-500">
                     <Heart className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                     <p className="text-lg font-medium">No donations found</p>
                     <p className="text-sm">Add your first donation to start tracking</p>
@@ -536,8 +536,8 @@ const DonationsPage = () => {
                       <td className="px-6 py-4">
                         <div>
                           <p className="font-semibold text-gray-800">{donation.donorName}</p>
-                          <p className="text-sm text-gray-500">{donation.donorEmail}</p>
-                          <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full mt-1 inline-block">
+                          <p className="text-sm text-ink-500">{donation.donorEmail}</p>
+                          <span className="text-xs px-2 py-1 bg-ink-100 text-ink-600 rounded-full mt-1 inline-block">
                             {donation.donorType}
                           </span>
                         </div>
@@ -545,7 +545,7 @@ const DonationsPage = () => {
                       <td className="px-6 py-4">
                         <p className="font-bold text-green-600 text-lg">${donation.amount.toLocaleString()}</p>
                         {donation.receiptNumber && (
-                          <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                          <p className="text-xs text-ink-500 flex items-center gap-1 mt-1">
                             <Receipt className="w-3 h-3" />
                             {donation.receiptNumber}
                           </p>
@@ -560,14 +560,14 @@ const DonationsPage = () => {
                         <div>
                           <p className="text-sm font-medium text-gray-800">{donation.paymentMethod}</p>
                           {donation.transactionId && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-ink-500 mt-1">
                               ID: {donation.transactionId}
                             </p>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-ink-600">
                           {new Date(donation.donationDate).toLocaleDateString()}
                         </p>
                       </td>
@@ -617,7 +617,7 @@ const DonationsPage = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">
                   {editingDonation ? 'Edit Donation' : 'Record New Donation'}
@@ -634,12 +634,12 @@ const DonationsPage = () => {
             <form onSubmit={handleSubmit} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Campaign (Optional)</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Campaign (Optional)</label>
                   <select
                     name="campaignId"
                     value={donationForm.campaignId}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   >
                     <option value="">General Donation</option>
                     {campaigns.map(campaign => (
@@ -649,51 +649,51 @@ const DonationsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donor Name *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donor Name *</label>
                   <input
                     type="text"
                     name="donorName"
                     value={donationForm.donorName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="John Doe"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donor Email *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donor Email *</label>
                   <input
                     type="email"
                     name="donorEmail"
                     value={donationForm.donorEmail}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="john@example.com"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Phone</label>
                   <input
                     type="tel"
                     name="donorPhone"
                     value={donationForm.donorPhone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="+1234567890"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donor Type *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donor Type *</label>
                   <select
                     name="donorType"
                     value={donationForm.donorType}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   >
                     {donorTypes.map(type => (
                       <option key={type} value={type}>{type}</option>
@@ -702,7 +702,7 @@ const DonationsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Amount ($) *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Amount ($) *</label>
                   <input
                     type="number"
                     name="amount"
@@ -711,19 +711,19 @@ const DonationsPage = () => {
                     required
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="100.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Payment Method *</label>
                   <select
                     name="paymentMethod"
                     value={donationForm.paymentMethod}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   >
                     {paymentMethods.map(method => (
                       <option key={method} value={method}>{method}</option>
@@ -732,13 +732,13 @@ const DonationsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Status *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Payment Status *</label>
                   <select
                     name="paymentStatus"
                     value={donationForm.paymentStatus}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   >
                     <option value="Pending">Pending</option>
                     <option value="Completed">Completed</option>
@@ -748,49 +748,49 @@ const DonationsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Transaction ID</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Transaction ID</label>
                   <input
                     type="text"
                     name="transactionId"
                     value={donationForm.transactionId}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="TXN123456"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donation Date *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donation Date *</label>
                   <input
                     type="date"
                     name="donationDate"
                     value={donationForm.donationDate}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donor Address</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Donor Address</label>
                   <input
                     type="text"
                     name="donorAddress"
                     value={donationForm.donorAddress}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="123 Main St, City, Country"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Notes</label>
                   <textarea
                     name="notes"
                     value={donationForm.notes}
                     onChange={handleInputChange}
                     rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-fuchsia-500"
                     placeholder="Additional notes..."
                   />
                 </div>
@@ -804,7 +804,7 @@ const DonationsPage = () => {
                       onChange={handleInputChange}
                       className="w-4 h-4 text-fuchsia-600 focus:ring-fuchsia-500 rounded"
                     />
-                    <span className="text-sm font-medium text-gray-700">Anonymous Donation</span>
+                    <span className="text-sm font-medium text-ink-700">Anonymous Donation</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -815,7 +815,7 @@ const DonationsPage = () => {
                       onChange={handleInputChange}
                       className="w-4 h-4 text-fuchsia-600 focus:ring-fuchsia-500 rounded"
                     />
-                    <span className="text-sm font-medium text-gray-700">Recurring Donation</span>
+                    <span className="text-sm font-medium text-ink-700">Recurring Donation</span>
                   </label>
                 </div>
               </div>
@@ -824,7 +824,7 @@ const DonationsPage = () => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition-colors"
                 >
                   Cancel
                 </button>
@@ -845,7 +845,7 @@ const DonationsPage = () => {
       {showViewModal && viewingDonation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Donation Details</h2>
                 <button
@@ -860,27 +860,27 @@ const DonationsPage = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-fuchsia-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Donation Code</p>
+                  <p className="text-sm text-ink-600 mb-1">Donation Code</p>
                   <p className="text-lg font-bold text-gray-800">{viewingDonation.donationCode}</p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Amount</p>
+                  <p className="text-sm text-ink-600 mb-1">Amount</p>
                   <p className="text-lg font-bold text-green-600">${viewingDonation.amount.toLocaleString()}</p>
                 </div>
               </div>
 
               <div className="border-t pt-4">
-                <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <h3 className="font-semibold text-ink-700 mb-3 flex items-center gap-2">
                   <Users className="w-5 h-5 text-fuchsia-600" />
                   Donor Information
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Name:</span>
+                    <span className="text-ink-600">Name:</span>
                     <span className="font-medium text-gray-800">{viewingDonation.donorName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Email:</span>
+                    <span className="text-ink-600">Email:</span>
                     <span className="font-medium text-gray-800 flex items-center gap-1">
                       <Mail className="w-3 h-3" />
                       {viewingDonation.donorEmail}
@@ -888,7 +888,7 @@ const DonationsPage = () => {
                   </div>
                   {viewingDonation.donorPhone && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Phone:</span>
+                      <span className="text-ink-600">Phone:</span>
                       <span className="font-medium text-gray-800 flex items-center gap-1">
                         <Phone className="w-3 h-3" />
                         {viewingDonation.donorPhone}
@@ -896,12 +896,12 @@ const DonationsPage = () => {
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Type:</span>
+                    <span className="text-ink-600">Type:</span>
                     <span className="font-medium text-gray-800">{viewingDonation.donorType}</span>
                   </div>
                   {viewingDonation.donorAddress && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Address:</span>
+                      <span className="text-ink-600">Address:</span>
                       <span className="font-medium text-gray-800">{viewingDonation.donorAddress}</span>
                     </div>
                   )}
@@ -909,30 +909,30 @@ const DonationsPage = () => {
               </div>
 
               <div className="border-t pt-4">
-                <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <h3 className="font-semibold text-ink-700 mb-3 flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-fuchsia-600" />
                   Payment Information
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Method:</span>
+                    <span className="text-ink-600">Method:</span>
                     <span className="font-medium text-gray-800">{viewingDonation.paymentMethod}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
+                    <span className="text-ink-600">Status:</span>
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(viewingDonation.paymentStatus).bgColor} ${getStatusBadge(viewingDonation.paymentStatus).color}`}>
                       {viewingDonation.paymentStatus}
                     </span>
                   </div>
                   {viewingDonation.transactionId && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Transaction ID:</span>
+                      <span className="text-ink-600">Transaction ID:</span>
                       <span className="font-medium text-gray-800">{viewingDonation.transactionId}</span>
                     </div>
                   )}
                   {viewingDonation.receiptNumber && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Receipt Number:</span>
+                      <span className="text-ink-600">Receipt Number:</span>
                       <span className="font-medium text-gray-800 flex items-center gap-1">
                         <Receipt className="w-3 h-3" />
                         {viewingDonation.receiptNumber}
@@ -940,7 +940,7 @@ const DonationsPage = () => {
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Date:</span>
+                    <span className="text-ink-600">Date:</span>
                     <span className="font-medium text-gray-800">
                       {new Date(viewingDonation.donationDate).toLocaleDateString()}
                     </span>
@@ -950,18 +950,18 @@ const DonationsPage = () => {
 
               {viewingDonation.campaign && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-3">Campaign</h3>
+                  <h3 className="font-semibold text-ink-700 mb-3">Campaign</h3>
                   <div className="bg-purple-50 p-4 rounded-lg">
                     <p className="font-medium text-gray-800">{viewingDonation.campaign.title}</p>
-                    <p className="text-sm text-gray-600 mt-1">Code: {viewingDonation.campaign.campaignCode}</p>
+                    <p className="text-sm text-ink-600 mt-1">Code: {viewingDonation.campaign.campaignCode}</p>
                   </div>
                 </div>
               )}
 
               {viewingDonation.notes && (
                 <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-700 mb-3">Notes</h3>
-                  <p className="text-gray-600 text-sm bg-gray-50 p-4 rounded-lg">{viewingDonation.notes}</p>
+                  <h3 className="font-semibold text-ink-700 mb-3">Notes</h3>
+                  <p className="text-ink-600 text-sm bg-ink-50 p-4 rounded-lg">{viewingDonation.notes}</p>
                 </div>
               )}
 
@@ -969,7 +969,7 @@ const DonationsPage = () => {
                 <div className="border-t pt-4">
                   <div className="flex gap-2">
                     {viewingDonation.isAnonymous && (
-                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                      <span className="px-3 py-1 bg-ink-100 text-ink-700 rounded-full text-xs font-medium">
                         Anonymous
                       </span>
                     )}

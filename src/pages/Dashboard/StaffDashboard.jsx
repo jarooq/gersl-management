@@ -196,7 +196,7 @@ const StaffDashboard = () => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Activity className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-2" />
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <p className="text-ink-600">Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -255,14 +255,14 @@ const StaffDashboard = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Total Tasks */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
               <Target className="text-indigo-600" size={20} />
             </div>
-            <span className="text-2xl font-bold text-gray-900">{stats.total}</span>
+            <span className="text-h1 text-ink-900">{stats.total}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Total Tasks</h3>
+          <h3 className="text-sm font-medium text-ink-600">Total Tasks</h3>
           <div className="mt-2 flex items-center gap-2">
             <div className="flex-1 bg-gray-200 rounded-full h-2">
               <div
@@ -270,55 +270,55 @@ const StaffDashboard = () => {
                 style={{ width: `${completionRate}%` }}
               />
             </div>
-            <span className="text-xs font-medium text-gray-600">{completionRate}%</span>
+            <span className="text-xs font-medium text-ink-600">{completionRate}%</span>
           </div>
         </div>
 
         {/* Completed */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
               <CheckCircle className="text-green-600" size={20} />
             </div>
             <span className="text-2xl font-bold text-green-600">{stats.completed}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Completed</h3>
-          <p className="text-xs text-gray-500 mt-1">
+          <h3 className="text-sm font-medium text-ink-600">Completed</h3>
+          <p className="text-xs text-ink-500 mt-1">
             {stats.inProgress} in progress
           </p>
         </div>
 
         {/* Due This Week */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
               <Calendar className="text-blue-600" size={20} />
             </div>
             <span className="text-2xl font-bold text-blue-600">{stats.dueThisWeek}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Due This Week</h3>
-          <p className="text-xs text-gray-500 mt-1">
+          <h3 className="text-sm font-medium text-ink-600">Due This Week</h3>
+          <p className="text-xs text-ink-500 mt-1">
             {stats.dueToday} due today
           </p>
         </div>
 
         {/* High Priority */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
               <AlertTriangle className="text-red-600" size={20} />
             </div>
             <span className="text-2xl font-bold text-red-600">{stats.highPriority}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">High Priority</h3>
-          <p className="text-xs text-gray-500 mt-1">
+          <h3 className="text-sm font-medium text-ink-600">High Priority</h3>
+          <p className="text-xs text-ink-500 mt-1">
             {stats.overdue} overdue
           </p>
         </div>
 
         {/* My Projects */}
         <div
-          className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md transition-shadow"
+          className="bg-white rounded-lg shadow-sm border border-ink-100 p-4 cursor-pointer hover:shadow-md transition-shadow"
           onClick={() => navigate('/admin/projects')}
         >
           <div className="flex items-center justify-between mb-2">
@@ -327,15 +327,15 @@ const StaffDashboard = () => {
             </div>
             <span className="text-2xl font-bold text-purple-600">{projects.length}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">My Projects</h3>
-          <p className="text-xs text-gray-500 mt-1">
+          <h3 className="text-sm font-medium text-ink-600">My Projects</h3>
+          <p className="text-xs text-ink-500 mt-1">
             {user?.department ? `${user.department} department` : 'All departments'}
           </p>
         </div>
 
         {/* My Proposals */}
         <div
-          className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md transition-shadow"
+          className="bg-white rounded-lg shadow-sm border border-ink-100 p-4 cursor-pointer hover:shadow-md transition-shadow"
           onClick={() => navigate('/admin/proposals')}
         >
           <div className="flex items-center justify-between mb-2">
@@ -344,8 +344,8 @@ const StaffDashboard = () => {
             </div>
             <span className="text-2xl font-bold text-amber-600">{proposals.length}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">My Proposals</h3>
-          <p className="text-xs text-gray-500 mt-1">
+          <h3 className="text-sm font-medium text-ink-600">My Proposals</h3>
+          <p className="text-xs text-ink-500 mt-1">
             {proposals.filter(p => p.status === 'Under Review').length} under review
           </p>
         </div>
@@ -354,9 +354,9 @@ const StaffDashboard = () => {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upcoming Tasks */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Upcoming Deadlines</h2>
+            <h2 className="text-lg font-bold text-ink-900">Upcoming Deadlines</h2>
             <button
               onClick={() => navigate('/admin/operations/my-tasks')}
               className="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
@@ -369,14 +369,14 @@ const StaffDashboard = () => {
           {upcomingTasks.length === 0 ? (
             <div className="text-center py-8">
               <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500">No upcoming deadlines</p>
+              <p className="text-ink-500">No upcoming deadlines</p>
             </div>
           ) : (
             <div className="space-y-3">
               {upcomingTasks.map(task => (
                 <div
                   key={task.id}
-                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                  className="flex items-center gap-3 p-3 bg-ink-50 rounded-lg hover:bg-ink-100 transition-colors cursor-pointer"
                   onClick={() => navigate('/admin/operations/my-tasks')}
                 >
                   <div className={`w-2 h-2 rounded-full ${
@@ -384,16 +384,16 @@ const StaffDashboard = () => {
                     task.priority === 'Medium' ? 'bg-orange-500' : 'bg-blue-500'
                   }`} />
                   <div className="flex-1">
-                    <h3 className="font-medium text-gray-900">{task.title}</h3>
-                    <p className="text-xs text-gray-500">
+                    <h3 className="font-medium text-ink-900">{task.title}</h3>
+                    <p className="text-xs text-ink-500">
                       {task.Project?.name || 'No project'}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-ink-700">
                       {formatDate(task.dueDate)}
                     </span>
-                    <p className="text-xs text-gray-500">{task.priority}</p>
+                    <p className="text-xs text-ink-500">{task.priority}</p>
                   </div>
                 </div>
               ))}
@@ -404,8 +404,8 @@ const StaffDashboard = () => {
         {/* Quick Actions & Recent Activity */}
         <div className="space-y-6">
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
+          <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+            <h2 className="text-lg font-bold text-ink-900 mb-4">Quick Actions</h2>
             <div className="space-y-2">
               {quickActions.map(action => {
                 const Icon = action.icon;
@@ -418,7 +418,7 @@ const StaffDashboard = () => {
                     <div className={`w-8 h-8 bg-${action.color}-100 rounded-lg flex items-center justify-center`}>
                       <Icon className={`text-${action.color}-600`} size={16} />
                     </div>
-                    <span className="font-medium text-gray-900">{action.title}</span>
+                    <span className="font-medium text-ink-900">{action.title}</span>
                   </button>
                 );
               })}
@@ -444,19 +444,19 @@ const StaffDashboard = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h2>
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+        <h2 className="text-lg font-bold text-ink-900 mb-4">Recent Activity</h2>
         {recentActivity.length === 0 ? (
           <div className="text-center py-8">
             <Activity className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-            <p className="text-gray-500">No recent activity</p>
+            <p className="text-ink-500">No recent activity</p>
           </div>
         ) : (
           <div className="space-y-3">
             {recentActivity.map(task => (
               <div
                 key={task.id}
-                className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+                className="flex items-center gap-4 p-3 hover:bg-ink-50 rounded-lg transition-colors cursor-pointer"
                 onClick={() => navigate('/admin/operations/my-tasks')}
               >
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
@@ -472,12 +472,12 @@ const StaffDashboard = () => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-medium text-gray-900">{task.title}</h3>
-                  <p className="text-xs text-gray-500">
+                  <h3 className="font-medium text-ink-900">{task.title}</h3>
+                  <p className="text-xs text-ink-500">
                     {task.Project?.name || 'No project'} • {task.status}
                   </p>
                 </div>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-ink-500">
                   {formatDate(task.updatedAt || task.createdAt)}
                 </span>
               </div>
@@ -495,14 +495,14 @@ const StaffDashboard = () => {
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
                 <Activity className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-2" />
-                <p className="text-gray-600">Loading your HR information...</p>
+                <p className="text-ink-600">Loading your HR information...</p>
               </div>
             </div>
           ) : !hrData?.hasStaffRecord ? (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
               <AlertCircleIcon className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">No Staff Record Found</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg font-bold text-ink-900 mb-2">No Staff Record Found</h3>
+              <p className="text-ink-600">
                 Your account is not linked to a staff record. Please contact HR for assistance.
               </p>
             </div>
@@ -510,20 +510,20 @@ const StaffDashboard = () => {
             <div className="space-y-6">
               {/* Employment Agreement Card */}
               {hrData?.agreement ? (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
                         <FileText className="text-indigo-600" size={24} />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-gray-900">Employment Agreement</h2>
-                        <p className="text-sm text-gray-500">Your current contract details</p>
+                        <h2 className="text-lg font-bold text-ink-900">Employment Agreement</h2>
+                        <p className="text-sm text-ink-500">Your current contract details</p>
                       </div>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       hrData.agreement.status === 'Active' ? 'bg-green-100 text-green-700' :
-                      hrData.agreement.status === 'Draft' ? 'bg-gray-100 text-gray-700' :
+                      hrData.agreement.status === 'Draft' ? 'bg-ink-100 text-ink-700' :
                       'bg-red-100 text-red-700'
                     }`}>
                       {hrData.agreement.status}
@@ -531,35 +531,35 @@ const StaffDashboard = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-sm text-gray-600 mb-1">Position</div>
-                      <div className="font-medium text-gray-900">{hrData.staff.position}</div>
+                    <div className="bg-ink-50 rounded-lg p-4">
+                      <div className="text-sm text-ink-600 mb-1">Position</div>
+                      <div className="font-medium text-ink-900">{hrData.staff.position}</div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-sm text-gray-600 mb-1">Department</div>
-                      <div className="font-medium text-gray-900">{hrData.staff.department}</div>
+                    <div className="bg-ink-50 rounded-lg p-4">
+                      <div className="text-sm text-ink-600 mb-1">Department</div>
+                      <div className="font-medium text-ink-900">{hrData.staff.department}</div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-sm text-gray-600 mb-1">Contract Type</div>
-                      <div className="font-medium text-gray-900">{hrData.agreement.contractType}</div>
+                    <div className="bg-ink-50 rounded-lg p-4">
+                      <div className="text-sm text-ink-600 mb-1">Contract Type</div>
+                      <div className="font-medium text-ink-900">{hrData.agreement.contractType}</div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-sm text-gray-600 mb-1">Monthly Salary</div>
-                      <div className="font-medium text-gray-900">
+                    <div className="bg-ink-50 rounded-lg p-4">
+                      <div className="text-sm text-ink-600 mb-1">Monthly Salary</div>
+                      <div className="font-medium text-ink-900">
                         LKR {hrData.agreement.salary?.toLocaleString()}
                       </div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-sm text-gray-600 mb-1">Start Date</div>
-                      <div className="font-medium text-gray-900">
+                    <div className="bg-ink-50 rounded-lg p-4">
+                      <div className="text-sm text-ink-600 mb-1">Start Date</div>
+                      <div className="font-medium text-ink-900">
                         {new Date(hrData.agreement.startDate).toLocaleDateString('en-US', {
                           year: 'numeric', month: 'short', day: 'numeric'
                         })}
                       </div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-sm text-gray-600 mb-1">End Date</div>
-                      <div className="font-medium text-gray-900">
+                    <div className="bg-ink-50 rounded-lg p-4">
+                      <div className="text-sm text-ink-600 mb-1">End Date</div>
+                      <div className="font-medium text-ink-900">
                         {hrData.agreement.endDate
                           ? new Date(hrData.agreement.endDate).toLocaleDateString('en-US', {
                               year: 'numeric', month: 'short', day: 'numeric'
@@ -571,48 +571,48 @@ const StaffDashboard = () => {
                   </div>
 
                   {/* Leave Entitlements */}
-                  <div className="border-t border-gray-200 pt-4">
-                    <h3 className="font-medium text-gray-900 mb-3">Leave Entitlements (Annual)</h3>
+                  <div className="border-t border-ink-100 pt-4">
+                    <h3 className="font-medium text-ink-900 mb-3">Leave Entitlements (Annual)</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <div className="bg-blue-50 rounded-lg p-3 text-center">
                         <div className="text-2xl font-bold text-blue-600">
                           {hrData.agreement.annualLeaveDays || 14}
                         </div>
-                        <div className="text-xs text-gray-600">Annual Leave</div>
+                        <div className="text-xs text-ink-600">Annual Leave</div>
                       </div>
                       <div className="bg-green-50 rounded-lg p-3 text-center">
                         <div className="text-2xl font-bold text-green-600">
                           {hrData.agreement.casualLeaveDays || 7}
                         </div>
-                        <div className="text-xs text-gray-600">Casual Leave</div>
+                        <div className="text-xs text-ink-600">Casual Leave</div>
                       </div>
                       <div className="bg-purple-50 rounded-lg p-3 text-center">
                         <div className="text-2xl font-bold text-purple-600">
                           {hrData.agreement.sickLeaveDays || 14}
                         </div>
-                        <div className="text-xs text-gray-600">Sick Leave</div>
+                        <div className="text-xs text-ink-600">Sick Leave</div>
                       </div>
                       <div className="bg-orange-50 rounded-lg p-3 text-center">
                         <div className="text-2xl font-bold text-orange-600">
                           {hrData.agreement.medicalLeaveDays || 21}
                         </div>
-                        <div className="text-xs text-gray-600">Medical Leave</div>
+                        <div className="text-xs text-ink-600">Medical Leave</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Working Hours */}
-                  <div className="border-t border-gray-200 pt-4 mt-4">
+                  <div className="border-t border-ink-100 pt-4 mt-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-medium text-gray-900">Working Hours</h3>
-                        <p className="text-sm text-gray-500">
+                        <h3 className="font-medium text-ink-900">Working Hours</h3>
+                        <p className="text-sm text-ink-500">
                           {hrData.agreement.workingHours || 8} hours per day
                         </p>
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900">Probation Period</h3>
-                        <p className="text-sm text-gray-500">
+                        <h3 className="font-medium text-ink-900">Probation Period</h3>
+                        <p className="text-sm text-ink-500">
                           {hrData.agreement.probationPeriod || 3} months
                         </p>
                       </div>
@@ -620,10 +620,10 @@ const StaffDashboard = () => {
                   </div>
                 </div>
               ) : (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">No Active Employment Agreement</h3>
-                  <p className="text-gray-600">
+                <div className="bg-ink-50 border border-ink-100 rounded-lg p-6 text-center">
+                  <FileText className="w-12 h-12 text-ink-400 mx-auto mb-3" />
+                  <h3 className="text-lg font-bold text-ink-900 mb-2">No Active Employment Agreement</h3>
+                  <p className="text-ink-600">
                     You don't have an active employment agreement on file. Please contact HR.
                   </p>
                 </div>
@@ -659,15 +659,15 @@ const StaffDashboard = () => {
 
               {/* Pending Renewals */}
               {hrData?.renewals && hrData.renewals.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">Contract Renewals</h2>
+                <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+                  <h2 className="text-lg font-bold text-ink-900 mb-4">Contract Renewals</h2>
                   <div className="space-y-3">
                     {hrData.renewals.map(renewal => (
-                      <div key={renewal.id} className="bg-gray-50 rounded-lg p-4">
+                      <div key={renewal.id} className="bg-ink-50 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <FileText size={18} className="text-indigo-600" />
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-ink-900">
                               Contract Renewal Request
                             </span>
                           </div>
@@ -681,8 +681,8 @@ const StaffDashboard = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
-                            <span className="text-gray-600">New Period:</span>{' '}
-                            <span className="font-medium text-gray-900">
+                            <span className="text-ink-600">New Period:</span>{' '}
+                            <span className="font-medium text-ink-900">
                               {new Date(renewal.renewalStartDate).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric'
                               })}
@@ -693,8 +693,8 @@ const StaffDashboard = () => {
                             </span>
                           </div>
                           <div>
-                            <span className="text-gray-600">New Salary:</span>{' '}
-                            <span className="font-medium text-gray-900">
+                            <span className="text-ink-600">New Salary:</span>{' '}
+                            <span className="font-medium text-ink-900">
                               LKR {renewal.newSalary?.toLocaleString()}
                             </span>
                           </div>
@@ -707,15 +707,15 @@ const StaffDashboard = () => {
 
               {/* Resignations */}
               {hrData?.resignations && hrData.resignations.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">My Resignations</h2>
+                <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+                  <h2 className="text-lg font-bold text-ink-900 mb-4">My Resignations</h2>
                   <div className="space-y-3">
                     {hrData.resignations.map(resignation => (
-                      <div key={resignation.id} className="bg-gray-50 rounded-lg p-4">
+                      <div key={resignation.id} className="bg-ink-50 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <LogOut size={18} className="text-red-600" />
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-ink-900">
                               Resignation Submitted
                             </span>
                           </div>
@@ -730,16 +730,16 @@ const StaffDashboard = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
-                            <span className="text-gray-600">Resignation Date:</span>{' '}
-                            <span className="font-medium text-gray-900">
+                            <span className="text-ink-600">Resignation Date:</span>{' '}
+                            <span className="font-medium text-ink-900">
                               {new Date(resignation.resignationDate).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric'
                               })}
                             </span>
                           </div>
                           <div>
-                            <span className="text-gray-600">Proposed Last Day:</span>{' '}
-                            <span className="font-medium text-gray-900">
+                            <span className="text-ink-600">Proposed Last Day:</span>{' '}
+                            <span className="font-medium text-ink-900">
                               {new Date(resignation.proposedLastDay).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric'
                               })}
@@ -748,8 +748,8 @@ const StaffDashboard = () => {
                         </div>
                         {resignation.reason && (
                           <div className="mt-2 text-sm">
-                            <span className="text-gray-600">Reason:</span>{' '}
-                            <span className="text-gray-900">{resignation.reason}</span>
+                            <span className="text-ink-600">Reason:</span>{' '}
+                            <span className="text-ink-900">{resignation.reason}</span>
                           </div>
                         )}
                       </div>
@@ -759,8 +759,8 @@ const StaffDashboard = () => {
               )}
 
               {/* Self-Service Actions */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
+              <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-6">
+                <h2 className="text-lg font-bold text-ink-900 mb-4">Quick Actions</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <button
                     onClick={() => navigate('/admin/hr/contract-management')}
@@ -770,8 +770,8 @@ const StaffDashboard = () => {
                       <FileText className="text-indigo-600" size={20} />
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">View Full Contract</div>
-                      <div className="text-xs text-gray-500">Access complete agreement details</div>
+                      <div className="font-medium text-ink-900">View Full Contract</div>
+                      <div className="text-xs text-ink-500">Access complete agreement details</div>
                     </div>
                   </button>
 
@@ -786,8 +786,8 @@ const StaffDashboard = () => {
                       <LogOut className="text-red-600" size={20} />
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">Submit Resignation</div>
-                      <div className="text-xs text-gray-500">Initiate resignation process</div>
+                      <div className="font-medium text-ink-900">Submit Resignation</div>
+                      <div className="text-xs text-ink-500">Initiate resignation process</div>
                     </div>
                   </button>
                 </div>

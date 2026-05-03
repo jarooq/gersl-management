@@ -300,13 +300,13 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
   // ============================================
   const getStatusBadge = (status) => {
     const badges = {
-      'Not Required': { bg: 'bg-gray-100', text: 'text-gray-800', icon: X },
+      'Not Required': { bg: 'bg-ink-100', text: 'text-gray-800', icon: X },
       'Pending': { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock },
       'In Progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Play },
       'Completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle }
     };
 
-    const badge = badges[status] || { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle };
+    const badge = badges[status] || { bg: 'bg-ink-100', text: 'text-gray-800', icon: AlertCircle };
     const Icon = badge.icon;
 
     return (
@@ -334,7 +334,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-600 to-pink-600">
+        <div className="px-6 py-4 border-b border-ink-100 bg-gradient-to-r from-purple-600 to-pink-600">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-white">Media Coverage Management</h2>
@@ -374,14 +374,14 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
         )}
 
         {/* Tabs */}
-        <div className="px-6 pt-4 border-b border-gray-200">
+        <div className="px-6 pt-4 border-b border-ink-100">
           <div className="flex space-x-1">
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                 activeTab === 'overview'
-                  ? 'bg-white text-purple-600 border-t border-x border-gray-200'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-white text-purple-600 border-t border-x border-ink-100'
+                  : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
               }`}
             >
               <FileText className="h-4 w-4 inline mr-2" />
@@ -392,8 +392,8 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
               onClick={() => setActiveTab('assign')}
               className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                 activeTab === 'assign'
-                  ? 'bg-white text-purple-600 border-t border-x border-gray-200'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-white text-purple-600 border-t border-x border-ink-100'
+                  : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
               }`}
             >
               <Users className="h-4 w-4 inline mr-2" />
@@ -405,8 +405,8 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 onClick={() => setActiveTab('status')}
                 className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                   activeTab === 'status'
-                    ? 'bg-white text-purple-600 border-t border-x border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'bg-white text-purple-600 border-t border-x border-ink-100'
+                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
                 }`}
               >
                 <Check className="h-4 w-4 inline mr-2" />
@@ -426,8 +426,8 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
               {/* Team Assignment Info */}
               {task?.mediaTeamAssigned && task.mediaTeamAssigned.length > 0 ? (
                 <>
-                  <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <div className="bg-white border border-ink-100 rounded-lg p-4">
+                    <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center">
                       <Users className="h-5 w-5 mr-2 text-purple-600" />
                       Assigned Media Team
                     </h3>
@@ -436,15 +436,15 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                       {task.mediaTeamAssigned.map((staffId, index) => (
                         <div key={index} className="flex items-center bg-purple-50 border border-purple-200 rounded-lg p-3">
                           <User className="h-5 w-5 text-purple-600 mr-3" />
-                          <span className="font-medium text-gray-900">{getStaffName(staffId)}</span>
+                          <span className="font-medium text-ink-900">{getStaffName(staffId)}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Coverage Types */}
-                  <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <div className="bg-white border border-ink-100 rounded-lg p-4">
+                    <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center">
                       <Camera className="h-5 w-5 mr-2 text-purple-600" />
                       Coverage Types
                     </h3>
@@ -457,7 +457,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         return (
                           <div key={index} className="flex items-center bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-3">
                             <Icon className="h-5 w-5 text-purple-600 mr-3" />
-                            <span className="font-medium text-gray-900">{type}</span>
+                            <span className="font-medium text-ink-900">{type}</span>
                           </div>
                         );
                       })}
@@ -466,8 +466,8 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
                   {/* Media Evidence */}
                   {task?.distributionEvidence && (
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <div className="bg-white border border-ink-100 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center">
                         <ImageIcon className="h-5 w-5 mr-2 text-purple-600" />
                         Media Evidence
                       </h3>
@@ -476,7 +476,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         {/* Photos */}
                         {task.distributionEvidence.photos?.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Photos ({task.distributionEvidence.photos.length})</h4>
+                            <h4 className="text-sm font-medium text-ink-700 mb-2">Photos ({task.distributionEvidence.photos.length})</h4>
                             <div className="space-y-1">
                               {task.distributionEvidence.photos.map((url, index) => (
                                 <a
@@ -496,7 +496,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         {/* Videos */}
                         {task.distributionEvidence.videos?.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Videos ({task.distributionEvidence.videos.length})</h4>
+                            <h4 className="text-sm font-medium text-ink-700 mb-2">Videos ({task.distributionEvidence.videos.length})</h4>
                             <div className="space-y-1">
                               {task.distributionEvidence.videos.map((url, index) => (
                                 <a
@@ -516,7 +516,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         {/* Social Media Posts */}
                         {task.distributionEvidence.socialMediaPosts?.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Social Media Posts ({task.distributionEvidence.socialMediaPosts.length})</h4>
+                            <h4 className="text-sm font-medium text-ink-700 mb-2">Social Media Posts ({task.distributionEvidence.socialMediaPosts.length})</h4>
                             <div className="space-y-1">
                               {task.distributionEvidence.socialMediaPosts.map((url, index) => (
                                 <a
@@ -536,7 +536,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         {/* Live Stream URLs */}
                         {task.distributionEvidence.liveStreamUrls?.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Live Streams ({task.distributionEvidence.liveStreamUrls.length})</h4>
+                            <h4 className="text-sm font-medium text-ink-700 mb-2">Live Streams ({task.distributionEvidence.liveStreamUrls.length})</h4>
                             <div className="space-y-1">
                               {task.distributionEvidence.liveStreamUrls.map((url, index) => (
                                 <a
@@ -556,8 +556,8 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         {/* Notes */}
                         {task.distributionEvidence.notes && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Notes</h4>
-                            <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200">
+                            <h4 className="text-sm font-medium text-ink-700 mb-2">Notes</h4>
+                            <p className="text-sm text-ink-600 bg-ink-50 p-3 rounded border border-ink-100">
                               {task.distributionEvidence.notes}
                             </p>
                           </div>
@@ -568,7 +568,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                          !task.distributionEvidence.videos?.length &&
                          !task.distributionEvidence.socialMediaPosts?.length &&
                          !task.distributionEvidence.liveStreamUrls?.length && (
-                          <p className="text-gray-500 text-center py-4">No media evidence uploaded yet</p>
+                          <p className="text-ink-500 text-center py-4">No media evidence uploaded yet</p>
                         )}
                       </div>
                     </div>
@@ -591,9 +591,9 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 </>
               ) : (
                 <div className="text-center py-12">
-                  <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Media Team Assigned</h3>
-                  <p className="text-gray-600 mb-4">
+                  <Camera className="h-16 w-16 text-ink-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-ink-900 mb-2">No Media Team Assigned</h3>
+                  <p className="text-ink-600 mb-4">
                     Assign a media team to start tracking coverage for this task.
                   </p>
                   <button
@@ -626,7 +626,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Team Member Selection */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Select Team Members</h3>
+                <h3 className="text-lg font-semibold text-ink-900 mb-3">Select Team Members</h3>
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {staff && staff.length > 0 ? (
                     staff.map((member) => (
@@ -635,31 +635,31 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-colors ${
                           assignFormData.mediaTeamAssigned.includes(member.id)
                             ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 hover:border-purple-300'
+                            : 'border-ink-100 hover:border-purple-300'
                         }`}
                       >
                         <input
                           type="checkbox"
                           checked={assignFormData.mediaTeamAssigned.includes(member.id)}
                           onChange={() => toggleTeamMember(member.id)}
-                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-ink-200 rounded"
                         />
-                        <User className="h-5 w-5 text-gray-400 mr-2" />
+                        <User className="h-5 w-5 text-ink-400 mr-2" />
                         <div>
-                          <p className="font-medium text-gray-900">{member.fullName}</p>
-                          <p className="text-xs text-gray-500">{member.email}</p>
+                          <p className="font-medium text-ink-900">{member.fullName}</p>
+                          <p className="text-xs text-ink-500">{member.email}</p>
                         </div>
                       </label>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-center py-4">No staff members available</p>
+                    <p className="text-ink-500 text-center py-4">No staff members available</p>
                   )}
                 </div>
               </div>
 
               {/* Coverage Types */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Coverage Types</h3>
+                <h3 className="text-lg font-semibold text-ink-900 mb-3">Coverage Types</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {coverageTypes.map((type) => {
                     const Icon = type.icon;
@@ -669,17 +669,17 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                         className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-colors ${
                           assignFormData.mediaCoverageType.includes(type.value)
                             ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 hover:border-purple-300'
+                            : 'border-ink-100 hover:border-purple-300'
                         }`}
                       >
                         <input
                           type="checkbox"
                           checked={assignFormData.mediaCoverageType.includes(type.value)}
                           onChange={() => toggleCoverageType(type.value)}
-                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-ink-200 rounded"
                         />
                         <Icon className="h-5 w-5 text-purple-600 mr-2" />
-                        <span className="font-medium text-gray-900">{type.label}</span>
+                        <span className="font-medium text-ink-900">{type.label}</span>
                       </label>
                     );
                   })}
@@ -726,13 +726,13 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Status Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Coverage Status <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={statusFormData.mediaCoverageStatus}
                   onChange={(e) => setStatusFormData(prev => ({ ...prev, mediaCoverageStatus: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   {statusOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -744,7 +744,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Photo URLs */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Photo URLs
                 </label>
                 <div className="flex space-x-2 mb-2">
@@ -754,7 +754,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newPhotoUrl}
                     onChange={(e) => setNewPhotoUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addPhotoUrl()}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                   <button
                     onClick={addPhotoUrl}
@@ -765,7 +765,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 </div>
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.photos?.map((url, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded border border-gray-200">
+                    <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
                       <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
                         {url}
                       </a>
@@ -782,7 +782,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Video URLs */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Video URLs
                 </label>
                 <div className="flex space-x-2 mb-2">
@@ -792,7 +792,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newVideoUrl}
                     onChange={(e) => setNewVideoUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addVideoUrl()}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                   <button
                     onClick={addVideoUrl}
@@ -803,7 +803,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 </div>
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.videos?.map((url, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded border border-gray-200">
+                    <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
                       <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
                         {url}
                       </a>
@@ -820,7 +820,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Social Media URLs */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Social Media Post URLs
                 </label>
                 <div className="flex space-x-2 mb-2">
@@ -830,7 +830,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newSocialMediaUrl}
                     onChange={(e) => setNewSocialMediaUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addSocialMediaUrl()}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                   <button
                     onClick={addSocialMediaUrl}
@@ -841,7 +841,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 </div>
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.socialMediaPosts?.map((url, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded border border-gray-200">
+                    <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
                       <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
                         {url}
                       </a>
@@ -858,7 +858,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Live Stream URLs */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Live Stream URLs
                 </label>
                 <div className="flex space-x-2 mb-2">
@@ -868,7 +868,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newLiveStreamUrl}
                     onChange={(e) => setNewLiveStreamUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addLiveStreamUrl()}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                   <button
                     onClick={addLiveStreamUrl}
@@ -879,7 +879,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 </div>
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.liveStreamUrls?.map((url, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded border border-gray-200">
+                    <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
                       <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
                         {url}
                       </a>
@@ -896,7 +896,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Notes
                 </label>
                 <textarea
@@ -910,7 +910,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                       notes: e.target.value
                     }
                   }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
 
@@ -937,10 +937,10 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
+        <div className="px-6 py-4 border-t border-ink-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
           >
             Close
           </button>

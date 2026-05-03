@@ -42,22 +42,22 @@ const ProjectStats = ({ stats }) => {
       {statItems.map((stat, index) => (
         <div
           key={index}
-          className="stat-card group cursor-pointer animate-slide-up"
+          className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-600 mb-2">{stat.title}</p>
-              <h3 className="text-3xl font-bold text-gray-900">{stat.value}</h3>
-              <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
+              <p className="text-sm font-semibold text-ink-600 mb-2">{stat.title}</p>
+              <h3 className="text-3xl font-bold text-ink-900">{stat.value}</h3>
+              <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
             </div>
             <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
               <stat.icon className="text-white" size={24} />
             </div>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-            <span className="text-sm font-medium text-gray-600">{stat.change}</span>
-            <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+          <div className="flex items-center justify-between pt-3 border-t border-ink-100">
+            <span className="text-sm font-medium text-ink-600">{stat.change}</span>
+            <ArrowRight size={16} className="text-ink-400 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       ))}

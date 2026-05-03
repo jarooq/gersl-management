@@ -178,8 +178,8 @@ const CoordinatorDetailsPage = () => {
     return (
       <div className="p-6">
         <div className="text-center py-12">
-          <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700">Coordinator Not Found</h3>
+          <User className="w-16 h-16 text-ink-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-ink-700">Coordinator Not Found</h3>
         </div>
       </div>
     );
@@ -190,7 +190,7 @@ const CoordinatorDetailsPage = () => {
       {/* Back Button */}
       <button
         onClick={() => navigate('/admin/coordinators')}
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition"
+        className="flex items-center gap-2 text-ink-600 hover:text-ink-900 mb-6 transition"
       >
         <ArrowLeft size={20} />
         <span>Back to Coordinators</span>
@@ -295,10 +295,10 @@ const CoordinatorDetailsPage = () => {
             <div className="bg-blue-100 p-3 rounded-lg">
               <Users className="w-6 h-6 text-blue-600" />
             </div>
-            <span className="text-sm text-gray-500">Total</span>
+            <span className="text-sm text-ink-500">Total</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{selectedCoordinator.total_orphans || 0}</p>
-          <p className="text-sm text-gray-600 mt-1">Orphans Assigned</p>
+          <p className="text-3xl font-bold text-ink-900">{selectedCoordinator.total_orphans || 0}</p>
+          <p className="text-sm text-ink-600 mt-1">Orphans Assigned</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-6">
@@ -306,10 +306,10 @@ const CoordinatorDetailsPage = () => {
             <div className="bg-green-100 p-3 rounded-lg">
               <Calendar className="w-6 h-6 text-green-600" />
             </div>
-            <span className="text-sm text-gray-500">All Time</span>
+            <span className="text-sm text-ink-500">All Time</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{selectedCoordinator.total_visits || 0}</p>
-          <p className="text-sm text-gray-600 mt-1">Total Visits</p>
+          <p className="text-3xl font-bold text-ink-900">{selectedCoordinator.total_visits || 0}</p>
+          <p className="text-sm text-ink-600 mt-1">Total Visits</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-6">
@@ -317,10 +317,10 @@ const CoordinatorDetailsPage = () => {
             <div className="bg-purple-100 p-3 rounded-lg">
               <CheckCircle className="w-6 h-6 text-purple-600" />
             </div>
-            <span className="text-sm text-gray-500">Tasks</span>
+            <span className="text-sm text-ink-500">Tasks</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{selectedCoordinator.completed_tasks || 0}</p>
-          <p className="text-sm text-gray-600 mt-1">Completed Tasks</p>
+          <p className="text-3xl font-bold text-ink-900">{selectedCoordinator.completed_tasks || 0}</p>
+          <p className="text-sm text-ink-600 mt-1">Completed Tasks</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-6">
@@ -328,22 +328,22 @@ const CoordinatorDetailsPage = () => {
             <div className="bg-orange-100 p-3 rounded-lg">
               <Activity className="w-6 h-6 text-orange-600" />
             </div>
-            <span className="text-sm text-gray-500">Activities</span>
+            <span className="text-sm text-ink-500">Activities</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{selectedCoordinator.total_activities || 0}</p>
-          <p className="text-sm text-gray-600 mt-1">Total Activities</p>
+          <p className="text-3xl font-bold text-ink-900">{selectedCoordinator.total_activities || 0}</p>
+          <p className="text-sm text-ink-600 mt-1">Total Activities</p>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="bg-white rounded-xl shadow-md mb-6" data-tab="overview">
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-ink-100">
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-6 py-4 font-semibold transition ${
               activeTab === 'overview'
                 ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-ink-600 hover:text-ink-900'
             }`}
           >
             Performance Overview
@@ -353,7 +353,7 @@ const CoordinatorDetailsPage = () => {
             className={`px-6 py-4 font-semibold transition ${
               activeTab === 'orphans'
                 ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-ink-600 hover:text-ink-900'
             }`}
           >
             Assigned Orphans ({assignedOrphans.length})
@@ -367,13 +367,13 @@ const CoordinatorDetailsPage = () => {
             <div>
               {/* Period Selector */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Performance Period
                 </label>
                 <select
                   value={selectedPeriod}
                   onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 >
                   <option value="weekly">Last 7 Days</option>
                   <option value="monthly">Last 30 Days</option>
@@ -387,25 +387,25 @@ const CoordinatorDetailsPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {/* Visit Stats */}
                   <div className="bg-blue-50 rounded-lg p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-ink-900 mb-4 flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-blue-600" />
                       Visit Metrics
                     </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Total Visits:</span>
+                        <span className="text-ink-600">Total Visits:</span>
                         <span className="font-semibold">{coordinatorStats.total_visits || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Completed:</span>
+                        <span className="text-ink-600">Completed:</span>
                         <span className="font-semibold text-green-600">{coordinatorStats.completed_visits || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Follow-ups:</span>
+                        <span className="text-ink-600">Follow-ups:</span>
                         <span className="font-semibold text-yellow-600">{coordinatorStats.follow_ups_required || 0}</span>
                       </div>
                       <div className="flex justify-between pt-3 border-t border-blue-200">
-                        <span className="text-gray-600">Completion Rate:</span>
+                        <span className="text-ink-600">Completion Rate:</span>
                         <span className="font-bold text-blue-600">{coordinatorStats.visit_completion_rate || 0}%</span>
                       </div>
                     </div>
@@ -413,29 +413,29 @@ const CoordinatorDetailsPage = () => {
 
                   {/* Task Stats */}
                   <div className="bg-purple-50 rounded-lg p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-ink-900 mb-4 flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-purple-600" />
                       Task Metrics
                     </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Total Tasks:</span>
+                        <span className="text-ink-600">Total Tasks:</span>
                         <span className="font-semibold">{coordinatorStats.total_tasks || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Completed:</span>
+                        <span className="text-ink-600">Completed:</span>
                         <span className="font-semibold text-green-600">{coordinatorStats.completed_tasks || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Pending:</span>
+                        <span className="text-ink-600">Pending:</span>
                         <span className="font-semibold text-yellow-600">{coordinatorStats.pending_tasks || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Overdue:</span>
+                        <span className="text-ink-600">Overdue:</span>
                         <span className="font-semibold text-red-600">{coordinatorStats.overdue_tasks || 0}</span>
                       </div>
                       <div className="flex justify-between pt-3 border-t border-purple-200">
-                        <span className="text-gray-600">Completion Rate:</span>
+                        <span className="text-ink-600">Completion Rate:</span>
                         <span className="font-bold text-purple-600">{coordinatorStats.task_completion_rate || 0}%</span>
                       </div>
                     </div>
@@ -443,21 +443,21 @@ const CoordinatorDetailsPage = () => {
 
                   {/* Activity Stats */}
                   <div className="bg-green-50 rounded-lg p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-ink-900 mb-4 flex items-center gap-2">
                       <Activity className="w-5 h-5 text-green-600" />
                       Activity Metrics
                     </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Total Activities:</span>
+                        <span className="text-ink-600">Total Activities:</span>
                         <span className="font-semibold">{coordinatorStats.total_activities || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Phone Calls:</span>
+                        <span className="text-ink-600">Phone Calls:</span>
                         <span className="font-semibold">{coordinatorStats.phone_calls || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Documents:</span>
+                        <span className="text-ink-600">Documents:</span>
                         <span className="font-semibold">{coordinatorStats.documents_uploaded || 0}</span>
                       </div>
                     </div>
@@ -484,9 +484,9 @@ const CoordinatorDetailsPage = () => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-700">No Orphans Assigned</h3>
-                  <p className="text-gray-500 mt-2">This coordinator has no orphans assigned yet.</p>
+                  <Users className="w-16 h-16 text-ink-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-ink-700">No Orphans Assigned</h3>
+                  <p className="text-ink-500 mt-2">This coordinator has no orphans assigned yet.</p>
                 </div>
               )}
             </div>
@@ -551,8 +551,8 @@ const CoordinatorDetailsPage = () => {
               {/* Utilization Bar */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-semibold text-gray-700">Capacity Utilization</span>
-                  <span className="text-lg font-bold text-gray-900">
+                  <span className="text-sm font-semibold text-ink-700">Capacity Utilization</span>
+                  <span className="text-lg font-bold text-ink-900">
                     {(((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100).toFixed(1)}%
                   </span>
                 </div>
@@ -628,12 +628,12 @@ const CoordinatorDetailsPage = () => {
               </div>
 
               {/* Recommendations */}
-              <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <div className="bg-ink-50 rounded-xl p-5 border border-ink-100">
+                <h3 className="font-bold text-ink-900 mb-3 flex items-center gap-2">
                   <TrendingUp size={20} className="text-blue-600" />
                   Recommendations
                 </h3>
-                <ul className="space-y-2 text-sm text-gray-700">
+                <ul className="space-y-2 text-sm text-ink-700">
                   {((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100 < 60 ? (
                     <>
                       <li className="flex items-start gap-2">
@@ -684,7 +684,7 @@ const CoordinatorDetailsPage = () => {
               </div>
 
               {/* Close Button */}
-              <div className="flex justify-end pt-4 border-t border-gray-200">
+              <div className="flex justify-end pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowWorkloadModal(false)}
                   className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-semibold shadow-lg hover:shadow-xl active:scale-95"

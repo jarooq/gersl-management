@@ -49,7 +49,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-2">{proposal.proposalTitle}</h2>
@@ -76,13 +76,13 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
 
         <div className="p-6 space-y-6">
           {/* Tabs */}
-          <div className="flex border-b border-gray-200 overflow-x-auto">
+          <div className="flex border-b border-ink-100 overflow-x-auto">
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-6 py-3 font-semibold transition whitespace-nowrap ${
                 activeTab === 'overview'
                   ? 'border-b-2 border-purple-600 text-purple-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               Overview
@@ -92,7 +92,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                 activeTab === 'meal'
                   ? 'border-b-2 border-purple-600 text-purple-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <BarChart3 size={16} />
@@ -108,7 +108,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                 activeTab === 'budget'
                   ? 'border-b-2 border-purple-600 text-purple-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <DollarSign size={16} />
@@ -119,7 +119,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                 activeTab === 'toc'
                   ? 'border-b-2 border-purple-600 text-purple-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <Lightbulb size={16} />
@@ -130,7 +130,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                 activeTab === 'safeguarding'
                   ? 'border-b-2 border-purple-600 text-purple-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <Shield size={16} />
@@ -141,7 +141,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
               className={`px-6 py-3 font-semibold transition flex items-center gap-2 whitespace-nowrap ${
                 activeTab === 'approval'
                   ? 'border-b-2 border-purple-600 text-purple-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-ink-500 hover:text-ink-700'
               }`}
             >
               <FileText size={16} />
@@ -154,57 +154,57 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
             <>
               {/* Key Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-white rounded-lg border border-ink-100 p-4">
                   <div className="flex items-center gap-3">
                     <div className="bg-green-500 p-3 rounded-lg">
                       <DollarSign className="text-white" size={20} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 uppercase">Budget</p>
-                      <p className="text-xl font-bold text-gray-900">
+                      <p className="text-xs text-ink-500 uppercase">Budget</p>
+                      <p className="text-xl font-bold text-ink-900">
                         {(proposal.requestedBudget / 1000000).toFixed(2)}M
                       </p>
-                      <p className="text-xs text-gray-500">LKR</p>
+                      <p className="text-xs text-ink-500">LKR</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-white rounded-lg border border-ink-100 p-4">
                   <div className="flex items-center gap-3">
                     <div className="bg-purple-500 p-3 rounded-lg">
                       <Users className="text-white" size={20} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 uppercase">Beneficiaries</p>
-                      <p className="text-xl font-bold text-gray-900">{totalDirectBeneficiaries}</p>
-                      <p className="text-xs text-gray-500">Direct</p>
+                      <p className="text-xs text-ink-500 uppercase">Beneficiaries</p>
+                      <p className="text-xl font-bold text-ink-900">{totalDirectBeneficiaries}</p>
+                      <p className="text-xs text-ink-500">Direct</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-white rounded-lg border border-ink-100 p-4">
                   <div className="flex items-center gap-3">
                     <div className="bg-blue-500 p-3 rounded-lg">
                       <TrendingUp className="text-white" size={20} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 uppercase">Cost/Beneficiary</p>
-                      <p className="text-xl font-bold text-gray-900">
+                      <p className="text-xs text-ink-500 uppercase">Cost/Beneficiary</p>
+                      <p className="text-xl font-bold text-ink-900">
                         {(costPerBeneficiary / 1000).toFixed(1)}k
                       </p>
-                      <p className="text-xs text-gray-500">LKR</p>
+                      <p className="text-xs text-ink-500">LKR</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-white rounded-lg border border-ink-100 p-4">
                   <div className="flex items-center gap-3">
                     <div className="bg-orange-500 p-3 rounded-lg">
                       <Calendar className="text-white" size={20} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 uppercase">Duration</p>
-                      <p className="text-xl font-bold text-gray-900">{proposal.duration}</p>
+                      <p className="text-xs text-ink-500 uppercase">Duration</p>
+                      <p className="text-xl font-bold text-ink-900">{proposal.duration}</p>
                     </div>
                   </div>
                 </div>
@@ -220,29 +220,29 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     <div className="flex items-start gap-3">
                       <Building2 size={18} className="text-purple-500 mt-0.5" />
                       <div>
-                        <p className="text-xs text-gray-500 uppercase">CBO Partner</p>
-                        <p className="text-sm font-semibold text-gray-900">{proposal.cboName}</p>
+                        <p className="text-xs text-ink-500 uppercase">CBO Partner</p>
+                        <p className="text-sm font-semibold text-ink-900">{proposal.cboName}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <MapPin size={18} className="text-purple-500 mt-0.5" />
                       <div>
-                        <p className="text-xs text-gray-500 uppercase">District</p>
-                        <p className="text-sm font-semibold text-gray-900">{proposal.district}</p>
+                        <p className="text-xs text-ink-500 uppercase">District</p>
+                        <p className="text-sm font-semibold text-ink-900">{proposal.district}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <Target size={18} className="text-purple-500 mt-0.5" />
                       <div>
-                        <p className="text-xs text-gray-500 uppercase">Project Tier</p>
-                        <p className="text-sm font-semibold text-gray-900">{proposal.projectTier}</p>
+                        <p className="text-xs text-ink-500 uppercase">Project Tier</p>
+                        <p className="text-sm font-semibold text-ink-900">{proposal.projectTier}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <Calendar size={18} className="text-purple-500 mt-0.5" />
                       <div>
-                        <p className="text-xs text-gray-500 uppercase">Project Period</p>
-                        <p className="text-sm font-semibold text-gray-900">
+                        <p className="text-xs text-ink-500 uppercase">Project Period</p>
+                        <p className="text-sm font-semibold text-ink-900">
                           {proposal.startDate} to {proposal.endDate}
                         </p>
                       </div>
@@ -251,31 +251,31 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
 
                   {/* Summary */}
                   <div className="mt-4 pt-4 border-t">
-                    <p className="text-xs text-gray-500 uppercase mb-2">Executive Summary</p>
-                    <p className="text-sm text-gray-700">{proposal.summary}</p>
+                    <p className="text-xs text-ink-500 uppercase mb-2">Executive Summary</p>
+                    <p className="text-sm text-ink-700">{proposal.summary}</p>
                   </div>
 
                   {/* Overall Goal */}
                   {proposal.overallGoal && (
                     <div className="mt-4 pt-4 border-t">
-                      <p className="text-xs text-gray-500 uppercase mb-2">Overall Goal</p>
-                      <p className="text-sm text-gray-700 italic">"{proposal.overallGoal}"</p>
+                      <p className="text-xs text-ink-500 uppercase mb-2">Overall Goal</p>
+                      <p className="text-sm text-ink-700 italic">"{proposal.overallGoal}"</p>
                     </div>
                   )}
 
                   {/* Problem Statement */}
                   {proposal.problemStatement && (
                     <div className="mt-4 pt-4 border-t">
-                      <p className="text-xs text-gray-500 uppercase mb-2">Problem Statement</p>
-                      <p className="text-sm text-gray-700">{proposal.problemStatement}</p>
+                      <p className="text-xs text-ink-500 uppercase mb-2">Problem Statement</p>
+                      <p className="text-sm text-ink-700">{proposal.problemStatement}</p>
                     </div>
                   )}
 
                   {/* Proposed Solution */}
                   {proposal.proposedSolution && (
                     <div className="mt-4 pt-4 border-t">
-                      <p className="text-xs text-gray-500 uppercase mb-2">Proposed Solution</p>
-                      <p className="text-sm text-gray-700">{proposal.proposedSolution}</p>
+                      <p className="text-xs text-ink-500 uppercase mb-2">Proposed Solution</p>
+                      <p className="text-sm text-ink-700">{proposal.proposedSolution}</p>
                     </div>
                   )}
                 </CardContent>
@@ -292,7 +292,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       {proposal.objectives?.map((objective, index) => (
                         <div key={index} className="flex items-start gap-2">
                           <Target size={14} className="text-purple-600 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-700">{objective}</span>
+                          <span className="text-sm text-ink-700">{objective}</span>
                         </div>
                       ))}
                     </div>
@@ -327,7 +327,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Results Framework</CardTitle>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-ink-500">
                       {proposal.resultsFramework?.length || 0} indicators
                     </span>
                   </div>
@@ -336,7 +336,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                   {proposal.resultsFramework && proposal.resultsFramework.length > 0 ? (
                     <div className="space-y-4">
                       {proposal.resultsFramework.map((indicator, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div key={index} className="border border-ink-100 rounded-lg p-4">
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">
@@ -344,26 +344,26 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                               </span>
                             </div>
                           </div>
-                          <h4 className="font-semibold text-gray-900 mb-2">{indicator.indicator}</h4>
+                          <h4 className="font-semibold text-ink-900 mb-2">{indicator.indicator}</h4>
                           <div className="grid grid-cols-3 gap-3 text-sm">
                             <div>
-                              <span className="text-gray-500">Baseline:</span>
-                              <span className="font-semibold text-gray-900 ml-1">{indicator.baseline}</span>
+                              <span className="text-ink-500">Baseline:</span>
+                              <span className="font-semibold text-ink-900 ml-1">{indicator.baseline}</span>
                             </div>
                             <div>
-                              <span className="text-gray-500">Target:</span>
+                              <span className="text-ink-500">Target:</span>
                               <span className="font-semibold text-green-600 ml-1">{indicator.target}</span>
                             </div>
                             <div>
-                              <span className="text-gray-500">MoV:</span>
-                              <span className="text-gray-700 ml-1 text-xs">{indicator.meansOfVerification}</span>
+                              <span className="text-ink-500">MoV:</span>
+                              <span className="text-ink-700 ml-1 text-xs">{indicator.meansOfVerification}</span>
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No indicators defined</p>
+                    <p className="text-center text-ink-500 py-8">No indicators defined</p>
                   )}
                 </CardContent>
               </Card>
@@ -379,35 +379,35 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         <p className="text-2xl font-bold text-blue-600">
                           {proposal.beneficiaryBreakdown.directMale || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Direct Male</p>
+                        <p className="text-xs text-ink-600 mt-1">Direct Male</p>
                       </div>
                       <div className="text-center p-4 bg-pink-50 rounded-lg">
                         <p className="text-2xl font-bold text-pink-600">
                           {proposal.beneficiaryBreakdown.directFemale || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Direct Female</p>
+                        <p className="text-xs text-ink-600 mt-1">Direct Female</p>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <p className="text-2xl font-bold text-purple-600">
                           {proposal.beneficiaryBreakdown.directChildren || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Children</p>
+                        <p className="text-xs text-ink-600 mt-1">Children</p>
                       </div>
                       <div className="text-center p-4 bg-green-50 rounded-lg">
                         <p className="text-2xl font-bold text-green-600">
                           {proposal.beneficiaryBreakdown.directPWD || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">PWD</p>
+                        <p className="text-xs text-ink-600 mt-1">PWD</p>
                       </div>
                       <div className="text-center p-4 bg-orange-50 rounded-lg">
                         <p className="text-2xl font-bold text-orange-600">
                           {proposal.beneficiaryBreakdown.indirectTotal || 0}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">Indirect</p>
+                        <p className="text-xs text-ink-600 mt-1">Indirect</p>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No beneficiary data available</p>
+                    <p className="text-center text-ink-500 py-8">No beneficiary data available</p>
                   )}
                 </CardContent>
               </Card>
@@ -426,21 +426,21 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse">
                         <thead>
-                          <tr className="bg-gray-100 border-b border-gray-200">
-                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Category</th>
-                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Description</th>
-                            <th className="px-3 py-2 text-right text-xs font-semibold text-gray-700">Quantity</th>
-                            <th className="px-3 py-2 text-right text-xs font-semibold text-gray-700">Unit Cost</th>
-                            <th className="px-3 py-2 text-right text-xs font-semibold text-gray-700">Total</th>
+                          <tr className="bg-ink-100 border-b border-ink-100">
+                            <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Category</th>
+                            <th className="px-3 py-2 text-left text-xs font-semibold text-ink-700">Description</th>
+                            <th className="px-3 py-2 text-right text-xs font-semibold text-ink-700">Quantity</th>
+                            <th className="px-3 py-2 text-right text-xs font-semibold text-ink-700">Unit Cost</th>
+                            <th className="px-3 py-2 text-right text-xs font-semibold text-ink-700">Total</th>
                           </tr>
                         </thead>
                         <tbody>
                           {proposal.budgetBreakdown.map((item, index) => (
-                            <tr key={item.id} className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                              <td className="px-3 py-2 text-sm text-gray-700">{item.category}</td>
-                              <td className="px-3 py-2 text-sm text-gray-700">{item.description}</td>
-                              <td className="px-3 py-2 text-sm text-gray-700 text-right">{item.quantity}</td>
-                              <td className="px-3 py-2 text-sm text-gray-700 text-right">
+                            <tr key={item.id} className={`border-b border-ink-100 ${index % 2 === 0 ? 'bg-white' : 'bg-ink-50'}`}>
+                              <td className="px-3 py-2 text-sm text-ink-700">{item.category}</td>
+                              <td className="px-3 py-2 text-sm text-ink-700">{item.description}</td>
+                              <td className="px-3 py-2 text-sm text-ink-700 text-right">{item.quantity}</td>
+                              <td className="px-3 py-2 text-sm text-ink-700 text-right">
                                 {item.unitCost.toLocaleString()}
                               </td>
                               <td className="px-3 py-2 text-sm font-semibold text-green-700 text-right">
@@ -459,7 +459,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           if (categoryTotal > 0) {
                             return (
                               <div key={category} className="text-xs">
-                                <span className="text-gray-600">{category}:</span>
+                                <span className="text-ink-600">{category}:</span>
                                 <span className="font-semibold text-green-700 ml-1">
                                   LKR {categoryTotal.toLocaleString()}
                                 </span>
@@ -476,14 +476,14 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                             LKR {proposal.requestedBudget.toLocaleString()}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-ink-500 mt-1">
                           Cost per beneficiary: LKR {costPerBeneficiary}
                         </p>
                       </div>
                     </div>
                   </>
                 ) : (
-                  <p className="text-center text-gray-500 py-8">No detailed budget breakdown available</p>
+                  <p className="text-center text-ink-500 py-8">No detailed budget breakdown available</p>
                 )}
               </CardContent>
             </Card>
@@ -501,19 +501,19 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     {/* Impact */}
                     {proposal.theoryOfChange.impact && (
                       <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                        <p className="text-xs font-semibold text-gray-700 mb-2">IMPACT (Long-term change)</p>
-                        <p className="text-sm text-gray-900 font-medium">{proposal.theoryOfChange.impact}</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-2">IMPACT (Long-term change)</p>
+                        <p className="text-sm text-ink-900 font-medium">{proposal.theoryOfChange.impact}</p>
                       </div>
                     )}
 
                     {/* Outcomes */}
                     {proposal.theoryOfChange.outcomes && proposal.theoryOfChange.outcomes.length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-700 mb-2">OUTCOMES (Medium-term results)</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-2">OUTCOMES (Medium-term results)</p>
                         <div className="space-y-2">
                           {proposal.theoryOfChange.outcomes.map((outcome, index) => (
                             <div key={index} className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                              <p className="text-sm text-gray-900">{outcome}</p>
+                              <p className="text-sm text-ink-900">{outcome}</p>
                             </div>
                           ))}
                         </div>
@@ -523,11 +523,11 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     {/* Outputs */}
                     {proposal.theoryOfChange.outputs && proposal.theoryOfChange.outputs.length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-700 mb-2">OUTPUTS (Immediate deliverables)</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-2">OUTPUTS (Immediate deliverables)</p>
                         <div className="space-y-2">
                           {proposal.theoryOfChange.outputs.map((output, index) => (
                             <div key={index} className="p-3 bg-green-50 rounded-lg border border-green-200">
-                              <p className="text-sm text-gray-900">{output}</p>
+                              <p className="text-sm text-ink-900">{output}</p>
                             </div>
                           ))}
                         </div>
@@ -537,7 +537,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     {/* Activities */}
                     {proposal.theoryOfChange.activities && proposal.theoryOfChange.activities.length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-700 mb-2">ACTIVITIES</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-2">ACTIVITIES</p>
                         <div className="flex flex-wrap gap-2">
                           {proposal.theoryOfChange.activities.map((activity, index) => (
                             <span key={index} className="px-3 py-1 bg-yellow-50 text-yellow-800 text-sm rounded-md border border-yellow-200">
@@ -551,10 +551,10 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     {/* Inputs */}
                     {proposal.theoryOfChange.inputs && proposal.theoryOfChange.inputs.length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-700 mb-2">INPUTS (Resources)</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-2">INPUTS (Resources)</p>
                         <div className="flex flex-wrap gap-2">
                           {proposal.theoryOfChange.inputs.map((input, index) => (
-                            <span key={index} className="px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-md border border-gray-200">
+                            <span key={index} className="px-3 py-1 bg-ink-100 text-gray-800 text-sm rounded-md border border-ink-100">
                               {input}
                             </span>
                           ))}
@@ -566,12 +566,12 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {proposal.theoryOfChange.assumptions && proposal.theoryOfChange.assumptions.length > 0 && (
                         <div>
-                          <p className="text-xs font-semibold text-gray-700 mb-2">ASSUMPTIONS</p>
+                          <p className="text-xs font-semibold text-ink-700 mb-2">ASSUMPTIONS</p>
                           <div className="space-y-1">
                             {proposal.theoryOfChange.assumptions.map((assumption, index) => (
                               <div key={index} className="flex items-start gap-2">
                                 <CheckCircle size={14} className="text-green-600 mt-0.5 flex-shrink-0" />
-                                <span className="text-xs text-gray-700">{assumption}</span>
+                                <span className="text-xs text-ink-700">{assumption}</span>
                               </div>
                             ))}
                           </div>
@@ -580,12 +580,12 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
 
                       {proposal.theoryOfChange.risks && proposal.theoryOfChange.risks.length > 0 && (
                         <div>
-                          <p className="text-xs font-semibold text-gray-700 mb-2">RISKS</p>
+                          <p className="text-xs font-semibold text-ink-700 mb-2">RISKS</p>
                           <div className="space-y-1">
                             {proposal.theoryOfChange.risks.map((risk, index) => (
                               <div key={index} className="flex items-start gap-2">
                                 <AlertCircle size={14} className="text-red-600 mt-0.5 flex-shrink-0" />
-                                <span className="text-xs text-gray-700">{risk}</span>
+                                <span className="text-xs text-ink-700">{risk}</span>
                               </div>
                             ))}
                           </div>
@@ -594,7 +594,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-center text-gray-500 py-8">No Theory of Change available</p>
+                  <p className="text-center text-ink-500 py-8">No Theory of Change available</p>
                 )}
               </CardContent>
             </Card>
@@ -617,7 +617,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           ) : (
                             <AlertCircle size={18} className="text-red-600" />
                           )}
-                          <span className="text-sm font-semibold text-gray-900">Data Protection Policy</span>
+                          <span className="text-sm font-semibold text-ink-900">Data Protection Policy</span>
                         </div>
                       </div>
 
@@ -628,7 +628,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           ) : (
                             <AlertCircle size={18} className="text-red-600" />
                           )}
-                          <span className="text-sm font-semibold text-gray-900">Informed Consent Procedures</span>
+                          <span className="text-sm font-semibold text-ink-900">Informed Consent Procedures</span>
                         </div>
                       </div>
 
@@ -639,7 +639,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           ) : (
                             <AlertCircle size={18} className="text-red-600" />
                           )}
-                          <span className="text-sm font-semibold text-gray-900">Child Safeguarding Policy</span>
+                          <span className="text-sm font-semibold text-ink-900">Child Safeguarding Policy</span>
                         </div>
                       </div>
 
@@ -650,7 +650,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           ) : (
                             <AlertCircle size={18} className="text-red-600" />
                           )}
-                          <span className="text-sm font-semibold text-gray-900">Incident Reporting Mechanism</span>
+                          <span className="text-sm font-semibold text-ink-900">Incident Reporting Mechanism</span>
                         </div>
                       </div>
 
@@ -661,7 +661,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           ) : (
                             <AlertCircle size={18} className="text-red-600" />
                           )}
-                          <span className="text-sm font-semibold text-gray-900">Background Checks for Staff</span>
+                          <span className="text-sm font-semibold text-ink-900">Background Checks for Staff</span>
                         </div>
                       </div>
 
@@ -672,21 +672,21 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           ) : (
                             <AlertCircle size={18} className="text-red-600" />
                           )}
-                          <span className="text-sm font-semibold text-gray-900">Staff Training Records</span>
+                          <span className="text-sm font-semibold text-ink-900">Staff Training Records</span>
                         </div>
                       </div>
                     </div>
 
                     {proposal.safeguarding.safeguardingFocalPerson && (
                       <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <p className="text-xs font-semibold text-gray-700 mb-1">Safeguarding Focal Person</p>
-                        <p className="text-sm font-medium text-gray-900">{proposal.safeguarding.safeguardingFocalPerson}</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-1">Safeguarding Focal Person</p>
+                        <p className="text-sm font-medium text-ink-900">{proposal.safeguarding.safeguardingFocalPerson}</p>
                       </div>
                     )}
 
                     {proposal.safeguarding.cfmChannels && proposal.safeguarding.cfmChannels.length > 0 && (
                       <div className="mt-4">
-                        <p className="text-xs font-semibold text-gray-700 mb-2">CFM Channels Available</p>
+                        <p className="text-xs font-semibold text-ink-700 mb-2">CFM Channels Available</p>
                         <div className="flex flex-wrap gap-2">
                           {proposal.safeguarding.cfmChannels.map((channel, index) => (
                             <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
@@ -698,7 +698,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     )}
                   </div>
                 ) : (
-                  <p className="text-center text-gray-500 py-8">No safeguarding information available</p>
+                  <p className="text-center text-ink-500 py-8">No safeguarding information available</p>
                 )}
               </CardContent>
             </Card>
@@ -722,10 +722,10 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : (
                         <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
                       )}
-                      <p className="text-xs font-medium text-gray-600 mt-1">Fundraising</p>
+                      <p className="text-xs font-medium text-ink-600 mt-1">Fundraising</p>
                       <p className={`text-xs mt-0.5 ${
                         proposal.fundraisingStatus === 'Approved' ? 'text-green-600' :
-                        proposal.fundraisingStatus === 'Rejected' ? 'text-red-600' : 'text-gray-400'
+                        proposal.fundraisingStatus === 'Rejected' ? 'text-red-600' : 'text-ink-400'
                       }`}>
                         {proposal.fundraisingStatus}
                       </p>
@@ -741,10 +741,10 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : (
                         <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
                       )}
-                      <p className="text-xs font-medium text-gray-600 mt-1">CEO</p>
+                      <p className="text-xs font-medium text-ink-600 mt-1">CEO</p>
                       <p className={`text-xs mt-0.5 ${
                         proposal.ceoStatus === 'Approved' ? 'text-green-600' :
-                        proposal.ceoStatus === 'Rejected' ? 'text-red-600' : 'text-gray-400'
+                        proposal.ceoStatus === 'Rejected' ? 'text-red-600' : 'text-ink-400'
                       }`}>
                         {proposal.ceoStatus}
                       </p>
@@ -760,10 +760,10 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : (
                         <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
                       )}
-                      <p className="text-xs font-medium text-gray-600 mt-1">Donor</p>
+                      <p className="text-xs font-medium text-ink-600 mt-1">Donor</p>
                       <p className={`text-xs mt-0.5 ${
                         proposal.donorStatus === 'Approved' ? 'text-green-600' :
-                        proposal.donorStatus === 'Rejected' ? 'text-red-600' : 'text-gray-400'
+                        proposal.donorStatus === 'Rejected' ? 'text-red-600' : 'text-ink-400'
                       }`}>
                         {proposal.donorStatus}
                       </p>
@@ -777,8 +777,8 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : (
                         <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
                       )}
-                      <p className="text-xs font-medium text-gray-600 mt-1">Project</p>
-                      <p className={`text-xs mt-0.5 ${proposal.convertedToProject ? 'text-purple-600' : 'text-gray-400'}`}>
+                      <p className="text-xs font-medium text-ink-600 mt-1">Project</p>
+                      <p className={`text-xs mt-0.5 ${proposal.convertedToProject ? 'text-purple-600' : 'text-ink-400'}`}>
                         {proposal.convertedToProject ? 'Converted' : 'Pending'}
                       </p>
                     </div>
@@ -791,12 +791,12 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         proposal.fundraisingStatus === 'Approved' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
                       }`}>
                         <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-semibold text-gray-900">Fundraising Review</p>
-                          <p className="text-xs text-gray-600">{proposal.fundraisingReviewDate}</p>
+                          <p className="text-sm font-semibold text-ink-900">Fundraising Review</p>
+                          <p className="text-xs text-ink-600">{proposal.fundraisingReviewDate}</p>
                         </div>
-                        <p className="text-xs text-gray-700 mb-1">Reviewer: {proposal.fundraisingReviewer}</p>
+                        <p className="text-xs text-ink-700 mb-1">Reviewer: {proposal.fundraisingReviewer}</p>
                         {proposal.fundraisingScore && (
-                          <p className="text-xs text-gray-700 mb-1">Score: {proposal.fundraisingScore}/100</p>
+                          <p className="text-xs text-ink-700 mb-1">Score: {proposal.fundraisingScore}/100</p>
                         )}
                         {proposal.fundraisingComments && (
                           <p className="text-sm text-gray-800 mt-2 italic">"{proposal.fundraisingComments}"</p>
@@ -809,12 +809,12 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         proposal.ceoStatus === 'Approved' ? 'bg-blue-50 border-blue-200' : 'bg-red-50 border-red-200'
                       }`}>
                         <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-semibold text-gray-900">CEO Approval</p>
-                          <p className="text-xs text-gray-600">{proposal.ceoApprovalDate}</p>
+                          <p className="text-sm font-semibold text-ink-900">CEO Approval</p>
+                          <p className="text-xs text-ink-600">{proposal.ceoApprovalDate}</p>
                         </div>
-                        <p className="text-xs text-gray-700 mb-1">Approver: {proposal.ceoApprover}</p>
+                        <p className="text-xs text-ink-700 mb-1">Approver: {proposal.ceoApprover}</p>
                         {proposal.approvedBudget && (
-                          <p className="text-xs text-gray-700 mb-1">
+                          <p className="text-xs text-ink-700 mb-1">
                             Approved Budget: LKR {proposal.approvedBudget.toLocaleString()}
                           </p>
                         )}
@@ -829,10 +829,10 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         proposal.donorStatus === 'Approved' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
                       }`}>
                         <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-semibold text-gray-900">Donor Decision</p>
-                          <p className="text-xs text-gray-600">{proposal.donorApprovalDate}</p>
+                          <p className="text-sm font-semibold text-ink-900">Donor Decision</p>
+                          <p className="text-xs text-ink-600">{proposal.donorApprovalDate}</p>
                         </div>
-                        <p className="text-xs text-gray-700 mb-1">Donor: {proposal.donorName}</p>
+                        <p className="text-xs text-ink-700 mb-1">Donor: {proposal.donorName}</p>
                         {proposal.donorStatus === 'Approved' && proposal.approvedBudget && (
                           <p className="text-xs font-semibold text-green-700">
                             Final Budget: LKR {proposal.approvedBudget.toLocaleString()}
@@ -844,7 +844,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     {proposal.convertedToProject && (
                       <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
                         <p className="text-sm font-semibold text-purple-700 mb-1">✓ Converted to Project #{proposal.projectId}</p>
-                        <p className="text-xs text-gray-700">Start Date: {proposal.projectStartDate}</p>
+                        <p className="text-xs text-ink-700">Start Date: {proposal.projectStartDate}</p>
                       </div>
                     )}
                   </div>
@@ -857,7 +857,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
           <div className="flex gap-3 pt-4 border-t">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
             >
               Close
             </button>
@@ -872,7 +872,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                     Review & Decide
                   </button>
                 ) : (
-                  <div className="flex-1 bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <div className="flex-1 bg-ink-50 rounded-lg p-4 border border-ink-100">
                     <form onSubmit={handleApprovalSubmit} className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
                         <button
@@ -881,7 +881,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           className={`px-4 py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
                             approvalData.decision === 'approve'
                               ? 'bg-green-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              : 'bg-gray-200 text-ink-700 hover:bg-gray-300'
                           }`}
                         >
                           <ThumbsUp size={16} />
@@ -893,7 +893,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           className={`px-4 py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
                             approvalData.decision === 'reject'
                               ? 'bg-red-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              : 'bg-gray-200 text-ink-700 hover:bg-gray-300'
                           }`}
                         >
                           <ThumbsDown size={16} />
@@ -903,34 +903,34 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
 
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Score (0-100)</label>
+                          <label className="block text-xs font-semibold text-ink-700 mb-1">Score (0-100)</label>
                           <input
                             type="number"
                             min="0"
                             max="100"
                             value={approvalData.score}
                             onChange={(e) => setApprovalData({...approvalData, score: e.target.value})}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Approved Budget (LKR)</label>
+                          <label className="block text-xs font-semibold text-ink-700 mb-1">Approved Budget (LKR)</label>
                           <input
                             type="number"
                             value={approvalData.approvedBudget}
                             onChange={(e) => setApprovalData({...approvalData, approvedBudget: e.target.value})}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1">Comments</label>
+                        <label className="block text-xs font-semibold text-ink-700 mb-1">Comments</label>
                         <textarea
                           value={approvalData.comments}
                           onChange={(e) => setApprovalData({...approvalData, comments: e.target.value})}
                           rows="3"
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                          className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                           placeholder="Add your review comments..."
                         />
                       </div>
@@ -939,7 +939,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         <button
                           type="button"
                           onClick={() => setShowApprovalForm(false)}
-                          className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-semibold"
+                          className="flex-1 px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition text-sm font-semibold"
                         >
                           Cancel
                         </button>

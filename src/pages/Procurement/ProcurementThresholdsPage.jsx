@@ -83,17 +83,17 @@ export default function ProcurementThresholdsPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <header className="mb-4">
-        <h1 className="text-2xl font-semibold text-gray-900">Procurement thresholds</h1>
-        <p className="text-sm text-gray-500">Approval matrix by amount band, scoped to global / donor / project.</p>
+        <h1 className="text-h1 text-ink-900">Procurement thresholds</h1>
+        <p className="text-sm text-ink-500">Approval matrix by amount band, scoped to global / donor / project.</p>
       </header>
 
-      <form onSubmit={submit} className="bg-white border border-gray-200 rounded-md p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+      <form onSubmit={submit} className="bg-white border border-ink-100 rounded-md p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Scope</span>
+          <span className="text-xs uppercase text-ink-500">Scope</span>
           <select
             value={draft.scopeType}
             onChange={(e) => setDraft({ ...draft, scopeType: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           >
             <option value="global">Global</option>
             <option value="donor">Donor</option>
@@ -101,64 +101,64 @@ export default function ProcurementThresholdsPage() {
           </select>
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Scope ID</span>
+          <span className="text-xs uppercase text-ink-500">Scope ID</span>
           <input
             type="number"
             value={draft.scopeId}
             onChange={(e) => setDraft({ ...draft, scopeId: e.target.value })}
             disabled={draft.scopeType === 'global'}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Currency</span>
+          <span className="text-xs uppercase text-ink-500">Currency</span>
           <input
             type="text"
             value={draft.currency}
             onChange={(e) => setDraft({ ...draft, currency: e.target.value.toUpperCase() })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Min amount</span>
+          <span className="text-xs uppercase text-ink-500">Min amount</span>
           <input
             type="number"
             min={0}
             value={draft.minAmount}
             onChange={(e) => setDraft({ ...draft, minAmount: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Max amount (blank = unlimited)</span>
+          <span className="text-xs uppercase text-ink-500">Max amount (blank = unlimited)</span>
           <input
             type="number"
             value={draft.maxAmount}
             onChange={(e) => setDraft({ ...draft, maxAmount: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Required method</span>
+          <span className="text-xs uppercase text-ink-500">Required method</span>
           <select
             value={draft.requiredMethod || ''}
             onChange={(e) => setDraft({ ...draft, requiredMethod: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           >
             {METHODS.map(m => <option key={m} value={m}>{m || '—'}</option>)}
           </select>
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Approver role</span>
+          <span className="text-xs uppercase text-ink-500">Approver role</span>
           <input
             type="text"
             value={draft.approverRole || ''}
             onChange={(e) => setDraft({ ...draft, approverRole: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase text-gray-500">Requires committee</span>
+          <span className="text-xs uppercase text-ink-500">Requires committee</span>
           <input
             type="checkbox"
             checked={!!draft.requiresCommittee}
@@ -167,55 +167,55 @@ export default function ProcurementThresholdsPage() {
           />
         </label>
         <label className="block sm:col-span-3">
-          <span className="text-xs uppercase text-gray-500">Notes</span>
+          <span className="text-xs uppercase text-ink-500">Notes</span>
           <input
             type="text"
             value={draft.notes || ''}
             onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
-            className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
+            className="mt-1 w-full rounded-md border border-ink-200 px-2 py-1"
           />
         </label>
         {error && <div className="sm:col-span-3 bg-red-50 border border-red-200 text-red-700 rounded-md p-2 text-xs">{error}</div>}
         <div className="sm:col-span-3 flex justify-end gap-2">
           {editingId && (
-            <button type="button" onClick={cancelEdit} className="px-3 py-1.5 text-sm border border-gray-300 rounded-md">Cancel</button>
+            <button type="button" onClick={cancelEdit} className="px-3 py-1.5 text-sm border border-ink-200 rounded-md">Cancel</button>
           )}
-          <button type="submit" className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+          <button type="submit" className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition">
             {editingId ? 'Save threshold' : 'Add threshold'}
           </button>
         </div>
       </form>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Scope</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Range</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Method</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Approver</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Committee</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Scope</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Range</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Method</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Approver</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-ink-500 uppercase">Committee</th>
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {loading && <tr><td colSpan={6} className="p-4 text-center text-sm text-gray-500">Loading…</td></tr>}
+          <tbody className="bg-white divide-y divide-ink-100">
+            {loading && <tr><td colSpan={6} className="p-4 text-center text-sm text-ink-500">Loading…</td></tr>}
             {!loading && rows.length === 0 && (
-              <tr><td colSpan={6} className="p-4 text-center text-sm text-gray-500">No thresholds defined.</td></tr>
+              <tr><td colSpan={6} className="p-4 text-center text-sm text-ink-500">No thresholds defined.</td></tr>
             )}
             {rows.map(t => (
               <tr key={t.id}>
-                <td className="px-3 py-2 text-sm text-gray-900">
+                <td className="px-3 py-2 text-sm text-ink-900">
                   {t.scopeType}{t.scopeId ? ` #${t.scopeId}` : ''}
                 </td>
-                <td className="px-3 py-2 text-sm text-gray-700">
+                <td className="px-3 py-2 text-sm text-ink-700">
                   {t.currency} {Number(t.minAmount).toLocaleString()} – {t.maxAmount ? Number(t.maxAmount).toLocaleString() : '∞'}
                 </td>
                 <td className="px-3 py-2 text-sm">{t.requiredMethod || '—'}</td>
                 <td className="px-3 py-2 text-sm">{t.approverRole || '—'}</td>
                 <td className="px-3 py-2 text-sm">{t.requiresCommittee ? 'Yes' : 'No'}</td>
                 <td className="px-3 py-2 text-sm text-right space-x-2">
-                  <button onClick={() => startEdit(t)} className="text-blue-600 hover:underline">Edit</button>
+                  <button onClick={() => startEdit(t)} className="text-navy-700 hover:underline">Edit</button>
                   <button onClick={() => onDelete(t.id)} className="text-red-700 hover:underline">Delete</button>
                 </td>
               </tr>

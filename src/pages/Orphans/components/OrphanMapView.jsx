@@ -70,29 +70,29 @@ const OrphanMapView = ({ orphans, onView }) => {
         <div className="lg:col-span-2">
           <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-8 border-2 border-blue-200 relative overflow-hidden">
             <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-lg shadow-md z-10">
-              <h3 className="text-lg font-bold text-gray-900">Sri Lanka - Orphan Distribution</h3>
-              <p className="text-sm text-gray-600">{orphans.length} orphans across {Object.values(districtCounts).filter(d => d.count > 0).length} districts</p>
+              <h3 className="text-lg font-bold text-ink-900">Sri Lanka - Orphan Distribution</h3>
+              <p className="text-sm text-ink-600">{orphans.length} orphans across {Object.values(districtCounts).filter(d => d.count > 0).length} districts</p>
             </div>
 
             {/* Legend */}
             <div className="absolute top-4 right-4 bg-white px-4 py-3 rounded-lg shadow-md z-10">
-              <p className="text-xs font-bold text-gray-700 mb-2">Orphan Count</p>
+              <p className="text-xs font-bold text-ink-700 mb-2">Orphan Count</p>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full"></div>
-                  <span className="text-xs text-gray-600">1-2</span>
+                  <span className="text-xs text-ink-600">1-2</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full"></div>
-                  <span className="text-xs text-gray-600">3-5</span>
+                  <span className="text-xs text-ink-600">3-5</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
-                  <span className="text-xs text-gray-600">6-10</span>
+                  <span className="text-xs text-ink-600">6-10</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-700 rounded-full"></div>
-                  <span className="text-xs text-gray-600">10+</span>
+                  <span className="text-xs text-ink-600">10+</span>
                 </div>
               </div>
             </div>
@@ -195,7 +195,7 @@ const OrphanMapView = ({ orphans, onView }) => {
 
             {!selectedDistrict && (
               <div className="text-center mt-4">
-                <p className="text-sm text-gray-600">Click on a district marker to view orphans</p>
+                <p className="text-sm text-ink-600">Click on a district marker to view orphans</p>
               </div>
             )}
           </div>
@@ -222,7 +222,7 @@ const OrphanMapView = ({ orphans, onView }) => {
                 {selectedOrphans.map((orphan, index) => (
                   <div
                     key={orphan.id}
-                    className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                    className="bg-white border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-center gap-3 mb-3">
@@ -230,19 +230,19 @@ const OrphanMapView = ({ orphans, onView }) => {
                         {orphan.fullName.charAt(0)}
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 leading-tight">{orphan.fullName}</h4>
-                        <p className="text-xs text-gray-500">{orphan.age} years old</p>
+                        <h4 className="font-bold text-ink-900 leading-tight">{orphan.fullName}</h4>
+                        <p className="text-xs text-ink-500">{orphan.age} years old</p>
                       </div>
                     </div>
 
                     <div className="space-y-2 mb-3">
                       <div className="flex items-center gap-2 text-xs">
                         <GraduationCap size={14} className="text-purple-500 flex-shrink-0" />
-                        <span className="text-gray-700 truncate">{orphan.schoolName}</span>
+                        <span className="text-ink-700 truncate">{orphan.schoolName}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs">
                         <User size={14} className="text-blue-500 flex-shrink-0" />
-                        <span className="text-gray-700 truncate">{orphan.guardianName}</span>
+                        <span className="text-ink-700 truncate">{orphan.guardianName}</span>
                       </div>
                     </div>
 
@@ -258,15 +258,15 @@ const OrphanMapView = ({ orphans, onView }) => {
               </div>
             </div>
           ) : (
-            <div className="bg-gray-50 rounded-lg p-8 text-center h-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
-              <MapPin className="w-16 h-16 text-gray-400 mb-4" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Select a District</h3>
-              <p className="text-sm text-gray-600 mb-4">Click on any district marker on the map to view orphans in that area</p>
-              <div className="bg-white px-4 py-3 rounded-lg shadow-sm border border-gray-200">
-                <p className="text-xs text-gray-500 mb-2">Quick Stats</p>
+            <div className="bg-ink-50 rounded-lg p-8 text-center h-full flex flex-col items-center justify-center border-2 border-dashed border-ink-200">
+              <MapPin className="w-16 h-16 text-ink-400 mb-4" />
+              <h3 className="text-lg font-bold text-ink-900 mb-2">Select a District</h3>
+              <p className="text-sm text-ink-600 mb-4">Click on any district marker on the map to view orphans in that area</p>
+              <div className="bg-white px-4 py-3 rounded-lg shadow-sm border border-ink-100">
+                <p className="text-xs text-ink-500 mb-2">Quick Stats</p>
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-gray-900">Total Orphans: {orphans.length}</p>
-                  <p className="text-sm font-semibold text-gray-900">Districts: {Object.values(districtCounts).filter(d => d.count > 0).length}</p>
+                  <p className="text-sm font-semibold text-ink-900">Total Orphans: {orphans.length}</p>
+                  <p className="text-sm font-semibold text-ink-900">Districts: {Object.values(districtCounts).filter(d => d.count > 0).length}</p>
                 </div>
               </div>
             </div>

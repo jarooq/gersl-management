@@ -165,7 +165,7 @@ const OnboardingPage = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-red-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
@@ -185,44 +185,44 @@ const OnboardingPage = () => {
 
       {/* Stats Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-primary-50 border border-primary-200 text-primary-700 rounded-md flex items-center justify-center">
               <UserPlus size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.total}</h3>
-          <p className="text-sm text-gray-600">Total Onboarding</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.total}</h3>
+          <p className="text-sm text-ink-600">Total Onboarding</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
               <Clock size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.inProgress}</h3>
-          <p className="text-sm text-gray-600">In Progress</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.inProgress}</h3>
+          <p className="text-sm text-ink-600">In Progress</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center">
               <CheckCircle size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.completed}</h3>
-          <p className="text-sm text-gray-600">Completed</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.completed}</h3>
+          <p className="text-sm text-ink-600">Completed</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center">
               <TrendingUp size={24} />
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">{stats.avgProgress}%</h3>
-          <p className="text-sm text-gray-600">Avg Progress</p>
+          <h3 className="text-h1 text-ink-900 mb-1">{stats.avgProgress}%</h3>
+          <p className="text-sm text-ink-600">Avg Progress</p>
         </div>
       </div>
 
@@ -252,13 +252,13 @@ const OnboardingPage = () => {
         <div className="flex gap-3 items-center">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400" size={20} />
             <input
               type="text"
               placeholder="Search by name, dept, mentor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent w-64"
+              className="pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent w-64"
             />
           </div>
 
@@ -266,7 +266,7 @@ const OnboardingPage = () => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           >
             <option value="all">All Status</option>
             <option value="in_progress">In Progress</option>
@@ -276,19 +276,19 @@ const OnboardingPage = () => {
       </div>
 
       {/* Onboarding Records */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">Onboarding Records ({filteredRecords.length})</h2>
-          <p className="text-sm text-gray-600">Manage employee onboarding process</p>
+      <div className="bg-white rounded-2xl shadow-sm border border-ink-100">
+        <div className="p-6 border-b border-ink-100 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-ink-900">Onboarding Records ({filteredRecords.length})</h2>
+          <p className="text-sm text-ink-600">Manage employee onboarding process</p>
         </div>
 
         <div className="p-6 space-y-4">
           {filteredRecords.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle size={32} className="text-gray-400" />
+              <div className="w-16 h-16 bg-ink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertCircle size={32} className="text-ink-400" />
               </div>
-              <p className="text-gray-500 mb-4">No onboarding records found</p>
+              <p className="text-ink-500 mb-4">No onboarding records found</p>
               <button
                 onClick={() => {
                   setEditingRecord(null);
@@ -302,15 +302,15 @@ const OnboardingPage = () => {
             </div>
           ) : (
             filteredRecords.map((record) => (
-              <div key={record.id} className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all">
+              <div key={record.id} className="border border-ink-100 rounded-xl p-6 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3 flex-1">
                     <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-xl flex items-center justify-center">
                       <User size={24} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg">{record.employeeName}</h3>
-                      <p className="text-sm text-gray-600">{record.department}</p>
+                      <h3 className="font-bold text-ink-900 text-lg">{record.employeeName}</h3>
+                      <p className="text-sm text-ink-600">{record.department}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -319,7 +319,7 @@ const OnboardingPage = () => {
                         ? 'bg-green-100 text-green-700'
                         : record.status === 'In Progress'
                         ? 'bg-orange-100 text-orange-700'
-                        : 'bg-gray-100 text-gray-700'
+                        : 'bg-ink-100 text-ink-700'
                     }`}>
                       {record.status}
                     </span>
@@ -328,18 +328,18 @@ const OnboardingPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar size={16} className="text-gray-400" />
-                    <span className="text-gray-600">Start: {record.startDate}</span>
+                    <Calendar size={16} className="text-ink-400" />
+                    <span className="text-ink-600">Start: {record.startDate}</span>
                   </div>
                   {record.mentor && (
                     <div className="flex items-center gap-2 text-sm">
-                      <User size={16} className="text-gray-400" />
-                      <span className="text-gray-600">Mentor: {record.mentor}</span>
+                      <User size={16} className="text-ink-400" />
+                      <span className="text-ink-600">Mentor: {record.mentor}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-2 text-sm">
-                    <TrendingUp size={16} className="text-gray-400" />
-                    <span className="text-gray-600">Progress: {record.progress || 0}%</span>
+                    <TrendingUp size={16} className="text-ink-400" />
+                    <span className="text-ink-600">Progress: {record.progress || 0}%</span>
                   </div>
                 </div>
 
@@ -354,8 +354,8 @@ const OnboardingPage = () => {
                 </div>
 
                 {record.checklist && (
-                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                    <p className="text-sm text-gray-700">{record.checklist}</p>
+                  <div className="bg-ink-50 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-ink-700">{record.checklist}</p>
                   </div>
                 )}
 
@@ -415,11 +415,11 @@ const OnboardingPage = () => {
             <div className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Employee *</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Employee *</label>
                   <select
                     value={onboardingForm.employeeId}
                     onChange={(e) => setOnboardingForm({ ...onboardingForm, employeeId: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     disabled={editingRecord !== null}
                   >
                     <option value="">Select Employee</option>
@@ -430,19 +430,19 @@ const OnboardingPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Mentor</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Mentor</label>
                   <input
                     type="text"
                     value={onboardingForm.mentor}
                     onChange={(e) => setOnboardingForm({ ...onboardingForm, mentor: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="Mentor name"
                   />
                 </div>
 
                 {!editingRecord && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Use Template (Optional)</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Use Template (Optional)</label>
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => applyTemplate('standard')}
@@ -467,11 +467,11 @@ const OnboardingPage = () => {
                 )}
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Checklist / Notes</label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Checklist / Notes</label>
                   <textarea
                     value={onboardingForm.checklist}
                     onChange={(e) => setOnboardingForm({ ...onboardingForm, checklist: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     rows="8"
                     placeholder="Enter onboarding checklist items or notes..."
                   />
@@ -490,7 +490,7 @@ const OnboardingPage = () => {
                     setShowModal(false);
                     setEditingRecord(null);
                   }}
-                  className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
                 >
                   Cancel
                 </button>

@@ -351,7 +351,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
     };
 
     return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${badges[status] || 'bg-gray-100 text-gray-800'}`}>
+      <span className={`px-2 py-1 text-xs font-medium rounded-full ${badges[status] || 'bg-ink-100 text-gray-800'}`}>
         {status}
       </span>
     );
@@ -366,14 +366,14 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div className="px-6 py-4 border-b border-ink-100 flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Individual Distribution Tracking</h2>
-            <p className="text-sm text-gray-600 mt-1">{task?.title}</p>
+            <h2 className="text-xl font-semibold text-ink-900">Individual Distribution Tracking</h2>
+            <p className="text-sm text-ink-600 mt-1">{task?.title}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-ink-400 hover:text-ink-600 transition-colors"
           >
             <X className="h-6 w-6" />
           </button>
@@ -391,47 +391,47 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
         )}
 
         {/* Statistics Cards */}
-        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <div className="px-6 py-4 bg-ink-50 border-b border-ink-100">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="bg-white p-3 rounded-lg border border-gray-200">
-              <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-              <div className="text-xs text-gray-600">Total</div>
+            <div className="bg-white p-3 rounded-lg border border-ink-100">
+              <div className="text-h1 text-ink-900">{stats.total}</div>
+              <div className="text-xs text-ink-600">Total</div>
             </div>
             <div className="bg-white p-3 rounded-lg border border-green-200">
               <div className="text-2xl font-bold text-green-600">{stats.received}</div>
-              <div className="text-xs text-gray-600">Received</div>
+              <div className="text-xs text-ink-600">Received</div>
             </div>
             <div className="bg-white p-3 rounded-lg border border-orange-200">
               <div className="text-2xl font-bold text-orange-600">{stats.notReceived}</div>
-              <div className="text-xs text-gray-600">Not Received</div>
+              <div className="text-xs text-ink-600">Not Received</div>
             </div>
             <div className="bg-white p-3 rounded-lg border border-blue-200">
               <div className="text-2xl font-bold text-blue-600">{stats.attended}</div>
-              <div className="text-xs text-gray-600">Attended</div>
+              <div className="text-xs text-ink-600">Attended</div>
             </div>
             <div className="bg-white p-3 rounded-lg border border-purple-200">
               <div className="text-2xl font-bold text-purple-600">{stats.approved}</div>
-              <div className="text-xs text-gray-600">Approved</div>
+              <div className="text-xs text-ink-600">Approved</div>
             </div>
             <div className="bg-white p-3 rounded-lg border border-red-200">
               <div className="text-2xl font-bold text-red-600">{stats.rejected}</div>
-              <div className="text-xs text-gray-600">Rejected</div>
+              <div className="text-xs text-ink-600">Rejected</div>
             </div>
           </div>
         </div>
 
         {/* Filters and Search */}
-        <div className="px-6 py-4 bg-white border-b border-gray-200">
+        <div className="px-6 py-4 bg-white border-b border-ink-100">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-ink-400" />
               <input
                 type="text"
                 placeholder="Search name, NIC, phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
 
@@ -439,7 +439,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
             <select
               value={filters.selectionStatus}
               onChange={(e) => setFilters(prev => ({ ...prev, selectionStatus: e.target.value }))}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             >
               <option value="">All Statuses</option>
               <option value="Nominated">Nominated</option>
@@ -453,7 +453,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
             <select
               value={filters.received}
               onChange={(e) => setFilters(prev => ({ ...prev, received: e.target.value }))}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             >
               <option value="">All Receipt Status</option>
               <option value="yes">Received</option>
@@ -464,7 +464,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
             <select
               value={filters.attended}
               onChange={(e) => setFilters(prev => ({ ...prev, attended: e.target.value }))}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             >
               <option value="">All Attendance</option>
               <option value="yes">Attended</option>
@@ -474,7 +474,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
           {/* Export Button */}
           <div className="mt-4 flex justify-between items-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-ink-600">
               Showing {filteredBeneficiaries.length} of {beneficiaries.length} beneficiaries
             </p>
             <button
@@ -492,13 +492,13 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <span className="ml-3 text-gray-600">Loading beneficiaries...</span>
+              <span className="ml-3 text-ink-600">Loading beneficiaries...</span>
             </div>
           ) : filteredBeneficiaries.length === 0 ? (
             <div className="text-center py-12">
-              <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No beneficiaries found</p>
-              <p className="text-sm text-gray-500 mt-1">Try adjusting your filters</p>
+              <User className="h-12 w-12 text-ink-400 mx-auto mb-4" />
+              <p className="text-ink-600">No beneficiaries found</p>
+              <p className="text-sm text-ink-500 mt-1">Try adjusting your filters</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -507,7 +507,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                 const isExpanded = expandedRows.has(taskBeneficiary.id);
 
                 return (
-                  <div key={taskBeneficiary.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div key={taskBeneficiary.id} className="border border-ink-100 rounded-lg overflow-hidden">
                     {/* Main Row */}
                     <div className="bg-white p-4">
                       <div className="grid grid-cols-12 gap-4 items-center">
@@ -515,7 +515,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                         <div className="col-span-1">
                           <button
                             onClick={() => toggleExpandRow(taskBeneficiary.id)}
-                            className="text-gray-400 hover:text-gray-600"
+                            className="text-ink-400 hover:text-ink-600"
                           >
                             {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                           </button>
@@ -523,13 +523,13 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
                         {/* Name & NIC */}
                         <div className="col-span-3">
-                          <div className="font-medium text-gray-900">{beneficiary.full_name}</div>
-                          <div className="text-sm text-gray-500">{beneficiary.nic}</div>
+                          <div className="font-medium text-ink-900">{beneficiary.full_name}</div>
+                          <div className="text-sm text-ink-500">{beneficiary.nic}</div>
                         </div>
 
                         {/* Contact */}
                         <div className="col-span-2">
-                          <div className="flex items-center text-sm text-gray-600">
+                          <div className="flex items-center text-sm text-ink-600">
                             <Phone className="h-3 w-3 mr-1" />
                             {beneficiary.primary_phone || 'N/A'}
                           </div>
@@ -568,7 +568,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                               Absent
                             </div>
                           ) : (
-                            <div className="text-gray-400 text-sm">Not marked</div>
+                            <div className="text-ink-400 text-sm">Not marked</div>
                           )}
                         </div>
                       </div>
@@ -576,20 +576,20 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
                     {/* Expanded Details */}
                     {isExpanded && (
-                      <div className="bg-gray-50 border-t border-gray-200 p-4">
+                      <div className="bg-ink-50 border-t border-ink-100 p-4">
                         <div className="grid grid-cols-2 gap-6 mb-4">
                           {/* Beneficiary Details */}
                           <div>
-                            <h4 className="font-medium text-gray-900 mb-2">Beneficiary Details</h4>
+                            <h4 className="font-medium text-ink-900 mb-2">Beneficiary Details</h4>
                             <div className="space-y-1 text-sm">
-                              <div className="flex items-center text-gray-600">
+                              <div className="flex items-center text-ink-600">
                                 <MapPin className="h-3 w-3 mr-2" />
                                 {beneficiary.district}, {beneficiary.province}
                               </div>
-                              <div className="text-gray-600">
+                              <div className="text-ink-600">
                                 Gender: {beneficiary.gender}, Age: {beneficiary.age || 'N/A'}
                               </div>
-                              <div className="text-gray-600">
+                              <div className="text-ink-600">
                                 Type: {beneficiary.beneficiary_type}
                               </div>
                             </div>
@@ -597,22 +597,22 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
                           {/* Distribution Details */}
                           <div>
-                            <h4 className="font-medium text-gray-900 mb-2">Distribution Details</h4>
+                            <h4 className="font-medium text-ink-900 mb-2">Distribution Details</h4>
                             <div className="space-y-1 text-sm">
                               {taskBeneficiary.receivedDate && (
-                                <div className="flex items-center text-gray-600">
+                                <div className="flex items-center text-ink-600">
                                   <Calendar className="h-3 w-3 mr-2" />
                                   Received: {new Date(taskBeneficiary.receivedDate).toLocaleDateString()}
                                 </div>
                               )}
                               {taskBeneficiary.attendanceDate && (
-                                <div className="flex items-center text-gray-600">
+                                <div className="flex items-center text-ink-600">
                                   <Calendar className="h-3 w-3 mr-2" />
                                   Attended: {new Date(taskBeneficiary.attendanceDate).toLocaleDateString()}
                                 </div>
                               )}
                               {taskBeneficiary.selectionNotes && (
-                                <div className="text-gray-600">
+                                <div className="text-ink-600">
                                   Notes: {taskBeneficiary.selectionNotes}
                                 </div>
                               )}
@@ -675,10 +675,10 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
+        <div className="px-6 py-4 border-t border-ink-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
           >
             Close
           </button>
@@ -691,26 +691,26 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {showReceiveModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Mark as Received</h3>
-              <p className="text-sm text-gray-600 mt-1">{showReceiveModal.Beneficiary?.full_name}</p>
+            <div className="px-6 py-4 border-b border-ink-100">
+              <h3 className="text-lg font-semibold text-ink-900">Mark as Received</h3>
+              <p className="text-sm text-ink-600 mt-1">{showReceiveModal.Beneficiary?.full_name}</p>
             </div>
 
             <div className="px-6 py-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Received Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
                   value={receiveFormData.receivedDate}
                   onChange={(e) => setReceiveFormData(prev => ({ ...prev, receivedDate: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Signature/Acknowledgment URL
                 </label>
                 <input
@@ -718,12 +718,12 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="https://..."
                   value={receiveFormData.signatureUrl}
                   onChange={(e) => setReceiveFormData(prev => ({ ...prev, signatureUrl: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Notes
                 </label>
                 <textarea
@@ -731,15 +731,15 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="Any additional notes..."
                   value={receiveFormData.receivedNotes}
                   onChange={(e) => setReceiveFormData(prev => ({ ...prev, receivedNotes: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-ink-100 flex justify-end space-x-3">
               <button
                 onClick={() => setShowReceiveModal(null)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
               >
                 Cancel
               </button>
@@ -761,14 +761,14 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {showAttendanceModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Mark Attendance</h3>
-              <p className="text-sm text-gray-600 mt-1">{showAttendanceModal.Beneficiary?.full_name}</p>
+            <div className="px-6 py-4 border-b border-ink-100">
+              <h3 className="text-lg font-semibold text-ink-900">Mark Attendance</h3>
+              <p className="text-sm text-ink-600 mt-1">{showAttendanceModal.Beneficiary?.full_name}</p>
             </div>
 
             <div className="px-6 py-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Attendance Status <span className="text-red-500">*</span>
                 </label>
                 <div className="flex space-x-4">
@@ -794,19 +794,19 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Attendance Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
                   value={attendanceFormData.attendanceDate}
                   onChange={(e) => setAttendanceFormData(prev => ({ ...prev, attendanceDate: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Notes
                 </label>
                 <textarea
@@ -814,15 +814,15 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="Any additional notes..."
                   value={attendanceFormData.attendanceNotes}
                   onChange={(e) => setAttendanceFormData(prev => ({ ...prev, attendanceNotes: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-ink-100 flex justify-end space-x-3">
               <button
                 onClick={() => setShowAttendanceModal(null)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
               >
                 Cancel
               </button>
@@ -844,20 +844,20 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {showStatusModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Update Selection Status</h3>
-              <p className="text-sm text-gray-600 mt-1">{showStatusModal.Beneficiary?.full_name}</p>
+            <div className="px-6 py-4 border-b border-ink-100">
+              <h3 className="text-lg font-semibold text-ink-900">Update Selection Status</h3>
+              <p className="text-sm text-ink-600 mt-1">{showStatusModal.Beneficiary?.full_name}</p>
             </div>
 
             <div className="px-6 py-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Selection Status <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={statusFormData.selectionStatus}
                   onChange={(e) => setStatusFormData(prev => ({ ...prev, selectionStatus: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select status...</option>
                   <option value="Nominated">Nominated</option>
@@ -869,7 +869,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Notes
                 </label>
                 <textarea
@@ -877,15 +877,15 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="Reason for status change..."
                   value={statusFormData.selectionNotes}
                   onChange={(e) => setStatusFormData(prev => ({ ...prev, selectionNotes: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-ink-100 flex justify-end space-x-3">
               <button
                 onClick={() => setShowStatusModal(null)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
               >
                 Cancel
               </button>
@@ -907,12 +907,12 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {showRemoveModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Remove Beneficiary</h3>
+            <div className="px-6 py-4 border-b border-ink-100">
+              <h3 className="text-lg font-semibold text-ink-900">Remove Beneficiary</h3>
             </div>
 
             <div className="px-6 py-4">
-              <p className="text-gray-600">
+              <p className="text-ink-600">
                 Are you sure you want to remove <strong>{showRemoveModal.Beneficiary?.full_name}</strong> from this task?
               </p>
               <p className="text-sm text-red-600 mt-2">
@@ -920,10 +920,10 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
               </p>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-ink-100 flex justify-end space-x-3">
               <button
                 onClick={() => setShowRemoveModal(null)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-ink-200 rounded-lg text-ink-700 hover:bg-ink-50 transition-colors"
               >
                 Cancel
               </button>

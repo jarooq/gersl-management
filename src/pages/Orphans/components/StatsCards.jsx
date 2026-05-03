@@ -50,27 +50,27 @@ const StatsCards = ({ stats }) => {
       {statItems.map((stat, index) => (
         <div
           key={index}
-          className="stat-card group cursor-pointer animate-slide-up"
+          className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-600 mb-1">{stat.title}</p>
+              <p className="text-xs font-semibold text-ink-600 mb-1">{stat.title}</p>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
+                <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                 {stat.trend === 'up' && (
                   <TrendingUp className="w-3 h-3 text-green-600" />
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
+              <p className="text-xs text-ink-500 mt-1">{stat.change}</p>
             </div>
             <div className={`bg-gradient-to-br ${stat.gradient} p-2.5 rounded-lg shadow-sm transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
               <stat.icon className="text-white" size={18} />
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="mt-2 pt-2 border-t border-ink-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-500">Status</span>
+              <span className="text-xs font-medium text-ink-500">Status</span>
               <div className="flex items-center gap-1">
                 <div className={`w-1.5 h-1.5 rounded-full ${
                   stat.trend === 'up' ? 'bg-green-500' :

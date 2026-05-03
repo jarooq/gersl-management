@@ -230,16 +230,16 @@ const SystemSettingsPage = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-gray-700 via-slate-700 to-zinc-700 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Settings className="w-5 h-5 animate-pulse" />
+                <Settings className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">System Settings</h1>
@@ -287,7 +287,7 @@ const SystemSettingsPage = () => {
 
       {/* Tabs */}
       <div className="bg-white rounded-lg shadow-md">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-ink-100">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -299,7 +299,7 @@ const SystemSettingsPage = () => {
                     flex items-center gap-2 px-6 py-4 font-semibold transition whitespace-nowrap
                     ${activeTab === tab.id
                       ? 'border-b-2 border-blue-600 text-blue-600'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
                     }
                   `}
                 >
@@ -340,15 +340,15 @@ const SystemSettingsPage = () => {
       {showDepartmentModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">
+            <div className="p-6 border-b border-ink-100">
+              <h2 className="text-xl font-bold text-ink-900">
                 {editingDepartment ? 'Edit Department' : 'Add New Department'}
               </h2>
             </div>
 
             <form onSubmit={handleDepartmentSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Department Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -356,45 +356,45 @@ const SystemSettingsPage = () => {
                   required
                   value={departmentForm.name}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., Finance, HR, Operations"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Department Code
                 </label>
                 <input
                   type="text"
                   value={departmentForm.code}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, code: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., FIN, HR, OPS"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description
                 </label>
                 <textarea
                   value={departmentForm.description}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   rows="3"
                   placeholder="Brief description of the department..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Color Theme
                 </label>
                 <select
                   value={departmentForm.color}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, color: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="from-blue-500 to-cyan-600">Blue</option>
                   <option value="from-purple-500 to-pink-600">Purple</option>
@@ -406,14 +406,14 @@ const SystemSettingsPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Sort Order
                 </label>
                 <input
                   type="number"
                   value={departmentForm.sortOrder}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, sortOrder: parseInt(e.target.value) || 0 })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="0"
                 />
               </div>
@@ -426,7 +426,7 @@ const SystemSettingsPage = () => {
                   onChange={(e) => setDepartmentForm({ ...departmentForm, isActive: e.target.checked })}
                   className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                 />
-                <label htmlFor="isActive" className="text-sm text-gray-700">
+                <label htmlFor="isActive" className="text-sm text-ink-700">
                   Active
                 </label>
               </div>
@@ -438,7 +438,7 @@ const SystemSettingsPage = () => {
                     setShowDepartmentModal(false);
                     setEditingDepartment(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -458,15 +458,15 @@ const SystemSettingsPage = () => {
       {showPositionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">
+            <div className="p-6 border-b border-ink-100">
+              <h2 className="text-xl font-bold text-ink-900">
                 {editingPosition ? 'Edit Position' : 'Add New Position'}
               </h2>
             </div>
 
             <form onSubmit={handlePositionSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Position Title <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -474,32 +474,32 @@ const SystemSettingsPage = () => {
                   required
                   value={positionForm.title}
                   onChange={(e) => setPositionForm({ ...positionForm, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., Program Manager, Finance Officer"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Position Code
                 </label>
                 <input
                   type="text"
                   value={positionForm.code}
                   onChange={(e) => setPositionForm({ ...positionForm, code: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., PM, FO"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Level
                 </label>
                 <select
                   value={positionForm.level}
                   onChange={(e) => setPositionForm({ ...positionForm, level: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select Level</option>
                   <option value="Executive">Executive</option>
@@ -510,27 +510,27 @@ const SystemSettingsPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description
                 </label>
                 <textarea
                   value={positionForm.description}
                   onChange={(e) => setPositionForm({ ...positionForm, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   rows="3"
                   placeholder="Brief description of the position..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Sort Order
                 </label>
                 <input
                   type="number"
                   value={positionForm.sortOrder}
                   onChange={(e) => setPositionForm({ ...positionForm, sortOrder: parseInt(e.target.value) || 0 })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="0"
                 />
               </div>
@@ -543,7 +543,7 @@ const SystemSettingsPage = () => {
                   onChange={(e) => setPositionForm({ ...positionForm, isActive: e.target.checked })}
                   className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                 />
-                <label htmlFor="positionIsActive" className="text-sm text-gray-700">
+                <label htmlFor="positionIsActive" className="text-sm text-ink-700">
                   Active
                 </label>
               </div>
@@ -555,7 +555,7 @@ const SystemSettingsPage = () => {
                     setShowPositionModal(false);
                     setEditingPosition(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -582,45 +582,45 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">General Settings</h2>
+      <h2 className="text-xl font-bold text-ink-900">General Settings</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Organization Name</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Organization Name</label>
           <input
             type="text"
             value={settings.organizationName}
             onChange={(e) => handleChange('organizationName', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Email</label>
           <input
             type="email"
             value={settings.organizationEmail}
             onChange={(e) => handleChange('organizationEmail', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Phone</label>
           <input
             type="tel"
             value={settings.organizationPhone}
             onChange={(e) => handleChange('organizationPhone', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Timezone</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Timezone</label>
           <select
             value={settings.timezone}
             onChange={(e) => handleChange('timezone', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="Asia/Colombo">Asia/Colombo (UTC+5:30)</option>
             <option value="Asia/Kolkata">Asia/Kolkata (UTC+5:30)</option>
@@ -629,11 +629,11 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Date Format</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Date Format</label>
           <select
             value={settings.dateFormat}
             onChange={(e) => handleChange('dateFormat', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="YYYY-MM-DD">YYYY-MM-DD</option>
             <option value="DD/MM/YYYY">DD/MM/YYYY</option>
@@ -642,11 +642,11 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Currency</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Currency</label>
           <select
             value={settings.currency}
             onChange={(e) => handleChange('currency', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="LKR">LKR (Sri Lankan Rupee)</option>
             <option value="USD">USD (US Dollar)</option>
@@ -656,11 +656,11 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Fiscal Year Start</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Fiscal Year Start</label>
           <select
             value={settings.fiscalYearStart}
             onChange={(e) => handleChange('fiscalYearStart', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="January">January</option>
             <option value="April">April</option>
@@ -670,11 +670,11 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Language</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Language</label>
           <select
             value={settings.language}
             onChange={(e) => handleChange('language', e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="English">English</option>
             <option value="Sinhala">Sinhala</option>
@@ -683,12 +683,12 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Address</label>
           <textarea
             value={settings.organizationAddress}
             onChange={(e) => handleChange('organizationAddress', e.target.value)}
             rows="3"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
           />
         </div>
       </div>
@@ -783,7 +783,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">User Management</h2>
+        <h2 className="text-xl font-bold text-ink-900">User Management</h2>
         <button
           onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -795,7 +795,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
 
       <div className="grid grid-cols-1 gap-3">
         {users.map((user) => (
-          <div key={user.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition">
+          <div key={user.id} className="border border-ink-100 rounded-lg p-4 hover:border-blue-300 transition">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 flex-1">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -803,15 +803,15 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h4 className="font-semibold text-gray-900">{user.fullName}</h4>
+                    <h4 className="font-semibold text-ink-900">{user.fullName}</h4>
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                      user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                      user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-ink-600'
                     }`}>
                       {user.status}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{user.email} • {user.role}</p>
-                  <p className="text-xs text-gray-500 mt-1">Last login: {user.lastLogin || 'Never'}</p>
+                  <p className="text-sm text-ink-600 mt-1">{user.email} • {user.role}</p>
+                  <p className="text-xs text-ink-500 mt-1">Last login: {user.lastLogin || 'Never'}</p>
                 </div>
                 <div className="text-right">
                   <button
@@ -835,12 +835,12 @@ const UsersTab = ({ users, toggleUserStatus }) => {
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-ink-100">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-900">Add New User</h3>
+                <h3 className="text-h1 text-ink-900">Add New User</h3>
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="text-gray-400 hover:text-gray-600 transition"
+                  className="text-ink-400 hover:text-ink-600 transition"
                 >
                   <XCircle size={24} />
                 </button>
@@ -863,56 +863,56 @@ const UsersTab = ({ users, toggleUserStatus }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Username <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     required
                     minLength={6}
                     disabled={isLoading}
@@ -920,13 +920,13 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     User Role <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -937,30 +937,30 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">System access level from Settings → Roles</p>
+                  <p className="text-xs text-ink-500 mt-1">System access level from Settings → Roles</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Phone
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     disabled={isLoading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Department
                   </label>
                   <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     disabled={isLoading}
                   >
                     <option value="">Select Department</option>
@@ -970,17 +970,17 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">From Settings → Departments</p>
+                  <p className="text-xs text-ink-500 mt-1">From Settings → Departments</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Position
                   </label>
                   <select
                     value={formData.position}
                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     disabled={isLoading}
                   >
                     <option value="">Select Position</option>
@@ -990,7 +990,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">Job title from Settings → Positions</p>
+                  <p className="text-xs text-ink-500 mt-1">Job title from Settings → Positions</p>
                 </div>
               </div>
 
@@ -998,7 +998,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                   disabled={isLoading}
                 >
                   Cancel
@@ -1073,13 +1073,13 @@ const RolesTab = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Roles & Permissions</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-xl font-bold text-ink-900">Roles & Permissions</h2>
+          <p className="text-sm text-ink-600 mt-1">
             Organizational hierarchy with {Object.keys(ROLES).length} defined roles across 7 levels
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-ink-600">
             Based on Global Ehsan Relief - Sri Lanka Organizational Structure
           </span>
         </div>
@@ -1092,14 +1092,14 @@ const RolesTab = () => {
           const levelRoles = rolesByLevel[level];
 
           return (
-            <div key={level} className="border border-gray-200 rounded-lg p-4 bg-white">
+            <div key={level} className="border border-ink-100 rounded-lg p-4 bg-white">
               <div className="flex items-center gap-3 mb-3">
                 <div className={`${getLevelColor(levelNum)} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm`}>
                   {levelNum === 0 ? '★' : levelNum === 99 ? '◉' : levelNum}
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900">{getLevelName(levelNum)}</h3>
-                  <p className="text-xs text-gray-500">{levelRoles.length} role{levelRoles.length !== 1 ? 's' : ''}</p>
+                  <h3 className="font-bold text-ink-900">{getLevelName(levelNum)}</h3>
+                  <p className="text-xs text-ink-500">{levelRoles.length} role{levelRoles.length !== 1 ? 's' : ''}</p>
                 </div>
               </div>
 
@@ -1111,15 +1111,15 @@ const RolesTab = () => {
                     <button
                       key={role.key}
                       onClick={() => handleRoleClick(role.key)}
-                      className="text-left border border-gray-200 rounded-lg p-3 hover:border-purple-400 hover:bg-purple-50 transition group"
+                      className="text-left border border-ink-100 rounded-lg p-3 hover:border-purple-400 hover:bg-purple-50 transition group"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 text-sm group-hover:text-purple-700">
+                          <h4 className="font-semibold text-ink-900 text-sm group-hover:text-purple-700">
                             {role.name}
                           </h4>
                           {role.department && (
-                            <p className="text-xs text-gray-500 mt-1">{role.department}</p>
+                            <p className="text-xs text-ink-500 mt-1">{role.department}</p>
                           )}
                           {role.specialization && (
                             <p className="text-xs text-blue-600 mt-1">Specialty: {role.specialization}</p>
@@ -1127,11 +1127,11 @@ const RolesTab = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs text-gray-600">
+                        <span className="text-xs text-ink-600">
                           {permissionCount} permissions
                         </span>
                         {role.reportsTo && (
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-ink-400">
                             → Reports to {ROLES[role.reportsTo]?.name}
                           </span>
                         )}
@@ -1149,19 +1149,19 @@ const RolesTab = () => {
       {showPermissions && selectedRole && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-ink-100">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">{ROLES[selectedRole].name}</h3>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <h3 className="text-h1 text-ink-900">{ROLES[selectedRole].name}</h3>
+                  <p className="text-sm text-ink-600 mt-1">
                     Level {ROLES[selectedRole].level} • {ROLES[selectedRole].department || 'No Department'}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowPermissions(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition"
+                  className="p-2 hover:bg-ink-100 rounded-lg transition"
                 >
-                  <XCircle size={24} className="text-gray-500" />
+                  <XCircle size={24} className="text-ink-500" />
                 </button>
               </div>
             </div>
@@ -1171,23 +1171,23 @@ const RolesTab = () => {
                 {/* Role Info */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-gray-500 uppercase mb-1">Hierarchy Level</p>
-                    <p className="font-semibold text-gray-900">{getLevelName(ROLES[selectedRole].level)}</p>
+                    <p className="text-xs text-ink-500 uppercase mb-1">Hierarchy Level</p>
+                    <p className="font-semibold text-ink-900">{getLevelName(ROLES[selectedRole].level)}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 uppercase mb-1">Department</p>
-                    <p className="font-semibold text-gray-900">{ROLES[selectedRole].department || 'N/A'}</p>
+                    <p className="text-xs text-ink-500 uppercase mb-1">Department</p>
+                    <p className="font-semibold text-ink-900">{ROLES[selectedRole].department || 'N/A'}</p>
                   </div>
                   {ROLES[selectedRole].specialization && (
                     <div>
-                      <p className="text-xs text-gray-500 uppercase mb-1">Specialization</p>
-                      <p className="font-semibold text-gray-900">{ROLES[selectedRole].specialization}</p>
+                      <p className="text-xs text-ink-500 uppercase mb-1">Specialization</p>
+                      <p className="font-semibold text-ink-900">{ROLES[selectedRole].specialization}</p>
                     </div>
                   )}
                   {ROLES[selectedRole].reportsTo && (
                     <div>
-                      <p className="text-xs text-gray-500 uppercase mb-1">Reports To</p>
-                      <p className="font-semibold text-gray-900">{ROLES[ROLES[selectedRole].reportsTo]?.name}</p>
+                      <p className="text-xs text-ink-500 uppercase mb-1">Reports To</p>
+                      <p className="font-semibold text-ink-900">{ROLES[ROLES[selectedRole].reportsTo]?.name}</p>
                     </div>
                   )}
                 </div>
@@ -1195,7 +1195,7 @@ const RolesTab = () => {
                 {/* Approval Authorities */}
                 {ROLES[selectedRole].canApprove.length > 0 && (
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <h4 className="font-bold text-ink-900 mb-3 flex items-center gap-2">
                       <CheckCircle size={18} className="text-green-600" />
                       Approval Authorities
                     </h4>
@@ -1211,25 +1211,25 @@ const RolesTab = () => {
 
                 {/* Permissions */}
                 <div>
-                  <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <h4 className="font-bold text-ink-900 mb-3 flex items-center gap-2">
                     <Shield size={18} className="text-purple-600" />
                     Permissions ({ROLE_PERMISSIONS[selectedRole]?.length || 0})
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-96 overflow-y-auto">
                     {ROLE_PERMISSIONS[selectedRole]?.map((permission, index) => (
-                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded text-sm">
+                      <div key={index} className="flex items-center gap-2 p-2 bg-ink-50 rounded text-sm">
                         <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
-                        <span className="text-gray-700">{permission}</span>
+                        <span className="text-ink-700">{permission}</span>
                       </div>
                     )) || (
-                      <p className="text-gray-500 text-sm">No permissions defined</p>
+                      <p className="text-ink-500 text-sm">No permissions defined</p>
                     )}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-200 bg-gray-50">
+            <div className="p-6 border-t border-ink-100 bg-ink-50">
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowPermissions(false)}
@@ -1269,14 +1269,14 @@ const NotificationsTab = ({ settings, setSettings, onSave }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">Notification Preferences</h2>
+      <h2 className="text-xl font-bold text-ink-900">Notification Preferences</h2>
 
       <div className="space-y-4">
         {notificationOptions.map((option) => (
-          <div key={option.key} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition">
+          <div key={option.key} className="flex items-center justify-between p-4 border border-ink-100 rounded-lg hover:border-blue-300 transition">
             <div className="flex-1">
-              <h4 className="font-semibold text-gray-900">{option.label}</h4>
-              <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+              <h4 className="font-semibold text-ink-900">{option.label}</h4>
+              <p className="text-sm text-ink-600 mt-1">{option.description}</p>
             </div>
             <button
               onClick={() => toggleSetting(option.key)}
@@ -1318,26 +1318,26 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">Backup & Recovery</h2>
+      <h2 className="text-xl font-bold text-ink-900">Backup & Recovery</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="border border-gray-200 rounded-lg p-5">
+        <div className="border border-ink-100 rounded-lg p-5">
           <div className="flex items-center gap-3 mb-4">
             <Database className="text-blue-600" size={24} />
-            <h3 className="text-lg font-semibold text-gray-900">Backup Status</h3>
+            <h3 className="text-lg font-semibold text-ink-900">Backup Status</h3>
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-sm text-gray-600">Last Backup</p>
-              <p className="font-semibold text-gray-900">{settings.lastBackup}</p>
+              <p className="text-sm text-ink-600">Last Backup</p>
+              <p className="font-semibold text-ink-900">{settings.lastBackup}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Next Scheduled</p>
-              <p className="font-semibold text-gray-900">{settings.nextBackup}</p>
+              <p className="text-sm text-ink-600">Next Scheduled</p>
+              <p className="font-semibold text-ink-900">{settings.nextBackup}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Backup Size</p>
-              <p className="font-semibold text-gray-900">{settings.backupSize}</p>
+              <p className="text-sm text-ink-600">Backup Size</p>
+              <p className="font-semibold text-ink-900">{settings.backupSize}</p>
             </div>
           </div>
           <button
@@ -1351,7 +1351,7 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Auto Backup</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Auto Backup</label>
             <button
               onClick={() => setSettings({ ...settings, autoBackup: !settings.autoBackup })}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
@@ -1367,11 +1367,11 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Backup Frequency</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Backup Frequency</label>
             <select
               value={settings.backupFrequency}
               onChange={(e) => setSettings({ ...settings, backupFrequency: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
               <option value="Hourly">Hourly</option>
               <option value="Daily">Daily</option>
@@ -1381,21 +1381,21 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Retention Period (Days)</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Retention Period (Days)</label>
             <input
               type="number"
               value={settings.retentionDays}
               onChange={(e) => setSettings({ ...settings, retentionDays: parseInt(e.target.value) })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Backup Location</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Backup Location</label>
             <select
               value={settings.backupLocation}
               onChange={(e) => setSettings({ ...settings, backupLocation: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
               <option value="Cloud Storage">Cloud Storage</option>
               <option value="Local Storage">Local Storage</option>
@@ -1473,30 +1473,30 @@ const IntegrationsTab = ({ settings }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">Third-Party Integrations</h2>
+      <h2 className="text-xl font-bold text-ink-900">Third-Party Integrations</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {integrations.map((integration) => {
           const Icon = integration.icon;
           const config = settings[integration.key];
           return (
-            <div key={integration.key} className="border border-gray-200 rounded-lg p-5 hover:border-blue-300 transition">
+            <div key={integration.key} className="border border-ink-100 rounded-lg p-5 hover:border-blue-300 transition">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-blue-50 rounded-lg">
                     <Icon className="text-blue-600" size={24} />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{integration.name}</h4>
-                    <p className="text-sm text-gray-600 mt-1">{integration.description}</p>
+                    <h4 className="font-semibold text-ink-900">{integration.name}</h4>
+                    <p className="text-sm text-ink-600 mt-1">{integration.description}</p>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+              <div className="flex items-center justify-between pt-3 border-t border-ink-100">
                 <div>
-                  <p className="text-sm text-gray-600">Provider: {integration.provider}</p>
+                  <p className="text-sm text-ink-600">Provider: {integration.provider}</p>
                   <p className={`text-xs font-semibold mt-1 ${
-                    config.status === 'Connected' ? 'text-green-600' : 'text-gray-500'
+                    config.status === 'Connected' ? 'text-green-600' : 'text-ink-500'
                   }`}>
                     {config.status}
                   </p>
@@ -1517,52 +1517,52 @@ const IntegrationsTab = ({ settings }) => {
       {showConfigModal && selectedIntegration && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full">
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-ink-100">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-900">Configure {selectedIntegration.name}</h3>
+                <h3 className="text-h1 text-ink-900">Configure {selectedIntegration.name}</h3>
                 <button
                   onClick={() => setShowConfigModal(false)}
-                  className="text-gray-400 hover:text-gray-600 transition"
+                  className="text-ink-400 hover:text-ink-600 transition"
                 >
                   <XCircle size={24} />
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mt-2">{selectedIntegration.description}</p>
+              <p className="text-sm text-ink-600 mt-2">{selectedIntegration.description}</p>
             </div>
 
             <div className="p-6 space-y-4">
               {selectedIntegration.key === 'emailService' && (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">SMTP Host</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">SMTP Host</label>
                     <input
                       type="text"
                       placeholder="smtp.gmail.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">SMTP Port</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">SMTP Port</label>
                     <input
                       type="number"
                       placeholder="587"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Username</label>
                     <input
                       type="text"
                       placeholder="your-email@gmail.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Password</label>
                     <input
                       type="password"
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1571,27 +1571,27 @@ const IntegrationsTab = ({ settings }) => {
               {selectedIntegration.key === 'smsService' && (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Provider</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Provider</label>
+                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
                       <option>Twilio</option>
                       <option>Nexmo</option>
                       <option>AWS SNS</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">API Key</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">API Key</label>
                     <input
                       type="text"
                       placeholder="Enter your API key"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">API Secret</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">API Secret</label>
                     <input
                       type="password"
                       placeholder="Enter your API secret"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1600,35 +1600,35 @@ const IntegrationsTab = ({ settings }) => {
               {selectedIntegration.key === 'cloudStorage' && (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Provider</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Provider</label>
+                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
                       <option>AWS S3</option>
                       <option>Google Cloud Storage</option>
                       <option>Azure Blob Storage</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Bucket Name</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Bucket Name</label>
                     <input
                       type="text"
                       placeholder="my-bucket"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Access Key</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Access Key</label>
                     <input
                       type="text"
                       placeholder="Enter access key"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Secret Key</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Secret Key</label>
                     <input
                       type="password"
                       placeholder="Enter secret key"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1637,35 +1637,35 @@ const IntegrationsTab = ({ settings }) => {
               {selectedIntegration.key === 'paymentGateway' && (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Provider</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Provider</label>
+                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
                       <option>Stripe</option>
                       <option>PayPal</option>
                       <option>Square</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Publishable Key</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Publishable Key</label>
                     <input
                       type="text"
                       placeholder="pk_test_..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Secret Key</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Secret Key</label>
                     <input
                       type="password"
                       placeholder="sk_test_..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Webhook Secret</label>
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">Webhook Secret</label>
                     <input
                       type="password"
                       placeholder="whsec_..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1675,7 +1675,7 @@ const IntegrationsTab = ({ settings }) => {
                 <button
                   type="button"
                   onClick={() => setShowConfigModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  className="flex-1 px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 transition font-semibold"
                 >
                   Cancel
                 </button>
@@ -1699,15 +1699,15 @@ const IntegrationsTab = ({ settings }) => {
 const AppearanceTab = ({ settings, setSettings, onSave }) => {
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">Appearance Settings</h2>
+      <h2 className="text-xl font-bold text-ink-900">Appearance Settings</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Theme</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Theme</label>
           <select
             value={settings.theme}
             onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="Light">Light</option>
             <option value="Dark">Dark</option>
@@ -1716,11 +1716,11 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Primary Color</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Primary Color</label>
           <select
             value={settings.primaryColor}
             onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
@@ -1730,11 +1730,11 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Sidebar Style</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Sidebar Style</label>
           <select
             value={settings.sidebarStyle}
             onChange={(e) => setSettings({ ...settings, sidebarStyle: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="Expanded">Expanded</option>
             <option value="Collapsed">Collapsed</option>
@@ -1743,11 +1743,11 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Font Size</label>
+          <label className="block text-sm font-semibold text-ink-700 mb-2">Font Size</label>
           <select
             value={settings.fontSize}
             onChange={(e) => setSettings({ ...settings, fontSize: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="Small">Small</option>
             <option value="Medium">Medium</option>
@@ -1758,8 +1758,8 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
         <div className="md:col-span-2 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-semibold text-gray-900">Compact Mode</h4>
-              <p className="text-sm text-gray-600">Reduce spacing for more content</p>
+              <h4 className="font-semibold text-ink-900">Compact Mode</h4>
+              <p className="text-sm text-ink-600">Reduce spacing for more content</p>
             </div>
             <button
               onClick={() => setSettings({ ...settings, compactMode: !settings.compactMode })}
@@ -1777,8 +1777,8 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
 
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-semibold text-gray-900">Show Animations</h4>
-              <p className="text-sm text-gray-600">Enable interface animations</p>
+              <h4 className="font-semibold text-ink-900">Show Animations</h4>
+              <p className="text-sm text-ink-600">Enable interface animations</p>
             </div>
             <button
               onClick={() => setSettings({ ...settings, showAnimations: !settings.showAnimations })}
@@ -1813,14 +1813,14 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
 const SecurityTab = ({ settings, setSettings, onSave }) => {
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">Security Settings</h2>
+      <h2 className="text-xl font-bold text-ink-900">Security Settings</h2>
 
       <div className="space-y-6">
-        <div className="border border-gray-200 rounded-lg p-5">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Password Policy</h3>
+        <div className="border border-ink-100 rounded-lg p-5">
+          <h3 className="text-lg font-semibold text-ink-900 mb-4">Password Policy</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Minimum Length</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Minimum Length</label>
               <input
                 type="number"
                 value={settings.minPasswordLength || 8}
@@ -1828,12 +1828,12 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                   ...settings,
                   minPasswordLength: parseInt(e.target.value)
                 })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Expiry (Days)</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Expiry (Days)</label>
               <input
                 type="number"
                 value={settings.passwordExpiry || 90}
@@ -1841,7 +1841,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                   ...settings,
                   passwordExpiry: parseInt(e.target.value)
                 })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
             </div>
           </div>
@@ -1862,42 +1862,42 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                   })}
                   className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                 />
-                <label className="text-sm text-gray-700">{option.label}</label>
+                <label className="text-sm text-ink-700">{option.label}</label>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="border border-gray-200 rounded-lg p-5">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Session & Login</h3>
+        <div className="border border-ink-100 rounded-lg p-5">
+          <h3 className="text-lg font-semibold text-ink-900 mb-4">Session & Login</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Session Timeout (minutes)</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Session Timeout (minutes)</label>
               <input
                 type="number"
                 value={settings.sessionTimeout}
                 onChange={(e) => setSettings({ ...settings, sessionTimeout: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Max Login Attempts</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Max Login Attempts</label>
               <input
                 type="number"
                 value={settings.loginAttempts}
                 onChange={(e) => setSettings({ ...settings, loginAttempts: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Lockout Duration (minutes)</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Lockout Duration (minutes)</label>
               <input
                 type="number"
                 value={settings.lockoutDuration}
                 onChange={(e) => setSettings({ ...settings, lockoutDuration: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
             </div>
           </div>
@@ -1905,8 +1905,8 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
           <div className="mt-4 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-semibold text-gray-900">Two-Factor Authentication</h4>
-                <p className="text-sm text-gray-600">Add extra security layer</p>
+                <h4 className="font-semibold text-ink-900">Two-Factor Authentication</h4>
+                <p className="text-sm text-ink-600">Add extra security layer</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, twoFactorAuth: !settings.twoFactorAuth })}
@@ -1924,8 +1924,8 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
 
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-semibold text-gray-900">Audit Log</h4>
-                <p className="text-sm text-gray-600">Track all system activities</p>
+                <h4 className="font-semibold text-ink-900">Audit Log</h4>
+                <p className="text-sm text-ink-600">Track all system activities</p>
               </div>
               <button
                 onClick={() => setSettings({ ...settings, auditLog: !settings.auditLog })}
@@ -2031,8 +2031,8 @@ const AIConfigTab = ({ onSave }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">AI Configuration</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-xl font-bold text-ink-900">AI Configuration</h2>
+          <p className="text-sm text-ink-600 mt-1">
             Configure AI providers for automated report generation
           </p>
         </div>
@@ -2062,8 +2062,8 @@ const AIConfigTab = ({ onSave }) => {
       )}
 
       {/* Provider Selection */}
-      <div className="border border-gray-200 rounded-lg p-5">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Provider</h3>
+      <div className="border border-ink-100 rounded-lg p-5">
+        <h3 className="text-lg font-semibold text-ink-900 mb-4">AI Provider</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {providers.map((provider) => {
             const Icon = provider.icon;
@@ -2075,20 +2075,20 @@ const AIConfigTab = ({ onSave }) => {
                 className={`flex items-center gap-3 p-4 border-2 rounded-lg transition text-left ${
                   isSelected
                     ? 'border-blue-600 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300'
+                    : 'border-ink-100 hover:border-blue-300'
                 }`}
               >
                 <div className={`p-3 rounded-lg ${
-                  isSelected ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
+                  isSelected ? 'bg-blue-600 text-white' : 'bg-ink-100 text-ink-600'
                 }`}>
                   <Icon size={20} />
                 </div>
                 <div>
-                  <h4 className={`font-semibold ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
+                  <h4 className={`font-semibold ${isSelected ? 'text-blue-900' : 'text-ink-900'}`}>
                     {provider.label}
                   </h4>
                   {provider.value === 'template' && (
-                    <p className="text-xs text-gray-600 mt-1">No API key required</p>
+                    <p className="text-xs text-ink-600 mt-1">No API key required</p>
                   )}
                 </div>
               </button>
@@ -2099,11 +2099,11 @@ const AIConfigTab = ({ onSave }) => {
 
       {/* OpenAI Configuration */}
       {aiSettings.provider === 'openai' && (
-        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">OpenAI Configuration</h3>
+        <div className="border border-ink-100 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-ink-900">OpenAI Configuration</h3>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               API Key <span className="text-red-500">*</span>
             </label>
             <input
@@ -2111,19 +2111,19 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.openaiApiKey}
               onChange={(e) => handleChange('openaiApiKey', e.target.value)}
               placeholder="sk-..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">platform.openai.com</a>
+            <p className="text-xs text-ink-500 mt-1">
+              Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-navy-700 hover:underline">platform.openai.com</a>
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Model</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Model</label>
             <select
               value={aiSettings.openaiModel}
               onChange={(e) => handleChange('openaiModel', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
               <option value="gpt-4">GPT-4 (Most capable, slower)</option>
               <option value="gpt-4-turbo-preview">GPT-4 Turbo (Faster, cheaper)</option>
@@ -2135,11 +2135,11 @@ const AIConfigTab = ({ onSave }) => {
 
       {/* Claude Configuration */}
       {aiSettings.provider === 'claude' && (
-        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Anthropic Claude Configuration</h3>
+        <div className="border border-ink-100 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-ink-900">Anthropic Claude Configuration</h3>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               API Key <span className="text-red-500">*</span>
             </label>
             <input
@@ -2147,19 +2147,19 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.claudeApiKey}
               onChange={(e) => handleChange('claudeApiKey', e.target.value)}
               placeholder="sk-ant-..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Get your API key from <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">console.anthropic.com</a>
+            <p className="text-xs text-ink-500 mt-1">
+              Get your API key from <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer" className="text-navy-700 hover:underline">console.anthropic.com</a>
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Model</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Model</label>
             <select
               value={aiSettings.claudeModel}
               onChange={(e) => handleChange('claudeModel', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
               <option value="claude-3-opus-20240229">Claude 3 Opus (Most capable)</option>
               <option value="claude-3-sonnet-20240229">Claude 3 Sonnet (Balanced)</option>
@@ -2171,11 +2171,11 @@ const AIConfigTab = ({ onSave }) => {
 
       {/* Custom Configuration */}
       {aiSettings.provider === 'custom' && (
-        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Custom Endpoint Configuration</h3>
+        <div className="border border-ink-100 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-ink-900">Custom Endpoint Configuration</h3>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               API Endpoint <span className="text-red-500">*</span>
             </label>
             <input
@@ -2183,12 +2183,12 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.customEndpoint}
               onChange={(e) => handleChange('customEndpoint', e.target.value)}
               placeholder="https://api.example.com/v1/chat/completions"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               API Key <span className="text-red-500">*</span>
             </label>
             <input
@@ -2196,18 +2196,18 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.customApiKey}
               onChange={(e) => handleChange('customApiKey', e.target.value)}
               placeholder="Your custom API key"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Model Name</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Model Name</label>
             <input
               type="text"
               value={aiSettings.customModel}
               onChange={(e) => handleChange('customModel', e.target.value)}
               placeholder="model-name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
         </div>
@@ -2215,12 +2215,12 @@ const AIConfigTab = ({ onSave }) => {
 
       {/* Generation Parameters */}
       {aiSettings.provider !== 'template' && (
-        <div className="border border-gray-200 rounded-lg p-5 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Generation Parameters</h3>
+        <div className="border border-ink-100 rounded-lg p-5 space-y-4">
+          <h3 className="text-lg font-semibold text-ink-900">Generation Parameters</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Temperature: {aiSettings.temperature}
               </label>
               <input
@@ -2232,28 +2232,28 @@ const AIConfigTab = ({ onSave }) => {
                 onChange={(e) => handleChange('temperature', parseFloat(e.target.value))}
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Higher values = more creative, Lower values = more focused
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Max Tokens</label>
+              <label className="block text-sm font-semibold text-ink-700 mb-2">Max Tokens</label>
               <input
                 type="number"
                 value={aiSettings.maxTokens}
                 onChange={(e) => handleChange('maxTokens', parseInt(e.target.value))}
                 min="100"
                 max="8000"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Maximum length of generated content
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Top P: {aiSettings.topP}
               </label>
               <input
@@ -2265,13 +2265,13 @@ const AIConfigTab = ({ onSave }) => {
                 onChange={(e) => handleChange('topP', parseFloat(e.target.value))}
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Controls diversity of output
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Frequency Penalty: {aiSettings.frequencyPenalty}
               </label>
               <input
@@ -2283,7 +2283,7 @@ const AIConfigTab = ({ onSave }) => {
                 onChange={(e) => handleChange('frequencyPenalty', parseFloat(e.target.value))}
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Reduces repetition
               </p>
             </div>
@@ -2292,13 +2292,13 @@ const AIConfigTab = ({ onSave }) => {
       )}
 
       {/* Fallback Settings */}
-      <div className="border border-gray-200 rounded-lg p-5 space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Fallback Configuration</h3>
+      <div className="border border-ink-100 rounded-lg p-5 space-y-4">
+        <h3 className="text-lg font-semibold text-ink-900">Fallback Configuration</h3>
 
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-semibold text-gray-900">Enable Fallback</h4>
-            <p className="text-sm text-gray-600">Use template-based generation if AI fails</p>
+            <h4 className="font-semibold text-ink-900">Enable Fallback</h4>
+            <p className="text-sm text-ink-600">Use template-based generation if AI fails</p>
           </div>
           <button
             onClick={() => handleChange('enableFallback', !aiSettings.enableFallback)}
@@ -2316,11 +2316,11 @@ const AIConfigTab = ({ onSave }) => {
 
         {aiSettings.enableFallback && (
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Fallback Provider</label>
+            <label className="block text-sm font-semibold text-ink-700 mb-2">Fallback Provider</label>
             <select
               value={aiSettings.fallbackProvider}
               onChange={(e) => handleChange('fallbackProvider', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
               <option value="template">Template-based Generation</option>
               <option value="openai">OpenAI (if not primary)</option>
@@ -2345,16 +2345,16 @@ const AIConfigTab = ({ onSave }) => {
 
 // Stat Card Component
 const StatCard = ({ icon: Icon, label, value, total, color }) => (
-  <div className="bg-white rounded-lg border border-gray-200 p-4">
+  <div className="bg-white rounded-lg border border-ink-100 p-4">
     <div className="flex items-center gap-3">
       <div className={`${color} p-3 rounded-lg`}>
         <Icon className="text-white" size={20} />
       </div>
       <div>
-        <p className="text-xs text-gray-500 uppercase">{label}</p>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-xs text-ink-500 uppercase">{label}</p>
+        <p className="text-h1 text-ink-900">
           {value}
-          {total && <span className="text-sm text-gray-500"> / {total}</span>}
+          {total && <span className="text-sm text-ink-500"> / {total}</span>}
         </p>
       </div>
     </div>
@@ -2378,8 +2378,8 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Departments</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-xl font-bold text-ink-900">Departments</h2>
+          <p className="text-sm text-ink-600 mt-1">
             Manage organizational departments ({departments.length} total)
           </p>
         </div>
@@ -2396,7 +2396,7 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
         {departments.map((dept) => (
           <div
             key={dept.id}
-            className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+            className="border border-ink-100 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between mb-3">
               <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${dept.color} flex items-center justify-center text-white`}>
@@ -2405,14 +2405,14 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
               <div className="flex gap-2">
                 <button
                   onClick={() => onEdit(dept)}
-                  className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                  className="p-1 text-ink-600 hover:text-blue-600 transition-colors"
                   title="Edit"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => onDelete(dept.id)}
-                  className="p-1 text-gray-600 hover:text-red-600 transition-colors"
+                  className="p-1 text-ink-600 hover:text-red-600 transition-colors"
                   title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -2420,27 +2420,27 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
               </div>
             </div>
 
-            <h3 className="font-bold text-gray-900 mb-1">{dept.name}</h3>
+            <h3 className="font-bold text-ink-900 mb-1">{dept.name}</h3>
             {dept.code && (
-              <p className="text-xs text-gray-500 mb-2">Code: {dept.code}</p>
+              <p className="text-xs text-ink-500 mb-2">Code: {dept.code}</p>
             )}
             {dept.description && (
-              <p className="text-sm text-gray-600 mb-2 line-clamp-2">{dept.description}</p>
+              <p className="text-sm text-ink-600 mb-2 line-clamp-2">{dept.description}</p>
             )}
             <div className="flex items-center justify-between mt-3 pt-3 border-t">
-              <span className={`text-xs px-2 py-1 rounded ${dept.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span className={`text-xs px-2 py-1 rounded ${dept.isActive ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-gray-800'}`}>
                 {dept.isActive ? 'Active' : 'Inactive'}
               </span>
-              <span className="text-xs text-gray-500">Order: {dept.sortOrder}</span>
+              <span className="text-xs text-ink-500">Order: {dept.sortOrder}</span>
             </div>
           </div>
         ))}
       </div>
 
       {departments.length === 0 && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
-          <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-600">No departments yet. Add your first department to get started.</p>
+        <div className="text-center py-12 border-2 border-dashed border-ink-200 rounded-lg">
+          <Building2 className="w-12 h-12 text-ink-400 mx-auto mb-3" />
+          <p className="text-ink-600">No departments yet. Add your first department to get started.</p>
         </div>
       )}
     </div>
@@ -2455,20 +2455,20 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
     { value: 'Executive', label: 'Executive', color: 'bg-purple-100 text-purple-800' },
     { value: 'Senior', label: 'Senior', color: 'bg-blue-100 text-blue-800' },
     { value: 'Mid', label: 'Mid', color: 'bg-green-100 text-green-800' },
-    { value: 'Entry', label: 'Entry', color: 'bg-gray-100 text-gray-800' },
+    { value: 'Entry', label: 'Entry', color: 'bg-ink-100 text-gray-800' },
   ];
 
   const getLevelColor = (level) => {
     const option = levelOptions.find(opt => opt.value === level);
-    return option ? option.color : 'bg-gray-100 text-gray-800';
+    return option ? option.color : 'bg-ink-100 text-gray-800';
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Positions</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-xl font-bold text-ink-900">Positions</h2>
+          <p className="text-sm text-ink-600 mt-1">
             Manage job positions and titles ({positions.length} total)
           </p>
         </div>
@@ -2485,7 +2485,7 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
         {positions.map((position) => (
           <div
             key={position.id}
-            className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+            className="border border-ink-100 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-600 flex items-center justify-center text-white">
@@ -2494,14 +2494,14 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
               <div className="flex gap-2">
                 <button
                   onClick={() => onEdit(position)}
-                  className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                  className="p-1 text-ink-600 hover:text-blue-600 transition-colors"
                   title="Edit"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => onDelete(position.id)}
-                  className="p-1 text-gray-600 hover:text-red-600 transition-colors"
+                  className="p-1 text-ink-600 hover:text-red-600 transition-colors"
                   title="Delete"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -2509,9 +2509,9 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
               </div>
             </div>
 
-            <h3 className="font-bold text-gray-900 mb-1">{position.title}</h3>
+            <h3 className="font-bold text-ink-900 mb-1">{position.title}</h3>
             {position.code && (
-              <p className="text-xs text-gray-500 mb-2">Code: {position.code}</p>
+              <p className="text-xs text-ink-500 mb-2">Code: {position.code}</p>
             )}
             {position.level && (
               <span className={`text-xs px-2 py-1 rounded ${getLevelColor(position.level)} inline-block mb-2`}>
@@ -2519,22 +2519,22 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
               </span>
             )}
             {position.description && (
-              <p className="text-sm text-gray-600 mb-2 line-clamp-2">{position.description}</p>
+              <p className="text-sm text-ink-600 mb-2 line-clamp-2">{position.description}</p>
             )}
             <div className="flex items-center justify-between mt-3 pt-3 border-t">
-              <span className={`text-xs px-2 py-1 rounded ${position.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span className={`text-xs px-2 py-1 rounded ${position.isActive ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-gray-800'}`}>
                 {position.isActive ? 'Active' : 'Inactive'}
               </span>
-              <span className="text-xs text-gray-500">Order: {position.sortOrder}</span>
+              <span className="text-xs text-ink-500">Order: {position.sortOrder}</span>
             </div>
           </div>
         ))}
       </div>
 
       {positions.length === 0 && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
-          <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-600">No positions yet. Add your first position to get started.</p>
+        <div className="text-center py-12 border-2 border-dashed border-ink-200 rounded-lg">
+          <Briefcase className="w-12 h-12 text-ink-400 mx-auto mb-3" />
+          <p className="text-ink-600">No positions yet. Add your first position to get started.</p>
         </div>
       )}
     </div>

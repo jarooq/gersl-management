@@ -89,9 +89,9 @@ export default function CashCountModal({ account, existingCount = null, onClose,
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-        <div className="px-5 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Cash count — {account.name}</h2>
-          <p className="text-xs text-gray-500 mt-1">
+        <div className="px-5 py-4 border-b border-ink-100">
+          <h2 className="text-lg font-semibold text-ink-900">Cash count — {account.name}</h2>
+          <p className="text-xs text-ink-500 mt-1">
             Expected (system): {account.currency} {Number(expected).toLocaleString()}
             {account.type === 'Locker' && <span className="ml-2 text-yellow-700">Witness required</span>}
           </p>
@@ -100,7 +100,7 @@ export default function CashCountModal({ account, existingCount = null, onClose,
         <div className="px-5 py-4 overflow-y-auto flex-1 space-y-4">
           {phase === 'start' && (
             <div className="space-y-3 text-sm">
-              <p className="text-gray-700">
+              <p className="text-ink-700">
                 Start a count. The system will lock in the current balance ({account.currency} {Number(expected).toLocaleString()}) as the expected total.
                 Then enter the physical denomination breakdown.
               </p>
@@ -111,19 +111,19 @@ export default function CashCountModal({ account, existingCount = null, onClose,
           {phase === 'submit' && (
             <>
               <div className="grid grid-cols-3 gap-2 text-sm">
-                <div className="font-medium text-gray-700">Denomination</div>
-                <div className="font-medium text-gray-700 text-right">Qty</div>
-                <div className="font-medium text-gray-700 text-right">Subtotal</div>
+                <div className="font-medium text-ink-700">Denomination</div>
+                <div className="font-medium text-ink-700 text-right">Qty</div>
+                <div className="font-medium text-ink-700 text-right">Subtotal</div>
                 {DEFAULT_DENOMS.map(d => (
                   <React.Fragment key={d}>
-                    <div className="text-gray-700 self-center">{account.currency} {d.toLocaleString()}</div>
+                    <div className="text-ink-700 self-center">{account.currency} {d.toLocaleString()}</div>
                     <div>
                       <input
                         type="number"
                         min={0}
                         value={breakdown[d] ?? 0}
                         onChange={(e) => updateDenom(d, e.target.value)}
-                        className="w-full text-right rounded-md border border-gray-300 px-2 py-1"
+                        className="w-full text-right rounded-md border border-ink-200 px-2 py-1"
                       />
                     </div>
                     <div className="text-right self-center">
@@ -133,14 +133,14 @@ export default function CashCountModal({ account, existingCount = null, onClose,
                 ))}
               </div>
 
-              <div className="border-t border-gray-200 pt-3 grid grid-cols-2 gap-3 text-sm">
+              <div className="border-t border-ink-100 pt-3 grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <div className="text-xs uppercase text-gray-500">Counted total</div>
+                  <div className="text-xs uppercase text-ink-500">Counted total</div>
                   <div className="text-xl font-semibold">{account.currency} {counted.toLocaleString()}</div>
                 </div>
                 <div>
-                  <div className="text-xs uppercase text-gray-500">Variance</div>
-                  <div className={`text-xl font-semibold ${variance === 0 ? 'text-gray-900' : variance > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                  <div className="text-xs uppercase text-ink-500">Variance</div>
+                  <div className={`text-xl font-semibold ${variance === 0 ? 'text-ink-900' : variance > 0 ? 'text-green-700' : 'text-red-700'}`}>
                     {variance > 0 ? '+' : ''}{variance.toLocaleString()}
                   </div>
                 </div>
@@ -148,11 +148,11 @@ export default function CashCountModal({ account, existingCount = null, onClose,
 
               {account.type === 'Locker' && (
                 <label className="block text-sm">
-                  <span className="font-medium text-gray-700">Witness</span>
+                  <span className="font-medium text-ink-700">Witness</span>
                   <select
                     value={witnessUserId}
                     onChange={(e) => setWitnessUserId(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2"
                   >
                     <option value="">Select witness</option>
                     {users.map(u => <option key={u.id} value={u.id}>{u.fullName} — {u.role}</option>)}
@@ -161,12 +161,12 @@ export default function CashCountModal({ account, existingCount = null, onClose,
               )}
 
               <label className="block text-sm">
-                <span className="font-medium text-gray-700">Notes</span>
+                <span className="font-medium text-ink-700">Notes</span>
                 <textarea
                   rows={2}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2"
                 />
               </label>
 
@@ -175,13 +175,13 @@ export default function CashCountModal({ account, existingCount = null, onClose,
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-gray-200 flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Close</button>
+        <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-ink-700 bg-white border border-ink-200 rounded-md hover:bg-ink-50">Close</button>
           {phase === 'start' && (
             <button
               onClick={onStart}
               disabled={submitting}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition disabled:opacity-50"
             >
               {submitting ? 'Starting…' : 'Start count'}
             </button>

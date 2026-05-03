@@ -188,12 +188,12 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
           <div className="space-y-6">
             {/* Basic Information Section */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 pb-2 border-b border-ink-100">
                 Basic Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Partner Name *
                   </label>
                   <input
@@ -209,7 +209,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
                 {/* Logo Section */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2 flex items-center gap-2">
                     <Image size={16} className="text-blue-600" />
                     Partner Logo
                   </label>
@@ -217,7 +217,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                   {/* Logo Preview */}
                   {(logoPreview || formData.logo) && (
                     <div className="mb-3 flex items-center gap-3">
-                      <div className="w-24 h-24 rounded-lg border-2 border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
+                      <div className="w-24 h-24 rounded-lg border-2 border-ink-100 overflow-hidden bg-ink-50 flex items-center justify-center">
                         <img
                           src={logoPreview || formData.logo}
                           alt="Partner logo preview"
@@ -239,14 +239,14 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
                   {/* Upload Option */}
                   <div className="mb-3">
-                    <label className="block text-xs font-medium text-gray-600 mb-2">
+                    <label className="block text-xs font-medium text-ink-600 mb-2">
                       Upload Logo
                     </label>
                     <div className="flex items-center gap-2">
                       <label className="flex-1 cursor-pointer">
-                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all">
-                          <Upload size={18} className="text-gray-400" />
-                          <span className="text-sm text-gray-600">Click to upload or drag image</span>
+                        <div className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-ink-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all">
+                          <Upload size={18} className="text-ink-400" />
+                          <span className="text-sm text-ink-600">Click to upload or drag image</span>
                         </div>
                         <input
                           type="file"
@@ -256,19 +256,19 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                         />
                       </label>
                     </div>
-                    <p className="mt-1 text-xs text-gray-500">Supports: JPG, PNG, GIF (max 2MB)</p>
+                    <p className="mt-1 text-xs text-ink-500">Supports: JPG, PNG, GIF (max 2MB)</p>
                   </div>
 
                   {/* OR Divider */}
                   <div className="flex items-center gap-3 my-3">
                     <div className="flex-1 h-px bg-gray-200"></div>
-                    <span className="text-xs text-gray-400 font-medium">OR</span>
+                    <span className="text-xs text-ink-400 font-medium">OR</span>
                     <div className="flex-1 h-px bg-gray-200"></div>
                   </div>
 
                   {/* URL Option */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-2">
+                    <label className="block text-xs font-medium text-ink-600 mb-2">
                       Logo URL
                     </label>
                     <input
@@ -283,7 +283,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Category *
                   </label>
                   <select
@@ -300,7 +300,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Organization Type *
                   </label>
                   <select
@@ -317,7 +317,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Status
                   </label>
                   <select
@@ -332,7 +332,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Partnership Start Date
                   </label>
                   <input
@@ -348,12 +348,12 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
             {/* Contact Information Section */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 pb-2 border-b border-ink-100">
                 Contact Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Contact Person *
                   </label>
                   <input
@@ -368,7 +368,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Email *
                   </label>
                   <input
@@ -383,7 +383,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Phone
                   </label>
                   <input
@@ -397,7 +397,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Website
                   </label>
                   <input
@@ -414,12 +414,12 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
             {/* Location Section */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 pb-2 border-b border-ink-100">
                 Location
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Country *
                   </label>
                   <input
@@ -434,7 +434,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-700 mb-2">
                     Address
                   </label>
                   <input
@@ -451,7 +451,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
             {/* Focus Areas Section */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 pb-2 border-b border-ink-100">
                 Focus Areas
               </h3>
               <div className="space-y-3">
@@ -464,7 +464,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                       className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                         formData.focusAreas.includes(area)
                           ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-md'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+                          : 'bg-ink-100 text-ink-700 hover:bg-gray-200 border border-ink-200'
                       }`}
                     >
                       {area}
@@ -496,8 +496,8 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                 </div>
 
                 {formData.focusAreas.length > 0 && (
-                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-600 mb-2">Selected Focus Areas:</p>
+                  <div className="bg-ink-50 rounded-lg p-3 border border-ink-100">
+                    <p className="text-xs font-semibold text-ink-600 mb-2">Selected Focus Areas:</p>
                     <div className="flex flex-wrap gap-2">
                       {formData.focusAreas.map((area, idx) => (
                         <span
@@ -522,7 +522,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
             {/* Additional Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Additional Notes
               </label>
               <textarea
@@ -537,11 +537,11 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
+          <div className="flex gap-3 mt-6 pt-6 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors"
+              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors"
             >
               Cancel
             </button>

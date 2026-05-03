@@ -268,20 +268,20 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
           {/* Photos Section */}
           {needsPhotos && (
             <div className="space-y-3">
-              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="font-bold text-ink-900 flex items-center gap-2">
                 <LinkIcon size={18} className="text-purple-600" />
                 Photo Links ({photoLinks.length})
               </h3>
 
               {/* Existing links */}
               {photoLinks.map((link, index) => (
-                <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                  <LinkIcon size={16} className="text-gray-400 flex-shrink-0" />
+                <div key={index} className="flex items-center gap-2 p-3 bg-ink-50 border border-ink-100 rounded-lg">
+                  <LinkIcon size={16} className="text-ink-400 flex-shrink-0" />
                   <a
                     href={link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-sm text-blue-600 hover:underline truncate"
+                    className="flex-1 text-sm text-navy-700 hover:underline truncate"
                   >
                     {link}
                   </a>
@@ -302,7 +302,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
                   onChange={(e) => setNewPhotoLink(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addLink('photo')}
                   placeholder="https://drive.google.com/..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <button
                   onClick={() => addLink('photo')}
@@ -318,19 +318,19 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
           {/* Videos Section */}
           {needsVideos && (
             <div className="space-y-3">
-              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="font-bold text-ink-900 flex items-center gap-2">
                 <LinkIcon size={18} className="text-purple-600" />
                 Video Links ({videoLinks.length})
               </h3>
 
               {videoLinks.map((link, index) => (
-                <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                  <LinkIcon size={16} className="text-gray-400 flex-shrink-0" />
+                <div key={index} className="flex items-center gap-2 p-3 bg-ink-50 border border-ink-100 rounded-lg">
+                  <LinkIcon size={16} className="text-ink-400 flex-shrink-0" />
                   <a
                     href={link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-sm text-blue-600 hover:underline truncate"
+                    className="flex-1 text-sm text-navy-700 hover:underline truncate"
                   >
                     {link}
                   </a>
@@ -350,7 +350,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
                   onChange={(e) => setNewVideoLink(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addLink('video')}
                   placeholder="https://drive.google.com/..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <button
                   onClick={() => addLink('video')}
@@ -366,19 +366,19 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
           {/* Testimonials Section */}
           {needsTestimonials && (
             <div className="space-y-3">
-              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="font-bold text-ink-900 flex items-center gap-2">
                 <LinkIcon size={18} className="text-purple-600" />
                 Testimonial Links ({testimonialLinks.length})
               </h3>
 
               {testimonialLinks.map((link, index) => (
-                <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                  <LinkIcon size={16} className="text-gray-400 flex-shrink-0" />
+                <div key={index} className="flex items-center gap-2 p-3 bg-ink-50 border border-ink-100 rounded-lg">
+                  <LinkIcon size={16} className="text-ink-400 flex-shrink-0" />
                   <a
                     href={link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-sm text-blue-600 hover:underline truncate"
+                    className="flex-1 text-sm text-navy-700 hover:underline truncate"
                   >
                     {link}
                   </a>
@@ -398,7 +398,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
                   onChange={(e) => setNewTestimonialLink(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addLink('testimonial')}
                   placeholder="https://drive.google.com/..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <button
                   onClick={() => addLink('testimonial')}
@@ -413,7 +413,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
 
           {/* Notes */}
           <div className="space-y-2">
-            <label className="block font-bold text-gray-900">
+            <label className="block font-bold text-ink-900">
               Notes (Optional)
             </label>
             <textarea
@@ -421,16 +421,16 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes about the media coverage..."
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center">
+        <div className="bg-ink-50 border-t border-ink-100 p-4 flex justify-between items-center">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+            className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
           >
             Cancel
           </button>

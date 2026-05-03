@@ -6,7 +6,7 @@ import AssignToOfficerModal from './components/AssignToOfficerModal';
 import RFQBuilderModal from './components/RFQBuilderModal';
 
 const URGENCY_BADGE = {
-  Low: 'bg-gray-100 text-gray-700',
+  Low: 'bg-ink-100 text-ink-700',
   Normal: 'bg-blue-100 text-blue-700',
   High: 'bg-orange-100 text-orange-700',
   Urgent: 'bg-red-100 text-red-700'
@@ -19,7 +19,7 @@ const STATUS_BADGE = {
   Approved: 'bg-green-100 text-green-700',
   Rejected: 'bg-red-100 text-red-700',
   'In-Sourcing': 'bg-purple-100 text-purple-700',
-  Cancelled: 'bg-gray-100 text-gray-600'
+  Cancelled: 'bg-ink-100 text-ink-600'
 };
 
 const formatMoney = (amount, currency = 'LKR') => {
@@ -79,22 +79,22 @@ export default function ProcurementInboxPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Procurement Inbox</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <h1 className="text-h1 text-ink-900">Procurement Inbox</h1>
+        <p className="text-sm text-ink-500 mt-1">
           {isManager
             ? 'Assign incoming procurement requests to officers and choose the procurement method.'
             : 'Requests assigned to you. Pick one to start the RFQ flow.'}
         </p>
       </header>
 
-      <div className="flex gap-2 mb-4 border-b border-gray-200">
+      <div className="flex gap-2 mb-4 border-b border-ink-100">
         {isManager && (
           <button
             onClick={() => setActiveTab('unassigned')}
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition ${
               activeTab === 'unassigned'
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-ink-500 hover:text-ink-700'
             }`}
           >
             Unassigned
@@ -105,7 +105,7 @@ export default function ProcurementInboxPage() {
           className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition ${
             activeTab === 'mine'
               ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-ink-500 hover:text-ink-700'
           }`}
         >
           My Queue
@@ -116,48 +116,48 @@ export default function ProcurementInboxPage() {
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 mb-4 text-sm">{error}</div>
       )}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white border border-ink-100 rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-ink-100">
+          <thead className="bg-ink-50">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">PR #</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estimated</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Urgency</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Method</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Officer</th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">PR #</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Title</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Department</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Estimated</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Urgency</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Status</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Method</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Officer</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-ink-500 uppercase">Action</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
+          <tbody className="bg-white divide-y divide-ink-100">
             {loading && (
-              <tr><td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-500">Loading…</td></tr>
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-sm text-ink-500">Loading…</td></tr>
             )}
             {!loading && rows.length === 0 && (
-              <tr><td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-500">
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-sm text-ink-500">
                 {activeTab === 'unassigned' ? 'No unassigned requests.' : 'Nothing in your queue right now.'}
               </td></tr>
             )}
             {!loading && rows.map(r => (
               <tr key={r.id}>
-                <td className="px-4 py-2 text-sm text-gray-900 font-mono">{r.requisitionNumber || `PR-${r.id}`}</td>
-                <td className="px-4 py-2 text-sm text-gray-900">{r.title}</td>
-                <td className="px-4 py-2 text-sm text-gray-600">{r.department || '—'}</td>
-                <td className="px-4 py-2 text-sm text-gray-900">{formatMoney(r.estimatedAmount, r.currency)}</td>
+                <td className="px-4 py-2 text-sm text-ink-900 font-mono">{r.requisitionNumber || `PR-${r.id}`}</td>
+                <td className="px-4 py-2 text-sm text-ink-900">{r.title}</td>
+                <td className="px-4 py-2 text-sm text-ink-600">{r.department || '—'}</td>
+                <td className="px-4 py-2 text-sm text-ink-900">{formatMoney(r.estimatedAmount, r.currency)}</td>
                 <td className="px-4 py-2">
                   <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${URGENCY_BADGE[r.urgency] || URGENCY_BADGE.Normal}`}>
                     {r.urgency || 'Normal'}
                   </span>
                 </td>
                 <td className="px-4 py-2">
-                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[r.status] || 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${STATUS_BADGE[r.status] || 'bg-ink-100 text-ink-700'}`}>
                     {r.status || '—'}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-600">{r.procurementMethod || '—'}</td>
-                <td className="px-4 py-2 text-sm text-gray-600">
+                <td className="px-4 py-2 text-sm text-ink-600">{r.procurementMethod || '—'}</td>
+                <td className="px-4 py-2 text-sm text-ink-600">
                   {r.assignedOfficer ? r.assignedOfficer.fullName : '—'}
                 </td>
                 <td className="px-4 py-2">
@@ -178,7 +178,7 @@ export default function ProcurementInboxPage() {
                     </button>
                   )}
                   {!canStartRFQ(r) && activeTab === 'mine' && (
-                    <span className="text-xs text-gray-400">{r.status}</span>
+                    <span className="text-xs text-ink-400">{r.status}</span>
                   )}
                 </td>
               </tr>

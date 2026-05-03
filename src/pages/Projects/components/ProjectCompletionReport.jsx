@@ -99,48 +99,48 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
           <div className="space-y-8">
             {/* Section 1: Project Information Summary */}
-            <div className="bg-gray-50 p-6 rounded-lg border-l-4 border-green-600">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-ink-50 p-6 rounded-lg border-l-4 border-green-600">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <FileText size={20} className="text-green-600" />
                 1. Project Information Summary
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div>
-                  <label className="text-gray-600 font-semibold">Project Name</label>
-                  <p className="text-gray-900">{project.name}</p>
+                  <label className="text-ink-600 font-semibold">Project Name</label>
+                  <p className="text-ink-900">{project.name}</p>
                 </div>
                 <div>
-                  <label className="text-gray-600 font-semibold">Programme Area</label>
-                  <p className="text-gray-900">{project.programmeArea}</p>
+                  <label className="text-ink-600 font-semibold">Programme Area</label>
+                  <p className="text-ink-900">{project.programmeArea}</p>
                 </div>
                 <div>
-                  <label className="text-gray-600 font-semibold">Donor</label>
-                  <p className="text-gray-900">{project.donor}</p>
+                  <label className="text-ink-600 font-semibold">Donor</label>
+                  <p className="text-ink-900">{project.donor}</p>
                 </div>
                 <div>
-                  <label className="text-gray-600 font-semibold">Start Date</label>
-                  <p className="text-gray-900">{project.startDate}</p>
+                  <label className="text-ink-600 font-semibold">Start Date</label>
+                  <p className="text-ink-900">{project.startDate}</p>
                 </div>
                 <div>
-                  <label className="text-gray-600 font-semibold">Planned End Date</label>
-                  <p className="text-gray-900">{project.endDate}</p>
+                  <label className="text-ink-600 font-semibold">Planned End Date</label>
+                  <p className="text-ink-900">{project.endDate}</p>
                 </div>
                 <div>
-                  <label className="text-gray-600 font-semibold">Location</label>
-                  <p className="text-gray-900">{project.location}</p>
+                  <label className="text-ink-600 font-semibold">Location</label>
+                  <p className="text-ink-900">{project.location}</p>
                 </div>
               </div>
             </div>
 
             {/* Section 2: Completion Details */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Calendar size={20} className="text-blue-600" />
                 2. Completion Details
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <Calendar size={16} className="text-blue-600" />
                     Actual Completion Date *
                   </label>
@@ -150,7 +150,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.completionDate}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                   />
                 </div>
               </div>
@@ -158,17 +158,17 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 3: Financial Summary */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <DollarSign size={20} className="text-green-600" />
                 3. Financial Summary
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <label className="text-sm font-semibold text-gray-600">Planned Budget</label>
-                  <p className="text-2xl font-bold text-gray-900">LKR {project.budget.toLocaleString()}</p>
+                <div className="bg-ink-50 p-4 rounded-lg">
+                  <label className="text-sm font-semibold text-ink-600">Planned Budget</label>
+                  <p className="text-h1 text-ink-900">LKR {project.budget.toLocaleString()}</p>
                 </div>
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <DollarSign size={16} className="text-orange-600" />
                     Actual Amount Spent *
                   </label>
@@ -180,14 +180,14 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     required
                     min="0"
                     step="1000"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                   />
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-ink-600 mt-2">
                     Budget utilization: <span className="font-bold">{budgetUtilization}%</span>
                   </p>
                 </div>
                 <div className="col-span-2">
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <AlertCircle size={16} className="text-yellow-600" />
                     Budget Variance Explanation
                   </label>
@@ -196,7 +196,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.budgetVarianceExplanation}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="Explain any significant variance between planned and actual budget"
                   />
                 </div>
@@ -205,17 +205,17 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 4: Beneficiary Achievement */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Users size={20} className="text-purple-600" />
                 4. Beneficiary Achievement
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <label className="text-sm font-semibold text-gray-600">Target Beneficiaries</label>
-                  <p className="text-2xl font-bold text-gray-900">{project.targetBeneficiaries.toLocaleString()}</p>
+                <div className="bg-ink-50 p-4 rounded-lg">
+                  <label className="text-sm font-semibold text-ink-600">Target Beneficiaries</label>
+                  <p className="text-h1 text-ink-900">{project.targetBeneficiaries.toLocaleString()}</p>
                 </div>
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <Users size={16} className="text-purple-600" />
                     Actual Beneficiaries Reached *
                   </label>
@@ -226,14 +226,14 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     min="0"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                   />
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-ink-600 mt-2">
                     Achievement: <span className="font-bold">{beneficiaryAchievement}%</span>
                   </p>
                 </div>
                 <div className="col-span-2">
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <Users size={16} className="text-blue-600" />
                     Beneficiary Feedback & Testimonials
                   </label>
@@ -242,7 +242,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.beneficiaryFeedback}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="Share feedback and testimonials from beneficiaries"
                   />
                 </div>
@@ -251,12 +251,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 5: Objectives Achievement */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Target size={20} className="text-indigo-600" />
                 5. Objectives & Outcomes Achievement
               </h3>
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <CheckCircle size={16} className="text-green-600" />
                   Achieved Objectives *
                 </label>
@@ -266,7 +266,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                   placeholder="List all project objectives and indicate achievement level for each"
                 />
               </div>
@@ -274,13 +274,13 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 6: Impact Summary */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <TrendingUp size={20} className="text-teal-600" />
                 6. Impact Summary
               </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <TrendingUp size={16} className="text-teal-600" />
                     Overall Impact & Results *
                   </label>
@@ -290,12 +290,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="Describe the overall impact of the project on beneficiaries and communities"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <FileText size={16} className="text-blue-600" />
                     Success Stories
                   </label>
@@ -304,7 +304,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.successStories}
                     onChange={handleChange}
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="Share 2-3 success stories or case studies from the project"
                   />
                 </div>
@@ -313,13 +313,13 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 7: Challenges & Lessons Learned */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <AlertCircle size={20} className="text-orange-600" />
                 7. Challenges & Lessons Learned
               </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <AlertCircle size={16} className="text-red-600" />
                     Challenges Faced *
                   </label>
@@ -329,12 +329,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="Describe major challenges encountered during implementation"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <CheckCircle size={16} className="text-blue-600" />
                     Lessons Learned *
                   </label>
@@ -344,7 +344,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="What were the key lessons learned from this project?"
                   />
                 </div>
@@ -353,13 +353,13 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 8: Sustainability & Future Actions */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Target size={20} className="text-green-600" />
                 8. Sustainability & Future Actions
               </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <Target size={16} className="text-green-600" />
                     Sustainability Plan *
                   </label>
@@ -369,12 +369,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="How will the project results be sustained after completion?"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <CheckCircle size={16} className="text-indigo-600" />
                     Recommendations & Future Actions *
                   </label>
@@ -384,12 +384,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="Recommendations for future similar projects"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                     <Users size={16} className="text-purple-600" />
                     Follow-up Actions Required
                   </label>
@@ -398,7 +398,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.futureActions}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                     placeholder="List any follow-up actions or monitoring required post-completion"
                   />
                 </div>
@@ -407,12 +407,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 9: Partner Contribution */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                 <Users size={20} className="text-red-600" />
                 9. Partner & Stakeholder Contribution
               </h3>
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
                   <Users size={16} className="text-red-600" />
                   Partner Contributions & Collaboration
                 </label>
@@ -421,7 +421,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.partnerContribution}
                   onChange={handleChange}
                   rows="4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                   placeholder="Describe contributions from partners, donors, and stakeholders"
                 />
               </div>
@@ -429,13 +429,13 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
             {/* Section 10: Documentation */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FileText size={20} className="text-gray-600" />
+              <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
+                <FileText size={20} className="text-ink-600" />
                 10. Supporting Documentation
               </h3>
               <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                  <FileText size={16} className="text-gray-600" />
+                <label className="flex items-center gap-2 text-sm font-bold text-ink-700 mb-2">
+                  <FileText size={16} className="text-ink-600" />
                   Photos & Documentation References
                 </label>
                 <textarea
@@ -443,10 +443,10 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.photosDocumentation}
                   onChange={handleChange}
                   rows="3"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
                   placeholder="List attached photos, reports, and supporting documents"
                 />
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-ink-500 mt-2">
                   Note: File upload feature will be added in future version
                 </p>
               </div>
@@ -455,12 +455,12 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
         </form>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex-shrink-0">
+        <div className="bg-ink-50 px-6 py-4 border-t border-ink-100 flex-shrink-0">
           <div className="flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
             >
               Cancel
             </button>

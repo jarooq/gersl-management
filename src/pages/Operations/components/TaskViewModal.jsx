@@ -16,7 +16,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
 
   const getPriorityColor = (priority) => {
     const colors = {
-      Low: 'bg-gray-100 text-gray-700',
+      Low: 'bg-ink-100 text-ink-700',
       Medium: 'bg-blue-100 text-blue-700',
       High: 'bg-orange-100 text-orange-700',
       Urgent: 'bg-red-100 text-red-700',
@@ -27,7 +27,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
 
   const getStatusColor = (status) => {
     const colors = {
-      'Not Started': 'bg-gray-100 text-gray-700',
+      'Not Started': 'bg-ink-100 text-ink-700',
       'In Progress': 'bg-blue-100 text-blue-700',
       'On Hold': 'bg-yellow-100 text-yellow-700',
       'Completed': 'bg-green-100 text-green-700',
@@ -65,7 +65,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-blue-700 text-white p-6 rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-2xl font-bold mb-2">{task.title || task.name}</h2>
@@ -98,8 +98,8 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
           {/* Description */}
           {task.description && (
             <div>
-              <h3 className="text-sm font-bold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-700 whitespace-pre-wrap">{task.description}</p>
+              <h3 className="text-sm font-bold text-ink-900 mb-2">Description</h3>
+              <p className="text-ink-700 whitespace-pre-wrap">{task.description}</p>
             </div>
           )}
 
@@ -107,27 +107,27 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Dates */}
             <div className="p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1 flex items-center gap-2">
+              <p className="text-sm text-ink-600 mb-1 flex items-center gap-2">
                 <Calendar size={16} />
                 Dates
               </p>
               <div className="space-y-1">
                 {task.startDate && (
                   <p className="text-sm">
-                    <span className="text-gray-600">Start:</span>{' '}
-                    <span className="font-semibold text-gray-900">{formatDate(task.startDate)}</span>
+                    <span className="text-ink-600">Start:</span>{' '}
+                    <span className="font-semibold text-ink-900">{formatDate(task.startDate)}</span>
                   </p>
                 )}
                 <p className="text-sm">
-                  <span className="text-gray-600">Due:</span>{' '}
-                  <span className="font-semibold text-gray-900">{formatDate(task.dueDate || task.endDate)}</span>
+                  <span className="text-ink-600">Due:</span>{' '}
+                  <span className="font-semibold text-ink-900">{formatDate(task.dueDate || task.endDate)}</span>
                 </p>
               </div>
             </div>
 
             {/* Assigned Users */}
             <div className="p-4 bg-purple-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
+              <p className="text-sm text-ink-600 mb-2 flex items-center gap-2">
                 <Users size={16} />
                 Assigned Staff
               </p>
@@ -138,21 +138,21 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
                       <div className="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
                         {assignee.user?.fullName?.[0] || '?'}
                       </div>
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-ink-900">
                         {assignee.user?.fullName || 'Unknown'}
                       </span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <span className="text-sm font-semibold text-gray-900">Unassigned</span>
+                <span className="text-sm font-semibold text-ink-900">Unassigned</span>
               )}
             </div>
 
             {/* Progress */}
             {task.progress !== undefined && (
               <div className="p-4 bg-green-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Progress</p>
+                <p className="text-sm text-ink-600 mb-2">Progress</p>
                 <p className="text-2xl font-bold text-green-700">{task.progress}%</p>
                 <div className="w-full bg-green-200 rounded-full h-2 mt-2">
                   <div
@@ -166,8 +166,8 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
             {/* Project */}
             {task.project && (
               <div className="p-4 bg-orange-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Project</p>
-                <p className="font-semibold text-gray-900">
+                <p className="text-sm text-ink-600 mb-1">Project</p>
+                <p className="font-semibold text-ink-900">
                   {task.project.projectName || task.project.name || 'Unknown Project'}
                 </p>
               </div>
@@ -184,13 +184,13 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
               <div className="space-y-3">
                 {task.procurementItems && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Items to Procure</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg">{task.procurementItems}</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Items to Procure</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg">{task.procurementItems}</p>
                   </div>
                 )}
                 {task.estimatedBudget && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Estimated Budget</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Estimated Budget</p>
                     <p className="text-xl font-bold text-purple-700 flex items-center gap-1">
                       <DollarSign size={20} />
                       {parseFloat(task.estimatedBudget).toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -216,15 +216,15 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {task.beneficiaryTrackingMode && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Tracking Mode</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg font-semibold">
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Tracking Mode</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg font-semibold">
                       {task.beneficiaryTrackingMode}
                     </p>
                   </div>
                 )}
                 {task.targetBeneficiaries && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Target Beneficiaries</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Target Beneficiaries</p>
                     <p className="text-2xl font-bold text-blue-700 bg-white p-3 rounded-lg">
                       {task.targetBeneficiaries.toLocaleString()} people
                     </p>
@@ -232,14 +232,14 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
                 )}
                 {task.beneficiarySelectionMethod && task.beneficiarySelectionMethod !== 'None' && (
                   <div className="md:col-span-2">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Selection Method</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg">{task.beneficiarySelectionMethod}</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Selection Method</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg">{task.beneficiarySelectionMethod}</p>
                   </div>
                 )}
                 {task.selectionCriteria && (
                   <div className="md:col-span-2">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Selection Criteria</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg whitespace-pre-wrap">{task.selectionCriteria}</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Selection Criteria</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg whitespace-pre-wrap">{task.selectionCriteria}</p>
                   </div>
                 )}
               </div>
@@ -255,24 +255,24 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-1">Distribution Type</p>
-                  <p className="text-gray-900 bg-white p-3 rounded-lg font-semibold">{task.distributionType}</p>
+                  <p className="text-sm font-semibold text-ink-700 mb-1">Distribution Type</p>
+                  <p className="text-ink-900 bg-white p-3 rounded-lg font-semibold">{task.distributionType}</p>
                 </div>
                 {task.distributionDate && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Distribution Date</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg font-semibold">{formatDate(task.distributionDate)}</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Distribution Date</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg font-semibold">{formatDate(task.distributionDate)}</p>
                   </div>
                 )}
                 {task.distributionItems && (
                   <div className="md:col-span-2">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Items to Distribute</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg whitespace-pre-wrap">{task.distributionItems}</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Items to Distribute</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg whitespace-pre-wrap">{task.distributionItems}</p>
                   </div>
                 )}
                 {task.cashAmount && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Cash Amount (per beneficiary)</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Cash Amount (per beneficiary)</p>
                     <p className="text-xl font-bold text-green-700 bg-white p-3 rounded-lg flex items-center gap-1">
                       <DollarSign size={20} />
                       {parseFloat(task.cashAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -281,8 +281,8 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
                 )}
                 {task.distributionLocation && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Location</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg">{task.distributionLocation}</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Location</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg">{task.distributionLocation}</p>
                   </div>
                 )}
               </div>
@@ -298,27 +298,27 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-1">Training Type</p>
-                  <p className="text-gray-900 bg-white p-3 rounded-lg font-semibold">{task.trainingType}</p>
+                  <p className="text-sm font-semibold text-ink-700 mb-1">Training Type</p>
+                  <p className="text-ink-900 bg-white p-3 rounded-lg font-semibold">{task.trainingType}</p>
                 </div>
                 {task.trainingDuration && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">Duration</p>
-                    <p className="text-gray-900 bg-white p-3 rounded-lg font-semibold">
+                    <p className="text-sm font-semibold text-ink-700 mb-1">Duration</p>
+                    <p className="text-ink-900 bg-white p-3 rounded-lg font-semibold">
                       {task.trainingDuration} hours
                     </p>
                   </div>
                 )}
                 <div className="md:col-span-2">
-                  <p className="text-sm font-semibold text-gray-700 mb-1">Certificate</p>
+                  <p className="text-sm font-semibold text-ink-700 mb-1">Certificate</p>
                   <div className="flex items-center gap-2 bg-white p-3 rounded-lg">
                     {task.certificateProvided ? (
                       <>
                         <CheckCircle size={20} className="text-green-600" />
-                        <span className="text-gray-900 font-semibold">Certificate will be provided</span>
+                        <span className="text-ink-900 font-semibold">Certificate will be provided</span>
                       </>
                     ) : (
-                      <span className="text-gray-600">No certificate</span>
+                      <span className="text-ink-600">No certificate</span>
                     )}
                   </div>
                 </div>
@@ -336,7 +336,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
               <div className="space-y-4">
                 {mediaCoverageType.length > 0 && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-2">Coverage Types</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-2">Coverage Types</p>
                     <div className="flex flex-wrap gap-2">
                       {mediaCoverageType.map((type, idx) => (
                         <span
@@ -351,9 +351,9 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
                 )}
                 {mediaTeamAssigned.length > 0 && (
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-2">Media Team Assigned</p>
+                    <p className="text-sm font-semibold text-ink-700 mb-2">Media Team Assigned</p>
                     <div className="bg-white p-3 rounded-lg">
-                      <p className="text-gray-900 font-semibold">{mediaTeamAssigned.length} team member(s) assigned</p>
+                      <p className="text-ink-900 font-semibold">{mediaTeamAssigned.length} team member(s) assigned</p>
                     </div>
                   </div>
                 )}
@@ -363,10 +363,10 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+        <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 p-4 rounded-b-2xl flex justify-between">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+            className="px-6 py-2 bg-white border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
           >
             Close
           </button>

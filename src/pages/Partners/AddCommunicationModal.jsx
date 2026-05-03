@@ -97,7 +97,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
           <div className="space-y-6">
             {/* Partner Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Partner/Donor *
               </label>
               <select
@@ -124,7 +124,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
             {/* Type and Contacted By */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Communication Type *
                 </label>
                 <select
@@ -141,7 +141,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Contacted By *
                 </label>
                 <input
@@ -158,7 +158,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
 
             {/* Subject */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Subject/Topic *
               </label>
               <input
@@ -174,7 +174,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
 
             {/* Summary */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Summary/Key Points *
               </label>
               <textarea
@@ -191,7 +191,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
             {/* Outcome and Follow-up */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Outcome
                 </label>
                 <select
@@ -207,7 +207,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Next Follow-up Date
                 </label>
                 <input
@@ -223,7 +223,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
 
             {/* Additional Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Additional Notes
               </label>
               <textarea
@@ -241,7 +241,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
               <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="text-blue-600" size={16} />
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-ink-900">
                     Follow-up reminder set for{' '}
                     <span className="font-bold text-blue-600">
                       {new Date(formData.nextFollowUp).toLocaleDateString('en-GB', {
@@ -257,11 +257,11 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
+          <div className="flex gap-3 mt-6 pt-6 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors"
+              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors"
             >
               Cancel
             </button>

@@ -205,11 +205,11 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
             {/* Completion Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Completion Date <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
                 <input
                   type="date"
                   name="completionDate"
@@ -217,18 +217,18 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   onChange={handleChange}
                   max={new Date().toISOString().split('T')[0]}
                   required
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
               </div>
             </div>
 
             {/* Completion Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Completion Summary <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <FileText className="absolute left-3 top-3 text-ink-400 w-5 h-5" />
                 <textarea
                   name="completionNotes"
                   value={formData.completionNotes}
@@ -236,72 +236,72 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   rows={4}
                   required
                   placeholder="Summarize what was accomplished, key outcomes, and any important details..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Describe the work completed and the results achieved
               </p>
             </div>
 
             {/* Deliverables */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Deliverables & Outputs
               </label>
               <div className="relative">
-                <Award className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <Award className="absolute left-3 top-3 text-ink-400 w-5 h-5" />
                 <textarea
                   name="deliverables"
                   value={formData.deliverables}
                   onChange={handleChange}
                   rows={3}
                   placeholder="List the key deliverables produced (reports, documents, completed activities, etc.)..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 What tangible outputs were created or delivered?
               </p>
             </div>
 
             {/* Lessons Learned */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Lessons Learned & Recommendations
               </label>
               <div className="relative">
-                <FileText className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <FileText className="absolute left-3 top-3 text-ink-400 w-5 h-5" />
                 <textarea
                   name="lessonsLearned"
                   value={formData.lessonsLearned}
                   onChange={handleChange}
                   rows={3}
                   placeholder="Share any insights, challenges faced, or recommendations for future similar tasks..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 What did you learn? What would you do differently next time?
               </p>
             </div>
 
             {/* Completion Evidence */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Evidence & Supporting Documents (Optional)
               </label>
               <div className="space-y-3">
                 {/* Add Evidence URL */}
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
-                    <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-400 w-5 h-5" />
                     <input
                       type="url"
                       placeholder="Enter URL to photo, document, or report..."
                       value={newEvidenceUrl}
                       onChange={(e) => setNewEvidenceUrl(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                   <button
@@ -317,9 +317,9 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
                 {/* Evidence List */}
                 {formData.completionEvidence.length > 0 && (
-                  <div className="border border-gray-200 rounded-lg divide-y divide-gray-200">
+                  <div className="border border-ink-100 rounded-lg divide-y divide-ink-100">
                     {formData.completionEvidence.map((url, index) => (
-                      <div key={index} className="p-3 flex items-center justify-between hover:bg-gray-50">
+                      <div key={index} className="p-3 flex items-center justify-between hover:bg-ink-50">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                             <ImageIcon className="w-5 h-5 text-purple-600 flex-shrink-0" />
@@ -347,15 +347,15 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   </div>
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Add links to photos, documents, reports, or other evidence of task completion
               </p>
             </div>
 
             {/* Completion Checklist */}
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-gray-600" />
+            <div className="bg-ink-50 rounded-lg p-4 border border-ink-100">
+              <h3 className="font-semibold text-ink-900 mb-3 flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-ink-600" />
                 Completion Checklist
               </h3>
               <div className="space-y-2">
@@ -366,7 +366,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                     checked={!!formData.completionDate}
                     readOnly
                   />
-                  <span className="text-sm text-gray-700">Completion date selected</span>
+                  <span className="text-sm text-ink-700">Completion date selected</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
@@ -375,7 +375,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                     checked={!!formData.completionNotes}
                     readOnly
                   />
-                  <span className="text-sm text-gray-700">Completion summary provided</span>
+                  <span className="text-sm text-ink-700">Completion summary provided</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
@@ -384,7 +384,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                     checked={formData.deliverables.length > 0 || formData.completionEvidence.length > 0}
                     readOnly
                   />
-                  <span className="text-sm text-gray-700">Deliverables or evidence documented (recommended)</span>
+                  <span className="text-sm text-ink-700">Deliverables or evidence documented (recommended)</span>
                 </label>
               </div>
             </div>
@@ -392,12 +392,12 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
+        <div className="bg-ink-50 border-t border-ink-100 px-6 py-4 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 disabled:opacity-50"
+            className="px-4 py-2 bg-white border border-ink-200 rounded-lg hover:bg-ink-50 transition-colors text-sm font-medium text-ink-700 disabled:opacity-50"
           >
             Cancel
           </button>
