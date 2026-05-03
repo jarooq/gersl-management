@@ -80,10 +80,10 @@ const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/Coordina
 
 // Loading component
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  <div className="min-h-screen flex items-center justify-center bg-ink-50">
     <div className="text-center">
       <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
-      <p className="text-gray-600 font-medium">Loading...</p>
+      <p className="text-ink-600 font-medium">Loading...</p>
     </div>
   </div>
 );
@@ -97,7 +97,7 @@ const ProtectedRoute = ({ children }) => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-ink-600">Loading...</p>
         </div>
       </div>
     );

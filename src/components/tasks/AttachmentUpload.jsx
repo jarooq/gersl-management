@@ -111,8 +111,8 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Upload Attachment</h3>
+    <div className="bg-white rounded-lg border border-ink-200 p-4">
+      <h3 className="text-lg font-semibold text-ink-900 mb-4">Upload Attachment</h3>
 
       <form onSubmit={handleUpload}>
         {/* File Upload Area */}
@@ -122,7 +122,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
               ? 'border-blue-500 bg-blue-50'
               : selectedFile
               ? 'border-green-500 bg-green-50'
-              : 'border-gray-300 hover:border-gray-400'
+              : 'border-ink-300 hover:border-ink-400'
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -133,9 +133,9 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2">
                 <File size={24} className="text-green-600" />
-                <span className="font-medium text-gray-900">{selectedFile.name}</span>
+                <span className="font-medium text-ink-900">{selectedFile.name}</span>
               </div>
-              <p className="text-sm text-gray-500">{formatFileSize(selectedFile.size)}</p>
+              <p className="text-sm text-ink-500">{formatFileSize(selectedFile.size)}</p>
               <button
                 type="button"
                 onClick={() => setSelectedFile(null)}
@@ -147,8 +147,8 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
             </div>
           ) : (
             <div className="space-y-2">
-              <Upload size={32} className="mx-auto text-gray-400" />
-              <p className="text-gray-600">
+              <Upload size={32} className="mx-auto text-ink-400" />
+              <p className="text-ink-600">
                 Drag and drop a file here, or{' '}
                 <label className="text-blue-600 hover:text-blue-700 cursor-pointer">
                   browse
@@ -160,7 +160,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
                   />
                 </label>
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-ink-500">
                 Max file size: 10MB
               </p>
             </div>
@@ -169,13 +169,13 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
 
         {/* File Category */}
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-ink-700 mb-1">
             Category (Optional)
           </label>
           <select
             value={fileCategory}
             onChange={(e) => setFileCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-ink-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Auto-detect</option>
             <option value="document">Document</option>
@@ -189,7 +189,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
 
         {/* Description */}
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-ink-700 mb-1">
             Description (Optional)
           </label>
           <textarea
@@ -197,7 +197,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
             placeholder="Add a description for this file..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-ink-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -216,7 +216,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
             disabled={!selectedFile || uploading}
             className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
               !selectedFile || uploading
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? 'bg-ink-300 text-ink-500 cursor-not-allowed'
                 : 'bg-blue-600 text-white hover:bg-blue-700'
             }`}
           >

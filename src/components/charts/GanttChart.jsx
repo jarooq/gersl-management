@@ -91,9 +91,9 @@ const GanttChart = ({ tasks }) => {
     switch (status) {
       case 'Completed': return 'bg-green-500';
       case 'In Progress': return 'bg-blue-500';
-      case 'Pending': return 'bg-gray-400';
+      case 'Pending': return 'bg-ink-400';
       case 'On Hold': return 'bg-yellow-500';
-      default: return 'bg-gray-400';
+      default: return 'bg-ink-400';
     }
   };
 
@@ -102,13 +102,13 @@ const GanttChart = ({ tasks }) => {
       case 'High': return 'text-red-500';
       case 'Medium': return 'text-yellow-500';
       case 'Low': return 'text-green-500';
-      default: return 'text-gray-500';
+      default: return 'text-ink-500';
     }
   };
 
   if (!tasks || tasks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+      <div className="flex flex-col items-center justify-center py-12 text-ink-500">
         <Calendar size={48} className="mb-4 opacity-50" />
         <p className="text-lg font-medium">No tasks to display</p>
         <p className="text-sm">Create tasks to see them in the timeline</p>
@@ -120,8 +120,8 @@ const GanttChart = ({ tasks }) => {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Project Timeline</h3>
-        <div className="flex items-center gap-4 text-sm text-gray-600">
+        <h3 className="text-lg font-semibold text-ink-900">Project Timeline</h3>
+        <div className="flex items-center gap-4 text-sm text-ink-600">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-green-500 rounded"></div>
             <span>Completed</span>
@@ -131,18 +131,18 @@ const GanttChart = ({ tasks }) => {
             <span>In Progress</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-gray-400 rounded"></div>
+            <div className="w-3 h-3 bg-ink-400 rounded"></div>
             <span>Pending</span>
           </div>
         </div>
       </div>
 
       {/* Gantt Chart Container */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <div className="border border-ink-200 rounded-lg overflow-hidden">
         {/* Timeline Header */}
-        <div className="bg-gray-50 border-b border-gray-200">
+        <div className="bg-ink-50 border-b border-ink-200">
           <div className="flex">
-            <div className="w-64 px-4 py-3 font-semibold text-sm text-gray-700 border-r border-gray-200">
+            <div className="w-64 px-4 py-3 font-semibold text-sm text-ink-700 border-r border-ink-200">
               Task
             </div>
             <div className="flex-1 flex">
@@ -150,7 +150,7 @@ const GanttChart = ({ tasks }) => {
                 <div
                   key={idx}
                   style={{ width: `${month.percentage}%` }}
-                  className="px-2 py-3 text-center text-sm font-semibold text-gray-700 border-r border-gray-200"
+                  className="px-2 py-3 text-center text-sm font-semibold text-ink-700 border-r border-ink-200"
                 >
                   {month.label}
                 </div>
@@ -160,24 +160,24 @@ const GanttChart = ({ tasks }) => {
         </div>
 
         {/* Tasks */}
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-ink-200">
           {tasks.map((task) => {
             const position = getTaskPosition(task);
 
             return (
-              <div key={task.id} className="flex hover:bg-gray-50 transition">
+              <div key={task.id} className="flex hover:bg-ink-50 transition">
                 {/* Task Info */}
-                <div className="w-64 px-4 py-3 border-r border-gray-200">
+                <div className="w-64 px-4 py-3 border-r border-ink-200">
                   <div className="flex items-start gap-2">
                     <Flag size={14} className={`mt-0.5 flex-shrink-0 ${getPriorityColor(task.priority)}`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate" title={task.title}>
+                      <p className="text-sm font-medium text-ink-900 truncate" title={task.title}>
                         {task.title}
                       </p>
                       {task.assignee && (
                         <div className="flex items-center gap-1 mt-1">
-                          <User size={12} className="text-gray-400" />
-                          <p className="text-xs text-gray-500 truncate">
+                          <User size={12} className="text-ink-400" />
+                          <p className="text-xs text-ink-500 truncate">
                             {task.assignee.fullName || task.assignee.username}
                           </p>
                         </div>
@@ -195,7 +195,7 @@ const GanttChart = ({ tasks }) => {
                         <div
                           key={idx}
                           style={{ width: `${month.percentage}%` }}
-                          className="border-r border-gray-100"
+                          className="border-r border-ink-100"
                         />
                       ))}
                     </div>
@@ -236,7 +236,7 @@ const GanttChart = ({ tasks }) => {
       </div>
 
       {/* Footer Stats */}
-      <div className="flex items-center justify-between text-sm text-gray-600 pt-2">
+      <div className="flex items-center justify-between text-sm text-ink-600 pt-2">
         <div>
           Showing {tasks.length} task{tasks.length !== 1 ? 's' : ''}
         </div>

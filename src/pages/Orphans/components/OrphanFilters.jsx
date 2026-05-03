@@ -65,7 +65,7 @@ const OrphanFilters = ({
           className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
             viewMode === 'grid'
               ? 'bg-pink-600 text-white shadow-md'
-              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
+              : 'bg-ink-200 text-ink-600 hover:bg-ink-300'
           }`}
         >
           <Grid size={20} />
@@ -76,7 +76,7 @@ const OrphanFilters = ({
           className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
             viewMode === 'list'
               ? 'bg-pink-600 text-white shadow-md'
-              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
+              : 'bg-ink-200 text-ink-600 hover:bg-ink-300'
           }`}
         >
           <List size={20} />
@@ -87,7 +87,7 @@ const OrphanFilters = ({
           className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
             viewMode === 'map'
               ? 'bg-pink-600 text-white shadow-md'
-              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
+              : 'bg-ink-200 text-ink-600 hover:bg-ink-300'
           }`}
         >
           <Map size={20} />

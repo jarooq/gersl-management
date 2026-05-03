@@ -272,9 +272,9 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 flex-shrink-0">
+        <div className="bg-navy-900 text-white p-6 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div>
               <div className="flex items-center gap-3">
@@ -666,7 +666,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Objectives */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Project Objectives (At least 1 required)</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-4">Project Objectives (At least 1 required)</h3>
                 {formData.objectives.map((objective, index) => (
                   <div key={index} className="mb-3">
                     <label className="text-sm font-semibold text-ink-700 mb-2 block">
@@ -687,7 +687,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Key Activities */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Key Activities (At least 1 required)</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-4">Key Activities (At least 1 required)</h3>
                 {formData.keyActivities.map((activity, index) => (
                   <div key={index} className="mb-3">
                     <label className="text-sm font-semibold text-ink-700 mb-2 block">
@@ -807,7 +807,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Inputs */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Inputs</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Inputs</h3>
                 {formData.theoryOfChange.inputs.map((input, index) => (
                   <div key={index} className="mb-3">
                     <input
@@ -824,7 +824,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Activities */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Activities</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Activities</h3>
                 {formData.theoryOfChange.activities.map((activity, index) => (
                   <div key={index} className="mb-3">
                     <input
@@ -841,7 +841,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Outputs */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Outputs</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Outputs</h3>
                 {formData.theoryOfChange.outputs.map((output, index) => (
                   <div key={index} className="mb-3">
                     <input
@@ -858,7 +858,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Outcomes */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Outcomes</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Outcomes</h3>
                 {formData.theoryOfChange.outcomes.map((outcome, index) => (
                   <div key={index} className="mb-3">
                     <input
@@ -875,7 +875,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Impact */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Impact (Long-term)</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Impact (Long-term)</h3>
                 <textarea
                   name="theoryOfChange.impact"
                   value={formData.theoryOfChange.impact}
@@ -888,7 +888,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Assumptions */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Assumptions</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Assumptions</h3>
                 {formData.theoryOfChange.assumptions.map((assumption, index) => (
                   <div key={index} className="mb-3">
                     <input
@@ -905,7 +905,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Risks */}
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-3">Risks</h3>
+                <h3 className="text-lg font-bold text-ink-800 mb-3">Risks</h3>
                 {formData.theoryOfChange.risks.map((risk, index) => (
                   <div key={index} className="mb-3">
                     <input
@@ -1034,13 +1034,13 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md hover:shadow-card flex items-center justify-center gap-2"
             >
               <Briefcase size={18} />
               Create GER-Compliant Project

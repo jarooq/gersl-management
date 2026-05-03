@@ -324,9 +324,9 @@ const ActivitiesPage = () => {
                   <span className="text-sm font-semibold text-ink-700">Progress</span>
                   <span className="text-sm font-bold text-purple-600">{activity.completion}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <div className="w-full bg-ink-200 rounded-full h-1.5">
                   <div
-                    className="bg-gradient-to-r from-purple-500 to-indigo-600 h-1.5 rounded-full transition-all duration-500"
+                    className="bg-navy-900 h-1.5 rounded-full transition-all duration-500"
                     style={{ width: `${activity.completion}%` }}
                   ></div>
                 </div>
@@ -378,7 +378,7 @@ const ActivitiesPage = () => {
       {/* Activity Detail Modal */}
       {showActivityDetail && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -438,7 +438,7 @@ const ActivitiesPage = () => {
       {/* Resource Planning Modal */}
       {showResourcePlanning && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -524,7 +524,7 @@ const ActivitiesPage = () => {
       {/* Attendance Tracking Modal */}
       {showAttendance && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -619,7 +619,7 @@ const ActivitiesPage = () => {
       {/* Photo Documentation Modal */}
       {showPhotos && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -684,7 +684,7 @@ const ActivitiesPage = () => {
       {/* Activity Report Modal */}
       {showReport && selectedActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -739,9 +739,9 @@ const ActivitiesPage = () => {
                       <span className="text-sm font-semibold text-ink-700">Overall Progress</span>
                       <span className="text-sm font-bold text-purple-600">{selectedActivity.completion}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="w-full bg-ink-200 rounded-full h-1.5">
                       <div
-                        className="bg-gradient-to-r from-purple-500 to-indigo-600 h-1.5 rounded-full"
+                        className="bg-navy-900 h-1.5 rounded-full"
                         style={{ width: `${selectedActivity.completion}%` }}
                       ></div>
                     </div>
@@ -754,9 +754,9 @@ const ActivitiesPage = () => {
                         {Math.round((selectedActivity.resources.filter(r => r.allocated).length / selectedActivity.resources.length) * 100)}%
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="w-full bg-ink-200 rounded-full h-1.5">
                       <div
-                        className="bg-gradient-to-r from-green-500 to-emerald-600 h-1.5 rounded-full"
+                        className="bg-navy-900 h-1.5 rounded-full"
                         style={{ width: `${(selectedActivity.resources.filter(r => r.allocated).length / selectedActivity.resources.length) * 100}%` }}
                       ></div>
                     </div>
@@ -815,7 +815,7 @@ const ActivitiesPage = () => {
       {/* Add Activity Modal */}
       {showAddActivity && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -990,7 +990,7 @@ const ActivitiesPage = () => {
               </button>
               <button
                 onClick={handleCreateActivity}
-                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+                className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
               >
                 Create Activity
               </button>

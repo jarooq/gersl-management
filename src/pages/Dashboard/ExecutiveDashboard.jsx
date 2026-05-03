@@ -224,7 +224,7 @@ const ExecutiveDashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex-1 bg-gray-200 rounded-full h-2">
+            <div className="flex-1 bg-ink-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all ${
                   portfolioMetrics.budgetUtilization > 90 ? 'bg-red-600' :

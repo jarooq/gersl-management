@@ -96,7 +96,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 p-6 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
                         key={index}
                         onClick={() => setUserInput(idea)}
                         disabled={loading}
-                        className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:border-blue-400 hover:shadow-sm transition text-sm text-gray-700 disabled:opacity-50"
+                        className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:border-blue-400 hover:shadow-sm transition text-sm text-ink-700 disabled:opacity-50"
                       >
                         {idea}
                       </button>
@@ -174,7 +174,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
 
           {/* Input Area */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">
+            <h3 className="font-semibold text-ink-900 mb-3">
               Describe Your Project Idea
             </h3>
             <textarea
@@ -182,10 +182,10 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
               onChange={(e) => setUserInput(e.target.value)}
               disabled={loading}
               placeholder="Example: I want to create an education project for orphan children in Colombo. We'll provide school supplies, tutoring, and scholarships. Target 500 children aged 5-15..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none disabled:bg-gray-50 disabled:opacity-70"
+              className="w-full px-4 py-3 border border-ink-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none disabled:bg-ink-50 disabled:opacity-70"
               rows={6}
             />
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-ink-500 mt-2">
               Be as detailed as possible. Include: target beneficiaries, location, activities, goals, budget range.
             </p>
           </div>
@@ -194,7 +194,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
           <button
             onClick={handleGenerate}
             disabled={loading || !userInput.trim() || aiAvailable === false}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-navy-900 text-white rounded-xl transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -222,7 +222,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
 
           {/* Result Display */}
           {result && (
-            <div className="border-t border-gray-200 pt-6 space-y-6">
+            <div className="border-t border-ink-200 pt-6 space-y-6">
               <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" />
                 <div>
@@ -234,49 +234,49 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
               </div>
 
               {/* Preview */}
-              <div className="bg-gray-50 rounded-xl p-5 max-h-96 overflow-y-auto">
-                <h4 className="font-bold text-lg text-gray-900 mb-4">{result.title}</h4>
+              <div className="bg-ink-50 rounded-xl p-5 max-h-96 overflow-y-auto">
+                <h4 className="font-bold text-lg text-ink-900 mb-4">{result.title}</h4>
 
                 <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                   <div>
-                    <span className="text-gray-600">Programme Area:</span>{' '}
-                    <span className="font-medium text-gray-900">{result.programmeArea}</span>
+                    <span className="text-ink-600">Programme Area:</span>{' '}
+                    <span className="font-medium text-ink-900">{result.programmeArea}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">District:</span>{' '}
-                    <span className="font-medium text-gray-900">{result.district}</span>
+                    <span className="text-ink-600">District:</span>{' '}
+                    <span className="font-medium text-ink-900">{result.district}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Budget:</span>{' '}
-                    <span className="font-medium text-gray-900">${result.budgetRequested?.toLocaleString()}</span>
+                    <span className="text-ink-600">Budget:</span>{' '}
+                    <span className="font-medium text-ink-900">${result.budgetRequested?.toLocaleString()}</span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Beneficiaries:</span>{' '}
-                    <span className="font-medium text-gray-900">{result.targetBeneficiaries?.toLocaleString()}</span>
+                    <span className="text-ink-600">Beneficiaries:</span>{' '}
+                    <span className="font-medium text-ink-900">{result.targetBeneficiaries?.toLocaleString()}</span>
                   </div>
                 </div>
 
                 <div className="space-y-3 text-sm">
                   <div>
-                    <h5 className="font-semibold text-gray-900 mb-1">Summary</h5>
-                    <p className="text-gray-700">{result.summary}</p>
+                    <h5 className="font-semibold text-ink-900 mb-1">Summary</h5>
+                    <p className="text-ink-700">{result.summary}</p>
                   </div>
 
                   <div>
-                    <h5 className="font-semibold text-gray-900 mb-1">Problem Statement</h5>
-                    <p className="text-gray-700">{result.problemStatement}</p>
+                    <h5 className="font-semibold text-ink-900 mb-1">Problem Statement</h5>
+                    <p className="text-ink-700">{result.problemStatement}</p>
                   </div>
 
                   <div>
-                    <h5 className="font-semibold text-gray-900 mb-1">Objectives ({result.objectives?.length || 0})</h5>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1">
+                    <h5 className="font-semibold text-ink-900 mb-1">Objectives ({result.objectives?.length || 0})</h5>
+                    <ul className="list-disc list-inside text-ink-700 space-y-1">
                       {result.objectives?.slice(0, 3).map((obj, idx) => (
                         <li key={idx}>{obj}</li>
                       ))}
                     </ul>
                   </div>
 
-                  <p className="text-xs text-gray-500 italic mt-3">
+                  <p className="text-xs text-ink-500 italic mt-3">
                     Complete proposal includes: GER fields, MEAL framework, Theory of Change, budget breakdown, and safeguarding measures.
                   </p>
                 </div>
@@ -286,13 +286,13 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProp
               <div className="flex gap-3">
                 <button
                   onClick={handleClose}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium"
+                  className="flex-1 px-6 py-3 border border-ink-300 text-ink-700 rounded-xl hover:bg-ink-50 transition font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAcceptProposal}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition font-semibold flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl transition font-semibold flex items-center justify-center gap-2"
                 >
                   <CheckCircle className="w-5 h-5" />
                   Accept & Use Proposal

@@ -9,7 +9,7 @@ const STATUS_BADGE = {
   Rejected:  'bg-red-100 text-red-700',
   Paid:      'bg-emerald-100 text-emerald-800',
   Merged:    'bg-purple-100 text-purple-700',
-  Cancelled: 'bg-gray-200 text-ink-600'
+  Cancelled: 'bg-ink-200 text-ink-600'
 };
 
 const APPROVER_ROLES = new Set([

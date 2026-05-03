@@ -29,9 +29,9 @@ const DeleteRoleModal = ({ isOpen, onClose, role, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+      <div className="bg-white rounded-xl shadow-pop max-w-md w-full">
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
+        <div className="bg-navy-900 px-6 py-4 flex items-center justify-between rounded-t-xl">
           <div className="flex items-center gap-3">
             <div className="bg-white bg-opacity-20 p-2 rounded-lg">
               <AlertTriangle className="w-6 h-6 text-white" />
@@ -56,7 +56,7 @@ const DeleteRoleModal = ({ isOpen, onClose, role, onSuccess }) => {
           )}
 
           <div className="mb-6">
-            <p className="text-gray-700 mb-4">
+            <p className="text-ink-700 mb-4">
               Are you sure you want to delete the role <span className="font-semibold">"{role.name}"</span>?
             </p>
 
@@ -85,7 +85,7 @@ const DeleteRoleModal = ({ isOpen, onClose, role, onSuccess }) => {
             <button
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="px-4 py-2 border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 transition-colors disabled:opacity-50"
             >
               Cancel
             </button>

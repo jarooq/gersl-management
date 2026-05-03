@@ -200,7 +200,7 @@ const PartnersPage = () => {
   return (
     <div className="space-y-4">
       {/* Red Gradient Hero Banner */}
-      <div className="bg-gradient-to-r from-red-500 via-red-600 to-rose-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-red-500 via-red-600 to-rose-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -216,7 +216,7 @@ const PartnersPage = () => {
             </div>
             <button
               onClick={() => setShowAddPartnerModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-semibold transition-all border border-white/30 hover:border-white/50 shadow-lg hover:shadow-xl"
+              className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-semibold transition-all border border-white/30 hover:border-white/50 shadow-card hover:shadow-lift"
             >
               <Plus size={20} />
               <span>Add Partner</span>
@@ -239,7 +239,7 @@ const PartnersPage = () => {
                 <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                 <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
@@ -272,7 +272,7 @@ const PartnersPage = () => {
           </div>
           <div className="space-y-3">
             {[].map((item, index) => (
-              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-medium text-ink-700">{item.type}</span>
                   <span className="text-xs font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
@@ -338,7 +338,7 @@ const PartnersPage = () => {
               <div key={index} className="flex items-center gap-3">
                 <span className="text-xs font-medium text-ink-600 w-20">{item.month}</span>
                 <div className="flex-1">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 h-8 rounded transition-all duration-300 flex items-center justify-end pr-2"
+                  <div className="bg-navy-900 h-8 rounded transition-all duration-300 flex items-center justify-end pr-2"
                     style={{ width: `${(item.amount / 20) * 100}%` }}>
                     <span className="text-white text-xs font-bold">{item.amount}M</span>
                   </div>
@@ -381,8 +381,8 @@ const PartnersPage = () => {
                   <div
                     className={`h-1.5 rounded-full transition-all duration-500 ${
                       item.status === 'above'
-                        ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                        : 'bg-gradient-to-r from-yellow-500 to-orange-600'
+                        ? 'bg-navy-900'
+                        : 'bg-navy-900'
                     }`}
                     style={{ width: `${item.value}%` }}
                   ></div>
@@ -402,7 +402,7 @@ const PartnersPage = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-lg border border-ink-100">
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
         <div className="border-b border-ink-100">
           <div className="flex gap-1 p-2">
             {[
@@ -415,7 +415,7 @@ const PartnersPage = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white shadow-md'
+                    ? 'bg-navy-900 text-white shadow-md'
                     : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
@@ -475,7 +475,7 @@ const PartnersPage = () => {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3 flex-1">
-                      <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 bg-red-50 border border-red-200 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-card group- transition-transform">
                         {partner.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -560,14 +560,14 @@ const PartnersPage = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleViewPartner(partner)}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-lg hover:from-red-700 hover:to-rose-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-navy-900 text-white rounded-lg transition-all text-xs font-semibold shadow-md hover:shadow-card active:scale-95"
                       >
                         <Eye size={14} />
                         View
                       </button>
                       <button
                         onClick={() => handleEditPartner(partner)}
-                        className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
+                        className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
                       >
                         <Edit size={16} />
                       </button>
@@ -585,7 +585,7 @@ const PartnersPage = () => {
 
             {filteredPartners.length === 0 && (
               <div className="text-center py-12">
-                <Building2 className="mx-auto text-gray-300 mb-4" size={64} />
+                <Building2 className="mx-auto text-ink-300 mb-4" size={64} />
                 <h3 className="text-xl font-semibold text-ink-900 mb-2">No partners found</h3>
                 <p className="text-ink-600">Try adjusting your search or filter criteria</p>
               </div>
@@ -600,7 +600,7 @@ const PartnersPage = () => {
               <h3 className="text-lg font-bold text-ink-900">All Contributions</h3>
               <button
                 onClick={() => setShowAddContributionModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 font-semibold shadow-lg hover:shadow-xl transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
               >
                 <Plus size={18} />
                 Add Contribution
@@ -664,7 +664,7 @@ const PartnersPage = () => {
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex gap-1">
-                          <button className="p-1.5 bg-ink-100 text-ink-600 rounded hover:bg-gray-200 transition-all">
+                          <button className="p-1.5 bg-ink-100 text-ink-600 rounded hover:bg-ink-200 transition-all">
                             <Eye size={14} />
                           </button>
                           <button
@@ -690,7 +690,7 @@ const PartnersPage = () => {
               <h3 className="text-lg font-bold text-ink-900">Communication Log</h3>
               <button
                 onClick={() => setShowAddCommunicationModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-700 text-white rounded-lg hover:from-blue-700 hover:to-cyan-800 font-semibold shadow-lg hover:shadow-xl transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
               >
                 <Plus size={18} />
                 Log Communication

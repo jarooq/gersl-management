@@ -47,7 +47,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
@@ -471,7 +471,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       </div>
                       <div className="pt-3 border-t border-green-300">
                         <div className="flex items-center justify-between">
-                          <span className="text-lg font-bold text-gray-800">Total Budget:</span>
+                          <span className="text-lg font-bold text-ink-800">Total Budget:</span>
                           <span className="text-2xl font-bold text-green-600">
                             LKR {proposal.requestedBudget.toLocaleString()}
                           </span>
@@ -554,7 +554,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         <p className="text-xs font-semibold text-ink-700 mb-2">INPUTS (Resources)</p>
                         <div className="flex flex-wrap gap-2">
                           {proposal.theoryOfChange.inputs.map((input, index) => (
-                            <span key={index} className="px-3 py-1 bg-ink-100 text-gray-800 text-sm rounded-md border border-ink-100">
+                            <span key={index} className="px-3 py-1 bg-ink-100 text-ink-800 text-sm rounded-md border border-ink-100">
                               {input}
                             </span>
                           ))}
@@ -720,7 +720,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : proposal.fundraisingStatus === 'Rejected' ? (
                         <AlertCircle size={20} className="text-red-600" />
                       ) : (
-                        <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+                        <div className="w-5 h-5 bg-ink-300 rounded-full"></div>
                       )}
                       <p className="text-xs font-medium text-ink-600 mt-1">Fundraising</p>
                       <p className={`text-xs mt-0.5 ${
@@ -731,7 +731,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       </p>
                     </div>
 
-                    <div className={`h-0.5 flex-1 ${proposal.fundraisingStatus === 'Approved' ? 'bg-green-300' : 'bg-gray-300'}`}></div>
+                    <div className={`h-0.5 flex-1 ${proposal.fundraisingStatus === 'Approved' ? 'bg-green-300' : 'bg-ink-300'}`}></div>
 
                     <div className="flex flex-col items-center flex-1">
                       {proposal.ceoStatus === 'Approved' ? (
@@ -739,7 +739,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : proposal.ceoStatus === 'Rejected' ? (
                         <AlertCircle size={20} className="text-red-600" />
                       ) : (
-                        <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+                        <div className="w-5 h-5 bg-ink-300 rounded-full"></div>
                       )}
                       <p className="text-xs font-medium text-ink-600 mt-1">CEO</p>
                       <p className={`text-xs mt-0.5 ${
@@ -750,7 +750,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       </p>
                     </div>
 
-                    <div className={`h-0.5 flex-1 ${proposal.ceoStatus === 'Approved' ? 'bg-green-300' : 'bg-gray-300'}`}></div>
+                    <div className={`h-0.5 flex-1 ${proposal.ceoStatus === 'Approved' ? 'bg-green-300' : 'bg-ink-300'}`}></div>
 
                     <div className="flex flex-col items-center flex-1">
                       {proposal.donorStatus === 'Approved' ? (
@@ -758,7 +758,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       ) : proposal.donorStatus === 'Rejected' ? (
                         <AlertCircle size={20} className="text-red-600" />
                       ) : (
-                        <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+                        <div className="w-5 h-5 bg-ink-300 rounded-full"></div>
                       )}
                       <p className="text-xs font-medium text-ink-600 mt-1">Donor</p>
                       <p className={`text-xs mt-0.5 ${
@@ -769,13 +769,13 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                       </p>
                     </div>
 
-                    <div className={`h-0.5 flex-1 ${proposal.donorStatus === 'Approved' ? 'bg-purple-300' : 'bg-gray-300'}`}></div>
+                    <div className={`h-0.5 flex-1 ${proposal.donorStatus === 'Approved' ? 'bg-purple-300' : 'bg-ink-300'}`}></div>
 
                     <div className="flex flex-col items-center flex-1">
                       {proposal.convertedToProject ? (
                         <CheckCircle size={20} className="text-purple-600" />
                       ) : (
-                        <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+                        <div className="w-5 h-5 bg-ink-300 rounded-full"></div>
                       )}
                       <p className="text-xs font-medium text-ink-600 mt-1">Project</p>
                       <p className={`text-xs mt-0.5 ${proposal.convertedToProject ? 'text-purple-600' : 'text-ink-400'}`}>
@@ -799,7 +799,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           <p className="text-xs text-ink-700 mb-1">Score: {proposal.fundraisingScore}/100</p>
                         )}
                         {proposal.fundraisingComments && (
-                          <p className="text-sm text-gray-800 mt-2 italic">"{proposal.fundraisingComments}"</p>
+                          <p className="text-sm text-ink-800 mt-2 italic">"{proposal.fundraisingComments}"</p>
                         )}
                       </div>
                     )}
@@ -819,7 +819,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           </p>
                         )}
                         {proposal.ceoComments && (
-                          <p className="text-sm text-gray-800 mt-2 italic">"{proposal.ceoComments}"</p>
+                          <p className="text-sm text-ink-800 mt-2 italic">"{proposal.ceoComments}"</p>
                         )}
                       </div>
                     )}
@@ -857,7 +857,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
           <div className="flex gap-3 pt-4 border-t">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
             >
               Close
             </button>
@@ -866,7 +866,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                 {!showApprovalForm ? (
                   <button
                     onClick={() => setShowApprovalForm(true)}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition font-semibold flex items-center justify-center gap-2"
+                    className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
                   >
                     <FileText size={18} />
                     Review & Decide
@@ -881,7 +881,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           className={`px-4 py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
                             approvalData.decision === 'approve'
                               ? 'bg-green-600 text-white'
-                              : 'bg-gray-200 text-ink-700 hover:bg-gray-300'
+                              : 'bg-ink-200 text-ink-700 hover:bg-ink-300'
                           }`}
                         >
                           <ThumbsUp size={16} />
@@ -893,7 +893,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           className={`px-4 py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
                             approvalData.decision === 'reject'
                               ? 'bg-red-600 text-white'
-                              : 'bg-gray-200 text-ink-700 hover:bg-gray-300'
+                              : 'bg-ink-200 text-ink-700 hover:bg-ink-300'
                           }`}
                         >
                           <ThumbsDown size={16} />
@@ -939,7 +939,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                         <button
                           type="button"
                           onClick={() => setShowApprovalForm(false)}
-                          className="flex-1 px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition text-sm font-semibold"
+                          className="flex-1 px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition text-sm font-semibold"
                         >
                           Cancel
                         </button>

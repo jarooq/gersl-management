@@ -44,10 +44,10 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
         };
       default:
         return {
-          bg: 'bg-gray-50',
-          border: 'border-gray-200',
-          text: 'text-gray-800',
-          icon: <Info className="h-5 w-5 text-gray-600" />,
+          bg: 'bg-ink-50',
+          border: 'border-ink-200',
+          text: 'text-ink-800',
+          icon: <Info className="h-5 w-5 text-ink-600" />,
         };
     }
   };
@@ -55,9 +55,9 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
   const styles = getToastStyles();
 
   return (
-    <div className="fixed top-4 right-4 z-[9999] animate-slide-in-right">
+    <div className="fixed top-4 right-4 z-[9999] -right">
       <div
-        className={`${styles.bg} ${styles.border} border rounded-lg shadow-lg p-4 min-w-[300px] max-w-md flex items-start gap-3`}
+        className={`${styles.bg} ${styles.border} border rounded-lg shadow-card p-4 min-w-[300px] max-w-md flex items-start gap-3`}
       >
         <div className="flex-shrink-0 mt-0.5">{styles.icon}</div>
         <div className="flex-1">

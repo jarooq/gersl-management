@@ -64,7 +64,7 @@ const OrphanMapView = ({ orphans, onView }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
+    <div className="bg-white rounded-xl shadow-card p-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Map Section */}
         <div className="lg:col-span-2">
@@ -79,19 +79,19 @@ const OrphanMapView = ({ orphans, onView }) => {
               <p className="text-xs font-bold text-ink-700 mb-2">Orphan Count</p>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full"></div>
+                  <div className="w-4 h-4 bg-blue-50 border border-blue-200 rounded-full"></div>
                   <span className="text-xs text-ink-600">1-2</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full"></div>
+                  <div className="w-5 h-5 bg-pink-50 border border-pink-200 rounded-full"></div>
                   <span className="text-xs text-ink-600">3-5</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
+                  <div className="w-6 h-6 bg-orange-50 border border-orange-200 rounded-full"></div>
                   <span className="text-xs text-ink-600">6-10</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-700 rounded-full"></div>
+                  <div className="w-7 h-7 bg-red-50 border border-red-200 rounded-full"></div>
                   <span className="text-xs text-ink-600">10+</span>
                 </div>
               </div>
@@ -106,7 +106,7 @@ const OrphanMapView = ({ orphans, onView }) => {
                   fill="rgba(219, 234, 254, 0.6)"
                   stroke="#3b82f6"
                   strokeWidth="0.5"
-                  className="drop-shadow-lg"
+                  className="drop-shadow-card"
                 />
 
                 {/* District markers */}
@@ -124,7 +124,7 @@ const OrphanMapView = ({ orphans, onView }) => {
                         cy={data.y}
                         r={size / 10}
                         className={`cursor-pointer transition-all duration-300 ${
-                          isSelected || isHovered ? 'opacity-90 filter drop-shadow-xl' : 'opacity-70'
+                          isSelected || isHovered ? 'opacity-90 filter drop-shadow-lift' : 'opacity-70'
                         }`}
                         fill={`url(#gradient-${district})`}
                         stroke="white"
@@ -163,7 +163,7 @@ const OrphanMapView = ({ orphans, onView }) => {
                             height="5"
                             fill="white"
                             rx="1"
-                            className="drop-shadow-lg"
+                            className="drop-shadow-card"
                           />
                           <text
                             x={data.x}
@@ -205,7 +205,7 @@ const OrphanMapView = ({ orphans, onView }) => {
         <div className="lg:col-span-1">
           {selectedDistrict ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between bg-gradient-to-r from-pink-500 to-rose-600 text-white p-4 rounded-lg">
+              <div className="flex items-center justify-between bg-navy-900 text-white p-4 rounded-lg">
                 <div>
                   <h3 className="text-lg font-bold">{selectedDistrict}</h3>
                   <p className="text-sm text-pink-100">{selectedOrphans.length} orphan{selectedOrphans.length !== 1 ? 's' : ''}</p>
@@ -226,7 +226,7 @@ const OrphanMapView = ({ orphans, onView }) => {
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-md flex-shrink-0">
+                      <div className="w-12 h-12 bg-pink-50 border border-pink-200 text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-md flex-shrink-0">
                         {orphan.fullName.charAt(0)}
                       </div>
                       <div className="flex-1">
@@ -248,7 +248,7 @@ const OrphanMapView = ({ orphans, onView }) => {
 
                     <button
                       onClick={() => onView(orphan)}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-semibold shadow-md"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md"
                     >
                       <Eye size={14} />
                       View Details

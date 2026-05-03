@@ -130,7 +130,7 @@ const SocialMediaSettings = () => {
         {/* Header */}
         <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center">
               <Settings className="text-white" size={24} />
             </div>
             <div>
@@ -528,14 +528,14 @@ const SocialMediaSettings = () => {
                 <button
                   onClick={() => handleConnect(activeTab)}
                   disabled={testingConnection}
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
                 >
                   <Link size={18} />
                   {testingConnection ? 'Testing Connection...' : 'Test & Connect'}
                 </button>
               )}
               <button
-                className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all font-semibold flex items-center gap-2"
+                className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-all font-semibold flex items-center gap-2"
               >
                 <Save size={18} />
                 Save Settings

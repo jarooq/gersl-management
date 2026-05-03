@@ -197,7 +197,7 @@ const HRPage = () => {
       'MEAL': 'from-teal-500 to-cyan-600',
       'Proposals': 'from-yellow-500 to-orange-600',
       'Operations': 'from-indigo-500 to-purple-600',
-      'Other': 'from-gray-500 to-slate-600'
+      'Other': 'from-ink-500 to-slate-600'
     };
 
     return Object.entries(deptCounts)
@@ -205,7 +205,7 @@ const HRPage = () => {
         dept,
         count,
         percent: totalActive > 0 ? Math.round((count / totalActive) * 100) : 0,
-        color: deptColors[dept] || 'from-gray-500 to-slate-600'
+        color: deptColors[dept] || 'from-ink-500 to-slate-600'
       }))
       .sort((a, b) => b.count - a.count);
   }, [staff]);
@@ -227,7 +227,7 @@ const HRPage = () => {
       'Sick Leave': { count: 0, approved: 0, pending: 0, color: 'bg-red-500' },
       'Casual Leave': { count: 0, approved: 0, pending: 0, color: 'bg-blue-500' },
       'Maternity/Paternity': { count: 0, approved: 0, pending: 0, color: 'bg-purple-500' },
-      'Other': { count: 0, approved: 0, pending: 0, color: 'bg-gray-500' }
+      'Other': { count: 0, approved: 0, pending: 0, color: 'bg-ink-500' }
     };
 
     currentMonthLeaves.forEach(leave => {
@@ -621,7 +621,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-3">
             {departmentDistribution.map((dept, index) => (
-              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-medium text-ink-700">{dept.name}</span>
                   <span className="text-xs font-bold text-ink-900">{dept.count} staff</span>
@@ -786,8 +786,8 @@ const HRPage = () => {
                     <div
                       className={`h-1.5 rounded-full transition-all duration-500 ${
                         item.value >= item.target
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                          : 'bg-gradient-to-r from-yellow-500 to-orange-600'
+                          ? 'bg-navy-900'
+                          : 'bg-navy-900'
                       }`}
                       style={{ width: `${item.value}%` }}
                     ></div>
@@ -808,7 +808,7 @@ const HRPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-lg border border-ink-100">
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
         <div className="border-b border-ink-100">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0">
             {[
@@ -838,7 +838,7 @@ const HRPage = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
+      <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
           {/* Staff Directory Tab */}
           {activeTab === 'overview' && (
             <div className="space-y-4">
@@ -860,7 +860,7 @@ const HRPage = () => {
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-start gap-3 mb-3">
-                      <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-card group- transition-transform">
                         {member.fullName.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1229,7 +1229,7 @@ const HRPage = () => {
                   <div key={asset.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3 flex-1">
-                        <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-teal-50 border border-teal-200 text-white rounded-xl flex items-center justify-center">
                           <Package size={24} />
                         </div>
                         <div className="flex-1">
@@ -1416,7 +1416,7 @@ const HRPage = () => {
                   { label: 'Pending', value: 0, color: 'from-yellow-500 to-amber-600' },
                   { label: 'Approved', value: 0, color: 'from-green-500 to-emerald-600' },
                   { label: 'In Use', value: 0, color: 'from-blue-500 to-sky-600' },
-                  { label: 'Completed', value: 0, color: 'from-gray-500 to-slate-600' }
+                  { label: 'Completed', value: 0, color: 'from-ink-500 to-slate-600' }
                 ].map((stat, i) => (
                   <div key={i} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                     <p className="text-sm text-ink-600 mb-1">{stat.label}</p>
@@ -1438,7 +1438,7 @@ const HRPage = () => {
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-sky-600 text-white rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-blue-50 border border-blue-200 text-white rounded-lg flex items-center justify-center">
                             <Car size={20} />
                           </div>
                           <div>
@@ -1543,7 +1543,7 @@ const HRPage = () => {
                   { label: 'Pending', value: 0, color: 'from-yellow-500 to-amber-600' },
                   { label: 'Approved', value: 0, color: 'from-green-500 to-emerald-600' },
                   { label: 'Booked', value: 0, color: 'from-rose-500 to-pink-600' },
-                  { label: 'Completed', value: 0, color: 'from-gray-500 to-slate-600' }
+                  { label: 'Completed', value: 0, color: 'from-ink-500 to-slate-600' }
                 ].map((stat, i) => (
                   <div key={i} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                     <p className="text-sm text-ink-600 mb-1">{stat.label}</p>
@@ -1565,7 +1565,7 @@ const HRPage = () => {
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 text-white rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-rose-50 border border-rose-200 text-white rounded-lg flex items-center justify-center">
                             <Home size={20} />
                           </div>
                           <div>
@@ -1753,12 +1753,12 @@ const HRPage = () => {
                             LKR {project.totalExpenses.toLocaleString()} / {project.budget.toLocaleString()}
                           </span>
                         </div>
-                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-ink-200 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
-                              budgetUsed > 80 ? 'bg-gradient-to-r from-red-500 to-rose-600' :
-                              budgetUsed > 60 ? 'bg-gradient-to-r from-yellow-500 to-amber-600' :
-                              'bg-gradient-to-r from-green-500 to-emerald-600'
+                              budgetUsed > 80 ? 'bg-navy-900' :
+                              budgetUsed > 60 ? 'bg-navy-900' :
+                              'bg-navy-900'
                             }`}
                             style={{ width: `${Math.min(budgetUsed, 100)}%` }}
                           ></div>
@@ -1801,14 +1801,14 @@ const HRPage = () => {
           </div>
           <div className="space-y-3">
             {weeklyAttendanceTrend.days.map((item, index) => (
-              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="font-medium text-ink-700">{item.day}</span>
                   <span className="text-ink-600">{item.count}/{stats.totalStaff}</span>
                 </div>
                 <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-orange-500 to-amber-600 h-1.5 rounded-full transition-all duration-500"
+                    className="bg-navy-900 h-1.5 rounded-full transition-all duration-500"
                     style={{ width: `${item.percent}%` }}
                   ></div>
                 </div>
@@ -1835,7 +1835,7 @@ const HRPage = () => {
           </div>
           <div className="space-y-3">
             {departmentDistribution.map((item, index) => (
-              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between text-xs mb-1">
                   <div className="flex items-center gap-2">
                     <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${item.color}`}></div>
@@ -1919,7 +1919,7 @@ const HRPage = () => {
               { metric: 'Vehicle Utilization', value: 0, target: 0, status: 'neutral' },
               { metric: 'Staff Satisfaction', value: 0, target: 0, status: 'neutral' }
             ].map((item, index) => (
-              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between text-xs mb-2">
                   <span className="font-medium text-ink-700">{item.metric}</span>
                   <div className="flex items-center gap-2">
@@ -1936,8 +1936,8 @@ const HRPage = () => {
                     <div
                       className={`h-1.5 rounded-full transition-all duration-500 ${
                         item.value >= item.target
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                          : 'bg-gradient-to-r from-orange-500 to-red-600'
+                          ? 'bg-navy-900'
+                          : 'bg-navy-900'
                       }`}
                       style={{ width: `${item.value}%` }}
                     ></div>
@@ -1955,7 +1955,7 @@ const HRPage = () => {
       {/* Add Staff Modal */}
       {showAddStaffModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -2114,7 +2114,7 @@ const HRPage = () => {
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                       <UserPlus size={18} className="text-blue-600" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-800">User Account Settings</h3>
+                    <h3 className="text-lg font-bold text-ink-800">User Account Settings</h3>
                   </div>
                   <p className="text-sm text-ink-600 mb-4">
                     Create login credentials for this staff member to access the system
@@ -2196,7 +2196,7 @@ const HRPage = () => {
               </button>
               <button
                 onClick={handleAddStaff}
-                className="px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-700 text-white rounded-lg hover:from-orange-700 hover:to-amber-800 font-semibold shadow-md"
+                className="px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-md"
               >
                 <UserPlus className="inline mr-2" size={18} />
                 Add Staff Member
@@ -2209,7 +2209,7 @@ const HRPage = () => {
       {/* Edit Staff Modal */}
       {showEditStaffModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -2510,8 +2510,8 @@ const HRPage = () => {
       {/* Add Onboarding Modal */}
       {showOnboardingModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
-            <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 rounded-t-2xl">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
+            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -2582,7 +2582,7 @@ const HRPage = () => {
                 </button>
                 <button
                   onClick={handleAddOnboarding}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-800 transition shadow-md"
+                  className="flex-1 px-4 py-3 bg-navy-900 text-white font-semibold rounded-lg transition shadow-md"
                 >
                   Create Onboarding
                 </button>
@@ -2595,8 +2595,8 @@ const HRPage = () => {
       {/* Add Appraisal Modal */}
       {showAppraisalModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
+            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -2698,7 +2698,7 @@ const HRPage = () => {
                 </button>
                 <button
                   onClick={handleAddAppraisal}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-800 transition shadow-md"
+                  className="flex-1 px-4 py-3 bg-navy-900 text-white font-semibold rounded-lg transition shadow-md"
                 >
                   Create Appraisal
                 </button>
@@ -2711,7 +2711,7 @@ const HRPage = () => {
       {/* Leave Application Modal */}
       {showLeaveModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Apply for Leave</h2>
             </div>
@@ -2794,13 +2794,13 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleApplyLeave}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-cyan-800 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Submit Application
                 </button>
                 <button
                   onClick={() => setShowLeaveModal(false)}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>
@@ -2813,7 +2813,7 @@ const HRPage = () => {
       {/* Asset Checkout Modal */}
       {showAssetCheckoutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Checkout Asset</h2>
             </div>
@@ -2909,13 +2909,13 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCheckoutAsset}
-                  className="flex-1 bg-gradient-to-r from-teal-600 to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-teal-700 hover:to-cyan-800 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Checkout Asset
                 </button>
                 <button
                   onClick={() => setShowAssetCheckoutModal(false)}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>
@@ -2928,7 +2928,7 @@ const HRPage = () => {
       {/* Vehicle Request Modal */}
       {showVehicleRequestModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Request Vehicle</h2>
             </div>
@@ -3058,13 +3058,13 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleRequestVehicle}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-sky-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-sky-800 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Submit Request
                 </button>
                 <button
                   onClick={() => setShowVehicleRequestModal(false)}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>
@@ -3077,7 +3077,7 @@ const HRPage = () => {
       {/* Accommodation Request Modal */}
       {showAccommodationRequestModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <h2 className="text-2xl font-bold">Request Accommodation</h2>
             </div>
@@ -3208,13 +3208,13 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleRequestAccommodation}
-                  className="flex-1 bg-gradient-to-r from-rose-600 to-pink-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-rose-700 hover:to-pink-800 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Submit Request
                 </button>
                 <button
                   onClick={() => setShowAccommodationRequestModal(false)}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>

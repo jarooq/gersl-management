@@ -51,7 +51,7 @@ const FinanceStats = ({ stats, payrollData }) => {
               <h3 className="text-3xl font-bold text-ink-900">{stat.value}</h3>
               <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
             </div>
-            <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+            <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
               <stat.icon className="text-white" size={24} />
             </div>
           </div>

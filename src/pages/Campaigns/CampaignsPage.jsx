@@ -496,7 +496,7 @@ const CampaignsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-fuchsia-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-fuchsia-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -522,7 +522,7 @@ const CampaignsPage = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Campaigns</p>
@@ -547,7 +547,7 @@ const CampaignsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Funds Raised</p>
@@ -572,7 +572,7 @@ const CampaignsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Active Campaigns</p>
@@ -597,7 +597,7 @@ const CampaignsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Success Rate</p>
@@ -624,7 +624,7 @@ const CampaignsPage = () => {
       </div>
 
       {/* Controls Bar */}
-      <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-card p-4 mb-6">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-3 items-center flex-1">
             <div className="relative flex-1 max-w-md">
@@ -663,14 +663,14 @@ const CampaignsPage = () => {
           <div className="flex gap-3">
             <button
               onClick={exportToCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-colors"
             >
               <Download className="w-5 h-5" />
               Export
             </button>
             <button
               onClick={handleNewCampaign}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-md"
+              className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md"
             >
               <Plus className="w-5 h-5" />
               New Campaign
@@ -680,7 +680,7 @@ const CampaignsPage = () => {
       </div>
 
       {/* Campaigns List */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-purple-100 to-blue-100">
@@ -698,7 +698,7 @@ const CampaignsPage = () => {
               {filteredCampaigns.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center text-ink-500">
-                    <Heart className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <Heart className="w-12 h-12 mx-auto mb-3 text-ink-300" />
                     <p className="text-lg font-medium">No campaigns found</p>
                     <p className="text-sm">Create your first campaign to start fundraising</p>
                   </td>
@@ -721,7 +721,7 @@ const CampaignsPage = () => {
                             />
                           )}
                           <div>
-                            <p className="font-semibold text-gray-800">{campaign.title}</p>
+                            <p className="font-semibold text-ink-800">{campaign.title}</p>
                             <p className="text-sm text-ink-500">{campaign.id}</p>
                           </div>
                         </div>
@@ -736,9 +736,9 @@ const CampaignsPage = () => {
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-ink-600 font-medium">{progress}%</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-ink-200 rounded-full h-2">
                             <div
-                              className="bg-gradient-to-r from-purple-500 to-blue-600 h-2 rounded-full transition-all"
+                              className="bg-navy-900 h-2 rounded-full transition-all"
                               style={{ width: `${progress}%` }}
                             ></div>
                           </div>
@@ -826,7 +826,7 @@ const CampaignsPage = () => {
       {/* Create/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">
@@ -1037,7 +1037,7 @@ const CampaignsPage = () => {
                 <button
                   type="submit"
                   disabled={isUploading}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 font-semibold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isUploading ? 'Uploading...' : editingCampaign ? 'Update Campaign' : 'Create Campaign'}
                 </button>
@@ -1050,7 +1050,7 @@ const CampaignsPage = () => {
       {/* View Modal */}
       {showViewModal && viewingCampaign && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{viewingCampaign.title}</h2>
@@ -1069,7 +1069,7 @@ const CampaignsPage = () => {
             <div className="p-6 space-y-6">
               {/* Campaign Image */}
               {viewingCampaign.imageUrl && (
-                <div className="relative rounded-xl overflow-hidden shadow-lg">
+                <div className="relative rounded-xl overflow-hidden shadow-card">
                   <img
                     src={getImageUrl(viewingCampaign.imageUrl)}
                     alt={viewingCampaign.title}
@@ -1081,11 +1081,11 @@ const CampaignsPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-purple-50 p-4 rounded-lg">
                   <p className="text-sm text-ink-600 mb-1">Campaign ID</p>
-                  <p className="text-lg font-bold text-gray-800">{viewingCampaign.id}</p>
+                  <p className="text-lg font-bold text-ink-800">{viewingCampaign.id}</p>
                 </div>
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="text-sm text-ink-600 mb-1">Type</p>
-                  <p className="text-lg font-bold text-gray-800">{viewingCampaign.type}</p>
+                  <p className="text-lg font-bold text-ink-800">{viewingCampaign.type}</p>
                 </div>
               </div>
 
@@ -1099,15 +1099,15 @@ const CampaignsPage = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-ink-600">Target Amount:</span>
-                    <span className="font-bold text-gray-800">${viewingCampaign.targetAmount.toLocaleString()}</span>
+                    <span className="font-bold text-ink-800">${viewingCampaign.targetAmount.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-ink-600">Raised Amount:</span>
                     <span className="font-bold text-green-600">${viewingCampaign.raisedAmount.toLocaleString()}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div className="w-full bg-ink-200 rounded-full h-3">
                     <div
-                      className="bg-gradient-to-r from-purple-500 to-blue-600 h-3 rounded-full"
+                      className="bg-navy-900 h-3 rounded-full"
                       style={{ width: `${getProgressPercentage(viewingCampaign.raisedAmount, viewingCampaign.targetAmount)}%` }}
                     ></div>
                   </div>
@@ -1120,11 +1120,11 @@ const CampaignsPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-ink-600 mb-1">Start Date</p>
-                  <p className="font-semibold text-gray-800">{viewingCampaign.startDate}</p>
+                  <p className="font-semibold text-ink-800">{viewingCampaign.startDate}</p>
                 </div>
                 <div>
                   <p className="text-sm text-ink-600 mb-1">End Date</p>
-                  <p className="font-semibold text-gray-800">{viewingCampaign.endDate}</p>
+                  <p className="font-semibold text-ink-800">{viewingCampaign.endDate}</p>
                 </div>
                 <div>
                   <p className="text-sm text-ink-600 mb-1">Status</p>
@@ -1134,7 +1134,7 @@ const CampaignsPage = () => {
                 </div>
                 <div>
                   <p className="text-sm text-ink-600 mb-1">Visibility</p>
-                  <p className="font-semibold text-gray-800">{viewingCampaign.visibility}</p>
+                  <p className="font-semibold text-ink-800">{viewingCampaign.visibility}</p>
                 </div>
               </div>
 
@@ -1143,21 +1143,21 @@ const CampaignsPage = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-ink-600">Created By:</span>
-                    <span className="font-medium text-gray-800">{viewingCampaign.createdBy}</span>
+                    <span className="font-medium text-ink-800">{viewingCampaign.createdBy}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-ink-600">Created Date:</span>
-                    <span className="font-medium text-gray-800">{viewingCampaign.createdDate}</span>
+                    <span className="font-medium text-ink-800">{viewingCampaign.createdDate}</span>
                   </div>
                   {viewingCampaign.approvedBy && (
                     <>
                       <div className="flex justify-between">
                         <span className="text-ink-600">Approved By:</span>
-                        <span className="font-medium text-gray-800">{viewingCampaign.approvedBy}</span>
+                        <span className="font-medium text-ink-800">{viewingCampaign.approvedBy}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-ink-600">Approval Date:</span>
-                        <span className="font-medium text-gray-800">{viewingCampaign.approvalDate}</span>
+                        <span className="font-medium text-ink-800">{viewingCampaign.approvalDate}</span>
                       </div>
                     </>
                   )}
@@ -1194,7 +1194,7 @@ const CampaignsPage = () => {
                             )}
                           </div>
                           {!pkg.isActive && (
-                            <span className="text-xs px-2 py-1 bg-gray-200 text-ink-600 rounded-full">
+                            <span className="text-xs px-2 py-1 bg-ink-200 text-ink-600 rounded-full">
                               Inactive
                             </span>
                           )}
@@ -1217,7 +1217,7 @@ const CampaignsPage = () => {
       {/* ============================================ */}
       {showPackageModal && managingCampaign && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-pop max-w-6xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between z-10">
               <div>
                 <h2 className="text-h1 text-ink-900 flex items-center gap-2">
@@ -1374,7 +1374,7 @@ const CampaignsPage = () => {
 
                   {packages.length === 0 ? (
                     <div className="bg-ink-50 rounded-lg p-8 text-center">
-                      <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                      <Package className="w-12 h-12 text-ink-300 mx-auto mb-3" />
                       <p className="text-ink-500">No packages added yet</p>
                       <p className="text-sm text-ink-400 mt-1">Add your first package using the form</p>
                     </div>

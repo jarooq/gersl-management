@@ -262,7 +262,7 @@ const DonationsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-pink-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -288,7 +288,7 @@ const DonationsPage = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Donations</p>
@@ -313,7 +313,7 @@ const DonationsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Amount</p>
@@ -338,7 +338,7 @@ const DonationsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Average Donation</p>
@@ -363,7 +363,7 @@ const DonationsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Pending</p>
@@ -391,8 +391,8 @@ const DonationsPage = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Monthly Donations Chart */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-xl shadow-card p-6">
+          <h3 className="text-lg font-bold text-ink-800 mb-4 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-fuchsia-600" />
             Monthly Donations
           </h3>
@@ -410,8 +410,8 @@ const DonationsPage = () => {
         </div>
 
         {/* Donor Type Distribution */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-xl shadow-card p-6">
+          <h3 className="text-lg font-bold text-ink-800 mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-fuchsia-600" />
             Donor Type Distribution
           </h3>
@@ -438,7 +438,7 @@ const DonationsPage = () => {
       </div>
 
       {/* Controls Bar */}
-      <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-card p-4 mb-6">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-3 items-center flex-1 flex-wrap">
             <div className="relative flex-1 max-w-md">
@@ -488,14 +488,14 @@ const DonationsPage = () => {
           <div className="flex gap-3">
             <button
               onClick={exportToCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-colors"
             >
               <Download className="w-5 h-5" />
               Export
             </button>
             <button
               onClick={handleNewDonation}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white rounded-lg hover:from-fuchsia-700 hover:to-pink-700 transition-all shadow-md"
+              className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md"
             >
               <Plus className="w-5 h-5" />
               New Donation
@@ -505,7 +505,7 @@ const DonationsPage = () => {
       </div>
 
       {/* Donations Table */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-fuchsia-100 to-pink-100">
@@ -523,7 +523,7 @@ const DonationsPage = () => {
               {filteredDonations.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center text-ink-500">
-                    <Heart className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <Heart className="w-12 h-12 mx-auto mb-3 text-ink-300" />
                     <p className="text-lg font-medium">No donations found</p>
                     <p className="text-sm">Add your first donation to start tracking</p>
                   </td>
@@ -535,7 +535,7 @@ const DonationsPage = () => {
                     <tr key={donation.id} className="hover:bg-fuchsia-50 transition-colors">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-semibold text-gray-800">{donation.donorName}</p>
+                          <p className="font-semibold text-ink-800">{donation.donorName}</p>
                           <p className="text-sm text-ink-500">{donation.donorEmail}</p>
                           <span className="text-xs px-2 py-1 bg-ink-100 text-ink-600 rounded-full mt-1 inline-block">
                             {donation.donorType}
@@ -552,13 +552,13 @@ const DonationsPage = () => {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-gray-800">
+                        <p className="text-sm text-ink-800">
                           {donation.campaign?.title || 'General'}
                         </p>
                       </td>
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-sm font-medium text-gray-800">{donation.paymentMethod}</p>
+                          <p className="text-sm font-medium text-ink-800">{donation.paymentMethod}</p>
                           {donation.transactionId && (
                             <p className="text-xs text-ink-500 mt-1">
                               ID: {donation.transactionId}
@@ -616,7 +616,7 @@ const DonationsPage = () => {
       {/* Create/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">
@@ -831,7 +831,7 @@ const DonationsPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white rounded-lg hover:from-fuchsia-700 hover:to-pink-700 font-semibold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Saving...' : editingDonation ? 'Update Donation' : 'Record Donation'}
                 </button>
@@ -844,7 +844,7 @@ const DonationsPage = () => {
       {/* View Modal */}
       {showViewModal && viewingDonation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Donation Details</h2>
@@ -861,7 +861,7 @@ const DonationsPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-fuchsia-50 p-4 rounded-lg">
                   <p className="text-sm text-ink-600 mb-1">Donation Code</p>
-                  <p className="text-lg font-bold text-gray-800">{viewingDonation.donationCode}</p>
+                  <p className="text-lg font-bold text-ink-800">{viewingDonation.donationCode}</p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
                   <p className="text-sm text-ink-600 mb-1">Amount</p>
@@ -877,11 +877,11 @@ const DonationsPage = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-ink-600">Name:</span>
-                    <span className="font-medium text-gray-800">{viewingDonation.donorName}</span>
+                    <span className="font-medium text-ink-800">{viewingDonation.donorName}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-ink-600">Email:</span>
-                    <span className="font-medium text-gray-800 flex items-center gap-1">
+                    <span className="font-medium text-ink-800 flex items-center gap-1">
                       <Mail className="w-3 h-3" />
                       {viewingDonation.donorEmail}
                     </span>
@@ -889,7 +889,7 @@ const DonationsPage = () => {
                   {viewingDonation.donorPhone && (
                     <div className="flex justify-between">
                       <span className="text-ink-600">Phone:</span>
-                      <span className="font-medium text-gray-800 flex items-center gap-1">
+                      <span className="font-medium text-ink-800 flex items-center gap-1">
                         <Phone className="w-3 h-3" />
                         {viewingDonation.donorPhone}
                       </span>
@@ -897,12 +897,12 @@ const DonationsPage = () => {
                   )}
                   <div className="flex justify-between">
                     <span className="text-ink-600">Type:</span>
-                    <span className="font-medium text-gray-800">{viewingDonation.donorType}</span>
+                    <span className="font-medium text-ink-800">{viewingDonation.donorType}</span>
                   </div>
                   {viewingDonation.donorAddress && (
                     <div className="flex justify-between">
                       <span className="text-ink-600">Address:</span>
-                      <span className="font-medium text-gray-800">{viewingDonation.donorAddress}</span>
+                      <span className="font-medium text-ink-800">{viewingDonation.donorAddress}</span>
                     </div>
                   )}
                 </div>
@@ -916,7 +916,7 @@ const DonationsPage = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-ink-600">Method:</span>
-                    <span className="font-medium text-gray-800">{viewingDonation.paymentMethod}</span>
+                    <span className="font-medium text-ink-800">{viewingDonation.paymentMethod}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-ink-600">Status:</span>
@@ -927,13 +927,13 @@ const DonationsPage = () => {
                   {viewingDonation.transactionId && (
                     <div className="flex justify-between">
                       <span className="text-ink-600">Transaction ID:</span>
-                      <span className="font-medium text-gray-800">{viewingDonation.transactionId}</span>
+                      <span className="font-medium text-ink-800">{viewingDonation.transactionId}</span>
                     </div>
                   )}
                   {viewingDonation.receiptNumber && (
                     <div className="flex justify-between">
                       <span className="text-ink-600">Receipt Number:</span>
-                      <span className="font-medium text-gray-800 flex items-center gap-1">
+                      <span className="font-medium text-ink-800 flex items-center gap-1">
                         <Receipt className="w-3 h-3" />
                         {viewingDonation.receiptNumber}
                       </span>
@@ -941,7 +941,7 @@ const DonationsPage = () => {
                   )}
                   <div className="flex justify-between">
                     <span className="text-ink-600">Date:</span>
-                    <span className="font-medium text-gray-800">
+                    <span className="font-medium text-ink-800">
                       {new Date(viewingDonation.donationDate).toLocaleDateString()}
                     </span>
                   </div>
@@ -952,7 +952,7 @@ const DonationsPage = () => {
                 <div className="border-t pt-4">
                   <h3 className="font-semibold text-ink-700 mb-3">Campaign</h3>
                   <div className="bg-purple-50 p-4 rounded-lg">
-                    <p className="font-medium text-gray-800">{viewingDonation.campaign.title}</p>
+                    <p className="font-medium text-ink-800">{viewingDonation.campaign.title}</p>
                     <p className="text-sm text-ink-600 mt-1">Code: {viewingDonation.campaign.campaignCode}</p>
                   </div>
                 </div>

@@ -66,7 +66,7 @@ const ProjectFilters = ({
           className={`p-2 rounded-lg transition ${
             viewMode === 'grid'
               ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
+              : 'bg-ink-200 text-ink-600 hover:bg-ink-300'
           }`}
         >
           <Grid size={20} />
@@ -76,7 +76,7 @@ const ProjectFilters = ({
           className={`p-2 rounded-lg transition ${
             viewMode === 'list'
               ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-ink-600 hover:bg-gray-300'
+              : 'bg-ink-200 text-ink-600 hover:bg-ink-300'
           }`}
         >
           <List size={20} />

@@ -97,9 +97,9 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 flex justify-between items-center">
+        <div className="bg-navy-900 text-white p-6 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold">Generate Progress Report</h2>
             <p className="text-blue-100 text-sm mt-1">for {orphan?.fullName}</p>
@@ -116,16 +116,16 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
         <div className="bg-ink-50 px-6 py-4 border-b">
           <div className="flex items-center justify-between">
             <StepIndicator number={1} label="Report Type" active={currentStep === 1} completed={currentStep > 1} />
-            <div className="flex-1 h-1 bg-gray-200 mx-2">
-              <div className={`h-full transition-all ${currentStep > 1 ? 'bg-blue-600' : 'bg-gray-200'}`} />
+            <div className="flex-1 h-1 bg-ink-200 mx-2">
+              <div className={`h-full transition-all ${currentStep > 1 ? 'bg-blue-600' : 'bg-ink-200'}`} />
             </div>
             <StepIndicator number={2} label="Partner" active={currentStep === 2} completed={currentStep > 2} />
-            <div className="flex-1 h-1 bg-gray-200 mx-2">
-              <div className={`h-full transition-all ${currentStep > 2 ? 'bg-blue-600' : 'bg-gray-200'}`} />
+            <div className="flex-1 h-1 bg-ink-200 mx-2">
+              <div className={`h-full transition-all ${currentStep > 2 ? 'bg-blue-600' : 'bg-ink-200'}`} />
             </div>
             <StepIndicator number={3} label="Media" active={currentStep === 3} completed={currentStep > 3} />
-            <div className="flex-1 h-1 bg-gray-200 mx-2">
-              <div className={`h-full transition-all ${currentStep > 3 ? 'bg-blue-600' : 'bg-gray-200'}`} />
+            <div className="flex-1 h-1 bg-ink-200 mx-2">
+              <div className={`h-full transition-all ${currentStep > 3 ? 'bg-blue-600' : 'bg-ink-200'}`} />
             </div>
             <StepIndicator number={4} label="Review" active={currentStep === 4} completed={false} />
           </div>
@@ -152,7 +152,7 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
           <button
             onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
             disabled={currentStep === 1}
-            className="flex items-center gap-2 px-4 py-2 text-ink-700 hover:bg-gray-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 text-ink-700 hover:bg-ink-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={18} />
             Back
@@ -175,7 +175,7 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              className="flex items-center gap-2 px-6 py-2 bg-navy-900 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
             >
               {loading ? (
                 <>
@@ -202,7 +202,7 @@ const StepIndicator = ({ number, label, active, completed }) => {
       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition ${
         completed ? 'bg-blue-600 text-white' :
         active ? 'bg-blue-600 text-white' :
-        'bg-gray-200 text-ink-500'
+        'bg-ink-200 text-ink-500'
       }`}>
         {completed ? <Check size={20} /> : number}
       </div>

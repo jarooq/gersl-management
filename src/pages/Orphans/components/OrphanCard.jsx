@@ -61,7 +61,7 @@ const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
               <img
                 src={profilePhotoUrl}
                 alt={displayName}
-                className="w-14 h-14 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform"
+                className="w-14 h-14 rounded-xl object-cover shadow-card group- transition-transform"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   e.target.nextElementSibling.style.display = 'flex';
@@ -69,7 +69,7 @@ const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
               />
             ) : null}
             <div
-              className="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-600 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-105 transition-transform"
+              className="w-14 h-14 bg-pink-50 border border-pink-200 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-card group- transition-transform"
               style={{ display: profilePhotoUrl ? 'none' : 'flex' }}
             >
               {displayName.charAt(0)}
@@ -117,14 +117,14 @@ const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
           <div className="flex gap-2">
             <button
               onClick={() => onView(orphan)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
             >
               <Eye size={16} />
               View
             </button>
             <button
               onClick={() => onEdit(orphan)}
-              className="px-3 py-2.5 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
+              className="px-3 py-2.5 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
             >
               <Edit size={18} />
             </button>

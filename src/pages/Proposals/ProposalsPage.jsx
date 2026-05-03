@@ -403,9 +403,9 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-6 py-4 rounded-t-xl flex items-center justify-between">
+        <div className="sticky top-0 bg-navy-900 text-white px-6 py-4 rounded-t-xl flex items-center justify-between">
           <h2 className="text-2xl font-bold">Add New Proposal</h2>
           <button
             onClick={onClose}
@@ -432,7 +432,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Basic Information</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Basic Information</h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -677,7 +677,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Budget Breakdown - Collapsed by default with toggle */}
           <details className="space-y-4 bg-ink-50 p-4 rounded-lg border border-ink-100">
-            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+            <summary className="cursor-pointer text-lg font-bold text-ink-800 flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-green-600" />
               Detailed Budget Breakdown (Optional - Click to expand)
             </summary>
@@ -799,7 +799,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   <div className="mt-4 bg-green-50 rounded-lg p-4 border border-green-200">
                     <div className="pt-3 border-t border-green-300">
                       <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-gray-800">Total Budget:</span>
+                        <span className="text-lg font-bold text-ink-800">Total Budget:</span>
                         <span className="text-2xl font-bold text-green-600">
                           LKR {parseFloat(formData.requestedBudget || 0).toLocaleString()}
                         </span>
@@ -818,7 +818,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Executive Summary */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Executive Summary</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Executive Summary</h3>
 
             <div>
               <label className="block text-sm font-semibold text-ink-700 mb-1">Summary (250 words) *</label>
@@ -872,7 +872,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Objectives */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Objectives</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Objectives</h3>
             {[0, 1, 2].map(index => (
               <div key={index}>
                 <label className="block text-sm font-semibold text-ink-700 mb-1">Objective {index + 1}</label>
@@ -889,7 +889,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Key Activities */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Key Activities</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Key Activities</h3>
             {[0, 1, 2].map(index => (
               <div key={index}>
                 <label className="block text-sm font-semibold text-ink-700 mb-1">Activity {index + 1}</label>
@@ -906,7 +906,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* MEAL - Results Framework - Collapsed */}
           <details className="space-y-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+            <summary className="cursor-pointer text-lg font-bold text-ink-800 flex items-center gap-2">
               <Target className="text-blue-600" size={20} />
               Results Framework (MEAL Indicators) - Optional
             </summary>
@@ -1029,7 +1029,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* MEAL - Beneficiary Disaggregation - Collapsed */}
           <details className="space-y-4 bg-green-50 p-4 rounded-lg border border-green-200">
-            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+            <summary className="cursor-pointer text-lg font-bold text-ink-800 flex items-center gap-2">
               <Users2 className="text-green-600" size={20} />
               Beneficiary Disaggregation Matrix - Optional
             </summary>
@@ -1102,7 +1102,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Theory of Change - Collapsed */}
           <details className="space-y-4 bg-indigo-50 p-4 rounded-lg border border-indigo-200">
-            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+            <summary className="cursor-pointer text-lg font-bold text-ink-800 flex items-center gap-2">
               <TrendingUp className="text-indigo-600" size={20} />
               Theory of Change - Optional
             </summary>
@@ -1265,7 +1265,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
 
           {/* Safeguarding Compliance - Collapsed */}
           <details className="space-y-4 bg-red-50 p-4 rounded-lg border border-red-200">
-            <summary className="cursor-pointer text-lg font-bold text-gray-800 flex items-center gap-2">
+            <summary className="cursor-pointer text-lg font-bold text-ink-800 flex items-center gap-2">
               <CheckSquare className="text-red-600" size={20} />
               Safeguarding Compliance Checklist - Optional
             </summary>
@@ -1277,7 +1277,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                     formData.safeguarding.dataProtection
                       ? 'border-green-500 bg-green-50'
-                      : 'border-ink-200 bg-white hover:border-gray-400'
+                      : 'border-ink-200 bg-white hover:border-ink-400'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -1288,7 +1288,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">Data Protection</p>
+                      <p className="text-sm font-semibold text-ink-800">Data Protection</p>
                       <p className="text-xs text-ink-600">Personal data encrypted, stored securely</p>
                     </div>
                   </div>
@@ -1299,7 +1299,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                     formData.safeguarding.informedConsent
                       ? 'border-green-500 bg-green-50'
-                      : 'border-ink-200 bg-white hover:border-gray-400'
+                      : 'border-ink-200 bg-white hover:border-ink-400'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -1310,7 +1310,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">Informed Consent</p>
+                      <p className="text-sm font-semibold text-ink-800">Informed Consent</p>
                       <p className="text-xs text-ink-600">Written consent forms for beneficiaries</p>
                     </div>
                   </div>
@@ -1321,7 +1321,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                     formData.safeguarding.childSafeguarding
                       ? 'border-green-500 bg-green-50'
-                      : 'border-ink-200 bg-white hover:border-gray-400'
+                      : 'border-ink-200 bg-white hover:border-ink-400'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -1332,7 +1332,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">Child Safeguarding</p>
+                      <p className="text-sm font-semibold text-ink-800">Child Safeguarding</p>
                       <p className="text-xs text-ink-600">Child protection policy in place</p>
                     </div>
                   </div>
@@ -1343,7 +1343,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                     formData.safeguarding.incidentReporting
                       ? 'border-green-500 bg-green-50'
-                      : 'border-ink-200 bg-white hover:border-gray-400'
+                      : 'border-ink-200 bg-white hover:border-ink-400'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -1354,7 +1354,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">Incident Reporting</p>
+                      <p className="text-sm font-semibold text-ink-800">Incident Reporting</p>
                       <p className="text-xs text-ink-600">Clear reporting mechanism</p>
                     </div>
                   </div>
@@ -1365,7 +1365,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                     formData.safeguarding.backgroundChecks
                       ? 'border-green-500 bg-green-50'
-                      : 'border-ink-200 bg-white hover:border-gray-400'
+                      : 'border-ink-200 bg-white hover:border-ink-400'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -1376,7 +1376,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">Background Checks</p>
+                      <p className="text-sm font-semibold text-ink-800">Background Checks</p>
                       <p className="text-xs text-ink-600">All staff screened</p>
                     </div>
                   </div>
@@ -1387,7 +1387,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                     formData.safeguarding.codeOfConduct
                       ? 'border-green-500 bg-green-50'
-                      : 'border-ink-200 bg-white hover:border-gray-400'
+                      : 'border-ink-200 bg-white hover:border-ink-400'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -1398,7 +1398,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">Code of Conduct</p>
+                      <p className="text-sm font-semibold text-ink-800">Code of Conduct</p>
                       <p className="text-xs text-ink-600">Staff signed code of conduct</p>
                     </div>
                   </div>
@@ -1428,7 +1428,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       className={`px-3 py-2 rounded-lg border-2 cursor-pointer transition text-center ${
                         formData.safeguarding.cfmChannels.includes(channel)
                           ? 'border-red-500 bg-red-50 text-red-700'
-                          : 'border-ink-200 bg-white text-ink-700 hover:border-gray-400'
+                          : 'border-ink-200 bg-white text-ink-700 hover:border-ink-400'
                       }`}
                     >
                       <p className="text-xs font-semibold">{channel}</p>
@@ -1451,7 +1451,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
               {isLoading ? 'Submitting...' : 'Submit Proposal'}
@@ -1794,7 +1794,7 @@ const ProposalsPage = () => {
   return (
     <div className="space-y-4">
       {/* Indigo Gradient Hero Banner */}
-      <div className="bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -1851,7 +1851,7 @@ const ProposalsPage = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-700 text-white shadow-md'
+                    ? 'bg-navy-900 text-white shadow-md'
                     : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
@@ -1902,14 +1902,14 @@ const ProposalsPage = () => {
                 </select>
                 <button
                   onClick={() => setShowAIAssistant(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl font-semibold whitespace-nowrap group"
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-card hover:shadow-lift font-semibold whitespace-nowrap group"
                 >
                   <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
                   AI Assistant
                 </button>
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl font-semibold whitespace-nowrap"
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-card hover:shadow-lift font-semibold whitespace-nowrap"
                 >
                   <Plus size={18} />
                   Add Proposal
@@ -2033,7 +2033,7 @@ const ProposalsPage = () => {
                           setSelectedProposal(proposal);
                           setShowViewModal(true);
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all text-xs font-semibold shadow-md hover:shadow-lg active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-navy-900 text-white rounded-lg transition-all text-xs font-semibold shadow-md hover:shadow-card active:scale-95"
                       >
                         <Eye size={14} />
                         View
@@ -2043,7 +2043,7 @@ const ProposalsPage = () => {
                           setSelectedProposal(proposal);
                           setShowEditModal(true);
                         }}
-                        className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
+                        className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
                       >
                         <Edit2 size={16} />
                       </button>
@@ -2061,7 +2061,7 @@ const ProposalsPage = () => {
 
             {filteredProposals.length === 0 && (
               <div className="text-center py-12">
-                <FileText className="mx-auto text-gray-300 mb-4" size={64} />
+                <FileText className="mx-auto text-ink-300 mb-4" size={64} />
                 <h3 className="text-xl font-semibold text-ink-900 mb-2">No proposals found</h3>
                 <p className="text-ink-600">Try adjusting your search or filter criteria</p>
               </div>
@@ -2084,7 +2084,7 @@ const ProposalsPage = () => {
                 return (
                   <div
                     key={column.status}
-                    className="animate-slide-up"
+                    className=""
                     style={{ animationDelay: `${colIndex * 0.1}s` }}
                   >
                     <div className={`bg-${column.color}-50 border border-${column.color}-200 rounded-lg p-3 mb-3`}>

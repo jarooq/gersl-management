@@ -130,7 +130,7 @@ const CoordinatorsPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -147,7 +147,7 @@ const CoordinatorsPage = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate('/admin/coordinators/add')}
-                className="btn-primary bg-white text-blue-600 hover:bg-blue-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white text-blue-600 hover:bg-blue-50 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <Plus size={18} />
                 Add Coordinator
@@ -287,8 +287,8 @@ const CoordinatorsPage = () => {
               disabled={filteredCoordinators.length === 0}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
                 filteredCoordinators.length > 0
-                  ? 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg'
-                  : 'bg-gray-300 text-ink-500 cursor-not-allowed'
+                  ? 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-card'
+                  : 'bg-ink-300 text-ink-500 cursor-not-allowed'
               }`}
             >
               <Download size={18} />
@@ -375,7 +375,7 @@ const CoordinatorsPage = () => {
                     className="flex items-center gap-3 flex-1 cursor-pointer"
                     onClick={() => navigate(`/admin/coordinators/${coordinator.id}`)}
                   >
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-lg group-hover:scale-105 transition-transform">
+                    <div className="w-14 h-14 bg-blue-50 border border-blue-200 text-white rounded-xl flex items-center justify-center text-xl font-bold shadow-card group- transition-transform">
                       {coordinator.name?.charAt(0) || 'C'}
                     </div>
                     <div className="flex-1">
@@ -415,7 +415,7 @@ const CoordinatorsPage = () => {
                             }}
                           />
                           {/* Dropdown Menu */}
-                          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-ink-100 py-2 z-20">
+                          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lift border border-ink-100 py-2 z-20">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -535,14 +535,14 @@ const CoordinatorsPage = () => {
                       {coordinator.current_workload || 0} / {coordinator.max_orphan_capacity || 50}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-ink-200 rounded-full h-2.5 overflow-hidden">
                     <div
                       className={`h-2.5 rounded-full transition-all ${
                         ((coordinator.current_workload || 0) / (coordinator.max_orphan_capacity || 50)) > 0.8
-                          ? 'bg-gradient-to-r from-red-500 to-red-600'
+                          ? 'bg-navy-900'
                           : ((coordinator.current_workload || 0) / (coordinator.max_orphan_capacity || 50)) > 0.6
-                          ? 'bg-gradient-to-r from-yellow-500 to-yellow-600'
-                          : 'bg-gradient-to-r from-green-500 to-green-600'
+                          ? 'bg-navy-900'
+                          : 'bg-navy-900'
                       }`}
                       style={{
                         width: `${Math.min(
@@ -558,7 +558,7 @@ const CoordinatorsPage = () => {
                 <div className="pt-4 border-t border-ink-100">
                   <button
                     onClick={() => navigate(`/admin/coordinators/${coordinator.id}`)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
                   >
                     <TrendingUp size={16} />
                     View Details

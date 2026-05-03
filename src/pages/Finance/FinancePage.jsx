@@ -238,7 +238,7 @@ const FinancePage = () => {
       'Personnel Costs': 'from-green-500 to-emerald-600',
       'Operating Expenses': 'from-orange-500 to-amber-600',
       'Non-Cash Expenses': 'from-purple-500 to-indigo-600',
-      'Other': 'from-gray-500 to-slate-600'
+      'Other': 'from-ink-500 to-slate-600'
     };
 
     return Object.entries(subtypeGroups)
@@ -246,7 +246,7 @@ const FinancePage = () => {
         category,
         amount,
         percent: totalExpenses > 0 ? Math.round((amount / totalExpenses) * 100) : 0,
-        color: colors[category] || 'from-gray-500 to-slate-600'
+        color: colors[category] || 'from-ink-500 to-slate-600'
       }))
       .sort((a, b) => b.amount - a.amount);
   }, [chartOfAccounts, totalExpenses]);
@@ -790,7 +790,7 @@ const FinancePage = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <button
           onClick={() => setShowAddInvoice(true)}
-          className="p-4 bg-white border-2 border-green-200 rounded-xl hover:shadow-lg transition-all hover:scale-105 text-left"
+          className="p-4 bg-white border-2 border-green-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -805,7 +805,7 @@ const FinancePage = () => {
 
         <button
           onClick={() => setShowAddExpense(true)}
-          className="p-4 bg-white border-2 border-red-200 rounded-xl hover:shadow-lg transition-all hover:scale-105 text-left"
+          className="p-4 bg-white border-2 border-red-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
@@ -820,7 +820,7 @@ const FinancePage = () => {
 
         <button
           onClick={() => setShowAddJournalEntry(true)}
-          className="p-4 bg-white border-2 border-blue-200 rounded-xl hover:shadow-lg transition-all hover:scale-105 text-left"
+          className="p-4 bg-white border-2 border-blue-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -835,7 +835,7 @@ const FinancePage = () => {
 
         <button
           onClick={() => setShowBankReconciliation(true)}
-          className="p-4 bg-white border-2 border-purple-200 rounded-xl hover:shadow-lg transition-all hover:scale-105 text-left"
+          className="p-4 bg-white border-2 border-purple-200 rounded-xl hover:shadow-card transition-all text-left"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
@@ -850,7 +850,7 @@ const FinancePage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-lg border border-ink-100">
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
         <div className="border-b border-ink-100">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
             {[
@@ -869,7 +869,7 @@ const FinancePage = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center justify-center gap-2 px-3 py-3 rounded-lg font-semibold text-xs md:text-sm transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg scale-105'
+                    ? 'bg-navy-900 text-white shadow-card scale-105'
                     : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
@@ -1045,7 +1045,7 @@ const FinancePage = () => {
               {/* Charts and Analytics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Expense Distribution Chart */}
-                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
+                <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -1057,7 +1057,7 @@ const FinancePage = () => {
                   </div>
                   <div className="space-y-3">
                     {expenseDistribution.map((item, index) => (
-                      <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                      <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-sm font-medium text-ink-700">{item.category}</span>
                           <span className="text-sm font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
@@ -1075,7 +1075,7 @@ const FinancePage = () => {
                 </div>
 
                 {/* Revenue Sources Chart */}
-                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
+                <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -1099,7 +1099,7 @@ const FinancePage = () => {
 
                       const totalRevenue = Object.values(revenueByClient).reduce((sum, amount) => sum + amount, 0);
 
-                      const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500', 'bg-indigo-500', 'bg-gray-500'];
+                      const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500', 'bg-indigo-500', 'bg-ink-500'];
 
                       const revenueSources = Object.entries(revenueByClient)
                         .map(([source, amount]) => ({
@@ -1134,7 +1134,7 @@ const FinancePage = () => {
                 </div>
 
                 {/* Cash Flow Trend */}
-                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
+                <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -1262,7 +1262,7 @@ const FinancePage = () => {
                 </div>
 
                 {/* Financial Health Metrics */}
-                <div className="bg-white rounded-xl shadow-lg border border-ink-100 p-6">
+                <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
                   {(() => {
                     // Calculate real financial health metrics
                     const totalAssets = chartOfAccounts
@@ -1362,8 +1362,8 @@ const FinancePage = () => {
                                 <div
                                   className={`h-2 rounded-full transition-all duration-500 ${
                                     item.status === 'above'
-                                      ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                                      : 'bg-gradient-to-r from-yellow-500 to-orange-600'
+                                      ? 'bg-navy-900'
+                                      : 'bg-navy-900'
                                   }`}
                                   style={{ width: `${Math.round(item.value)}%` }}
                                 ></div>
@@ -1397,7 +1397,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddAccount(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Account
@@ -1507,7 +1507,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddAsset(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Fixed Asset
@@ -1608,7 +1608,7 @@ const FinancePage = () => {
                               <p className="font-semibold text-red-600">
                                 LKR {asset.accumulatedDepreciation.toLocaleString()}
                               </p>
-                              <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                              <div className="w-full bg-ink-200 rounded-full h-1.5 mt-1">
                                 <div
                                   className="bg-red-600 h-1.5 rounded-full transition-all"
                                   style={{ width: `${depreciationPercent}%` }}
@@ -1677,7 +1677,7 @@ const FinancePage = () => {
 
                 {fixedAssets.filter(a => !a.disposed).length === 0 && (
                   <div className="text-center py-12">
-                    <Package size={48} className="mx-auto text-gray-300 mb-3" />
+                    <Package size={48} className="mx-auto text-ink-300 mb-3" />
                     <p className="text-ink-500 font-medium">No fixed assets yet</p>
                     <p className="text-sm text-ink-400 mt-1">Click "Add Fixed Asset" to start tracking your assets</p>
                   </div>
@@ -1686,7 +1686,7 @@ const FinancePage = () => {
 
               {/* Summary by Asset Type */}
               {Object.keys(getSummaryByType()).length > 0 && (
-                <div className="bg-gradient-to-br from-gray-50 to-slate-50 border border-ink-100 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-ink-50 to-slate-50 border border-ink-100 rounded-xl p-6">
                   <h3 className="text-lg font-bold text-ink-900 mb-4">Summary by Asset Type</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {Object.entries(getSummaryByType()).map(([assetType, summary]) => (
@@ -1734,7 +1734,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddGrant(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Grant Receivable
@@ -1834,7 +1834,7 @@ const FinancePage = () => {
                               <p className="font-semibold text-green-600">
                                 LKR {grant.receivedAmount.toLocaleString()}
                               </p>
-                              <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                              <div className="w-full bg-ink-200 rounded-full h-1.5 mt-1">
                                 <div
                                   className="bg-green-600 h-1.5 rounded-full transition-all"
                                   style={{ width: `${percentage}%` }}
@@ -1911,7 +1911,7 @@ const FinancePage = () => {
 
                 {grantReceivables.length === 0 && (
                   <div className="text-center py-12">
-                    <HandCoins size={48} className="mx-auto text-gray-300 mb-3" />
+                    <HandCoins size={48} className="mx-auto text-ink-300 mb-3" />
                     <p className="text-ink-500 font-medium">No grant receivables yet</p>
                     <p className="text-sm text-ink-400 mt-1">Click "Add Grant Receivable" to start tracking pledged grants</p>
                   </div>
@@ -1969,7 +1969,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddInvoice(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   New Invoice
@@ -2072,7 +2072,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddBill(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Bill
@@ -2081,7 +2081,7 @@ const FinancePage = () => {
 
               {/* Bills Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-gradient-to-br from-red-500 to-rose-600 rounded-xl p-6 text-white shadow-lg">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-white shadow-card">
                   <div className="flex items-center justify-between mb-2">
                     <Receipt size={24} />
                     <span className="text-xs bg-white/20 px-2 py-1 rounded">Total</span>
@@ -2090,7 +2090,7 @@ const FinancePage = () => {
                   <p className="text-3xl font-bold">{bills.length}</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl p-6 text-white shadow-lg">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-white shadow-card">
                   <div className="flex items-center justify-between mb-2">
                     <Clock size={24} />
                     <span className="text-xs bg-white/20 px-2 py-1 rounded">Pending</span>
@@ -2099,7 +2099,7 @@ const FinancePage = () => {
                   <p className="text-3xl font-bold">{bills.filter(b => b.status === 'Pending').length}</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-6 text-white shadow-lg">
+                <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-white shadow-card">
                   <div className="flex items-center justify-between mb-2">
                     <CheckCircle size={24} />
                     <span className="text-xs bg-white/20 px-2 py-1 rounded">Paid</span>
@@ -2108,7 +2108,7 @@ const FinancePage = () => {
                   <p className="text-3xl font-bold">{bills.filter(b => b.status === 'Paid').length}</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg">
+                <div className="bg-purple-50 border border-purple-200 rounded-xl p-6 text-white shadow-card">
                   <div className="flex items-center justify-between mb-2">
                     <DollarSign size={24} />
                     <span className="text-xs bg-white/20 px-2 py-1 rounded">Amount</span>
@@ -2204,7 +2204,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddJournalEntry(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   New Entry
@@ -2213,7 +2213,7 @@ const FinancePage = () => {
 
               <div className="space-y-4">
                 {journalEntries.map((entry) => (
-                  <div key={entry.id} className="bg-white border border-ink-100 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                  <div key={entry.id} className="bg-white border border-ink-100 rounded-xl overflow-hidden hover:shadow-card transition-shadow">
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -2284,14 +2284,14 @@ const FinancePage = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setShowAddBankAccount(true)}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                    className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                   >
                     <Plus size={18} />
                     Add Bank Account
                   </button>
                   <button
                     onClick={() => setShowBankReconciliation(true)}
-                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                    className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                   >
                     <RefreshCw size={18} />
                     Reconcile Banks
@@ -2302,7 +2302,7 @@ const FinancePage = () => {
               {/* Bank Account Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {chartOfAccounts.filter(acc => acc.name.includes('Bank')).map((bank) => (
-                  <div key={bank.id} className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+                  <div key={bank.id} className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-white shadow-card hover:shadow-lift transition-shadow">
                     <div className="flex items-center justify-between mb-4">
                       <Building2 size={24} />
                       <span className="text-xs bg-white/20 px-2 py-1 rounded">Active</span>
@@ -2376,7 +2376,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowReportBuilder(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Download size={18} />
                   Custom Report
@@ -2392,7 +2392,7 @@ const FinancePage = () => {
                   { name: 'General Ledger', desc: 'Complete transaction history', icon: FileText, color: 'gray' },
                   { name: 'Trial Balance', desc: 'Verify debits equal credits', icon: CheckCircle, color: 'teal' },
                 ].map((report, idx) => (
-                  <div key={idx} className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-lg hover:border-ink-200 transition-all group">
+                  <div key={idx} className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-card hover:border-ink-200 transition-all group">
                     <div className={`w-12 h-12 bg-${report.color}-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <report.icon className={`text-${report.color}-600`} size={24} />
                     </div>
@@ -2400,7 +2400,7 @@ const FinancePage = () => {
                     <p className="text-sm text-ink-600 mb-4">{report.desc}</p>
                     <button
                       onClick={() => handleGenerateReport(report.name)}
-                      className="w-full px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center justify-center gap-2"
+                      className="w-full px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center justify-center gap-2"
                     >
                       <Eye size={16} />
                       Generate
@@ -2467,7 +2467,7 @@ const FinancePage = () => {
       {/* Payment Processing Modal */}
       {showPayBill && selectedBill && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
@@ -2695,7 +2695,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2">
                   <CheckCircle size={18} />
                   Generate Voucher & Process Payment
                 </button>
@@ -2708,7 +2708,7 @@ const FinancePage = () => {
       {/* Bill Detail Modal */}
       {showBillDetail && selectedBill && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
@@ -2936,12 +2936,12 @@ const FinancePage = () => {
                       setShowBillDetail(false);
                       setShowPayBill(true);
                     }}
-                    className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+                    className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
                   >
                     Process Payment
                   </button>
                 )}
-                <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Download PDF
                 </button>
               </div>
@@ -2953,9 +2953,9 @@ const FinancePage = () => {
       {/* Receive Payment Modal */}
       {showReceivePayment && selectedInvoice && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Receive Payment</h2>
@@ -3137,7 +3137,7 @@ const FinancePage = () => {
                     setSelectedInvoice(null);
                     alert('Payment received successfully!');
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <CheckCircle size={18} />
                   Confirm Payment
@@ -3151,7 +3151,7 @@ const FinancePage = () => {
       {/* Add Invoice Modal */}
       {showAddInvoice && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
@@ -3327,7 +3327,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Create Invoice
                 </button>
               </div>
@@ -3339,7 +3339,7 @@ const FinancePage = () => {
       {/* Add Expense Modal */}
       {showAddExpense && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
@@ -3459,7 +3459,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Record Expense
                 </button>
               </div>
@@ -3471,7 +3471,7 @@ const FinancePage = () => {
       {/* Add Journal Entry Modal */}
       {showAddJournalEntry && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
@@ -3622,7 +3622,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Post Entry
                 </button>
               </div>
@@ -3634,7 +3634,7 @@ const FinancePage = () => {
       {/* Bank Reconciliation Modal */}
       {showBankReconciliation && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <div>
@@ -3755,10 +3755,10 @@ const FinancePage = () => {
                   Cancel
                 </button>
                 <div className="flex gap-3">
-                  <button className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all font-semibold">
+                  <button className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-all font-semibold">
                     Mark Selected as Cleared
                   </button>
-                  <button className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                  <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                     Complete Reconciliation
                   </button>
                 </div>
@@ -3771,7 +3771,7 @@ const FinancePage = () => {
       {/* Account Detail View Modal */}
       {showAccountDetail && selectedAccount && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Sticky Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -3936,7 +3936,7 @@ const FinancePage = () => {
                     setShowAccountDetail(false);
                     setShowEditAccount(true);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Edit size={18} />
                   Edit Account
@@ -3950,7 +3950,7 @@ const FinancePage = () => {
       {/* Add Account Modal */}
       {showAddAccount && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -4102,7 +4102,7 @@ const FinancePage = () => {
               >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+              <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                 Create Account
               </button>
             </div>
@@ -4113,9 +4113,9 @@ const FinancePage = () => {
       {/* Edit Account Modal */}
       {showEditAccount && selectedAccount && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-gray-700 to-gray-900 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-gradient-to-r from-ink-700 to-ink-900 text-white p-6 rounded-t-2xl z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Edit Account</h2>
@@ -4155,7 +4155,7 @@ const FinancePage = () => {
                 </label>
                 <select
                   defaultValue={selectedAccount.subtype}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-ink-500 focus:border-ink-500"
                 >
                   {selectedAccount.type === 'Asset' && (
                     <>
@@ -4228,7 +4228,7 @@ const FinancePage = () => {
                 <input
                   type="text"
                   defaultValue={selectedAccount.name}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-ink-500 focus:border-ink-500"
                 />
               </div>
 
@@ -4259,7 +4259,7 @@ const FinancePage = () => {
                 <textarea
                   rows="3"
                   placeholder="Optional description of what this account tracks"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 resize-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-ink-500 focus:border-ink-500 resize-none"
                 />
               </div>
 
@@ -4291,7 +4291,7 @@ const FinancePage = () => {
                   <Trash2 size={18} />
                   Deactivate Account
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+                <button className="px-6 py-2 bg-gradient-to-r from-ink-700 to-ink-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Save Changes
                 </button>
               </div>
@@ -4303,7 +4303,7 @@ const FinancePage = () => {
       {/* Add Bill Modal */}
       {showAddBill && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -4547,7 +4547,7 @@ const FinancePage = () => {
               >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold">
+              <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                 Create Bill
               </button>
             </div>
@@ -4558,7 +4558,7 @@ const FinancePage = () => {
       {/* Custom Report Builder Modal */}
       {showReportBuilder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -4767,10 +4767,10 @@ const FinancePage = () => {
                 Cancel
               </button>
               <div className="flex gap-3">
-                <button className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all font-semibold">
+                <button className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-all font-semibold">
                   Save as Template
                 </button>
-                <button className="px-6 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2">
+                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2">
                   <Download size={18} />
                   Generate Report
                 </button>
@@ -4783,7 +4783,7 @@ const FinancePage = () => {
       {/* Invoice Detail Modal */}
       {showInvoiceDetail && selectedInvoice && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -4917,7 +4917,7 @@ const FinancePage = () => {
                       setShowInvoiceDetail(false);
                       setShowReceivePayment(true);
                     }}
-                    className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                    className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                   >
                     <DollarSign size={18} />
                     Receive Payment
@@ -4928,7 +4928,7 @@ const FinancePage = () => {
                     setShowInvoiceDetail(false);
                     setShowEditInvoice(true);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Edit size={18} />
                   Edit Invoice
@@ -4937,7 +4937,7 @@ const FinancePage = () => {
                   onClick={() => {
                     alert(`Sending invoice ${selectedInvoice.invoiceNo} to ${selectedInvoice.client}...`);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Send size={18} />
                   Send Invoice
@@ -4951,7 +4951,7 @@ const FinancePage = () => {
       {/* Edit Invoice Modal */}
       {showEditInvoice && selectedInvoice && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -5113,7 +5113,7 @@ const FinancePage = () => {
                     setShowEditInvoice(false);
                     setSelectedInvoice(null);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <CheckCircle size={18} />
                   Save Changes
@@ -5127,7 +5127,7 @@ const FinancePage = () => {
       {/* Edit Bill Modal */}
       {showEditBill && selectedBill && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -5275,7 +5275,7 @@ const FinancePage = () => {
                     setShowEditBill(false);
                     setSelectedBill(null);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <CheckCircle size={18} />
                   Save Changes
@@ -5289,9 +5289,9 @@ const FinancePage = () => {
       {/* Financial Report Modal */}
       {showReportModal && selectedReportType && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col report-modal-content">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col report-modal-content">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6 flex items-center justify-between">
+            <div className="bg-navy-900 text-white p-6 flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">{selectedReportType}</h2>
                 <p className="text-orange-100 text-sm mt-1">Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
@@ -5762,21 +5762,21 @@ const FinancePage = () => {
               <div className="flex gap-2">
                 <button
                   onClick={handlePrintPDF}
-                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <Download size={18} />
                   Print PDF
                 </button>
                 <button
                   onClick={handleSaveAsPDF}
-                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <FileText size={18} />
                   Save as PDF
                 </button>
                 <button
                   onClick={handleExportExcel}
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:shadow-lg transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <FileText size={18} />
                   Export Excel
@@ -5790,8 +5790,8 @@ const FinancePage = () => {
       {/* Add Grant Receivable Modal */}
       {showAddGrant && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-white z-10">
+          <div className="bg-white rounded-xl shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-navy-900 p-6 text-white z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <HandCoins size={24} />
@@ -6001,7 +6001,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:shadow-lg transition font-semibold"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold"
                 >
                   Add Grant Receivable
                 </button>
@@ -6014,8 +6014,8 @@ const FinancePage = () => {
       {/* Grant Detail Modal */}
       {showGrantDetail && selectedGrant && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white z-10">
+          <div className="bg-white rounded-xl shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-navy-900 p-6 text-white z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <HandCoins size={24} />
@@ -6094,7 +6094,7 @@ const FinancePage = () => {
                       {((selectedGrant.receivedAmount / selectedGrant.pledgeAmount) * 100).toFixed(1)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-ink-200 rounded-full h-2">
                     <div
                       className="bg-green-600 h-2 rounded-full transition-all"
                       style={{ width: `${(selectedGrant.receivedAmount / selectedGrant.pledgeAmount) * 100}%` }}
@@ -6147,7 +6147,7 @@ const FinancePage = () => {
                       setShowGrantDetail(false);
                       setShowRecordReceipt(true);
                     }}
-                    className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition font-semibold flex items-center gap-2"
+                    className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                   >
                     <DollarSign size={18} />
                     Record Receipt
@@ -6168,8 +6168,8 @@ const FinancePage = () => {
       {/* Record Receipt Modal */}
       {showRecordReceipt && selectedGrant && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-xl w-full">
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 text-white">
+          <div className="bg-white rounded-xl shadow-pop max-w-xl w-full">
+            <div className="bg-navy-900 p-6 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <DollarSign size={24} />
@@ -6262,7 +6262,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition font-semibold"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold"
                 >
                   Record Receipt
                 </button>
@@ -6275,8 +6275,8 @@ const FinancePage = () => {
       {/* Add Fixed Asset Modal */}
       {showAddAsset && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white sticky top-0 z-10">
+          <div className="bg-white rounded-xl shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-navy-900 p-6 text-white sticky top-0 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Package size={24} />
@@ -6493,7 +6493,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition font-semibold"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold"
                 >
                   Add Asset
                 </button>
@@ -6506,8 +6506,8 @@ const FinancePage = () => {
       {/* Asset Detail Modal */}
       {showAssetDetail && selectedAsset && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white sticky top-0 z-10">
+          <div className="bg-white rounded-xl shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-navy-900 p-6 text-white sticky top-0 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">{selectedAsset.assetName}</h2>
@@ -6567,7 +6567,7 @@ const FinancePage = () => {
                       {((selectedAsset.accumulatedDepreciation / selectedAsset.cost) * 100).toFixed(1)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-ink-200 rounded-full h-2">
                     <div
                       className="bg-red-600 h-2 rounded-full transition-all"
                       style={{ width: `${(selectedAsset.accumulatedDepreciation / selectedAsset.cost) * 100}%` }}
@@ -6616,7 +6616,7 @@ const FinancePage = () => {
                     setShowAssetDetail(false);
                     setShowDepreciationSchedule(true);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <LineChart size={18} />
                   View Depreciation Schedule
@@ -6636,8 +6636,8 @@ const FinancePage = () => {
       {/* Depreciation Schedule Modal */}
       {showDepreciationSchedule && selectedAsset && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white sticky top-0 z-10">
+          <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-navy-900 p-6 text-white sticky top-0 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">Depreciation Schedule</h2>
@@ -6717,7 +6717,7 @@ const FinancePage = () => {
       {/* Add Bank Account Modal */}
       {showAddBankAccount && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
@@ -6858,7 +6858,7 @@ const FinancePage = () => {
               </button>
               <button
                 onClick={handleAddBankAccount}
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:shadow-lg transition font-semibold flex items-center gap-2"
+                className="px-6 py-2.5 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
               >
                 <Plus size={18} />
                 Add Bank Account

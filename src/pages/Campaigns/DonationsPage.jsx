@@ -156,7 +156,7 @@ const DonationsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-500 via-pink-600 to-fuchsia-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-purple-500 via-pink-600 to-fuchsia-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -183,49 +183,49 @@ const DonationsPage = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-green-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-green-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-green-100 p-3 rounded-xl">
                 <DollarSign className="text-green-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Amount</h3>
-            <p className="text-3xl font-bold text-gray-800">${stats.totalAmount.toLocaleString()}</p>
+            <p className="text-3xl font-bold text-ink-800">${stats.totalAmount.toLocaleString()}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-blue-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-blue-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-blue-100 p-3 rounded-xl">
                 <Receipt className="text-blue-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Donations</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.totalDonations}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.totalDonations}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-purple-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-purple-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-purple-100 p-3 rounded-xl">
                 <TrendingUp className="text-purple-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Average Donation</h3>
-            <p className="text-3xl font-bold text-gray-800">${stats.averageDonation.toLocaleString()}</p>
+            <p className="text-3xl font-bold text-ink-800">${stats.averageDonation.toLocaleString()}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-pink-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-pink-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-pink-100 p-3 rounded-xl">
                 <Users className="text-pink-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Donors</h3>
-            <p className="text-3xl font-bold text-gray-800">{donors.length}</p>
+            <p className="text-3xl font-bold text-ink-800">{donors.length}</p>
           </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div className="bg-white rounded-lg2 shadow-card p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
@@ -265,7 +265,7 @@ const DonationsPage = () => {
 
             <button
               onClick={exportToCSV}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-card"
             >
               <Download size={20} />
               Export CSV
@@ -276,9 +276,9 @@ const DonationsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Donations List */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-lg2 shadow-card overflow-hidden">
               <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-ink-100">
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-ink-800 flex items-center gap-2">
                   <Receipt size={24} className="text-purple-600" />
                   Recent Donations ({filteredDonations.length})
                 </h2>
@@ -294,7 +294,7 @@ const DonationsPage = () => {
                     <p className="text-ink-500 mb-6">Start recording donations to track fundraising progress</p>
                     <button
                       onClick={() => setShowDonationModal(true)}
-                      className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-200 inline-flex items-center gap-2"
+                      className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 inline-flex items-center gap-2"
                     >
                       <Plus size={20} />
                       Record First Donation
@@ -361,9 +361,9 @@ const DonationsPage = () => {
 
           {/* Top Donors Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-lg2 shadow-card overflow-hidden">
               <div className="p-6 bg-gradient-to-r from-pink-50 to-purple-50 border-b border-ink-100">
-                <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <h2 className="text-xl font-bold text-ink-800 flex items-center gap-2">
                   <Users size={20} className="text-pink-600" />
                   Top Donors
                 </h2>
@@ -372,7 +372,7 @@ const DonationsPage = () => {
               <div className="p-6">
                 {topDonors.length === 0 ? (
                   <div className="text-center py-8">
-                    <Users size={40} className="text-gray-300 mx-auto mb-3" />
+                    <Users size={40} className="text-ink-300 mx-auto mb-3" />
                     <p className="text-ink-500 text-sm">No donors yet</p>
                   </div>
                 ) : (
@@ -383,11 +383,11 @@ const DonationsPage = () => {
                         className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl hover:shadow-md transition-all duration-200 cursor-pointer"
                         onClick={() => handleViewDonor(donor)}
                       >
-                        <div className="bg-gradient-to-br from-purple-600 to-pink-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">
+                        <div className="bg-purple-50 border border-purple-200 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">
                           #{index + 1}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-800 truncate">{donor.name}</p>
+                          <p className="font-semibold text-ink-800 truncate">{donor.name}</p>
                           <p className="text-sm text-ink-600 font-bold">${donor.totalDonations.toLocaleString()}</p>
                           <p className="text-xs text-ink-500">{donor.donationCount} donations</p>
                         </div>
@@ -404,7 +404,7 @@ const DonationsPage = () => {
       {/* Record Donation Modal */}
       {showDonationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Plus size={24} />
@@ -541,7 +541,7 @@ const DonationsPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl font-semibold transition-all duration-200 shadow-card hover:shadow-lift"
                 >
                   Record Donation
                 </button>
@@ -554,7 +554,7 @@ const DonationsPage = () => {
       {/* Donor Details Modal */}
       {showDonorModal && selectedDonor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Users size={24} />
@@ -570,7 +570,7 @@ const DonationsPage = () => {
 
             <div className="p-6 space-y-6">
               <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-xl p-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">{selectedDonor.name}</h3>
+                <h3 className="text-2xl font-bold text-ink-800 mb-4">{selectedDonor.name}</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="flex items-center gap-2 text-ink-600">
@@ -602,7 +602,7 @@ const DonationsPage = () => {
               </div>
 
               <div>
-                <h4 className="text-lg font-bold text-gray-800 mb-3">Donation History</h4>
+                <h4 className="text-lg font-bold text-ink-800 mb-3">Donation History</h4>
                 <div className="space-y-3">
                   {donations
                     .filter(d => d.email === selectedDonor.email)
@@ -612,7 +612,7 @@ const DonationsPage = () => {
                       return (
                         <div key={donation.id} className="flex items-center justify-between p-4 bg-ink-50 rounded-xl">
                           <div>
-                            <p className="font-semibold text-gray-800">{campaign?.title || 'N/A'}</p>
+                            <p className="font-semibold text-ink-800">{campaign?.title || 'N/A'}</p>
                             <p className="text-sm text-ink-600">{donation.date}</p>
                           </div>
                           <div className="text-right">

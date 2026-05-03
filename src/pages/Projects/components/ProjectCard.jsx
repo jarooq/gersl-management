@@ -75,7 +75,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
             </span>
             <span className="text-sm font-bold text-ink-900">{project.progress}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 shadow-inner">
+          <div className="w-full bg-ink-200 rounded-full h-2.5 shadow-inner">
             <div
               className={`bg-gradient-to-r ${getProgressColor(project.progress)} h-2.5 rounded-full transition-all shadow-sm`}
               style={{ width: `${project.progress}%` }}
@@ -86,7 +86,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="flex items-center gap-3 text-sm p-3 bg-green-50 rounded-lg border border-green-100">
-            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-8 h-8 bg-green-50 border border-green-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
               <DollarSign size={16} className="text-white" />
             </div>
             <div className="flex-1">
@@ -95,7 +95,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm p-3 bg-blue-50 rounded-lg border border-blue-100">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-8 h-8 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
               <Users size={16} className="text-white" />
             </div>
             <div className="flex-1">
@@ -104,7 +104,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm p-3 bg-purple-50 rounded-lg border border-purple-100">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-8 h-8 bg-purple-50 border border-purple-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
               <TrendingUp size={16} className="text-white" />
             </div>
             <div className="flex-1">
@@ -113,7 +113,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
             </div>
           </div>
           <div className="flex items-center gap-3 text-sm p-3 bg-orange-50 rounded-lg border border-orange-100">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-8 h-8 bg-orange-50 border border-orange-200 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
               <Calendar size={16} className="text-white" />
             </div>
             <div className="flex-1">
@@ -135,14 +135,14 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
         <div className="flex gap-2 pt-4 border-t border-ink-100">
           <button
             onClick={() => navigate(`/admin/projects/${project.id}`)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
           >
             <Eye size={16} />
             View
           </button>
           <button
             onClick={() => onEdit(project)}
-            className="px-3 py-2.5 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
+            className="px-3 py-2.5 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-all border border-ink-100 hover:border-ink-200 active:scale-95"
           >
             <Edit size={18} />
           </button>

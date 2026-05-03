@@ -232,7 +232,7 @@ const SystemSettingsPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-gray-700 via-slate-700 to-zinc-700 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-ink-700 via-slate-700 to-zinc-700 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -243,7 +243,7 @@ const SystemSettingsPage = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">System Settings</h1>
-                <p className="text-gray-100 text-sm">Configure system preferences and manage settings</p>
+                <p className="text-ink-100 text-sm">Configure system preferences and manage settings</p>
               </div>
             </div>
             {showSuccess && (
@@ -339,7 +339,7 @@ const SystemSettingsPage = () => {
       {/* Department Modal */}
       {showDepartmentModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-pop max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-ink-100">
               <h2 className="text-xl font-bold text-ink-900">
                 {editingDepartment ? 'Edit Department' : 'Add New Department'}
@@ -457,7 +457,7 @@ const SystemSettingsPage = () => {
       {/* Position Modal */}
       {showPositionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-pop max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-ink-100">
               <h2 className="text-xl font-bold text-ink-900">
                 {editingPosition ? 'Edit Position' : 'Add New Position'}
@@ -798,7 +798,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
           <div key={user.id} className="border border-ink-100 rounded-lg p-4 hover:border-blue-300 transition">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-full flex items-center justify-center text-white font-bold text-lg">
                   {user.fullName.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div className="flex-1">
@@ -834,7 +834,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
       {/* Add User Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-ink-100">
               <div className="flex items-center justify-between">
                 <h3 className="text-h1 text-ink-900">Add New User</h3>
@@ -1059,8 +1059,8 @@ const RolesTab = () => {
       case 5: return 'bg-green-500';
       case 6: return 'bg-yellow-500';
       case 7: return 'bg-orange-500';
-      case 99: return 'bg-gray-500';
-      default: return 'bg-gray-500';
+      case 99: return 'bg-ink-500';
+      default: return 'bg-ink-500';
     }
   };
 
@@ -1233,7 +1233,7 @@ const RolesTab = () => {
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowPermissions(false)}
-                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                  className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition"
                 >
                   Close
                 </button>
@@ -1281,7 +1281,7 @@ const NotificationsTab = ({ settings, setSettings, onSave }) => {
             <button
               onClick={() => toggleSetting(option.key)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                settings[option.key] ? 'bg-blue-600' : 'bg-gray-300'
+                settings[option.key] ? 'bg-blue-600' : 'bg-ink-300'
               }`}
             >
               <span
@@ -1355,7 +1355,7 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
             <button
               onClick={() => setSettings({ ...settings, autoBackup: !settings.autoBackup })}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                settings.autoBackup ? 'bg-blue-600' : 'bg-gray-300'
+                settings.autoBackup ? 'bg-blue-600' : 'bg-ink-300'
               }`}
             >
               <span
@@ -1516,7 +1516,7 @@ const IntegrationsTab = ({ settings }) => {
       {/* Configuration Modal */}
       {showConfigModal && selectedIntegration && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full">
+          <div className="bg-white rounded-xl shadow-pop max-w-lg w-full">
             <div className="p-6 border-b border-ink-100">
               <div className="flex items-center justify-between">
                 <h3 className="text-h1 text-ink-900">Configure {selectedIntegration.name}</h3>
@@ -1764,7 +1764,7 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
             <button
               onClick={() => setSettings({ ...settings, compactMode: !settings.compactMode })}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                settings.compactMode ? 'bg-blue-600' : 'bg-gray-300'
+                settings.compactMode ? 'bg-blue-600' : 'bg-ink-300'
               }`}
             >
               <span
@@ -1783,7 +1783,7 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
             <button
               onClick={() => setSettings({ ...settings, showAnimations: !settings.showAnimations })}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                settings.showAnimations ? 'bg-blue-600' : 'bg-gray-300'
+                settings.showAnimations ? 'bg-blue-600' : 'bg-ink-300'
               }`}
             >
               <span
@@ -1911,7 +1911,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
               <button
                 onClick={() => setSettings({ ...settings, twoFactorAuth: !settings.twoFactorAuth })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                  settings.twoFactorAuth ? 'bg-blue-600' : 'bg-gray-300'
+                  settings.twoFactorAuth ? 'bg-blue-600' : 'bg-ink-300'
                 }`}
               >
                 <span
@@ -1930,7 +1930,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
               <button
                 onClick={() => setSettings({ ...settings, auditLog: !settings.auditLog })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-                  settings.auditLog ? 'bg-blue-600' : 'bg-gray-300'
+                  settings.auditLog ? 'bg-blue-600' : 'bg-ink-300'
                 }`}
               >
                 <span
@@ -2303,7 +2303,7 @@ const AIConfigTab = ({ onSave }) => {
           <button
             onClick={() => handleChange('enableFallback', !aiSettings.enableFallback)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-              aiSettings.enableFallback ? 'bg-blue-600' : 'bg-gray-300'
+              aiSettings.enableFallback ? 'bg-blue-600' : 'bg-ink-300'
             }`}
           >
             <span
@@ -2366,11 +2366,11 @@ const StatCard = ({ icon: Icon, label, value, total, color }) => (
 // ============================================
 const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
   const colorOptions = [
-    { value: 'from-blue-500 to-cyan-600', label: 'Blue', preview: 'bg-gradient-to-r from-blue-500 to-cyan-600' },
-    { value: 'from-purple-500 to-pink-600', label: 'Purple', preview: 'bg-gradient-to-r from-purple-500 to-pink-600' },
-    { value: 'from-green-500 to-teal-600', label: 'Green', preview: 'bg-gradient-to-r from-green-500 to-teal-600' },
-    { value: 'from-orange-500 to-red-600', label: 'Orange', preview: 'bg-gradient-to-r from-orange-500 to-red-600' },
-    { value: 'from-indigo-500 to-purple-600', label: 'Indigo', preview: 'bg-gradient-to-r from-indigo-500 to-purple-600' },
+    { value: 'from-blue-500 to-cyan-600', label: 'Blue', preview: 'bg-navy-900' },
+    { value: 'from-purple-500 to-pink-600', label: 'Purple', preview: 'bg-navy-900' },
+    { value: 'from-green-500 to-teal-600', label: 'Green', preview: 'bg-navy-900' },
+    { value: 'from-orange-500 to-red-600', label: 'Orange', preview: 'bg-navy-900' },
+    { value: 'from-indigo-500 to-purple-600', label: 'Indigo', preview: 'bg-navy-900' },
     { value: 'from-yellow-400 to-orange-500', label: 'Yellow', preview: 'bg-gradient-to-r from-yellow-400 to-orange-500' },
   ];
 
@@ -2428,7 +2428,7 @@ const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
               <p className="text-sm text-ink-600 mb-2 line-clamp-2">{dept.description}</p>
             )}
             <div className="flex items-center justify-between mt-3 pt-3 border-t">
-              <span className={`text-xs px-2 py-1 rounded ${dept.isActive ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-gray-800'}`}>
+              <span className={`text-xs px-2 py-1 rounded ${dept.isActive ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-ink-800'}`}>
                 {dept.isActive ? 'Active' : 'Inactive'}
               </span>
               <span className="text-xs text-ink-500">Order: {dept.sortOrder}</span>
@@ -2455,12 +2455,12 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
     { value: 'Executive', label: 'Executive', color: 'bg-purple-100 text-purple-800' },
     { value: 'Senior', label: 'Senior', color: 'bg-blue-100 text-blue-800' },
     { value: 'Mid', label: 'Mid', color: 'bg-green-100 text-green-800' },
-    { value: 'Entry', label: 'Entry', color: 'bg-ink-100 text-gray-800' },
+    { value: 'Entry', label: 'Entry', color: 'bg-ink-100 text-ink-800' },
   ];
 
   const getLevelColor = (level) => {
     const option = levelOptions.find(opt => opt.value === level);
-    return option ? option.color : 'bg-ink-100 text-gray-800';
+    return option ? option.color : 'bg-ink-100 text-ink-800';
   };
 
   return (
@@ -2488,7 +2488,7 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
             className="border border-ink-100 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-600 flex items-center justify-center text-white">
+              <div className="w-12 h-12 rounded-lg bg-navy-900 flex items-center justify-center text-white">
                 <Briefcase className="w-6 h-6" />
               </div>
               <div className="flex gap-2">
@@ -2522,7 +2522,7 @@ const PositionsTab = ({ positions, onAdd, onEdit, onDelete }) => {
               <p className="text-sm text-ink-600 mb-2 line-clamp-2">{position.description}</p>
             )}
             <div className="flex items-center justify-between mt-3 pt-3 border-t">
-              <span className={`text-xs px-2 py-1 rounded ${position.isActive ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-gray-800'}`}>
+              <span className={`text-xs px-2 py-1 rounded ${position.isActive ? 'bg-green-100 text-green-800' : 'bg-ink-100 text-ink-800'}`}>
                 {position.isActive ? 'Active' : 'Inactive'}
               </span>
               <span className="text-xs text-ink-500">Order: {position.sortOrder}</span>

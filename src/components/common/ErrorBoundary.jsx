@@ -9,25 +9,25 @@ import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
+      <div className="bg-white rounded-lg2 shadow-pop p-8 max-w-2xl w-full">
         <div className="flex items-center justify-center mb-6">
           <div className="bg-red-100 p-4 rounded-full">
             <AlertTriangle className="text-red-600" size={48} />
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 text-center mb-4">
+        <h1 className="text-3xl font-bold text-ink-900 text-center mb-4">
           Oops! Something went wrong
         </h1>
 
-        <p className="text-gray-600 text-center mb-6">
+        <p className="text-ink-600 text-center mb-6">
           We're sorry for the inconvenience. The application encountered an unexpected error.
         </p>
 
         {/* Error Details - Only in development */}
         {import.meta.env.DEV && (
-          <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+          <div className="bg-ink-50 rounded-lg p-4 mb-6 border border-ink-200">
+            <h3 className="text-sm font-semibold text-ink-700 mb-2">
               Error Details (Development Mode):
             </h3>
             <div className="bg-red-50 border border-red-200 rounded p-3 mb-2">
@@ -36,11 +36,11 @@ function ErrorFallback({ error, resetErrorBoundary }) {
               </p>
             </div>
             {error.stack && (
-              <details className="text-xs text-gray-600">
-                <summary className="cursor-pointer font-medium hover:text-gray-900">
+              <details className="text-xs text-ink-600">
+                <summary className="cursor-pointer font-medium hover:text-ink-900">
                   Stack Trace
                 </summary>
-                <pre className="mt-2 bg-gray-100 p-3 rounded overflow-x-auto text-xs">
+                <pre className="mt-2 bg-ink-100 p-3 rounded overflow-x-auto text-xs">
                   {error.stack}
                 </pre>
               </details>
@@ -52,7 +52,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={resetErrorBoundary}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-navy-900 text-white font-semibold rounded-lg transition-all shadow-card hover:shadow-lift"
           >
             <RefreshCw size={18} />
             Try Again
@@ -60,7 +60,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
           <button
             onClick={() => window.location.href = '/dashboard'}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all"
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-ink-300 text-ink-700 font-semibold rounded-lg hover:bg-ink-50 transition-all"
           >
             <Home size={18} />
             Go to Dashboard
@@ -68,7 +68,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
         </div>
 
         {/* Help Text */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-ink-500">
           <p>
             If this problem persists, please contact the system administrator or{' '}
             <a

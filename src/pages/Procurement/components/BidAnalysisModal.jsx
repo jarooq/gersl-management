@@ -111,7 +111,7 @@ export default function BidAnalysisModal({ rfq, quotations = [], existing = null
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-5xl max-h-[90vh] flex flex-col">
         <div className="px-5 py-4 border-b border-ink-100">
           <h2 className="text-lg font-semibold text-ink-900">{editing ? 'Edit Bid Analysis' : 'Build Bid Analysis'}</h2>
           <p className="text-xs text-ink-500 mt-1">{rfq.rfqNumber} — {quotations.length} quotation(s)</p>

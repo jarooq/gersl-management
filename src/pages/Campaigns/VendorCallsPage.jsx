@@ -169,9 +169,9 @@ const VendorCallsPage = () => {
   const getStatusBadge = (status) => {
     const badges = {
       'Open': 'bg-green-100 text-green-800',
-      'Closed': 'bg-ink-100 text-gray-800'
+      'Closed': 'bg-ink-100 text-ink-800'
     };
-    return badges[status] || 'bg-ink-100 text-gray-800';
+    return badges[status] || 'bg-ink-100 text-ink-800';
   };
 
   const getCategoryBadge = (category) => {
@@ -182,13 +182,13 @@ const VendorCallsPage = () => {
       'Supplies': 'bg-green-100 text-green-800',
       'Construction': 'bg-red-100 text-red-800'
     };
-    return badges[category] || 'bg-ink-100 text-gray-800';
+    return badges[category] || 'bg-ink-100 text-ink-800';
   };
 
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -215,49 +215,49 @@ const VendorCallsPage = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-orange-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-orange-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-orange-100 p-3 rounded-xl">
                 <Store className="text-orange-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Calls</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.totalCalls}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.totalCalls}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-green-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-green-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-green-100 p-3 rounded-xl">
                 <CheckCircle className="text-green-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Open Calls</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.openCalls}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.openCalls}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-purple-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-purple-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-purple-100 p-3 rounded-xl">
                 <Users className="text-purple-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Bids</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.totalBids}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.totalBids}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-gray-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-ink-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-ink-100 p-3 rounded-xl">
                 <XCircle className="text-ink-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Closed Calls</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.closedCalls}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.closedCalls}</p>
           </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div className="bg-white rounded-lg2 shadow-card p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
@@ -297,7 +297,7 @@ const VendorCallsPage = () => {
 
             <button
               onClick={exportToCSV}
-              className="bg-gradient-to-r from-orange-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-700 hover:to-pink-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-card"
             >
               <Download size={20} />
               Export CSV
@@ -306,9 +306,9 @@ const VendorCallsPage = () => {
         </div>
 
       {/* Vendor Calls Grid */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-lg2 shadow-card overflow-hidden">
           <div className="p-6 bg-gradient-to-r from-orange-50 to-pink-50 border-b border-ink-100">
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-ink-800 flex items-center gap-2">
               <Store size={24} className="text-orange-600" />
               Vendor Calls ({filteredCalls.length})
             </h2>
@@ -323,7 +323,7 @@ const VendorCallsPage = () => {
               <p className="text-ink-500 mb-6">Create your first vendor call to start procurement</p>
               <button
                 onClick={() => setShowModal(true)}
-                className="bg-gradient-to-r from-orange-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-700 hover:to-pink-700 transition-all duration-200 inline-flex items-center gap-2"
+                className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 inline-flex items-center gap-2"
               >
                 <Plus size={20} />
                 Create First Call
@@ -335,12 +335,12 @@ const VendorCallsPage = () => {
                 {filteredCalls.map((call) => (
                   <div
                     key={call.id}
-                    className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border border-ink-100 hover:shadow-xl transition-all duration-200 cursor-pointer"
+                    className="bg-gradient-to-br from-white to-ink-50 rounded-xl p-6 border border-ink-100 hover:shadow-lift transition-all duration-200 cursor-pointer"
                     onClick={() => handleView(call)}
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-800 mb-2">{call.title}</h3>
+                        <h3 className="text-lg font-bold text-ink-800 mb-2">{call.title}</h3>
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getCategoryBadge(call.category)}`}>
                           {call.category}
                         </span>
@@ -409,7 +409,7 @@ const VendorCallsPage = () => {
       {/* Create/Edit Vendor Call Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 {editingCall ? <Edit size={24} /> : <Plus size={24} />}
@@ -569,7 +569,7 @@ const VendorCallsPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-pink-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl font-semibold transition-all duration-200 shadow-card hover:shadow-lift"
                 >
                   {editingCall ? 'Update Call' : 'Create Call'}
                 </button>
@@ -582,7 +582,7 @@ const VendorCallsPage = () => {
       {/* View Vendor Call Modal */}
       {showViewModal && selectedCall && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Eye size={24} />
@@ -600,7 +600,7 @@ const VendorCallsPage = () => {
               <div className="bg-gradient-to-br from-orange-50 to-pink-50 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-3xl font-bold text-gray-800 mb-2">{selectedCall.title}</h3>
+                    <h3 className="text-3xl font-bold text-ink-800 mb-2">{selectedCall.title}</h3>
                     <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${getCategoryBadge(selectedCall.category)}`}>
                       {selectedCall.category}
                     </span>
@@ -657,28 +657,28 @@ const VendorCallsPage = () => {
 
               {selectedCall.description && (
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Description</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Description</h4>
                   <p className="text-ink-600 whitespace-pre-line">{selectedCall.description}</p>
                 </div>
               )}
 
               {selectedCall.requirements && (
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Vendor Requirements</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Vendor Requirements</h4>
                   <p className="text-ink-600 whitespace-pre-line">{selectedCall.requirements}</p>
                 </div>
               )}
 
               {selectedCall.specifications && (
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Technical Specifications</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Technical Specifications</h4>
                   <p className="text-ink-600 whitespace-pre-line">{selectedCall.specifications}</p>
                 </div>
               )}
 
               {(selectedCall.contactEmail || selectedCall.contactPhone) && (
                 <div className="bg-ink-50 rounded-xl p-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Contact Information</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Contact Information</h4>
                   <div className="space-y-2">
                     {selectedCall.contactEmail && (
                       <p className="text-ink-600">

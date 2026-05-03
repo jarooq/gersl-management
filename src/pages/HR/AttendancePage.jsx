@@ -233,7 +233,7 @@ const AttendancePage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -251,7 +251,7 @@ const AttendancePage = () => {
 
       {/* Stats Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-primary-50 border border-primary-200 text-primary-700 rounded-md flex items-center justify-center">
               <Clock size={24} />
@@ -261,7 +261,7 @@ const AttendancePage = () => {
           <p className="text-sm text-ink-600">Total Check-ins Today</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center">
               <CheckCircle size={24} />
@@ -271,7 +271,7 @@ const AttendancePage = () => {
           <p className="text-sm text-ink-600">Present Staff</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center">
               <MapPin size={24} />
@@ -281,7 +281,7 @@ const AttendancePage = () => {
           <p className="text-sm text-ink-600">GPS Check-ins</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
               <User size={24} />
@@ -291,7 +291,7 @@ const AttendancePage = () => {
           <p className="text-sm text-ink-600">Office Check-ins</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-danger-50 border border-danger-600/20 text-danger-700 rounded-md flex items-center justify-center">
               <AlertCircle size={24} />
@@ -363,7 +363,7 @@ const AttendancePage = () => {
       </div>
 
       {/* Attendance Records */}
-      <div className="bg-white rounded-2xl shadow-sm border border-ink-100">
+      <div className="bg-white rounded-lg2 shadow-sm border border-ink-100">
         <div className="p-6 border-b border-ink-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-ink-900">Attendance Records ({allAttendance.length})</h2>
           <p className="text-sm text-ink-600">Showing results for {filterDate}</p>
@@ -388,7 +388,7 @@ const AttendancePage = () => {
               <div key={`${record.type}-${record.id || index}`} className="border border-ink-100 rounded-xl p-6 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className={`w-12 h-12 ${record.hasGPS ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-primary-50 border border-primary-200 text-primary-700'} text-white rounded-xl flex items-center justify-center`}>
+                    <div className={`w-12 h-12 ${record.hasGPS ? 'bg-purple-50 border border-purple-200' : 'bg-primary-50 border border-primary-200 text-primary-700'} text-white rounded-xl flex items-center justify-center`}>
                       {record.hasGPS ? <MapPin size={24} /> : <User size={24} />}
                     </div>
                     <div>
@@ -448,7 +448,7 @@ const AttendancePage = () => {
       {/* Check-in Modal */}
       {showCheckInModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Check In</h2>
@@ -519,7 +519,7 @@ const AttendancePage = () => {
                 </button>
                 <button
                   onClick={() => setShowCheckInModal(false)}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>
@@ -532,7 +532,7 @@ const AttendancePage = () => {
       {/* Check-out Modal */}
       {showCheckOutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Check Out</h2>
@@ -597,13 +597,13 @@ const AttendancePage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCheckOut}
-                  className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Check Out
                 </button>
                 <button
                   onClick={() => setShowCheckOutModal(false)}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>

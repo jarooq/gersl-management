@@ -112,9 +112,9 @@ const MyTasksPage = () => {
       'In Progress': 'bg-blue-100 text-blue-800 border-blue-200',
       'Completed': 'bg-green-100 text-green-800 border-green-200',
       'Cancelled': 'bg-red-100 text-red-800 border-red-200',
-      'On Hold': 'bg-ink-100 text-gray-800 border-ink-100'
+      'On Hold': 'bg-ink-100 text-ink-800 border-ink-100'
     };
-    return colors[status] || 'bg-ink-100 text-gray-800 border-ink-100';
+    return colors[status] || 'bg-ink-100 text-ink-800 border-ink-100';
   }, []);
 
   const getPriorityColor = useCallback((priority) => {
@@ -298,7 +298,7 @@ const MyTasksPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-xl p-6 text-white shadow-card">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">My Tasks</h1>

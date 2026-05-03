@@ -172,9 +172,9 @@ const JobPostingsPage = () => {
   const getStatusBadge = (status) => {
     const badges = {
       'Open': 'bg-green-100 text-green-800',
-      'Closed': 'bg-ink-100 text-gray-800'
+      'Closed': 'bg-ink-100 text-ink-800'
     };
-    return badges[status] || 'bg-ink-100 text-gray-800';
+    return badges[status] || 'bg-ink-100 text-ink-800';
   };
 
   const getTypeBadge = (type) => {
@@ -184,13 +184,13 @@ const JobPostingsPage = () => {
       'Contract': 'bg-orange-100 text-orange-800',
       'Internship': 'bg-pink-100 text-pink-800'
     };
-    return badges[type] || 'bg-ink-100 text-gray-800';
+    return badges[type] || 'bg-ink-100 text-ink-800';
   };
 
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-500 via-blue-600 to-purple-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-indigo-500 via-blue-600 to-purple-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -217,49 +217,49 @@ const JobPostingsPage = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-blue-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-blue-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-blue-100 p-3 rounded-xl">
                 <Briefcase className="text-blue-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Jobs</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.totalJobs}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.totalJobs}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-green-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-green-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-green-100 p-3 rounded-xl">
                 <CheckCircle className="text-green-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Open Positions</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.openJobs}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.openJobs}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-purple-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-purple-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-purple-100 p-3 rounded-xl">
                 <Users className="text-purple-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Total Applicants</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.totalApplicants}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.totalApplicants}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-gray-500">
+          <div className="bg-white rounded-lg2 p-6 shadow-card border-l-4 border-ink-500">
             <div className="flex items-center justify-between mb-3">
               <div className="bg-ink-100 p-3 rounded-xl">
                 <XCircle className="text-ink-600" size={24} />
               </div>
             </div>
             <h3 className="text-ink-600 text-sm font-medium mb-1">Closed Jobs</h3>
-            <p className="text-3xl font-bold text-gray-800">{stats.closedJobs}</p>
+            <p className="text-3xl font-bold text-ink-800">{stats.closedJobs}</p>
           </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <div className="bg-white rounded-lg2 shadow-card p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
@@ -298,7 +298,7 @@ const JobPostingsPage = () => {
 
             <button
               onClick={exportToCSV}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-card"
             >
               <Download size={20} />
               Export CSV
@@ -307,9 +307,9 @@ const JobPostingsPage = () => {
         </div>
 
       {/* Job Postings Grid */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-lg2 shadow-card overflow-hidden">
           <div className="p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-ink-100">
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-ink-800 flex items-center gap-2">
               <Briefcase size={24} className="text-indigo-600" />
               Job Postings ({filteredJobs.length})
             </h2>
@@ -324,7 +324,7 @@ const JobPostingsPage = () => {
               <p className="text-ink-500 mb-6">Create your first job posting to start recruiting</p>
               <button
                 onClick={() => setShowModal(true)}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 inline-flex items-center gap-2"
+                className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 inline-flex items-center gap-2"
               >
                 <Plus size={20} />
                 Post First Job
@@ -336,12 +336,12 @@ const JobPostingsPage = () => {
                 {filteredJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border border-ink-100 hover:shadow-xl transition-all duration-200 cursor-pointer"
+                    className="bg-gradient-to-br from-white to-ink-50 rounded-xl p-6 border border-ink-100 hover:shadow-lift transition-all duration-200 cursor-pointer"
                     onClick={() => handleView(job)}
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-800 mb-2">{job.title}</h3>
+                        <h3 className="text-lg font-bold text-ink-800 mb-2">{job.title}</h3>
                         <p className="text-sm text-ink-600 mb-1">{job.department}</p>
                       </div>
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(job.status)}`}>
@@ -406,7 +406,7 @@ const JobPostingsPage = () => {
       {/* Create/Edit Job Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 {editingJob ? <Edit size={24} /> : <Plus size={24} />}
@@ -576,7 +576,7 @@ const JobPostingsPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl font-semibold transition-all duration-200 shadow-card hover:shadow-lift"
                 >
                   {editingJob ? 'Update Job' : 'Post Job'}
                 </button>
@@ -589,7 +589,7 @@ const JobPostingsPage = () => {
       {/* View Job Modal */}
       {showViewModal && selectedJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 flex items-center justify-between">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Eye size={24} />
@@ -607,7 +607,7 @@ const JobPostingsPage = () => {
               <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-3xl font-bold text-gray-800 mb-2">{selectedJob.title}</h3>
+                    <h3 className="text-3xl font-bold text-ink-800 mb-2">{selectedJob.title}</h3>
                     <p className="text-lg text-ink-600">{selectedJob.department}</p>
                   </div>
                   <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusBadge(selectedJob.status)}`}>
@@ -646,28 +646,28 @@ const JobPostingsPage = () => {
 
               {selectedJob.description && (
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Job Description</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Job Description</h4>
                   <p className="text-ink-600 whitespace-pre-line">{selectedJob.description}</p>
                 </div>
               )}
 
               {selectedJob.requirements && (
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Requirements</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Requirements</h4>
                   <p className="text-ink-600 whitespace-pre-line">{selectedJob.requirements}</p>
                 </div>
               )}
 
               {selectedJob.responsibilities && (
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Responsibilities</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Responsibilities</h4>
                   <p className="text-ink-600 whitespace-pre-line">{selectedJob.responsibilities}</p>
                 </div>
               )}
 
               {(selectedJob.contactEmail || selectedJob.contactPhone) && (
                 <div className="bg-ink-50 rounded-xl p-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Contact Information</h4>
+                  <h4 className="text-lg font-bold text-ink-800 mb-3">Contact Information</h4>
                   <div className="space-y-2">
                     {selectedJob.contactEmail && (
                       <p className="text-ink-600">

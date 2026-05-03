@@ -223,7 +223,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
       'Rejected': { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle }
     };
 
-    const badge = badges[status] || { bg: 'bg-ink-100', text: 'text-gray-800', icon: AlertCircle };
+    const badge = badges[status] || { bg: 'bg-ink-100', text: 'text-ink-800', icon: AlertCircle };
     const Icon = badge.icon;
 
     return (
@@ -239,7 +239,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
   // ============================================
   const getProcurementStatusBadge = (status) => {
     const badges = {
-      'Not Required': 'bg-ink-100 text-gray-800',
+      'Not Required': 'bg-ink-100 text-ink-800',
       'Budget Requested': 'bg-yellow-100 text-yellow-800',
       'Budget Approved': 'bg-green-100 text-green-800',
       'Budget Rejected': 'bg-red-100 text-red-800',
@@ -248,7 +248,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
     };
 
     return (
-      <span className={`px-3 py-1 rounded-full text-sm font-medium ${badges[status] || 'bg-ink-100 text-gray-800'}`}>
+      <span className={`px-3 py-1 rounded-full text-sm font-medium ${badges[status] || 'bg-ink-100 text-ink-800'}`}>
         {status || 'Not Required'}
       </span>
     );
@@ -272,9 +272,9 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-ink-100 bg-gradient-to-r from-blue-600 to-indigo-700">
+        <div className="px-6 py-4 border-b border-ink-100 bg-navy-900">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-white">Budget Request Workflow</h2>
@@ -286,7 +286,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-200 transition-colors"
+              className="text-white hover:text-ink-200 transition-colors"
             >
               <X className="h-6 w-6" />
             </button>
@@ -730,7 +730,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
       {/* ============================================ */}
       {showApprovalModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lift w-full max-w-md">
             <div className="px-6 py-4 border-b border-ink-100">
               <h3 className="text-lg font-semibold text-ink-900">Approve Budget Request</h3>
             </div>
@@ -819,7 +819,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
       {/* ============================================ */}
       {showRejectionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lift w-full max-w-md">
             <div className="px-6 py-4 border-b border-ink-100">
               <h3 className="text-lg font-semibold text-ink-900">Reject Budget Request</h3>
             </div>

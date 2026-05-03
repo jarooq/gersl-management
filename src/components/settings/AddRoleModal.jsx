@@ -106,9 +106,9 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-4 flex items-center justify-between">
+        <div className="bg-navy-900 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-white bg-opacity-20 p-2 rounded-lg">
               <Shield className="w-6 h-6 text-white" />
@@ -143,7 +143,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
           {/* Role Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Role Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -151,14 +151,14 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Content Manager"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 disabled={loading}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Description
               </label>
               <input
@@ -166,7 +166,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Brief description of the role"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 disabled={loading}
               />
             </div>
@@ -175,25 +175,25 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
           {/* Permissions Selection */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-ink-700">
                 Permissions <span className="text-red-500">*</span>
               </label>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-ink-500">
                 {formData.permissions.length} selected
               </span>
             </div>
 
             {/* Permissions Grid */}
-            <div className="border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
+            <div className="border border-ink-200 rounded-lg max-h-96 overflow-y-auto">
               {Object.entries(groupedPermissions).map(([moduleName, modulePermissions]) => {
                 const modulePermissionIds = modulePermissions.map(p => p.id);
                 const allSelected = modulePermissionIds.every(id => formData.permissions.includes(id));
                 const someSelected = modulePermissionIds.some(id => formData.permissions.includes(id));
 
                 return (
-                  <div key={moduleName} className="border-b border-gray-200 last:border-b-0">
+                  <div key={moduleName} className="border-b border-ink-200 last:border-b-0">
                     {/* Module Header */}
-                    <div className="bg-gray-50 px-4 py-3 flex items-center justify-between sticky top-0">
+                    <div className="bg-ink-50 px-4 py-3 flex items-center justify-between sticky top-0">
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
@@ -202,8 +202,8 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                           className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
                           disabled={loading}
                         />
-                        <span className="font-semibold text-gray-900">{moduleName}</span>
-                        <span className="text-xs text-gray-500">
+                        <span className="font-semibold text-ink-900">{moduleName}</span>
+                        <span className="text-xs text-ink-500">
                           ({modulePermissions.length} permissions)
                         </span>
                       </div>
@@ -217,7 +217,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                       {modulePermissions.map((permission) => (
                         <label
                           key={permission.id}
-                          className="flex items-start gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                          className="flex items-start gap-2 p-2 hover:bg-ink-50 rounded cursor-pointer"
                         >
                           <input
                             type="checkbox"
@@ -227,15 +227,15 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                             disabled={loading}
                           />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-ink-900">
                               {permission.permission_name}
                             </div>
                             {permission.description && (
-                              <div className="text-xs text-gray-500 mt-0.5">
+                              <div className="text-xs text-ink-500 mt-0.5">
                                 {permission.description}
                               </div>
                             )}
-                            <div className="text-xs text-gray-400 mt-0.5">
+                            <div className="text-xs text-ink-400 mt-0.5">
                               {permission.permission_key}
                             </div>
                           </div>
@@ -247,7 +247,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
               })}
 
               {Object.keys(groupedPermissions).length === 0 && (
-                <div className="p-8 text-center text-gray-500">
+                <div className="p-8 text-center text-ink-500">
                   <Shield className="w-12 h-12 mx-auto mb-2 opacity-50" />
                   <p>Loading permissions...</p>
                 </div>
@@ -256,19 +256,19 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-ink-200">
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="px-6 py-2 border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || formData.permissions.length === 0}
-              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2 bg-navy-900 text-white rounded-lg transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save size={18} />
               {loading ? 'Creating...' : 'Create Role'}

@@ -751,7 +751,7 @@ const ContractManagementPage = () => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-violet-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-violet-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -969,7 +969,7 @@ const ContractManagementPage = () => {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                               ${agreement.status === 'Active' ? 'bg-green-100 text-green-800' : ''}
-                              ${agreement.status === 'Draft' ? 'bg-ink-100 text-gray-800' : ''}
+                              ${agreement.status === 'Draft' ? 'bg-ink-100 text-ink-800' : ''}
                               ${agreement.status === 'Expired' ? 'bg-red-100 text-red-800' : ''}
                             `}>
                               {agreement.status}
@@ -1458,8 +1458,8 @@ const ContractManagementPage = () => {
 
       {/* Create Employment Agreement Modal */}
       {showAgreementModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white">
+        <div className="fixed inset-0 bg-ink-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-card rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-ink-900">Generate Employment Agreement with AI</h3>
               <button onClick={() => { setShowAgreementModal(false); resetAgreementForm(); }} className="text-ink-400 hover:text-ink-600">
@@ -1598,7 +1598,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowAgreementModal(false); resetAgreementForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300"
                 >
                   Cancel
                 </button>
@@ -1618,7 +1618,7 @@ const ContractManagementPage = () => {
       {/* View Agreement Modal */}
       {showViewModal && selectedItem && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-ink-100 px-6 py-4 flex justify-between items-center">
               <div>
                 <h2 className="text-h1 text-ink-900">Employment Agreement</h2>
@@ -1662,7 +1662,7 @@ const ContractManagementPage = () => {
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       selectedItem.status === 'Active' ? 'bg-green-100 text-green-800' :
                       selectedItem.status === 'Draft' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-ink-100 text-gray-800'
+                      'bg-ink-100 text-ink-800'
                     }`}>
                       {selectedItem.status}
                     </span>
@@ -1773,7 +1773,7 @@ const ContractManagementPage = () => {
             <div className="sticky bottom-0 bg-ink-50 border-t border-ink-100 px-6 py-4 flex justify-end space-x-3">
               <button
                 onClick={() => { setShowViewModal(false); setSelectedItem(null); }}
-                className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
+                className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300"
               >
                 Close
               </button>
@@ -1791,8 +1791,8 @@ const ContractManagementPage = () => {
 
       {/* Create Contract Renewal Modal */}
       {showRenewalModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white">
+        <div className="fixed inset-0 bg-ink-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-card rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-ink-900">Create Contract Renewal</h3>
               <button onClick={() => { setShowRenewalModal(false); resetRenewalForm(); }} className="text-ink-400 hover:text-ink-600">
@@ -1897,7 +1897,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowRenewalModal(false); resetRenewalForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300"
                 >
                   Cancel
                 </button>
@@ -1916,8 +1916,8 @@ const ContractManagementPage = () => {
 
       {/* Create Termination Modal */}
       {showTerminationModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-ink-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-card rounded-lg bg-white max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4 sticky top-0 bg-white pb-4 border-b">
               <h3 className="text-xl font-semibold text-ink-900">Create Termination</h3>
               <button onClick={() => { setShowTerminationModal(false); resetTerminationForm(); }} className="text-ink-400 hover:text-ink-600">
@@ -2102,7 +2102,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowTerminationModal(false); resetTerminationForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300"
                 >
                   Cancel
                 </button>
@@ -2121,8 +2121,8 @@ const ContractManagementPage = () => {
 
       {/* Submit Resignation Modal */}
       {showResignationModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-lg bg-white">
+        <div className="fixed inset-0 bg-ink-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-card rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-ink-900">Submit Resignation</h3>
               <button onClick={() => { setShowResignationModal(false); resetResignationForm(); }} className="text-ink-400 hover:text-ink-600">
@@ -2264,7 +2264,7 @@ const ContractManagementPage = () => {
                 <button
                   type="button"
                   onClick={() => { setShowResignationModal(false); resetResignationForm(); }}
-                  className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300"
                 >
                   Cancel
                 </button>

@@ -260,9 +260,9 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-t-2xl">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-2xl">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-2">{project.name}</h2>
@@ -424,7 +424,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   <span className="font-bold text-green-600">LKR {(project.budget - project.spent).toLocaleString()}</span>
                 </div>
                 <div className="pt-3 border-t">
-                  <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div className="w-full bg-ink-200 rounded-full h-3">
                     <div
                       className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all"
                       style={{ width: `${budgetUsed}%` }}
@@ -697,7 +697,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                               <span className="text-xs text-ink-500">Progress</span>
                               <span className="text-xs font-bold text-ink-900">{task.progress || 0}%</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="w-full bg-ink-200 rounded-full h-2">
                               <div
                                 className="bg-blue-500 h-2 rounded-full transition-all"
                                 style={{ width: `${task.progress || 0}%` }}
@@ -787,14 +787,14 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
           <div className="flex gap-3 pt-4">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
             >
               Close
             </button>
             {(project.status === 'Closing' || project.status === 'Completed') && (
               <button
                 onClick={() => onGenerateReport(project)}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 transition font-semibold flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
               >
                 <FileText size={18} />
                 Generate Completion Report
@@ -812,7 +812,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
         {/* CFM Modal */}
         {showCFMModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="bg-blue-600 text-white p-6 rounded-t-xl">
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-bold">Log Community Feedback</h3>
@@ -916,7 +916,7 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
                   <button
                     type="button"
                     onClick={() => setShowCFMModal(false)}
-                    className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+                    className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
                   >
                     Cancel
                   </button>

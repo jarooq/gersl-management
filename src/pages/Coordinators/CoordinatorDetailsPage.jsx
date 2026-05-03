@@ -197,7 +197,7 @@ const CoordinatorDetailsPage = () => {
       </button>
 
       {/* Header Card */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl shadow-xl p-8 mb-6 text-white">
+      <div className="bg-navy-900 rounded-lg2 shadow-lift p-8 mb-6 text-white">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold mb-2">{selectedCoordinator.name}</h1>
@@ -231,7 +231,7 @@ const CoordinatorDetailsPage = () => {
         <div className="flex flex-wrap gap-3 pt-6 border-t border-blue-500">
           <button
             onClick={exportReport}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold active:scale-95"
             title="Download performance report"
           >
             <Download size={16} />
@@ -246,7 +246,7 @@ const CoordinatorDetailsPage = () => {
                 setActiveTab('overview');
               }
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold active:scale-95"
             title="View performance metrics"
           >
             <BarChart3 size={16} />
@@ -259,7 +259,7 @@ const CoordinatorDetailsPage = () => {
               navigator.clipboard.writeText(info);
               alert('Coordinator information copied to clipboard!');
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold active:scale-95"
             title="Copy coordinator information"
           >
             <FileText size={16} />
@@ -267,7 +267,7 @@ const CoordinatorDetailsPage = () => {
           </button>
           <button
             onClick={() => setShowWorkloadModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all text-sm font-semibold active:scale-95"
             title="Analyze workload capacity"
           >
             <Target size={16} />
@@ -497,9 +497,9 @@ const CoordinatorDetailsPage = () => {
       {/* Workload Analysis Modal */}
       {showWorkloadModal && selectedCoordinator && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-2xl">
+            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -556,14 +556,14 @@ const CoordinatorDetailsPage = () => {
                     {(((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100).toFixed(1)}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+                <div className="w-full bg-ink-200 rounded-full h-4 overflow-hidden shadow-inner">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       ((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100 < 60
                         ? 'bg-gradient-to-r from-green-400 to-green-600'
                         : ((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100 < 80
                         ? 'bg-gradient-to-r from-yellow-400 to-orange-500'
-                        : 'bg-gradient-to-r from-red-500 to-red-700'
+                        : 'bg-navy-900'
                     }`}
                     style={{
                       width: `${Math.min(((selectedCoordinator.current_workload || 0) / (selectedCoordinator.max_orphan_capacity || 50)) * 100, 100)}%`
@@ -687,7 +687,7 @@ const CoordinatorDetailsPage = () => {
               <div className="flex justify-end pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowWorkloadModal(false)}
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-semibold shadow-lg hover:shadow-xl active:scale-95"
+                  className="px-6 py-2.5 bg-navy-900 text-white rounded-lg transition-all font-semibold shadow-card hover:shadow-lift active:scale-95"
                 >
                   Close Analysis
                 </button>

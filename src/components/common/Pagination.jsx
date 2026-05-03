@@ -91,7 +91,7 @@ const Pagination = ({
       {/* Left side - Summary and items per page */}
       <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
         {showSummary && totalItems > 0 && (
-          <div className="text-sm text-gray-700">
+          <div className="text-sm text-ink-700">
             Showing <span className="font-semibold">{startItem}</span> to{' '}
             <span className="font-semibold">{endItem}</span> of{' '}
             <span className="font-semibold">{totalItems}</span> results
@@ -100,14 +100,14 @@ const Pagination = ({
 
         {showItemsPerPage && itemsPerPageOptions.length > 1 && (
           <div className="flex items-center gap-2">
-            <label htmlFor="itemsPerPage" className="text-sm text-gray-700">
+            <label htmlFor="itemsPerPage" className="text-sm text-ink-700">
               Per page:
             </label>
             <select
               id="itemsPerPage"
               value={itemsPerPage}
               onChange={handleItemsPerPageChange}
-              className="px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+              className="px-3 py-1 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
             >
               {itemsPerPageOptions.map(option => (
                 <option key={option} value={option}>
@@ -128,8 +128,8 @@ const Pagination = ({
             disabled={currentPage === 1}
             className={`p-2 rounded-lg transition ${
               currentPage === 1
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-100 active:bg-gray-200'
+                ? 'text-ink-400 cursor-not-allowed'
+                : 'text-ink-700 hover:bg-ink-100 active:bg-ink-200'
             }`}
             title="First page"
           >
@@ -142,8 +142,8 @@ const Pagination = ({
             disabled={currentPage === 1}
             className={`p-2 rounded-lg transition ${
               currentPage === 1
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-100 active:bg-gray-200'
+                ? 'text-ink-400 cursor-not-allowed'
+                : 'text-ink-700 hover:bg-ink-100 active:bg-ink-200'
             }`}
             title="Previous page"
           >
@@ -157,7 +157,7 @@ const Pagination = ({
                 return (
                   <span
                     key={`ellipsis-${index}`}
-                    className="px-3 py-2 text-gray-500"
+                    className="px-3 py-2 text-ink-500"
                   >
                     ...
                   </span>
@@ -171,7 +171,7 @@ const Pagination = ({
                   className={`min-w-[40px] px-3 py-2 rounded-lg font-medium transition ${
                     currentPage === page
                       ? 'bg-indigo-600 text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100 active:bg-gray-200'
+                      : 'text-ink-700 hover:bg-ink-100 active:bg-ink-200'
                   }`}
                 >
                   {page}
@@ -186,8 +186,8 @@ const Pagination = ({
             disabled={currentPage === totalPages}
             className={`p-2 rounded-lg transition ${
               currentPage === totalPages
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-100 active:bg-gray-200'
+                ? 'text-ink-400 cursor-not-allowed'
+                : 'text-ink-700 hover:bg-ink-100 active:bg-ink-200'
             }`}
             title="Next page"
           >
@@ -200,8 +200,8 @@ const Pagination = ({
             disabled={currentPage === totalPages}
             className={`p-2 rounded-lg transition ${
               currentPage === totalPages
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-gray-700 hover:bg-gray-100 active:bg-gray-200'
+                ? 'text-ink-400 cursor-not-allowed'
+                : 'text-ink-700 hover:bg-ink-100 active:bg-ink-200'
             }`}
             title="Last page"
           >

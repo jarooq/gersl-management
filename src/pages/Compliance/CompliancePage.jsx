@@ -144,7 +144,7 @@ const CompliancePage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -293,14 +293,14 @@ const CompliancePage = () => {
                       <span>{training.completed}/{training.totalStaff} staff completed</span>
                       <span className="font-bold">{training.completionRate}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-ink-200 rounded-full h-1.5 overflow-hidden">
                       <div
                         className={`h-1.5 rounded-full transition-all duration-500 ${
                           training.completionRate === 100
-                            ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                            ? 'bg-navy-900'
                             : training.completionRate >= 75
-                            ? 'bg-gradient-to-r from-yellow-500 to-orange-600'
-                            : 'bg-gradient-to-r from-red-500 to-pink-600'
+                            ? 'bg-navy-900'
+                            : 'bg-navy-900'
                         }`}
                         style={{ width: `${training.completionRate}%` }}
                       ></div>
@@ -331,9 +331,9 @@ const CompliancePage = () => {
                       <span className="text-ink-600">Overall Compliance Rate</span>
                       <span className="font-bold text-ink-900">{stats.complianceRate}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="w-full bg-ink-200 rounded-full h-1.5">
                       <div
-                        className="h-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600"
+                        className="h-1.5 rounded-full bg-navy-900"
                         style={{ width: `${stats.complianceRate}%` }}
                       ></div>
                     </div>

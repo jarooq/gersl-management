@@ -464,7 +464,7 @@ const TaskFormModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
@@ -1110,7 +1110,7 @@ const TaskFormModal = ({
           {currentStep < 3 ? (
             <button
               onClick={handleNext}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold"
+              className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
             >
               Next
             </button>
@@ -1118,7 +1118,7 @@ const TaskFormModal = ({
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {loading ? (
                 <>

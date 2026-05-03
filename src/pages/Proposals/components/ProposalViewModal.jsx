@@ -293,7 +293,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
       <h3 className="text-sm font-semibold text-ink-700 mb-4 uppercase tracking-wide">Proposal Workflow</h3>
       <div className="relative">
         {/* Progress Bar Background */}
-        <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200" style={{ zIndex: 0 }}></div>
+        <div className="absolute top-5 left-0 right-0 h-1 bg-ink-200" style={{ zIndex: 0 }}></div>
         {/* Progress Bar Fill */}
         <div
           className="absolute top-5 left-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-500"
@@ -318,13 +318,13 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {/* Icon Circle */}
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
-                  ${isCompleted ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-lg scale-110` :
-                    isCurrent ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-xl scale-125` :
+                  ${isCompleted ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-card scale-110` :
+                    isCurrent ? `bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 text-white shadow-lift scale-125` :
                     isRejected || isDonorRejected ? 'bg-red-500 text-white' :
-                    'bg-gray-200 text-ink-400'}
+                    'bg-ink-200 text-ink-400'}
                 `}>
                   {isCompleted ? (
-                    <CheckCircle size={20} className="animate-scale-in" />
+                    <CheckCircle size={20} className="" />
                   ) : isRejected || isDonorRejected ? (
                     <XCircle size={20} />
                   ) : (
@@ -368,7 +368,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
           <div className="flex justify-between items-start">
@@ -869,7 +869,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {/* Timeline Events */}
                 {proposal.createdAt && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-card"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border border-ink-100">
                       <div className="flex items-center gap-2 mb-1">
                         <FileEdit size={16} className="text-blue-600" />
@@ -891,7 +891,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.submissionDate && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-card"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border border-ink-100">
                       <div className="flex items-center gap-2 mb-1">
                         <Send size={16} className="text-green-600" />
@@ -911,7 +911,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.status === 'Approved' && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-emerald-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-emerald-500 rounded-full border-4 border-white shadow-card"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border-2 border-emerald-200">
                       <div className="flex items-center gap-2 mb-1">
                         <CheckCircle2 size={16} className="text-emerald-600" />
@@ -925,7 +925,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.status === 'Submitted to Donor' && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-purple-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-purple-500 rounded-full border-4 border-white shadow-card"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border-2 border-purple-200">
                       <div className="flex items-center gap-2 mb-1">
                         <Mail size={16} className="text-purple-600" />
@@ -939,7 +939,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.status === 'Donor Approved' && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-card"></div>
                     <div className="bg-white p-4 rounded-lg shadow-md border-2 border-indigo-200">
                       <div className="flex items-center gap-2 mb-1">
                         <ThumbsUp size={16} className="text-indigo-600" />
@@ -953,8 +953,8 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
 
                 {proposal.linkedProjectId && (
                   <div className="relative mb-6">
-                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full border-4 border-white shadow-xl"></div>
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg shadow-lg border-2 border-indigo-300">
+                    <div className="absolute left-[-1.4rem] w-6 h-6 bg-navy-900 rounded-full border-4 border-white shadow-lift"></div>
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg shadow-card border-2 border-indigo-300">
                       <div className="flex items-center gap-2 mb-1">
                         <Rocket size={16} className="text-indigo-700" />
                         <span className="font-semibold text-ink-900">Project Created</span>
@@ -1005,7 +1005,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 <button
                   onClick={() => handleStatusChange('Submitted')}
                   disabled={workflowLoading}
-                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {workflowLoading ? (
                     <Loader size={20} className="animate-spin" />
@@ -1022,7 +1022,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <button
                     onClick={() => handleStatusChange('Under Review')}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {workflowLoading ? (
                       <Loader size={20} className="animate-spin" />
@@ -1035,7 +1035,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <button
                     onClick={() => handleStatusChange('Approved', true)}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {workflowLoading ? (
                       <Loader size={20} className="animate-spin" />
@@ -1048,7 +1048,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <button
                     onClick={() => handleStatusChange('Rejected', true)}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {workflowLoading ? (
                       <Loader size={20} className="animate-spin" />
@@ -1066,7 +1066,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <button
                     onClick={() => setShowEmailModal(true)}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Mail size={20} />
                     Email to Donor
@@ -1074,7 +1074,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   <button
                     onClick={() => handleStatusChange('Submitted to Donor')}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {workflowLoading ? (
                       <Loader size={20} className="animate-spin" />
@@ -1095,7 +1095,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                       setShowDonorDecisionModal(true);
                     }}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ThumbsUp size={20} />
                     Record Donor Approval
@@ -1107,7 +1107,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                       setShowDonorDecisionModal(true);
                     }}
                     disabled={workflowLoading}
-                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold shadow-md hover:shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ThumbsDown size={20} />
                     Record Donor Rejection
@@ -1187,7 +1187,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
               <div className="flex gap-2">
                 <button
                   onClick={() => generateProposalPDF(proposal, 'full')}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow-md hover:shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow-md hover:shadow-card"
                   title="Download full proposal as PDF"
                 >
                   <Download size={18} />
@@ -1195,7 +1195,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 </button>
                 <button
                   onClick={() => generateProposalPDF(proposal, 'executive')}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md hover:shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md hover:shadow-card"
                   title="Download executive summary as PDF"
                 >
                   <FileText size={18} />
@@ -1224,7 +1224,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 <button
                   onClick={handleConvertToProject}
                   disabled={converting || workflowLoading}
-                  className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 transition font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-2 bg-navy-900 text-white rounded-lg transition font-semibold shadow-card hover:shadow-lift disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {converting ? (
                     <>
@@ -1269,7 +1269,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
       {/* Comment Modal */}
       {showCommentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6">
+          <div className="bg-white rounded-xl shadow-pop max-w-lg w-full p-6">
             <h3 className="text-xl font-bold text-ink-900 mb-4">
               Add Comments
             </h3>
@@ -1289,7 +1289,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   setComments('');
                   setWorkflowAction(null);
                 }}
-                className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+                className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
                 disabled={workflowLoading}
               >
                 Cancel

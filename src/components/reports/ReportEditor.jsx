@@ -132,20 +132,20 @@ const ReportEditor = ({ report, onClose }) => {
   return (
     <div className="bg-white rounded-lg shadow">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-ink-200">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-ink-800">
               {report.projectName || 'Report'}
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-ink-600 mt-1">
               {report.reportType.replace(/_/g, ' ')}
             </p>
           </div>
           {onClose && (
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-ink-400 hover:text-ink-600"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -157,21 +157,21 @@ const ReportEditor = ({ report, onClose }) => {
         {/* Report Metadata */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <span className="text-gray-500">Donor:</span>
-            <p className="font-medium text-gray-800">{report.donor || 'N/A'}</p>
+            <span className="text-ink-500">Donor:</span>
+            <p className="font-medium text-ink-800">{report.donor || 'N/A'}</p>
           </div>
           <div>
-            <span className="text-gray-500">Created:</span>
-            <p className="font-medium text-gray-800">
+            <span className="text-ink-500">Created:</span>
+            <p className="font-medium text-ink-800">
               {new Date(report.createdAt).toLocaleDateString()}
             </p>
           </div>
           <div>
-            <span className="text-gray-500">Sections:</span>
-            <p className="font-medium text-gray-800">{sections.length}</p>
+            <span className="text-ink-500">Sections:</span>
+            <p className="font-medium text-ink-800">{sections.length}</p>
           </div>
           <div>
-            <span className="text-gray-500">Status:</span>
+            <span className="text-ink-500">Status:</span>
             <p className="font-medium text-green-600">
               {report.successfulSections}/{report.totalSections} Generated
             </p>
@@ -184,7 +184,7 @@ const ReportEditor = ({ report, onClose }) => {
             onClick={() => setIsEditing(!isEditing)}
             className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
               isEditing
-                ? 'bg-gray-200 text-gray-800'
+                ? 'bg-ink-200 text-ink-800'
                 : 'bg-blue-600 text-white hover:bg-blue-700'
             }`}
           >
@@ -195,7 +195,7 @@ const ReportEditor = ({ report, onClose }) => {
             <select
               value={exportFormat}
               onChange={(e) => setExportFormat(e.target.value)}
-              className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="html">HTML</option>
               <option value="markdown">Markdown</option>
@@ -230,9 +230,9 @@ const ReportEditor = ({ report, onClose }) => {
       {/* Sections */}
       <div className="p-6 space-y-6 max-h-[600px] overflow-y-auto">
         {sections.map((section, index) => (
-          <div key={section.id} className="border-b border-gray-200 pb-6 last:border-b-0">
+          <div key={section.id} className="border-b border-ink-200 pb-6 last:border-b-0">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-ink-800">
                 {index + 1}. {section.title}
               </h3>
               {section.editedAt && (
@@ -251,18 +251,18 @@ const ReportEditor = ({ report, onClose }) => {
               <textarea
                 value={section.content}
                 onChange={(e) => handleSectionUpdate(section.id, e.target.value)}
-                className="w-full border border-gray-300 rounded p-3 min-h-[150px] focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                className="w-full border border-ink-300 rounded p-3 min-h-[150px] focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                 placeholder="Section content..."
               />
             ) : (
               <div className="prose max-w-none">
-                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                <p className="text-ink-700 whitespace-pre-wrap leading-relaxed">
                   {section.content}
                 </p>
               </div>
             )}
 
-            <div className="mt-2 text-xs text-gray-500">
+            <div className="mt-2 text-xs text-ink-500">
               Generated: {new Date(section.generatedAt).toLocaleString()}
             </div>
           </div>
@@ -270,7 +270,7 @@ const ReportEditor = ({ report, onClose }) => {
       </div>
 
       {/* Footer Info */}
-      <div className="p-4 bg-gray-50 border-t border-gray-200 text-xs text-gray-600">
+      <div className="p-4 bg-ink-50 border-t border-ink-200 text-xs text-ink-600">
         <p>
           Report ID: {report.id} | Last Updated: {new Date(report.updatedAt).toLocaleString()}
         </p>

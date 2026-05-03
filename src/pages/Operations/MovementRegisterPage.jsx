@@ -9,7 +9,7 @@ const STATUS_BADGE = {
   InMovement: 'bg-indigo-100 text-indigo-700',
   Arrived:    'bg-teal-100 text-teal-700',
   Returned:   'bg-green-100 text-green-700',
-  Cancelled:  'bg-gray-200 text-ink-600',
+  Cancelled:  'bg-ink-200 text-ink-600',
   Rejected:   'bg-red-100 text-red-700'
 };
 

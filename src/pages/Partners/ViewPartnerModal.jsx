@@ -6,9 +6,9 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-red-600 to-rose-700 text-white p-6 rounded-t-xl flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-xl flex items-center justify-between z-10">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-bold overflow-hidden">
               {partner.logo ? (
@@ -44,7 +44,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
             {/* Left Column */}
             <div className="space-y-6">
               {/* Basic Information */}
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-ink-100">
+              <div className="bg-gradient-to-br from-ink-50 to-ink-100 rounded-xl p-5 border border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <Building2 size={20} className="text-red-600" />
                   Basic Information
@@ -232,7 +232,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
 
               {/* Additional Notes */}
               {partner.notes && (
-                <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-5 border border-ink-100">
+                <div className="bg-gradient-to-br from-ink-50 to-slate-50 rounded-xl p-5 border border-ink-100">
                   <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                     <Heart size={20} className="text-ink-600" />
                     Additional Notes
@@ -248,7 +248,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
         <div className="sticky bottom-0 bg-ink-50 p-6 rounded-b-xl border-t border-ink-100">
           <button
             onClick={onClose}
-            className="w-full px-4 py-3 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-lg hover:from-red-700 hover:to-rose-800 font-semibold shadow-lg hover:shadow-xl transition-all"
+            className="w-full px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
           >
             Close
           </button>

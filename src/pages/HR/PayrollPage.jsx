@@ -275,7 +275,7 @@ const PayrollPage = () => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -292,7 +292,7 @@ const PayrollPage = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowAddModal(true)}
-                className="btn-primary bg-white text-green-600 hover:bg-green-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white text-green-600 hover:bg-green-50 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <Plus size={18} />
                 Add Payroll

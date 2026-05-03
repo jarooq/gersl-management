@@ -89,7 +89,7 @@ const FilterChips = ({ filters, onRemoveFilter, onClearAll }) => {
     chips.push({
       id: 'search',
       label: `Search: "${filters.searchTerm}"`,
-      color: 'bg-gray-100 text-gray-800',
+      color: 'bg-ink-100 text-ink-800',
       onRemove: () => onRemoveFilter('searchTerm', '')
     });
   }
@@ -99,8 +99,8 @@ const FilterChips = ({ filters, onRemoveFilter, onClearAll }) => {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <span className="text-sm font-medium text-gray-600">Active Filters:</span>
+    <div className="flex flex-wrap items-center gap-2 p-4 bg-ink-50 rounded-lg border border-ink-200">
+      <span className="text-sm font-medium text-ink-600">Active Filters:</span>
 
       {chips.map(chip => (
         <div

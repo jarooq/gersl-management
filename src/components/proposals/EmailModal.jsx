@@ -173,10 +173,10 @@ ${emailData.body}`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-xl shadow-pop w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 flex items-center justify-between">
+        <div className="bg-navy-900 text-white p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Mail size={28} />
             <div>
@@ -214,57 +214,57 @@ ${emailData.body}`;
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
 
           {/* Sender Information */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <div className="bg-ink-50 border border-ink-200 rounded-lg p-4">
+            <h3 className="font-semibold text-ink-900 mb-3 flex items-center gap-2">
               <Mail size={18} />
               Sender Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Your Name *
                 </label>
                 <input
                   type="text"
                   value={emailData.senderName}
                   onChange={(e) => handleInputChange('senderName', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="John Doe"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Your Title *
                 </label>
                 <input
                   type="text"
                   value={emailData.senderTitle}
                   onChange={(e) => handleInputChange('senderTitle', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Fundraising Manager"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Your Email
                 </label>
                 <input
                   type="email"
                   value={emailData.senderEmail}
                   onChange={(e) => handleInputChange('senderEmail', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="contact@gersl.org"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Your Phone
                 </label>
                 <input
                   type="tel"
                   value={emailData.senderPhone}
                   onChange={(e) => handleInputChange('senderPhone', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="+94 XX XXX XXXX"
                 />
               </div>
@@ -279,42 +279,42 @@ ${emailData.body}`;
 
           {/* Recipient Information */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">Email Details</h3>
+            <h3 className="font-semibold text-ink-900 mb-3">Email Details</h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   Donor Contact Name
                 </label>
                 <input
                   type="text"
                   value={emailData.donorContactName}
                   onChange={(e) => handleInputChange('donorContactName', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Dear Sir/Madam or Specific name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   To: (Recipient Email) *
                 </label>
                 <input
                   type="email"
                   value={emailData.to}
                   onChange={(e) => handleInputChange('to', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="donor@organization.org"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-700 mb-1">
                   CC: (Optional)
                 </label>
                 <input
                   type="email"
                   value={emailData.cc}
                   onChange={(e) => handleInputChange('cc', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="cc@organization.org"
                 />
               </div>
@@ -323,38 +323,38 @@ ${emailData.body}`;
 
           {/* Subject */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-ink-700 mb-1">
               Subject *
             </label>
             <input
               type="text"
               value={emailData.subject}
               onChange={(e) => handleInputChange('subject', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-medium"
+              className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-medium"
               required
             />
           </div>
 
           {/* Email Body */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-ink-700 mb-1">
               Email Body *
             </label>
             <textarea
               value={emailData.body}
               onChange={(e) => handleInputChange('body', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
               rows={previewMode ? 25 : 15}
               required
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               {emailData.body.length} / 10,000 characters
             </p>
           </div>
 
           {/* Attachments */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <h3 className="font-semibold text-ink-900 mb-3 flex items-center gap-2">
               <Paperclip size={18} />
               Attachments
             </h3>
@@ -366,7 +366,7 @@ ${emailData.body}`;
                   onChange={(e) => handleInputChange('attachFullProposal', e.target.checked)}
                   className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-ink-700">
                   Attach Full Proposal PDF ({proposal.proposalCode}_Full.pdf)
                 </span>
               </label>
@@ -377,23 +377,23 @@ ${emailData.body}`;
                   onChange={(e) => handleInputChange('attachSummary', e.target.checked)}
                   className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-ink-700">
                   Attach Executive Summary PDF ({proposal.proposalCode}_Summary.pdf)
                 </span>
               </label>
             </div>
-            <p className="text-xs text-gray-600 mt-3">
+            <p className="text-xs text-ink-600 mt-3">
               📎 Note: PDFs will be automatically generated and attached when sending
             </p>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center gap-3">
+        <div className="bg-ink-50 border-t border-ink-200 p-4 flex justify-between items-center gap-3">
           <div className="flex gap-2">
             <button
               onClick={handleCopyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-200 hover:bg-ink-300 text-ink-700 rounded-lg transition font-medium"
               disabled={sending}
             >
               {copied ? (
@@ -410,7 +410,7 @@ ${emailData.body}`;
             </button>
             <button
               onClick={() => setPreviewMode(!previewMode)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-200 hover:bg-ink-300 text-ink-700 rounded-lg transition font-medium"
               disabled={sending}
             >
               <Eye size={18} />
@@ -421,7 +421,7 @@ ${emailData.body}`;
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+              className="px-6 py-2 bg-white border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               disabled={sending}
             >
               Cancel
@@ -429,7 +429,7 @@ ${emailData.body}`;
             <button
               onClick={handleSend}
               disabled={sending || !emailData.to || !emailData.subject || !emailData.body}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-2 bg-navy-900 text-white rounded-lg transition font-semibold shadow-card hover:shadow-lift disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {sending ? (
                 <>

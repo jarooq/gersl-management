@@ -128,18 +128,18 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-pop max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-ink-200">
           <div className="flex items-center gap-3">
             <Filter className="text-indigo-600" size={24} />
-            <h2 className="text-xl font-bold text-gray-900">Advanced Filters</h2>
+            <h2 className="text-xl font-bold text-ink-900">Advanced Filters</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-ink-100 rounded-lg transition-colors"
           >
-            <X size={20} className="text-gray-500" />
+            <X size={20} className="text-ink-500" />
           </button>
         </div>
 
@@ -147,7 +147,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Status Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-ink-700 mb-2">
               Status
             </label>
             <div className="flex flex-wrap gap-2">
@@ -158,7 +158,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                   className={`px-4 py-2 rounded-lg border-2 transition-all ${
                     filters.status.includes(status)
                       ? 'bg-indigo-600 text-white border-indigo-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-indigo-400'
+                      : 'bg-white text-ink-700 border-ink-300 hover:border-indigo-400'
                   }`}
                 >
                   {status}
@@ -169,7 +169,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
 
           {/* Priority Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-ink-700 mb-2">
               Priority
             </label>
             <div className="flex flex-wrap gap-2">
@@ -184,7 +184,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                         : priority === 'Medium'
                         ? 'bg-orange-600 text-white border-orange-600'
                         : 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-indigo-400'
+                      : 'bg-white text-ink-700 border-ink-300 hover:border-indigo-400'
                   }`}
                 >
                   {priority}
@@ -196,25 +196,25 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
           {/* Date Range Filter */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Due Date From
               </label>
               <input
                 type="date"
                 value={filters.dateFrom}
                 onChange={(e) => updateFilter('dateFrom', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Due Date To
               </label>
               <input
                 type="date"
                 value={filters.dateTo}
                 onChange={(e) => updateFilter('dateTo', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
           </div>
@@ -222,19 +222,19 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
           {/* Project Filter */}
           {projects.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Project
               </label>
-              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2">
+              <div className="max-h-40 overflow-y-auto border border-ink-300 rounded-lg p-3 space-y-2">
                 {projects.map(project => (
-                  <label key={project.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                  <label key={project.id} className="flex items-center gap-2 cursor-pointer hover:bg-ink-50 p-2 rounded">
                     <input
                       type="checkbox"
                       checked={filters.project.includes(project.id)}
                       onChange={() => toggleArrayFilter('project', project.id)}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-indigo-600 border-ink-300 rounded focus:ring-indigo-500"
                     />
-                    <span className="text-sm text-gray-700">{project.name}</span>
+                    <span className="text-sm text-ink-700">{project.name}</span>
                   </label>
                 ))}
               </div>
@@ -244,19 +244,19 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
           {/* Assignee Filter */}
           {users.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Assigned To
               </label>
-              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2">
+              <div className="max-h-40 overflow-y-auto border border-ink-300 rounded-lg p-3 space-y-2">
                 {users.map(user => (
-                  <label key={user.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                  <label key={user.id} className="flex items-center gap-2 cursor-pointer hover:bg-ink-50 p-2 rounded">
                     <input
                       type="checkbox"
                       checked={filters.assignee.includes(user.id)}
                       onChange={() => toggleArrayFilter('assignee', user.id)}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-indigo-600 border-ink-300 rounded focus:ring-indigo-500"
                     />
-                    <span className="text-sm text-gray-700">{user.name}</span>
+                    <span className="text-sm text-ink-700">{user.name}</span>
                   </label>
                 ))}
               </div>
@@ -265,7 +265,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
 
           {/* Search Term */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-ink-700 mb-2">
               Search in Title/Description
             </label>
             <input
@@ -273,25 +273,25 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
               value={filters.searchTerm}
               onChange={(e) => updateFilter('searchTerm', e.target.value)}
               placeholder="Enter search term..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
           {/* Saved Presets */}
           {savedPresets.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-700 mb-2">
                 Saved Filter Presets
               </label>
               <div className="space-y-2">
                 {savedPresets.map(preset => (
                   <div
                     key={preset.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center justify-between p-3 bg-ink-50 rounded-lg hover:bg-ink-100 transition-colors"
                   >
                     <button
                       onClick={() => handleLoadPreset(preset)}
-                      className="flex-1 text-left text-sm font-medium text-gray-900"
+                      className="flex-1 text-left text-sm font-medium text-ink-900"
                     >
                       {preset.name}
                     </button>
@@ -326,7 +326,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                     value={presetName}
                     onChange={(e) => setPresetName(e.target.value)}
                     placeholder="Enter preset name..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     autoFocus
                   />
                   <div className="flex gap-2">
@@ -341,7 +341,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                         setShowSavePreset(false);
                         setPresetName('');
                       }}
-                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                      className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition-colors"
                     >
                       Cancel
                     </button>
@@ -353,17 +353,17 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between p-6 border-t border-ink-200 bg-ink-50">
           <button
             onClick={handleResetFilters}
-            className="px-6 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors font-medium"
+            className="px-6 py-2 text-ink-700 hover:bg-ink-200 rounded-lg transition-colors font-medium"
           >
             Reset All
           </button>
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              className="px-6 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition-colors font-medium"
             >
               Cancel
             </button>

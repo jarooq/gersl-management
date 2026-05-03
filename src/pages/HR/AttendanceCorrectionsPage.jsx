@@ -6,7 +6,7 @@ const STATUS_BADGE = {
   Pending:   'bg-yellow-100 text-yellow-800',
   Approved:  'bg-green-100 text-green-700',
   Rejected:  'bg-red-100 text-red-700',
-  Cancelled: 'bg-gray-200 text-ink-600'
+  Cancelled: 'bg-ink-200 text-ink-600'
 };
 
 const HR_ROLES = new Set(['Admin', 'CEO', 'HR Manager', 'HR Officer']);

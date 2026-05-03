@@ -184,7 +184,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
@@ -212,14 +212,14 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Basic Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center gap-2">
               <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
               Basic Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Username */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Username <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -230,8 +230,8 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   onBlur={() => handleBlur('username')}
                   disabled={isEditMode} // Can't change username
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
-                    errors.username && touched.username ? 'border-red-500' : 'border-gray-300'
-                  } ${isEditMode ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    errors.username && touched.username ? 'border-red-500' : 'border-ink-300'
+                  } ${isEditMode ? 'bg-ink-100 cursor-not-allowed' : ''}`}
                   placeholder="john.doe"
                 />
                 {errors.username && touched.username && (
@@ -244,7 +244,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
               {/* Full Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -254,7 +254,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   onChange={handleChange}
                   onBlur={() => handleBlur('fullName')}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
-                    errors.fullName && touched.fullName ? 'border-red-500' : 'border-gray-300'
+                    errors.fullName && touched.fullName ? 'border-red-500' : 'border-ink-300'
                   }`}
                   placeholder="John Doe"
                 />
@@ -268,7 +268,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -278,7 +278,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   onChange={handleChange}
                   onBlur={() => handleBlur('email')}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
-                    errors.email && touched.email ? 'border-red-500' : 'border-gray-300'
+                    errors.email && touched.email ? 'border-red-500' : 'border-ink-300'
                   }`}
                   placeholder="john.doe@gersl.org"
                 />
@@ -292,7 +292,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Phone Number
                 </label>
                 <input
@@ -302,7 +302,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   onChange={handleChange}
                   onBlur={() => handleBlur('phone')}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
-                    errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'
+                    errors.phone && touched.phone ? 'border-red-500' : 'border-ink-300'
                   }`}
                   placeholder="+94 77 123 4567"
                 />
@@ -318,16 +318,16 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
           {/* Security & Access */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center gap-2">
               <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
               Security & Access
             </h3>
             <div className="space-y-4">
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Password {!isEditMode && <span className="text-red-500">*</span>}
-                  {isEditMode && <span className="text-gray-500 text-xs">(leave empty to keep current)</span>}
+                  {isEditMode && <span className="text-ink-500 text-xs">(leave empty to keep current)</span>}
                 </label>
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
@@ -338,14 +338,14 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                       onChange={handleChange}
                       onBlur={() => handleBlur('password')}
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition pr-10 ${
-                        errors.password && touched.password ? 'border-red-500' : 'border-gray-300'
+                        errors.password && touched.password ? 'border-red-500' : 'border-ink-300'
                       }`}
                       placeholder={isEditMode ? "Enter new password" : "Password will be generated"}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-ink-400 hover:text-ink-600"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -366,7 +366,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   </p>
                 )}
                 {!isEditMode && (
-                  <p className="mt-2 text-sm text-gray-600">
+                  <p className="mt-2 text-sm text-ink-600">
                     ℹ️ Copy this password and share it securely with the user. They can change it after first login.
                   </p>
                 )}
@@ -374,34 +374,34 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
               {/* Role */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Role <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 >
                   {Object.keys(ROLE_PERMISSIONS || {}).map(role => (
                     <option key={role} value={role}>{role}</option>
                   ))}
                 </select>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-ink-600">
                   Selected role determines the user's permissions and access level
                 </p>
               </div>
 
               {/* Department */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Department
                 </label>
                 <select
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 >
                   <option value="">Select Department</option>
                   {departments.map(dept => (
@@ -412,14 +412,14 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
               {/* Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   Status <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
@@ -430,19 +430,19 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
           </div>
 
           {/* Footer */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-ink-200">
             <button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium disabled:opacity-50"
+              className="px-6 py-2 border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 transition font-medium disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition font-medium flex items-center gap-2 disabled:opacity-50"
+              className="px-6 py-2 bg-navy-900 text-white rounded-lg transition font-medium flex items-center gap-2 disabled:opacity-50"
             >
               {isLoading ? (
                 <>

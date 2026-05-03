@@ -147,10 +147,10 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto my-8">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto my-8">
         <form onSubmit={handleSubmit}>
           {/* Header */}
-          <div className="sticky top-0 bg-gradient-to-r from-pink-600 to-rose-600 text-white px-6 py-4 flex items-center justify-between z-10">
+          <div className="sticky top-0 bg-navy-900 text-white px-6 py-4 flex items-center justify-between z-10">
             <h2 className="text-xl font-bold">Add Visit Log for {orphan?.fullName}</h2>
             <button type="button" onClick={onClose} className="hover:bg-white/20 p-1 rounded-lg">
               <X size={24} />
@@ -235,7 +235,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                         >
                           <Star
                             size={32}
-                            className={formData.rating[key] >= star ? `fill-${color}-500 text-${color}-500` : 'text-gray-300'}
+                            className={formData.rating[key] >= star ? `fill-${color}-500 text-${color}-500` : 'text-ink-300'}
                             fill={formData.rating[key] >= star ? 'currentColor' : 'none'}
                           />
                         </button>
@@ -304,7 +304,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition font-semibold shadow-md disabled:opacity-50"
+              className="px-6 py-2 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Visit Log'}
             </button>

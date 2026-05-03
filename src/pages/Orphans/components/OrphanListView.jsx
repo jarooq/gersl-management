@@ -20,11 +20,11 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow border border-ink-100 p-5">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lift transition-shadow border border-ink-100 p-5">
       <div className="flex flex-col md:flex-row gap-4">
         {/* Avatar and Basic Info */}
         <div className="flex items-center gap-4 md:w-1/4">
-          <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 text-white rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg flex-shrink-0">
+          <div className="w-16 h-16 bg-pink-50 border border-pink-200 text-white rounded-xl flex items-center justify-center text-2xl font-bold shadow-card flex-shrink-0">
             {orphan.fullName.charAt(0)}
           </div>
           <div className="flex-1">
@@ -101,7 +101,7 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
         <div className="flex md:flex-col gap-2 md:w-auto justify-end">
           <button
             onClick={() => onView(orphan)}
-            className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-semibold shadow-md hover:shadow-lg"
+            className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card"
             title="View Details"
           >
             <Eye size={16} />
@@ -109,7 +109,7 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
           </button>
           <button
             onClick={() => onEdit(orphan)}
-            className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all border border-ink-100 hover:border-ink-200"
+            className="px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-all border border-ink-100 hover:border-ink-200"
             title="Edit"
           >
             <Edit size={18} />

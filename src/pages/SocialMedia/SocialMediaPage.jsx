@@ -22,7 +22,7 @@ const SocialMediaPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -46,7 +46,7 @@ const SocialMediaPage = () => {
               </Link>
               <button
                 onClick={() => setShowSchedulePost(true)}
-                className="px-6 py-3 bg-white text-sky-600 rounded-lg hover:shadow-lg transition-all font-bold flex items-center gap-2"
+                className="px-6 py-3 bg-white text-sky-600 rounded-lg hover:shadow-card transition-all font-bold flex items-center gap-2"
               >
                 <Plus size={20} />
                 Schedule Post
@@ -60,7 +60,7 @@ const SocialMediaPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <button
           onClick={() => setShowCalendar(true)}
-          className="p-4 bg-white border-2 border-blue-200 rounded-xl hover:shadow-lg transition-all hover:scale-105"
+          className="p-4 bg-white border-2 border-blue-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -72,7 +72,7 @@ const SocialMediaPage = () => {
 
         <button
           onClick={() => setShowAnalytics(true)}
-          className="p-4 bg-white border-2 border-purple-200 rounded-xl hover:shadow-lg transition-all hover:scale-105"
+          className="p-4 bg-white border-2 border-purple-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
@@ -84,7 +84,7 @@ const SocialMediaPage = () => {
 
         <button
           onClick={() => setShowSchedulePost(true)}
-          className="p-4 bg-white border-2 border-pink-200 rounded-xl hover:shadow-lg transition-all hover:scale-105"
+          className="p-4 bg-white border-2 border-pink-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
@@ -96,7 +96,7 @@ const SocialMediaPage = () => {
 
         <button
           onClick={() => setShowEngagement(true)}
-          className="p-4 bg-white border-2 border-green-200 rounded-xl hover:shadow-lg transition-all hover:scale-105"
+          className="p-4 bg-white border-2 border-green-200 rounded-xl hover:shadow-card transition-all "
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -178,7 +178,7 @@ const SocialMediaPage = () => {
       <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
         <h2 className="text-sm font-bold text-ink-900 mb-6">Social Media Accounts</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 border-2 border-blue-200 rounded-xl hover:shadow-lg transition-shadow">
+          <div className="p-4 border-2 border-blue-200 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                 <Facebook className="text-white" size={20} />
@@ -200,7 +200,7 @@ const SocialMediaPage = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-pink-200 rounded-xl hover:shadow-lg transition-shadow">
+          <div className="p-4 border-2 border-pink-200 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-lg flex items-center justify-center">
                 <Instagram className="text-white" size={20} />
@@ -222,7 +222,7 @@ const SocialMediaPage = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-sky-200 rounded-xl hover:shadow-lg transition-shadow">
+          <div className="p-4 border-2 border-sky-200 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-sky-500 rounded-lg flex items-center justify-center">
                 <Twitter className="text-white" size={20} />
@@ -244,7 +244,7 @@ const SocialMediaPage = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-blue-300 rounded-xl hover:shadow-lg transition-shadow">
+          <div className="p-4 border-2 border-blue-300 rounded-xl hover:shadow-card transition-shadow">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
                 <Linkedin className="text-white" size={20} />
@@ -311,7 +311,7 @@ const SocialMediaPage = () => {
                   <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
                     {post.status}
                   </span>
-                  <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
+                  <button className="p-2 hover:bg-ink-200 rounded-lg transition-colors">
                     <Edit size={16} className="text-ink-600" />
                   </button>
                   <button className="p-2 hover:bg-red-100 rounded-lg transition-colors">
@@ -327,7 +327,7 @@ const SocialMediaPage = () => {
       {/* Content Calendar Modal */}
       {showCalendar && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-7xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -349,13 +349,13 @@ const SocialMediaPage = () => {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-ink-900">November 2025</h3>
                   <div className="flex gap-2">
-                    <button className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold">
+                    <button className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-colors font-semibold">
                       Previous
                     </button>
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
                       Today
                     </button>
-                    <button className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold">
+                    <button className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-colors font-semibold">
                       Next
                     </button>
                   </div>
@@ -377,7 +377,7 @@ const SocialMediaPage = () => {
                         className={`p-3 min-h-24 border-2 rounded-lg transition-all ${
                           dayNum > 0 && dayNum <= 30
                             ? hasPost
-                              ? 'border-blue-300 bg-blue-50 hover:shadow-lg cursor-pointer'
+                              ? 'border-blue-300 bg-blue-50 hover:shadow-card cursor-pointer'
                               : 'border-ink-100 hover:border-ink-200 cursor-pointer'
                             : 'bg-ink-50 border-ink-100'
                         }`}
@@ -442,7 +442,7 @@ const SocialMediaPage = () => {
       {/* Analytics Dashboard Modal */}
       {showAnalytics && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-7xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -523,7 +523,7 @@ const SocialMediaPage = () => {
                             <p className="text-xs text-ink-600">Engagement</p>
                             <p className="text-sm font-bold text-ink-900">{platform.engagement}</p>
                           </div>
-                          <div className="w-24 bg-gray-200 rounded-full h-1.5">
+                          <div className="w-24 bg-ink-200 rounded-full h-1.5">
                             <div className={`bg-${platform.color}-500 h-1.5 rounded-full`} style={{ width: platform.engagement }}></div>
                           </div>
                         </div>
@@ -576,7 +576,7 @@ const SocialMediaPage = () => {
       {/* Schedule Post Modal */}
       {showSchedulePost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -683,7 +683,7 @@ const SocialMediaPage = () => {
                 Cancel
               </button>
               <div className="flex gap-2">
-                <button className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all font-semibold">
+                <button className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-all font-semibold">
                   Save Draft
                 </button>
                 <button
@@ -691,7 +691,7 @@ const SocialMediaPage = () => {
                     setShowSchedulePost(false);
                     alert('Post scheduled successfully!');
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-pink-600 to-red-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Send size={18} />
                   Schedule Post
@@ -705,7 +705,7 @@ const SocialMediaPage = () => {
       {/* Engagement Tracking Modal */}
       {showEngagement && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -746,7 +746,7 @@ const SocialMediaPage = () => {
                   }`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-gradient-to-br from-ink-400 to-ink-600 rounded-full flex items-center justify-center">
                           <span className="text-white font-bold text-sm">
                             {item.user.split(' ').map(n => n[0]).join('')}
                           </span>
@@ -785,7 +785,7 @@ const SocialMediaPage = () => {
                         <MessageCircle size={14} />
                         Reply
                       </button>
-                      <button className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-semibold flex items-center gap-1">
+                      <button className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-colors text-sm font-semibold flex items-center gap-1">
                         <Check size={14} />
                         Mark Read
                       </button>

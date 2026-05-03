@@ -342,9 +342,9 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-5xl max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4 flex justify-between items-center">
+        <div className="bg-navy-900 px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Heart className="w-6 h-6 text-white" />
             <h2 className="text-2xl font-bold text-white">
@@ -802,19 +802,19 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
           )}
 
           {/* Footer */}
-          <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-200">
+          <div className="flex justify-end gap-3 px-6 py-4 bg-ink-50 border-t border-ink-200">
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors disabled:opacity-50"
+              className="px-6 py-2.5 text-ink-700 bg-white border border-ink-300 rounded-lg hover:bg-ink-50 font-medium transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg hover:from-blue-600 hover:to-indigo-700 font-medium transition-all shadow-lg disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2.5 text-white bg-navy-900 rounded-lg font-medium transition-all shadow-card disabled:opacity-50 flex items-center gap-2"
             >
               {loading ? (
                 <>

@@ -264,7 +264,7 @@ const StaffDashboard = () => {
           </div>
           <h3 className="text-sm font-medium text-ink-600">Total Tasks</h3>
           <div className="mt-2 flex items-center gap-2">
-            <div className="flex-1 bg-gray-200 rounded-full h-2">
+            <div className="flex-1 bg-ink-200 rounded-full h-2">
               <div
                 className="bg-indigo-600 h-2 rounded-full transition-all"
                 style={{ width: `${completionRate}%` }}
@@ -368,7 +368,7 @@ const StaffDashboard = () => {
 
           {upcomingTasks.length === 0 ? (
             <div className="text-center py-8">
-              <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+              <Calendar className="w-12 h-12 text-ink-300 mx-auto mb-2" />
               <p className="text-ink-500">No upcoming deadlines</p>
             </div>
           ) : (
@@ -448,7 +448,7 @@ const StaffDashboard = () => {
         <h2 className="text-lg font-bold text-ink-900 mb-4">Recent Activity</h2>
         {recentActivity.length === 0 ? (
           <div className="text-center py-8">
-            <Activity className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+            <Activity className="w-12 h-12 text-ink-300 mx-auto mb-2" />
             <p className="text-ink-500">No recent activity</p>
           </div>
         ) : (
@@ -631,7 +631,7 @@ const StaffDashboard = () => {
 
               {/* Contract Status Card */}
               {hrData?.agreement?.endDate && (
-                <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg shadow-sm p-6 text-white">
+                <div className="bg-navy-900 rounded-lg shadow-sm p-6 text-white">
                   <div className="flex items-center gap-3 mb-3">
                     <Calendar className="w-6 h-6" />
                     <h3 className="text-lg font-bold">Contract Status</h3>

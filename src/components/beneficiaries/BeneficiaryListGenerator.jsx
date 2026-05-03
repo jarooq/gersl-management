@@ -196,9 +196,9 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-6xl max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4 flex justify-between items-center">
+        <div className="bg-navy-900 px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <FileText className="w-6 h-6 text-white" />
             <div>
@@ -221,7 +221,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Filter className="text-blue-600" size={20} />
-                <h3 className="text-lg font-bold text-gray-900">Filter Criteria</h3>
+                <h3 className="text-lg font-bold text-ink-900">Filter Criteria</h3>
               </div>
               <button
                 onClick={clearFilters}
@@ -234,14 +234,14 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* District Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   <MapPin size={16} className="inline mr-1" />
                   District
                 </label>
                 <select
                   value={filters.district}
                   onChange={(e) => handleFilterChange('district', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Districts</option>
                   {allDistricts.map(district => (
@@ -252,14 +252,14 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
 
               {/* Type Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   <Users size={16} className="inline mr-1" />
                   Beneficiary Type
                 </label>
                 <select
                   value={filters.beneficiaryType}
                   onChange={(e) => handleFilterChange('beneficiaryType', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Types</option>
                   {BENEFICIARY_TYPES.map(type => (
@@ -270,14 +270,14 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
 
               {/* Age Range Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   <Calendar size={16} className="inline mr-1" />
                   Age Range
                 </label>
                 <select
                   value={filters.ageRange}
                   onChange={(e) => handleFilterChange('ageRange', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {AGE_RANGES.map(range => (
                     <option key={range.label} value={range.label}>{range.label}</option>
@@ -287,14 +287,14 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
 
               {/* Support Status Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   <Heart size={16} className="inline mr-1" />
                   Support Status
                 </label>
                 <select
                   value={filters.supportStatus}
                   onChange={(e) => handleFilterChange('supportStatus', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="all">All Beneficiaries</option>
                   <option value="with_support">With Support History</option>
@@ -305,7 +305,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
 
               {/* Search Query */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-700 mb-2">
                   <Search size={16} className="inline mr-1" />
                   Search
                 </label>
@@ -314,7 +314,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
                   placeholder="Search by name, NIC, or district..."
                   value={filters.searchQuery}
                   onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border-2 border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -324,8 +324,8 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
           <div className="bg-white border-2 border-blue-100 rounded-xl p-6 mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Results Summary</h3>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
+                <h3 className="text-lg font-bold text-ink-900 mb-2">Results Summary</h3>
+                <div className="flex items-center gap-4 text-sm text-ink-600">
                   <div className="flex items-center gap-2">
                     <CheckCircle size={18} className="text-green-600" />
                     <span><strong>{filteredBeneficiaries.length}</strong> beneficiaries found</span>
@@ -355,35 +355,35 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
 
           {/* Preview Table */}
           {showPreview && filteredBeneficiaries.length > 0 && (
-            <div className="bg-white border-2 border-gray-100 rounded-xl overflow-hidden mb-6">
+            <div className="bg-white border-2 border-ink-100 rounded-xl overflow-hidden mb-6">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b-2 border-gray-200">
+                  <thead className="bg-ink-50 border-b-2 border-ink-200">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">NIC</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Age</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">District</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Supports</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">NIC</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">Age</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">District</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">Type</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-ink-600 uppercase">Supports</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {filteredBeneficiaries.slice(0, 10).map((b, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm text-gray-900">{b.nic || '-'}</td>
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900">{b.full_name}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{b.age || '-'}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{b.district}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{b.beneficiary_type}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{b.total_supports || 0}</td>
+                      <tr key={index} className="hover:bg-ink-50">
+                        <td className="px-4 py-3 text-sm text-ink-900">{b.nic || '-'}</td>
+                        <td className="px-4 py-3 text-sm font-medium text-ink-900">{b.full_name}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{b.age || '-'}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{b.district}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{b.beneficiary_type}</td>
+                        <td className="px-4 py-3 text-sm text-ink-600">{b.total_supports || 0}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
               {filteredBeneficiaries.length > 10 && (
-                <div className="bg-gray-50 px-4 py-3 text-sm text-gray-600 text-center border-t">
+                <div className="bg-ink-50 px-4 py-3 text-sm text-ink-600 text-center border-t">
                   Showing first 10 of {filteredBeneficiaries.length} results
                 </div>
               )}
@@ -393,18 +393,18 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
           {/* Empty State */}
           {filteredBeneficiaries.length === 0 && (
             <div className="text-center py-12">
-              <Users size={48} className="mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No beneficiaries found</h3>
-              <p className="text-gray-600">Try adjusting your filters to see more results.</p>
+              <Users size={48} className="mx-auto text-ink-300 mb-4" />
+              <h3 className="text-lg font-semibold text-ink-900 mb-2">No beneficiaries found</h3>
+              <p className="text-ink-600">Try adjusting your filters to see more results.</p>
             </div>
           )}
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-between items-center">
+        <div className="border-t border-ink-200 px-6 py-4 bg-ink-50 flex justify-between items-center">
           <button
             onClick={onClose}
-            className="px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+            className="px-6 py-2.5 text-ink-700 bg-white border border-ink-300 rounded-lg hover:bg-ink-50 font-medium transition-colors"
           >
             Close
           </button>
@@ -412,7 +412,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
             <button
               onClick={handlePrint}
               disabled={filteredBeneficiaries.length === 0}
-              className="px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2.5 text-ink-700 bg-white border border-ink-300 rounded-lg hover:bg-ink-50 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Printer size={18} />
               Print
@@ -420,7 +420,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
             <button
               onClick={handleExportCSV}
               disabled={filteredBeneficiaries.length === 0}
-              className="px-6 py-2.5 text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg hover:from-blue-600 hover:to-indigo-700 font-medium transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2.5 text-white bg-navy-900 rounded-lg font-medium transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <FileSpreadsheet size={18} />
               Export to Excel

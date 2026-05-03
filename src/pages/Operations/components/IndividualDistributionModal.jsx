@@ -351,7 +351,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
     };
 
     return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${badges[status] || 'bg-ink-100 text-gray-800'}`}>
+      <span className={`px-2 py-1 text-xs font-medium rounded-full ${badges[status] || 'bg-ink-100 text-ink-800'}`}>
         {status}
       </span>
     );
@@ -364,7 +364,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-6 py-4 border-b border-ink-100 flex justify-between items-center">
           <div>
@@ -690,7 +690,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {/* ============================================ */}
       {showReceiveModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lift w-full max-w-md">
             <div className="px-6 py-4 border-b border-ink-100">
               <h3 className="text-lg font-semibold text-ink-900">Mark as Received</h3>
               <p className="text-sm text-ink-600 mt-1">{showReceiveModal.Beneficiary?.full_name}</p>
@@ -760,7 +760,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {/* ============================================ */}
       {showAttendanceModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lift w-full max-w-md">
             <div className="px-6 py-4 border-b border-ink-100">
               <h3 className="text-lg font-semibold text-ink-900">Mark Attendance</h3>
               <p className="text-sm text-ink-600 mt-1">{showAttendanceModal.Beneficiary?.full_name}</p>
@@ -843,7 +843,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {/* ============================================ */}
       {showStatusModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lift w-full max-w-md">
             <div className="px-6 py-4 border-b border-ink-100">
               <h3 className="text-lg font-semibold text-ink-900">Update Selection Status</h3>
               <p className="text-sm text-ink-600 mt-1">{showStatusModal.Beneficiary?.full_name}</p>
@@ -906,7 +906,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
       {/* ============================================ */}
       {showRemoveModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lift w-full max-w-md">
             <div className="px-6 py-4 border-b border-ink-100">
               <h3 className="text-lg font-semibold text-ink-900">Remove Beneficiary</h3>
             </div>

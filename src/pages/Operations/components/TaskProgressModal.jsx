@@ -84,10 +84,10 @@ const TaskProgressModal = ({ isOpen, onClose, task, onUpdate }) => {
       'Pending': 'bg-yellow-100 text-yellow-800 border-yellow-200',
       'In Progress': 'bg-blue-100 text-blue-800 border-blue-200',
       'Completed': 'bg-green-100 text-green-800 border-green-200',
-      'On Hold': 'bg-ink-100 text-gray-800 border-ink-100',
+      'On Hold': 'bg-ink-100 text-ink-800 border-ink-100',
       'Cancelled': 'bg-red-100 text-red-800 border-red-200'
     };
-    return colors[status] || 'bg-ink-100 text-gray-800 border-ink-100';
+    return colors[status] || 'bg-ink-100 text-ink-800 border-ink-100';
   };
 
   const getStatusIcon = (status) => {
@@ -125,9 +125,9 @@ const TaskProgressModal = ({ isOpen, onClose, task, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-6 py-4 flex items-center justify-between">
+        <div className="bg-navy-900 text-white px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <TrendingUp className="w-6 h-6" />
             <div>
@@ -211,7 +211,7 @@ const TaskProgressModal = ({ isOpen, onClose, task, onUpdate }) => {
                   step="5"
                   value={formData.progressPercentage}
                   onChange={handleChange}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600"
+                  className="w-full h-2 bg-ink-200 rounded-lg appearance-none cursor-pointer accent-green-600"
                 />
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-ink-600">0%</span>
@@ -221,7 +221,7 @@ const TaskProgressModal = ({ isOpen, onClose, task, onUpdate }) => {
                   </div>
                   <span className="text-sm text-ink-600">100%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                <div className="w-full bg-ink-200 rounded-full h-4 overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-green-500 to-teal-500 transition-all duration-300"
                     style={{ width: `${formData.progressPercentage}%` }}

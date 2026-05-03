@@ -160,9 +160,9 @@ const NeedsReport = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-7xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-t-2xl flex-shrink-0 z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-2xl flex-shrink-0 z-10">
           <div className="flex justify-between items-start">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -462,7 +462,7 @@ const NeedsReport = ({ onClose }) => {
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: Math.max(1, prev.page - 1) }))}
               disabled={pagination.page === 1}
-              className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -472,7 +472,7 @@ const NeedsReport = ({ onClose }) => {
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: Math.min(prev.totalPages, prev.page + 1) }))}
               disabled={pagination.page === pagination.totalPages}
-              className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>

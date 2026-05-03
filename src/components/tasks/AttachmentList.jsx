@@ -181,7 +181,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
     if (category === 'archive' || mimeType?.includes('zip') || mimeType?.includes('rar')) {
       return <Archive size={20} className="text-orange-600" />;
     }
-    return <File size={20} className="text-gray-600" />;
+    return <File size={20} className="text-ink-600" />;
   };
 
   // Format file size
@@ -202,8 +202,8 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+    <div className="bg-white rounded-lg border border-ink-200 p-4">
+      <h3 className="text-lg font-semibold text-ink-900 mb-4">
         Attachments ({attachments.length})
       </h3>
 
@@ -215,8 +215,8 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
       )}
 
       {attachments.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          <File size={48} className="mx-auto mb-2 text-gray-300" />
+        <div className="text-center py-8 text-ink-500">
+          <File size={48} className="mx-auto mb-2 text-ink-300" />
           <p>No attachments yet</p>
         </div>
       ) : (
@@ -224,7 +224,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
           {attachments.map((attachment) => (
             <div
               key={attachment.id}
-              className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-start gap-3 p-3 border border-ink-200 rounded-lg hover:bg-ink-50 transition-colors"
             >
               {/* File Icon */}
               <div className="flex-shrink-0 mt-1">
@@ -237,13 +237,13 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                   // Edit Mode
                   <div className="space-y-2">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-ink-700 mb-1">
                         Category
                       </label>
                       <select
                         value={editCategory}
                         onChange={(e) => setEditCategory(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-2 py-1 text-sm border border-ink-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="document">Document</option>
                         <option value="image">Image</option>
@@ -254,14 +254,14 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-ink-700 mb-1">
                         Description
                       </label>
                       <textarea
                         value={editDescription}
                         onChange={(e) => setEditDescription(e.target.value)}
                         rows={2}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-2 py-1 text-sm border border-ink-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -274,7 +274,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                       </button>
                       <button
                         onClick={cancelEdit}
-                        className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                        className="flex items-center gap-1 px-3 py-1 text-sm bg-ink-200 text-ink-700 rounded hover:bg-ink-300"
                       >
                         <X size={14} />
                         Cancel
@@ -286,16 +286,16 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                   <>
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-ink-900 truncate">
                           {attachment.originalName}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-ink-500">
                           {formatFileSize(attachment.fileSize)} •
                           Uploaded by {attachment.uploader?.fullName || 'Unknown'} •
                           {formatDistanceToNow(new Date(attachment.createdAt), { addSuffix: true })}
                         </p>
                         {attachment.description && (
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-ink-600 mt-1">
                             {attachment.description}
                           </p>
                         )}
@@ -317,7 +317,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                   </button>
                   <button
                     onClick={() => startEdit(attachment)}
-                    className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                    className="p-2 text-ink-600 hover:bg-ink-100 rounded transition-colors"
                     title="Edit"
                   >
                     <Edit2 size={16} />

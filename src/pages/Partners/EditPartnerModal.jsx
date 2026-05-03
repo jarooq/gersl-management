@@ -163,9 +163,9 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-700 text-white p-6 rounded-t-xl flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-xl flex items-center justify-between z-10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
               <Building2 size={20} />
@@ -261,9 +261,9 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
 
                   {/* OR Divider */}
                   <div className="flex items-center gap-3 my-3">
-                    <div className="flex-1 h-px bg-gray-200"></div>
+                    <div className="flex-1 h-px bg-ink-200"></div>
                     <span className="text-xs text-ink-400 font-medium">OR</span>
-                    <div className="flex-1 h-px bg-gray-200"></div>
+                    <div className="flex-1 h-px bg-ink-200"></div>
                   </div>
 
                   {/* URL Option */}
@@ -463,8 +463,8 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                       onClick={() => toggleFocusArea(area)}
                       className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                         formData.focusAreas.includes(area)
-                          ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-md'
-                          : 'bg-ink-100 text-ink-700 hover:bg-gray-200 border border-ink-200'
+                          ? 'bg-navy-900 text-white shadow-md'
+                          : 'bg-ink-100 text-ink-700 hover:bg-ink-200 border border-ink-200'
                       }`}
                     >
                       {area}
@@ -541,13 +541,13 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors"
+              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 font-semibold transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-700 text-white rounded-lg hover:from-blue-700 hover:to-cyan-800 font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2"
             >
               <Save size={18} />
               Save Changes

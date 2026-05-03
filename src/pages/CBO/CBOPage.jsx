@@ -78,7 +78,7 @@ const CBOPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -139,7 +139,7 @@ const CBOPage = () => {
                 className={`flex items-center gap-2 px-6 py-4 font-semibold transition-all relative whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-ink-600 hover:text-gray-800 hover:bg-ink-50'
+                    : 'text-ink-600 hover:text-ink-800 hover:bg-ink-50'
                 }`}
               >
                 <tab.icon size={20} />
@@ -179,7 +179,7 @@ const CBOPage = () => {
               </select>
               <button
                 onClick={handleAddClick}
-                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition font-semibold flex items-center gap-2 shadow-md"
+                className="px-4 py-2 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center gap-2 shadow-md"
               >
                 <Plus size={18} />
                 Add {
@@ -237,7 +237,7 @@ const StatCard = ({ icon: Icon, label, value, subValue, color }) => {
           <Icon className="text-white" size={24} />
         </div>
       </div>
-      <p className="text-2xl font-bold text-gray-800 mb-1">{value}</p>
+      <p className="text-2xl font-bold text-ink-800 mb-1">{value}</p>
       <p className="text-sm text-ink-600 font-medium">{label}</p>
       <p className="text-xs text-ink-500 mt-1">{subValue}</p>
     </div>
@@ -298,12 +298,12 @@ const CBOCard = ({ cbo }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-lg transition">
+    <div className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-card transition">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-lg font-bold text-gray-800">{cbo.name}</h3>
+            <h3 className="text-lg font-bold text-ink-800">{cbo.name}</h3>
           </div>
           <p className="text-sm text-purple-600 font-semibold">{cbo.acronym}</p>
         </div>
@@ -321,7 +321,7 @@ const CBOCard = ({ cbo }) => {
       {/* Contact Person */}
       <div className="mb-4">
         <p className="text-xs text-ink-500 mb-2 font-semibold">Contact Person</p>
-        <p className="text-sm font-semibold text-gray-800 mb-1">{cbo.contactPerson}</p>
+        <p className="text-sm font-semibold text-ink-800 mb-1">{cbo.contactPerson}</p>
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2 text-xs text-ink-600">
             <Mail size={12} />
@@ -451,7 +451,7 @@ const VolunteerCard = ({ volunteer }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-lg transition">
+    <div className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-card transition">
       {/* Avatar and Status */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -459,7 +459,7 @@ const VolunteerCard = ({ volunteer }) => {
             {getInitials(volunteer.fullName)}
           </div>
           <div>
-            <h3 className="text-base font-bold text-gray-800">{volunteer.fullName}</h3>
+            <h3 className="text-base font-bold text-ink-800">{volunteer.fullName}</h3>
             <div className="flex gap-1 mt-1">
               {renderStars(volunteer.rating)}
             </div>
@@ -561,10 +561,10 @@ const ActivitiesTab = ({ activities, searchTerm }) => {
   return (
     <div className="space-y-4">
       {filteredActivities.map(activity => (
-        <div key={activity.id} className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-lg transition">
+        <div key={activity.id} className="bg-white rounded-xl border border-ink-100 p-5 hover:shadow-card transition">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-gray-800 mb-1">{activity.activityName}</h3>
+              <h3 className="text-lg font-bold text-ink-800 mb-1">{activity.activityName}</h3>
               <div className="flex items-center gap-2 text-sm text-ink-600">
                 <Calendar size={14} />
                 <span>{activity.date}</span>
@@ -655,11 +655,11 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
   return (
     <div className="space-y-4">
       {filteredAssessments.map(assessment => (
-        <div key={assessment.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-lg transition">
+        <div key={assessment.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-card transition">
           {/* Header */}
           <div className="flex items-start justify-between mb-5">
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-800 mb-2">{assessment.cboName}</h3>
+              <h3 className="text-xl font-bold text-ink-800 mb-2">{assessment.cboName}</h3>
               <div className="flex items-center gap-4 text-sm text-ink-600">
                 <div className="flex items-center gap-1">
                   <Calendar size={14} />
@@ -849,17 +849,17 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
     if (stepStage === 'donor' && proposal?.donorStatus === 'Approved') return <CheckCircle size={16} className="text-green-600" />;
     if (stepStage === 'donor' && proposal?.donorStatus === 'Rejected') return <AlertCircle size={16} className="text-red-600" />;
     if (stepStage === 'converted' && proposal?.convertedToProject) return <CheckCircle size={16} className="text-purple-600" />;
-    return <div className="w-3 h-3 bg-gray-300 rounded-full"></div>;
+    return <div className="w-3 h-3 bg-ink-300 rounded-full"></div>;
   };
 
   return (
     <div className="space-y-4">
       {filteredProposals.map(proposal => (
-        <div key={proposal.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-lg transition">
+        <div key={proposal.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-card transition">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-800 mb-1">{proposal.proposalTitle}</h3>
+              <h3 className="text-xl font-bold text-ink-800 mb-1">{proposal.proposalTitle}</h3>
               <p className="text-sm text-purple-600 font-semibold mb-2">{proposal.cboName}</p>
 
               {/* MEAL Badges - NEW */}
@@ -925,22 +925,22 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div>
                   <p className="text-xs text-ink-500 mb-1">Project Tier</p>
-                  <p className="text-sm font-semibold text-gray-800">{proposal.projectTier}</p>
+                  <p className="text-sm font-semibold text-ink-800">{proposal.projectTier}</p>
                 </div>
                 <div>
                   <p className="text-xs text-ink-500 mb-1">Sector/Theme</p>
-                  <p className="text-sm font-semibold text-gray-800">{proposal.sectorTheme}</p>
+                  <p className="text-sm font-semibold text-ink-800">{proposal.sectorTheme}</p>
                 </div>
                 {proposal.startDate && (
                   <div>
                     <p className="text-xs text-ink-500 mb-1">Project Period</p>
-                    <p className="text-sm font-semibold text-gray-800">{proposal.startDate} to {proposal.endDate}</p>
+                    <p className="text-sm font-semibold text-ink-800">{proposal.startDate} to {proposal.endDate}</p>
                   </div>
                 )}
                 {proposal.mealFocalPoint && (
                   <div>
                     <p className="text-xs text-ink-500 mb-1">MEAL Focal Point</p>
-                    <p className="text-sm font-semibold text-gray-800">{proposal.mealFocalPoint}</p>
+                    <p className="text-sm font-semibold text-ink-800">{proposal.mealFocalPoint}</p>
                   </div>
                 )}
               </div>
@@ -1047,7 +1047,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </p>
               </div>
 
-              <div className={`h-0.5 flex-1 ${proposal.fundraisingStatus === 'Approved' ? 'bg-green-300' : 'bg-gray-300'}`}></div>
+              <div className={`h-0.5 flex-1 ${proposal.fundraisingStatus === 'Approved' ? 'bg-green-300' : 'bg-ink-300'}`}></div>
 
               {/* Step 2: CEO */}
               <div className="flex flex-col items-center flex-1">
@@ -1058,7 +1058,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </p>
               </div>
 
-              <div className={`h-0.5 flex-1 ${proposal.ceoStatus === 'Approved' ? 'bg-green-300' : 'bg-gray-300'}`}></div>
+              <div className={`h-0.5 flex-1 ${proposal.ceoStatus === 'Approved' ? 'bg-green-300' : 'bg-ink-300'}`}></div>
 
               {/* Step 3: Donor */}
               <div className="flex flex-col items-center flex-1">
@@ -1069,7 +1069,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </p>
               </div>
 
-              <div className={`h-0.5 flex-1 ${proposal.donorStatus === 'Approved' ? 'bg-purple-300' : 'bg-gray-300'}`}></div>
+              <div className={`h-0.5 flex-1 ${proposal.donorStatus === 'Approved' ? 'bg-purple-300' : 'bg-ink-300'}`}></div>
 
               {/* Step 4: Converted */}
               <div className="flex flex-col items-center flex-1">
@@ -1148,7 +1148,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 setSelectedProposal(proposal);
                 setShowProposalDetail(true);
               }}
-              className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition font-semibold flex items-center justify-center gap-2"
+              className="w-full px-4 py-2 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
             >
               <FileText size={16} />
               View Full Details & MEAL Data
@@ -1183,8 +1183,8 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
       {/* Add Proposal Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-ink-100 bg-gradient-to-r from-indigo-500 to-purple-600">
+          <div className="bg-white rounded-xl shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-ink-100 bg-navy-900">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
@@ -1194,7 +1194,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </div>
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="text-white hover:text-gray-200 transition"
+                  className="text-white hover:text-ink-200 transition"
                 >
                   <AlertCircle size={24} />
                 </button>
@@ -1396,7 +1396,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-card"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Creating...' : 'Create Proposal'}
@@ -1456,11 +1456,11 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
         const beneficiaryProgress = ((project.actualBeneficiaries / project.targetBeneficiaries) * 100).toFixed(1);
 
         return (
-          <div key={project.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-lg transition">
+          <div key={project.id} className="bg-white rounded-xl border border-ink-100 p-6 hover:shadow-card transition">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-800 mb-1">{project.projectTitle}</h3>
+                <h3 className="text-xl font-bold text-ink-800 mb-1">{project.projectTitle}</h3>
                 <p className="text-sm text-purple-600 font-semibold mb-2">{project.cboName}</p>
                 <div className="flex items-center gap-4 text-sm text-ink-600">
                   <div className="flex items-center gap-1">
@@ -1488,9 +1488,9 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
                 <p className="text-xs font-semibold text-ink-700">Project Progress</p>
                 <p className="text-xs font-bold text-purple-600">{project.progress}%</p>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div className="w-full bg-ink-200 rounded-full h-2.5">
                 <div
-                  className="bg-gradient-to-r from-purple-600 to-indigo-600 h-2.5 rounded-full transition-all duration-300"
+                  className="bg-navy-900 h-2.5 rounded-full transition-all duration-300"
                   style={{ width: `${project.progress}%` }}
                 ></div>
               </div>
@@ -1585,7 +1585,7 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
             <div className="mt-4 pt-4 border-t border-ink-100">
               <button
                 onClick={() => handleOpenCFM(project)}
-                className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg hover:from-orange-600 hover:to-red-700 transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
+                className="w-full px-4 py-2 bg-navy-900 text-white rounded-lg transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
               >
                 <MessageSquare size={16} />
                 Community Feedback & Complaints ({project.cfmLog?.length || 0})
@@ -1680,9 +1680,9 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-4 rounded-t-xl">
+        <div className="sticky top-0 bg-navy-900 text-white px-6 py-4 rounded-t-xl">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -1912,7 +1912,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg hover:from-orange-600 hover:to-red-700 transition font-semibold shadow-md flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md flex items-center justify-center gap-2"
                 >
                   <Send size={18} />
                   Submit Feedback
@@ -2246,9 +2246,9 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-6 py-4 rounded-t-xl flex items-center justify-between">
+        <div className="sticky top-0 bg-navy-900 text-white px-6 py-4 rounded-t-xl flex items-center justify-between">
           <h2 className="text-2xl font-bold">Add New Proposal</h2>
           <button
             onClick={onClose}
@@ -2262,7 +2262,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Basic Information</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Basic Information</h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -2424,7 +2424,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-green-600" />
-                <h3 className="text-lg font-bold text-gray-800">Detailed Budget Breakdown</h3>
+                <h3 className="text-lg font-bold text-ink-800">Detailed Budget Breakdown</h3>
               </div>
               <button
                 type="button"
@@ -2548,7 +2548,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   </div>
                   <div className="pt-3 border-t border-green-300">
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-gray-800">Total Budget:</span>
+                      <span className="text-lg font-bold text-ink-800">Total Budget:</span>
                       <span className="text-2xl font-bold text-green-600">
                         LKR {parseFloat(formData.requestedBudget || 0).toLocaleString()}
                       </span>
@@ -2566,7 +2566,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* Executive Summary */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Executive Summary</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Executive Summary</h3>
 
             <div>
               <label className="block text-sm font-semibold text-ink-700 mb-1">Summary (250 words) *</label>
@@ -2632,7 +2632,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* Project Justification */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Project Justification</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Project Justification</h3>
 
             <div>
               <label className="block text-sm font-semibold text-ink-700 mb-1">Needs Assessment Data</label>
@@ -2661,7 +2661,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* Objectives */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Objectives</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Objectives</h3>
             {[0, 1, 2].map(index => (
               <div key={index}>
                 <label className="block text-sm font-semibold text-ink-700 mb-1">Objective {index + 1}</label>
@@ -2678,7 +2678,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* Key Activities */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Key Activities</h3>
+            <h3 className="text-lg font-bold text-ink-800 border-b pb-2">Key Activities</h3>
             {[0, 1, 2].map(index => (
               <div key={index}>
                 <label className="block text-sm font-semibold text-ink-700 mb-1">Activity {index + 1}</label>
@@ -2696,7 +2696,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
           {/* MEAL - Results Framework */}
           <div className="space-y-4 bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink-800 flex items-center gap-2">
                 <Target className="text-blue-600" size={20} />
                 Results Framework (MEAL Indicators)
               </h3>
@@ -2818,7 +2818,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* MEAL - Beneficiary Disaggregation */}
           <div className="space-y-4 bg-green-50 p-4 rounded-lg">
-            <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-ink-800 flex items-center gap-2">
               <Users2 className="text-green-600" size={20} />
               Beneficiary Disaggregation Matrix
             </h3>
@@ -2890,7 +2890,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* Theory of Change */}
           <div className="space-y-4 bg-indigo-50 p-4 rounded-lg">
-            <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-ink-800 flex items-center gap-2">
               <TrendingUp className="text-indigo-600" size={20} />
               Theory of Change
             </h3>
@@ -3136,7 +3136,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
 
           {/* Safeguarding Compliance Checklist */}
           <div className="space-y-4 bg-red-50 p-4 rounded-lg">
-            <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-ink-800 flex items-center gap-2">
               <CheckSquare className="text-red-600" size={20} />
               Safeguarding Compliance Checklist
             </h3>
@@ -3151,7 +3151,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.dataProtection
                     ? 'border-green-500 bg-green-50'
-                    : 'border-ink-200 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3162,7 +3162,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">Data Protection</p>
+                    <p className="text-sm font-semibold text-ink-800">Data Protection</p>
                     <p className="text-xs text-ink-600">Personal data encrypted, stored securely, GDPR compliant</p>
                   </div>
                 </div>
@@ -3173,7 +3173,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.informedConsent
                     ? 'border-green-500 bg-green-50'
-                    : 'border-ink-200 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3184,7 +3184,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">Informed Consent</p>
+                    <p className="text-sm font-semibold text-ink-800">Informed Consent</p>
                     <p className="text-xs text-ink-600">Written consent forms for all beneficiaries/guardians</p>
                   </div>
                 </div>
@@ -3195,7 +3195,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.childSafeguarding
                     ? 'border-green-500 bg-green-50'
-                    : 'border-ink-200 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3206,7 +3206,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">Child Safeguarding</p>
+                    <p className="text-sm font-semibold text-ink-800">Child Safeguarding</p>
                     <p className="text-xs text-ink-600">Child protection policy in place, staff trained</p>
                   </div>
                 </div>
@@ -3217,7 +3217,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.incidentReporting
                     ? 'border-green-500 bg-green-50'
-                    : 'border-ink-200 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3228,7 +3228,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">Incident Reporting</p>
+                    <p className="text-sm font-semibold text-ink-800">Incident Reporting</p>
                     <p className="text-xs text-ink-600">Clear reporting mechanism for safeguarding concerns</p>
                   </div>
                 </div>
@@ -3239,7 +3239,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.backgroundChecks
                     ? 'border-green-500 bg-green-50'
-                    : 'border-ink-200 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3250,7 +3250,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">Background Checks</p>
+                    <p className="text-sm font-semibold text-ink-800">Background Checks</p>
                     <p className="text-xs text-ink-600">All staff working with vulnerable groups screened</p>
                   </div>
                 </div>
@@ -3261,7 +3261,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 className={`p-3 rounded-lg border-2 cursor-pointer transition ${
                   formData.safeguarding.codeOfConduct
                     ? 'border-green-500 bg-green-50'
-                    : 'border-ink-200 bg-white hover:border-gray-400'
+                    : 'border-ink-200 bg-white hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start gap-2">
@@ -3272,7 +3272,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">Code of Conduct</p>
+                    <p className="text-sm font-semibold text-ink-800">Code of Conduct</p>
                     <p className="text-xs text-ink-600">Staff signed code of conduct, zero tolerance policy</p>
                   </div>
                 </div>
@@ -3303,7 +3303,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     className={`px-3 py-2 rounded-lg border-2 cursor-pointer transition text-center ${
                       formData.safeguarding.cfmChannels.includes(channel)
                         ? 'border-red-500 bg-red-50 text-red-700'
-                        : 'border-ink-200 bg-white text-ink-700 hover:border-gray-400'
+                        : 'border-ink-200 bg-white text-ink-700 hover:border-ink-400'
                     }`}
                   >
                     <p className="text-xs font-semibold">{channel}</p>
@@ -3317,7 +3317,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-ink-700">Compliance Status:</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-gray-800">
+                  <span className="text-lg font-bold text-ink-800">
                     {Object.values(formData.safeguarding).filter(v => v === true).length} / 6
                   </span>
                   <span className="text-xs text-ink-600">items checked</span>
@@ -3342,7 +3342,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-lg hover:from-purple-700 hover:to-indigo-800 transition font-semibold shadow-md"
+              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md"
             >
               Submit Proposal
             </button>

@@ -114,13 +114,13 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-gray-600 to-gray-800 text-white p-6 rounded-t-2xl">
+        <div className="sticky top-0 bg-gradient-to-r from-ink-600 to-ink-800 text-white p-6 rounded-t-2xl">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">Edit Task</h2>
-              <p className="text-gray-200 text-sm">Update task details</p>
+              <p className="text-ink-200 text-sm">Update task details</p>
             </div>
             <button
               onClick={onClose}
@@ -319,7 +319,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               onChange={(e) => setFormData({ ...formData, progress: parseInt(e.target.value) })}
               className="w-full"
             />
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div className="w-full bg-ink-200 rounded-full h-2 mt-2">
               <div
                 className="bg-blue-500 h-2 rounded-full transition-all"
                 style={{ width: `${formData.progress}%` }}
@@ -341,8 +341,8 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               disabled={loading}
               className={`flex-1 px-6 py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
                 loading
-                  ? 'bg-gray-300 text-ink-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white hover:from-gray-700 hover:to-gray-900'
+                  ? 'bg-ink-300 text-ink-500 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-ink-600 to-ink-800 text-white '
               }`}
             >
               <Save size={18} />

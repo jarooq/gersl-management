@@ -171,7 +171,7 @@ const MEALPage = () => {
   return (
     <div className="space-y-4">
       {/* Teal Gradient Hero Banner */}
-      <div className="bg-gradient-to-r from-teal-500 via-teal-600 to-cyan-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-teal-500 via-teal-600 to-cyan-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -203,7 +203,7 @@ const MEALPage = () => {
                 <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                 <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
@@ -216,7 +216,7 @@ const MEALPage = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-lg border border-ink-100">
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
         <div className="border-b border-ink-100">
           <div className="flex gap-1 p-2">
             {[
@@ -230,7 +230,7 @@ const MEALPage = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-teal-600 to-cyan-700 text-white shadow-md'
+                    ? 'bg-navy-900 text-white shadow-md'
                     : 'text-ink-600 hover:bg-ink-50'
                 }`}
               >
@@ -335,7 +335,7 @@ const MEALPage = () => {
                         <td className="p-3">
                           <div className="flex flex-col items-center gap-1">
                             <span className="text-xs font-bold text-ink-900">{progress}%</span>
-                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div className="w-full bg-ink-200 rounded-full h-1.5">
                               <div
                                 className={`h-1.5 rounded-full transition-all ${
                                   progress >= 75 ? 'bg-green-500' :
@@ -395,7 +395,7 @@ const MEALPage = () => {
 
             {filteredIndicators.length === 0 && (
               <div className="text-center py-12">
-                <Target className="mx-auto text-gray-300 mb-4" size={64} />
+                <Target className="mx-auto text-ink-300 mb-4" size={64} />
                 <h3 className="text-xl font-semibold text-ink-900 mb-2">No indicators found</h3>
                 <p className="text-ink-600">Try adjusting your search or filter criteria</p>
               </div>
@@ -411,7 +411,7 @@ const MEALPage = () => {
               <h3 className="text-lg font-bold text-ink-900">Project Evaluations</h3>
               <button
                 onClick={() => setShowAddEvaluation(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all font-semibold shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all font-semibold shadow-md"
               >
                 <Plus size={18} />
                 Add Evaluation
@@ -590,7 +590,7 @@ const MEALPage = () => {
               </select>
               <button
                 onClick={() => setShowAddLearningEvent(true)}
-                className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg hover:from-indigo-700 hover:to-purple-800 transition-all font-semibold flex items-center gap-2 shadow-md hover:shadow-lg"
+                className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all font-semibold flex items-center gap-2 shadow-md hover:shadow-card"
               >
                 <Plus size={18} />
                 Add Event
@@ -699,7 +699,7 @@ const MEALPage = () => {
               <h3 className="text-lg font-bold text-ink-900">Beneficiary Complaints & Feedback</h3>
               <button
                 onClick={() => setShowAddComplaint(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-600 to-red-700 text-white rounded-lg hover:from-orange-700 hover:to-red-800 transition-all font-semibold shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all font-semibold shadow-md"
               >
                 <Plus size={18} />
                 Record Complaint
@@ -839,7 +839,7 @@ const MEALPage = () => {
 
             {filteredComplaints.length === 0 && (
               <div className="text-center py-12">
-                <MessageSquareWarning className="mx-auto text-gray-300 mb-4" size={64} />
+                <MessageSquareWarning className="mx-auto text-ink-300 mb-4" size={64} />
                 <h3 className="text-xl font-semibold text-ink-900 mb-2">No complaints found</h3>
                 <p className="text-ink-600">Try adjusting your search or filter criteria</p>
               </div>
@@ -851,7 +851,7 @@ const MEALPage = () => {
       {/* Indicator Detail Modal */}
       {showIndicatorDetail && selectedItem && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -904,9 +904,9 @@ const MEALPage = () => {
                       {((selectedItem.current / selectedItem.target) * 100).toFixed(1)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div className="w-full bg-ink-200 rounded-full h-3">
                     <div
-                      className="bg-gradient-to-r from-teal-500 to-cyan-600 h-3 rounded-full transition-all"
+                      className="bg-navy-900 h-3 rounded-full transition-all"
                       style={{ width: `${Math.min((selectedItem.current / selectedItem.target) * 100, 100)}%` }}
                     ></div>
                   </div>
@@ -966,7 +966,7 @@ const MEALPage = () => {
       {/* Evaluation Detail Modal */}
       {showEvaluationDetail && selectedItem && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -1039,7 +1039,7 @@ const MEALPage = () => {
                 <div>
                   <h3 className="text-lg font-bold text-ink-900 mb-3">Methodology</h3>
                   <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
-                    <p className="text-gray-800 whitespace-pre-wrap">{selectedItem.methodology}</p>
+                    <p className="text-ink-800 whitespace-pre-wrap">{selectedItem.methodology}</p>
                   </div>
                 </div>
               )}
@@ -1054,7 +1054,7 @@ const MEALPage = () => {
                         <span className="flex-shrink-0 w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                           {idx + 1}
                         </span>
-                        <p className="text-gray-800 flex-1">{objective}</p>
+                        <p className="text-ink-800 flex-1">{objective}</p>
                       </div>
                     ))}
                   </div>
@@ -1082,7 +1082,7 @@ const MEALPage = () => {
                 <div>
                   <h3 className="text-lg font-bold text-ink-900 mb-3">Key Findings</h3>
                   <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-gray-800">{selectedItem.findings}</p>
+                    <p className="text-ink-800">{selectedItem.findings}</p>
                   </div>
                 </div>
               )}
@@ -1095,7 +1095,7 @@ const MEALPage = () => {
                     {selectedItem.recommendations.map((rec, idx) => (
                       <div key={idx} className="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
                         <CheckCircle size={18} className="text-green-600 mt-0.5 flex-shrink-0" />
-                        <p className="text-gray-800">{rec}</p>
+                        <p className="text-ink-800">{rec}</p>
                       </div>
                     ))}
                   </div>
@@ -1200,8 +1200,8 @@ const AddComplaintModal = ({ projects, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-red-700 p-6 rounded-t-2xl text-white">
+      <div className="bg-white rounded-lg2 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-pop">
+        <div className="sticky top-0 bg-navy-900 p-6 rounded-t-2xl text-white">
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-xl font-bold">Record New Complaint</h3>
@@ -1342,7 +1342,7 @@ const AddComplaintModal = ({ projects, onClose }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-700 text-white rounded-xl hover:from-orange-700 hover:to-red-800 transition-all font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl transition-all font-semibold shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Submitting...' : 'Submit Complaint'}
             </button>

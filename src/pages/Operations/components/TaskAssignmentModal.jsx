@@ -136,14 +136,14 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
       'High': 'bg-orange-100 text-orange-800 border-orange-200',
       'Urgent': 'bg-red-100 text-red-800 border-red-200'
     };
-    return colors[priority] || 'bg-ink-100 text-gray-800 border-ink-100';
+    return colors[priority] || 'bg-ink-100 text-ink-800 border-ink-100';
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 flex items-center justify-between">
+        <div className="bg-navy-900 text-white px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <UserPlus className="w-6 h-6" />
             <div>

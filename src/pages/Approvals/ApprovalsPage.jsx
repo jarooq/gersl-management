@@ -122,7 +122,7 @@ const ApprovalsPage = () => {
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -185,8 +185,8 @@ const ApprovalsPage = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                   activeTab === tab
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
+                    ? 'bg-indigo-600 text-white shadow-card'
+                    : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -321,7 +321,7 @@ const ApprovalsPage = () => {
                           setSelectedApproval(approval);
                           setShowDetailModal(true);
                         }}
-                        className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center gap-2"
+                        className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition font-semibold flex items-center gap-2"
                       >
                         <Eye size={16} />
                         View
@@ -417,9 +417,9 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-700 text-white px-6 py-4 rounded-t-2xl">
+        <div className="sticky top-0 bg-navy-900 text-white px-6 py-4 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Approval Details</h2>
             <button

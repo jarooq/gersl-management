@@ -144,9 +144,9 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 flex-shrink-0">
+        <div className="bg-navy-900 text-white p-6 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div>
               <div className="flex items-center gap-3">
@@ -330,7 +330,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
           <div className="flex gap-3">
             <button
               onClick={handleClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
             >
               Cancel
             </button>
@@ -339,8 +339,8 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
               disabled={!selectedPartner || !selectedProject || !supportType}
               className={`flex-1 px-6 py-3 rounded-lg transition font-semibold flex items-center justify-center gap-2 ${
                 selectedPartner && selectedProject && supportType
-                  ? 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg'
-                  : 'bg-gray-300 text-ink-500 cursor-not-allowed'
+                  ? 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-card'
+                  : 'bg-ink-300 text-ink-500 cursor-not-allowed'
               }`}
             >
               <DollarSign size={18} />

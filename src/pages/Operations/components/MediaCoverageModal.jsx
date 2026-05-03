@@ -300,13 +300,13 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
   // ============================================
   const getStatusBadge = (status) => {
     const badges = {
-      'Not Required': { bg: 'bg-ink-100', text: 'text-gray-800', icon: X },
+      'Not Required': { bg: 'bg-ink-100', text: 'text-ink-800', icon: X },
       'Pending': { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock },
       'In Progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Play },
       'Completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle }
     };
 
-    const badge = badges[status] || { bg: 'bg-ink-100', text: 'text-gray-800', icon: AlertCircle };
+    const badge = badges[status] || { bg: 'bg-ink-100', text: 'text-ink-800', icon: AlertCircle };
     const Icon = badge.icon;
 
     return (
@@ -332,9 +332,9 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-ink-100 bg-gradient-to-r from-purple-600 to-pink-600">
+        <div className="px-6 py-4 border-b border-ink-100 bg-navy-900">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-white">Media Coverage Management</h2>
@@ -345,7 +345,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-200 transition-colors"
+              className="text-white hover:text-ink-200 transition-colors"
             >
               <X className="h-6 w-6" />
             </button>

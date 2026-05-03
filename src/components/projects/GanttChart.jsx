@@ -98,7 +98,7 @@ const GanttChart = ({ project, onTaskClick }) => {
   // Get status color
   const getStatusColor = (task) => {
     if (task.status === 'Completed') return 'bg-green-500';
-    if (task.status === 'Cancelled') return 'bg-gray-400';
+    if (task.status === 'Cancelled') return 'bg-ink-400';
     if (task.status === 'In Progress') return 'bg-blue-500';
 
     // Check if overdue
@@ -108,7 +108,7 @@ const GanttChart = ({ project, onTaskClick }) => {
       if (deadlineStatus.status === 'due_today' || deadlineStatus.status === 'due_tomorrow') return 'bg-orange-500';
     }
 
-    return 'bg-gray-300';
+    return 'bg-ink-300';
   };
 
   // Get priority badge
@@ -137,7 +137,7 @@ const GanttChart = ({ project, onTaskClick }) => {
   if (tasksWithDates.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
-        <div className="text-center text-gray-500">
+        <div className="text-center text-ink-500">
           <p className="text-lg font-medium mb-2">No Tasks with Timelines</p>
           <p className="text-sm">Add tasks with start dates and deadlines to see the Gantt chart.</p>
         </div>
@@ -148,8 +148,8 @@ const GanttChart = ({ project, onTaskClick }) => {
   return (
     <div className="bg-white rounded-lg shadow">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-800">Project Timeline</h3>
+      <div className="p-4 border-b border-ink-200 flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-ink-800">Project Timeline</h3>
 
         {/* View Mode Selector */}
         <div className="flex gap-2">
@@ -158,7 +158,7 @@ const GanttChart = ({ project, onTaskClick }) => {
             className={`px-3 py-1 text-sm rounded ${
               viewMode === 'week'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             Week
@@ -168,7 +168,7 @@ const GanttChart = ({ project, onTaskClick }) => {
             className={`px-3 py-1 text-sm rounded ${
               viewMode === 'month'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             Month
@@ -178,7 +178,7 @@ const GanttChart = ({ project, onTaskClick }) => {
             className={`px-3 py-1 text-sm rounded ${
               viewMode === 'quarter'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             Quarter
@@ -190,8 +190,8 @@ const GanttChart = ({ project, onTaskClick }) => {
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           {/* Timeline Header */}
-          <div className="flex border-b border-gray-200 bg-gray-50">
-            <div className="w-64 p-2 border-r border-gray-200 font-semibold text-sm text-gray-700">
+          <div className="flex border-b border-ink-200 bg-ink-50">
+            <div className="w-64 p-2 border-r border-ink-200 font-semibold text-sm text-ink-700">
               Task Name
             </div>
             <div className="flex-1 relative">
@@ -199,7 +199,7 @@ const GanttChart = ({ project, onTaskClick }) => {
                 {timelineColumns.map((col, index) => (
                   <div
                     key={index}
-                    className={`flex-1 px-1 py-2 text-xs text-center border-r border-gray-200 ${
+                    className={`flex-1 px-1 py-2 text-xs text-center border-r border-ink-200 ${
                       col.isMonthStart ? 'font-semibold' : ''
                     }`}
                     title={col.fullLabel}
@@ -221,16 +221,16 @@ const GanttChart = ({ project, onTaskClick }) => {
               return (
                 <div
                   key={task.id}
-                  className="flex border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                  className="flex border-b border-ink-100 hover:bg-ink-50 transition-colors"
                 >
                   {/* Task Info */}
-                  <div className="w-64 p-2 border-r border-gray-200">
-                    <div className="text-sm font-medium text-gray-800 truncate" title={task.name || task.title}>
+                  <div className="w-64 p-2 border-r border-ink-200">
+                    <div className="text-sm font-medium text-ink-800 truncate" title={task.name || task.title}>
                       {task.name || task.title}
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       {getPriorityBadge(task.priority)}
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-ink-500">
                         {task.assignees?.length > 0 && `${task.assignees.length} assigned`}
                       </span>
                     </div>
@@ -269,7 +269,7 @@ const GanttChart = ({ project, onTaskClick }) => {
           </div>
 
           {/* Legend */}
-          <div className="p-4 bg-gray-50 border-t border-gray-200">
+          <div className="p-4 bg-ink-50 border-t border-ink-200">
             <div className="flex flex-wrap gap-4 text-xs">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-blue-500 rounded"></div>
@@ -288,11 +288,11 @@ const GanttChart = ({ project, onTaskClick }) => {
                 <span>Overdue</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                <div className="w-4 h-4 bg-ink-300 rounded"></div>
                 <span>Pending</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-gray-400 rounded"></div>
+                <div className="w-4 h-4 bg-ink-400 rounded"></div>
                 <span>Cancelled</span>
               </div>
             </div>
@@ -301,26 +301,26 @@ const GanttChart = ({ project, onTaskClick }) => {
       </div>
 
       {/* Summary Statistics */}
-      <div className="p-4 bg-white border-t border-gray-200">
+      <div className="p-4 bg-white border-t border-ink-200">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <div className="text-gray-500">Total Tasks</div>
-            <div className="text-lg font-semibold text-gray-800">{tasksWithDates.length}</div>
+            <div className="text-ink-500">Total Tasks</div>
+            <div className="text-lg font-semibold text-ink-800">{tasksWithDates.length}</div>
           </div>
           <div>
-            <div className="text-gray-500">In Progress</div>
+            <div className="text-ink-500">In Progress</div>
             <div className="text-lg font-semibold text-blue-600">
               {tasksWithDates.filter(t => t.status === 'In Progress').length}
             </div>
           </div>
           <div>
-            <div className="text-gray-500">Completed</div>
+            <div className="text-ink-500">Completed</div>
             <div className="text-lg font-semibold text-green-600">
               {tasksWithDates.filter(t => t.status === 'Completed').length}
             </div>
           </div>
           <div>
-            <div className="text-gray-500">Overdue</div>
+            <div className="text-ink-500">Overdue</div>
             <div className="text-lg font-semibold text-red-600">
               {tasksWithDates.filter(t => {
                 const today = new Date().toISOString().split('T')[0];

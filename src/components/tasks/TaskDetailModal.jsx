@@ -52,7 +52,7 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
   // Get priority badge color
   const getPriorityColor = (priority) => {
     const colors = {
-      low: 'bg-gray-100 text-gray-800',
+      low: 'bg-ink-100 text-ink-800',
       medium: 'bg-blue-100 text-blue-800',
       high: 'bg-orange-100 text-orange-800',
       urgent: 'bg-red-100 text-red-800'
@@ -66,7 +66,7 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
       pending: 'bg-yellow-100 text-yellow-800',
       'in-progress': 'bg-blue-100 text-blue-800',
       completed: 'bg-green-100 text-green-800',
-      'on-hold': 'bg-gray-100 text-gray-800',
+      'on-hold': 'bg-ink-100 text-ink-800',
       cancelled: 'bg-red-100 text-red-800'
     };
     return colors[status] || colors.pending;
@@ -76,15 +76,15 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Task Details</h2>
+        <div className="flex items-center justify-between p-6 border-b border-ink-200">
+          <h2 className="text-2xl font-bold text-ink-900">Task Details</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-ink-100 rounded-lg transition-colors"
           >
-            <X size={24} className="text-gray-500" />
+            <X size={24} className="text-ink-500" />
           </button>
         </div>
 
@@ -100,14 +100,14 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
         ) : task ? (
           <>
             {/* Tabs */}
-            <div className="border-b border-gray-200">
+            <div className="border-b border-ink-200">
               <div className="flex gap-4 px-6">
                 <button
                   onClick={() => setActiveTab('details')}
                   className={`py-3 px-1 border-b-2 font-medium transition-colors ${
                     activeTab === 'details'
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      : 'border-transparent text-ink-500 hover:text-ink-700'
                   }`}
                 >
                   Details
@@ -117,7 +117,7 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                   className={`py-3 px-1 border-b-2 font-medium transition-colors ${
                     activeTab === 'attachments'
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      : 'border-transparent text-ink-500 hover:text-ink-700'
                   }`}
                 >
                   Attachments {attachmentCount > 0 && `(${attachmentCount})`}
@@ -127,7 +127,7 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                   className={`py-3 px-1 border-b-2 font-medium transition-colors ${
                     activeTab === 'comments'
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      : 'border-transparent text-ink-500 hover:text-ink-700'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                 <div className="space-y-6">
                   {/* Title and Status */}
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{task.title}</h3>
+                    <h3 className="text-xl font-semibold text-ink-900 mb-2">{task.title}</h3>
                     <div className="flex items-center gap-2">
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(task.status)}`}>
                         {task.status}
@@ -158,8 +158,8 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                   {/* Description */}
                   {task.description && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
-                      <p className="text-gray-600 whitespace-pre-wrap">{task.description}</p>
+                      <h4 className="text-sm font-medium text-ink-700 mb-2">Description</h4>
+                      <p className="text-ink-600 whitespace-pre-wrap">{task.description}</p>
                     </div>
                   )}
 
@@ -167,22 +167,22 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Assigned To */}
                     <div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-ink-500 mb-1">
                         <User size={16} />
                         <span className="font-medium">Assigned To</span>
                       </div>
-                      <p className="text-gray-900">
+                      <p className="text-ink-900">
                         {task.assignedTo?.fullName || 'Unassigned'}
                       </p>
                     </div>
 
                     {/* Created By */}
                     <div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-ink-500 mb-1">
                         <User size={16} />
                         <span className="font-medium">Created By</span>
                       </div>
-                      <p className="text-gray-900">
+                      <p className="text-ink-900">
                         {task.createdBy?.fullName || 'Unknown'}
                       </p>
                     </div>
@@ -190,11 +190,11 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                     {/* Due Date */}
                     {task.dueDate && (
                       <div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                        <div className="flex items-center gap-2 text-sm text-ink-500 mb-1">
                           <Calendar size={16} />
                           <span className="font-medium">Due Date</span>
                         </div>
-                        <p className="text-gray-900">
+                        <p className="text-ink-900">
                           {format(new Date(task.dueDate), 'PPP')}
                         </p>
                       </div>
@@ -203,40 +203,40 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                     {/* Progress */}
                     {task.progress !== null && task.progress !== undefined && (
                       <div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                        <div className="flex items-center gap-2 text-sm text-ink-500 mb-1">
                           <CheckCircle size={16} />
                           <span className="font-medium">Progress</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 bg-gray-200 rounded-full h-2">
+                          <div className="flex-1 bg-ink-200 rounded-full h-2">
                             <div
                               className="bg-blue-600 h-2 rounded-full transition-all"
                               style={{ width: `${task.progress}%` }}
                             ></div>
                           </div>
-                          <span className="text-sm text-gray-900">{task.progress}%</span>
+                          <span className="text-sm text-ink-900">{task.progress}%</span>
                         </div>
                       </div>
                     )}
 
                     {/* Created At */}
                     <div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-ink-500 mb-1">
                         <Clock size={16} />
                         <span className="font-medium">Created</span>
                       </div>
-                      <p className="text-gray-900">
+                      <p className="text-ink-900">
                         {format(new Date(task.createdAt), 'PPP')}
                       </p>
                     </div>
 
                     {/* Updated At */}
                     <div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-ink-500 mb-1">
                         <Clock size={16} />
                         <span className="font-medium">Last Updated</span>
                       </div>
-                      <p className="text-gray-900">
+                      <p className="text-ink-900">
                         {format(new Date(task.updatedAt), 'PPP')}
                       </p>
                     </div>
@@ -245,12 +245,12 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
                   {/* Tags */}
                   {task.tags && task.tags.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Tags</h4>
+                      <h4 className="text-sm font-medium text-ink-700 mb-2">Tags</h4>
                       <div className="flex flex-wrap gap-2">
                         {task.tags.map((tag, index) => (
                           <span
                             key={index}
-                            className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                            className="px-3 py-1 bg-ink-100 text-ink-700 rounded-full text-sm"
                           >
                             {tag}
                           </span>
@@ -269,8 +269,8 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
               )}
 
               {activeTab === 'comments' && (
-                <div className="text-center py-8 text-gray-500">
-                  <MessageSquare size={48} className="mx-auto mb-2 text-gray-300" />
+                <div className="text-center py-8 text-ink-500">
+                  <MessageSquare size={48} className="mx-auto mb-2 text-ink-300" />
                   <p>Comments section - To be implemented</p>
                 </div>
               )}
@@ -279,10 +279,10 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
         ) : null}
 
         {/* Footer */}
-        <div className="border-t border-gray-200 p-4 flex justify-end gap-2">
+        <div className="border-t border-ink-200 p-4 flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            className="px-4 py-2 text-ink-700 bg-ink-100 rounded-lg hover:bg-ink-200 transition-colors"
           >
             Close
           </button>

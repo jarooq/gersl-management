@@ -12,7 +12,7 @@ const STATUS_BADGE = {
   Posted: 'bg-green-100 text-green-700',
   'Pending-Approval': 'bg-yellow-100 text-yellow-800',
   Rejected: 'bg-red-100 text-red-700',
-  Reversed: 'bg-gray-200 text-ink-700'
+  Reversed: 'bg-ink-200 text-ink-700'
 };
 
 const fmt = (v, currency = 'LKR') => {

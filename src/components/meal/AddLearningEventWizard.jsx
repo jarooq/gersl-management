@@ -97,9 +97,9 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-700 text-white p-6 rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-2xl z-10">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">Add Learning Event</h2>
@@ -134,10 +134,10 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Event Details</h3>
+              <h3 className="text-lg font-bold text-ink-900 mb-4">Event Details</h3>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Event Title *
                 </label>
                 <input
@@ -151,7 +151,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Event Type *
                   </label>
                   <select
@@ -168,7 +168,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Project *
                   </label>
                   <select
@@ -187,7 +187,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Link to Evaluation (Optional)
                 </label>
                 <select
@@ -204,14 +204,14 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                       </option>
                     ))}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   Link this learning event to an evaluation to capture lessons from evaluation findings
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2 flex items-center gap-2">
                     <Calendar size={16} />
                     Event Date *
                   </label>
@@ -224,7 +224,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Duration (hours)
                   </label>
                   <input
@@ -240,7 +240,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Facilitator
                   </label>
                   <input
@@ -253,7 +253,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2 flex items-center gap-2">
                     <Users size={16} />
                     Total Participants
                   </label>
@@ -269,7 +269,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2 flex items-center gap-2">
                   <MapPin size={16} />
                   Venue
                 </label>
@@ -283,7 +283,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Status
                 </label>
                 <select
@@ -298,7 +298,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description
                 </label>
                 <textarea
@@ -315,10 +315,10 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
           {/* Step 2: Key Learnings & Action Points */}
           {currentStep === 2 && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Knowledge Capture</h3>
+              <h3 className="text-lg font-bold text-ink-900 mb-4">Knowledge Capture</h3>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Key Learnings
                 </label>
                 <textarea
@@ -328,13 +328,13 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                   rows={6}
                   placeholder="Capture the main insights, lessons learned, and knowledge gained from this event..."
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   Document the key takeaways, best practices, and insights shared during the event
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Action Points
                 </label>
                 <div className="flex gap-2 mb-3">
@@ -364,7 +364,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                       <span className="flex-shrink-0 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
                       </span>
-                      <span className="flex-1 text-sm text-gray-800">{point}</span>
+                      <span className="flex-1 text-sm text-ink-800">{point}</span>
                       <button
                         onClick={() => removeActionPoint(index)}
                         className="text-red-600 hover:text-red-700 transition-colors"
@@ -374,7 +374,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                     </div>
                   ))}
                   {formData.actionPoints.length === 0 && (
-                    <p className="text-sm text-gray-500 text-center py-4">
+                    <p className="text-sm text-ink-500 text-center py-4">
                       No action points added yet. Add action items that need follow-up.
                     </p>
                   )}
@@ -386,9 +386,9 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
           {/* Step 3: Follow-up & Materials */}
           {currentStep === 3 && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Follow-up & Resources</h3>
+              <h3 className="text-lg font-bold text-ink-900 mb-4">Follow-up & Resources</h3>
 
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div className="bg-ink-50 border border-ink-200 rounded-lg p-4">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -397,8 +397,8 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                     className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500"
                   />
                   <div>
-                    <p className="font-semibold text-gray-900">Follow-up Required</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="font-semibold text-ink-900">Follow-up Required</p>
+                    <p className="text-sm text-ink-600">
                       Check if this event requires a follow-up session
                     </p>
                   </div>
@@ -406,7 +406,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
 
                 {formData.followUpRequired && (
                   <div className="mt-4">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-ink-700 mb-2">
                       Follow-up Date
                     </label>
                     <input
@@ -420,7 +420,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Training Materials & Resources
                 </label>
                 <div className="space-y-3 mb-3">
@@ -456,7 +456,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                       className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg"
                     >
                       <div className="flex-1">
-                        <p className="font-semibold text-sm text-gray-900">{material.title}</p>
+                        <p className="font-semibold text-sm text-ink-900">{material.title}</p>
                         <a
                           href={material.url}
                           target="_blank"
@@ -475,7 +475,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                     </div>
                   ))}
                   {formData.materials.length === 0 && (
-                    <p className="text-sm text-gray-500 text-center py-4">
+                    <p className="text-sm text-ink-500 text-center py-4">
                       No materials added yet. Add links to presentations, handouts, or resources.
                     </p>
                   )}
@@ -486,14 +486,14 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
         </div>
 
         {/* Footer Navigation */}
-        <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-between">
+        <div className="sticky bottom-0 bg-ink-50 border-t border-ink-200 p-4 rounded-b-2xl flex justify-between">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
             className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
               currentStep === 1
-                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                ? 'bg-ink-200 text-ink-400 cursor-not-allowed'
+                : 'bg-white border border-ink-300 text-ink-700 hover:bg-ink-50'
             }`}
           >
             <ChevronLeft size={18} />
@@ -503,7 +503,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
           {currentStep < 3 ? (
             <button
               onClick={nextStep}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-800 transition-all flex items-center gap-2"
+              className="px-6 py-2 bg-navy-900 text-white rounded-lg font-semibold transition-all flex items-center gap-2"
             >
               Next
               <ChevronRight size={18} />
@@ -514,8 +514,8 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
               disabled={submitting || !formData.title || !formData.projectId || !formData.eventDate}
               className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
                 submitting || !formData.title || !formData.projectId || !formData.eventDate
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-green-600 to-teal-700 text-white hover:from-green-700 hover:to-teal-800'
+                  ? 'bg-ink-300 text-ink-500 cursor-not-allowed'
+                  : 'bg-navy-900 text-white '
               }`}
             >
               {submitting ? 'Creating...' : 'Create Event'}

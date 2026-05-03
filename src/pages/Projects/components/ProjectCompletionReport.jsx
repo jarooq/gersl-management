@@ -62,9 +62,9 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 flex-shrink-0">
+        <div className="bg-navy-900 text-white p-6 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div>
               <div className="flex items-center gap-3">
@@ -460,7 +460,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
             >
               Cancel
             </button>
@@ -474,7 +474,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-lg hover:from-green-700 hover:to-emerald-800 transition font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md hover:shadow-card flex items-center justify-center gap-2"
             >
               <FileText size={18} />
               Save Report

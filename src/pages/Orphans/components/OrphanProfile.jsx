@@ -707,16 +707,16 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-6xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-pink-500 to-rose-600 text-white p-6 flex-shrink-0">
+        <div className="bg-navy-900 text-white p-6 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-4">
               {profilePhotoUrl ? (
                 <img
                   src={profilePhotoUrl}
                   alt={orphan.fullName}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg"
+                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-card"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextElementSibling.style.display = 'flex';
@@ -724,7 +724,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
                 />
               ) : null}
               <div
-                className="w-16 h-16 bg-white text-pink-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg"
+                className="w-16 h-16 bg-white text-pink-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-card"
                 style={{ display: profilePhotoUrl ? 'none' : 'flex' }}
               >
                 {photoInitial}
@@ -744,7 +744,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
         </div>
 
         {/* Tabs */}
-        <div className="bg-ink-50 border-b border-ink-100 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex-shrink-0 z-10">
+        <div className="bg-ink-50 border-b border-ink-100 overflow-x-auto scrollbar-thin scrollbar-thumb-ink-300 scrollbar-track-ink-100 flex-shrink-0 z-10">
           <div className="flex min-w-max">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -832,7 +832,7 @@ const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
             </button>
             <button
               onClick={onClose}
-              className="col-span-2 md:col-span-3 lg:col-span-1 px-3 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition text-xs font-semibold"
+              className="col-span-2 md:col-span-3 lg:col-span-1 px-3 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition text-xs font-semibold"
             >
               Close
             </button>
@@ -1142,7 +1142,7 @@ const DocumentsTab = ({ orphan }) => {
               <div
                 key={index}
                 onClick={() => handleDocumentClick(doc.url)}
-                className="bg-white border-2 border-ink-100 rounded-lg p-4 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
+                className="bg-white border-2 border-ink-100 rounded-lg p-4 hover:border-blue-500 hover:shadow-card transition-all cursor-pointer group"
               >
                 <div className="flex items-start gap-3">
                   <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
@@ -1228,7 +1228,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
       case 'Delivered': return 'bg-blue-100 text-blue-800';
       case 'Pending': return 'bg-yellow-100 text-yellow-800';
       case 'Processing': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-ink-100 text-gray-800';
+      default: return 'bg-ink-100 text-ink-800';
     }
   };
 
@@ -1290,12 +1290,12 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
       )}
 
       {/* Selected Partner Display */}
-      <div className="bg-white border-2 border-ink-100 rounded-2xl overflow-hidden">
+      <div className="bg-white border-2 border-ink-100 rounded-lg2 overflow-hidden">
         {/* Partner Header */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6">
+        <div className="bg-navy-900 text-white p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white text-green-600 rounded-xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-lg">
+              <div className="w-16 h-16 bg-white text-green-600 rounded-xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-card">
                 {selectedPartner.partner.name.charAt(0)}
               </div>
               <div>
@@ -1388,7 +1388,7 @@ const SupportLogTab = ({ orphan, onAssignPartner }) => {
                         <span>{entry.date}</span>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg text-right min-w-[140px]">
+                    <div className="bg-navy-900 text-white px-4 py-3 rounded-lg text-right min-w-[140px]">
                       <p className="text-xs font-semibold opacity-90 mb-1">Amount</p>
                       <p className="text-xl font-bold">LKR {entry.amount.toLocaleString()}</p>
                     </div>

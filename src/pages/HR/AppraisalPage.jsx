@@ -161,7 +161,7 @@ const AppraisalPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -179,7 +179,7 @@ const AppraisalPage = () => {
 
       {/* Stats Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center">
               <TrendingUp size={24} />
@@ -189,7 +189,7 @@ const AppraisalPage = () => {
           <p className="text-sm text-ink-600">Total Appraisals</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
               <Clock size={24} />
@@ -199,7 +199,7 @@ const AppraisalPage = () => {
           <p className="text-sm text-ink-600">Pending</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center">
               <CheckCircle size={24} />
@@ -209,9 +209,9 @@ const AppraisalPage = () => {
           <p className="text-sm text-ink-600">Completed</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-yellow-50 border border-yellow-200 text-white rounded-xl flex items-center justify-center">
               <Star size={24} />
             </div>
           </div>
@@ -289,7 +289,7 @@ const AppraisalPage = () => {
       </div>
 
       {/* Appraisal Records */}
-      <div className="bg-white rounded-2xl shadow-sm border border-ink-100">
+      <div className="bg-white rounded-lg2 shadow-sm border border-ink-100">
         <div className="p-6 border-b border-ink-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-ink-900">Appraisal Records ({filteredRecords.length})</h2>
           <p className="text-sm text-ink-600">Performance evaluation records</p>
@@ -429,7 +429,7 @@ const AppraisalPage = () => {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{editingRecord ? 'Edit Appraisal' : 'New Appraisal'}</h2>
@@ -554,7 +554,7 @@ const AppraisalPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleSaveAppraisal}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   {editingRecord ? 'Update Appraisal' : 'Create Appraisal'}
                 </button>
@@ -563,7 +563,7 @@ const AppraisalPage = () => {
                     setShowModal(false);
                     setEditingRecord(null);
                   }}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>

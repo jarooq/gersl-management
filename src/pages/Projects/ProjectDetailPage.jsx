@@ -135,8 +135,8 @@ const ProjectDetailPage = () => {
       case 'Active': return 'bg-green-100 text-green-800';
       case 'Completed': return 'bg-blue-100 text-blue-800';
       case 'Planning': return 'bg-yellow-100 text-yellow-800';
-      case 'On Hold': return 'bg-ink-100 text-gray-800';
-      default: return 'bg-ink-100 text-gray-800';
+      case 'On Hold': return 'bg-ink-100 text-ink-800';
+      default: return 'bg-ink-100 text-ink-800';
     }
   };
 
@@ -192,7 +192,7 @@ const ProjectDetailPage = () => {
       </div>
 
       {/* Tabs - Modern rounded style */}
-      <div className="bg-white rounded-xl shadow-lg p-2 mb-6">
+      <div className="bg-white rounded-xl shadow-card p-2 mb-6">
         <div className="flex gap-2">
           {tabs.map(tab => (
             <button
@@ -200,7 +200,7 @@ const ProjectDetailPage = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 px-4 rounded-lg transition-all font-semibold text-sm ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                  ? 'bg-navy-900 text-white shadow-md'
                   : 'text-ink-600 hover:bg-ink-100'
               }`}
             >
@@ -209,7 +209,7 @@ const ProjectDetailPage = () => {
                 <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
                   activeTab === tab.id
                     ? 'bg-white/20 text-white'
-                    : 'bg-gray-200 text-ink-600'
+                    : 'bg-ink-200 text-ink-600'
                 }`}>
                   {tab.count}
                 </span>
@@ -226,7 +226,7 @@ const ProjectDetailPage = () => {
             {/* Main Info */}
             <div className="lg:col-span-2 space-y-6">
               {/* Description */}
-              <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+              <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-4 flex items-center gap-2">
                   <FileText className="text-blue-600" size={20} />
                   Description
@@ -237,7 +237,7 @@ const ProjectDetailPage = () => {
               </div>
 
               {/* Progress */}
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl shadow-lg p-6">
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg2 shadow-card p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-6 flex items-center gap-2">
                   <TrendingUp className="text-purple-600" size={22} />
                   Project Progress
@@ -250,7 +250,7 @@ const ProjectDetailPage = () => {
                     </div>
                     <div className="w-full bg-white rounded-full h-3 shadow-inner">
                       <div
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all shadow-sm"
+                        className="bg-navy-900 h-3 rounded-full transition-all shadow-sm"
                         style={{ width: `${project.progress}%` }}
                       />
                     </div>
@@ -264,7 +264,7 @@ const ProjectDetailPage = () => {
                     </div>
                     <div className="w-full bg-white rounded-full h-3 shadow-inner">
                       <div
-                        className="bg-gradient-to-r from-green-500 to-emerald-600 h-3 rounded-full transition-all shadow-sm"
+                        className="bg-navy-900 h-3 rounded-full transition-all shadow-sm"
                         style={{ width: `${(project.spent / project.budget) * 100}%` }}
                       />
                     </div>
@@ -280,7 +280,7 @@ const ProjectDetailPage = () => {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Key Stats */}
-              <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+              <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
                 <h3 className="text-lg font-bold text-ink-900 mb-6 flex items-center gap-2">
                   <Target className="text-indigo-600" size={22} />
                   Key Information
@@ -365,7 +365,7 @@ const ProjectDetailPage = () => {
         )}
 
         {activeTab === 'team' && (
-          <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+          <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
             <div className="p-6 border-b border-ink-100 flex justify-between items-center">
               <div>
                 <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -378,7 +378,7 @@ const ProjectDetailPage = () => {
               </div>
               <button
                 onClick={() => setShowAddTeamMember(true)}
-                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-md flex items-center gap-2"
+                className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
               >
                 <Plus size={18} />
                 <span className="font-semibold">Add Member</span>
@@ -402,11 +402,11 @@ const ProjectDetailPage = () => {
                   {teamMembers.map(member => (
                     <div
                       key={member.id}
-                      className="border-2 border-ink-100 rounded-xl p-4 hover:shadow-lg hover:border-blue-300 transition-all bg-gradient-to-br from-white to-gray-50"
+                      className="border-2 border-ink-100 rounded-xl p-4 hover:shadow-card hover:border-blue-300 transition-all bg-gradient-to-br from-white to-ink-50"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-start gap-3">
-                          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
+                          <div className="w-14 h-14 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
                             {member.user.fullName.charAt(0)}
                           </div>
                           <div>
@@ -455,7 +455,7 @@ const ProjectDetailPage = () => {
 
         {activeTab === 'financial' && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl shadow-lg p-6">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg2 shadow-card p-6">
               <h3 className="text-lg font-bold text-ink-900 mb-6 flex items-center gap-2">
                 <DollarSign className="text-green-600" size={22} />
                 Financial Overview
@@ -503,7 +503,7 @@ const ProjectDetailPage = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+            <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
               <div className="p-6 border-b border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <FileText className="text-blue-600" size={20} />
@@ -569,7 +569,7 @@ const ProjectDetailPage = () => {
         )}
 
         {activeTab === 'tasks' && (
-          <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+          <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
             <div className="p-6 border-b border-ink-100">
               <div className="flex justify-between items-center mb-4">
                 <div>
@@ -583,7 +583,7 @@ const ProjectDetailPage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddTask(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-md flex items-center gap-2"
+                  className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Task
@@ -598,7 +598,7 @@ const ProjectDetailPage = () => {
                     className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
                       taskView === 'list'
                         ? 'bg-blue-100 text-blue-700 font-medium'
-                        : 'bg-ink-100 text-ink-600 hover:bg-gray-200'
+                        : 'bg-ink-100 text-ink-600 hover:bg-ink-200'
                     }`}
                   >
                     <List size={16} />
@@ -609,7 +609,7 @@ const ProjectDetailPage = () => {
                     className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
                       taskView === 'gantt'
                         ? 'bg-blue-100 text-blue-700 font-medium'
-                        : 'bg-ink-100 text-ink-600 hover:bg-gray-200'
+                        : 'bg-ink-100 text-ink-600 hover:bg-ink-200'
                     }`}
                   >
                     <BarChart size={16} />
@@ -678,7 +678,7 @@ const ProjectDetailPage = () => {
                             )}
                             {task.progress !== undefined && (
                               <div className="flex items-center gap-2">
-                                <div className="w-24 bg-gray-200 rounded-full h-2">
+                                <div className="w-24 bg-ink-200 rounded-full h-2">
                                   <div
                                     className="bg-blue-600 h-2 rounded-full"
                                     style={{ width: `${task.progress}%` }}
@@ -746,7 +746,7 @@ const ProjectDetailPage = () => {
           <div className="space-y-6">
             {/* MEAL Overview Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-200 rounded-2xl shadow-lg p-6">
+              <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-200 rounded-lg2 shadow-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-teal-500 rounded-xl">
                     <Target size={24} className="text-white" />
@@ -757,7 +757,7 @@ const ProjectDetailPage = () => {
                 <p className="text-xs text-ink-600 mt-1">Performance metrics</p>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl shadow-lg p-6">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg2 shadow-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-blue-500 rounded-xl">
                     <FileCheck size={24} className="text-white" />
@@ -768,7 +768,7 @@ const ProjectDetailPage = () => {
                 <p className="text-xs text-ink-600 mt-1">Assessments completed</p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl shadow-lg p-6">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-lg2 shadow-card p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="p-3 bg-orange-500 rounded-xl">
                     <MessageSquareWarning size={24} className="text-white" />
@@ -781,7 +781,7 @@ const ProjectDetailPage = () => {
             </div>
 
             {/* Indicators Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+            <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
               <div className="p-6 border-b border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <Target className="text-teal-600" size={22} />
@@ -832,9 +832,9 @@ const ProjectDetailPage = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="flex-1">
-                            <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div className="w-full bg-ink-200 rounded-full h-2.5">
                               <div
-                                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-2.5 rounded-full transition-all"
+                                className="bg-navy-900 h-2.5 rounded-full transition-all"
                                 style={{ width: `${Math.min((indicator.current / indicator.target) * 100, 100)}%` }}
                               />
                             </div>
@@ -851,7 +851,7 @@ const ProjectDetailPage = () => {
             </div>
 
             {/* Evaluations Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+            <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
               <div className="p-6 border-b border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <FileCheck className="text-blue-600" size={22} />
@@ -902,7 +902,7 @@ const ProjectDetailPage = () => {
             </div>
 
             {/* Complaints Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+            <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
               <div className="p-6 border-b border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <MessageSquareWarning className="text-orange-600" size={22} />
@@ -967,7 +967,7 @@ const ProjectDetailPage = () => {
         {activeTab === 'compliance' && (
           <div className="space-y-6">
             {/* Compliance Overview */}
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-2xl shadow-lg p-6">
+            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-lg2 shadow-card p-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-4 bg-purple-500 rounded-xl">
                   <Shield size={32} className="text-white" />
@@ -1014,7 +1014,7 @@ const ProjectDetailPage = () => {
             </div>
 
             {/* Safeguarding Incidents */}
-            <div className="bg-white rounded-2xl shadow-lg border border-ink-100">
+            <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
               <div className="p-6 border-b border-ink-100">
                 <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
                   <AlertTriangle className="text-red-600" size={22} />
@@ -1393,7 +1393,7 @@ const GanttChart = ({ tasks }) => {
                     task.status === 'In Progress' ? 'bg-blue-500' :
                     task.status === 'On Hold' ? 'bg-yellow-500' :
                     task.status === 'Cancelled' ? 'bg-red-500' :
-                    'bg-gray-400'
+                    'bg-ink-400'
                   }`}
                   style={{ left: barStyle.left, width: barStyle.width }}
                   title={`${task.title}\nStart: ${task.startDate || '-'}\nDue: ${task.dueDate || '-'}\nProgress: ${task.progress || 0}%`}
@@ -1417,7 +1417,7 @@ const GanttChart = ({ tasks }) => {
         {/* Legend */}
         <div className="mt-6 pt-4 border-t border-ink-100 flex gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-gray-400"></div>
+            <div className="w-4 h-4 rounded bg-ink-400"></div>
             <span className="text-xs text-ink-600">Pending</span>
           </div>
           <div className="flex items-center gap-2">

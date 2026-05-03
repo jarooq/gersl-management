@@ -99,7 +99,7 @@ const AssignCoordinatorModal = ({ isOpen, onClose, orphan, onAssign }) => {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300"
+            className="flex-1 px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300"
           >
             Cancel
           </button>
@@ -109,7 +109,7 @@ const AssignCoordinatorModal = ({ isOpen, onClose, orphan, onAssign }) => {
             className={`flex-1 px-4 py-2 rounded-lg flex items-center justify-center gap-2 ${
               selectedId && !loading
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-300 text-ink-500 cursor-not-allowed'
+                : 'bg-ink-300 text-ink-500 cursor-not-allowed'
             }`}
           >
             <UserPlus size={18} />

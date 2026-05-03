@@ -94,13 +94,13 @@ const SettingsPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-lift relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mb-32" style={{ animationDelay: '1s' }}></div>
 
         <div className="relative z-10">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg2 flex items-center justify-center">
               <SettingsIcon className="w-8 h-8 animate-spin-slow" />
             </div>
             <div>
@@ -163,7 +163,7 @@ const SettingsPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="border-b border-ink-100">
           <div className="flex">
             {tabs.map((tab) => {
@@ -365,7 +365,7 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                     user.status === 'Active' ? 'bg-green-100 text-green-800' :
-                    user.status === 'Inactive' ? 'bg-ink-100 text-gray-800' :
+                    user.status === 'Inactive' ? 'bg-ink-100 text-ink-800' :
                     'bg-red-100 text-red-800'
                   }`}>
                     {user.status}
@@ -546,7 +546,7 @@ const RolesTab = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl p-6 text-white">
+      <div className="bg-navy-900 rounded-xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold flex items-center gap-3">
@@ -567,7 +567,7 @@ const RolesTab = ({
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Sidebar - Role List */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-lg p-4">
+          <div className="bg-white rounded-xl shadow-card p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-ink-900">Roles</h3>
               <button
@@ -592,7 +592,7 @@ const RolesTab = ({
                       }}
                       className={`w-full text-left px-4 py-3 rounded-lg transition-all cursor-pointer ${
                         selectedRole?.id === role.id
-                          ? 'bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-lg'
+                          ? 'bg-navy-900 text-white shadow-card'
                           : 'hover:bg-ink-50 text-ink-700'
                       }`}
                     >
@@ -664,7 +664,7 @@ const RolesTab = ({
 
         {/* Right Side - Permissions Editor */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-card p-6">
             {/* Role Header */}
             {selectedRole ? (
               <>
@@ -697,7 +697,7 @@ const RolesTab = ({
                   <>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-colors flex items-center gap-2"
                     >
                       <X size={16} />
                       Cancel
@@ -728,11 +728,11 @@ const RolesTab = ({
                 );
 
                 return (
-                  <div key={groupName} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-ink-100">
+                  <div key={groupName} className="bg-gradient-to-br from-ink-50 to-ink-100 rounded-xl p-5 border border-ink-100">
                     {/* Group Header */}
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-bold text-ink-900 flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${someSelected ? 'bg-green-500' : 'bg-gray-300'}`} />
+                        <div className={`w-2 h-2 rounded-full ${someSelected ? 'bg-green-500' : 'bg-ink-300'}`} />
                         {groupName}
                         <span className="text-xs font-normal text-ink-500">
                           ({groupPermissions.filter(perm => activePerms.some(p => p.id === perm.id)).length}/{groupPermissions.length})
@@ -795,7 +795,7 @@ const RolesTab = ({
             </>
             ) : (
               <div className="text-center py-16">
-                <Shield className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <Shield className="w-16 h-16 mx-auto mb-4 text-ink-300" />
                 <h3 className="text-lg font-semibold text-ink-900 mb-2">Select a Role</h3>
                 <p className="text-ink-500">Choose a role from the list to view and manage its permissions</p>
               </div>

@@ -288,7 +288,7 @@ const ReportsPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl p-8 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
 
@@ -315,7 +315,7 @@ const ReportsPage = () => {
               </button>
               <button
                 onClick={() => setShowGenerateModal(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 rounded-lg hover:shadow-xl transition-all font-semibold"
+                className="flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 rounded-lg hover:shadow-lift transition-all font-semibold"
               >
                 <Plus size={20} />
                 Generate Report
@@ -329,7 +329,7 @@ const ReportsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center">
               <FileText className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">All Time</span>
@@ -340,7 +340,7 @@ const ReportsPage = () => {
 
         <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center">
               <TrendingUp className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">This Month</span>
@@ -351,7 +351,7 @@ const ReportsPage = () => {
 
         <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-purple-50 border border-purple-200 rounded-xl flex items-center justify-center">
               <Clock className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Upcoming</span>
@@ -362,7 +362,7 @@ const ReportsPage = () => {
 
         <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-6 hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-orange-50 border border-orange-200 rounded-xl flex items-center justify-center">
               <Download className="text-white" size={24} />
             </div>
             <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Total</span>
@@ -565,7 +565,7 @@ const ReportsPage = () => {
 
                 {reports.length === 0 ? (
                   <div className="text-center py-12">
-                    <FileText className="mx-auto text-gray-300 mb-4" size={64} />
+                    <FileText className="mx-auto text-ink-300 mb-4" size={64} />
                     <h3 className="text-lg font-semibold text-ink-900 mb-2">No Reports Yet</h3>
                     <p className="text-ink-600 mb-4">Generate your first report to get started</p>
                     <button
@@ -705,7 +705,7 @@ const ReportsPage = () => {
               {/* Reports List */}
               {reports.length === 0 ? (
                 <div className="text-center py-16 bg-ink-50 rounded-xl">
-                  <FileText className="mx-auto text-gray-300 mb-4" size={80} />
+                  <FileText className="mx-auto text-ink-300 mb-4" size={80} />
                   <h3 className="text-xl font-bold text-ink-900 mb-2">No Reports Found</h3>
                   <p className="text-ink-600 mb-6">Start by generating your first report</p>
                   <button
@@ -800,7 +800,7 @@ const ReportsPage = () => {
                 {/* Source Selection */}
                 <div className="lg:col-span-1">
                   <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Source</h3>
+                    <h3 className="text-lg font-semibold text-ink-800 mb-4">Select Source</h3>
 
                     {/* Source Type Toggle */}
                     <div className="mb-4">
@@ -816,7 +816,7 @@ const ReportsPage = () => {
                           className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
                             sourceType === 'project'
                               ? 'bg-indigo-600 text-white'
-                              : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
+                              : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
                           }`}
                         >
                           Project
@@ -829,7 +829,7 @@ const ReportsPage = () => {
                           className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
                             sourceType === 'proposal'
                               ? 'bg-indigo-600 text-white'
-                              : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
+                              : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
                           }`}
                         >
                           Proposal
@@ -855,7 +855,7 @@ const ReportsPage = () => {
                                     : 'border-ink-100 hover:border-indigo-300'
                                 }`}
                               >
-                                <p className="font-medium text-sm text-gray-800">{project.name}</p>
+                                <p className="font-medium text-sm text-ink-800">{project.name}</p>
                                 {project.donor && (
                                   <p className="text-xs text-ink-600 mt-1">{project.donor}</p>
                                 )}
@@ -888,7 +888,7 @@ const ReportsPage = () => {
                                     : 'border-ink-100 hover:border-indigo-300'
                                 }`}
                               >
-                                <p className="font-medium text-sm text-gray-800">{proposal.title}</p>
+                                <p className="font-medium text-sm text-ink-800">{proposal.title}</p>
                                 {proposal.donor && (
                                   <p className="text-xs text-ink-600 mt-1">{proposal.donor}</p>
                                 )}
@@ -945,7 +945,7 @@ const ReportsPage = () => {
 
               {scheduledReports.length === 0 ? (
                 <div className="text-center py-16 bg-ink-50 rounded-xl">
-                  <Clock className="mx-auto text-gray-300 mb-4" size={80} />
+                  <Clock className="mx-auto text-ink-300 mb-4" size={80} />
                   <h3 className="text-xl font-bold text-ink-900 mb-2">No Scheduled Reports</h3>
                   <p className="text-ink-600 mb-6">Set up automated report generation</p>
                   <button
@@ -999,7 +999,7 @@ const ReportsPage = () => {
       {/* Generate Report Modal */}
       {showGenerateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Generate New Report</h2>
@@ -1093,7 +1093,7 @@ const ReportsPage = () => {
                         className={`p-3 border-2 rounded-lg font-semibold transition-all ${
                           selectedFormat === format
                             ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
-                            : 'border-ink-200 hover:border-gray-400'
+                            : 'border-ink-200 hover:border-ink-400'
                         }`}
                       >
                         {format}
@@ -1139,7 +1139,7 @@ const ReportsPage = () => {
       {/* Schedule Report Modal */}
       {showScheduleModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Schedule Automated Report</h2>

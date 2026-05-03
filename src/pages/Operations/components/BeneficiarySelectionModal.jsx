@@ -218,9 +218,9 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
+        <div className="bg-navy-900 text-white p-6">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-2xl font-bold mb-1">Select Beneficiaries</h2>
@@ -290,7 +290,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
           <div className="flex items-center justify-between">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition font-semibold"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition font-semibold"
             >
               <Filter size={18} />
               Advanced Filters
@@ -408,7 +408,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
             </button>
             <button
               onClick={clearSelection}
-              className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold text-sm"
+              className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold text-sm"
             >
               Clear Selection
             </button>
@@ -448,7 +448,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                       isExisting
                         ? 'border-ink-200 bg-ink-100 opacity-60 cursor-not-allowed'
                         : isNewlyRegistered
-                        ? 'border-green-500 bg-green-50 shadow-lg'
+                        ? 'border-green-500 bg-green-50 shadow-card'
                         : isSelected
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-ink-100 hover:border-blue-300'
@@ -460,7 +460,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                         <h3 className="font-bold text-ink-900 flex items-center gap-2">
                           {beneficiary.full_name}
                           {isExisting && (
-                            <span className="text-xs bg-gray-200 text-ink-700 px-2 py-0.5 rounded-full">
+                            <span className="text-xs bg-ink-200 text-ink-700 px-2 py-0.5 rounded-full">
                               Already Added
                             </span>
                           )}
@@ -524,7 +524,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
           <button
             onClick={handleSubmit}
             disabled={loading || selectedBeneficiaries.length === 0}
-            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:shadow-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {loading ? (
               <>

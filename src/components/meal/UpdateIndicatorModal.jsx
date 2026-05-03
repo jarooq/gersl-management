@@ -45,9 +45,9 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-cyan-700 text-white p-6 rounded-t-2xl">
+        <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">Update Indicator</h2>
@@ -65,32 +65,32 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Indicator Info */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="bg-ink-50 border border-ink-200 rounded-lg p-4">
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <TrendingUp className="text-blue-600" size={20} />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-gray-600 mb-1">{indicator.code}</p>
-                <h3 className="font-bold text-gray-900 mb-2">{indicator.name}</h3>
+                <p className="text-xs font-semibold text-ink-600 mb-1">{indicator.code}</p>
+                <h3 className="font-bold text-ink-900 mb-2">{indicator.name}</h3>
                 {indicator.description && (
-                  <p className="text-sm text-gray-600">{indicator.description}</p>
+                  <p className="text-sm text-ink-600">{indicator.description}</p>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 pt-3 border-t border-gray-200">
+            <div className="grid grid-cols-3 gap-4 pt-3 border-t border-ink-200">
               <div>
-                <p className="text-xs text-gray-600 mb-1">Baseline</p>
-                <p className="font-bold text-gray-900">{indicator.baseline} {indicator.unit}</p>
+                <p className="text-xs text-ink-600 mb-1">Baseline</p>
+                <p className="font-bold text-ink-900">{indicator.baseline} {indicator.unit}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 mb-1">Current</p>
+                <p className="text-xs text-ink-600 mb-1">Current</p>
                 <p className="font-bold text-blue-600">{indicator.current} {indicator.unit}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 mb-1">Target</p>
-                <p className="font-bold text-gray-900">{indicator.target} {indicator.unit}</p>
+                <p className="text-xs text-ink-600 mb-1">Target</p>
+                <p className="font-bold text-ink-900">{indicator.target} {indicator.unit}</p>
               </div>
             </div>
           </div>
@@ -98,7 +98,7 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
           {/* Update Form */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 New Measurement Value *
               </label>
               <div className="relative">
@@ -111,11 +111,11 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
                   step="0.01"
                   min="0"
                 />
-                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-ink-500 font-medium">
                   {indicator.unit}
                 </span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-500 mt-1">
                 Enter the latest measurement for this indicator
               </p>
             </div>
@@ -123,18 +123,18 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
             {/* Progress Visualization */}
             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-semibold text-gray-700">Progress to Target</p>
+                <p className="text-sm font-semibold text-ink-700">Progress to Target</p>
                 <p className={`text-2xl font-bold ${getProgressColor()}`}>
                   {progress.toFixed(1)}%
                 </p>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-ink-200 rounded-full h-3 overflow-hidden">
                 <div
                   className={`h-full ${getProgressBarColor()} transition-all duration-500 rounded-full`}
                   style={{ width: `${Math.min(progress, 100)}%` }}
                 />
               </div>
-              <div className="flex justify-between mt-2 text-xs text-gray-600">
+              <div className="flex justify-between mt-2 text-xs text-ink-600">
                 <span>Baseline: {indicator.baseline}</span>
                 <span>Current: {formData.current}</span>
                 <span>Target: {indicator.target}</span>
@@ -143,7 +143,7 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
 
             {/* Status Update */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Status *
               </label>
               <select
@@ -160,7 +160,7 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-ink-700 mb-2">
                 Notes (Optional)
               </label>
               <textarea
@@ -191,10 +191,10 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 rounded-b-2xl flex justify-end gap-3">
+        <div className="bg-ink-50 border-t border-ink-200 p-4 rounded-b-2xl flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-all"
+            className="px-6 py-2 bg-white border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition-all"
           >
             Cancel
           </button>
@@ -203,8 +203,8 @@ const UpdateIndicatorModal = ({ indicator, onClose }) => {
             disabled={submitting || !formData.current}
             className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
               submitting || !formData.current
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white hover:from-blue-700 hover:to-cyan-800'
+                ? 'bg-ink-300 text-ink-500 cursor-not-allowed'
+                : 'bg-navy-900 text-white '
             }`}
           >
             <Save size={18} />

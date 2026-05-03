@@ -111,7 +111,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
   const getFileIcon = (type) => {
     if (type.startsWith('image/')) return <Image size={20} className="text-blue-600" />;
     if (type === 'application/pdf') return <FileText size={20} className="text-red-600" />;
-    return <File size={20} className="text-gray-600" />;
+    return <File size={20} className="text-ink-600" />;
   };
 
   const formatFileSize = (bytes) => {
@@ -177,10 +177,10 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-xl shadow-pop w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className={`${isApproved ? 'bg-gradient-to-r from-green-600 to-emerald-600' : 'bg-gradient-to-r from-red-600 to-orange-600'} text-white p-6 flex items-center justify-between`}>
+        <div className={`${isApproved ? 'bg-navy-900' : 'bg-navy-900'} text-white p-6 flex items-center justify-between`}>
           <div className="flex items-center gap-3">
             {isApproved ? <CheckCircle size={32} /> : <XCircle size={32} />}
             <div>
@@ -224,7 +224,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
 
           {/* Response Date */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               <Calendar size={16} className="inline mr-1" />
               Donor Response Date *
             </label>
@@ -233,26 +233,26 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
               value={formData.donorResponseDate}
               onChange={(e) => handleInputChange('donorResponseDate', e.target.value)}
               max={new Date().toISOString().split('T')[0]} // Can't be in future
-              className={`w-full px-4 py-2 border ${errors.donorResponseDate ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.donorResponseDate ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
               required
             />
             {errors.donorResponseDate && (
               <p className="text-xs text-red-600 mt-1">{errors.donorResponseDate}</p>
             )}
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               When did the donor communicate their decision?
             </p>
           </div>
 
           {/* Communication Channel */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               Communication Channel *
             </label>
             <select
               value={formData.communicationChannel}
               onChange={(e) => handleInputChange('communicationChannel', e.target.value)}
-              className={`w-full px-4 py-2 border ${errors.communicationChannel ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.communicationChannel ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
               required
             >
               <option value="">Select channel...</option>
@@ -263,14 +263,14 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
             {errors.communicationChannel && (
               <p className="text-xs text-red-600 mt-1">{errors.communicationChannel}</p>
             )}
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               How did the donor communicate their decision?
             </p>
           </div>
 
           {/* Donor Contact Person */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               Donor Contact Person *
             </label>
             <input
@@ -278,20 +278,20 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
               value={formData.donorContactPerson}
               onChange={(e) => handleInputChange('donorContactPerson', e.target.value)}
               placeholder="e.g., John Smith, Programme Manager"
-              className={`w-full px-4 py-2 border ${errors.donorContactPerson ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.donorContactPerson ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
               required
             />
             {errors.donorContactPerson && (
               <p className="text-xs text-red-600 mt-1">{errors.donorContactPerson}</p>
             )}
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               Who from the donor organization communicated this decision?
             </p>
           </div>
 
           {/* Comments/Explanation */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               <MessageSquare size={16} className="inline mr-1" />
               Comments / Explanation *
             </label>
@@ -302,14 +302,14 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
                 ? "E.g., Donor approved via WhatsApp on [date]. They expressed strong interest in the education component and confirmed funding will be available in Q2. Next steps: Sign MOU and begin project initiation."
                 : "E.g., Donor rejected via email on [date]. Reason stated: 'Project does not align with our current funding priorities for health sector.' Feedback: Consider reframing proposal to emphasize health outcomes and resubmit next funding cycle."
               }
-              className={`w-full px-4 py-2 border ${errors.comments ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.comments ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
               rows={5}
               required
             />
             {errors.comments && (
               <p className="text-xs text-red-600 mt-1">{errors.comments}</p>
             )}
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-500 mt-1">
               {formData.comments.length}/1000 characters
               {isApproved
                 ? " - Include any conditions, next steps, or special notes from the donor"
@@ -320,11 +320,11 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
 
           {/* File Upload */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-ink-700 mb-2">
               <Paperclip size={16} className="inline mr-1" />
               Attach Evidence (Optional)
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+            <div className="border-2 border-dashed border-ink-300 rounded-lg p-6 text-center hover:border-indigo-500 transition">
               <input
                 type="file"
                 id="file-upload"
@@ -338,11 +338,11 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
                 htmlFor="file-upload"
                 className="cursor-pointer flex flex-col items-center gap-2"
               >
-                <Upload size={32} className="text-gray-400" />
-                <p className="text-sm text-gray-600">
+                <Upload size={32} className="text-ink-400" />
+                <p className="text-sm text-ink-600">
                   Click to upload or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-ink-500">
                   Screenshots, emails, PDFs, or documents (max 5MB each)
                 </p>
               </label>
@@ -354,17 +354,17 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
             {/* Attached Files */}
             {formData.attachments.length > 0 && (
               <div className="mt-4 space-y-2">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-ink-700">
                   Attached Files ({formData.attachments.length})
                 </p>
                 {formData.attachments.map((attachment, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div key={index} className="flex items-center gap-3 p-3 bg-ink-50 rounded-lg border border-ink-200">
                     {getFileIcon(attachment.type)}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-ink-900 truncate">
                         {attachment.name}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-ink-500">
                         {formatFileSize(attachment.size)}
                       </p>
                     </div>
@@ -392,14 +392,14 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center gap-3">
-          <p className="text-xs text-gray-600">
+        <div className="bg-ink-50 border-t border-ink-200 p-4 flex justify-between items-center gap-3">
+          <p className="text-xs text-ink-600">
             * Required fields must be completed
           </p>
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+              className="px-6 py-2 bg-white border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold transition"
               disabled={submitting}
             >
               Cancel
@@ -407,7 +407,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={`flex items-center gap-2 px-6 py-2 ${isApproved ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' : 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'} text-white rounded-lg transition font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`flex items-center gap-2 px-6 py-2 ${isApproved ? 'bg-navy-900 ' : 'bg-navy-900 '} text-white rounded-lg transition font-semibold shadow-card hover:shadow-lift disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {submitting ? (
                 <>

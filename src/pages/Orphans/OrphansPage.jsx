@@ -161,7 +161,7 @@ const OrphansPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-pink-500 via-pink-600 to-rose-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-pink-500 via-pink-600 to-rose-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -178,14 +178,14 @@ const OrphansPage = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowBulkUpload(true)}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <Upload size={18} />
                 Bulk Upload
               </button>
               <button
                 onClick={() => setShowNeedsReport(true)}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <ClipboardList size={18} />
                 Needs Report
@@ -195,7 +195,7 @@ const OrphansPage = () => {
                   setOrphanToEdit(null);
                   setShowAddForm(true);
                 }}
-                className="btn-primary bg-white text-pink-600 hover:bg-pink-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white text-pink-600 hover:bg-pink-50 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <Plus size={18} />
                 Add Orphan
@@ -325,7 +325,7 @@ const OrphansPage = () => {
                 const count = orphans.filter(o => o.district === district).length;
                 const percent = stats.totalOrphans > 0 ? Math.round((count / stats.totalOrphans) * 100) : 0;
                 return (
-                  <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium text-ink-700">{district}</span>
                       <span className="text-xs font-bold text-ink-900">{count} children</span>
@@ -418,7 +418,7 @@ const OrphansPage = () => {
                 { range: 'LKR 15,000 - 20,000', count: range3, percent: Math.round((range3 / totalWithStipend) * 100), color: 'from-orange-500 to-amber-600' },
                 { range: 'LKR 20,000+', count: range4, percent: Math.round((range4 / totalWithStipend) * 100), color: 'from-purple-500 to-indigo-600' }
               ].filter(item => item.count > 0).map((item, index) => (
-                <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-ink-700">{item.range}</span>
                     <span className="text-xs font-bold text-ink-900">{item.count} children</span>
@@ -492,8 +492,8 @@ const OrphansPage = () => {
                     <div
                       className={`h-1.5 rounded-full transition-all duration-500 ${
                         item.status === 'above'
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                          : 'bg-gradient-to-r from-yellow-500 to-orange-600'
+                          ? 'bg-navy-900'
+                          : 'bg-navy-900'
                       }`}
                       style={{ width: `${item.value}%` }}
                     ></div>
@@ -541,7 +541,7 @@ const OrphansPage = () => {
           {filteredOrphans.map((orphan, index) => (
             <div
               key={orphan.id}
-              className="animate-slide-up"
+              className=""
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               {viewMode === 'grid' ? (
@@ -563,7 +563,7 @@ const OrphansPage = () => {
           ))}
         </div>
       ) : (
-        <div className="card-modern text-center py-16 animate-scale-in">
+        <div className="card-modern text-center py-16 ">
           <div className="flex flex-col items-center gap-4">
             <div className="bg-ink-100 p-6 rounded-full">
               <Heart className="w-12 h-12 text-ink-400" />

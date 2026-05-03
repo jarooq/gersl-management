@@ -123,7 +123,7 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 p-6 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
@@ -170,7 +170,7 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
 
           {/* Upload Section */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <h3 className="font-semibold text-ink-900 mb-3 flex items-center gap-2">
               <div className="w-2 h-2 bg-green-600 rounded-full"></div>
               Step 2: Upload Your File
             </h3>
@@ -180,7 +180,7 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
               className={`border-2 border-dashed rounded-xl p-8 text-center transition ${
                 dragActive
                   ? 'border-green-500 bg-green-50'
-                  : 'border-gray-300 hover:border-green-400 hover:bg-gray-50'
+                  : 'border-ink-300 hover:border-green-400 hover:bg-ink-50'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -197,11 +197,11 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
 
               {!file ? (
                 <>
-                  <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-lg font-semibold text-gray-700 mb-2">
+                  <Upload className="w-16 h-16 text-ink-400 mx-auto mb-4" />
+                  <p className="text-lg font-semibold text-ink-700 mb-2">
                     Drag & drop your file here
                   </p>
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-sm text-ink-500 mb-4">
                     or click to browse (Excel or CSV files only)
                   </p>
                   <button
@@ -215,8 +215,8 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
                 <div className="space-y-4">
                   <FileSpreadsheet className="w-16 h-16 text-green-600 mx-auto" />
                   <div>
-                    <p className="font-semibold text-gray-900">{file.name}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-semibold text-ink-900">{file.name}</p>
+                    <p className="text-sm text-ink-500">
                       {(file.size / 1024).toFixed(2)} KB
                     </p>
                   </div>
@@ -239,7 +239,7 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
           {/* Validation Results */}
           {validationResult && (
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+              <h3 className="font-semibold text-ink-900 flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-600 rounded-full"></div>
                 Validation Results
               </h3>
@@ -320,18 +320,18 @@ const BulkUploadModal = ({ isOpen, onClose, type, onUpload, title }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
+        <div className="flex justify-end gap-3 p-6 border-t border-ink-200">
           <button
             onClick={handleClose}
             disabled={uploading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium disabled:opacity-50"
+            className="px-6 py-2 border border-ink-300 text-ink-700 rounded-lg hover:bg-ink-50 transition font-medium disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleUpload}
             disabled={!validationResult || !validationResult.isValid || uploading}
-            className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-navy-900 text-white rounded-lg transition font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? (
               <>

@@ -167,7 +167,7 @@ const OnboardingPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-red-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-orange-500 via-orange-600 to-red-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -185,7 +185,7 @@ const OnboardingPage = () => {
 
       {/* Stats Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-primary-50 border border-primary-200 text-primary-700 rounded-md flex items-center justify-center">
               <UserPlus size={24} />
@@ -195,7 +195,7 @@ const OnboardingPage = () => {
           <p className="text-sm text-ink-600">Total Onboarding</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-mission-100 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
               <Clock size={24} />
@@ -205,7 +205,7 @@ const OnboardingPage = () => {
           <p className="text-sm text-ink-600">In Progress</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-success-50 border border-success-600/20 text-success-700 rounded-md flex items-center justify-center">
               <CheckCircle size={24} />
@@ -215,7 +215,7 @@ const OnboardingPage = () => {
           <p className="text-sm text-ink-600">Completed</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-ink-100">
+        <div className="bg-white rounded-lg2 shadow-sm p-6 border border-ink-100">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center">
               <TrendingUp size={24} />
@@ -276,7 +276,7 @@ const OnboardingPage = () => {
       </div>
 
       {/* Onboarding Records */}
-      <div className="bg-white rounded-2xl shadow-sm border border-ink-100">
+      <div className="bg-white rounded-lg2 shadow-sm border border-ink-100">
         <div className="p-6 border-b border-ink-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-ink-900">Onboarding Records ({filteredRecords.length})</h2>
           <p className="text-sm text-ink-600">Manage employee onboarding process</p>
@@ -305,7 +305,7 @@ const OnboardingPage = () => {
               <div key={record.id} className="border border-ink-100 rounded-xl p-6 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-orange-50 border border-orange-200 text-white rounded-xl flex items-center justify-center">
                       <User size={24} />
                     </div>
                     <div>
@@ -345,9 +345,9 @@ const OnboardingPage = () => {
 
                 {/* Progress Bar */}
                 <div className="mb-4">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-ink-200 rounded-full h-2">
                     <div
-                      className="bg-gradient-to-r from-orange-500 to-red-600 h-2 rounded-full transition-all"
+                      className="bg-navy-900 h-2 rounded-full transition-all"
                       style={{ width: `${record.progress || 0}%` }}
                     />
                   </div>
@@ -397,7 +397,7 @@ const OnboardingPage = () => {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{editingRecord ? 'Edit Onboarding' : 'New Onboarding'}</h2>
@@ -481,7 +481,7 @@ const OnboardingPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleSaveOnboarding}
-                  className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition-all shadow-md hover:shadow-lg active:scale-95"
+                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   {editingRecord ? 'Update Onboarding' : 'Create Onboarding'}
                 </button>
@@ -490,7 +490,7 @@ const OnboardingPage = () => {
                     setShowModal(false);
                     setEditingRecord(null);
                   }}
-                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all"
+                  className="flex-1 bg-ink-100 text-ink-700 px-6 py-3 rounded-lg font-semibold hover:bg-ink-200 transition-all"
                 >
                   Cancel
                 </button>

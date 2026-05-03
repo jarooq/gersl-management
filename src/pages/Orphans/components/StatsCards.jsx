@@ -76,7 +76,7 @@ const StatsCards = ({ stats }) => {
                   stat.trend === 'up' ? 'bg-green-500' :
                   stat.trend === 'down' ? 'bg-red-500' :
                   'bg-yellow-500'
-                } animate-pulse`}></div>
+                } `}></div>
                 <span className={`text-xs font-semibold ${
                   stat.trend === 'up' ? 'text-green-600' :
                   stat.trend === 'down' ? 'text-red-600' :

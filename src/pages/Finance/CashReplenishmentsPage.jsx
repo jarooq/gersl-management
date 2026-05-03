@@ -9,7 +9,7 @@ const STATUS_BADGE = {
   Approved:  'bg-blue-100 text-blue-700',
   Rejected:  'bg-red-100 text-red-700',
   Disbursed: 'bg-green-100 text-green-700',
-  Cancelled: 'bg-gray-200 text-ink-600'
+  Cancelled: 'bg-ink-200 text-ink-600'
 };
 
 const fmt = (v, currency = 'LKR') => {

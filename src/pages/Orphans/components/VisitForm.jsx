@@ -1278,9 +1278,9 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-t-2xl flex-shrink-0 z-10">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-2xl flex-shrink-0 z-10">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">Record Visit Log</h2>
@@ -1297,7 +1297,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
         </div>
 
         {/* Section Navigation */}
-        <div className="bg-ink-50 border-b border-ink-100 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 flex-shrink-0">
+        <div className="bg-ink-50 border-b border-ink-100 overflow-x-auto scrollbar-thin scrollbar-thumb-ink-300 flex-shrink-0">
           <div className="flex min-w-max p-2 gap-2">
             {sections.map((section) => {
               const Icon = section.icon;
@@ -1333,13 +1333,13 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-6 py-3 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-semibold"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-semibold shadow-md"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md"
             >
               <Save size={20} />
               Save Visit Log

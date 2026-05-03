@@ -568,7 +568,7 @@ const Dashboard = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Project Timeline Chart */}
-        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+        <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -598,7 +598,7 @@ const Dashboard = () => {
         </div>
 
         {/* Budget by Programme */}
-        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+        <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -644,7 +644,7 @@ const Dashboard = () => {
 
       {/* Campaign Progress Chart */}
       {campaignProgressData.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+        <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
@@ -681,7 +681,7 @@ const Dashboard = () => {
       {/* Finance Overview Section */}
       <div className="bg-white border border-ink-100 rounded-lg2 p-6 shadow-card">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-green-500 rounded-xl shadow-lg">
+          <div className="p-3 bg-green-500 rounded-xl shadow-card">
             <Wallet className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -883,7 +883,7 @@ const Dashboard = () => {
       <div className="bg-white border border-ink-100 rounded-lg2 p-6 shadow-card">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-indigo-500 rounded-xl shadow-lg">
+            <div className="p-3 bg-indigo-500 rounded-xl shadow-card">
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -1019,7 +1019,7 @@ const Dashboard = () => {
       {/* Activity Feed & Urgent Items */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+        <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
               <Activity className="text-blue-600" size={22} />
@@ -1058,7 +1058,7 @@ const Dashboard = () => {
         </div>
 
         {/* Urgent Items */}
-        <div className="bg-white rounded-2xl shadow-lg border border-ink-100 p-6">
+        <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
               <Bell className="text-orange-600" size={22} />

@@ -237,7 +237,7 @@ const JobPostingsPage = () => {
   return (
     <div className="p-8 bg-ink-50 min-h-screen">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-purple-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-8">
+      <div className="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-purple-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -263,7 +263,7 @@ const JobPostingsPage = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Postings</p>
@@ -288,7 +288,7 @@ const JobPostingsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Open Positions</p>
@@ -313,7 +313,7 @@ const JobPostingsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Applications</p>
@@ -338,7 +338,7 @@ const JobPostingsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all group cursor-pointer" style={{ animationDelay: '0.3s' }}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Draft Postings</p>
@@ -364,7 +364,7 @@ const JobPostingsPage = () => {
       </div>
 
       {/* Controls Bar */}
-      <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-card p-4 mb-6">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-3 items-center flex-1 flex-wrap">
             <div className="relative flex-1 max-w-md">
@@ -403,14 +403,14 @@ const JobPostingsPage = () => {
           <div className="flex gap-3">
             <button
               onClick={exportToCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-colors"
             >
               <Download className="w-5 h-5" />
               Export
             </button>
             <button
               onClick={handleNewJob}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white rounded-lg hover:from-fuchsia-700 hover:to-purple-700 transition-all shadow-md"
+              className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md"
             >
               <Plus className="w-5 h-5" />
               New Job Posting
@@ -420,7 +420,7 @@ const JobPostingsPage = () => {
       </div>
 
       {/* Job Postings Table */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-fuchsia-100 to-purple-100">
@@ -438,7 +438,7 @@ const JobPostingsPage = () => {
               {filteredJobs.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center text-ink-500">
-                    <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <Briefcase className="w-12 h-12 mx-auto mb-3 text-ink-300" />
                     <p className="text-lg font-medium">No job postings found</p>
                     <p className="text-sm">Create your first job posting to start hiring</p>
                   </td>
@@ -451,7 +451,7 @@ const JobPostingsPage = () => {
                     <tr key={job.id} className="hover:bg-fuchsia-50 transition-colors">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-semibold text-gray-800">{job.title}</p>
+                          <p className="font-semibold text-ink-800">{job.title}</p>
                           <p className="text-sm text-ink-500">{job.jobCode}</p>
                           {job.applications && job.applications.length > 0 && (
                             <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
@@ -462,7 +462,7 @@ const JobPostingsPage = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-gray-800 flex items-center gap-1">
+                        <p className="text-sm text-ink-800 flex items-center gap-1">
                           <Building2 className="w-4 h-4 text-ink-500" />
                           {job.department}
                         </p>
@@ -479,7 +479,7 @@ const JobPostingsPage = () => {
                         </p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="font-bold text-gray-800">{job.numberOfPositions}</p>
+                        <p className="font-bold text-ink-800">{job.numberOfPositions}</p>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 w-fit ${statusBadge.bgColor} ${statusBadge.color}`}>
@@ -526,7 +526,7 @@ const JobPostingsPage = () => {
       {/* Create/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">
@@ -782,7 +782,7 @@ const JobPostingsPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white rounded-lg hover:from-fuchsia-700 hover:to-purple-700 font-semibold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Saving...' : editingJob ? 'Update Job Posting' : 'Create Job Posting'}
                 </button>
@@ -795,7 +795,7 @@ const JobPostingsPage = () => {
       {/* View Modal */}
       {showViewModal && viewingJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{viewingJob.title}</h2>
@@ -812,11 +812,11 @@ const JobPostingsPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-fuchsia-50 p-4 rounded-lg">
                   <p className="text-sm text-ink-600 mb-1">Job Code</p>
-                  <p className="text-lg font-bold text-gray-800">{viewingJob.jobCode}</p>
+                  <p className="text-lg font-bold text-ink-800">{viewingJob.jobCode}</p>
                 </div>
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="text-sm text-ink-600 mb-1">Department</p>
-                  <p className="text-lg font-bold text-gray-800">{viewingJob.department}</p>
+                  <p className="text-lg font-bold text-ink-800">{viewingJob.department}</p>
                 </div>
               </div>
 
@@ -838,11 +838,11 @@ const JobPostingsPage = () => {
                     <MapPin className="w-4 h-4" />
                     Location
                   </p>
-                  <p className="font-semibold text-gray-800">{viewingJob.location}</p>
+                  <p className="font-semibold text-ink-800">{viewingJob.location}</p>
                 </div>
                 <div>
                   <p className="text-sm text-ink-600 mb-1">Positions</p>
-                  <p className="font-semibold text-gray-800">{viewingJob.numberOfPositions}</p>
+                  <p className="font-semibold text-ink-800">{viewingJob.numberOfPositions}</p>
                 </div>
                 {viewingJob.salaryRange && (
                   <div className="col-span-2">
@@ -850,7 +850,7 @@ const JobPostingsPage = () => {
                       <DollarSign className="w-4 h-4" />
                       Salary Range
                     </p>
-                    <p className="font-semibold text-gray-800">{viewingJob.salaryRange}</p>
+                    <p className="font-semibold text-ink-800">{viewingJob.salaryRange}</p>
                   </div>
                 )}
               </div>
@@ -878,7 +878,7 @@ const JobPostingsPage = () => {
                 {viewingJob.experienceRequired && (
                   <div>
                     <p className="text-sm text-ink-600 mb-1">Experience Required</p>
-                    <p className="font-semibold text-gray-800">{viewingJob.experienceRequired}</p>
+                    <p className="font-semibold text-ink-800">{viewingJob.experienceRequired}</p>
                   </div>
                 )}
                 {viewingJob.educationRequired && (
@@ -887,7 +887,7 @@ const JobPostingsPage = () => {
                       <GraduationCap className="w-4 h-4" />
                       Education Required
                     </p>
-                    <p className="font-semibold text-gray-800">{viewingJob.educationRequired}</p>
+                    <p className="font-semibold text-ink-800">{viewingJob.educationRequired}</p>
                   </div>
                 )}
               </div>
@@ -909,7 +909,7 @@ const JobPostingsPage = () => {
               <div className="grid grid-cols-2 gap-4 border-t pt-4">
                 <div>
                   <p className="text-sm text-ink-600 mb-1">Posted Date</p>
-                  <p className="font-semibold text-gray-800">{new Date(viewingJob.postedDate).toLocaleDateString()}</p>
+                  <p className="font-semibold text-ink-800">{new Date(viewingJob.postedDate).toLocaleDateString()}</p>
                 </div>
                 {viewingJob.applicationDeadline && (
                   <div>
@@ -917,7 +917,7 @@ const JobPostingsPage = () => {
                       <Clock className="w-4 h-4" />
                       Application Deadline
                     </p>
-                    <p className="font-semibold text-gray-800">{new Date(viewingJob.applicationDeadline).toLocaleDateString()}</p>
+                    <p className="font-semibold text-ink-800">{new Date(viewingJob.applicationDeadline).toLocaleDateString()}</p>
                   </div>
                 )}
               </div>
@@ -927,10 +927,10 @@ const JobPostingsPage = () => {
                   <h3 className="font-semibold text-ink-700 mb-3">Contact Information</h3>
                   <div className="space-y-2 text-sm">
                     {viewingJob.contactEmail && (
-                      <p className="text-ink-600">Email: <span className="font-medium text-gray-800">{viewingJob.contactEmail}</span></p>
+                      <p className="text-ink-600">Email: <span className="font-medium text-ink-800">{viewingJob.contactEmail}</span></p>
                     )}
                     {viewingJob.contactPhone && (
-                      <p className="text-ink-600">Phone: <span className="font-medium text-gray-800">{viewingJob.contactPhone}</span></p>
+                      <p className="text-ink-600">Phone: <span className="font-medium text-ink-800">{viewingJob.contactPhone}</span></p>
                     )}
                   </div>
                 </div>

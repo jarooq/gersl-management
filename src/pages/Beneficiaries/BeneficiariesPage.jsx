@@ -219,7 +219,7 @@ const BeneficiariesPage = () => {
   return (
     <div className="space-y-4">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-card relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24" style={{ animationDelay: '1s' }}></div>
         <div className="relative z-10">
@@ -236,21 +236,21 @@ const BeneficiariesPage = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowBulkUpload(true)}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <Upload size={18} />
                 Bulk Upload
               </button>
               <button
                 onClick={() => setShowListGenerator(true)}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <ClipboardList size={18} />
                 Generate List
               </button>
               <button
                 onClick={() => handleClearFilters()}
-                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                className="btn-primary bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white/20 shadow-card flex items-center gap-2 text-sm px-4 py-2"
               >
                 <Download size={18} />
                 Export Data
@@ -258,7 +258,7 @@ const BeneficiariesPage = () => {
               {canCreate && (
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="btn-primary bg-white text-blue-600 hover:bg-blue-50 shadow-lg flex items-center gap-2 text-sm px-4 py-2"
+                  className="btn-primary bg-white text-blue-600 hover:bg-blue-50 shadow-card flex items-center gap-2 text-sm px-4 py-2"
                 >
                   <UserPlus size={18} />
                   Register Beneficiary
@@ -434,7 +434,7 @@ const BeneficiariesPage = () => {
                 }
 
                 return analytics.topDistricts.map((item, index) => (
-                  <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium text-ink-700">{item.district}</span>
                       <span className="text-xs font-bold text-ink-900">{item.count} beneficiaries</span>
@@ -490,7 +490,7 @@ const BeneficiariesPage = () => {
                 return topTypes.map(([type, count], index) => {
                   const percentage = Math.round((count / beneficiaries.length) * 100);
                   return (
-                    <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-medium text-ink-700">{type}</span>
                         <span className="text-xs font-bold text-ink-900">{count} beneficiaries</span>
@@ -550,7 +550,7 @@ const BeneficiariesPage = () => {
                   { range: 'LKR 100,000 - 200,000', count: range3, percent: Math.round((range3 / totalWithSupport) * 100), color: 'from-orange-500 to-amber-600' },
                   { range: 'LKR 200,000+', count: range4, percent: Math.round((range4 / totalWithSupport) * 100), color: 'from-purple-500 to-indigo-600' }
                 ].filter(item => item.count > 0).map((item, index) => (
-                  <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-medium text-ink-700">{item.range}</span>
                       <span className="text-xs font-bold text-ink-900">{item.count} beneficiaries</span>
@@ -628,7 +628,7 @@ const BeneficiariesPage = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 showFilters
                   ? 'bg-blue-600 text-white'
-                  : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
+                  : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
               }`}
             >
               <Filter size={18} />
@@ -639,7 +639,7 @@ const BeneficiariesPage = () => {
               <button
                 onClick={() => setViewMode('table')}
                 className={`p-2 rounded transition-colors ${
-                  viewMode === 'table' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
+                  viewMode === 'table' ? 'bg-white shadow-sm' : 'hover:bg-ink-200'
                 }`}
               >
                 <List size={18} className={viewMode === 'table' ? 'text-blue-600' : 'text-ink-600'} />
@@ -647,7 +647,7 @@ const BeneficiariesPage = () => {
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded transition-colors ${
-                  viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
+                  viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-ink-200'
                 }`}
               >
                 <Grid3x3 size={18} className={viewMode === 'grid' ? 'text-blue-600' : 'text-ink-600'} />

@@ -237,7 +237,7 @@ const ProjectsPage = () => {
                 <h3 className="text-h1 text-ink-900">{stat.value}</h3>
                 <p className="text-xs text-ink-500 mt-1">{stat.subtitle}</p>
               </div>
-              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+              <div className={`bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-card transform group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
                 <stat.icon className="text-white" size={18} />
               </div>
             </div>
@@ -267,7 +267,7 @@ const ProjectsPage = () => {
           </div>
           <div className="space-y-3">
             {[].map((item, index) => (
-              <div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div key={index} className="" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-medium text-ink-700">{item.programme}</span>
                   <span className="text-xs font-bold text-ink-900">${(item.budget / 1000).toFixed(0)}K</span>
@@ -297,7 +297,7 @@ const ProjectsPage = () => {
               { status: 'Active', count: stats.active, percent: stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0, color: 'bg-green-500' },
               { status: 'Planning', count: stats.planning, percent: stats.total > 0 ? Math.round((stats.planning / stats.total) * 100) : 0, color: 'bg-blue-500' },
               { status: 'On Hold', count: stats.onHold || 0, percent: stats.total > 0 ? Math.round(((stats.onHold || 0) / stats.total) * 100) : 0, color: 'bg-yellow-500' },
-              { status: 'Completed', count: stats.completed || 0, percent: stats.total > 0 ? Math.round(((stats.completed || 0) / stats.total) * 100) : 0, color: 'bg-gray-500' },
+              { status: 'Completed', count: stats.completed || 0, percent: stats.total > 0 ? Math.round(((stats.completed || 0) / stats.total) * 100) : 0, color: 'bg-ink-500' },
               { status: 'Closing', count: stats.closing, percent: stats.total > 0 ? Math.round((stats.closing / stats.total) * 100) : 0, color: 'bg-purple-500' }
             ].filter(item => item.count > 0).map((item, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-ink-50 rounded-lg">
@@ -550,8 +550,8 @@ const ProjectsPage = () => {
                   <div
                     className={`h-1.5 rounded-full transition-all duration-500 ${
                       item.value >= item.target
-                        ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                        : 'bg-gradient-to-r from-yellow-500 to-orange-600'
+                        ? 'bg-navy-900'
+                        : 'bg-navy-900'
                     }`}
                     style={{ width: `${item.value}%` }}
                   ></div>

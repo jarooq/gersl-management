@@ -50,7 +50,7 @@ export default function TransferCashModal({ fromAccount, onClose, onSaved }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
+      <div className="bg-white rounded-lg shadow-lift w-full max-w-lg">
         <div className="px-5 py-4 border-b border-ink-100">
           <h2 className="text-lg font-semibold text-ink-900">Transfer cash</h2>
           <p className="text-xs text-ink-500 mt-1">From {fromAccount.name} ({fromAccount.currency} {Number(fromAccount.currentBalance).toLocaleString()})</p>

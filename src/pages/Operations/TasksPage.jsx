@@ -634,7 +634,7 @@ const TasksPage = () => {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
               viewMode === 'list'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             <List size={18} />
@@ -645,7 +645,7 @@ const TasksPage = () => {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
               viewMode === 'kanban'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-ink-100 text-ink-700 hover:bg-gray-200'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             <LayoutGrid size={18} />
@@ -653,7 +653,7 @@ const TasksPage = () => {
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition-all font-semibold">
+          <button className="flex items-center gap-2 px-4 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition-all font-semibold">
             <Filter size={18} />
             Filter
           </button>
@@ -843,9 +843,9 @@ const TasksPage = () => {
                       <span className="text-xs font-semibold text-ink-700">Progress</span>
                       <span className="text-xs font-bold text-indigo-600">{task.progress}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="w-full bg-ink-200 rounded-full h-1.5">
                       <div
-                        className="bg-gradient-to-r from-indigo-500 to-blue-600 h-1.5 rounded-full transition-all duration-500"
+                        className="bg-navy-900 h-1.5 rounded-full transition-all duration-500"
                         style={{ width: `${task.progress}%` }}
                       ></div>
                     </div>
@@ -1138,7 +1138,7 @@ const TasksPage = () => {
       {/* Task Templates Modal */}
       {showTemplates && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="sticky top-0 bg-navy-900 text-white p-5 rounded-t-lg2 z-10">
               <div className="flex justify-between items-center">
@@ -1160,7 +1160,7 @@ const TasksPage = () => {
                 {taskTemplates.map((template) => (
                   <div
                     key={template.id}
-                    className="p-5 border-2 border-ink-100 rounded-xl hover:border-indigo-400 hover:shadow-lg transition-all cursor-pointer group"
+                    className="p-5 border-2 border-ink-100 rounded-xl hover:border-indigo-400 hover:shadow-card transition-all cursor-pointer group"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -1217,7 +1217,7 @@ const TasksPage = () => {
 
                     <button
                       onClick={() => createTaskFromTemplate(template)}
-                      className="mt-4 w-full py-2 bg-gradient-to-r from-indigo-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold flex items-center justify-center gap-2"
+                      className="mt-4 w-full py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center justify-center gap-2"
                     >
                       <Plus size={18} />
                       Create Task from Template
@@ -1243,7 +1243,7 @@ const TasksPage = () => {
       {/* Bulk Delete Confirmation Modal */}
       {showBulkConfirmation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 p-6">
+          <div className="bg-white rounded-lg shadow-pop max-w-md w-full mx-4 p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
                 <AlertCircle className="text-red-600" size={24} />
@@ -1260,7 +1260,7 @@ const TasksPage = () => {
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowBulkConfirmation(false)}
-                className="px-4 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition-colors font-medium"
               >
                 Cancel
               </button>

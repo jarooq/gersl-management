@@ -84,7 +84,7 @@ const ReportsTab = ({ orphan }) => {
         </div>
         <button
           onClick={() => setShowWizard(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition text-sm font-semibold shadow-md"
+          className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition text-sm font-semibold shadow-md"
         >
           <Plus size={18} />
           Generate New Report
@@ -110,7 +110,7 @@ const ReportsTab = ({ orphan }) => {
           <p className="text-ink-600 text-sm mb-6">Create progress reports to share with partners and sponsors</p>
           <button
             onClick={() => setShowWizard(true)}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition text-sm font-semibold shadow-md"
+            className="px-6 py-3 bg-navy-900 text-white rounded-lg transition text-sm font-semibold shadow-md"
           >
             <Plus size={18} className="inline mr-2" />
             Generate First Report
@@ -204,7 +204,7 @@ const ReportCard = ({ report, onDelete, onDownload, onPreview }) => {
   };
 
   return (
-    <div className="bg-white border-2 border-ink-100 rounded-xl p-5 hover:shadow-lg transition-all duration-200">
+    <div className="bg-white border-2 border-ink-100 rounded-xl p-5 hover:shadow-card transition-all duration-200">
       {/* Header */}
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
@@ -278,7 +278,7 @@ const ReportCard = ({ report, onDelete, onDownload, onPreview }) => {
         )}
         <button
           onClick={() => onPreview(report)}
-          className="flex items-center justify-center gap-2 px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium"
+          className="flex items-center justify-center gap-2 px-3 py-2 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 transition text-sm font-medium"
         >
           <Eye size={14} />
           Preview
@@ -324,9 +324,9 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-pop">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-pink-600 to-blue-600 text-white p-6 rounded-t-xl">
+        <div className="sticky top-0 bg-navy-900 text-white p-6 rounded-t-xl">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-2">{getReportTypeLabel(report.reportType)}</h2>
@@ -466,7 +466,7 @@ const ReportPreviewModal = ({ report, orphan, onClose }) => {
         <div className="sticky bottom-0 bg-ink-50 p-6 rounded-b-xl border-t-2 border-ink-100 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-gray-200 text-ink-700 rounded-lg hover:bg-gray-300 transition font-medium"
+            className="px-6 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-medium"
           >
             Close
           </button>

@@ -164,7 +164,7 @@ const TaskComments = ({ taskId }) => {
   return (
     <div className="space-y-4">
       {/* Comments Header */}
-      <div className="flex items-center gap-2 text-gray-700 font-medium">
+      <div className="flex items-center gap-2 text-ink-700 font-medium">
         <MessageCircle size={20} />
         <span>Comments ({comments.length})</span>
       </div>
@@ -172,12 +172,12 @@ const TaskComments = ({ taskId }) => {
       {/* Comments List */}
       <div className="space-y-3 max-h-96 overflow-y-auto">
         {comments.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">
+          <p className="text-ink-500 text-center py-8">
             No comments yet. Be the first to comment!
           </p>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="bg-gray-50 rounded-lg p-4 relative group">
+            <div key={comment.id} className="bg-ink-50 rounded-lg p-4 relative group">
               {/* Comment Header */}
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-3">
@@ -188,13 +188,13 @@ const TaskComments = ({ taskId }) => {
 
                   {/* User Info */}
                   <div>
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-ink-900">
                       {comment.userName}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-ink-500">
                       {formatTimestamp(comment.createdAt)}
                       {comment.isEdited && (
-                        <span className="ml-1 text-gray-400">(edited)</span>
+                        <span className="ml-1 text-ink-400">(edited)</span>
                       )}
                     </div>
                   </div>
@@ -205,16 +205,16 @@ const TaskComments = ({ taskId }) => {
                   <div className="relative">
                     <button
                       onClick={() => setShowMenu(showMenu === comment.id ? null : comment.id)}
-                      className="p-1 hover:bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="p-1 hover:bg-ink-200 rounded opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <MoreVertical size={16} className="text-gray-500" />
+                      <MoreVertical size={16} className="text-ink-500" />
                     </button>
 
                     {showMenu === comment.id && (
-                      <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-32">
+                      <div className="absolute right-0 top-8 bg-white border border-ink-200 rounded-lg shadow-card z-10 min-w-32">
                         <button
                           onClick={() => handleStartEdit(comment)}
-                          className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                          className="w-full px-4 py-2 text-left text-sm hover:bg-ink-50 flex items-center gap-2"
                         >
                           <Edit2 size={14} />
                           Edit
@@ -238,7 +238,7 @@ const TaskComments = ({ taskId }) => {
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     rows={3}
                     placeholder="Edit your comment..."
                   />
@@ -252,14 +252,14 @@ const TaskComments = ({ taskId }) => {
                     </button>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300"
+                      className="px-3 py-1 bg-ink-200 text-ink-700 rounded text-sm hover:bg-ink-300"
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-700 whitespace-pre-wrap break-words">
+                <p className="text-ink-700 whitespace-pre-wrap break-words">
                   {comment.content}
                 </p>
               )}
@@ -276,16 +276,16 @@ const TaskComments = ({ taskId }) => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment... (Use @ to mention someone)"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-4 py-3 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             rows={3}
           />
-          <div className="absolute bottom-3 right-3 text-xs text-gray-400">
+          <div className="absolute bottom-3 right-3 text-xs text-ink-400">
             Tip: Use @username to mention someone
           </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-ink-500">
             {newComment.length} characters
           </span>
           <button

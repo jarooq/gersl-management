@@ -191,9 +191,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-lg shadow-pop max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+        <div className="bg-navy-900 text-white p-6">
           <div className="flex justify-between items-start">
             <div className="flex items-start gap-4">
               <div className="w-20 h-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-3xl font-bold">
@@ -206,7 +206,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                     staff.status === 'Active'
                       ? 'bg-green-500 bg-opacity-20 text-green-100 border border-green-300'
-                      : 'bg-gray-500 bg-opacity-20 text-gray-100 border border-gray-300'
+                      : 'bg-ink-500 bg-opacity-20 text-ink-100 border border-ink-300'
                   }`}>
                     {staff.status || 'Unknown'}
                   </span>
@@ -224,7 +224,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="border-b border-gray-200 bg-gray-50">
+        <div className="border-b border-ink-200 bg-ink-50">
           <div className="flex overflow-x-auto">
             {sections.map((section) => {
               const Icon = section.icon;
@@ -235,7 +235,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   className={`flex items-center gap-2 px-6 py-3 font-medium transition whitespace-nowrap ${
                     activeSection === section.id
                       ? 'border-b-2 border-blue-600 text-blue-600 bg-white'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-ink-600 hover:text-ink-900 hover:bg-ink-100'
                   }`}
                 >
                   <Icon size={18} />
@@ -261,9 +261,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
               </div>
 
               {staff.bio && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Biography</h3>
-                  <p className="text-gray-600 text-sm">{staff.bio}</p>
+                <div className="bg-ink-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-ink-900 mb-2">Biography</h3>
+                  <p className="text-ink-600 text-sm">{staff.bio}</p>
                 </div>
               )}
             </div>
@@ -289,11 +289,11 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   {staff.status === 'Active' ? (
                     <CheckCircle className="text-green-600 flex-shrink-0" size={20} />
                   ) : (
-                    <AlertCircle className="text-gray-600 flex-shrink-0" size={20} />
+                    <AlertCircle className="text-ink-600 flex-shrink-0" size={20} />
                   )}
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Employment Status</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="font-semibold text-ink-900 mb-1">Employment Status</h4>
+                    <p className="text-sm text-ink-600">
                       {staff.status === 'Active'
                         ? 'This employee is currently active and working.'
                         : 'This employee is not currently active.'}
@@ -308,9 +308,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
           {activeSection === 'documents' && (
             <div className="space-y-4">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-semibold text-gray-900">Employee Documents</h3>
+                <h3 className="font-semibold text-ink-900">Employee Documents</h3>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-ink-600">
                     {documents.length} document{documents.length !== 1 ? 's' : ''} on file
                   </span>
                   <button
@@ -329,23 +329,23 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                 </div>
               ) : documents.length === 0 ? (
                 <div className="text-center py-12">
-                  <FileText className="mx-auto text-gray-400 mb-3" size={48} />
-                  <p className="text-gray-600 mb-2">No documents uploaded yet</p>
-                  <p className="text-sm text-gray-500">Documents will appear here once uploaded</p>
+                  <FileText className="mx-auto text-ink-400 mb-3" size={48} />
+                  <p className="text-ink-600 mb-2">No documents uploaded yet</p>
+                  <p className="text-sm text-ink-500">Documents will appear here once uploaded</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {documents.map((doc) => (
-                    <div key={doc.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
+                    <div key={doc.id} className="border border-ink-200 rounded-lg p-4 hover:bg-ink-50 transition">
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-3 flex-1">
                           <FileText className="text-blue-600 flex-shrink-0 mt-1" size={20} />
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-gray-900">{doc.documentName}</h4>
-                            <p className="text-sm text-gray-500 mb-2">
+                            <h4 className="font-medium text-ink-900">{doc.documentName}</h4>
+                            <p className="text-sm text-ink-500 mb-2">
                               Type: {doc.documentType}
                             </p>
-                            <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+                            <div className="flex flex-wrap gap-2 text-xs text-ink-600">
                               <span className="flex items-center gap-1">
                                 <Calendar size={12} />
                                 Uploaded: {formatDate(doc.createdAt)}
@@ -364,13 +364,13 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                               )}
                             </div>
                             {doc.verificationDate && doc.verifier && (
-                              <div className="mt-2 text-xs text-gray-600 bg-gray-50 rounded px-2 py-1 inline-flex items-center gap-1">
+                              <div className="mt-2 text-xs text-ink-600 bg-ink-50 rounded px-2 py-1 inline-flex items-center gap-1">
                                 <CheckCircle size={12} className="text-green-600" />
                                 Verified by {doc.verifier.fullName} on {formatDate(doc.verificationDate)}
                               </div>
                             )}
                             {doc.notes && (
-                              <div className="mt-2 text-xs text-gray-600 bg-blue-50 rounded px-2 py-1">
+                              <div className="mt-2 text-xs text-ink-600 bg-blue-50 rounded px-2 py-1">
                                 <strong>Note:</strong> {doc.notes}
                               </div>
                             )}
@@ -383,7 +383,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                               : doc.status === 'Rejected'
                               ? 'bg-red-100 text-red-700'
                               : doc.status === 'Expired'
-                              ? 'bg-gray-100 text-gray-700'
+                              ? 'bg-ink-100 text-ink-700'
                               : 'bg-yellow-100 text-yellow-700'
                           }`}>
                             {doc.status}
@@ -400,7 +400,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
           {/* Performance Section */}
           {activeSection === 'performance' && (
             <div className="space-y-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Performance Overview</h3>
+              <h3 className="font-semibold text-ink-900 mb-4">Performance Overview</h3>
 
               {loadingPerformance ? (
                 <div className="flex items-center justify-center py-12">
@@ -431,24 +431,24 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   </div>
 
                   {/* Recent Activities */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-3">Recent Activities</h4>
+                  <div className="bg-ink-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-ink-900 mb-3">Recent Activities</h4>
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                        <span className="text-gray-600">Last Check-in</span>
-                        <span className="font-medium text-gray-900">
+                      <div className="flex items-center justify-between py-2 border-b border-ink-200">
+                        <span className="text-ink-600">Last Check-in</span>
+                        <span className="font-medium text-ink-900">
                           {formatRelativeTime(performance.lastCheckIn)}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                        <span className="text-gray-600">Last Leave Request</span>
-                        <span className="font-medium text-gray-900">
+                      <div className="flex items-center justify-between py-2 border-b border-ink-200">
+                        <span className="text-ink-600">Last Leave Request</span>
+                        <span className="font-medium text-ink-900">
                           {formatRelativeTime(performance.lastLeaveRequest)}
                         </span>
                       </div>
                       <div className="flex items-center justify-between py-2">
-                        <span className="text-gray-600">Last Appraisal</span>
-                        <span className="font-medium text-gray-900">
+                        <span className="text-ink-600">Last Appraisal</span>
+                        <span className="font-medium text-ink-900">
                           {formatRelativeTime(performance.lastAppraisal)}
                         </span>
                       </div>
@@ -461,9 +461,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t border-gray-200 p-4 bg-gray-50">
+        <div className="border-t border-ink-200 p-4 bg-ink-50">
           <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-ink-600">
               Employee ID: {staff.employeeId || 'N/A'}
             </div>
             <div className="flex gap-3">
@@ -487,7 +487,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
               )}
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-medium"
               >
                 Close
               </button>
@@ -499,9 +499,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
       {/* Upload Document Modal */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-white rounded-lg shadow-pop max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+            <div className="bg-navy-900 text-white p-6">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">Upload Document</h2>
@@ -520,13 +520,13 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {/* Document Type */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Document Type <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={uploadForm.documentType}
                   onChange={(e) => setUploadForm({ ...uploadForm, documentType: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select document type...</option>
                   {DOCUMENT_TYPE_OPTIONS.map((opt) => (
@@ -539,7 +539,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
 
               {/* Document Name */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Document Name (optional)
                 </label>
                 <input
@@ -547,29 +547,29 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   value={uploadForm.documentName}
                   onChange={(e) => setUploadForm({ ...uploadForm, documentName: e.target.value })}
                   placeholder="Leave blank to use filename"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               {/* File Upload */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Select File <span className="text-red-500">*</span>
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
-                  <Upload className="mx-auto text-gray-400 mb-2" size={32} />
+                <div className="border-2 border-dashed border-ink-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
+                  <Upload className="mx-auto text-ink-400 mb-2" size={32} />
                   <input
                     type="file"
                     onChange={(e) => setUploadForm({ ...uploadForm, file: e.target.files[0] })}
                     accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-                    className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    className="block w-full text-sm text-ink-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   />
                   {uploadForm.file && (
-                    <p className="mt-2 text-sm text-gray-600">
+                    <p className="mt-2 text-sm text-ink-600">
                       Selected: <strong>{uploadForm.file.name}</strong> ({(uploadForm.file.size / 1024 / 1024).toFixed(2)} MB)
                     </p>
                   )}
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-ink-500 mt-2">
                     Supported: PDF, Word, Excel, Images (Max 20MB)
                   </p>
                 </div>
@@ -578,21 +578,21 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
               {/* Expiry Date (only for certain document types) */}
               {uploadForm.documentType && EXPIRABLE_DOCUMENT_TYPES.includes(uploadForm.documentType) && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Expiry Date (optional)
                   </label>
                   <input
                     type="date"
                     value={uploadForm.expiryDate}
                     onChange={(e) => setUploadForm({ ...uploadForm, expiryDate: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               )}
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-ink-700 mb-2">
                   Description (optional)
                 </label>
                 <textarea
@@ -600,17 +600,17 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   onChange={(e) => setUploadForm({ ...uploadForm, description: e.target.value })}
                   rows="3"
                   placeholder="Add any notes about this document..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 ></textarea>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="border-t border-gray-200 p-4 bg-gray-50">
+            <div className="border-t border-ink-200 p-4 bg-ink-50">
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setShowUploadModal(false)}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                  className="px-4 py-2 bg-ink-200 text-ink-700 rounded-lg hover:bg-ink-300 transition font-medium"
                   disabled={uploading}
                 >
                   Cancel
@@ -643,14 +643,14 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
 
 // Helper Components
 const InfoCard = ({ icon: Icon, label, value }) => (
-  <div className="bg-white border border-gray-200 rounded-lg p-4">
+  <div className="bg-white border border-ink-200 rounded-lg p-4">
     <div className="flex items-start gap-3">
       <div className="p-2 bg-blue-50 rounded-lg">
         <Icon className="text-blue-600" size={20} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-600 mb-1">{label}</p>
-        <p className="font-semibold text-gray-900 truncate">{value}</p>
+        <p className="text-sm text-ink-600 mb-1">{label}</p>
+        <p className="font-semibold text-ink-900 truncate">{value}</p>
       </div>
     </div>
   </div>

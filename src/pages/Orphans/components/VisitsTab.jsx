@@ -65,7 +65,7 @@ const VisitsTab = ({ orphan }) => {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-lg hover:from-pink-600 hover:to-rose-700 transition text-sm font-semibold shadow-md"
+          className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition text-sm font-semibold shadow-md"
         >
           <Plus size={18} />
           Add Visit Log
@@ -90,7 +90,7 @@ const VisitsTab = ({ orphan }) => {
           <p className="text-ink-600 text-sm mb-6">Start tracking visits to monitor {orphan?.fullName}'s progress</p>
           <button
             onClick={() => setShowModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition text-sm font-semibold shadow-md"
+            className="px-6 py-3 bg-navy-900 text-white rounded-lg transition text-sm font-semibold shadow-md"
           >
             <Plus size={18} className="inline mr-2" />
             Add First Visit Log
@@ -136,7 +136,7 @@ const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
   const hasRating = rating.educationalProgress || rating.healthWellbeing || rating.socialDevelopment || rating.behavioralProgress;
 
   return (
-    <div className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-lg transition-all duration-200">
+    <div className="bg-white border-2 border-ink-100 rounded-xl p-6 hover:shadow-card transition-all duration-200">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
@@ -328,7 +328,7 @@ const RatingBadge = ({ label, value, color }) => {
           <Star
             key={star}
             size={14}
-            className={value >= star ? `text-${color}-500 fill-${color}-500` : 'text-gray-300'}
+            className={value >= star ? `text-${color}-500 fill-${color}-500` : 'text-ink-300'}
             fill={value >= star ? 'currentColor' : 'none'}
           />
         ))}
@@ -357,7 +357,7 @@ const MediaSection = ({ title, media, color, onImageClick }) => {
             <img
               src={src}
               alt={`${title} ${index + 1}`}
-              className="w-full h-20 object-cover rounded-lg border-2 border-ink-100 hover:border-pink-400 transition-all group-hover:scale-105"
+              className="w-full h-20 object-cover rounded-lg border-2 border-ink-100 hover:border-pink-400 transition-all group-"
               onError={(e) => {
                 e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23f3f4f6" width="100" height="100"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%239ca3af" font-size="12"%3ENo Image%3C/text%3E%3C/svg%3E';
               }}

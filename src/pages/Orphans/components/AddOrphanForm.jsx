@@ -361,9 +361,9 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-lg2 shadow-pop w-full max-w-5xl max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-pink-500 to-rose-600 px-6 py-4 flex justify-between items-center">
+        <div className="bg-navy-900 px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Heart className="w-6 h-6 text-white" />
             <h2 className="text-2xl font-bold text-white">
@@ -1184,7 +1184,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
                         </div>
                       </div>
                     ) : (
-                      <div className="w-24 h-32 bg-gray-200 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center">
+                      <div className="w-24 h-32 bg-ink-200 rounded-lg border-2 border-dashed border-ink-400 flex items-center justify-center">
                         <User className="w-8 h-8 text-ink-400" />
                       </div>
                     )}
@@ -1345,7 +1345,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="btn-primary bg-gradient-to-r from-pink-500 to-rose-600 text-white flex items-center gap-2"
+            className="btn-primary bg-navy-900 text-white flex items-center gap-2"
           >
             <Save size={18} />
             {isEditMode ? 'Update Orphan' : 'Save Orphan'}
