@@ -48,16 +48,11 @@ public/uploads/
 *.njsproj
 *.sln
 *.sw?
-.vercel
-
-# Local Netlify folder
-.netlify
 
 # Deployment files and artifacts
 .vercel
 server/.vercel
 .env.render
-.netlify
 deploy.sh
 setup-vercel-env.sh
 setup-vercel-backend.sh
