@@ -1,9 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { MapContainer, Polyline, Popup, TileLayer, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Route } from 'lucide-react';
+import {
+  PageWrap, PageHeader, Card, Button, Badge, EmptyState, ErrorBox, Field, inputClass, Th, Td,
+} from '../../components/ui/primitives';
 import { MovementSegmentAPI } from '../../services/hrAdminApi';
 
-const DEFAULT_CENTER = [6.9271, 79.8612]; // Colombo
+const DEFAULT_CENTER = [6.9271, 79.8612];
 
 const today = () => new Date();
 const ymd = (d) => d.toISOString().slice(0, 10);
@@ -13,11 +17,6 @@ const fmtTime = (iso) => {
   if (!iso) return '—';
   try { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
   catch { return iso; }
-};
-
-const TYPE_BADGE = {
-  STOP: 'bg-gray-100 text-gray-700 border border-gray-200',
-  TRIP: 'bg-blue-50 text-blue-700 border border-blue-200',
 };
 
 export default function MovementSegmentsPage() {
@@ -74,115 +73,105 @@ export default function MovementSegmentsPage() {
   }, [rows]);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Movement segments</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          STOP / TRIP segments derived nightly from raw GPS pings. Used to verify fuel claims.
-        </p>
-      </div>
+    <PageWrap>
+      <PageHeader
+        eyebrow="HR · GPS"
+        title="Movement segments"
+        subtitle="STOP / TRIP segments derived nightly from raw GPS pings. Used to verify fuel claims."
+      />
 
-      <div className="bg-white border border-gray-200 rounded-md p-4 flex items-end gap-4 flex-wrap">
-        <label className="text-sm">
-          <span className="block text-gray-600 mb-1">From</span>
-          <input type="date" value={from} onChange={e => setFrom(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md text-sm" />
-        </label>
-        <label className="text-sm">
-          <span className="block text-gray-600 mb-1">To</span>
-          <input type="date" value={to} onChange={e => setTo(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md text-sm" />
-        </label>
-        <label className="text-sm">
-          <span className="block text-gray-600 mb-1">User ID</span>
-          <input type="number" value={userId} onChange={e => setUserId(e.target.value)} placeholder="(all)"
-            className="border border-gray-300 px-3 py-2 rounded-md text-sm w-28" />
-        </label>
-        <button onClick={load}
-          className="border border-gray-300 hover:bg-gray-50 text-sm font-medium px-3 py-2 rounded-md text-gray-700">
-          Refresh
-        </button>
-        <button onClick={runCluster} disabled={busy}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-2 rounded-md">
-          {busy ? 'Running…' : `Recluster ${from}`}
-        </button>
-      </div>
+      <Card className="mb-4">
+        <div className="flex items-end gap-4 flex-wrap">
+          <Field label="From">
+            <input type="date" value={from} onChange={e => setFrom(e.target.value)} className={inputClass} />
+          </Field>
+          <Field label="To">
+            <input type="date" value={to} onChange={e => setTo(e.target.value)} className={inputClass} />
+          </Field>
+          <Field label="User ID">
+            <input type="number" value={userId} onChange={e => setUserId(e.target.value)} placeholder="(all)"
+              className={`${inputClass} w-32`} />
+          </Field>
+          <Button variant="secondary" onClick={load}>Refresh</Button>
+          <Button onClick={runCluster} loading={busy}>Recluster {from}</Button>
+        </div>
+      </Card>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>}
+      {error && <ErrorBox className="mb-4">{error}</ErrorBox>}
 
       {(trips.length > 0 || stops.length > 0) && (
-        <div className="bg-white border border-gray-200 rounded-md overflow-hidden" style={{ height: 400 }}>
-          <MapContainer center={mapCenter} zoom={12} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {trips.map(t => (
-              <Polyline key={`trip-${t.id}`} positions={t.points} color="#2563eb" weight={4} opacity={0.7}>
-                <Popup>
-                  <div className="text-sm"><strong>Trip</strong><br />{t.dist} km · {t.dur} min</div>
-                </Popup>
-              </Polyline>
-            ))}
-            {stops.map(s => (
-              <CircleMarker key={`stop-${s.id}`} center={s.point} radius={8} pathOptions={{ color: '#6b7280', fillColor: '#9ca3af', fillOpacity: 0.7 }}>
-                <Popup>
-                  <div className="text-sm"><strong>Stop</strong><br />{s.dur} min</div>
-                </Popup>
-              </CircleMarker>
-            ))}
-          </MapContainer>
-        </div>
+        <Card padded={false} className="overflow-hidden mb-4">
+          <div style={{ height: 380 }}>
+            <MapContainer center={mapCenter} zoom={12} style={{ height: '100%', width: '100%' }}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {trips.map(t => (
+                <Polyline key={`trip-${t.id}`} positions={t.points} color="#1f3e85" weight={4} opacity={0.8}>
+                  <Popup>
+                    <div className="text-sm"><strong>Trip</strong><br />{t.dist} km · {t.dur} min</div>
+                  </Popup>
+                </Polyline>
+              ))}
+              {stops.map(s => (
+                <CircleMarker key={`stop-${s.id}`} center={s.point} radius={8}
+                  pathOptions={{ color: '#3a5879', fillColor: '#7891b0', fillOpacity: 0.7 }}>
+                  <Popup>
+                    <div className="text-sm"><strong>Stop</strong><br />{s.dur} min</div>
+                  </Popup>
+                </CircleMarker>
+              ))}
+            </MapContainer>
+          </div>
+        </Card>
       )}
 
       {loading ? (
-        <div className="text-gray-500 text-sm">Loading…</div>
+        <div className="text-ink-500 text-sm">Loading…</div>
       ) : rows.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-md p-6 text-center text-gray-500 text-sm">
-          No segments in range. Run the clusterer for a day with location_points data.
-        </div>
+        <EmptyState
+          icon={<Route className="w-10 h-10" />}
+          title="No segments in range"
+          message="Run the clusterer for a day with location_points data, or widen the date filter."
+        />
       ) : (
-        Object.entries(groups).sort().map(([date, list]) => (
-          <div key={date} className="bg-white border border-gray-200 rounded-md overflow-hidden">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 text-sm font-medium text-gray-700">
-              {new Date(date).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}
-              <span className="ml-2 text-gray-500 font-normal">· {list.length} segment{list.length === 1 ? '' : 's'}</span>
-            </div>
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50">
-                <tr className="text-left">
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">User</th>
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Type</th>
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Time</th>
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Duration</th>
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Distance</th>
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Points</th>
-                  <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Map</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {list.map(s => (
-                  <tr key={s.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2 font-medium text-gray-900">{s.user?.fullName ?? `#${s.userId}`}</td>
-                    <td className="px-4 py-2">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${TYPE_BADGE[s.segmentType] ?? ''}`}>{s.segmentType}</span>
-                    </td>
-                    <td className="px-4 py-2 font-mono text-xs text-gray-600">{fmtTime(s.startedAt)} – {fmtTime(s.endedAt)}</td>
-                    <td className="px-4 py-2 text-gray-700">{s.durationMinutes} min</td>
-                    <td className="px-4 py-2 text-gray-700">{s.distanceKm != null ? `${s.distanceKm} km` : '—'}</td>
-                    <td className="px-4 py-2 text-gray-700">{s.pointCount}</td>
-                    <td className="px-4 py-2">
-                      <a href={`https://www.google.com/maps/search/?api=1&query=${s.startLat},${s.startLng}`}
-                        target="_blank" rel="noreferrer"
-                        className="text-blue-600 hover:underline text-xs font-medium">Open →</a>
-                    </td>
+        <div className="space-y-4">
+          {Object.entries(groups).sort().map(([date, list]) => (
+            <Card key={date} padded={false} className="overflow-hidden">
+              <div className="bg-ink-50 px-5 py-2.5 border-b border-ink-100 text-sm font-semibold text-ink-800">
+                {new Date(date).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}
+                <span className="ml-2 text-ink-500 font-normal">· {list.length} segment{list.length === 1 ? '' : 's'}</span>
+              </div>
+              <table className="w-full">
+                <thead className="bg-ink-50 border-b border-ink-100">
+                  <tr>
+                    <Th>User</Th><Th>Type</Th><Th>Time</Th><Th>Duration</Th>
+                    <Th>Distance</Th><Th>Points</Th><Th>Map</Th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))
+                </thead>
+                <tbody className="divide-y divide-ink-100">
+                  {list.map(s => (
+                    <tr key={s.id} className="hover:bg-ink-50">
+                      <Td className="font-semibold text-navy-800">{s.user?.fullName ?? `#${s.userId}`}</Td>
+                      <Td><Badge tone={s.segmentType === 'TRIP' ? 'info' : 'neutral'}>{s.segmentType}</Badge></Td>
+                      <Td mono>{fmtTime(s.startedAt)} – {fmtTime(s.endedAt)}</Td>
+                      <Td>{s.durationMinutes} min</Td>
+                      <Td>{s.distanceKm != null ? `${s.distanceKm} km` : '—'}</Td>
+                      <Td>{s.pointCount}</Td>
+                      <Td>
+                        <a href={`https://www.google.com/maps/search/?api=1&query=${s.startLat},${s.startLng}`}
+                          target="_blank" rel="noreferrer"
+                          className="text-navy-700 hover:underline text-xs font-medium">Open →</a>
+                      </Td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+          ))}
+        </div>
       )}
-    </div>
+    </PageWrap>
   );
 }

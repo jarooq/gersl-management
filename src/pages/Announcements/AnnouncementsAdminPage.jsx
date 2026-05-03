@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Megaphone } from 'lucide-react';
+import {
+  PageWrap, PageHeader, Card, Button, ErrorBox, EmptyState, Field, inputClass,
+} from '../../components/ui/primitives';
 import { AnnouncementAPI } from '../../services/hrAdminApi';
 
 const fmtDate = (iso) => {
   if (!iso) return '—';
   try { return new Date(iso).toLocaleString(); } catch { return iso; }
 };
-
 const isExpired = (iso) => iso && new Date(iso) < new Date();
 
 export default function AnnouncementsAdminPage() {
@@ -50,94 +53,95 @@ export default function AnnouncementsAdminPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Announcements</h1>
-          <p className="text-sm text-gray-500 mt-1">Broadcasts shown in the staff mobile app.</p>
-        </div>
-        <button
-          onClick={() => setShowForm(s => !s)}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md"
-        >
-          {showForm ? 'Cancel' : '+ New announcement'}
-        </button>
-      </div>
+    <PageWrap>
+      <PageHeader
+        eyebrow="Communications"
+        title="Announcements"
+        subtitle="Broadcasts shown in the staff mobile app."
+        actions={
+          <Button onClick={() => setShowForm(s => !s)}>
+            {showForm ? 'Cancel' : '+ New announcement'}
+          </Button>
+        }
+      />
 
       {showForm && (
-        <form onSubmit={submit} className="bg-white border border-gray-200 rounded-md p-4 space-y-3">
-          <input
-            type="text" placeholder="Title *" value={form.title}
-            onChange={e => setForm({ ...form, title: e.target.value })}
-            className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
-          />
-          <textarea
-            placeholder="Body *" rows={4} value={form.body}
-            onChange={e => setForm({ ...form, body: e.target.value })}
-            className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input type="text" placeholder="Audience (e.g. all, role:Admin)"
-              value={form.audience}
-              onChange={e => setForm({ ...form, audience: e.target.value })}
-              className="border border-gray-300 px-3 py-2 rounded-md text-sm" />
-            <input type="datetime-local" placeholder="Expires at"
-              value={form.expiresAt}
-              onChange={e => setForm({ ...form, expiresAt: e.target.value })}
-              className="border border-gray-300 px-3 py-2 rounded-md text-sm" />
-          </div>
-          <button type="submit" disabled={busy}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md">
-            {busy ? 'Publishing…' : 'Publish'}
-          </button>
-        </form>
+        <Card className="mb-4">
+          <form onSubmit={submit} className="space-y-3">
+            <Field label="Title *">
+              <input type="text" value={form.title}
+                onChange={e => setForm({ ...form, title: e.target.value })}
+                className={inputClass} />
+            </Field>
+            <Field label="Body *">
+              <textarea rows={4} value={form.body}
+                onChange={e => setForm({ ...form, body: e.target.value })}
+                className={inputClass} />
+            </Field>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Field label="Audience" hint="e.g. all, role:Admin, dept:HR">
+                <input type="text" value={form.audience}
+                  onChange={e => setForm({ ...form, audience: e.target.value })}
+                  className={inputClass} />
+              </Field>
+              <Field label="Expires at (optional)">
+                <input type="datetime-local" value={form.expiresAt}
+                  onChange={e => setForm({ ...form, expiresAt: e.target.value })}
+                  className={inputClass} />
+              </Field>
+            </div>
+            <Button type="submit" loading={busy}>Publish</Button>
+          </form>
+        </Card>
       )}
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>}
+      {error && <ErrorBox className="mb-4">{error}</ErrorBox>}
 
       {loading ? (
-        <div className="text-gray-500 text-sm">Loading…</div>
+        <div className="text-ink-500 text-sm">Loading…</div>
       ) : rows.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-md p-6 text-center text-gray-500 text-sm">
-          No announcements yet.
-        </div>
+        <EmptyState
+          icon={<Megaphone className="w-10 h-10" />}
+          title="No announcements yet"
+          message="Publish the first one with the button above. Mobile staff will see it the next time they refresh their feed."
+        />
       ) : (
         <div className="space-y-3">
           {rows.map(a => (
-            <div key={a.id} className="bg-white border border-gray-200 rounded-md p-4">
+            <Card key={a.id}>
               <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">{a.title}</h3>
-                  <p className="text-sm text-gray-700 whitespace-pre-line mt-1">{a.body}</p>
-                  <div className="flex items-center gap-3 mt-3 text-xs text-gray-500 flex-wrap">
-                    <span>Audience: {a.audience || 'all'}</span>
-                    <span>·</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-h3 text-ink-900">{a.title}</h3>
+                  <p className="text-sm text-ink-700 whitespace-pre-line mt-1">{a.body}</p>
+                  <div className="flex items-center gap-2 mt-3 text-xs text-ink-500 flex-wrap">
+                    <span>Audience: <strong className="text-ink-700">{a.audience || 'all'}</strong></span>
+                    <span aria-hidden>·</span>
                     <span>Published {fmtDate(a.publishedAt)}</span>
                     {a.expiresAt && (
                       <>
-                        <span>·</span>
-                        <span className={isExpired(a.expiresAt) ? 'text-red-600' : ''}>
+                        <span aria-hidden>·</span>
+                        <span className={isExpired(a.expiresAt) ? 'text-danger-600 font-medium' : ''}>
                           Expires {fmtDate(a.expiresAt)}
                         </span>
                       </>
                     )}
                     {a.creator && (
                       <>
-                        <span>·</span>
+                        <span aria-hidden>·</span>
                         <span>By {a.creator.fullName}</span>
                       </>
                     )}
                   </div>
                 </div>
                 <button onClick={() => remove(a.id)}
-                  className="text-red-700 hover:underline text-sm font-medium">
+                  className="text-danger-700 hover:underline text-sm font-medium">
                   Delete
                 </button>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       )}
-    </div>
+    </PageWrap>
   );
 }

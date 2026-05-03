@@ -2,6 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Activity, MapPin } from 'lucide-react';
+import {
+  PageWrap, PageHeader, Card, EmptyState, ErrorBox, Th, Td,
+} from '../../components/ui/primitives';
 import { LiveLocationAPI } from '../../services/hrAdminApi';
 
 const POLL_MS = 10_000;
@@ -13,7 +17,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const DEFAULT_CENTER = [6.9271, 79.8612]; // Colombo
+const DEFAULT_CENTER = [6.9271, 79.8612];
 
 const fmtAge = (iso) => {
   if (!iso) return '—';
@@ -36,14 +40,9 @@ export default function LiveStaffMapPage() {
       try {
         const data = await LiveLocationAPI.live();
         if (cancelled) return;
-        setRows(data);
-        setUpdatedAt(new Date());
-        setError(null);
-      } catch (e) {
-        if (!cancelled) setError(e.message);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+        setRows(data); setUpdatedAt(new Date()); setError(null);
+      } catch (e) { if (!cancelled) setError(e.message); }
+      finally { if (!cancelled) setLoading(false); }
     };
     tick();
     const id = setInterval(tick, POLL_MS);
@@ -59,80 +58,80 @@ export default function LiveStaffMapPage() {
   }, [rows]);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Live staff map</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Last 15 min of GPS pings from staff currently tracking · refreshes every {POLL_MS / 1000}s
-          </p>
+    <PageWrap>
+      <PageHeader
+        eyebrow="HR · Operations"
+        title="Live staff map"
+        subtitle={`Last 15 min of GPS pings · refreshes every ${POLL_MS / 1000}s`}
+        actions={
+          updatedAt && (
+            <span className="inline-flex items-center gap-2 text-xs text-ink-500">
+              <Activity className="w-3.5 h-3.5 text-success-600" />
+              Updated {updatedAt.toLocaleTimeString()}
+            </span>
+          )
+        }
+      />
+
+      {error && <ErrorBox className="mb-4">{error}</ErrorBox>}
+
+      <Card padded={false} className="overflow-hidden mb-4" >
+        <div style={{ height: 480 }}>
+          {loading ? (
+            <div className="h-full flex items-center justify-center text-ink-500 text-sm">Loading map…</div>
+          ) : (
+            <MapContainer center={center} zoom={11} style={{ height: '100%', width: '100%' }}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {rows.map((r) => (
+                <Marker key={r.user_id} position={[Number(r.latitude), Number(r.longitude)]}>
+                  <Popup>
+                    <div className="text-sm">
+                      <strong>User #{r.user_id}</strong>
+                      <div>{fmtAge(r.recorded_at)}</div>
+                      <div>Speed: {r.speed_kmh != null ? `${Number(r.speed_kmh).toFixed(1)} km/h` : '—'}</div>
+                      <div>Accuracy: {r.accuracy_m != null ? `${Math.round(r.accuracy_m)} m` : '—'}</div>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          )}
         </div>
-        {updatedAt && (
-          <span className="text-xs text-gray-500">Updated {updatedAt.toLocaleTimeString()}</span>
-        )}
-      </div>
+      </Card>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>
-      )}
-
-      <div className="bg-white border border-gray-200 rounded-md overflow-hidden" style={{ height: 500 }}>
-        {loading ? (
-          <div className="h-full flex items-center justify-center text-gray-500 text-sm">Loading…</div>
-        ) : (
-          <MapContainer center={center} zoom={11} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {rows.map((r) => (
-              <Marker key={r.user_id} position={[Number(r.latitude), Number(r.longitude)]}>
-                <Popup>
-                  <div className="text-sm">
-                    <strong>User #{r.user_id}</strong>
-                    <div>{fmtAge(r.recorded_at)}</div>
-                    <div>Speed: {r.speed_kmh != null ? `${Number(r.speed_kmh).toFixed(1)} km/h` : '—'}</div>
-                    <div>Accuracy: {r.accuracy_m != null ? `${Math.round(r.accuracy_m)} m` : '—'}</div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        )}
-      </div>
-
-      {rows.length === 0 && !loading ? (
-        <div className="bg-white border border-gray-200 rounded-md p-6 text-center text-gray-500 text-sm">
-          No staff currently tracking. Ask field staff to enable GPS tracking from the mobile app.
-        </div>
+      {!loading && rows.length === 0 ? (
+        <EmptyState
+          icon={<MapPin className="w-10 h-10" />}
+          title="No staff currently tracking"
+          message="Field staff need to enable GPS tracking from the mobile app for their location to appear here."
+        />
       ) : rows.length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-md overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr className="text-left">
-                <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">User</th>
-                <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Latitude</th>
-                <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Longitude</th>
-                <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Speed (km/h)</th>
-                <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Accuracy (m)</th>
-                <th className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">Last seen</th>
+        <Card padded={false} className="overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-ink-50 border-b border-ink-100">
+              <tr>
+                <Th>User</Th><Th>Latitude</Th><Th>Longitude</Th>
+                <Th>Speed (km/h)</Th><Th>Accuracy (m)</Th><Th>Last seen</Th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-ink-100">
               {rows.map((r, i) => (
-                <tr key={i} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 font-medium text-gray-900">#{r.user_id}</td>
-                  <td className="px-4 py-2 font-mono text-xs text-gray-600">{Number(r.latitude).toFixed(5)}</td>
-                  <td className="px-4 py-2 font-mono text-xs text-gray-600">{Number(r.longitude).toFixed(5)}</td>
-                  <td className="px-4 py-2 text-gray-700">{r.speed_kmh != null ? Number(r.speed_kmh).toFixed(1) : '—'}</td>
-                  <td className="px-4 py-2 text-gray-700">{r.accuracy_m != null ? Math.round(r.accuracy_m) : '—'}</td>
-                  <td className="px-4 py-2 text-gray-600">{fmtAge(r.recorded_at)}</td>
+                <tr key={i} className="hover:bg-ink-50">
+                  <Td className="font-semibold text-navy-800">#{r.user_id}</Td>
+                  <Td mono>{Number(r.latitude).toFixed(5)}</Td>
+                  <Td mono>{Number(r.longitude).toFixed(5)}</Td>
+                  <Td>{r.speed_kmh != null ? Number(r.speed_kmh).toFixed(1) : '—'}</Td>
+                  <Td>{r.accuracy_m != null ? Math.round(r.accuracy_m) : '—'}</Td>
+                  <Td className="text-ink-500">{fmtAge(r.recorded_at)}</Td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </Card>
       )}
-    </div>
+    </PageWrap>
   );
 }
