@@ -16,7 +16,7 @@ const Navbar = ({ toggleSidebar, onCommandOpen }) => {
   return (
     <header className="bg-white border-b border-ink-100 sticky top-0 z-40">
       <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-4">
-        {/* Left — burger + brand */}
+        {/* Left — burger only (brand lives in sidebar) */}
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={toggleSidebar}
@@ -25,16 +25,6 @@ const Navbar = ({ toggleSidebar, onCommandOpen }) => {
           >
             <Menu size={20} />
           </button>
-
-          <div className="flex items-center gap-2.5 min-w-0">
-            <img src="/Logo.png" alt="Global Ehsan Relief" className="h-9 w-9 object-contain shrink-0" />
-            <div className="min-w-0">
-              <h1 className="text-sm font-semibold text-ink-900 truncate leading-tight">
-                Global Ehsan Relief <span className="text-ink-500 font-normal">· Sri Lanka</span>
-              </h1>
-              <p className="text-[11px] text-ink-500 hidden sm:block leading-tight">Management System</p>
-            </div>
-          </div>
         </div>
 
         {/* Center — command palette hint (md+) */}

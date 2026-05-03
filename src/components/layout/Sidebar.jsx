@@ -168,25 +168,28 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-50
-        w-64 h-screen overflow-y-auto
+        w-64 h-screen flex flex-col
         bg-gradient-to-b from-navy-900 to-navy-800 text-ink-100
         border-r border-navy-900
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Brand block — visible on mobile, hidden on desktop where Navbar shows it */}
-        <div className="lg:hidden flex items-center justify-between px-5 py-4 border-b border-navy-800">
-          <div className="flex items-center gap-2">
-            <img src="/Logo.png" alt="GERSL" className="h-8 w-8 object-contain" />
-            <span className="text-sm font-semibold text-white">GERSL</span>
+        {/* Brand block — always visible, sits above nav */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-navy-800 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <img src="/Logo.png" alt="Global Ehsan Relief" className="h-9 w-9 object-contain shrink-0" />
+            <div className="min-w-0 leading-tight">
+              <p className="text-[13px] font-semibold text-white truncate">Global Ehsan Relief</p>
+              <p className="text-[10px] text-mission-300 truncate">Sri Lanka · Management</p>
+            </div>
           </div>
           <button onClick={closeSidebar}
-            className="p-1.5 rounded-md text-ink-200 hover:bg-navy-800 hover:text-white">
+            className="lg:hidden p-1.5 rounded-md text-ink-200 hover:bg-navy-800 hover:text-white shrink-0">
             <X size={18} />
           </button>
         </div>
 
-        <nav className="py-3 px-2.5 space-y-0.5">
+        <nav className="py-3 px-2.5 space-y-0.5 flex-1 overflow-y-auto">
           {filteredMenuItems.map((item, index) => {
             if (item.hasSubmenu) {
               const isActive = item.subItems.some(sub => location.pathname === sub.path);
@@ -249,12 +252,11 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           })}
         </nav>
 
-        {/* Footer — small mission credo (visual signature, NGO-appropriate) */}
-        <div className="px-5 py-4 border-t border-navy-800 mt-2">
-          <p className="text-[11px] text-ink-300 leading-relaxed">
-            <span className="text-mission-300 font-semibold">Global Ehsan Relief</span> · Sri Lanka
+        {/* Footer — mission credo (sticky at bottom) */}
+        <div className="px-5 py-3 border-t border-navy-800 shrink-0">
+          <p className="text-[10px] text-ink-400 leading-relaxed">
+            Serving with compassion since 2015
           </p>
-          <p className="text-[10px] text-ink-400 mt-0.5">Serving with compassion since 2015</p>
         </div>
       </aside>
     </>
