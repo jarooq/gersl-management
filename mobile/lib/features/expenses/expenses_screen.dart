@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import 'expense_repository.dart';
 
 class ExpensesScreen extends ConsumerWidget {
@@ -13,27 +16,26 @@ class ExpensesScreen extends ConsumerWidget {
     final expenses = ref.watch(myExpensesProvider);
     return Scaffold(
       body: RefreshIndicator(
+        color: kNavy900,
         onRefresh: () async => ref.invalidate(myExpensesProvider),
         child: expenses.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => ListView(children: [
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Card(
-                color: Colors.red.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(e.toString(), style: TextStyle(color: Colors.red.shade900)),
-                ),
-              ),
-            ),
-          ]),
+          loading: () => const LoadingPanel(),
+          error: (e, _) => ListView(
+            padding: const EdgeInsets.all(16),
+            children: [ErrorBox(message: e.toString())],
+          ),
           data: (rows) {
             if (rows.isEmpty) {
-              return ListView(children: const [
-                SizedBox(height: 100),
-                Center(child: Text('No expense claims yet.')),
-              ]);
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: const [
+                  EmptyState(
+                    title: 'No expense claims',
+                    message: 'Submit out-of-pocket expenses for reimbursement.',
+                    icon: Icons.receipt_long_outlined,
+                  ),
+                ],
+              );
             }
             return ListView.separated(
               padding: const EdgeInsets.all(12),
@@ -51,9 +53,13 @@ class ExpensesScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: kMission500,
+        foregroundColor: kNavy900,
+        elevation: 4,
         onPressed: () => context.push('/expenses/new'),
         icon: const Icon(Icons.add),
-        label: const Text('Submit claim'),
+        label: Text('Submit claim',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w800)),
       ),
     );
   }
@@ -72,66 +78,86 @@ class _ExpenseCard extends StatelessWidget {
     final description = row['description']?.toString() ?? '';
     final date = row['date']?.toString();
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '$category  •  Rs $amount',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      category,
+                      style: GoogleFonts.inter(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w700,
+                        color: kInk900,
+                      ),
+                    ),
+                    Text(
+                      'LKR $amount',
+                      style: GoogleFonts.inter(
+                        fontSize: 13, color: kInk500,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-                _StatusChip(status: status),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(description),
-            if (date != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(_fmt(date), style: Theme.of(context).textTheme.bodySmall),
-            ),
-            if (row['receiptUrl'] != null) const Padding(
-              padding: EdgeInsets.only(top: 4),
-              child: Row(children: [Icon(Icons.attachment, size: 14), SizedBox(width: 4), Text('Receipt attached', style: TextStyle(fontSize: 12))]),
-            ),
-            if (status == 'Pending') Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(onPressed: onCancel, child: const Text('Cancel')),
               ),
+              StatusPill(label: status, color: _statusColor(status)),
+            ],
+          ),
+          if (description.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: GoogleFonts.inter(fontSize: 13, color: kInk700, height: 1.4),
             ),
           ],
-        ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              if (date != null) ...[
+                const Icon(Icons.event, size: 13, color: kInk400),
+                const SizedBox(width: 4),
+                Text(_fmt(date),
+                    style: GoogleFonts.inter(fontSize: 11.5, color: kInk500)),
+              ],
+              const SizedBox(width: 12),
+              if (row['receiptUrl'] != null) ...[
+                const Icon(Icons.attach_file, size: 13, color: kInk400),
+                const SizedBox(width: 4),
+                Text('Receipt',
+                    style: GoogleFonts.inter(fontSize: 11.5, color: kInk500)),
+              ],
+            ],
+          ),
+          if (status == 'Pending') ...[
+            const SizedBox(height: 4),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(onPressed: onCancel, child: const Text('Cancel')),
+            ),
+          ],
+        ],
       ),
     );
+  }
+
+  Color _statusColor(String s) {
+    switch (s) {
+      case 'Approved': case 'Paid':  return kSuccess600;
+      case 'Rejected':                return kDanger600;
+      case 'Cancelled':               return kInk500;
+      default:                         return kMission500;
+    }
   }
 
   String _fmt(String d) {
     try { return DateFormat('d MMM yyyy').format(DateTime.parse(d)); }
     catch (_) { return d; }
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-  const _StatusChip({required this.status});
-  @override
-  Widget build(BuildContext context) {
-    final color = switch (status) {
-      'Approved' || 'Paid' => Colors.green,
-      'Rejected' => Colors.red,
-      _ => Colors.orange,
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
-      child: Text(status, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
-    );
   }
 }

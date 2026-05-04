@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../auth/auth_controller.dart';
 import 'advance_repository.dart';
 
@@ -19,27 +22,26 @@ class AdvancesScreen extends ConsumerWidget {
 
     return Scaffold(
       body: RefreshIndicator(
+        color: kNavy900,
         onRefresh: () async => ref.invalidate(advancesProvider),
         child: advances.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => ListView(children: [
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Card(
-                color: Colors.red.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(e.toString(), style: TextStyle(color: Colors.red.shade900)),
-                ),
-              ),
-            ),
-          ]),
+          loading: () => const LoadingPanel(),
+          error: (e, _) => ListView(
+            padding: const EdgeInsets.all(16),
+            children: [ErrorBox(message: e.toString())],
+          ),
           data: (rows) {
             if (rows.isEmpty) {
-              return ListView(children: const [
-                SizedBox(height: 100),
-                Center(child: Text('No salary advances yet.')),
-              ]);
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: const [
+                  EmptyState(
+                    title: 'No salary advances',
+                    message: 'Submit an advance request from the button below.',
+                    icon: Icons.attach_money,
+                  ),
+                ],
+              );
             }
             return ListView.separated(
               padding: const EdgeInsets.all(12),
@@ -48,6 +50,7 @@ class AdvancesScreen extends ConsumerWidget {
               itemBuilder: (_, i) => _AdvanceCard(
                 row: rows[i],
                 canApprove: canApprove,
+                isMine: rows[i]['userId'] == me?['id'],
                 onDecide: (approve) async {
                   await ref.read(advanceRepoProvider).decide(
                     rows[i]['id'] as int,
@@ -59,16 +62,19 @@ class AdvancesScreen extends ConsumerWidget {
                   await ref.read(advanceRepoProvider).cancel(rows[i]['id'] as int);
                   ref.invalidate(advancesProvider);
                 },
-                isMine: rows[i]['userId'] == me?['id'],
               ),
             );
           },
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: kMission500,
+        foregroundColor: kNavy900,
+        elevation: 4,
         onPressed: () => context.push('/advances/new'),
         icon: const Icon(Icons.add),
-        label: const Text('Request advance'),
+        label: Text('Request advance',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w800)),
       ),
     );
   }
@@ -96,89 +102,108 @@ class _AdvanceCard extends StatelessWidget {
     final user = row['user'] as Map?;
     final created = row['createdAt'] as String?;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    user?['fullName']?.toString() ?? 'You',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                _StatusChip(status: status),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text('Rs ${amount ?? 0}', style: Theme.of(context).textTheme.titleLarge),
-            if (row['reason'] != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(row['reason'].toString()),
-            ),
-            if (created != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text('Submitted ${_fmt(created)}', style: Theme.of(context).textTheme.bodySmall),
-            ),
-            if (status == 'Pending') Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                children: [
-                  if (canApprove) ...[
-                    OutlinedButton(
-                      onPressed: () => onDecide(false),
-                      style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-                      child: const Text('Reject'),
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user?['fullName']?.toString() ?? 'You',
+                      style: GoogleFonts.inter(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
+                        color: kInk900,
+                      ),
                     ),
-                    const SizedBox(width: 8),
-                    FilledButton(
-                      onPressed: () => onDecide(true),
-                      child: const Text('Approve'),
+                    Text(
+                      'LKR ${amount ?? 0}',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: kInk900,
+                        letterSpacing: -0.2,
+                      ),
                     ),
-                    const Spacer(),
                   ],
-                  if (isMine) TextButton(
-                    onPressed: onCancel,
-                    child: const Text('Cancel request'),
-                  ),
-                ],
+                ),
               ),
+              StatusPill(label: status, color: _color(status)),
+            ],
+          ),
+          if (row['reason'] != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              row['reason'].toString(),
+              style: GoogleFonts.inter(fontSize: 13, color: kInk700, height: 1.4),
             ),
           ],
-        ),
+          if (created != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.event, size: 13, color: kInk400),
+                const SizedBox(width: 4),
+                Text(
+                  'Submitted ${_fmt(created)}',
+                  style: GoogleFonts.inter(fontSize: 11.5, color: kInk500),
+                ),
+              ],
+            ),
+          ],
+          if (status == 'Pending') ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                if (canApprove) ...[
+                  OutlinedButton(
+                    onPressed: () => onDecide(false),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: kDanger600,
+                      minimumSize: const Size(0, 38),
+                    ),
+                    child: const Text('Reject'),
+                  ),
+                  const SizedBox(width: 8),
+                  FilledButton(
+                    onPressed: () => onDecide(true),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: kSuccess600,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(0, 38),
+                    ),
+                    child: const Text('Approve'),
+                  ),
+                  const Spacer(),
+                ],
+                if (isMine)
+                  TextButton(
+                    onPressed: onCancel,
+                    child: const Text('Cancel'),
+                  ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }
+
+  Color _color(String s) => switch (s) {
+    'Approved'  => kSuccess600,
+    'Rejected'  => kDanger600,
+    'Cancelled' => kInk500,
+    'Deducted'  => kNavy900,
+    _           => kMission500,
+  };
 
   String _fmt(String iso) {
     try { return DateFormat('d MMM').format(DateTime.parse(iso).toLocal()); }
     catch (_) { return iso; }
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = switch (status) {
-      'Approved' => Colors.green,
-      'Rejected' => Colors.red,
-      'Cancelled' => Colors.grey,
-      'Deducted' => Colors.blue,
-      _ => Colors.orange,
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(status, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
-    );
   }
 }

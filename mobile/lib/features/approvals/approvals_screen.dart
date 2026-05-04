@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../advances/advance_repository.dart';
 import '../auth/auth_controller.dart';
 import '../expenses/expense_repository.dart';
@@ -12,16 +15,11 @@ const _approverRoles = {
   'Finance Manager', 'Programme Manager', 'Manager'
 };
 
-// Small wrapper providers so a single Approvals screen can refresh all three
-// underlying lists with one swipe-down.
 final _pendingLeavesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>(
   (ref) => ref.watch(leaveRepoProvider).pending(),
 );
 final _pendingAdvancesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>(
-  (ref) async {
-    final all = await ref.watch(advanceRepoProvider).list(status: 'Pending');
-    return all;
-  },
+  (ref) async => ref.watch(advanceRepoProvider).list(status: 'Pending'),
 );
 final _pendingExpensesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>(
   (ref) => ref.watch(expenseRepoProvider).pending(),
@@ -36,7 +34,13 @@ class ApprovalsScreen extends ConsumerWidget {
     if (!_approverRoles.contains(me?['role'])) {
       return const Padding(
         padding: EdgeInsets.all(24),
-        child: Center(child: Text('Approvals queue is visible only to managers / HR / Finance.')),
+        child: Center(
+          child: EmptyState(
+            title: 'Approvals queue',
+            message: 'This view is for managers, HR and Finance staff only.',
+            icon: Icons.lock_outline,
+          ),
+        ),
       );
     }
     final leaves = ref.watch(_pendingLeavesProvider);
@@ -50,58 +54,80 @@ class ApprovalsScreen extends ConsumerWidget {
     }
 
     return RefreshIndicator(
+      color: kNavy900,
       onRefresh: refreshAll,
       child: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          _SectionHeader(title: 'Leave requests', count: leaves.maybeWhen(data: (d) => d.length, orElse: () => null)),
+          _Section(
+            title: 'Leave requests',
+            count: leaves.maybeWhen(data: (d) => d.length, orElse: () => null),
+          ),
           leaves.when(
             loading: () => const _LoadingTile(),
-            error:   (e, _) => _ErrorTile(message: e.toString()),
+            error:   (e, _) => ErrorBox(message: e.toString()),
             data:    (rows) => rows.isEmpty
                 ? const _EmptyTile(text: 'No pending leave requests.')
                 : Column(children: [
-                    for (final r in rows) _LeaveTile(
-                      row: r,
-                      onDecide: (approve) async {
-                        await ref.read(leaveRepoProvider).decide(r['id'] as int, approve: approve);
-                        await refreshAll();
-                      },
-                    ),
+                    for (final r in rows)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: _LeaveTile(
+                          row: r,
+                          onDecide: (approve) async {
+                            await ref.read(leaveRepoProvider).decide(r['id'] as int, approve: approve);
+                            await refreshAll();
+                          },
+                        ),
+                      ),
                   ]),
           ),
-          const SizedBox(height: 16),
-          _SectionHeader(title: 'Salary advances', count: advances.maybeWhen(data: (d) => d.length, orElse: () => null)),
+          const SizedBox(height: 18),
+          _Section(
+            title: 'Salary advances',
+            count: advances.maybeWhen(data: (d) => d.length, orElse: () => null),
+          ),
           advances.when(
             loading: () => const _LoadingTile(),
-            error:   (e, _) => _ErrorTile(message: e.toString()),
+            error:   (e, _) => ErrorBox(message: e.toString()),
             data:    (rows) => rows.isEmpty
                 ? const _EmptyTile(text: 'No pending advances.')
                 : Column(children: [
-                    for (final r in rows) _AdvanceTile(
-                      row: r,
-                      onDecide: (approve) async {
-                        await ref.read(advanceRepoProvider).decide(r['id'] as int, approve: approve);
-                        await refreshAll();
-                      },
-                    ),
+                    for (final r in rows)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: _AdvanceTile(
+                          row: r,
+                          onDecide: (approve) async {
+                            await ref.read(advanceRepoProvider).decide(r['id'] as int, approve: approve);
+                            await refreshAll();
+                          },
+                        ),
+                      ),
                   ]),
           ),
-          const SizedBox(height: 16),
-          _SectionHeader(title: 'Expense claims', count: expenses.maybeWhen(data: (d) => d.length, orElse: () => null)),
+          const SizedBox(height: 18),
+          _Section(
+            title: 'Expense claims',
+            count: expenses.maybeWhen(data: (d) => d.length, orElse: () => null),
+          ),
           expenses.when(
             loading: () => const _LoadingTile(),
-            error:   (e, _) => _ErrorTile(message: e.toString()),
+            error:   (e, _) => ErrorBox(message: e.toString()),
             data:    (rows) => rows.isEmpty
                 ? const _EmptyTile(text: 'No pending expense claims.')
                 : Column(children: [
-                    for (final r in rows) _ExpenseTile(
-                      row: r,
-                      onDecide: (approve) async {
-                        await ref.read(expenseRepoProvider).decide(r['id'] as int, approve: approve);
-                        await refreshAll();
-                      },
-                    ),
+                    for (final r in rows)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: _ExpenseTile(
+                          row: r,
+                          onDecide: (approve) async {
+                            await ref.read(expenseRepoProvider).decide(r['id'] as int, approve: approve);
+                            await refreshAll();
+                          },
+                        ),
+                      ),
                   ]),
           ),
         ],
@@ -110,24 +136,29 @@ class ApprovalsScreen extends ConsumerWidget {
   }
 }
 
-class _SectionHeader extends StatelessWidget {
+class _Section extends StatelessWidget {
   final String title;
   final int? count;
-  const _SectionHeader({required this.title, this.count});
+  const _Section({required this.title, this.count});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, top: 8, bottom: 8),
+      padding: const EdgeInsets.only(left: 4, top: 4, bottom: 10),
       child: Row(
         children: [
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(width: 8),
-          if (count != null) Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
-            child: Text('$count', style: TextStyle(fontSize: 12, color: Colors.blue.shade800, fontWeight: FontWeight.w600)),
+          Text(
+            title.toUpperCase(),
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.0,
+              color: kInk500,
+            ),
           ),
+          const SizedBox(width: 8),
+          if (count != null && count! > 0)
+            StatusPill(label: '$count pending', color: kMission500),
         ],
       ),
     );
@@ -137,26 +168,64 @@ class _SectionHeader extends StatelessWidget {
 class _LoadingTile extends StatelessWidget {
   const _LoadingTile();
   @override
-  Widget build(BuildContext context) =>
-      const Card(child: Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())));
-}
-
-class _ErrorTile extends StatelessWidget {
-  final String message;
-  const _ErrorTile({required this.message});
-  @override
-  Widget build(BuildContext context) => Card(
-    color: Colors.red.shade50,
-    child: Padding(padding: const EdgeInsets.all(12), child: Text(message, style: TextStyle(color: Colors.red.shade900))),
-  );
+  Widget build(BuildContext context) => const SoftCard(
+        padding: EdgeInsets.all(20),
+        child: Center(child: CircularProgressIndicator(color: kNavy900)),
+      );
 }
 
 class _EmptyTile extends StatelessWidget {
   final String text;
   const _EmptyTile({required this.text});
   @override
-  Widget build(BuildContext context) =>
-      Card(child: Padding(padding: const EdgeInsets.all(16), child: Text(text, style: const TextStyle(color: Colors.grey))));
+  Widget build(BuildContext context) => SoftCard(
+        child: Row(
+          children: [
+            const Icon(Icons.check_circle_outline, color: kSuccess600, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: GoogleFonts.inter(fontSize: 13, color: kInk500),
+            ),
+          ],
+        ),
+      );
+}
+
+class _DecideButtons extends StatelessWidget {
+  final Future<void> Function(bool approve) onDecide;
+  const _DecideButtons({required this.onDecide});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => onDecide(false),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: kDanger600,
+              minimumSize: const Size(0, 38),
+              side: const BorderSide(color: kInk200, width: 1.2),
+            ),
+            child: const Text('Reject'),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: FilledButton(
+            onPressed: () => onDecide(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: kSuccess600,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(0, 38),
+            ),
+            child: const Text('Approve'),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class _LeaveTile extends StatelessWidget {
@@ -173,33 +242,32 @@ class _LeaveTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final r = row['requester'] as Map?;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(r?['fullName']?.toString() ?? 'Staff #${row['userId']}', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text('${row['leaveType']}  ·  ${_fmt(row['startDate']?.toString())} → ${_fmt(row['endDate']?.toString())}  ·  ${row['daysCount']} days'),
-            if (row['reason'] != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(row['reason'].toString(), style: Theme.of(context).textTheme.bodySmall),
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            r?['fullName']?.toString() ?? 'Staff #${row['userId']}',
+            style: GoogleFonts.inter(
+              fontSize: 14, fontWeight: FontWeight.w700, color: kInk900,
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                OutlinedButton(
-                  onPressed: () => onDecide(false),
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-                  child: const Text('Reject'),
-                ),
-                const SizedBox(width: 8),
-                FilledButton(onPressed: () => onDecide(true), child: const Text('Approve')),
-              ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${row['leaveType']}  ·  ${_fmt(row['startDate']?.toString())} → ${_fmt(row['endDate']?.toString())}  ·  ${row['daysCount']} days',
+            style: GoogleFonts.inter(fontSize: 12, color: kInk500),
+          ),
+          if (row['reason'] != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              row['reason'].toString(),
+              style: GoogleFonts.inter(fontSize: 12.5, color: kInk700, height: 1.4),
             ),
           ],
-        ),
+          const SizedBox(height: 12),
+          _DecideButtons(onDecide: onDecide),
+        ],
       ),
     );
   }
@@ -213,47 +281,55 @@ class _ExpenseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final submitter = row['submitter'] as Map?;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    submitter?['fullName']?.toString() ?? 'Staff #${row['submittedBy']}',
-                    style: Theme.of(context).textTheme.titleMedium,
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  submitter?['fullName']?.toString() ?? 'Staff #${row['submittedBy']}',
+                  style: GoogleFonts.inter(
+                    fontSize: 14, fontWeight: FontWeight.w700, color: kInk900,
                   ),
                 ),
-                Text('Rs ${row['amount']}', style: Theme.of(context).textTheme.titleMedium),
-              ],
+              ),
+              Text(
+                'LKR ${row['amount']}',
+                style: GoogleFonts.inter(
+                  fontSize: 14.5, fontWeight: FontWeight.w800, color: kInk900,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${row['category']}  ·  ${row['date']}',
+            style: GoogleFonts.inter(fontSize: 12, color: kInk500),
+          ),
+          if (row['description'] != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              row['description'].toString(),
+              style: GoogleFonts.inter(fontSize: 12.5, color: kInk700, height: 1.4),
             ),
-            const SizedBox(height: 4),
-            Text('${row['category']}  ·  ${row['date']}'),
-            if (row['description'] != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(row['description'].toString(), style: Theme.of(context).textTheme.bodySmall),
-            ),
-            if (row['receiptUrl'] != null) const Padding(
-              padding: EdgeInsets.only(top: 4),
-              child: Row(children: [Icon(Icons.attachment, size: 14), SizedBox(width: 4), Text('Receipt attached', style: TextStyle(fontSize: 12))]),
-            ),
-            const SizedBox(height: 8),
+          ],
+          if (row['receiptUrl'] != null) ...[
+            const SizedBox(height: 6),
             Row(
               children: [
-                OutlinedButton(
-                  onPressed: () => onDecide(false),
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-                  child: const Text('Reject'),
-                ),
-                const SizedBox(width: 8),
-                FilledButton(onPressed: () => onDecide(true), child: const Text('Approve')),
+                const Icon(Icons.attach_file, size: 13, color: kInk400),
+                const SizedBox(width: 4),
+                Text('Receipt attached',
+                    style: GoogleFonts.inter(fontSize: 11.5, color: kInk500)),
               ],
             ),
           ],
-        ),
+          const SizedBox(height: 12),
+          _DecideButtons(onDecide: onDecide),
+        ],
       ),
     );
   }
@@ -267,33 +343,35 @@ class _AdvanceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = row['user'] as Map?;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(user?['fullName']?.toString() ?? 'Staff #${row['userId']}', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text('Rs ${row['amount']}', style: Theme.of(context).textTheme.titleLarge),
-            if (row['reason'] != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(row['reason'].toString(), style: Theme.of(context).textTheme.bodySmall),
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            user?['fullName']?.toString() ?? 'Staff #${row['userId']}',
+            style: GoogleFonts.inter(
+              fontSize: 14, fontWeight: FontWeight.w700, color: kInk900,
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                OutlinedButton(
-                  onPressed: () => onDecide(false),
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-                  child: const Text('Reject'),
-                ),
-                const SizedBox(width: 8),
-                FilledButton(onPressed: () => onDecide(true), child: const Text('Approve')),
-              ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'LKR ${row['amount']}',
+            style: GoogleFonts.inter(
+              fontSize: 18, fontWeight: FontWeight.w800,
+              color: kInk900, letterSpacing: -0.3,
+            ),
+          ),
+          if (row['reason'] != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              row['reason'].toString(),
+              style: GoogleFonts.inter(fontSize: 12.5, color: kInk700, height: 1.4),
             ),
           ],
-        ),
+          const SizedBox(height: 12),
+          _DecideButtons(onDecide: onDecide),
+        ],
       ),
     );
   }

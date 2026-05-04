@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import 'leave_repository.dart';
 
 class LeavesScreen extends ConsumerWidget {
@@ -13,27 +16,26 @@ class LeavesScreen extends ConsumerWidget {
     final leaves = ref.watch(myLeavesProvider);
     return Scaffold(
       body: RefreshIndicator(
+        color: kNavy900,
         onRefresh: () async => ref.invalidate(myLeavesProvider),
         child: leaves.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => ListView(children: [
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Card(
-                color: Colors.red.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(e.toString(), style: TextStyle(color: Colors.red.shade900)),
-                ),
-              ),
-            ),
-          ]),
+          loading: () => const LoadingPanel(),
+          error: (e, _) => ListView(
+            padding: const EdgeInsets.all(16),
+            children: [ErrorBox(message: e.toString())],
+          ),
           data: (rows) {
             if (rows.isEmpty) {
-              return ListView(children: const [
-                SizedBox(height: 100),
-                Center(child: Text('No leave requests yet.')),
-              ]);
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: const [
+                  EmptyState(
+                    title: 'No leave requests',
+                    message: 'Submit a new leave request from the button below.',
+                    icon: Icons.event_busy_outlined,
+                  ),
+                ],
+              );
             }
             return ListView.separated(
               padding: const EdgeInsets.all(12),
@@ -51,9 +53,13 @@ class LeavesScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: kMission500,
+        foregroundColor: kNavy900,
+        elevation: 4,
         onPressed: () => context.push('/leaves/new'),
         icon: const Icon(Icons.add),
-        label: const Text('Request leave'),
+        label: Text('Request leave',
+            style: GoogleFonts.inter(fontWeight: FontWeight.w800)),
       ),
     );
   }
@@ -72,66 +78,80 @@ class _LeaveCard extends StatelessWidget {
     final end = row['endDate']?.toString();
     final days = row['daysCount'];
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(type, style: Theme.of(context).textTheme.titleMedium),
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  type,
+                  style: GoogleFonts.inter(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w700,
+                    color: kInk900,
+                  ),
                 ),
-                _StatusChip(status: status),
-              ],
+              ),
+              StatusPill(label: status, color: _statusColor(status)),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              const Icon(Icons.event, size: 13, color: kInk400),
+              const SizedBox(width: 4),
+              Text(
+                '${_fmt(start)} → ${_fmt(end)}  ·  $days day${days == 1 ? '' : 's'}',
+                style: GoogleFonts.inter(fontSize: 12, color: kInk500),
+              ),
+            ],
+          ),
+          if (row['reason'] != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              row['reason'].toString(),
+              style: GoogleFonts.inter(fontSize: 13, color: kInk700, height: 1.4),
             ),
-            const SizedBox(height: 4),
-            Text('${_fmt(start)} → ${_fmt(end)}  •  $days day${days == 1 ? '' : 's'}'),
-            if (row['reason'] != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(row['reason'].toString()),
-            ),
-            if (row['rejectionReason'] != null) Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text('Rejected: ${row['rejectionReason']}', style: TextStyle(color: Colors.red.shade700)),
-            ),
-            if (status == 'Pending') Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(onPressed: onCancel, child: const Text('Cancel request')),
+          ],
+          if (row['rejectionReason'] != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              'Rejected: ${row['rejectionReason']}',
+              style: GoogleFonts.inter(
+                fontSize: 12, color: kDanger600, fontWeight: FontWeight.w600,
               ),
             ),
           ],
-        ),
+          if (status == 'Pending') ...[
+            const SizedBox(height: 6),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: onCancel,
+                child: const Text('Cancel request'),
+              ),
+            ),
+          ],
+        ],
       ),
     );
+  }
+
+  Color _statusColor(String s) {
+    switch (s) {
+      case 'Approved':  return kSuccess600;
+      case 'Rejected':  return kDanger600;
+      case 'Cancelled': return kInk500;
+      default:          return kMission500; // Pending
+    }
   }
 
   String _fmt(String? d) {
     if (d == null) return '';
     try { return DateFormat('d MMM').format(DateTime.parse(d)); }
     catch (_) { return d; }
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = switch (status) {
-      'Approved' => Colors.green,
-      'Rejected' => Colors.red,
-      'Cancelled' => Colors.grey,
-      _ => Colors.orange,
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
-      child: Text(status, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
-    );
   }
 }

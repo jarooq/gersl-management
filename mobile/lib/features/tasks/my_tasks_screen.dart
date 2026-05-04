@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../services/api_client.dart';
 
 final myTasksProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   final dio = ref.watch(dioProvider);
   final res = await dio.get('/tasks/my-tasks');
-  // Existing API returns { success: true, tasks: [...] }
   final raw = (res.data['tasks'] ?? res.data['data']?['tasks']) as List? ?? [];
   return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
 });
@@ -19,30 +21,26 @@ class MyTasksScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tasks = ref.watch(myTasksProvider);
     return RefreshIndicator(
+      color: kNavy900,
       onRefresh: () async { ref.invalidate(myTasksProvider); },
       child: tasks.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ListView(children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Card(
-              color: Colors.red.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Text(
-                  e.toString(),
-                  style: TextStyle(color: Colors.red.shade900),
-                ),
-              ),
-            ),
-          ),
-        ]),
+        loading: () => const LoadingPanel(),
+        error: (e, _) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [ErrorBox(message: e.toString())],
+        ),
         data: (rows) {
           if (rows.isEmpty) {
-            return ListView(children: const [
-              SizedBox(height: 80),
-              Center(child: Text('No tasks assigned to you yet.')),
-            ]);
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: const [
+                EmptyState(
+                  title: 'Nothing assigned',
+                  message: 'Tasks assigned to you by your supervisor will appear here.',
+                  icon: Icons.checklist_outlined,
+                ),
+              ],
+            );
           }
           return ListView.separated(
             padding: const EdgeInsets.all(12),
@@ -63,59 +61,89 @@ class _TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final due = task['dueDate'] as String?;
-    final priority = task['priority'] as String? ?? '';
-    return Card(
-      child: ListTile(
-        title: Text(task['title']?.toString() ?? 'Untitled'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (task['project'] != null)
-              Text(
-                (task['project']['projectName'] ?? task['project']['name'] ?? '').toString(),
-                style: Theme.of(context).textTheme.bodySmall,
+    final priority = task['priority']?.toString() ?? '';
+    final status = task['status']?.toString() ?? '';
+    final project = task['project'] as Map?;
+    final title = task['title']?.toString() ?? 'Untitled';
+
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w700,
+                    color: kInk900,
+                    height: 1.3,
+                  ),
+                ),
               ),
-            if (due != null) Text('Due ${_fmtDate(due)}'),
+              const SizedBox(width: 8),
+              if (priority.isNotEmpty)
+                StatusPill(label: priority.toUpperCase(), color: _priorityColor(priority)),
+            ],
+          ),
+          if (project != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.folder_outlined, size: 13, color: kInk400),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    (project['projectName'] ?? project['name'] ?? '').toString(),
+                    style: GoogleFonts.inter(fontSize: 11.5, color: kInk500),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ],
-        ),
-        trailing: _StatusPill(status: task['status']?.toString() ?? '', priority: priority),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              if (due != null) ...[
+                const Icon(Icons.event, size: 13, color: kInk400),
+                const SizedBox(width: 4),
+                Text(
+                  'Due ${_fmtDate(due)}',
+                  style: GoogleFonts.inter(fontSize: 11.5, color: kInk500),
+                ),
+              ],
+              const Spacer(),
+              if (status.isNotEmpty)
+                StatusPill(label: status, color: _statusColor(status)),
+            ],
+          ),
+        ],
       ),
     );
   }
-}
 
-class _StatusPill extends StatelessWidget {
-  final String status;
-  final String priority;
-  const _StatusPill({required this.status, required this.priority});
-
-  Color _color() {
-    switch (priority) {
-      case 'Urgent': return Colors.red;
-      case 'High':   return Colors.orange;
-      case 'Medium': return Colors.blue;
-      default:       return Colors.grey;
+  Color _priorityColor(String p) {
+    switch (p) {
+      case 'Urgent': return kDanger600;
+      case 'High':   return kMission500;
+      case 'Medium': return kNavy900;
+      default:       return kInk500;
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: _color().withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(priority, style: TextStyle(color: _color(), fontSize: 11, fontWeight: FontWeight.w600)),
-        ),
-        const SizedBox(height: 4),
-        Text(status, style: Theme.of(context).textTheme.bodySmall),
-      ],
-    );
+  Color _statusColor(String s) {
+    switch (s) {
+      case 'Completed': case 'Done':       return kSuccess600;
+      case 'In Progress': case 'Active':   return kNavy900;
+      case 'Blocked': case 'Cancelled':    return kDanger600;
+      case 'Pending':                       return kMission500;
+      default:                              return kInk500;
+    }
   }
 }
 

@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../services/api_client.dart';
 
 final myShiftsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   final Dio dio = ref.watch(dioProvider);
-  // Show next 60 days of scheduled shifts.
   final now = DateTime.now();
   final to = now.add(const Duration(days: 60));
   String ymd(DateTime d) =>
@@ -27,27 +29,26 @@ class ShiftsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final shifts = ref.watch(myShiftsProvider);
     return RefreshIndicator(
+      color: kNavy900,
       onRefresh: () async => ref.invalidate(myShiftsProvider),
       child: shifts.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ListView(children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Card(
-              color: Colors.red.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Text(e.toString(), style: TextStyle(color: Colors.red.shade900)),
-              ),
-            ),
-          ),
-        ]),
+        loading: () => const LoadingPanel(),
+        error: (e, _) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [ErrorBox(message: e.toString())],
+        ),
         data: (rows) {
           if (rows.isEmpty) {
-            return ListView(children: const [
-              SizedBox(height: 100),
-              Center(child: Text('No shifts scheduled.')),
-            ]);
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: const [
+                EmptyState(
+                  title: 'No shifts scheduled',
+                  message: 'Upcoming roster shifts will appear here.',
+                  icon: Icons.calendar_view_week,
+                ),
+              ],
+            );
           }
           return ListView.separated(
             padding: const EdgeInsets.all(12),
@@ -57,12 +58,51 @@ class ShiftsScreen extends ConsumerWidget {
               final s = rows[i];
               final status = s['status']?.toString() ?? '';
               final date = s['date']?.toString();
-              return Card(
-                child: ListTile(
-                  leading: CircleAvatar(child: Text(_dayLabel(date))),
-                  title: Text(_fmtDate(date)),
-                  subtitle: Text('${s['startTime']} → ${s['endTime']}  •  break ${s['breakMinutes'] ?? 0} min'),
-                  trailing: _Pill(text: status),
+              return SoftCard(
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                child: Row(
+                  children: [
+                    // Date chip
+                    Container(
+                      width: 46, height: 46,
+                      decoration: BoxDecoration(
+                        color: kNavy900,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        _dayLabel(date),
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: 18, fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _fmtDate(date),
+                            style: GoogleFonts.inter(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: kInk900,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${s['startTime']} → ${s['endTime']}   ·   break ${s['breakMinutes'] ?? 0} min',
+                            style: GoogleFonts.inter(
+                              fontSize: 12, color: kInk500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    StatusPill(label: status, color: _color(status)),
+                  ],
                 ),
               );
             },
@@ -83,23 +123,11 @@ class ShiftsScreen extends ConsumerWidget {
     try { return DateFormat('d').format(DateTime.parse(d)); }
     catch (_) { return '?'; }
   }
-}
 
-class _Pill extends StatelessWidget {
-  final String text;
-  const _Pill({required this.text});
-  @override
-  Widget build(BuildContext context) {
-    final color = switch (text) {
-      'Completed' => Colors.green,
-      'Missed' => Colors.red,
-      'Cancelled' => Colors.grey,
-      _ => Colors.blue,
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-      child: Text(text, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
-    );
-  }
+  Color _color(String s) => switch (s) {
+    'Completed' => kSuccess600,
+    'Missed'    => kDanger600,
+    'Cancelled' => kInk500,
+    _           => kNavy900,
+  };
 }

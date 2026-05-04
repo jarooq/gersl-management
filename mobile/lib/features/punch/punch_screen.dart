@@ -4,10 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import '../../services/api_client.dart';
 import 'punch_repository.dart';
 
@@ -36,8 +39,6 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     );
   }
 
-  // Capture a selfie + upload it. Returns the URL the backend stores; null if
-  // the user cancels or upload fails (caller treats as optional).
   Future<String?> _captureSelfie() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(
@@ -50,11 +51,11 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     try {
       final dio = ref.read(dioProvider);
       final form = FormData.fromMap({
-        'image': await MultipartFile.fromFile(picked.path, filename: File(picked.path).uri.pathSegments.last),
+        'image': await MultipartFile.fromFile(picked.path,
+            filename: File(picked.path).uri.pathSegments.last),
       });
       final res = await dio.post('/upload/punch', data: form,
           options: Options(headers: {'Content-Type': 'multipart/form-data'}));
-      // Controller returns { data: { url, path, ... } } — fall back to either.
       final data = res.data['data'] ?? res.data;
       return (data['url'] ?? data['path'])?.toString();
     } catch (_) {
@@ -92,93 +93,113 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
   Widget build(BuildContext context) {
     final today = ref.watch(todayProvider);
     return RefreshIndicator(
+      color: kNavy900,
       onRefresh: () async { ref.invalidate(todayProvider); },
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           today.when(
-            loading: () => const Padding(
-              padding: EdgeInsets.all(40),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            error: (e, _) => _Errored(message: e.toString()),
-            data: (d) => _TodaySummary(data: d),
-          ),
-          const SizedBox(height: 16),
-          if (_error != null)
-            Card(
-              color: Colors.red.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade900)),
+            loading: () => SoftCard(
+              padding: const EdgeInsets.all(28),
+              child: const Center(
+                child: CircularProgressIndicator(color: kNavy900),
               ),
             ),
+            error: (e, _) => _ErrorBox(message: e.toString()),
+            data: (d) => _TodayCard(data: d),
+          ),
+
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            _ErrorBox(message: _error!),
+          ],
+
+          const SizedBox(height: 16),
+
+          // Primary punch buttons
           Row(
             children: [
               Expanded(
-                child: _BigButton(
+                child: _ActionTile(
                   label: 'Punch IN',
-                  color: Colors.green,
-                  icon: Icons.login,
+                  icon: Icons.login_rounded,
+                  filled: true,
                   busy: _busy,
                   onPressed: () => _punch('In', withSelfie: true),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
-                child: _BigButton(
+                child: _ActionTile(
                   label: 'Punch OUT',
-                  color: Colors.red,
-                  icon: Icons.logout,
+                  icon: Icons.logout_rounded,
+                  filled: false,
                   busy: _busy,
                   onPressed: () => _punch('Out'),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+
+          const SizedBox(height: 10),
+
+          // Break controls
           Row(
             children: [
               Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _busy ? null : () => _punch('BreakIn'),
-                  icon: const Icon(Icons.coffee_outlined),
-                  label: const Text('Break in'),
+                child: _BreakButton(
+                  label: 'Break in',
+                  icon: Icons.coffee_outlined,
+                  busy: _busy,
+                  onPressed: () => _punch('BreakIn'),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _busy ? null : () => _punch('BreakOut'),
-                  icon: const Icon(Icons.work_history_outlined),
-                  label: const Text('Break out'),
+                child: _BreakButton(
+                  label: 'Break out',
+                  icon: Icons.work_history_outlined,
+                  busy: _busy,
+                  onPressed: () => _punch('BreakOut'),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text("Today's punches", style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
+
+          const SizedBox(height: 22),
+          const SectionHeader(label: "Today's punches"),
+
           today.when(
             loading: () => const SizedBox.shrink(),
             error: (_, _) => const SizedBox.shrink(),
             data: (d) {
               final punches = (d['punches'] as List? ?? []).cast<Map>();
               if (punches.isEmpty) {
-                return Card(
-                  child: const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('No punches yet today.'),
+                return SoftCard(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.history_toggle_off,
+                          color: kInk400, size: 20),
+                      const SizedBox(width: 10),
+                      Text(
+                        'No punches yet today.',
+                        style: GoogleFonts.inter(
+                          fontSize: 13.5, color: kInk500,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
-              return Card(
+              return SoftCard(
+                padding: EdgeInsets.zero,
                 child: Column(
                   children: [
                     for (var i = 0; i < punches.length; i++) ...[
-                      if (i > 0) const Divider(height: 1),
-                      _PunchTile(punch: Map<String, dynamic>.from(punches[i])),
-                    ]
+                      if (i > 0)
+                        const Divider(height: 1, color: kInk100),
+                      _PunchRow(punch: Map<String, dynamic>.from(punches[i])),
+                    ],
                   ],
                 ),
               );
@@ -190,79 +211,210 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
   }
 }
 
-class _TodaySummary extends StatelessWidget {
+// -----------------------------------------------------------------------------
+
+class _TodayCard extends StatelessWidget {
   final Map<String, dynamic> data;
-  const _TodaySummary({required this.data});
+  const _TodayCard({required this.data});
 
   @override
   Widget build(BuildContext context) {
     final isClockedIn = data['isClockedIn'] == true;
     final last = data['lastPunch'] as Map?;
     final dateStr = data['date'] as String? ?? '';
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 6,
-                  backgroundColor: isClockedIn ? Colors.green : Colors.grey,
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+      decoration: BoxDecoration(
+        color: kNavy900,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: kNavy900.withValues(alpha: 0.18),
+            blurRadius: 14, offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              StatusPill(
+                label: isClockedIn ? 'CLOCKED IN' : 'NOT CLOCKED IN',
+                color: isClockedIn ? kSuccess600 : kInk400,
+                icon: isClockedIn ? Icons.circle : Icons.circle_outlined,
+              ),
+              const Spacer(),
+              Text(
+                dateStr,
+                style: GoogleFonts.inter(
+                  color: kInk200,
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(width: 8),
-                Text(isClockedIn ? 'Clocked in' : 'Not clocked in',
-                    style: Theme.of(context).textTheme.titleMedium),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Text(
+            isClockedIn ? "You're on duty" : 'Ready to start your day',
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.4,
+            ),
+          ),
+          if (last != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              'Last punch: ${last['punchType']} · ${_fmtTime(last['occurredAt'])}',
+              style: GoogleFonts.inter(
+                color: kInk200,
+                fontSize: 13,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _PunchRow extends StatelessWidget {
+  final Map<String, dynamic> punch;
+  const _PunchRow({required this.punch});
+
+  @override
+  Widget build(BuildContext context) {
+    final type = punch['punchType'] as String? ?? '';
+    final geo = punch['geofenceMatch'] == true;
+    final isIn = type == 'In' || type == 'BreakIn';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: Row(
+        children: [
+          Container(
+            width: 34, height: 34,
+            decoration: BoxDecoration(
+              color: (isIn ? kSuccess600 : kDanger600).withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              isIn ? Icons.login : Icons.logout,
+              size: 17,
+              color: isIn ? kSuccess600 : kDanger600,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  type,
+                  style: GoogleFonts.inter(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: kInk900,
+                  ),
+                ),
+                Text(
+                  _fmtTime(punch['occurredAt']),
+                  style: GoogleFonts.inter(fontSize: 12, color: kInk500),
+                ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(dateStr, style: Theme.of(context).textTheme.bodySmall),
-            if (last != null) ...[
-              const SizedBox(height: 8),
-              Text('Last: ${last['punchType']} at ${_fmtTime(last['occurredAt'])}'),
-            ],
-          ],
+          ),
+          if (geo)
+            const Icon(Icons.place, color: kSuccess600, size: 17)
+          else if (punch['latitude'] != null)
+            const Icon(Icons.location_off, color: kMission600, size: 17),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionTile extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool filled;
+  final bool busy;
+  final VoidCallback onPressed;
+  const _ActionTile({
+    required this.label,
+    required this.icon,
+    required this.filled,
+    required this.busy,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = filled ? kMission500 : Colors.white;
+    final fg = filled ? kNavy900 : kNavy900;
+    return Material(
+      color: bg,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: busy ? null : onPressed,
+        child: Container(
+          height: 92,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: filled
+                ? null
+                : Border.all(color: kInk200, width: 1.2),
+            boxShadow: filled
+                ? [
+                    BoxShadow(
+                      color: kMission500.withValues(alpha: 0.25),
+                      blurRadius: 14, offset: const Offset(0, 6),
+                    ),
+                  ]
+                : null,
+          ),
+          child: busy
+              ? Center(
+                  child: SizedBox(
+                    width: 22, height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2.4, color: fg),
+                  ),
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(icon, color: fg, size: 24),
+                    const SizedBox(height: 4),
+                    Text(
+                      label,
+                      style: GoogleFonts.inter(
+                        color: fg,
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
   }
 }
 
-class _PunchTile extends StatelessWidget {
-  final Map<String, dynamic> punch;
-  const _PunchTile({required this.punch});
-
-  @override
-  Widget build(BuildContext context) {
-    final type = punch['punchType'] as String? ?? '';
-    final geo = punch['geofenceMatch'] == true;
-    return ListTile(
-      dense: true,
-      leading: Icon(
-        type == 'In' || type == 'BreakIn' ? Icons.login : Icons.logout,
-        color: type == 'In' ? Colors.green : type == 'Out' ? Colors.red : Colors.orange,
-      ),
-      title: Text(type),
-      subtitle: Text(_fmtTime(punch['occurredAt'])),
-      trailing: geo
-          ? const Icon(Icons.place, color: Colors.green, size: 18)
-          : (punch['latitude'] != null
-              ? const Icon(Icons.location_off, color: Colors.orange, size: 18)
-              : null),
-    );
-  }
-}
-
-class _BigButton extends StatelessWidget {
+class _BreakButton extends StatelessWidget {
   final String label;
-  final Color color;
   final IconData icon;
   final bool busy;
   final VoidCallback onPressed;
-  const _BigButton({
+  const _BreakButton({
     required this.label,
-    required this.color,
     required this.icon,
     required this.busy,
     required this.onPressed,
@@ -270,36 +422,41 @@ class _BigButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 80,
-      child: FilledButton(
-        style: FilledButton.styleFrom(backgroundColor: color),
-        onPressed: busy ? null : onPressed,
-        child: busy
-            ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, color: Colors.white),
-                  const SizedBox(height: 4),
-                  Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                ],
-              ),
-      ),
+    return OutlinedButton.icon(
+      onPressed: busy ? null : onPressed,
+      icon: Icon(icon, size: 16),
+      label: Text(label),
     );
   }
 }
 
-class _Errored extends StatelessWidget {
+class _ErrorBox extends StatelessWidget {
   final String message;
-  const _Errored({required this.message});
+  const _ErrorBox({required this.message});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.red.shade50,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Text(message, style: TextStyle(color: Colors.red.shade900)),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: kDanger600.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: kDanger600.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, color: kDanger600, size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: GoogleFonts.inter(
+                fontSize: 12.5,
+                color: kDanger600,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

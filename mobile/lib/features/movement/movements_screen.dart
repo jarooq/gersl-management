@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets.dart';
 import 'movement_repository.dart';
 
 class MovementsScreen extends ConsumerWidget {
@@ -11,27 +14,26 @@ class MovementsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final movements = ref.watch(myMovementsProvider);
     return RefreshIndicator(
+      color: kNavy900,
       onRefresh: () async => ref.invalidate(myMovementsProvider),
       child: movements.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ListView(children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Card(
-              color: Colors.red.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Text(e.toString(), style: TextStyle(color: Colors.red.shade900)),
-              ),
-            ),
-          ),
-        ]),
+        loading: () => const LoadingPanel(),
+        error: (e, _) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [ErrorBox(message: e.toString())],
+        ),
         data: (rows) {
           if (rows.isEmpty) {
-            return ListView(children: const [
-              SizedBox(height: 100),
-              Center(child: Text('No movements logged.')),
-            ]);
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: const [
+                EmptyState(
+                  title: 'No movements yet',
+                  message: 'Field-trip movements will appear here once logged.',
+                  icon: Icons.directions_car_outlined,
+                ),
+              ],
+            );
           }
           return ListView.separated(
             padding: const EdgeInsets.all(12),
@@ -40,20 +42,50 @@ class MovementsScreen extends ConsumerWidget {
             itemBuilder: (_, i) {
               final m = rows[i];
               final status = m['status']?.toString() ?? '';
-              return Card(
-                child: ListTile(
-                  title: Text('${m['fromLocation'] ?? ''} → ${m['toLocation'] ?? ''}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (m['purpose'] != null) Text(m['purpose'].toString()),
+              return SoftCard(
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${m['fromLocation'] ?? ''} → ${m['toLocation'] ?? ''}',
+                            style: GoogleFonts.inter(
+                              fontSize: 14, fontWeight: FontWeight.w700,
+                              color: kInk900,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        StatusPill(label: status, color: _color(status)),
+                      ],
+                    ),
+                    if (m['purpose'] != null) ...[
+                      const SizedBox(height: 6),
                       Text(
-                        '${_fmt(m['plannedStart'] as String?)} • ${m['distanceKm'] ?? '-'} km',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        m['purpose'].toString(),
+                        style: GoogleFonts.inter(
+                          fontSize: 12.5, color: kInk700, height: 1.4,
+                        ),
                       ),
                     ],
-                  ),
-                  trailing: _Pill(text: status, color: _color(status)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.event, size: 13, color: kInk400),
+                        const SizedBox(width: 4),
+                        Text(_fmt(m['plannedStart'] as String?),
+                            style: GoogleFonts.inter(fontSize: 11.5, color: kInk500)),
+                        const SizedBox(width: 12),
+                        const Icon(Icons.straighten, size: 13, color: kInk400),
+                        const SizedBox(width: 4),
+                        Text('${m['distanceKm'] ?? '—'} km',
+                            style: GoogleFonts.inter(fontSize: 11.5, color: kInk500)),
+                      ],
+                    ),
+                  ],
                 ),
               );
             },
@@ -70,24 +102,9 @@ class MovementsScreen extends ConsumerWidget {
   }
 
   Color _color(String s) => switch (s) {
-    'Approved' || 'Returned' => Colors.green,
-    'Rejected' || 'Cancelled' => Colors.red,
-    'InMovement' || 'Arrived' => Colors.blue,
-    _ => Colors.orange,
+    'Approved' || 'Returned'   => kSuccess600,
+    'Rejected' || 'Cancelled'  => kDanger600,
+    'InMovement' || 'Arrived'  => kNavy900,
+    _                          => kMission500,
   };
-}
-
-class _Pill extends StatelessWidget {
-  final String text;
-  final Color color;
-  const _Pill({required this.text, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-      child: Text(text, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
-    );
-  }
 }
