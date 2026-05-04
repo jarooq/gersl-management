@@ -5,6 +5,7 @@
 
 import asyncHandler from 'express-async-handler';
 import { Expense, User } from '../models/index.js';
+import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
 
 const isApprover = (user) => ['Admin', 'CEO', 'Finance Manager', 'HR Manager'].includes(user?.role);
 
@@ -33,6 +34,24 @@ export const listPending = asyncHandler(async (req, res) => {
   res.json({ success: true, data: rows });
 });
 
+// GET /api/me/expenses/admin — Finance/HR view of every claim (any status, any user).
+// Used by the web Expenses admin page.
+export const listAll = asyncHandler(async (req, res) => {
+  if (!isApprover(req.user)) return res.status(403).json({ success: false, message: 'forbidden' });
+  const where = {};
+  if (req.query.status) where.status = req.query.status;
+  const rows = await Expense.findAll({
+    where,
+    include: [
+      { model: User, as: 'submitter', attributes: ['id', 'fullName', 'role'] },
+      { model: User, as: 'approver',  attributes: ['id', 'fullName'] },
+    ],
+    order: [['date', 'DESC']],
+    limit: 500,
+  });
+  res.json({ success: true, data: rows });
+});
+
 // POST /api/me/expenses
 export const createMine = asyncHandler(async (req, res) => {
   const { date, category, description, amount, projectId, paymentMethod, receiptUrl } = req.body;
@@ -53,6 +72,15 @@ export const createMine = asyncHandler(async (req, res) => {
     submittedBy: req.user.id,
     status: 'Pending'
   });
+  await createApprovalRow({
+    type: 'FINANCE_EXPENSE',
+    entityType: 'expense',
+    entityId: row.id,
+    requestedBy: req.user.id,
+    amount: Number(amount),
+    title: `${category} — LKR ${amount}`,
+    description: description,
+  });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -64,6 +92,9 @@ export const cancelMine = asyncHandler(async (req, res) => {
   if (row.status !== 'Pending') return res.status(409).json({ success: false, message: `cannot cancel ${row.status}` });
   row.status = 'Rejected';
   await row.save();
+  await syncApprovalDecision({
+    entityType: 'expense', entityId: row.id, status: 'Cancelled', decidedBy: req.user.id,
+  });
   res.json({ success: true, data: row });
 });
 
@@ -79,5 +110,9 @@ export const decide = asyncHandler(async (req, res) => {
   row.approvedBy = req.user.id;
   row.approvalDate = new Date();
   await row.save();
+  await syncApprovalDecision({
+    entityType: 'expense', entityId: row.id, status: row.status,
+    decidedBy: req.user.id, notes: req.body.notes ?? null,
+  });
   res.json({ success: true, data: row });
 });

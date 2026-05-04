@@ -69,9 +69,11 @@ export const HRProvider = ({ children }) => {
         console.error('❌ Error loading staff:', staffRes.reason);
       }
 
-      // Set attendance data
+      // Set attendance data — backend returns { attendanceRecords, pagination };
+      // older mock returned { attendance }. Accept either.
       if (attendanceRes.status === 'fulfilled') {
-        setAttendance(attendanceRes.value.attendance || []);
+        const v = attendanceRes.value;
+        setAttendance(v?.attendanceRecords || v?.attendance || []);
       } else {
         console.error('Error loading attendance:', attendanceRes.reason);
       }

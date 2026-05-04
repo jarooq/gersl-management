@@ -49,7 +49,12 @@ class MoreScreen extends ConsumerWidget {
       _Tile('Payslips',        Icons.payments_outlined,      '/payslips',  kNavy900),
     ];
     final updates = const [
-      _Tile('Announcements', Icons.campaign_outlined, '/announcements', kMission600),
+      _Tile('Notifications', Icons.notifications_outlined, '/notifications', kNavy900),
+      _Tile('Announcements', Icons.campaign_outlined,      '/announcements', kMission600),
+    ];
+
+    final safety = const [
+      _Tile('Report incident', Icons.shield_outlined, '/incidents', kDanger600),
     ];
 
     return ListView(
@@ -68,6 +73,8 @@ class MoreScreen extends ConsumerWidget {
         _GridSection(title: 'HR & Finance', tiles: hrFinance),
         const SizedBox(height: 18),
         _GridSection(title: 'Updates', tiles: updates),
+        const SizedBox(height: 18),
+        _GridSection(title: 'Safety & Compliance', tiles: safety),
       ],
     );
   }

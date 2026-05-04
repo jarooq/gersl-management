@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useHR } from '../../contexts/HRContext';
-import { Clock, MapPin, CheckCircle, X, Calendar, User, TrendingUp, AlertCircle, Navigation, Search, Filter, Download, LogOut, LogIn } from 'lucide-react';
+import { Clock, MapPin, CheckCircle, X, Calendar, User, TrendingUp, AlertCircle, Navigation, Search, Filter, Download, LogOut, LogIn, Camera, Smartphone } from 'lucide-react';
+import { API_ORIGIN } from '../../config/apiBase';
 
 const AttendancePage = () => {
   const {
@@ -422,11 +423,27 @@ const AttendancePage = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      record.type === 'GPS'
-                        ? 'bg-purple-100 text-purple-700'
-                        : 'bg-blue-100 text-blue-700'
+                    {record.selfieUrl && (
+                      <a
+                        href={/^https?:\/\//.test(record.selfieUrl) ? record.selfieUrl : `${API_ORIGIN}${record.selfieUrl.startsWith('/') ? '' : '/'}${record.selfieUrl}`}
+                        target="_blank" rel="noreferrer"
+                        title="Open selfie"
+                        className="w-9 h-9 rounded-md overflow-hidden border border-ink-200 hover:border-navy-700 transition shrink-0 bg-ink-50 flex items-center justify-center"
+                      >
+                        <img
+                          src={/^https?:\/\//.test(record.selfieUrl) ? record.selfieUrl : `${API_ORIGIN}${record.selfieUrl.startsWith('/') ? '' : '/'}${record.selfieUrl}`}
+                          alt="selfie"
+                          className="w-full h-full object-cover"
+                          onError={(e) => { e.currentTarget.style.display='none'; e.currentTarget.parentElement.innerHTML = '<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'14\' height=\'14\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' viewBox=\'0 0 24 24\' class=\'text-ink-400\'><circle cx=\'12\' cy=\'13\' r=\'4\'/><path d=\'M9 3l-1 2H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2h-4l-1-2z\'/></svg>'; }}
+                        />
+                      </a>
+                    )}
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1 ${
+                      record.type === 'GPS' ? 'bg-purple-100 text-purple-700' :
+                      record.type === 'Mobile' ? 'bg-mission-50 text-mission-700 border border-mission-200' :
+                      'bg-blue-100 text-blue-700'
                     }`}>
+                      {record.type === 'Mobile' && <Smartphone size={12} />}
                       {record.type}
                     </span>
                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">

@@ -6,6 +6,7 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 import { LeaveRequest, User } from '../models/index.js';
+import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
 
 const isApprover = (user) => ['Admin', 'CEO', 'HR Manager', 'HR Officer', 'Manager'].includes(user?.role);
 
@@ -53,6 +54,14 @@ export const createMine = asyncHandler(async (req, res) => {
     reason:    reason || null,
     status:    'Pending'
   });
+  await createApprovalRow({
+    type: 'HR_LEAVE_REQUEST',
+    entityType: 'leave_request',
+    entityId: row.id,
+    requestedBy: req.user.id,
+    title: `${leaveType} leave — ${row.daysCount} day${row.daysCount === 1 ? '' : 's'}`,
+    description: reason || `${startDate} → ${endDate}`,
+  });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -64,6 +73,9 @@ export const cancelMine = asyncHandler(async (req, res) => {
   if (row.status !== 'Pending') return res.status(409).json({ success: false, message: `already ${row.status}` });
   row.status = 'Cancelled';
   await row.save();
+  await syncApprovalDecision({
+    entityType: 'leave_request', entityId: row.id, status: 'Cancelled', decidedBy: req.user.id,
+  });
   res.json({ success: true, data: row });
 });
 
@@ -80,5 +92,9 @@ export const decide = asyncHandler(async (req, res) => {
   row.approvalDate = new Date();
   if (action === 'reject') row.rejectionReason = req.body.reason || null;
   await row.save();
+  await syncApprovalDecision({
+    entityType: 'leave_request', entityId: row.id, status: row.status,
+    decidedBy: req.user.id, notes: req.body.reason ?? null,
+  });
   res.json({ success: true, data: row });
 });

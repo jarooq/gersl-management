@@ -39,6 +39,9 @@ const OnboardingPage = lazy(() => import('../pages/HR/OnboardingPage'));
 const AppraisalPage = lazy(() => import('../pages/HR/AppraisalPage'));
 const ContractManagementPage = lazy(() => import('../pages/HR/ContractManagementPage'));
 const PayrollPage = lazy(() => import('../pages/HR/PayrollPage'));
+const SalaryAdvancesPage = lazy(() => import('../pages/HR/SalaryAdvancesPage'));
+const StaffExpensesPage = lazy(() => import('../pages/HR/StaffExpensesPage'));
+const FieldVisitsPage = lazy(() => import('../pages/Operations/FieldVisitsPage'));
 const ProposalsPage = lazy(() => import('../pages/Proposals/ProposalsPage'));
 const PartnersPage = lazy(() => import('../pages/Partners/PartnersPage'));
 const MEALPage = lazy(() => import('../pages/MEAL/MEALPage'));
@@ -510,6 +513,14 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             }
           />
           <Route
+            path="operations/field-visits"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <FieldVisitsPage />
+              </Suspense>
+            }
+          />
+          <Route
             path="operations/movements"
             element={
               <Suspense fallback={<PageLoader />}>
@@ -636,6 +647,26 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
                 <PermissionRoute permission={PERMISSIONS.FINANCE_VIEW_PAYROLL}>
                   <Suspense fallback={<PageLoader />}>
                     <PayrollPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="salary-advances"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_VIEW}>
+                  <Suspense fallback={<PageLoader />}>
+                    <SalaryAdvancesPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="staff-expenses"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_VIEW}>
+                  <Suspense fallback={<PageLoader />}>
+                    <StaffExpensesPage />
                   </Suspense>
                 </PermissionRoute>
               }

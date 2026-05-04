@@ -9,7 +9,24 @@ import '../../app/widgets.dart';
 import '../auth/auth_controller.dart';
 import 'advance_repository.dart';
 
-const _approverRoles = {'Admin', 'CEO', 'HR Manager', 'Finance Manager'};
+// Permission-driven approver check (same shape as approvals_screen).
+const _approverPermissions = <String>[
+  'hr:salary_advance_approve',
+  'finance:manager_approve',
+];
+
+bool _canApprove(Map<String, dynamic>? user) {
+  if (user == null) return false;
+  final perms = user['permissions'];
+  if (perms is List) {
+    final keys = perms.map((p) => p is Map ? p['permissionKey']?.toString() : p.toString()).toSet();
+    if (keys.contains('*')) return true;
+    for (final p in _approverPermissions) {
+      if (keys.contains(p)) return true;
+    }
+  }
+  return const {'Admin', 'CEO', 'HR Manager', 'Finance Manager'}.contains(user['role']);
+}
 
 class AdvancesScreen extends ConsumerWidget {
   const AdvancesScreen({super.key});
@@ -18,7 +35,7 @@ class AdvancesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final advances = ref.watch(advancesProvider);
     final me = ref.watch(authControllerProvider).value?.user;
-    final canApprove = _approverRoles.contains(me?['role']);
+    final canApprove = _canApprove(me);
 
     return Scaffold(
       body: RefreshIndicator(

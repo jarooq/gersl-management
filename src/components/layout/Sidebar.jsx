@@ -86,6 +86,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/operations/activities', icon: Target, label: 'Activities', icc: ICON.purple, permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES },
         { path: '/admin/operations/tasks', icon: ClipboardCheck, label: 'All Tasks', icc: ICON.purple, permission: PERMISSIONS.OPERATIONS_VIEW_TASKS },
         { path: '/admin/operations/my-tasks', icon: UserCheck, label: 'My Tasks', icc: ICON.purple },
+        { path: '/admin/operations/field-visits', icon: MapPin, label: 'Field Visits', icc: ICON.purple },
         { path: '/admin/operations/movements', icon: MapPin, label: 'Movement Register', icc: ICON.purple },
         { path: '/admin/operations/fuel-claims', icon: DollarSign, label: 'Fuel Claims', icc: ICON.purple },
         { path: '/admin/operations/fuel-rates', icon: Settings, label: 'Fuel Rates', icc: ICON.purple },
@@ -127,6 +128,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
         { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_CONTRACTS },
         { path: '/admin/hr/payroll', icon: Wallet, label: 'Payroll', icc: ICON.orange, permission: PERMISSIONS.FINANCE_VIEW_PAYROLL },
+        { path: '/admin/hr/salary-advances', icon: DollarSign, label: 'Salary Advances', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
+        { path: '/admin/hr/staff-expenses', icon: ClipboardCheck, label: 'Staff Expenses', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
       ]
     },
     { path: '/admin/cbo', icon: Users2, label: 'CBO Partners', icc: ICON.indigo, permission: PERMISSIONS.CBO_VIEW },

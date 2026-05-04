@@ -10,10 +10,34 @@ import '../auth/auth_controller.dart';
 import '../expenses/expense_repository.dart';
 import '../leaves/leave_repository.dart';
 
-const _approverRoles = {
-  'Admin', 'CEO', 'HR Manager', 'HR Officer',
-  'Finance Manager', 'Programme Manager', 'Manager'
-};
+// Replaces the hard-coded role allowlist with a permission-based check on the
+// user's permissions list. Mirrors the admin-web `hasPermission(...)` model.
+const _approverPermissions = <String>[
+  'hr:approve_leave',
+  'hr:manager_approve_leave',
+  'finance:approve_expense',
+  'finance:manager_approve',
+  'hr:salary_advance_approve',
+];
+
+bool _canApprove(Map<String, dynamic>? user) {
+  if (user == null) return false;
+  // Wildcard super-admin
+  final perms = user['permissions'];
+  if (perms is List) {
+    final keys = perms.map((p) => p is Map ? p['permissionKey']?.toString() : p.toString()).toSet();
+    if (keys.contains('*')) return true;
+    for (final p in _approverPermissions) {
+      if (keys.contains(p)) return true;
+    }
+  }
+  // Fallback: legacy role allowlist (until every deployment has the new permissions seeded)
+  const fallback = {
+    'Admin', 'CEO', 'HR Manager', 'HR Officer',
+    'Finance Manager', 'Programme Manager', 'Manager',
+  };
+  return fallback.contains(user['role']);
+}
 
 final _pendingLeavesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>(
   (ref) => ref.watch(leaveRepoProvider).pending(),
@@ -31,7 +55,7 @@ class ApprovalsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final me = ref.watch(authControllerProvider).value?.user;
-    if (!_approverRoles.contains(me?['role'])) {
+    if (!_canApprove(me)) {
       return const Padding(
         padding: EdgeInsets.all(24),
         child: Center(

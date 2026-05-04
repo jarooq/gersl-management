@@ -3750,6 +3750,80 @@ export const DataProtectionAPI = {
 };
 
 // ============================================
+// EXPENSE CLAIMS API (mobile-submitted via /me/expenses)
+// ============================================
+export const ExpenseAPI = {
+  // HR / Finance: list every claim across all users
+  listAdmin: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/me/expenses/admin?${qs}`);
+    return data.data || [];
+  },
+  approve: async (id, notes) => {
+    const data = await request(`/me/expenses/${id}/approve`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes: notes || null }),
+    });
+    return data.data;
+  },
+  reject: async (id, notes) => {
+    const data = await request(`/me/expenses/${id}/reject`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes: notes || null }),
+    });
+    return data.data;
+  },
+};
+API.Expense = ExpenseAPI;
+
+// ============================================
+// SALARY ADVANCE API (mobile-submitted via /salary-advances)
+// ============================================
+export const SalaryAdvanceAPI = {
+  list: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/salary-advances?${qs}`);
+    return data.data || [];
+  },
+  approve: async (id, notes) => {
+    const data = await request(`/salary-advances/${id}/approve`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes: notes || null }),
+    });
+    return data.data;
+  },
+  reject: async (id, notes) => {
+    const data = await request(`/salary-advances/${id}/reject`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes: notes || null }),
+    });
+    return data.data;
+  },
+  cancel: async (id) => {
+    const data = await request(`/salary-advances/${id}/cancel`, { method: 'PATCH' });
+    return data.data;
+  },
+};
+API.SalaryAdvance = SalaryAdvanceAPI;
+
+// ============================================
+// FIELD VISITS API (mobile-submitted via /visits — generic Visit model,
+// distinct from /visit-logs which is the orphan visit log)
+// ============================================
+export const FieldVisitAPI = {
+  list: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/visits?${qs}`);
+    return data.data || data.visits || [];
+  },
+  getById: async (id) => {
+    const data = await request(`/visits/${id}`);
+    return data.data || data.visit;
+  },
+};
+API.FieldVisit = FieldVisitAPI;
+
+// ============================================
 // HR CONTRACT MANAGEMENT API
 // ============================================
 

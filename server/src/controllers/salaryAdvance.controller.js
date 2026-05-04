@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { SalaryAdvance, User } from '../models/index.js';
+import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
 
 const isAdmin = (user) => ['Admin', 'CEO', 'HR Manager', 'Finance Manager'].includes(user?.role);
 
@@ -25,6 +26,15 @@ export const create = asyncHandler(async (req, res) => {
   const { amount, reason } = req.body;
   if (!amount || amount <= 0) return res.status(400).json({ success: false, message: 'amount > 0 required' });
   const row = await SalaryAdvance.create({ userId: req.user.id, amount, reason, status: 'Pending' });
+  await createApprovalRow({
+    type: 'HR_SALARY_ADVANCE',
+    entityType: 'salary_advance',
+    entityId: row.id,
+    requestedBy: req.user.id,
+    amount: Number(amount),
+    title: `Salary advance — LKR ${amount}`,
+    description: reason || null,
+  });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -39,6 +49,10 @@ export const decide = asyncHandler(async (req, res) => {
   row.decidedAt = new Date();
   row.decisionNotes = req.body.notes || null;
   await row.save();
+  await syncApprovalDecision({
+    entityType: 'salary_advance', entityId: row.id, status: row.status,
+    decidedBy: req.user.id, notes: req.body.notes ?? null,
+  });
   res.json({ success: true, data: row });
 });
 
@@ -49,5 +63,8 @@ export const cancel = asyncHandler(async (req, res) => {
   if (row.status !== 'Pending') return res.status(409).json({ success: false, message: `cannot cancel ${row.status}` });
   row.status = 'Cancelled';
   await row.save();
+  await syncApprovalDecision({
+    entityType: 'salary_advance', entityId: row.id, status: 'Cancelled', decidedBy: req.user.id,
+  });
   res.json({ success: true, data: row });
 });
