@@ -19,7 +19,7 @@ class VisitsScreen extends ConsumerWidget {
         color: kNavy900,
         onRefresh: () async => ref.invalidate(myVisitsProvider),
         child: visits.when(
-          loading: () => const LoadingPanel(),
+          loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
             children: [ErrorBox(message: e.toString())],
@@ -50,7 +50,7 @@ class VisitsScreen extends ConsumerWidget {
         backgroundColor: kMission500,
         foregroundColor: kNavy900,
         elevation: 4,
-        onPressed: () => context.push('/visits/new'),
+        onPressed: () { Haptics.light(); context.push('/visits/new'); },
         icon: const Icon(Icons.add),
         label: Text(
           'Log visit',

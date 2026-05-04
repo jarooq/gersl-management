@@ -10,6 +10,7 @@ import '../features/auth/login_screen.dart';
 import '../features/expenses/expenses_screen.dart';
 import '../features/expenses/new_expense_screen.dart';
 import '../features/compliance/incident_screen.dart';
+import '../features/home/home_dashboard_screen.dart';
 import '../features/home/home_shell.dart';
 import '../features/home/more_screen.dart';
 import '../features/notifications/notifications_screen.dart';
@@ -41,7 +42,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (context, state, child) => HomeShell(child: child),
         routes: [
-          GoRoute(path: '/today',         builder: (context, state) => const PunchScreen()),
+          GoRoute(path: '/today',         builder: (context, state) => const HomeDashboardScreen()),
+          GoRoute(path: '/punch',         builder: (context, state) => const PunchScreen()),
           GoRoute(path: '/tasks',         builder: (context, state) => const MyTasksScreen()),
           GoRoute(path: '/visits',        builder: (context, state) => const VisitsScreen()),
           GoRoute(path: '/more',          builder: (context, state) => const MoreScreen()),

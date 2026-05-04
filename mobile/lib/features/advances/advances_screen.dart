@@ -42,7 +42,7 @@ class AdvancesScreen extends ConsumerWidget {
         color: kNavy900,
         onRefresh: () async => ref.invalidate(advancesProvider),
         child: advances.when(
-          loading: () => const LoadingPanel(),
+          loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
             children: [ErrorBox(message: e.toString())],
@@ -88,7 +88,7 @@ class AdvancesScreen extends ConsumerWidget {
         backgroundColor: kMission500,
         foregroundColor: kNavy900,
         elevation: 4,
-        onPressed: () => context.push('/advances/new'),
+        onPressed: () { Haptics.light(); context.push('/advances/new'); },
         icon: const Icon(Icons.add),
         label: Text('Request advance',
             style: GoogleFonts.inter(fontWeight: FontWeight.w800)),
@@ -179,7 +179,7 @@ class _AdvanceCard extends StatelessWidget {
               children: [
                 if (canApprove) ...[
                   OutlinedButton(
-                    onPressed: () => onDecide(false),
+                    onPressed: () { Haptics.medium(); onDecide(false); },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: kDanger600,
                       minimumSize: const Size(0, 38),
@@ -188,7 +188,7 @@ class _AdvanceCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   FilledButton(
-                    onPressed: () => onDecide(true),
+                    onPressed: () { Haptics.medium(); onDecide(true); },
                     style: FilledButton.styleFrom(
                       backgroundColor: kSuccess600,
                       foregroundColor: Colors.white,

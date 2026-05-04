@@ -19,7 +19,7 @@ class LeavesScreen extends ConsumerWidget {
         color: kNavy900,
         onRefresh: () async => ref.invalidate(myLeavesProvider),
         child: leaves.when(
-          loading: () => const LoadingPanel(),
+          loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
             children: [ErrorBox(message: e.toString())],
@@ -56,7 +56,7 @@ class LeavesScreen extends ConsumerWidget {
         backgroundColor: kMission500,
         foregroundColor: kNavy900,
         elevation: 4,
-        onPressed: () => context.push('/leaves/new'),
+        onPressed: () { Haptics.light(); context.push('/leaves/new'); },
         icon: const Icon(Icons.add),
         label: Text('Request leave',
             style: GoogleFonts.inter(fontWeight: FontWeight.w800)),

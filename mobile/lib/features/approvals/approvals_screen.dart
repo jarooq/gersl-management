@@ -226,7 +226,7 @@ class _DecideButtons extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton(
-            onPressed: () => onDecide(false),
+            onPressed: () { Haptics.medium(); onDecide(false); },
             style: OutlinedButton.styleFrom(
               foregroundColor: kDanger600,
               minimumSize: const Size(0, 38),
@@ -238,7 +238,7 @@ class _DecideButtons extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: FilledButton(
-            onPressed: () => onDecide(true),
+            onPressed: () { Haptics.medium(); onDecide(true); },
             style: FilledButton.styleFrom(
               backgroundColor: kSuccess600,
               foregroundColor: Colors.white,

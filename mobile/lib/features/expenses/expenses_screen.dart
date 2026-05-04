@@ -19,7 +19,7 @@ class ExpensesScreen extends ConsumerWidget {
         color: kNavy900,
         onRefresh: () async => ref.invalidate(myExpensesProvider),
         child: expenses.when(
-          loading: () => const LoadingPanel(),
+          loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
             children: [ErrorBox(message: e.toString())],
@@ -56,7 +56,7 @@ class ExpensesScreen extends ConsumerWidget {
         backgroundColor: kMission500,
         foregroundColor: kNavy900,
         elevation: 4,
-        onPressed: () => context.push('/expenses/new'),
+        onPressed: () { Haptics.light(); context.push('/expenses/new'); },
         icon: const Icon(Icons.add),
         label: Text('Submit claim',
             style: GoogleFonts.inter(fontWeight: FontWeight.w800)),

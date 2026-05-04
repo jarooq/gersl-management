@@ -25,7 +25,7 @@ class NotificationsScreen extends ConsumerWidget {
       color: kNavy900,
       onRefresh: () async => ref.invalidate(_notificationsProvider),
       child: feed.when(
-        loading: () => const LoadingPanel(),
+        loading: () => const SkeletonList(),
         error: (e, _) => ListView(
           padding: const EdgeInsets.all(16),
           children: [ErrorBox(message: e.toString())],
