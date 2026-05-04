@@ -124,3 +124,29 @@ export const listPunchesByUser = asyncHandler(async (req, res) => {
   });
   res.json({ success: true, data: { punches: rows } });
 });
+
+// ============================================
+// HR view: ALL staff punches (HR roles) — used by the web AttendancePage
+// to surface mobile punches alongside the legacy attendance records.
+// Query: ?from=YYYY-MM-DD&to=YYYY-MM-DD&limit=500
+// ============================================
+export const listAllPunches = asyncHandler(async (req, res) => {
+  const HR_ROLES = ['Admin', 'CEO', 'HR Manager', 'HR Officer'];
+  if (!HR_ROLES.includes(req.user.role)) {
+    throw new BadRequestError('Only HR can list all staff punches');
+  }
+  const { from, to, limit = 500 } = req.query;
+  const where = {};
+  if (from || to) {
+    where.occurredAt = {};
+    if (from) where.occurredAt[Op.gte] = new Date(from);
+    if (to)   where.occurredAt[Op.lte] = new Date(to);
+  }
+  const rows = await AttendancePunch.findAll({
+    where,
+    include: [{ model: User, as: 'user', attributes: ['id', 'fullName'] }],
+    order: [['occurredAt', 'DESC']],
+    limit: Math.min(parseInt(limit, 10) || 500, 2000),
+  });
+  res.json({ success: true, data: { punches: rows } });
+});

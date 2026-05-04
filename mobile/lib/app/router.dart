@@ -10,6 +10,7 @@ import '../features/auth/login_screen.dart';
 import '../features/expenses/expenses_screen.dart';
 import '../features/expenses/new_expense_screen.dart';
 import '../features/home/home_shell.dart';
+import '../features/home/more_screen.dart';
 import '../features/leaves/leaves_screen.dart';
 import '../features/leaves/new_leave_screen.dart';
 import '../features/movement/fuel_claims_screen.dart';
@@ -41,6 +42,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/today',         builder: (context, state) => const PunchScreen()),
           GoRoute(path: '/tasks',         builder: (context, state) => const MyTasksScreen()),
           GoRoute(path: '/visits',        builder: (context, state) => const VisitsScreen()),
+          GoRoute(path: '/more',          builder: (context, state) => const MoreScreen()),
           GoRoute(path: '/advances',      builder: (context, state) => const AdvancesScreen()),
           GoRoute(path: '/announcements', builder: (context, state) => const AnnouncementsScreen()),
           GoRoute(path: '/movements',     builder: (context, state) => const MovementsScreen()),

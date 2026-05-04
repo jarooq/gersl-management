@@ -25,6 +25,7 @@ export const HRProvider = ({ children }) => {
   const [onboardingRecords, setOnboardingRecords] = useState([]);
   const [appraisalRecords, setAppraisalRecords] = useState([]);
   const [gpsAttendance, setGpsAttendance] = useState([]);
+  const [attendancePunches, setAttendancePunches] = useState([]);
   const [assetCheckouts, setAssetCheckouts] = useState([]);
   const [vehicleRequests, setVehicleRequests] = useState([]);
   const [accommodationRequests, setAccommodationRequests] = useState([]);
@@ -35,18 +36,25 @@ export const HRProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
+      // Mobile punches: pull the last 30 days so today's check-ins surface
+      // immediately on the web AttendancePage.
+      const punchesFrom = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        .toISOString().slice(0, 10);
+
       const [
         staffRes,
         attendanceRes,
         leaveRes,
         onboardingRes,
-        appraisalRes
+        appraisalRes,
+        punchesRes
       ] = await Promise.allSettled([
         APIServices.HRAPI.getAll({ limit: 100 }), // Get all staff (API max limit is 100)
         API.Attendance.getAll(),
         API.LeaveRequest.getAll(),
         APIServices.HROnboardingAPI.getAll(),
-        APIServices.HRAppraisalAPI.getAll()
+        APIServices.HRAppraisalAPI.getAll(),
+        API.Attendance.listAllPunches({ from: punchesFrom, limit: 1000 }),
       ]);
 
       // Set staff data
@@ -87,6 +95,15 @@ export const HRProvider = ({ children }) => {
         setAppraisalRecords(appraisalRes.value.records || []);
       } else {
         console.error('Error loading appraisal records:', appraisalRes.reason);
+      }
+
+      // Set mobile punches (recent window) — these are the AttendancePunch
+      // rows from the new mobile flow; the web AttendancePage merges them
+      // with the legacy attendance list.
+      if (punchesRes.status === 'fulfilled') {
+        setAttendancePunches(punchesRes.value || []);
+      } else {
+        console.error('Error loading attendance punches:', punchesRes.reason);
       }
 
     } catch (err) {
@@ -132,6 +149,8 @@ export const HRProvider = ({ children }) => {
     appraisalRecords,
     gpsAttendance,
     setGpsAttendance,
+    attendancePunches,
+    setAttendancePunches,
     assetCheckouts,
     setAssetCheckouts,
     vehicleRequests,

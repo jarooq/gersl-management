@@ -2732,6 +2732,13 @@ export const AttendanceAPI = {
     const data = await request(`/attendance/stats?${queryString}`);
     return data.data;
   },
+
+  // Mobile punches surfaced for HR. params: { from, to, limit }
+  listAllPunches: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/attendance/punches/all?${queryString}`);
+    return data.data?.punches || [];
+  },
 };
 
 // ============================================

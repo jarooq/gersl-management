@@ -14,7 +14,8 @@ import {
   recordPunch,
   listMyPunches,
   todayStatus,
-  listPunchesByUser
+  listPunchesByUser,
+  listAllPunches
 } from '../controllers/attendancePunch.controller.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
@@ -46,6 +47,9 @@ router.get('/reports/movements',  movementRegister);
 router.post('/punches',           recordPunch);
 router.get ('/punches/today',     todayStatus);
 router.get ('/punches/me',        listMyPunches);
+// HR view: list all staff punches in a window (NB: must come before the
+// userId-required handler so the all-punches fetch isn't gated on userId).
+router.get ('/punches/all',       listAllPunches);
 router.get ('/punches',           listPunchesByUser);
 
 // Stats and listings

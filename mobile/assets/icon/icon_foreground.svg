@@ -1,0 +1,49 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="48%" r="55%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.30"/>
+      <stop offset="55%" stop-color="#F59E0B" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- soft glow halo so the mark feels luminous on the navy -->
+  <circle cx="512" cy="512" r="430" fill="url(#glow)"/>
+  
+    <!-- Subtle ring -->
+    <circle cx="512" cy="512" r="380" fill="none"
+      stroke="#F59E0B" stroke-opacity="0.18" stroke-width="14"/>
+
+    <!-- Cupped hand (stylised) -->
+    <path
+      d="
+        M 320 590
+        C 320 470, 410 410, 512 410
+        C 614 410, 704 470, 704 590
+        L 704 640
+        C 704 700, 660 740, 600 740
+        L 424 740
+        C 364 740, 320 700, 320 640
+        Z
+      "
+      fill="#F59E0B"
+      stroke="none"
+      stroke-width="6"
+    />
+
+    <!-- Wrist accent strip -->
+    <rect x="372" y="710" width="280" height="22" rx="11" fill="#FCD34D" opacity="0.65"/>
+
+    <!-- Spark / benevolence flame above the palm -->
+    <path
+      d="
+        M 512 250
+        C 470 320, 470 360, 512 410
+        C 554 360, 554 320, 512 250
+        Z
+      "
+      fill="#FCD34D"
+    />
+    <circle cx="512" cy="370" r="22" fill="#FFFFFF" opacity="0.95"/>
+  
+</svg>

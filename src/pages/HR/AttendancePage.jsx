@@ -7,6 +7,7 @@ const AttendancePage = () => {
     staff,
     attendance,
     gpsAttendance,
+    attendancePunches,
     checkIn,
     checkOut,
     addGpsAttendance
@@ -150,31 +151,54 @@ const AttendancePage = () => {
     alert('Checked out successfully!');
   };
 
-  // Combine both attendance types for unified view with filtering
+  // Map mobile punches → the same row shape the table renders. One row per
+  // punch event (In / Out / BreakIn / BreakOut), tagged as "Mobile" so HR
+  // can tell where the record came from.
+  const mobilePunchRows = useMemo(() => {
+    return (attendancePunches || []).map(p => {
+      const occurredAt = p.occurredAt ? new Date(p.occurredAt) : null;
+      const date = occurredAt ? occurredAt.toISOString().slice(0, 10) : '';
+      const time = occurredAt
+        ? `${String(occurredAt.getHours()).padStart(2,'0')}:${String(occurredAt.getMinutes()).padStart(2,'0')}`
+        : '';
+      const isIn = p.punchType === 'In' || p.punchType === 'BreakIn';
+      return {
+        id: `punch-${p.id}`,
+        type: 'Mobile',
+        hasGPS: p.latitude != null,
+        date,
+        employeeId: p.userId,
+        employeeName: p.user?.fullName || `Staff #${p.userId}`,
+        department: '',
+        checkIn:  isIn  ? time : '',
+        checkOut: !isIn ? time : '',
+        location: p.latitude != null
+          ? `${Number(p.latitude).toFixed(5)}, ${Number(p.longitude).toFixed(5)}`
+          : '',
+        status: isIn ? 'Present' : 'Checked out',
+        punchType: p.punchType,
+        geofenceMatch: p.geofenceMatch,
+        selfieUrl: p.selfieUrl,
+      };
+    });
+  }, [attendancePunches]);
+
+  // Combine all three streams (legacy office attendance, gps attendance,
+  // and mobile-app punches) for the unified table.
   const allAttendance = useMemo(() => {
     const combined = [
-      ...attendance.map(a => ({
-        ...a,
-        type: 'Office',
-        hasGPS: false
-      })),
-      ...gpsAttendance.map(g => ({
-        ...g,
-        type: 'GPS',
-        hasGPS: true,
-        status: 'Present'
-      }))
+      ...attendance.map(a => ({ ...a, type: 'Office', hasGPS: false })),
+      ...gpsAttendance.map(g => ({ ...g, type: 'GPS', hasGPS: true, status: 'Present' })),
+      ...mobilePunchRows,
     ];
 
     // Filter by date
     let filtered = combined.filter(a => a.date === filterDate);
 
     // Filter by type
-    if (filterType === 'office') {
-      filtered = filtered.filter(a => a.type === 'Office');
-    } else if (filterType === 'gps') {
-      filtered = filtered.filter(a => a.type === 'GPS');
-    }
+    if (filterType === 'office') filtered = filtered.filter(a => a.type === 'Office');
+    else if (filterType === 'gps')    filtered = filtered.filter(a => a.type === 'GPS');
+    else if (filterType === 'mobile') filtered = filtered.filter(a => a.type === 'Mobile');
 
     // Filter by search term
     if (searchTerm) {
@@ -186,15 +210,19 @@ const AttendancePage = () => {
     }
 
     return filtered;
-  }, [attendance, gpsAttendance, filterDate, filterType, searchTerm]);
+  }, [attendance, gpsAttendance, mobilePunchRows, filterDate, filterType, searchTerm]);
 
   // Stats calculations
   const today = new Date().toISOString().split('T')[0];
+  const todayPunches = mobilePunchRows.filter(p => p.date === today);
   const stats = {
-    totalToday: [...attendance, ...gpsAttendance].filter(a => a.date === today).length,
-    present: attendance.filter(a => a.date === today && a.status === 'Present').length + gpsAttendance.filter(g => g.date === today).length,
-    gpsCheckIns: gpsAttendance.filter(g => g.date === today).length,
+    totalToday: [...attendance, ...gpsAttendance, ...todayPunches].filter(a => a.date === today).length,
+    present: attendance.filter(a => a.date === today && a.status === 'Present').length
+      + gpsAttendance.filter(g => g.date === today).length
+      + todayPunches.filter(p => p.punchType === 'In' || p.punchType === 'BreakIn').length,
+    gpsCheckIns: gpsAttendance.filter(g => g.date === today).length + todayPunches.filter(p => p.hasGPS).length,
     officeCheckIns: attendance.filter(a => a.date === today).length,
+    mobileCheckIns: todayPunches.length,
     late: attendance.filter(a => {
       if (a.date !== today || !a.checkIn) return false;
       const checkInTime = a.checkIn.split(':');
@@ -354,6 +382,7 @@ const AttendancePage = () => {
             <option value="all">All Types</option>
             <option value="office">Office Only</option>
             <option value="gps">GPS Only</option>
+            <option value="mobile">Mobile App Only</option>
           </select>
         </div>
       </div>

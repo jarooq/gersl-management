@@ -7,40 +7,27 @@ import '../../app/theme.dart';
 import '../../services/background_location_service.dart';
 import '../../services/location_tracker.dart';
 import '../../services/token_store.dart';
-import '../auth/auth_controller.dart';
 
-class _NavItem {
+// =============================================================================
+// HomeShell — modern bottom-tab scaffold (no drawer).
+//   5 tabs: Today · Visits · Tasks · Approvals · More
+//   The "More" tab is a card-grid hub for everything else.
+// =============================================================================
+
+class _Tab {
   final String label;
   final IconData icon;
+  final IconData iconActive;
   final String route;
-  const _NavItem(this.label, this.icon, this.route);
+  const _Tab(this.label, this.icon, this.iconActive, this.route);
 }
 
-const _bottomTabs = <_NavItem>[
-  _NavItem('Today',  Icons.today_outlined,        '/today'),
-  _NavItem('Visits', Icons.location_on_outlined,  '/visits'),
-  _NavItem('Tasks',  Icons.checklist_outlined,    '/tasks'),
-];
-
-const _drawerSections = <(String, List<_NavItem>)>[
-  ('Field work', <_NavItem>[
-    _NavItem('Today',           Icons.today_outlined,           '/today'),
-    _NavItem('My visits',       Icons.location_on_outlined,     '/visits'),
-    _NavItem('My tasks',        Icons.checklist_outlined,       '/tasks'),
-    _NavItem('Movements',       Icons.directions_car_outlined,  '/movements'),
-    _NavItem('Fuel claims',     Icons.local_gas_station,        '/fuel-claims'),
-  ]),
-  ('HR & finance', <_NavItem>[
-    _NavItem('Leave',           Icons.event_busy_outlined,      '/leaves'),
-    _NavItem('Expenses',        Icons.receipt_long_outlined,    '/expenses'),
-    _NavItem('Shifts',          Icons.calendar_view_week,       '/shifts'),
-    _NavItem('Salary advances', Icons.attach_money,             '/advances'),
-    _NavItem('Payslips',        Icons.payments_outlined,        '/payslips'),
-  ]),
-  ('Other', <_NavItem>[
-    _NavItem('Approvals',       Icons.fact_check_outlined,      '/approvals'),
-    _NavItem('Announcements',   Icons.campaign_outlined,        '/announcements'),
-  ]),
+const _tabs = <_Tab>[
+  _Tab('Today',     Icons.today_outlined,        Icons.today,            '/today'),
+  _Tab('Visits',    Icons.location_on_outlined,  Icons.location_on,      '/visits'),
+  _Tab('Tasks',     Icons.checklist_outlined,    Icons.checklist,        '/tasks'),
+  _Tab('Approvals', Icons.fact_check_outlined,   Icons.fact_check,       '/approvals'),
+  _Tab('More',      Icons.grid_view_outlined,    Icons.grid_view_rounded,'/more'),
 ];
 
 class HomeShell extends ConsumerWidget {
@@ -50,45 +37,57 @@ class HomeShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loc = GoRouterState.of(context).matchedLocation;
-    final bottomIdx = _bottomTabs.indexWhere((t) => loc.startsWith(t.route));
+    final idx = _tabs.indexWhere((t) => loc.startsWith(t.route));
+    final selected = idx == -1 ? 0 : idx;
     final tracking = ref.watch(isTrackingProvider);
-    final user = ref.watch(authControllerProvider).valueOrNull?.user;
 
     return Scaffold(
+      backgroundColor: kInk50,
       appBar: AppBar(
-        title: Text(_bottomTabs[bottomIdx == -1 ? 0 : bottomIdx].label),
+        titleSpacing: 16,
+        title: Row(
+          children: [
+            Container(
+              width: 30, height: 30,
+              decoration: BoxDecoration(
+                color: kNavy900,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.volunteer_activism_outlined,
+                color: kMission300,
+                size: 16,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              _tabs[selected].label,
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: kInk900,
+                letterSpacing: -0.3,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            tooltip: tracking ? 'Stop tracking' : 'Start tracking',
+            tooltip: tracking ? 'Stop GPS tracking' : 'Start GPS tracking',
             icon: Icon(
               tracking ? Icons.gps_fixed : Icons.gps_off,
               color: tracking ? kSuccess600 : kInk500,
             ),
             onPressed: () => _toggleTracking(context, ref, tracking),
           ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: kInk500),
-            tooltip: 'Sign out',
-            onPressed: () async {
-              await BackgroundLocationService.stop();
-              await ref.read(locationTrackerProvider).stop();
-              ref.read(isTrackingProvider.notifier).state = false;
-              await ref.read(authControllerProvider.notifier).logout();
-            },
-          ),
           const SizedBox(width: 4),
         ],
       ),
-      drawer: _GerslDrawer(loc: loc, user: user),
       body: child,
-      bottomNavigationBar: NavigationBar(
-        height: 64,
-        selectedIndex: bottomIdx == -1 ? 0 : bottomIdx,
-        onDestinationSelected: (i) => context.go(_bottomTabs[i].route),
-        destinations: [
-          for (final t in _bottomTabs)
-            NavigationDestination(icon: Icon(t.icon), label: t.label),
-        ],
+      bottomNavigationBar: _BottomBar(
+        selected: selected,
+        onSelect: (i) => context.go(_tabs[i].route),
       ),
     );
   }
@@ -126,181 +125,101 @@ class HomeShell extends ConsumerWidget {
   }
 }
 
-class _GerslDrawer extends StatelessWidget {
-  final String loc;
-  final Map<String, dynamic>? user;
-  const _GerslDrawer({required this.loc, required this.user});
+// -----------------------------------------------------------------------------
+// Bottom bar — custom built so we can render a mission-amber pill behind the
+// active label, matching the admin-web sidebar accent.
+// -----------------------------------------------------------------------------
+
+class _BottomBar extends StatelessWidget {
+  final int selected;
+  final ValueChanged<int> onSelect;
+  const _BottomBar({required this.selected, required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
-    final name = (user?['fullName'] ?? user?['name'] ?? '?') as String;
-    final role = user?['role'] as String?;
-    final initials = _initials(name);
-    return Drawer(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: kInk100, width: 1)),
+        boxShadow: [
+          BoxShadow(
+            color: kNavy900.withValues(alpha: 0.04),
+            blurRadius: 14, offset: const Offset(0, -3),
+          ),
+        ],
+      ),
       child: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            // Brand header — navy band with mission-amber accent.
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
-              decoration: const BoxDecoration(color: kNavy900),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 44, height: 44,
-                        decoration: BoxDecoration(
-                          color: kMission500.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: kMission500.withValues(alpha: 0.30)),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          initials,
-                          style: GoogleFonts.inter(
-                            color: kMission300,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            if (role != null)
-                              Text(
-                                role,
-                                style: GoogleFonts.inter(
-                                  color: kInk200,
-                                  fontSize: 12,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            children: [
+              for (var i = 0; i < _tabs.length; i++)
+                Expanded(
+                  child: _BottomBarItem(
+                    tab: _tabs[i],
+                    selected: i == selected,
+                    onTap: () => onSelect(i),
                   ),
-                  const SizedBox(height: 14),
-                  Text(
-                    'Global Ehsan Relief · Sri Lanka',
-                    style: GoogleFonts.inter(
-                      color: kMission300,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.6,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Serving with compassion since 2015',
-                    style: GoogleFonts.inter(
-                      color: kInk200,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Sections
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                children: [
-                  for (final (heading, items) in _drawerSections) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 14, 20, 6),
-                      child: Text(
-                        heading.toUpperCase(),
-                        style: GoogleFonts.inter(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.0,
-                          color: kInk500,
-                        ),
-                      ),
-                    ),
-                    for (final item in items)
-                      _DrawerTile(item: item, currentPath: loc),
-                  ],
-                  const SizedBox(height: 12),
-                ],
-              ),
-            ),
-          ],
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
-    if (parts.isEmpty) return '?';
-    if (parts.length == 1) return parts.first.characters.first.toUpperCase();
-    return (parts.first.characters.first + parts.last.characters.first).toUpperCase();
-  }
 }
 
-class _DrawerTile extends StatelessWidget {
-  final _NavItem item;
-  final String currentPath;
-  const _DrawerTile({required this.item, required this.currentPath});
+class _BottomBarItem extends StatelessWidget {
+  final _Tab tab;
+  final bool selected;
+  final VoidCallback onTap;
+  const _BottomBarItem({
+    required this.tab,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final selected = currentPath.startsWith(item.route);
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).pop();
-          context.go(item.route);
-        },
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-          decoration: BoxDecoration(
-            color: selected ? kNavy50 : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-            border: selected
-                ? const Border(left: BorderSide(color: kMission500, width: 3))
-                : null,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                item.icon,
-                size: 19,
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Active indicator pill
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              padding: EdgeInsets.symmetric(
+                horizontal: selected ? 14 : 0,
+                vertical: 6,
+              ),
+              decoration: BoxDecoration(
+                color: selected
+                    ? kMission500.withValues(alpha: 0.16)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Icon(
+                selected ? tab.iconActive : tab.icon,
+                size: 22,
                 color: selected ? kNavy900 : kInk500,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  item.label,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                    color: selected ? kNavy900 : kInk700,
-                  ),
-                ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              tab.label,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: selected ? FontWeight.w800 : FontWeight.w500,
+                color: selected ? kNavy900 : kInk500,
+                letterSpacing: 0.1,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -65,6 +65,16 @@ class AuthController extends AsyncNotifier<AuthState> {
     await tokens.clear();
     state = const AsyncData(AuthState(isAuthenticated: false));
   }
+
+  /// Local-only logout — clears tokens and flips auth state without
+  /// hitting the network. Called from the dio 401 interceptor when the
+  /// stored token is no longer accepted by the backend (e.g. issued by
+  /// a different environment, or expired beyond refresh).
+  Future<void> forceLogout() async {
+    final tokens = ref.read(tokenStoreProvider);
+    await tokens.clear();
+    state = const AsyncData(AuthState(isAuthenticated: false));
+  }
 }
 
 final authControllerProvider =
