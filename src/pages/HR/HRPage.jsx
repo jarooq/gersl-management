@@ -1217,25 +1217,6 @@ const HRPage = () => {
                 </button>
               </div>
 
-              {/* Asset Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                {[
-                  { label: 'Total Assets', value: 0, color: 'from-teal-500 to-cyan-600' },
-                  { label: 'Checked Out', value: 0, color: 'from-orange-500 to-amber-600' },
-                  { label: 'Available', value: 0, color: 'from-green-500 to-emerald-600' },
-                  { label: 'In Repair', value: 0, color: 'from-red-500 to-rose-600' }
-                ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
-                    <p className="text-sm text-ink-600 mb-1">{stat.label}</p>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-h1 text-ink-900">{stat.value}</h3>
-                      <div className={`bg-gradient-to-br ${stat.color} w-10 h-10 rounded-lg flex items-center justify-center`}>
-                        <Package className="text-white" size={20} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
               {/* Checked Out Assets */}
               <h3 className="font-bold text-ink-900 mb-3">Checked Out Assets</h3>
@@ -1425,25 +1406,6 @@ const HRPage = () => {
                 </button>
               </div>
 
-              {/* Request Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                {[
-                  { label: 'Pending', value: 0, color: 'from-yellow-500 to-amber-600' },
-                  { label: 'Approved', value: 0, color: 'from-green-500 to-emerald-600' },
-                  { label: 'In Use', value: 0, color: 'from-blue-500 to-sky-600' },
-                  { label: 'Completed', value: 0, color: 'from-ink-500 to-slate-600' }
-                ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
-                    <p className="text-sm text-ink-600 mb-1">{stat.label}</p>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-h1 text-ink-900">{stat.value}</h3>
-                      <div className={`bg-gradient-to-br ${stat.color} w-10 h-10 rounded-lg flex items-center justify-center`}>
-                        <Car className="text-white" size={20} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
               {/* Active Requests */}
               <h3 className="font-bold text-ink-900 mb-3">Recent Vehicle Requests</h3>
@@ -1552,25 +1514,6 @@ const HRPage = () => {
                 </button>
               </div>
 
-              {/* Request Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                {[
-                  { label: 'Pending', value: 0, color: 'from-yellow-500 to-amber-600' },
-                  { label: 'Approved', value: 0, color: 'from-green-500 to-emerald-600' },
-                  { label: 'Booked', value: 0, color: 'from-rose-500 to-pink-600' },
-                  { label: 'Completed', value: 0, color: 'from-ink-500 to-slate-600' }
-                ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
-                    <p className="text-sm text-ink-600 mb-1">{stat.label}</p>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-h1 text-ink-900">{stat.value}</h3>
-                      <div className={`bg-gradient-to-br ${stat.color} w-10 h-10 rounded-lg flex items-center justify-center`}>
-                        <Home className="text-white" size={20} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
               {/* Active Requests */}
               <h3 className="font-bold text-ink-900 mb-3">Recent Accommodation Requests</h3>
@@ -1690,26 +1633,6 @@ const HRPage = () => {
                 </button>
               </div>
 
-              {/* Expense Summary */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {[
-                  { label: 'Vehicle Expenses', value: 0, icon: Car, color: 'from-blue-500 to-sky-600' },
-                  { label: 'Accommodation', value: 0, icon: Home, color: 'from-rose-500 to-pink-600' },
-                  { label: 'Total This Month', value: 0, icon: Receipt, color: 'from-indigo-500 to-purple-600' }
-                ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
-                    <p className="text-sm text-ink-600 mb-2">{stat.label}</p>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-h1 text-ink-900">
-                        LKR {stat.value.toLocaleString()}
-                      </h3>
-                      <div className={`bg-gradient-to-br ${stat.color} w-12 h-12 rounded-lg flex items-center justify-center`}>
-                        <stat.icon className="text-white" size={24} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
               {/* Expense by Project */}
               <h3 className="font-bold text-ink-900 mb-3">Expenses by Project</h3>
