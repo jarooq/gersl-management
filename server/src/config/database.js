@@ -40,11 +40,21 @@ const sequelize = useSQLite
         family: 4, // Force IPv4 to avoid IPv6 connection issues
         ssl: sslConfig
       },
+      // SERVERLESS POOL — Vercel spawns many short-lived function instances,
+      // each running its own copy of this Sequelize. With pool.max=10 and
+      // ~20 warm instances we hit Supabase's 200-conn limit and the API
+      // returns 500 (EMAXCONN). Cap each instance at 1 connection and let
+      // it drop fast when idle.
+      //
+      // For the long term, switch DATABASE_URL on Vercel to Supabase's
+      // PgBouncer pooler endpoint (port 6543, "Transaction" mode):
+      //   postgres://postgres.<ref>:<pwd>@aws-0-<region>.pooler.supabase.com:6543/postgres
       pool: {
-        max: 10,
+        max: 1,
         min: 0,
         acquire: 30000,
-        idle: 10000
+        idle: 1000,
+        evict: 1000
       },
       define: {
         timestamps: true,
