@@ -182,7 +182,7 @@ class _Section extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           if (count != null && count! > 0)
-            StatusPill(label: '$count pending', color: kMission500),
+            StatusPill(label: '$count pending', color: kWarn600),
         ],
       ),
     );
