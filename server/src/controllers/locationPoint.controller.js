@@ -38,15 +38,34 @@ export const listForUser = asyncHandler(async (req, res) => {
   res.json({ success: true, data: rows });
 });
 
-// GET /api/locations/live — latest point per user (admin live map)
+// GET /api/locations/live — latest point per user (admin live map).
+// Returns the most recent LocationPoint per user within the configurable
+// window, joined to the user's full name + role so the popup/table can
+// render real labels instead of "User #1".
+//
+// Query: ?windowMin=N  (1..360, default 60). Default was 15 but most
+// stationary staff never showed because the mobile tracker only pushes
+// after 10m of movement; a 60-min window captures anyone who stepped
+// out of their desk during the hour.
 export const liveSnapshot = asyncHandler(async (req, res) => {
   const sequelize = LocationPoint.sequelize;
+  const requested = parseInt(req.query.windowMin, 10);
+  const windowMin = Number.isFinite(requested) && requested >= 1 && requested <= 360
+    ? requested
+    : 60;
   const rows = await sequelize.query(
-    `SELECT DISTINCT ON (user_id) user_id, latitude, longitude, accuracy_m, speed_kmh, recorded_at
-     FROM location_points
-     WHERE recorded_at > NOW() - INTERVAL '15 minutes'
-     ORDER BY user_id, recorded_at DESC`,
-    { type: sequelize.QueryTypes.SELECT }
+    `SELECT DISTINCT ON (lp.user_id)
+            lp.user_id,
+            lp.latitude, lp.longitude,
+            lp.accuracy_m, lp.speed_kmh, lp.recorded_at,
+            u.full_name AS user_full_name,
+            u.role      AS user_role,
+            u.department AS user_department
+       FROM location_points lp
+       LEFT JOIN users u ON u.id = lp.user_id
+      WHERE lp.recorded_at > NOW() - (CAST($1 AS INTEGER) || ' minutes')::INTERVAL
+   ORDER BY lp.user_id, lp.recorded_at DESC`,
+    { bind: [windowMin], type: sequelize.QueryTypes.SELECT }
   );
-  res.json({ success: true, data: rows });
+  res.json({ success: true, data: rows, windowMin });
 });

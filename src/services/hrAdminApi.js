@@ -24,7 +24,10 @@ async function call(path, { method = 'GET', body } = {}) {
 
 // /api/locations
 export const LiveLocationAPI = {
-  live:   () => call('/locations/live').then(r => r.data || []),
+  live:   ({ windowMin } = {}) => {
+    const qs = windowMin ? `?windowMin=${encodeURIComponent(windowMin)}` : '';
+    return call(`/locations/live${qs}`).then(r => r.data || []);
+  },
   byUser: (userId, from, to) => {
     const qs = new URLSearchParams({ userId, ...(from && { from }), ...(to && { to }) }).toString();
     return call(`/locations?${qs}`).then(r => r.data || []);
