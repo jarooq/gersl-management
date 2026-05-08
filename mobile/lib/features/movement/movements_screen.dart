@@ -227,6 +227,9 @@ class _MovementDetailSheetState extends ConsumerState<_MovementDetailSheet> {
     final canArrive = status == 'InMovement';
     final canReturn = status == 'Arrived';
     final canCancel = status == 'Planned' || status == 'Approved';
+    final isPassenger = r['isPassenger'] == true;
+    final canClaimFuel =
+        !isPassenger && (status == 'Returned' || status == 'Arrived');
     final repo = ref.read(movementRepoProvider);
 
     return Container(
@@ -329,7 +332,7 @@ class _MovementDetailSheetState extends ConsumerState<_MovementDetailSheet> {
               padding: EdgeInsets.symmetric(vertical: 12),
               child: CircularProgressIndicator(color: kNavy900),
             ))
-          else if (canDepart || canArrive || canReturn || canCancel) ...[
+          else if (canDepart || canArrive || canReturn || canCancel || canClaimFuel) ...[
             if (canDepart)
               _ActionButton(
                 icon: Icons.flight_takeoff,
@@ -348,6 +351,15 @@ class _MovementDetailSheetState extends ConsumerState<_MovementDetailSheet> {
                 label: 'Trip returned',
                 onTap: () => _run(() async => repo.returnTrip(id), 'Trip closed'),
               ),
+            if (canClaimFuel)
+              _ActionButton(
+                icon: Icons.local_gas_station,
+                label: 'Claim fuel',
+                onTap: () => _run(
+                  () async => repo.deriveFuelClaim(movementId: id),
+                  'Draft fuel claim created',
+                ),
+              ),
             if (canCancel)
               _ActionButton(
                 icon: Icons.close,
@@ -358,7 +370,9 @@ class _MovementDetailSheetState extends ConsumerState<_MovementDetailSheet> {
           ] else
             Center(
               child: Text(
-                'No actions available for status "$status".',
+                isPassenger
+                    ? 'Passenger trip — fuel is claimed by the rider.'
+                    : 'No actions available for status "$status".',
                 style: GoogleFonts.inter(fontSize: 12.5, color: kInk500),
               ),
             ),
