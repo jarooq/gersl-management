@@ -593,7 +593,41 @@ const HRPage = () => {
         })}
       </div>
 
-      {/* HR Analytics and Insights */}
+      {/* Tabs — kept directly under the primary stats so users see
+           navigation before scrolling through analytics. */}
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
+        <div className="border-b border-ink-100">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0">
+            {[
+              { id: 'overview', label: 'Staff Directory', icon: Users },
+              { id: 'leave', label: 'Leave Management', icon: Calendar },
+              { id: 'staffMovement', label: 'Staff Movement', icon: MapPin },
+              { id: 'assetRegister', label: 'Asset Register', icon: Package },
+              { id: 'vehicleRequests', label: 'Vehicle Requests', icon: Car },
+              { id: 'accommodation', label: 'Accommodation', icon: Home },
+              { id: 'expenses', label: 'Expenses', icon: Receipt }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`flex items-center justify-center gap-2 px-4 py-4 font-semibold text-sm transition-colors border-r border-b border-ink-100 ${
+                  activeTab === tab.id
+                    ? 'text-orange-600 bg-orange-50 border-b-2 border-b-orange-600'
+                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
+                }`}
+              >
+                <tab.icon size={18} />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* HR Analytics and Insights — only on the Staff Directory tab.
+           Was previously rendered above the tabs which made the page feel
+           like it was duplicating the primary stats. */}
+      {activeTab === 'overview' && (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Department Distribution */}
         <div className="bg-white rounded-xl shadow-sm border border-ink-100 p-4">
@@ -798,35 +832,7 @@ const HRPage = () => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-card border border-ink-100">
-        <div className="border-b border-ink-100">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0">
-            {[
-              { id: 'overview', label: 'Staff Directory', icon: Users },
-              { id: 'leave', label: 'Leave Management', icon: Calendar },
-              { id: 'staffMovement', label: 'Staff Movement', icon: MapPin },
-              { id: 'assetRegister', label: 'Asset Register', icon: Package },
-              { id: 'vehicleRequests', label: 'Vehicle Requests', icon: Car },
-              { id: 'accommodation', label: 'Accommodation', icon: Home },
-              { id: 'expenses', label: 'Expenses', icon: Receipt }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`flex items-center justify-center gap-2 px-4 py-4 font-semibold text-sm transition-colors border-r border-b border-ink-100 ${
-                  activeTab === tab.id
-                    ? 'text-orange-600 bg-orange-50 border-b-2 border-b-orange-600'
-                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={18} />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Tab Content */}
       <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
