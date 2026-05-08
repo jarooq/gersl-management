@@ -3,34 +3,59 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // =============================================================================
-// GERSL mobile design tokens — mirrors the admin web design system.
-//   Primary  : navy-900 (#0D1D3D)  — trust, NGO authority
-//   Accent   : mission-amber (#F59E0B) — impact, calls-to-action
-//   Surface  : ink-50 (#F5F7FA) canvas, white cards
-//   Text     : ink-900 (#0F172A) primary, ink-500 (#64748B) secondary
+// GERSL mobile design — DARK theme with lime-green accent.
+// Replaces the previous navy/mission-amber light theme.
+//   Surface (canvas): kSurfaceDark (#10212F) — deep teal-navy
+//   Card surface:    kSurfaceCard (#1B2C3E) — slightly lighter
+//   Primary accent:  kLime500 (#A4F056)     — lime-green
+//   Text:            #FFFFFF primary, #9DABBC secondary
 // =============================================================================
 
-const Color kNavy900 = Color(0xFF0D1D3D); // primary
-const Color kNavy800 = Color(0xFF142A55);
-const Color kNavy700 = Color(0xFF1F3D7A);
-const Color kNavy50  = Color(0xFFE7ECF6);
+// --- DARK SURFACE PALETTE -------------------------------------------------
+const Color kSurfaceDark    = Color(0xFF10212F); // page bg
+const Color kSurfaceCardDk  = Color(0xFF1B2C3E); // primary card
+const Color kSurfaceLiftDk  = Color(0xFF243749); // hovered/elevated card
+const Color kBorderDk       = Color(0xFF2C3F52);
+const Color kTextDk         = Color(0xFFFFFFFF);
+const Color kTextDkMuted    = Color(0xFF9DABBC);
+const Color kTextDkHint     = Color(0xFF7A8A9E);
 
-const Color kMission500 = Color(0xFFF59E0B); // amber accent
-const Color kMission600 = Color(0xFFD97706);
-const Color kMission300 = Color(0xFFFCD34D);
-const Color kMission50  = Color(0xFFFFFBEB);
+// --- LIME-GREEN ACCENT ----------------------------------------------------
+const Color kLime500 = Color(0xFFA4F056); // primary accent
+const Color kLime600 = Color(0xFF7BD63B); // hover / pressed
+const Color kLime300 = Color(0xFFC8FA8E); // light tint
+const Color kLime50  = Color(0xFF2C3F2C); // dark-on-dark tint for "soft" badges
 
-const Color kInk900 = Color(0xFF0F172A);
-const Color kInk700 = Color(0xFF334155);
-const Color kInk500 = Color(0xFF64748B);
-const Color kInk400 = Color(0xFF94A3B8);
-const Color kInk200 = Color(0xFFE2E8F0);
-const Color kInk100 = Color(0xFFEEF1F5);
-const Color kInk50  = Color(0xFFF5F7FA);
+// --- STATUS PILL TONES (work on both dark + light bg) ---------------------
+const Color kPillPink   = Color(0xFFF08AA8);
+const Color kPillPurple = Color(0xFF8A7AE6);
+const Color kPillSky    = Color(0xFF6FB6FF);
+const Color kPillTeal   = Color(0xFF4DD0C8);
 
-const Color kSuccess600 = Color(0xFF16A34A);
-const Color kDanger600  = Color(0xFFDC2626);
-const Color kWarn600    = Color(0xFFCA8A04);
+// --- LEGACY NAVY / MISSION TOKENS ------------------------------------------
+// Most of the old theme code still references these names; keep them as
+// aliases so we don't have to touch every screen at once.
+const Color kNavy900 = kSurfaceCardDk;        // was #0D1D3D
+const Color kNavy800 = kSurfaceLiftDk;        // was #142A55
+const Color kNavy700 = Color(0xFF2C4459);
+const Color kNavy50  = Color(0xFF243749);
+
+const Color kMission500 = kLime500;           // was amber #F59E0B
+const Color kMission600 = kLime600;
+const Color kMission300 = kLime300;
+const Color kMission50  = kLime50;
+
+const Color kInk900 = kTextDk;                // was #0F172A
+const Color kInk700 = Color(0xFFB8C4D2);
+const Color kInk500 = kTextDkMuted;
+const Color kInk400 = kTextDkHint;
+const Color kInk200 = kBorderDk;
+const Color kInk100 = Color(0xFF253647);
+const Color kInk50  = kSurfaceDark;
+
+const Color kSuccess600 = kLime500;
+const Color kDanger600  = Color(0xFFFF5471);
+const Color kWarn600    = Color(0xFFF5B72E);
 
 // Legacy aliases — keep so any future GERHR-style call sites continue to work.
 const Color kBrand     = kNavy900;
@@ -67,163 +92,164 @@ ThemeData buildGerslTheme() {
 
   final scheme = ColorScheme.fromSeed(
     seedColor: kNavy900,
-    brightness: Brightness.light,
-    primary: kNavy900,
-    secondary: kMission500,
-    tertiary: kNavy700,
-    surface: kInk50,
+    brightness: Brightness.dark,
+    primary: kLime500,
+    secondary: kLime600,
+    tertiary: kLime300,
+    surface: kSurfaceCardDk,
     error: kDanger600,
   );
 
   final textTheme = GoogleFonts.interTextTheme().apply(
-    bodyColor: kInk900,
-    displayColor: kInk900,
+    bodyColor: kTextDk,
+    displayColor: kTextDk,
   );
 
   return ThemeData(
     colorScheme: scheme,
     useMaterial3: true,
-    scaffoldBackgroundColor: kInk50,
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: kSurfaceDark,
     splashFactory: InkSparkle.splashFactory,
     textTheme: textTheme.copyWith(
       headlineLarge: textTheme.headlineLarge?.copyWith(
-        fontWeight: FontWeight.w800, letterSpacing: -0.6, color: kInk900,
+        fontWeight: FontWeight.w800, letterSpacing: -0.6, color: kTextDk,
       ),
       headlineSmall: textTheme.headlineSmall?.copyWith(
-        fontWeight: FontWeight.w800, letterSpacing: -0.4, color: kInk900,
+        fontWeight: FontWeight.w800, letterSpacing: -0.4, color: kTextDk,
       ),
       titleLarge: textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.w800, letterSpacing: -0.3, color: kInk900,
+        fontWeight: FontWeight.w800, letterSpacing: -0.3, color: kTextDk,
       ),
       titleMedium: textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.w700, color: kInk900,
+        fontWeight: FontWeight.w700, color: kTextDk,
       ),
-      bodyMedium: textTheme.bodyMedium?.copyWith(color: kInk500, height: 1.45),
-      bodySmall:  textTheme.bodySmall?.copyWith(color: kInk500),
+      bodyMedium: textTheme.bodyMedium?.copyWith(color: kTextDkMuted, height: 1.45),
+      bodySmall:  textTheme.bodySmall?.copyWith(color: kTextDkMuted),
       labelLarge: textTheme.labelLarge?.copyWith(
-        fontWeight: FontWeight.w700, letterSpacing: 0.1,
+        fontWeight: FontWeight.w700, letterSpacing: 0.1, color: kTextDk,
       ),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.white,
+      backgroundColor: kSurfaceDark,
       surfaceTintColor: Colors.transparent,
-      foregroundColor: kInk900,
+      foregroundColor: kTextDk,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      iconTheme: const IconThemeData(color: kInk700),
+      iconTheme: const IconThemeData(color: kTextDk),
       titleTextStyle: GoogleFonts.inter(
         fontSize: 18, fontWeight: FontWeight.w800,
-        color: kInk900, letterSpacing: -0.3,
+        color: kTextDk, letterSpacing: -0.3,
       ),
-      systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+      systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
         statusBarColor: Colors.transparent,
       ),
     ),
     cardTheme: CardThemeData(
       elevation: 0,
       margin: EdgeInsets.zero,
-      color: Colors.white,
+      color: kSurfaceCardDk,
       surfaceTintColor: Colors.transparent,
-      shadowColor: kInk900.withValues(alpha: 0.05),
+      shadowColor: Colors.black.withValues(alpha: 0.30),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: const BorderSide(color: kInk200),
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: kBorderDk),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size.fromHeight(50),
-        backgroundColor: kNavy900,
-        foregroundColor: Colors.white,
+        minimumSize: const Size.fromHeight(54),
+        backgroundColor: kLime500,
+        foregroundColor: kSurfaceDark,
         elevation: 0,
-        shadowColor: kNavy900.withValues(alpha: 0.25),
+        shadowColor: kLime500.withValues(alpha: 0.30),
         textStyle: GoogleFonts.inter(
-            fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 0.1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            fontSize: 15, fontWeight: FontWeight.w800, letterSpacing: 0.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        minimumSize: const Size.fromHeight(48),
-        foregroundColor: kNavy900,
-        side: const BorderSide(color: kInk200, width: 1.4),
+        minimumSize: const Size.fromHeight(50),
+        foregroundColor: kTextDk,
+        side: const BorderSide(color: kBorderDk, width: 1.4),
         textStyle: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: kNavy900,
+        foregroundColor: kLime500,
         textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
-      hintStyle: GoogleFonts.inter(color: kInk400, fontSize: 14),
-      labelStyle: GoogleFonts.inter(color: kInk500, fontSize: 14),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      fillColor: kSurfaceCardDk,
+      hintStyle: GoogleFonts.inter(color: kTextDkHint, fontSize: 14),
+      labelStyle: GoogleFonts.inter(color: kTextDkMuted, fontSize: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: kInk200),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: kBorderDk),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: kInk200),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: kBorderDk),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: kNavy700, width: 1.6),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: kLime500, width: 1.6),
       ),
     ),
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: kInk900,
+      backgroundColor: kSurfaceLiftDk,
       contentTextStyle: GoogleFonts.inter(
-          color: Colors.white, fontWeight: FontWeight.w500),
+          color: kTextDk, fontWeight: FontWeight.w500),
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: kNavy900.withValues(alpha: 0.08),
+      backgroundColor: kSurfaceLiftDk,
       labelStyle: GoogleFonts.inter(
-          color: kNavy900, fontWeight: FontWeight.w700, fontSize: 12),
+          color: kTextDk, fontWeight: FontWeight.w700, fontSize: 12),
       side: BorderSide.none,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: Colors.white,
+      backgroundColor: kSurfaceCardDk,
       surfaceTintColor: Colors.transparent,
-      indicatorColor: kMission500.withValues(alpha: 0.18),
+      indicatorColor: kLime500.withValues(alpha: 0.18),
       labelTextStyle: WidgetStateProperty.resolveWith((states) {
         final selected = states.contains(WidgetState.selected);
         return GoogleFonts.inter(
           fontSize: 11.5,
           fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-          color: selected ? kNavy900 : kInk500,
+          color: selected ? kLime500 : kTextDkMuted,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         final selected = states.contains(WidgetState.selected);
         return IconThemeData(
-          color: selected ? kNavy900 : kInk500,
+          color: selected ? kLime500 : kTextDkMuted,
           size: 22,
         );
       }),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: kNavy900,
-      unselectedItemColor: kInk500,
+      backgroundColor: kSurfaceCardDk,
+      selectedItemColor: kLime500,
+      unselectedItemColor: kTextDkMuted,
       type: BottomNavigationBarType.fixed,
       elevation: 0,
       selectedLabelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
       unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
     ),
     dividerTheme: const DividerThemeData(
-      color: kInk100,
+      color: kBorderDk,
       thickness: 1,
       space: 1,
     ),

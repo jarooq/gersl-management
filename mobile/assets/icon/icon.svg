@@ -2,13 +2,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#142A55"/>
-      <stop offset="100%" stop-color="#081530"/>
+      <stop offset="0%" stop-color="#1B2C3E"/>
+      <stop offset="100%" stop-color="#0A1722"/>
     </linearGradient>
     <radialGradient id="glow" cx="50%" cy="48%" r="55%">
-      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.22"/>
-      <stop offset="55%" stop-color="#F59E0B" stop-opacity="0.04"/>
-      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#A4F056" stop-opacity="0.22"/>
+      <stop offset="55%" stop-color="#A4F056" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#A4F056" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="topShine" x1="50%" y1="0%" x2="50%" y2="100%">
       <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.10"/>
@@ -25,7 +25,7 @@
   
     <!-- Subtle ring -->
     <circle cx="512" cy="512" r="380" fill="none"
-      stroke="#F59E0B" stroke-opacity="0.18" stroke-width="14"/>
+      stroke="#A4F056" stroke-opacity="0.18" stroke-width="14"/>
 
     <!-- Cupped hand (stylised) -->
     <path
@@ -39,13 +39,13 @@
         C 364 740, 320 700, 320 640
         Z
       "
-      fill="#F59E0B"
+      fill="#A4F056"
       stroke="none"
       stroke-width="6"
     />
 
     <!-- Wrist accent strip -->
-    <rect x="372" y="710" width="280" height="22" rx="11" fill="#FCD34D" opacity="0.65"/>
+    <rect x="372" y="710" width="280" height="22" rx="11" fill="#C8FA8E" opacity="0.65"/>
 
     <!-- Spark / benevolence flame above the palm -->
     <path
@@ -55,7 +55,7 @@
         C 554 360, 554 320, 512 250
         Z
       "
-      fill="#FCD34D"
+      fill="#C8FA8E"
     />
     <circle cx="512" cy="370" r="22" fill="#FFFFFF" opacity="0.95"/>
   

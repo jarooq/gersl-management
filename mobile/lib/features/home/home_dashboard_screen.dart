@@ -10,35 +10,39 @@ import '../auth/auth_controller.dart';
 import '../leaves/leave_repository.dart';
 import '../punch/punch_repository.dart';
 import '../tasks/my_tasks_screen.dart';
-import '../visits/new_visit_screen.dart';
-import '../leaves/new_leave_screen.dart';
-import '../expenses/new_expense_screen.dart';
 
 // =============================================================================
-// HomeDashboardScreen — first thing the user sees after login.
-//   Sections:
-//     1. Greeting hero (good morning/afternoon, name, date)
-//     2. Today-at-a-glance KPI row (clocked-in / tasks / pending leaves)
-//     3. Big primary action: Punch IN/OUT (with status pill)
-//     4. Quick actions row (Log visit / Submit expense / Request leave / Report incident)
-//     5. Recent activity feed (last 5 punches today)
+// HomeDashboardScreen — dark theme dashboard inspired by the reference design.
+// Sections:
+//   1. Header — avatar + name/role + GPS toggle bell
+//   2. Overview header + "See all"
+//   3. Featured lime-green card — three-column KPI strip (Today Punches /
+//      Presence / Late). Punch IN button anchored at the bottom right.
+//   4. Two large tiles — Total Tasks (mission-amber) + Pending Leaves
+//   5. "Upcoming items" header + "See all"
+//   6. Date-chipped task cards
 // =============================================================================
 
-final _todayProvider = FutureProvider.autoDispose((ref) async {
-  return ref.watch(punchRepoProvider).today();
-});
+final _todayProvider = FutureProvider.autoDispose(
+  (ref) => ref.watch(punchRepoProvider).today(),
+);
 
-final _myTasksProviderHome = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+final _myTasksProviderHome =
+    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   try {
-    final list = await ref.read(myTasksProvider.future);
-    return list;
-  } catch (_) { return []; }
+    return await ref.read(myTasksProvider.future);
+  } catch (_) {
+    return [];
+  }
 });
 
-final _myLeavesProviderHome = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+final _myLeavesProviderHome =
+    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   try {
     return await ref.read(leaveRepoProvider).mine();
-  } catch (_) { return []; }
+  } catch (_) {
+    return [];
+  }
 });
 
 class HomeDashboardScreen extends ConsumerWidget {
@@ -51,108 +55,142 @@ class HomeDashboardScreen extends ConsumerWidget {
     final leaves = ref.watch(_myLeavesProviderHome);
     final user = ref.watch(authControllerProvider).valueOrNull?.user;
 
-    final firstName = ((user?['fullName'] ?? user?['name'] ?? 'there') as String).split(' ').first;
+    final fullName = (user?['fullName'] ?? user?['name'] ?? 'Field Officer') as String;
+    final firstName = fullName.split(' ').first;
+    final role = user?['role']?.toString() ?? 'Staff';
 
     return RefreshIndicator(
-      color: kNavy900,
+      color: kLime500,
+      backgroundColor: kSurfaceCardDk,
       onRefresh: () async {
         ref.invalidate(_todayProvider);
         ref.invalidate(_myTasksProviderHome);
         ref.invalidate(_myLeavesProviderHome);
       },
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
         children: [
-          _GreetingHero(name: firstName, today: today),
-          const SizedBox(height: 14),
-
-          // KPI row (loads with skeleton until ready)
-          today.when(
-            loading: () => Row(
-              children: const [
-                Expanded(child: SkeletonBox(height: 60, radius: 14)),
-                SizedBox(width: 8),
-                Expanded(child: SkeletonBox(height: 60, radius: 14)),
-                SizedBox(width: 8),
-                Expanded(child: SkeletonBox(height: 60, radius: 14)),
-              ],
-            ),
-            error: (_, _) => const SizedBox.shrink(),
-            data: (d) => _KpiRow(
-              isClockedIn: d['isClockedIn'] == true,
-              taskCount: tasks.maybeWhen(data: (t) => t.where((x) => (x['status'] ?? '') != 'Completed').length, orElse: () => 0),
-              leaveCount: leaves.maybeWhen(data: (l) => l.where((x) => x['status'] == 'Pending').length, orElse: () => 0),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Primary punch action
-          today.when(
-            loading: () => const SkeletonBox(height: 120, radius: 16),
-            error: (_, _) => const SizedBox.shrink(),
-            data: (d) => _PunchPanel(today: d, ref: ref),
-          ),
-
+          _Header(name: firstName, role: role, fullName: fullName),
           const SizedBox(height: 18),
-          const _SectionLabel('Quick actions'),
-          const SizedBox(height: 8),
+
+          // Overview header
           Row(
             children: [
-              Expanded(child: QuickAction(
-                icon: Icons.location_on_outlined, label: 'Log visit',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NewVisitScreen())),
-              )),
-              const SizedBox(width: 8),
-              Expanded(child: QuickAction(
-                icon: Icons.receipt_long_outlined, label: 'Expense',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NewExpenseScreen())),
-              )),
-              const SizedBox(width: 8),
-              Expanded(child: QuickAction(
-                icon: Icons.event_busy_outlined, label: 'Leave',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const NewLeaveScreen())),
-              )),
-              const SizedBox(width: 8),
-              Expanded(child: QuickAction(
-                icon: Icons.shield_outlined, label: 'Incident',
-                tone: kDanger600,
-                onTap: () => context.go('/incidents'),
-              )),
+              Text('Overview',
+                style: GoogleFonts.inter(
+                  fontSize: 20, fontWeight: FontWeight.w800, color: kTextDk,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => context.go('/today'),
+                child: Text('See all',
+                  style: GoogleFonts.inter(
+                    fontSize: 13, fontWeight: FontWeight.w600,
+                    color: kTextDkMuted,
+                  ),
+                ),
+              ),
             ],
           ),
+          const SizedBox(height: 12),
 
-          const SizedBox(height: 22),
-          const _SectionLabel("Today's punches"),
-          const SizedBox(height: 8),
+          // Featured lime-green KPI strip
           today.when(
-            loading: () => const SkeletonBox(height: 80, radius: 14),
-            error: (_, _) => const SizedBox.shrink(),
-            data: (d) {
-              final punches = (d['punches'] as List? ?? []).cast<Map>();
-              if (punches.isEmpty) {
-                return SoftCard(
-                  child: Row(
-                    children: [
-                      const Icon(Icons.history_toggle_off, color: kInk400, size: 18),
-                      const SizedBox(width: 10),
-                      Text('No punches yet today.',
-                        style: GoogleFonts.inter(fontSize: 13, color: kInk500),
-                      ),
-                    ],
+            loading: () => const SkeletonBox(height: 110, radius: 22),
+            error: (_, _) => const _OverviewCard(present: 0, today: 0, late: 0),
+            data: (d) => _OverviewCard(
+              present:    d['isClockedIn'] == true ? 1 : 0,
+              today:      (d['punches'] as List? ?? []).length,
+              late:       0,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Two larger feature tiles
+          Row(
+            children: [
+              Expanded(
+                child: _FeatureTile(
+                  icon: Icons.task_alt,
+                  iconBg: const Color(0xFF18374C),
+                  iconFg: kLime500,
+                  title: tasks.maybeWhen(
+                    data: (rows) => '${rows.length}',
+                    orElse: () => '—',
                   ),
+                  caption: 'My tasks',
+                  onTap: () => context.go('/tasks'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _FeatureTile(
+                  icon: Icons.event_available,
+                  iconBg: const Color(0xFF3A2638),
+                  iconFg: kPillPink,
+                  title: leaves.maybeWhen(
+                    data: (rows) => '${rows.where((r) => r['status'] == 'Pending').length}',
+                    orElse: () => '—',
+                  ),
+                  caption: 'Pending leaves',
+                  onTap: () => context.go('/more'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 22),
+
+          // Upcoming items header
+          Row(
+            children: [
+              Text('Upcoming tasks',
+                style: GoogleFonts.inter(
+                  fontSize: 18, fontWeight: FontWeight.w800, color: kTextDk,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => context.go('/tasks'),
+                child: Text('See all',
+                  style: GoogleFonts.inter(
+                    fontSize: 13, fontWeight: FontWeight.w600,
+                    color: kTextDkMuted,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Tasks as date-chip cards
+          tasks.when(
+            loading: () => Column(
+              children: const [
+                SkeletonBox(height: 86, radius: 18),
+                SizedBox(height: 8),
+                SkeletonBox(height: 86, radius: 18),
+              ],
+            ),
+            error: (e, _) => ErrorBox(message: e.toString()),
+            data: (rows) {
+              if (rows.isEmpty) {
+                return const EmptyState(
+                  title: 'No upcoming tasks',
+                  message: 'When tasks are assigned to you, they\'ll appear here.',
+                  icon: Icons.checklist_outlined,
                 );
               }
-              return SoftCard(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    for (var i = 0; i < punches.length; i++) ...[
-                      if (i > 0) const Divider(height: 1, color: kInk100),
-                      _ActivityPunch(punch: Map<String, dynamic>.from(punches[i])),
-                    ],
+              final upcoming = rows.take(4).toList();
+              return Column(
+                children: [
+                  for (final t in upcoming) ...[
+                    _UpcomingTaskCard(task: t, onTap: () => context.go('/tasks')),
+                    const SizedBox(height: 8),
                   ],
-                ),
+                ],
               );
             },
           ),
@@ -164,295 +202,357 @@ class HomeDashboardScreen extends ConsumerWidget {
 
 // -----------------------------------------------------------------------------
 
-class _GreetingHero extends StatelessWidget {
+class _Header extends StatelessWidget {
   final String name;
-  final AsyncValue<Map<String, dynamic>> today;
-  const _GreetingHero({required this.name, required this.today});
+  final String role;
+  final String fullName;
+  const _Header({required this.name, required this.role, required this.fullName});
 
-  String _greeting() {
-    final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
+  String _initials(String n) {
+    final parts = n.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return '?';
+    if (parts.length == 1) return parts.first.characters.first.toUpperCase();
+    return (parts.first.characters.first + parts.last.characters.first).toUpperCase();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final dateStr = DateFormat('EEEE, d MMMM').format(DateTime.now());
-    final isClockedIn = today.maybeWhen(data: (d) => d['isClockedIn'] == true, orElse: () => false);
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
-      decoration: BoxDecoration(
-        color: kNavy900,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: kNavy900.withValues(alpha: 0.20),
-            blurRadius: 18, offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '${_greeting()},',
-                  style: GoogleFonts.inter(
-                    color: kMission300,
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.4,
-                  ),
-                ),
-              ),
-              StatusPill(
-                label: isClockedIn ? 'ON DUTY' : 'OFF DUTY',
-                color: isClockedIn ? kSuccess600 : kInk400,
-                icon: isClockedIn ? Icons.circle : Icons.circle_outlined,
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          Text(
-            name,
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.6,
-              height: 1.1,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            dateStr,
-            style: GoogleFonts.inter(
-              color: kInk200, fontSize: 12.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _KpiRow extends StatelessWidget {
-  final bool isClockedIn;
-  final int taskCount;
-  final int leaveCount;
-  const _KpiRow({required this.isClockedIn, required this.taskCount, required this.leaveCount});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: KpiPill(
-          icon: isClockedIn ? Icons.timer : Icons.timer_off_outlined,
-          value: isClockedIn ? 'IN' : 'OUT',
-          label: 'attendance',
-          tone: isClockedIn ? kSuccess600 : kInk500,
-        )),
-        const SizedBox(width: 8),
-        Expanded(child: KpiPill(
-          icon: Icons.checklist_outlined,
-          value: '$taskCount',
-          label: 'open tasks',
-          tone: kNavy900,
-        )),
-        const SizedBox(width: 8),
-        Expanded(child: KpiPill(
-          icon: Icons.event_busy_outlined,
-          value: '$leaveCount',
-          label: 'pending leave',
-          tone: kMission600,
-        )),
-      ],
-    );
-  }
-}
-
-class _PunchPanel extends StatefulWidget {
-  final Map<String, dynamic> today;
-  final WidgetRef ref;
-  const _PunchPanel({required this.today, required this.ref});
-
-  @override
-  State<_PunchPanel> createState() => _PunchPanelState();
-}
-
-class _PunchPanelState extends State<_PunchPanel> {
-  bool _busy = false;
-  String? _error;
-
-  // Calls the same repository as PunchScreen but inline. Re-uses the geo +
-  // selfie flow by importing the existing screen's helpers indirectly.
-  Future<void> _punch(String type) async {
-    // Delegate to the punch screen logic via a lightweight repository call.
-    // To keep this dashboard self-contained we don't replicate the selfie
-    // capture here — Punch IN with selfie will route the user to /today
-    // (which is this same dashboard, with the punch panel below).
-    Haptics.medium();
-    setState(() { _busy = true; _error = null; });
-    try {
-      final repo = widget.ref.read(punchRepoProvider);
-      await repo.record(punchType: type);
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      widget.ref.invalidate(_todayProvider);
-      if (mounted) {
-        Haptics.success();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Punched $type')));
-      }
-    } catch (e) {
-      setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isIn = widget.today['isClockedIn'] == true;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(child: _PunchTile(
-              label: isIn ? 'You are IN' : 'Punch IN',
-              icon: isIn ? Icons.check_circle : Icons.login_rounded,
-              filled: !isIn,
-              busy: _busy,
-              onPressed: () => _punch('In'),
-            )),
-            const SizedBox(width: 10),
-            Expanded(child: _PunchTile(
-              label: 'Punch OUT',
-              icon: Icons.logout_rounded,
-              filled: isIn,
-              busy: _busy,
-              onPressed: () => _punch('Out'),
-            )),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _busy ? null : () => _punch('BreakIn'),
-                icon: const Icon(Icons.coffee_outlined, size: 16),
-                label: const Text('Break in'),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _busy ? null : () => _punch('BreakOut'),
-                icon: const Icon(Icons.work_history_outlined, size: 16),
-                label: const Text('Break out'),
-              ),
-            ),
-          ],
-        ),
-        if (_error != null) ...[
-          const SizedBox(height: 10),
-          ErrorBox(message: _error!),
-        ],
-      ],
-    );
-  }
-}
-
-class _PunchTile extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final bool filled;
-  final bool busy;
-  final VoidCallback onPressed;
-  const _PunchTile({required this.label, required this.icon, required this.filled, required this.busy, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    final bg = filled ? kMission500 : Colors.white;
-    final fg = kNavy900;
-    return Material(
-      color: bg,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: busy ? null : onPressed,
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          height: 96,
+        Container(
+          width: 44, height: 44,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: filled ? null : Border.all(color: kInk200, width: 1.2),
-            boxShadow: filled
-                ? [
-                    BoxShadow(
-                      color: kMission500.withValues(alpha: 0.25),
-                      blurRadius: 14, offset: const Offset(0, 6),
-                    ),
-                  ]
-                : null,
+            color: kSurfaceCardDk,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: kBorderDk),
           ),
-          child: busy
-              ? Center(child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: fg)))
-              : Column(
+          alignment: Alignment.center,
+          child: Text(
+            _initials(fullName),
+            style: GoogleFonts.inter(
+              color: kLime500, fontWeight: FontWeight.w800, fontSize: 16,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: GoogleFonts.inter(
+                  color: kTextDk, fontSize: 16,
+                  fontWeight: FontWeight.w800, height: 1.1,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                role,
+                style: GoogleFonts.inter(
+                  color: kTextDkMuted, fontSize: 12.5,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Overview card — lime green featured strip with three KPIs.
+
+class _OverviewCard extends StatelessWidget {
+  final int present;
+  final int today;
+  final int late;
+  const _OverviewCard({
+    required this.present,
+    required this.today,
+    required this.late,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFB7F25C), Color(0xFF7BD63B)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: kLime500.withValues(alpha: 0.20),
+            blurRadius: 20, offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _OverviewMetric(
+            label: 'Presence',
+            value: '$present',
+          ),
+          _OverviewDivider(),
+          _OverviewMetric(
+            label: 'Punches',
+            value: '$today',
+          ),
+          _OverviewDivider(),
+          _OverviewMetric(
+            label: 'Late',
+            value: late == 0 ? '0h' : '${late}h',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OverviewMetric extends StatelessWidget {
+  final String label;
+  final String value;
+  const _OverviewMetric({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 12, color: const Color(0xFF15411D),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              fontSize: 24, fontWeight: FontWeight.w800,
+              color: const Color(0xFF0E2C13), letterSpacing: -0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OverviewDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1, height: 40,
+      color: const Color(0xFF15411D).withValues(alpha: 0.18),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Feature tile — large dark card with icon-bg + value + caption.
+
+class _FeatureTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconBg;
+  final Color iconFg;
+  final String title;
+  final String caption;
+  final VoidCallback onTap;
+
+  const _FeatureTile({
+    required this.icon,
+    required this.iconBg,
+    required this.iconFg,
+    required this.title,
+    required this.caption,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: kSurfaceCardDk,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: kBorderDk),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 44, height: 44,
+                decoration: BoxDecoration(
+                  color: iconBg,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                alignment: Alignment.center,
+                child: Icon(icon, color: iconFg, size: 22),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                title,
+                style: GoogleFonts.inter(
+                  fontSize: 28, fontWeight: FontWeight.w800,
+                  color: kTextDk, letterSpacing: -0.6, height: 1.0,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                caption,
+                style: GoogleFonts.inter(
+                  fontSize: 12.5, color: kTextDkMuted,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Date-chip task card — left date stack + title + time + Get Details link.
+
+class _UpcomingTaskCard extends StatelessWidget {
+  final Map<String, dynamic> task;
+  final VoidCallback onTap;
+  const _UpcomingTaskCard({required this.task, required this.onTap});
+
+  ({String day, String month}) _date() {
+    final raw = task['dueDate']?.toString() ?? task['date']?.toString();
+    if (raw != null) {
+      try {
+        final d = DateTime.parse(raw).toLocal();
+        return (
+          day: DateFormat('d').format(d),
+          month: DateFormat('MMM').format(d),
+        );
+      } catch (_) {}
+    }
+    return (day: '—', month: '');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final d = _date();
+    final priority = task['priority']?.toString() ?? '';
+    final priorityTone = priority == 'Urgent' ? kDanger600
+                       : priority == 'High'   ? kPillPink
+                       : priority == 'Medium' ? kPillSky
+                       : kPillPurple;
+
+    return Material(
+      color: kSurfaceCardDk,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(14, 14, 16, 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: kBorderDk),
+          ),
+          child: Row(
+            children: [
+              // Date stack
+              Container(
+                width: 48, height: 56,
+                decoration: BoxDecoration(
+                  color: kSurfaceLiftDk,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(icon, color: fg, size: 26),
-                    const SizedBox(height: 5),
-                    Text(label,
-                      style: GoogleFonts.inter(color: fg, fontSize: 13.5, fontWeight: FontWeight.w800, letterSpacing: 0.2),
+                    Text(d.day,
+                      style: GoogleFonts.inter(
+                        fontSize: 18, fontWeight: FontWeight.w800,
+                        color: kTextDk, height: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(d.month,
+                      style: GoogleFonts.inter(
+                        fontSize: 10, color: kTextDkMuted,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task['title']?.toString() ?? 'Task',
+                      style: GoogleFonts.inter(
+                        fontSize: 14, fontWeight: FontWeight.w800,
+                        color: kTextDk, letterSpacing: -0.2, height: 1.2,
+                      ),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        if (priority.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: priorityTone.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Text(priority,
+                              style: GoogleFonts.inter(
+                                fontSize: 10, fontWeight: FontWeight.w800,
+                                color: priorityTone,
+                                letterSpacing: 0.4,
+                              ),
+                            ),
+                          ),
+                        if (priority.isNotEmpty) const SizedBox(width: 8),
+                        Text(
+                          (task['project']?['projectName'] ??
+                            task['project']?['name'] ?? '—').toString(),
+                          style: GoogleFonts.inter(
+                            fontSize: 11.5, color: kTextDkMuted,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text('Get Details',
+                      style: GoogleFonts.inter(
+                        fontSize: 11.5, fontWeight: FontWeight.w700,
+                        color: kLime500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  final String text;
-  const _SectionLabel(this.text);
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4),
-      child: Text(
-        text.toUpperCase(),
-        style: GoogleFonts.inter(
-          fontSize: 11, fontWeight: FontWeight.w800,
-          letterSpacing: 1.0, color: kInk500,
-        ),
-      ),
-    );
-  }
-}
-
-class _ActivityPunch extends StatelessWidget {
-  final Map<String, dynamic> punch;
-  const _ActivityPunch({required this.punch});
-
-  @override
-  Widget build(BuildContext context) {
-    final type = punch['punchType'] as String? ?? '';
-    final isIn = type == 'In' || type == 'BreakIn';
-    final t = punch['occurredAt'];
-    final time = (t is String)
-      ? DateFormat('HH:mm').format(DateTime.parse(t).toLocal())
-      : '—';
-    return ActivityRow(
-      icon: isIn ? Icons.login_rounded : Icons.logout_rounded,
-      tone: isIn ? kSuccess600 : kDanger600,
-      title: type,
-      subtitle: punch['geofenceMatch'] == true ? 'In office geofence' : 'Outside geofence',
-      time: time,
     );
   }
 }

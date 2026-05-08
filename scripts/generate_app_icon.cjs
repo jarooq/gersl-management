@@ -17,11 +17,11 @@ const OUT = path.join(__dirname, '..', 'mobile', 'assets', 'icon');
 fs.mkdirSync(OUT, { recursive: true });
 
 const SIZE = 1024;
-const NAVY = '#0D1D3D';
-const NAVY_DEEP = '#081530';
-const NAVY_HI = '#142A55';
-const MISSION = '#F59E0B';
-const MISSION_LIGHT = '#FCD34D';
+const NAVY = '#10212F';
+const NAVY_DEEP = '#0A1722';
+const NAVY_HI = '#1B2C3E';
+const MISSION = '#A4F056'; // lime-green primary accent
+const MISSION_LIGHT = '#C8FA8E';
 const WHITE = '#FFFFFF';
 
 // ---------------------------------------------------------------------------

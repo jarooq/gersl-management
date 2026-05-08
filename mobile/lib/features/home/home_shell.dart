@@ -196,12 +196,12 @@ class _FloatingBottomBar extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: kSurfaceCardDk,
             borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: kInk100),
+            border: Border.all(color: kBorderDk),
             boxShadow: [
               BoxShadow(
-                color: kNavy900.withValues(alpha: 0.10),
+                color: Colors.black.withValues(alpha: 0.30),
                 blurRadius: 22, offset: const Offset(0, 8),
               ),
             ],
@@ -245,7 +245,7 @@ class _BottomBarItem extends StatelessWidget {
             horizontal: selected ? 8 : 4, vertical: 8,
           ),
           decoration: BoxDecoration(
-            color: selected ? kNavy900 : Colors.transparent,
+            color: selected ? kLime500 : Colors.transparent,
             borderRadius: BorderRadius.circular(22),
           ),
           child: Row(
@@ -254,7 +254,7 @@ class _BottomBarItem extends StatelessWidget {
               Icon(
                 selected ? tab.iconActive : tab.icon,
                 size: 18,
-                color: selected ? kMission300 : kInk500,
+                color: selected ? kSurfaceDark : kTextDkMuted,
               ),
               if (selected) ...[
                 const SizedBox(width: 6),
@@ -263,7 +263,7 @@ class _BottomBarItem extends StatelessWidget {
                     tab.label,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
-                      color: Colors.white, fontSize: 11.5,
+                      color: kSurfaceDark, fontSize: 11.5,
                       fontWeight: FontWeight.w800, letterSpacing: 0.1,
                     ),
                   ),
