@@ -25,7 +25,9 @@ import {
   Image,
   Package,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const CampaignsPage = () => {
@@ -43,6 +45,7 @@ const CampaignsPage = () => {
   const stats = getCampaignStats();
 
   const [showModal, setShowModal] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [editingCampaign, setEditingCampaign] = useState(null);
   const [viewingCampaign, setViewingCampaign] = useState(null);
@@ -186,6 +189,7 @@ const CampaignsPage = () => {
     setImagePreview('');
     setImageInputKey(Date.now()); // Reset file input
     setEditingCampaign(null);
+    setShowAdvanced(false);
     setShowModal(false);
   };
 
@@ -210,6 +214,7 @@ const CampaignsPage = () => {
     setImagePreview('');
     setImageInputKey(Date.now()); // Reset file input
     setEditingCampaign(null);
+    setShowAdvanced(false);
     setShowModal(true);
   };
 
@@ -236,6 +241,14 @@ const CampaignsPage = () => {
     if (campaign.imageUrl) {
       setImagePreview(getImageUrl(campaign.imageUrl));
     }
+
+    // Auto-expand Advanced if any of its fields are populated on the record
+    // we're about to edit, otherwise the user might not realise they're set.
+    setShowAdvanced(
+      Boolean(campaign.category) ||
+      Boolean(campaign.perDonorAmount) ||
+      (campaign.visibility && campaign.visibility !== 'Public')
+    );
 
     setShowModal(true);
   };
@@ -891,18 +904,6 @@ const CampaignsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">Category</label>
-                  <input
-                    type="text"
-                    name="category"
-                    value={campaignForm.category}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
-                    placeholder="e.g., Disaster Relief"
-                  />
-                </div>
-
-                <div>
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Target Amount ($) *</label>
                   <input
                     type="number"
@@ -915,21 +916,6 @@ const CampaignsPage = () => {
                     className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
                     placeholder="50000"
                   />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">Per Donor Amount ($)</label>
-                  <input
-                    type="number"
-                    name="perDonorAmount"
-                    value={campaignForm.perDonorAmount}
-                    onChange={handleInputChange}
-                    min="0"
-                    step="0.01"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
-                    placeholder="20"
-                  />
-                  <p className="text-xs text-ink-500 mt-1">E.g., Back to School: Total $20,000, Each donor $20</p>
                 </div>
 
                 <div>
@@ -946,19 +932,6 @@ const CampaignsPage = () => {
                     <option value="Pending Approval">Pending Approval</option>
                     <option value="Completed">Completed</option>
                     <option value="Closed">Closed</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">Visibility</label>
-                  <select
-                    name="visibility"
-                    value={campaignForm.visibility}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
-                  >
-                    <option value="Public">Public</option>
-                    <option value="Private">Private</option>
                   </select>
                 </div>
 
@@ -1030,6 +1003,66 @@ const CampaignsPage = () => {
                     <p className="text-xs text-ink-500">Supported formats: JPG, PNG, GIF, WebP (Max 5MB)</p>
                   </div>
                 </div>
+              </div>
+
+              {/* Advanced fields — hidden by default; shown via the toggle below.
+                  These are useful but rarely changed: Category, Per Donor Amount, Visibility. */}
+              <div className="mt-4 border-t border-ink-100 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvanced(s => !s)}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-ink-700 hover:text-purple-600 transition-colors"
+                >
+                  {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  Advanced options
+                  <span className="text-xs font-normal text-ink-400">
+                    (category, per-donor amount, visibility)
+                  </span>
+                </button>
+
+                {showAdvanced && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Category</label>
+                      <input
+                        type="text"
+                        name="category"
+                        value={campaignForm.category}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        placeholder="e.g., Disaster Relief"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Per Donor Amount ($)</label>
+                      <input
+                        type="number"
+                        name="perDonorAmount"
+                        value={campaignForm.perDonorAmount}
+                        onChange={handleInputChange}
+                        min="0"
+                        step="0.01"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        placeholder="20"
+                      />
+                      <p className="text-xs text-ink-500 mt-1">E.g., Back to School: Total $20,000, Each donor $20</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">Visibility</label>
+                      <select
+                        name="visibility"
+                        value={campaignForm.visibility}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-3 mt-6">
