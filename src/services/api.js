@@ -3750,6 +3750,69 @@ export const DataProtectionAPI = {
 };
 
 // ============================================
+// ASSET REGISTER API (HR / Operations equipment register)
+// ============================================
+export const AssetAPI = {
+  list: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/assets${qs ? `?${qs}` : ''}`);
+    return data.data || [];
+  },
+  stats: async () => {
+    const data = await request('/assets/stats');
+    return data.data || {};
+  },
+  create: async (payload) => {
+    const data = await request('/assets', { method: 'POST', body: JSON.stringify(payload) });
+    return data.data;
+  },
+  update: async (id, payload) => {
+    const data = await request(`/assets/${id}`, { method: 'PATCH', body: JSON.stringify(payload) });
+    return data.data;
+  },
+  assign: async (id, payload) => {
+    const data = await request(`/assets/${id}/assign`, { method: 'PATCH', body: JSON.stringify(payload) });
+    return data.data;
+  },
+  returnAsset: async (id) => {
+    const data = await request(`/assets/${id}/return`, { method: 'PATCH' });
+    return data.data;
+  },
+  remove: async (id) => {
+    await request(`/assets/${id}`, { method: 'DELETE' });
+  },
+};
+API.Asset = AssetAPI;
+
+// ============================================
+// VEHICLE + ACCOMMODATION REQUEST APIs
+// ============================================
+export const VehicleRequestAPI = {
+  list:   async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/vehicle-requests${qs ? `?${qs}` : ''}`);
+    return data.data || [];
+  },
+  stats:  async () => (await request('/vehicle-requests/stats')).data || {},
+  create: async (payload) => (await request('/vehicle-requests', { method: 'POST', body: JSON.stringify(payload) })).data,
+  decide: async (id, action, notes) =>
+    (await request(`/vehicle-requests/${id}/${action}`, { method: 'PATCH', body: JSON.stringify({ notes: notes || null }) })).data,
+};
+export const AccommodationRequestAPI = {
+  list:   async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/accommodation-requests${qs ? `?${qs}` : ''}`);
+    return data.data || [];
+  },
+  stats:  async () => (await request('/accommodation-requests/stats')).data || {},
+  create: async (payload) => (await request('/accommodation-requests', { method: 'POST', body: JSON.stringify(payload) })).data,
+  decide: async (id, action, notes) =>
+    (await request(`/accommodation-requests/${id}/${action}`, { method: 'PATCH', body: JSON.stringify({ notes: notes || null }) })).data,
+};
+API.VehicleRequest = VehicleRequestAPI;
+API.AccommodationRequest = AccommodationRequestAPI;
+
+// ============================================
 // EXPENSE CLAIMS API (mobile-submitted via /me/expenses)
 // ============================================
 export const ExpenseAPI = {

@@ -4939,6 +4939,51 @@ const Asset = sequelize.define('Asset', {
 }, { tableName: 'assets', timestamps: true, underscored: true });
 
 // ============================================
+// Vehicle Request — staff books an org vehicle for a trip / pickup
+// ============================================
+const VehicleRequest = sequelize.define('VehicleRequest', {
+  userId: { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  vehicleId: { type: DataTypes.INTEGER, field: 'vehicle_id', references: { model: 'vehicles', key: 'id' } },
+  purpose: { type: DataTypes.TEXT, allowNull: false },
+  startDate: { type: DataTypes.DATE, allowNull: false, field: 'start_date' },
+  endDate:   { type: DataTypes.DATE, allowNull: false, field: 'end_date' },
+  pickupLocation: { type: DataTypes.STRING(200), field: 'pickup_location' },
+  dropoffLocation:{ type: DataTypes.STRING(200), field: 'dropoff_location' },
+  passengerCount: { type: DataTypes.INTEGER, defaultValue: 1, field: 'passenger_count' },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Approved, Rejected, In Use, Completed, Cancelled
+  decidedBy: { type: DataTypes.INTEGER, field: 'decided_by', references: { model: 'users', key: 'id' } },
+  decidedAt: { type: DataTypes.DATE, field: 'decided_at' },
+  decisionNotes: { type: DataTypes.TEXT, field: 'decision_notes' },
+}, { tableName: 'vehicle_requests', timestamps: true, underscored: true });
+
+// ============================================
+// Accommodation Request — staff books accommodation for a field trip
+// ============================================
+const AccommodationRequest = sequelize.define('AccommodationRequest', {
+  userId: { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
+  location: { type: DataTypes.STRING(200), allowNull: false },
+  checkInDate:  { type: DataTypes.DATEONLY, allowNull: false, field: 'check_in_date' },
+  checkOutDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'check_out_date' },
+  purpose: { type: DataTypes.TEXT, allowNull: false },
+  estimatedCost: { type: DataTypes.DECIMAL(15, 2), field: 'estimated_cost' },
+  guestCount: { type: DataTypes.INTEGER, defaultValue: 1, field: 'guest_count' },
+  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Approved, Rejected, Booked, Completed, Cancelled
+  decidedBy: { type: DataTypes.INTEGER, field: 'decided_by', references: { model: 'users', key: 'id' } },
+  decidedAt: { type: DataTypes.DATE, field: 'decided_at' },
+  decisionNotes: { type: DataTypes.TEXT, field: 'decision_notes' },
+}, { tableName: 'accommodation_requests', timestamps: true, underscored: true });
+
+// Associations
+VehicleRequest.belongsTo(User,    { as: 'user',    foreignKey: 'userId' });
+VehicleRequest.belongsTo(User,    { as: 'decider', foreignKey: 'decidedBy' });
+VehicleRequest.belongsTo(Vehicle, { as: 'vehicle', foreignKey: 'vehicleId' });
+User.hasMany(VehicleRequest, { as: 'vehicleRequests', foreignKey: 'userId' });
+
+AccommodationRequest.belongsTo(User, { as: 'user',    foreignKey: 'userId' });
+AccommodationRequest.belongsTo(User, { as: 'decider', foreignKey: 'decidedBy' });
+User.hasMany(AccommodationRequest, { as: 'accommodationRequests', foreignKey: 'userId' });
+
+// ============================================
 // ROLES & PERMISSIONS MODELS
 // ============================================
 
@@ -5591,6 +5636,8 @@ export {
   Vendor,
   InventoryItem,
   Asset,
+  VehicleRequest,
+  AccommodationRequest,
   Role,
   Permission,
   RolePermission,
@@ -5748,6 +5795,8 @@ export default {
   Vendor,
   InventoryItem,
   Asset,
+  VehicleRequest,
+  AccommodationRequest,
   Role,
   Permission,
   RolePermission,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useHR } from '../../contexts/HRContext';
 import { useProjects } from '../../contexts/ProjectContext';
-import API, { ExpenseAPI } from '../../services/api';
+import API, { ExpenseAPI, AssetAPI, VehicleRequestAPI, AccommodationRequestAPI } from '../../services/api';
 import StaffProfileModal from '../../components/hr/StaffProfileModal';
 import {
   Users, UserPlus, Clock, Calendar, TrendingUp, CheckCircle,
@@ -74,6 +74,111 @@ const HRPage = () => {
       }))
       .sort((a, b) => b.totalExpenses - a.totalExpenses);
   }, [staffExpenses, allProjects]);
+
+  // Asset Register tab — lazy-fetch all assets on tab open.
+  const [assetRows, setAssetRows] = useState([]);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [assetBusy, setAssetBusy] = useState(false);
+  const refreshAssets = async () => {
+    try {
+      const rows = await AssetAPI.list();
+      setAssetRows(Array.isArray(rows) ? rows : []);
+      setAssetsLoaded(true);
+    } catch {
+      setAssetsLoaded(true);
+    }
+  };
+  useEffect(() => {
+    if (activeTab === 'assetRegister' && !assetsLoaded) refreshAssets();
+  }, [activeTab, assetsLoaded]);
+
+  const handleNewAsset = async () => {
+    const tag  = window.prompt('Asset tag (e.g. LAP-007)');
+    if (!tag) return;
+    const name = window.prompt('Asset name (e.g. Dell Latitude 7420)');
+    if (!name) return;
+    const category = window.prompt('Category (Laptop / Monitor / Furniture / …)') || 'Other';
+    setAssetBusy(true);
+    try {
+      await AssetAPI.create({ assetTag: tag.trim(), assetName: name.trim(), category: category.trim(), status: 'Active' });
+      await refreshAssets();
+    } catch (e) {
+      alert(e?.message || 'Failed to create asset');
+    } finally { setAssetBusy(false); }
+  };
+
+  const handleAssignAsset = async (asset) => {
+    const who = window.prompt(`Assign ${asset.assetName} to (full name)`, asset.assignedTo || '');
+    if (!who) return;
+    setAssetBusy(true);
+    try {
+      await AssetAPI.assign(asset.id, { assignedTo: who.trim() });
+      await refreshAssets();
+    } catch (e) {
+      alert(e?.message || 'Failed to assign asset');
+    } finally { setAssetBusy(false); }
+  };
+
+  const handleReturnAsset = async (asset) => {
+    if (!window.confirm(`Mark ${asset.assetName} as returned?`)) return;
+    setAssetBusy(true);
+    try {
+      await AssetAPI.returnAsset(asset.id);
+      await refreshAssets();
+    } catch (e) {
+      alert(e?.message || 'Failed to return asset');
+    } finally { setAssetBusy(false); }
+  };
+
+  // Vehicle Requests + Accommodation Requests — lazy-fetch + handlers.
+  const [vehReqs, setVehReqs] = useState([]);
+  const [vehLoaded, setVehLoaded] = useState(false);
+  const refreshVeh = async () => {
+    try { const rows = await VehicleRequestAPI.list(); setVehReqs(rows); setVehLoaded(true); }
+    catch { setVehLoaded(true); }
+  };
+  useEffect(() => { if (activeTab === 'vehicleRequests' && !vehLoaded) refreshVeh(); }, [activeTab, vehLoaded]);
+
+  const [accReqs, setAccReqs] = useState([]);
+  const [accLoaded, setAccLoaded] = useState(false);
+  const refreshAcc = async () => {
+    try { const rows = await AccommodationRequestAPI.list(); setAccReqs(rows); setAccLoaded(true); }
+    catch { setAccLoaded(true); }
+  };
+  useEffect(() => { if (activeTab === 'accommodation' && !accLoaded) refreshAcc(); }, [activeTab, accLoaded]);
+
+  const handleNewVehicleReq = async () => {
+    const purpose = window.prompt('Purpose of trip?'); if (!purpose) return;
+    const startDate = window.prompt('Start date (YYYY-MM-DD HH:MM)?'); if (!startDate) return;
+    const endDate   = window.prompt('End date (YYYY-MM-DD HH:MM)?');   if (!endDate)   return;
+    const pickup    = window.prompt('Pickup location?') || '';
+    const dropoff   = window.prompt('Drop-off location?') || '';
+    try {
+      await VehicleRequestAPI.create({ purpose, startDate, endDate, pickupLocation: pickup, dropoffLocation: dropoff });
+      await refreshVeh();
+    } catch (e) { alert(e?.message || 'Failed'); }
+  };
+  const decideVeh = async (id, action) => {
+    if (!window.confirm(`${action} this vehicle request?`)) return;
+    try { await VehicleRequestAPI.decide(id, action); await refreshVeh(); }
+    catch (e) { alert(e?.message || 'Failed'); }
+  };
+
+  const handleNewAccReq = async () => {
+    const location = window.prompt('Accommodation location?'); if (!location) return;
+    const checkInDate  = window.prompt('Check-in date (YYYY-MM-DD)?'); if (!checkInDate) return;
+    const checkOutDate = window.prompt('Check-out date (YYYY-MM-DD)?'); if (!checkOutDate) return;
+    const purpose = window.prompt('Purpose?'); if (!purpose) return;
+    try {
+      await AccommodationRequestAPI.create({ location, checkInDate, checkOutDate, purpose });
+      await refreshAcc();
+    } catch (e) { alert(e?.message || 'Failed'); }
+  };
+  const decideAcc = async (id, action) => {
+    if (!window.confirm(`${action} this accommodation request?`)) return;
+    try { await AccommodationRequestAPI.decide(id, action); await refreshAcc(); }
+    catch (e) { alert(e?.message || 'Failed'); }
+  };
 
   const [showAddStaffModal, setShowAddStaffModal] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
@@ -954,37 +1059,43 @@ const HRPage = () => {
 
 
 
-          {/* Asset Register Tab */}
+          {/* Asset Register Tab — backed by /api/assets */}
           {activeTab === 'assetRegister' && (
             <div className="space-y-4">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-ink-900">Asset Movement Register</h2>
+                <h2 className="text-lg font-bold text-ink-900">Asset Register</h2>
                 <button
-                  onClick={() => setShowAssetCheckoutModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
+                  onClick={handleNewAsset}
+                  disabled={assetBusy}
+                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 disabled:opacity-50 text-white rounded-md font-medium shadow-card transition">
                   <Package size={18} />
-                  Checkout Asset
+                  New asset
                 </button>
               </div>
 
-
-              {/* Checked Out Assets */}
-              <h3 className="font-bold text-ink-900 mb-3">Checked Out Assets</h3>
               <div className="space-y-3">
-                {assetCheckouts.map((asset) => (
+                {!assetsLoaded ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">Loading…</div>
+                ) : assetRows.length === 0 ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">
+                    No assets registered yet. Click "New asset" to add the first one.
+                  </div>
+                ) : assetRows.map((asset) => (
                   <div key={asset.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3 flex-1">
-                        <div className="w-12 h-12 bg-teal-50 border border-teal-200 text-white rounded-xl flex items-center justify-center">
-                          <Package size={24} />
+                        <div className="w-12 h-12 bg-mission-50 border border-mission-200 text-mission-700 rounded-md flex items-center justify-center">
+                          <Package size={20} />
                         </div>
                         <div className="flex-1">
                           <h3 className="font-bold text-ink-900">{asset.assetName}</h3>
-                          <p className="text-sm text-ink-600">{asset.assetCode} • {asset.category}</p>
+                          <p className="text-sm text-ink-600">{asset.assetTag} · {asset.category}{asset.location ? ` · ${asset.location}` : ''}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          asset.status === 'Checked Out' ? 'bg-orange-100 text-orange-700 border border-orange-200' :
-                          'bg-red-100 text-red-700 border border-red-200'
+                          asset.status === 'Assigned'     ? 'bg-mission-50 text-mission-700 border border-mission-200' :
+                          asset.status === 'Active'       ? 'bg-success-50 text-success-700 border border-success-600/20' :
+                          asset.status === 'Under Repair' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                          'bg-ink-100 text-ink-700 border border-ink-200'
                         }`}>
                           {asset.status}
                         </span>
@@ -993,31 +1104,37 @@ const HRPage = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                       <div>
-                        <p className="text-xs text-ink-500 mb-1">Checked Out To</p>
-                        <p className="text-sm font-semibold text-ink-900">{asset.checkedOutTo}</p>
+                        <p className="text-xs text-ink-500 mb-1">Assigned to</p>
+                        <p className="text-sm font-semibold text-ink-900">{asset.assignedTo || '—'}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-ink-500 mb-1">Checkout Date</p>
-                        <p className="text-sm font-semibold text-ink-900">{asset.checkedOutDate}</p>
+                        <p className="text-xs text-ink-500 mb-1">Assignment date</p>
+                        <p className="text-sm font-semibold text-ink-900">{asset.assignmentDate || '—'}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-ink-500 mb-1">Expected Return</p>
-                        <p className="text-sm font-semibold text-ink-900">{asset.expectedReturn}</p>
+                        <p className="text-xs text-ink-500 mb-1">Warranty expiry</p>
+                        <p className="text-sm font-semibold text-ink-900">{asset.warrantyExpiry || '—'}</p>
                       </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Actions</p>
-                        <button
-                          onClick={() => alert(`Returning ${asset.assetName} from ${asset.checkedOutTo}`)}
-                          className="px-3 py-1 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-all text-xs font-semibold border border-green-200 flex items-center gap-1">
-                          <Check size={12} />
-                          Return
-                        </button>
+                      <div className="flex items-end gap-2">
+                        {asset.status === 'Assigned' ? (
+                          <button onClick={() => handleReturnAsset(asset)} disabled={assetBusy}
+                            className="px-3 py-1.5 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition text-xs font-semibold border border-success-600/20 inline-flex items-center gap-1 disabled:opacity-50">
+                            <Check size={12} /> Return
+                          </button>
+                        ) : (
+                          <button onClick={() => handleAssignAsset(asset)} disabled={assetBusy}
+                            className="px-3 py-1.5 bg-navy-50 text-navy-800 rounded-md hover:bg-navy-100 transition text-xs font-semibold border border-navy-200 inline-flex items-center gap-1 disabled:opacity-50">
+                            <UserPlus size={12} /> Assign
+                          </button>
+                        )}
                       </div>
                     </div>
 
-                    <div className="p-3 bg-teal-50 rounded-lg">
-                      <p className="text-sm text-ink-700"><span className="font-semibold">Purpose:</span> {asset.purpose}</p>
-                    </div>
+                    {asset.assignmentNotes && (
+                      <div className="p-3 bg-ink-50 rounded-md">
+                        <p className="text-sm text-ink-700"><span className="font-semibold">Notes:</span> {asset.assignmentNotes}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1143,105 +1260,63 @@ const HRPage = () => {
             </div>
           )}
 
-          {/* Vehicle Requests Tab */}
+          {/* Vehicle Requests Tab — backed by /api/vehicle-requests */}
           {activeTab === 'vehicleRequests' && (
             <div className="space-y-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold text-ink-900">Vehicle Requests</h2>
                 <button
-                  onClick={() => setShowVehicleRequestModal(true)}
+                  onClick={handleNewVehicleReq}
                   className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
-                  <Car size={18} />
-                  Request Vehicle
+                  <Car size={18} /> New request
                 </button>
               </div>
 
-
-              {/* Active Requests */}
-              <h3 className="font-bold text-ink-900 mb-3">Recent Vehicle Requests</h3>
               <div className="space-y-3">
-                {vehicleRequests.map((request) => (
-                  <div key={request.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
+                {!vehLoaded ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">Loading…</div>
+                ) : vehReqs.length === 0 ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">
+                    No vehicle requests yet.
+                  </div>
+                ) : vehReqs.map((r) => (
+                  <div key={r.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-blue-50 border border-blue-200 text-white rounded-lg flex items-center justify-center">
-                            <Car size={20} />
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-ink-900">{request.requestNo}</h3>
-                            <p className="text-sm text-ink-600">{request.requestedBy}</p>
-                          </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-50 border border-blue-200 text-blue-700 rounded-md flex items-center justify-center"><Car size={18} /></div>
+                        <div>
+                          <h3 className="font-bold text-ink-900">{r.user?.fullName || `Staff #${r.userId}`}</h3>
+                          <p className="text-sm text-ink-600">{r.user?.role || ''}{r.vehicle?.plateNo ? ` · Vehicle ${r.vehicle.plateNo}` : ''}</p>
                         </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        request.status === 'Approved' ? 'bg-green-100 text-green-700 border border-green-200' :
-                        request.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
-                        'bg-blue-100 text-blue-700 border border-blue-200'
-                      }`}>
-                        {request.status}
-                      </span>
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                        r.status === 'Approved' || r.status === 'Completed' ? 'bg-success-50 text-success-700 border-success-600/20' :
+                        r.status === 'Rejected' || r.status === 'Cancelled' ? 'bg-danger-50 text-danger-700 border-danger-600/20' :
+                        r.status === 'In Use'   ? 'bg-navy-50 text-navy-800 border-navy-200' :
+                        'bg-mission-50 text-mission-700 border-mission-200'
+                      }`}>{r.status}</span>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3 p-3 bg-blue-50 rounded-lg">
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Project</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.project}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Activity</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.activity}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Est. Cost</p>
-                        <p className="text-sm font-semibold text-blue-600">LKR {request.estimatedCost.toLocaleString()}</p>
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 text-sm">
+                      <div><p className="text-xs text-ink-500 mb-0.5">Start</p><p className="font-semibold text-ink-900">{new Date(r.startDate).toLocaleString()}</p></div>
+                      <div><p className="text-xs text-ink-500 mb-0.5">End</p><p className="font-semibold text-ink-900">{new Date(r.endDate).toLocaleString()}</p></div>
+                      <div><p className="text-xs text-ink-500 mb-0.5">Passengers</p><p className="font-semibold text-ink-900">{r.passengerCount ?? 1}</p></div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Vehicle Type</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.vehicleType}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Date</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.date}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Time</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.startTime} - {request.endTime}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Passengers</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.passengers}</p>
-                      </div>
-                    </div>
+                    {(r.pickupLocation || r.dropoffLocation) && (
+                      <p className="text-sm text-ink-700 mb-2"><span className="font-semibold">Route:</span> {r.pickupLocation || '—'} → {r.dropoffLocation || '—'}</p>
+                    )}
+                    <p className="text-sm text-ink-700 mb-3"><span className="font-semibold">Purpose:</span> {r.purpose}</p>
 
-                    <div className="mb-3 p-3 bg-ink-50 rounded-lg">
-                      <p className="text-xs text-ink-500 mb-1">Destination</p>
-                      <p className="text-sm font-semibold text-ink-900 mb-2">{request.destination}</p>
-                      <p className="text-sm text-ink-700"><span className="font-semibold">Purpose:</span> {request.purpose}</p>
-                    </div>
-
-                    {request.status === 'Pending' && (
+                    {r.status === 'Pending' && (
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => alert(`Approved vehicle request ${request.requestNo} for ${request.project}`)}
-                          className="flex-1 px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-all text-sm font-semibold border border-green-200 flex items-center justify-center gap-1">
-                          <Check size={14} />
-                          Approve
+                        <button onClick={() => decideVeh(r.id, 'approve')}
+                          className="flex-1 px-4 py-2 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition text-sm font-semibold border border-success-600/20 inline-flex items-center justify-center gap-1">
+                          <Check size={14} /> Approve
                         </button>
-                        <button
-                          onClick={() => alert(`Rejected vehicle request ${request.requestNo}`)}
-                          className="flex-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all text-sm font-semibold border border-red-200 flex items-center justify-center gap-1">
-                          <X size={14} />
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => alert(`Editing vehicle request ${request.requestNo}`)}
-                          className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all text-sm font-semibold border border-blue-200 flex items-center gap-1">
-                          <Edit size={14} />
-                          Edit
+                        <button onClick={() => decideVeh(r.id, 'reject')}
+                          className="flex-1 px-4 py-2 bg-danger-50 text-danger-700 rounded-md hover:bg-danger-100 transition text-sm font-semibold border border-danger-600/20 inline-flex items-center justify-center gap-1">
+                          <X size={14} /> Reject
                         </button>
                       </div>
                     )}
@@ -1251,116 +1326,61 @@ const HRPage = () => {
             </div>
           )}
 
-          {/* Accommodation Requests Tab */}
+          {/* Accommodation Requests Tab — backed by /api/accommodation-requests */}
           {activeTab === 'accommodation' && (
             <div className="space-y-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold text-ink-900">Accommodation Requests</h2>
                 <button
-                  onClick={() => setShowAccommodationRequestModal(true)}
+                  onClick={handleNewAccReq}
                   className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
-                  <Home size={18} />
-                  Request Accommodation
+                  <Home size={18} /> New request
                 </button>
               </div>
 
-
-              {/* Active Requests */}
-              <h3 className="font-bold text-ink-900 mb-3">Recent Accommodation Requests</h3>
               <div className="space-y-3">
-                {accommodationRequests.map((request) => (
-                  <div key={request.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
+                {!accLoaded ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">Loading…</div>
+                ) : accReqs.length === 0 ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">
+                    No accommodation requests yet.
+                  </div>
+                ) : accReqs.map((r) => (
+                  <div key={r.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-rose-50 border border-rose-200 text-white rounded-lg flex items-center justify-center">
-                            <Home size={20} />
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-ink-900">{request.requestNo}</h3>
-                            <p className="text-sm text-ink-600">{request.requestedBy}</p>
-                          </div>
-                        </div>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        request.status === 'Approved' ? 'bg-green-100 text-green-700 border border-green-200' :
-                        request.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
-                        'bg-rose-100 text-rose-700 border border-rose-200'
-                      }`}>
-                        {request.status}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3 p-3 bg-rose-50 rounded-lg">
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Project</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.project}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Activity</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.activity}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Budget</p>
-                        <p className="text-sm font-semibold text-rose-600">LKR {request.budget.toLocaleString()}</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-3">
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Location</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.location}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Check-In</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.checkIn}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Check-Out</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.checkOut}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Duration</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.nights} nights</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Rooms/Guests</p>
-                        <p className="text-sm font-semibold text-ink-900">{request.rooms} / {request.guests}</p>
-                      </div>
-                    </div>
-
-                    <div className="mb-3 p-3 bg-ink-50 rounded-lg">
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-rose-50 border border-rose-200 text-rose-700 rounded-md flex items-center justify-center"><Home size={18} /></div>
                         <div>
-                          <p className="text-xs text-ink-500 mb-1">Type</p>
-                          <p className="text-sm font-semibold text-ink-900">{request.accommodationType}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-ink-500 mb-1">Special Requirements</p>
-                          <p className="text-sm text-ink-700">{request.specialRequirements}</p>
+                          <h3 className="font-bold text-ink-900">{r.user?.fullName || `Staff #${r.userId}`}</h3>
+                          <p className="text-sm text-ink-600">{r.location}{r.guestCount ? ` · ${r.guestCount} guest${r.guestCount === 1 ? '' : 's'}` : ''}</p>
                         </div>
                       </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                        r.status === 'Approved' || r.status === 'Booked' || r.status === 'Completed' ? 'bg-success-50 text-success-700 border-success-600/20' :
+                        r.status === 'Rejected' || r.status === 'Cancelled' ? 'bg-danger-50 text-danger-700 border-danger-600/20' :
+                        'bg-mission-50 text-mission-700 border-mission-200'
+                      }`}>{r.status}</span>
                     </div>
 
-                    {request.status === 'Pending' && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 text-sm">
+                      <div><p className="text-xs text-ink-500 mb-0.5">Check-in</p><p className="font-semibold text-ink-900">{r.checkInDate}</p></div>
+                      <div><p className="text-xs text-ink-500 mb-0.5">Check-out</p><p className="font-semibold text-ink-900">{r.checkOutDate}</p></div>
+                      {r.estimatedCost && (
+                        <div><p className="text-xs text-ink-500 mb-0.5">Est. cost</p><p className="font-semibold text-ink-900">LKR {Number(r.estimatedCost).toLocaleString()}</p></div>
+                      )}
+                    </div>
+
+                    <p className="text-sm text-ink-700 mb-3"><span className="font-semibold">Purpose:</span> {r.purpose}</p>
+
+                    {r.status === 'Pending' && (
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => alert(`Approved accommodation request ${request.requestNo} for ${request.project}`)}
-                          className="flex-1 px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-all text-sm font-semibold border border-green-200 flex items-center justify-center gap-1">
-                          <Check size={14} />
-                          Approve
+                        <button onClick={() => decideAcc(r.id, 'approve')}
+                          className="flex-1 px-4 py-2 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition text-sm font-semibold border border-success-600/20 inline-flex items-center justify-center gap-1">
+                          <Check size={14} /> Approve
                         </button>
-                        <button
-                          onClick={() => alert(`Rejected accommodation request ${request.requestNo}`)}
-                          className="flex-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all text-sm font-semibold border border-red-200 flex items-center justify-center gap-1">
-                          <X size={14} />
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => alert(`Editing accommodation request ${request.requestNo}`)}
-                          className="px-4 py-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 transition-all text-sm font-semibold border border-rose-200 flex items-center gap-1">
-                          <Edit size={14} />
-                          Edit
+                        <button onClick={() => decideAcc(r.id, 'reject')}
+                          className="flex-1 px-4 py-2 bg-danger-50 text-danger-700 rounded-md hover:bg-danger-100 transition text-sm font-semibold border border-danger-600/20 inline-flex items-center justify-center gap-1">
+                          <X size={14} /> Reject
                         </button>
                       </div>
                     )}
