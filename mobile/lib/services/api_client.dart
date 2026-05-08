@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/env.dart';
 import '../features/auth/auth_controller.dart';
+import 'observability.dart';
 import 'token_store.dart';
 
 final tokenStoreProvider = Provider<TokenStore>((ref) => TokenStore());
@@ -32,6 +33,25 @@ final dioProvider = Provider<Dio>((ref) {
       handler.next(options);
     },
     onError: (e, handler) async {
+      // Forward server-side and network errors to Sentry as breadcrumbs so
+      // future captureException calls have request context. 401s are excluded
+      // because the refresh flow below handles them silently.
+      final status = e.response?.statusCode;
+      if (status == null || status >= 500) {
+        captureError(e, e.stackTrace, {
+          'method':  e.requestOptions.method,
+          'url':     e.requestOptions.uri.toString(),
+          'status':  status,
+          'message': e.message,
+        });
+      } else if (status >= 400 && status != 401) {
+        breadcrumb(
+          '${e.requestOptions.method} ${e.requestOptions.path} → $status',
+          category: 'http',
+          data: { 'status': status },
+        );
+      }
+
       // Skip auth handling for the auth endpoints themselves so we don't loop.
       final url = e.requestOptions.uri.toString();
       final isAuthEndpoint = url.contains('/auth/login') ||

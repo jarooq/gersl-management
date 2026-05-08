@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 class LeaveRepository {
   final Dio _dio;
@@ -9,14 +10,12 @@ class LeaveRepository {
 
   Future<List<Map<String, dynamic>>> mine() async {
     final res = await _dio.get('/me/leave-requests');
-    final raw = (res.data['data'] as List?) ?? [];
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['leaveRequests', 'leaves']);
   }
 
   Future<List<Map<String, dynamic>>> pending() async {
     final res = await _dio.get('/me/leave-requests/pending');
-    final raw = (res.data['data'] as List?) ?? [];
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['leaveRequests', 'leaves']);
   }
 
   Future<Map<String, dynamic>> create({

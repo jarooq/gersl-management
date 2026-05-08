@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 class ExpenseRepository {
   final Dio _dio;
@@ -11,14 +12,12 @@ class ExpenseRepository {
 
   Future<List<Map<String, dynamic>>> mine() async {
     final res = await _dio.get('/me/expenses');
-    final raw = (res.data['data'] as List?) ?? [];
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['expenses']);
   }
 
   Future<List<Map<String, dynamic>>> pending() async {
     final res = await _dio.get('/me/expenses/pending');
-    final raw = (res.data['data'] as List?) ?? [];
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['expenses']);
   }
 
   Future<void> decide(int id, {required bool approve}) async {

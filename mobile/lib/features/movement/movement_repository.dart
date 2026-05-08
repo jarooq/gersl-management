@@ -2,39 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 class MovementRepository {
   final Dio _dio;
   MovementRepository(this._dio);
 
-  // Tolerant list extractor — backend returns either
-  //   { data: [...] }          (legacy)
-  //   { data: { movements: [...], pagination: ... } }   (current /movements)
-  //   { data: { claims: [...] } }                       (current /fuel-claims)
-  // In Dart `value as List?` THROWS when value is non-null and not a List, so
-  // the fallback chain we used to have raised _Map<String,dynamic> not subtype
-  // of List the moment the first key was a Map. Use type-checks instead.
-  static List _extractList(dynamic body, List<String> innerKeys) {
-    if (body is! Map) return const [];
-    final data = body['data'];
-    if (data is List) return data;
-    if (data is Map) {
-      for (final k in innerKeys) {
-        final v = data[k];
-        if (v is List) return v;
-      }
-    }
-    for (final k in innerKeys) {
-      final v = body[k];
-      if (v is List) return v;
-    }
-    return const [];
-  }
-
   Future<List<Map<String, dynamic>>> myMovements() async {
     final res = await _dio.get('/movements');
-    final raw = _extractList(res.data, const ['movements']);
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['movements']);
   }
 
   Future<Map<String, dynamic>> create({
@@ -83,8 +59,7 @@ class MovementRepository {
 
   Future<List<Map<String, dynamic>>> myFuelClaims() async {
     final res = await _dio.get('/fuel-claims');
-    final raw = _extractList(res.data, const ['claims']);
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['claims']);
   }
 
   // -------------------------------------------------------------------------

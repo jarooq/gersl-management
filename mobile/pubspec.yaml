@@ -46,6 +46,11 @@ dependencies:
   # Charting (Attendance donut)
   fl_chart: ^0.69.0
 
+  # Crash + error reporting (init lazily — no DSN = no-op).
+  # Pinned to 9.x because Kotlin 2.2 compiler no longer accepts 8.x's
+  # languageVersion 1.6.
+  sentry_flutter: ^9.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

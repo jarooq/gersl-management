@@ -7,13 +7,13 @@ import 'package:intl/intl.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 final _accommodationRequestsProvider =
     FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   final Dio dio = ref.watch(dioProvider);
   final res = await dio.get('/accommodation-requests');
-  final raw = (res.data['data'] as List?) ?? [];
-  return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+  return extractMapList(res.data, const ['requests', 'accommodationRequests']);
 });
 
 class AccommodationRequestsScreen extends ConsumerWidget {

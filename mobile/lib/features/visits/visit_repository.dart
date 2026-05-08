@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 class VisitRepository {
   final Dio _dio;
@@ -12,8 +13,7 @@ class VisitRepository {
       if (from != null) 'from': from.toIso8601String(),
       if (to != null) 'to': to.toIso8601String(),
     });
-    final raw = (res.data['data'] as List?) ?? [];
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['visits']);
   }
 
   Future<Map<String, dynamic>> create({

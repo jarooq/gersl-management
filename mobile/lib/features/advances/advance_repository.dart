@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 class AdvanceRepository {
   final Dio _dio;
@@ -11,8 +12,7 @@ class AdvanceRepository {
     final res = await _dio.get('/salary-advances', queryParameters: {
       'status': ?status,
     });
-    final raw = (res.data['data'] as List?) ?? [];
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['advances', 'salaryAdvances']);
   }
 
   Future<Map<String, dynamic>> create({required num amount, String? reason}) async {

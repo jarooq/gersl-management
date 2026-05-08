@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 import '../auth/auth_controller.dart';
 import '../leaves/leave_repository.dart';
 import '../punch/punch_repository.dart';
@@ -49,11 +50,7 @@ final _notificationsProvider =
   try {
     final dio = ref.watch(dioProvider);
     final res = await dio.get('/notifications', queryParameters: {'limit': 50});
-    final raw = (res.data['data']?['notifications'] ??
-            res.data['notifications'] ??
-            res.data['data'] ??
-            []) as List;
-    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+    return extractMapList(res.data, const ['notifications']);
   } catch (_) {
     return const [];
   }
@@ -75,7 +72,10 @@ class HomeDashboardScreen extends ConsumerWidget {
     final initials = _initials(fullName);
 
     final punches = today.maybeWhen(
-      data: (d) => (d['punches'] as List?) ?? const [],
+      data: (d) {
+        final p = d['punches'];
+        return p is List ? p : const [];
+      },
       orElse: () => const [],
     );
     final clockIn = _firstTime(punches, 'IN');

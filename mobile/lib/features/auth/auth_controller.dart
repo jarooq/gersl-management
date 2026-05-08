@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/observability.dart';
 
 class AuthState {
   final bool isAuthenticated;
@@ -26,7 +27,17 @@ class AuthController extends AsyncNotifier<AuthState> {
     }
     final userJson = await tokens.readUserJson();
     final user = userJson == null ? null : jsonDecode(userJson) as Map<String, dynamic>;
+    _tagSentryUser(user);
     return AuthState(isAuthenticated: true, user: user);
+  }
+
+  void _tagSentryUser(Map<String, dynamic>? user) {
+    if (user == null) return;
+    setUserContext(
+      id:    user['id'] is int ? user['id'] as int : null,
+      email: user['email'] as String?,
+      role:  user['role'] as String?,
+    );
   }
 
   Future<void> login(String username, String password) async {
@@ -50,6 +61,7 @@ class AuthController extends AsyncNotifier<AuthState> {
         refreshToken: refreshToken,
         userJson: user == null ? null : jsonEncode(user),
       );
+      _tagSentryUser(user);
       state = AsyncData(AuthState(isAuthenticated: true, user: user));
     } catch (err, st) {
       state = AsyncError(err, st);
@@ -63,6 +75,7 @@ class AuthController extends AsyncNotifier<AuthState> {
       await ref.read(dioProvider).post('/auth/logout');
     } catch (_) {/* ignore network errors on logout */}
     await tokens.clear();
+    clearUserContext();
     state = const AsyncData(AuthState(isAuthenticated: false));
   }
 
@@ -73,6 +86,7 @@ class AuthController extends AsyncNotifier<AuthState> {
   Future<void> forceLogout() async {
     final tokens = ref.read(tokenStoreProvider);
     await tokens.clear();
+    clearUserContext();
     state = const AsyncData(AuthState(isAuthenticated: false));
   }
 }
