@@ -539,104 +539,45 @@ const CampaignsPage = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
-          <div className="flex items-center justify-between mb-3">
+      {/* Stats Cards — three numbers a campaign manager checks at a glance.
+          Success Rate dropped (calculated metric, low daily value) and the
+          hardcoded "Status: Good" trailing rows removed as pure visual noise. */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all">
+          <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Total Campaigns</p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-h1 text-ink-900">{stats.totalCampaigns}</h3>
-                <TrendingUp className="w-3 h-3 text-green-600" />
-              </div>
+              <h3 className="text-h1 text-ink-900">{stats.totalCampaigns}</h3>
               <p className="text-xs text-ink-500 mt-1">{stats.activeCampaigns} active</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
-              <Heart className="text-white" size={18} />
-            </div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-ink-100">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-ink-500">Status</span>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <span className="text-xs font-semibold text-green-600">Good</span>
-              </div>
+              <Heart className="text-navy-700" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
-          <div className="flex items-center justify-between mb-3">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all">
+          <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Funds Raised</p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-h1 text-ink-900">${(stats.totalRaised / 1000).toFixed(0)}K</h3>
-                <TrendingUp className="w-3 h-3 text-green-600" />
-              </div>
+              <h3 className="text-h1 text-ink-900">${(stats.totalRaised / 1000).toFixed(0)}K</h3>
               <p className="text-xs text-ink-500 mt-1">of ${stats.totalTarget.toLocaleString()} target</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
-              <DollarSign className="text-white" size={18} />
-            </div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-ink-100">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-ink-500">Status</span>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <span className="text-xs font-semibold text-green-600">Good</span>
-              </div>
+              <DollarSign className="text-navy-700" size={18} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
-          <div className="flex items-center justify-between mb-3">
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all">
+          <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-xs font-semibold text-ink-600 mb-1">Active Campaigns</p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-h1 text-ink-900">{stats.activeCampaigns}</h3>
-                <TrendingUp className="w-3 h-3 text-green-600" />
-              </div>
+              <h3 className="text-h1 text-ink-900">{stats.activeCampaigns}</h3>
               <p className="text-xs text-ink-500 mt-1">{stats.completedCampaigns} completed</p>
             </div>
             <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
-              <CheckCircle className="text-white" size={18} />
-            </div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-ink-100">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-ink-500">Status</span>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <span className="text-xs font-semibold text-green-600">Good</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-card transition-all group cursor-pointer">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex-1">
-              <p className="text-xs font-semibold text-ink-600 mb-1">Success Rate</p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-h1 text-ink-900">{stats.successRate}%</h3>
-                <TrendingUp className="w-3 h-3 text-green-600" />
-              </div>
-              <p className="text-xs text-ink-500 mt-1">Campaign completion</p>
-            </div>
-            <div className="bg-ink-50 border border-ink-200 text-navy-700 p-2.5 rounded-md">
-              <Target className="text-white" size={18} />
-            </div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-ink-100">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-ink-500">Status</span>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <span className="text-xs font-semibold text-green-600">Good</span>
-              </div>
+              <CheckCircle className="text-navy-700" size={18} />
             </div>
           </div>
         </div>

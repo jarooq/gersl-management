@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Settings, Facebook, Instagram, Twitter, Linkedin, Key, Link, Check, X,
+  Settings, Facebook, Instagram, Key, Link, Check, X,
   AlertCircle, HelpCircle, ExternalLink, Save, RefreshCw
 } from 'lucide-react';
 
+// GERSL only posts to Facebook + Instagram in practice. Twitter and LinkedIn
+// platform tabs were dropped in Apr-2026 — they were never wired to a real
+// API and just added cognitive load.
 const SocialMediaSettings = () => {
   const [connections, setConnections] = useState({
     facebook: {
@@ -18,22 +21,6 @@ const SocialMediaSettings = () => {
       businessAccountId: '',
       accessToken: '',
       username: '',
-      lastSync: null
-    },
-    twitter: {
-      connected: false,
-      apiKey: '',
-      apiSecret: '',
-      accessToken: '',
-      accessTokenSecret: '',
-      username: '',
-      lastSync: null
-    },
-    linkedin: {
-      connected: false,
-      organizationId: '',
-      accessToken: '',
-      companyName: '',
       lastSync: null
     }
   });
@@ -55,20 +42,6 @@ const SocialMediaSettings = () => {
       icon: Instagram,
       color: 'pink',
       docsUrl: 'https://developers.facebook.com/docs/instagram-api'
-    },
-    {
-      id: 'twitter',
-      name: 'Twitter',
-      icon: Twitter,
-      color: 'sky',
-      docsUrl: 'https://developer.twitter.com/en/docs'
-    },
-    {
-      id: 'linkedin',
-      name: 'LinkedIn',
-      icon: Linkedin,
-      color: 'blue',
-      docsUrl: 'https://docs.microsoft.com/en-us/linkedin/'
     }
   ];
 
@@ -341,147 +314,6 @@ const SocialMediaSettings = () => {
                     }))}
                     placeholder="@yourusername"
                     className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Twitter Settings */}
-            {activeTab === 'twitter' && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    API Key (Consumer Key)
-                  </label>
-                  <input
-                    type="text"
-                    value={connection.apiKey}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      twitter: { ...prev.twitter, apiKey: e.target.value }
-                    }))}
-                    placeholder="Enter your Twitter API Key"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    API Secret (Consumer Secret)
-                  </label>
-                  <input
-                    type="password"
-                    value={connection.apiSecret}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      twitter: { ...prev.twitter, apiSecret: e.target.value }
-                    }))}
-                    placeholder="Enter your Twitter API Secret"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Access Token
-                  </label>
-                  <input
-                    type="password"
-                    value={connection.accessToken}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      twitter: { ...prev.twitter, accessToken: e.target.value }
-                    }))}
-                    placeholder="Enter your Access Token"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Access Token Secret
-                  </label>
-                  <input
-                    type="password"
-                    value={connection.accessTokenSecret}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      twitter: { ...prev.twitter, accessTokenSecret: e.target.value }
-                    }))}
-                    placeholder="Enter your Access Token Secret"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Twitter Username
-                  </label>
-                  <input
-                    type="text"
-                    value={connection.username}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      twitter: { ...prev.twitter, username: e.target.value }
-                    }))}
-                    placeholder="@yourusername"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* LinkedIn Settings */}
-            {activeTab === 'linkedin' && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Organization ID
-                  </label>
-                  <input
-                    type="text"
-                    value={connection.organizationId}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      linkedin: { ...prev.linkedin, organizationId: e.target.value }
-                    }))}
-                    placeholder="Enter your LinkedIn Organization ID"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Access Token
-                  </label>
-                  <input
-                    type="password"
-                    value={connection.accessToken}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      linkedin: { ...prev.linkedin, accessToken: e.target.value }
-                    }))}
-                    placeholder="Enter your LinkedIn Access Token"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
-                  <p className="text-xs text-ink-500 mt-1">
-                    Requires OAuth 2.0 authentication
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    value={connection.companyName}
-                    onChange={(e) => setConnections(prev => ({
-                      ...prev,
-                      linkedin: { ...prev.linkedin, companyName: e.target.value }
-                    }))}
-                    placeholder="Your Company Name"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
