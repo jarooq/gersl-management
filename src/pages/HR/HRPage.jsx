@@ -601,7 +601,6 @@ const HRPage = () => {
             {[
               { id: 'overview', label: 'Staff Directory', icon: Users },
               { id: 'leave', label: 'Leave Management', icon: Calendar },
-              { id: 'staffMovement', label: 'Staff Movement', icon: MapPin },
               { id: 'assetRegister', label: 'Asset Register', icon: Package },
               { id: 'vehicleRequests', label: 'Vehicle Requests', icon: Car },
               { id: 'accommodation', label: 'Accommodation', icon: Home },
@@ -910,90 +909,6 @@ const HRPage = () => {
           )}
 
 
-          {/* Staff Movement Register Tab */}
-          {activeTab === 'staffMovement' && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-ink-900">Staff Movement Register</h2>
-                <button
-                  onClick={() => alert('Start GPS tracking for staff movement')}
-                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
-                  <MapPin size={18} />
-                  Start Tracking
-                </button>
-              </div>
-
-              {/* Map View Placeholder */}
-              <div className="bg-ink-50 rounded-xl p-8 border-2 border-dashed border-ink-300 mb-6">
-                <div className="text-center">
-                  <Map className="w-16 h-16 mx-auto mb-4 text-purple-400" />
-                  <h3 className="text-lg font-bold text-ink-900 mb-2">Real-time Staff Movement Map</h3>
-                  <p className="text-sm text-ink-600 mb-4">Interactive map showing staff locations and routes</p>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-semibold">
-                    <Navigation size={16} />
-                    Map integration ready
-                  </div>
-                </div>
-              </div>
-
-              {/* Active Movements */}
-              <h3 className="font-bold text-ink-900 mb-3">Active Movements</h3>
-              <div className="space-y-3">
-                {[].map((movement) => (
-                  <div key={movement.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="w-12 h-12 bg-violet-50 border border-violet-200 text-violet-700 rounded-md flex items-center justify-center font-bold">
-                          {movement.staffName.charAt(0)}
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-bold text-ink-900">{movement.staffName}</h3>
-                          <p className="text-sm text-ink-600">{movement.department}</p>
-                        </div>
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
-                          <Play size={12} />
-                          {movement.status}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Start Time</p>
-                        <p className="text-sm font-semibold text-ink-900">{movement.startTime}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Distance</p>
-                        <p className="text-sm font-semibold text-ink-900">{movement.distance}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">ETA</p>
-                        <p className="text-sm font-semibold text-ink-900">{movement.estimatedArrival}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-ink-500 mb-1">Actions</p>
-                        <button
-                          onClick={() => alert(`Tracking ${movement.staffName} in real-time`)}
-                          className="px-3 py-1 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-all text-xs font-semibold border border-purple-200 flex items-center gap-1">
-                          <Eye size={12} />
-                          Track
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg">
-                      <MapPin size={14} className="text-purple-600 flex-shrink-0" />
-                      <div className="flex-1 text-sm">
-                        <span className="font-semibold text-ink-900">{movement.currentLocation}</span>
-                        <ArrowRight size={14} className="inline mx-2 text-ink-400" />
-                        <span className="font-semibold text-ink-900">{movement.destination}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Asset Register Tab */}
           {activeTab === 'assetRegister' && (
