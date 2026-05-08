@@ -74,7 +74,6 @@ const FuelClaimsPage = lazy(() => import('../pages/Operations/FuelClaimsPage'));
 const FuelRatesPage = lazy(() => import('../pages/Operations/FuelRatesPage'));
 const AttendanceCorrectionsPage = lazy(() => import('../pages/HR/AttendanceCorrectionsPage'));
 const LiveStaffMapPage = lazy(() => import('../pages/HR/LiveStaffMapPage'));
-const ShiftRosterPage = lazy(() => import('../pages/HR/ShiftRosterPage'));
 const MovementSegmentsPage = lazy(() => import('../pages/HR/MovementSegmentsPage'));
 const AnnouncementsAdminPage = lazy(() => import('../pages/Announcements/AnnouncementsAdminPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
@@ -558,16 +557,6 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
                 <Suspense fallback={<PageLoader />}>
                   <LiveStaffMapPage />
-                </Suspense>
-              </PermissionRoute>
-            }
-          />
-          <Route
-            path="hr/shifts"
-            element={
-              <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
-                <Suspense fallback={<PageLoader />}>
-                  <ShiftRosterPage />
                 </Suspense>
               </PermissionRoute>
             }

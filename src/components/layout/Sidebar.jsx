@@ -122,7 +122,6 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/corrections', icon: ClipboardCheck, label: 'Attendance Corrections', icc: ICON.orange },
         { path: '/admin/hr/live-map', icon: MapPin, label: 'Live staff map', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/shifts', icon: Calendar, label: 'Shift roster', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/movement-segments', icon: MapPin, label: 'Movement segments', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
         { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
