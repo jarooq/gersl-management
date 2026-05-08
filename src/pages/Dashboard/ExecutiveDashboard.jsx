@@ -190,8 +190,8 @@ const ExecutiveDashboard = () => {
         </p>
       </div>
 
-      {/* Key Performance Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Key Performance Indicators — three numbers a manager actually checks daily */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Total Projects */}
         <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-5">
           <div className="flex items-center justify-between mb-3">
@@ -256,25 +256,6 @@ const ExecutiveDashboard = () => {
           </div>
         </div>
 
-        {/* Proposal Success Rate */}
-        <div className="bg-white rounded-lg shadow-sm border border-ink-100 p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <Award className="text-orange-600" size={24} />
-            </div>
-            <div className="text-right">
-              <div className="text-h1 text-ink-900">
-                {proposalMetrics.approvalRate.toFixed(0)}%
-              </div>
-              <div className="text-xs text-ink-500">Approval Rate</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-green-600 font-medium">{proposalMetrics.approved} Approved</span>
-            <span className="text-ink-400">•</span>
-            <span className="text-ink-600">{proposalMetrics.pending} Pending</span>
-          </div>
-        </div>
       </div>
 
       {/* Financial Overview */}
@@ -305,14 +286,6 @@ const ExecutiveDashboard = () => {
                   <span className="text-sm text-ink-600">Remaining</span>
                   <span className="text-lg font-bold text-green-600">
                     ${portfolioMetrics.budgetRemaining.toLocaleString()}
-                  </span>
-                </div>
-              </div>
-              <div className="pt-4 border-t border-ink-100">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-ink-600">Proposal Value (Approved)</span>
-                  <span className="text-lg font-bold text-blue-600">
-                    ${proposalMetrics.approvedValue.toLocaleString()}
                   </span>
                 </div>
               </div>

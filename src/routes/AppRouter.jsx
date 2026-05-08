@@ -64,7 +64,6 @@ const ProcurementInboxPage = lazy(() => import('../pages/Procurement/Procurement
 const RFQWorkspacePage = lazy(() => import('../pages/Procurement/RFQWorkspacePage'));
 const PODetailPage = lazy(() => import('../pages/Procurement/PODetailPage'));
 const VendorsPage = lazy(() => import('../pages/Procurement/VendorsPage'));
-const ProcurementThresholdsPage = lazy(() => import('../pages/Procurement/ProcurementThresholdsPage'));
 const ProcurementDashboardPage = lazy(() => import('../pages/Procurement/ProcurementDashboardPage'));
 const CashAccountsPage = lazy(() => import('../pages/Finance/CashAccountsPage'));
 const CashBookPage = lazy(() => import('../pages/Finance/CashBookPage'));
@@ -72,9 +71,6 @@ const CashReplenishmentsPage = lazy(() => import('../pages/Finance/CashReplenish
 const MovementRegisterPage = lazy(() => import('../pages/Operations/MovementRegisterPage'));
 const FuelClaimsPage = lazy(() => import('../pages/Operations/FuelClaimsPage'));
 const FuelRatesPage = lazy(() => import('../pages/Operations/FuelRatesPage'));
-const AttendanceCorrectionsPage = lazy(() => import('../pages/HR/AttendanceCorrectionsPage'));
-const LiveStaffMapPage = lazy(() => import('../pages/HR/LiveStaffMapPage'));
-const MovementSegmentsPage = lazy(() => import('../pages/HR/MovementSegmentsPage'));
 const AnnouncementsAdminPage = lazy(() => import('../pages/Announcements/AnnouncementsAdminPage'));
 const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/BeneficiariesPage'));
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
@@ -462,16 +458,6 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             }
           />
           <Route
-            path="procurement/thresholds"
-            element={
-              <PermissionRoute permission={PERMISSIONS.PROCUREMENT_THRESHOLDS_MANAGE}>
-                <Suspense fallback={<PageLoader />}>
-                  <ProcurementThresholdsPage />
-                </Suspense>
-              </PermissionRoute>
-            }
-          />
-          <Route
             path="procurement/dashboard"
             element={
               <PermissionRoute permission={PERMISSIONS.PROCUREMENT_DASHBOARD_VIEW}>
@@ -541,34 +527,6 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               <Suspense fallback={<PageLoader />}>
                 <FuelRatesPage />
               </Suspense>
-            }
-          />
-          <Route
-            path="hr/corrections"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <AttendanceCorrectionsPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="hr/live-map"
-            element={
-              <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
-                <Suspense fallback={<PageLoader />}>
-                  <LiveStaffMapPage />
-                </Suspense>
-              </PermissionRoute>
-            }
-          />
-          <Route
-            path="hr/movement-segments"
-            element={
-              <PermissionRoute permission={PERMISSIONS.HR_VIEW_ATTENDANCE}>
-                <Suspense fallback={<PageLoader />}>
-                  <MovementSegmentsPage />
-                </Suspense>
-              </PermissionRoute>
             }
           />
           <Route

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useHR } from '../../contexts/HRContext';
 import { useProjects } from '../../contexts/ProjectContext';
 import API, { ExpenseAPI, AssetAPI, VehicleRequestAPI, AccommodationRequestAPI } from '../../services/api';
@@ -11,6 +11,11 @@ import {
   Briefcase, Shield, Target, BarChart3, PieChart, TrendingDown,
   Clipboard, Award, Star, Plus, Trash2
 } from 'lucide-react';
+
+// Embedded merge — Appraisal + Contracts now live inside HRPage tabs
+// instead of as separate sidebar entries.
+const AppraisalPage = lazy(() => import('./AppraisalPage'));
+const ContractManagementPage = lazy(() => import('./ContractManagementPage'));
 
 const HRPage = () => {
   const {
@@ -753,7 +758,9 @@ const HRPage = () => {
               { id: 'assetRegister', label: 'Asset Register', icon: Package },
               { id: 'vehicleRequests', label: 'Vehicle Requests', icon: Car },
               { id: 'accommodation', label: 'Accommodation', icon: Home },
-              { id: 'expenses', label: 'Expenses', icon: Receipt }
+              { id: 'expenses', label: 'Expenses', icon: Receipt },
+              { id: 'appraisals', label: 'Appraisals', icon: Award },
+              { id: 'contracts', label: 'Contracts', icon: FileText }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1461,6 +1468,20 @@ const HRPage = () => {
                 })}
               </div>
             </div>
+          )}
+
+          {/* Appraisals — embedded standalone page */}
+          {activeTab === 'appraisals' && (
+            <Suspense fallback={<div className="p-8 text-center text-ink-500">Loading appraisals…</div>}>
+              <AppraisalPage />
+            </Suspense>
+          )}
+
+          {/* Contracts — embedded standalone page */}
+          {activeTab === 'contracts' && (
+            <Suspense fallback={<div className="p-8 text-center text-ink-500">Loading contracts…</div>}>
+              <ContractManagementPage />
+            </Suspense>
           )}
       </div>
 

@@ -101,7 +101,6 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       label: 'Public Engagement', icon: Megaphone, icc: ICON.fuchsia, hasSubmenu: true,
       subItems: [
         { path: '/admin/campaigns', icon: Megaphone, label: 'Campaigns', icc: ICON.fuchsia, permission: PERMISSIONS.CAMPAIGNS_VIEW },
-        { path: '/admin/donations', icon: DollarSign, label: 'Donations', icc: ICON.fuchsia, permission: PERMISSIONS.DONATIONS_VIEW },
         { path: '/admin/job-postings', icon: Briefcase, label: 'Job Postings', icc: ICON.fuchsia, permission: PERMISSIONS.JOB_POSTINGS_VIEW },
         { path: '/admin/vendor-calls', icon: Store, label: 'Vendor Calls', icc: ICON.fuchsia, permission: PERMISSIONS.VENDOR_CALLS_VIEW },
       ]
@@ -112,7 +111,6 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/procurement/dashboard', icon: BarChart, label: 'Dashboard', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_DASHBOARD_VIEW },
         { path: '/admin/procurement/inbox', icon: ClipboardCheck, label: 'Inbox', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_REQUEST_VIEW },
         { path: '/admin/procurement/vendors', icon: Store, label: 'Vendors', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_VENDOR_VIEW },
-        { path: '/admin/procurement/thresholds', icon: Settings, label: 'Thresholds', icc: ICON.amber, permission: PERMISSIONS.PROCUREMENT_THRESHOLDS_MANAGE },
       ]
     },
     {
@@ -120,12 +118,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       subItems: [
         { path: '/admin/hr', icon: Users, label: 'HR Overview', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/corrections', icon: ClipboardCheck, label: 'Attendance Corrections', icc: ICON.orange },
-        { path: '/admin/hr/live-map', icon: MapPin, label: 'Live staff map', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
-        { path: '/admin/hr/movement-segments', icon: MapPin, label: 'Movement segments', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
-        { path: '/admin/hr/appraisal', icon: TrendingUp, label: 'Appraisal', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_APPRAISALS },
-        { path: '/admin/hr/contracts', icon: FileText, label: 'Contracts', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_CONTRACTS },
         { path: '/admin/hr/payroll', icon: Wallet, label: 'Payroll', icc: ICON.orange, permission: PERMISSIONS.FINANCE_VIEW_PAYROLL },
         { path: '/admin/hr/salary-advances', icon: DollarSign, label: 'Salary Advances', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/staff-expenses', icon: ClipboardCheck, label: 'Staff Expenses', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },

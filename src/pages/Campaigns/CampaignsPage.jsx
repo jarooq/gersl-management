@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useCampaign } from '../../contexts/CampaignContext';
 import API, { getImageUrl } from '../../services/api';
 import {
@@ -507,14 +508,21 @@ const CampaignsPage = () => {
               <p className="text-ink-200 text-sm mt-0.5">Manage fundraising campaigns, track donations, and connect with supporters</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+            <Link
+              to="/admin/donations"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-white/10 hover:bg-white/15 border border-white/20 text-white transition"
+            >
+              <DollarSign className="w-4 h-4" />
+              View donations
+            </Link>
             <div className="bg-white/20 backdrop-blur-lg rounded-xl p-4 border border-white/30">
               <div className="text-center">
                 <p className="text-sm text-purple-100">Overall Progress</p>
                 <p className="text-3xl font-bold">{((stats.totalRaised / stats.totalTarget) * 100).toFixed(1)}%</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
         </div>
       </div>
 
