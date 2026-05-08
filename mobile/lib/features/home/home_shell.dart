@@ -11,10 +11,12 @@ import '../../services/token_store.dart';
 import '../auth/auth_controller.dart';
 
 // =============================================================================
-// HomeShell — modern shell:
-//   - Slim app bar with brand mark + title + avatar (avatar opens AccountSheet)
-//   - 5-tab floating-pill bottom nav with mission-amber active indicator
-//   - Haptic feedback on tab change
+// HomeShell — light HR-style shell.
+//   - Frameless (no app bar) — each child screen renders its own navy header
+//     so dashboards/attendance can carry the gradient hero edge-to-edge.
+//   - 5-tab flat bottom bar with active yellow dot under the selected icon.
+//   - Tabs: Home / Attendance / Leave / Payroll / More
+//     (Visits, Tasks, Approvals stay reachable from the Home modules grid.)
 // =============================================================================
 
 class _Tab {
@@ -26,11 +28,11 @@ class _Tab {
 }
 
 const _tabs = <_Tab>[
-  _Tab('Home',      Icons.home_outlined,         Icons.home_rounded,            '/today'),
-  _Tab('Visits',    Icons.location_on_outlined,  Icons.location_on,             '/visits'),
-  _Tab('Tasks',     Icons.checklist_outlined,    Icons.checklist,               '/tasks'),
-  _Tab('Approvals', Icons.fact_check_outlined,   Icons.fact_check,              '/approvals'),
-  _Tab('More',      Icons.grid_view_outlined,    Icons.grid_view_rounded,       '/more'),
+  _Tab('Home',       Icons.home_outlined,           Icons.home_rounded,           '/today'),
+  _Tab('Attendance', Icons.fingerprint,             Icons.fingerprint,            '/attendance'),
+  _Tab('Leave',      Icons.event_busy_outlined,     Icons.event_busy,             '/leaves'),
+  _Tab('Payroll',    Icons.account_balance_wallet_outlined, Icons.account_balance_wallet, '/payslips'),
+  _Tab('More',       Icons.grid_view_outlined,      Icons.grid_view_rounded,      '/more'),
 ];
 
 class HomeShell extends ConsumerWidget {
@@ -54,67 +56,43 @@ class HomeShell extends ConsumerWidget {
     final name = (user?['fullName'] ?? user?['name'] ?? '?') as String;
     final role = user?['role'] as String?;
 
+    // Tabs that render their own navy gradient hero header (Home, Attendance).
+    // For these, we hide the white AppBar and let the body fill from the top.
+    final heroTab = selected == 0 || selected == 1;
+
     return Scaffold(
-      backgroundColor: kInk50,
-      extendBody: true, // so the floating nav can sit over the content
-      appBar: AppBar(
-        titleSpacing: 16,
-        toolbarHeight: 56,
-        title: Row(
-          children: [
-            Container(
-              width: 30, height: 30,
-              decoration: BoxDecoration(color: kNavy900, borderRadius: BorderRadius.circular(8)),
-              alignment: Alignment.center,
-              child: const Icon(Icons.volunteer_activism_outlined, color: kMission300, size: 16),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              _tabs[selected].label,
-              style: GoogleFonts.inter(
-                fontSize: 18, fontWeight: FontWeight.w800,
-                color: kInk900, letterSpacing: -0.3,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Notifications',
-            icon: const Icon(Icons.notifications_outlined, color: kInk700, size: 22),
-            onPressed: () { Haptics.light(); context.go('/notifications'); },
-          ),
-          // Avatar → opens AccountSheet
-          Padding(
-            padding: const EdgeInsets.only(right: 12, left: 4),
-            child: InkWell(
-              onTap: () => _openAccountSheet(context, ref, name, role, tracking),
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                width: 32, height: 32,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: kNavy900, borderRadius: BorderRadius.circular(10),
+      backgroundColor: kBgLight,
+      extendBodyBehindAppBar: heroTab,
+      appBar: heroTab
+          ? null
+          : AppBar(
+              backgroundColor: kBgLight,
+              elevation: 0,
+              titleSpacing: 16,
+              title: Text(
+                _tabs[selected].label,
+                style: GoogleFonts.inter(
+                  fontSize: 19, fontWeight: FontWeight.w800,
+                  color: kInk900, letterSpacing: -0.3,
                 ),
-                child: Text(
-                  _initials(name),
-                  style: GoogleFonts.inter(
-                    color: kMission300, fontSize: 12, fontWeight: FontWeight.w800,
+              ),
+              actions: [
+                IconButton(
+                  tooltip: 'Notifications',
+                  icon: const Icon(Icons.notifications_none_rounded, size: 22, color: kInk700),
+                  onPressed: () { Haptics.light(); context.go('/notifications'); },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12, left: 4),
+                  child: _AvatarChip(
+                    initials: _initials(name),
+                    onTap: () => _openAccountSheet(context, ref, name, role, tracking),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 84), // leave room for floating nav
-          child: child,
-        ),
-      ),
-      bottomNavigationBar: _FloatingBottomBar(
+      body: child,
+      bottomNavigationBar: _BottomBar(
         selected: selected,
         onSelect: (i) {
           Haptics.select();
@@ -179,33 +157,34 @@ class HomeShell extends ConsumerWidget {
 }
 
 // =============================================================================
-// Floating-pill bottom navigation bar.
+// Flat bottom bar — white surface, navy active label, amber dot beneath.
 // =============================================================================
 
-class _FloatingBottomBar extends StatelessWidget {
+class _BottomBar extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onSelect;
-  const _FloatingBottomBar({required this.selected, required this.onSelect});
+  const _BottomBar({
+    required this.selected,
+    required this.onSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-          decoration: BoxDecoration(
-            color: kSurfaceCardDk,
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: kBorderDk),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.30),
-                blurRadius: 22, offset: const Offset(0, 8),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: kSurfaceLight,
+        boxShadow: [
+          BoxShadow(
+            color: kNavy900.withValues(alpha: 0.06),
+            blurRadius: 24, offset: const Offset(0, -6),
           ),
+        ],
+        border: const Border(top: BorderSide(color: kBorderLight)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
           child: Row(
             children: [
               for (var i = 0; i < _tabs.length; i++)
@@ -232,44 +211,68 @@ class _BottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = selected ? kNavy900 : kInk500;
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(22),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(22),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeOutCubic,
-          padding: EdgeInsets.symmetric(
-            horizontal: selected ? 8 : 4, vertical: 8,
-          ),
-          decoration: BoxDecoration(
-            color: selected ? kLime500 : Colors.transparent,
-            borderRadius: BorderRadius.circular(22),
-          ),
-          child: Row(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                selected ? tab.iconActive : tab.icon,
-                size: 18,
-                color: selected ? kSurfaceDark : kTextDkMuted,
-              ),
-              if (selected) ...[
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    tab.label,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      color: kSurfaceDark, fontSize: 11.5,
-                      fontWeight: FontWeight.w800, letterSpacing: 0.1,
-                    ),
-                  ),
+              Icon(selected ? tab.iconActive : tab.icon, size: 22, color: color),
+              const SizedBox(height: 4),
+              Text(
+                tab.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.inter(
+                  fontSize: 10.5,
+                  fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  color: color,
                 ),
-              ],
+              ),
+              const SizedBox(height: 3),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                width: selected ? 18 : 0,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: kAmber500,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AvatarChip extends StatelessWidget {
+  final String initials;
+  final VoidCallback onTap;
+  const _AvatarChip({required this.initials, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 34, height: 34,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: kNavy900,
+          borderRadius: BorderRadius.circular(11),
+        ),
+        child: Text(
+          initials,
+          style: GoogleFonts.inter(
+            color: kAmber300, fontSize: 12, fontWeight: FontWeight.w800,
           ),
         ),
       ),

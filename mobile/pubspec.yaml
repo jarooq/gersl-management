@@ -43,6 +43,9 @@ dependencies:
   # Typography (Inter to match the admin web)
   google_fonts: ^6.2.1
 
+  # Charting (Attendance donut)
+  fl_chart: ^0.69.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

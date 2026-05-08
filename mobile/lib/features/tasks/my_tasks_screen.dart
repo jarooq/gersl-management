@@ -99,7 +99,8 @@ class _TaskCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     (project['projectName'] ?? project['name'] ?? '').toString(),
-                    style: GoogleFonts.inter(fontSize: 11.5, color: kInk500),
+                    style: GoogleFonts.inter(fontSize: 11.5, color: kInk500, height: 1.35),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

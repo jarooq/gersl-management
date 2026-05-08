@@ -55,7 +55,9 @@ class MovementsScreen extends ConsumerWidget {
                             style: GoogleFonts.inter(
                               fontSize: 14, fontWeight: FontWeight.w700,
                               color: kInk900,
+                              height: 1.3,
                             ),
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

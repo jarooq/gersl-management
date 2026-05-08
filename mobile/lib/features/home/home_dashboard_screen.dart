@@ -6,42 +6,56 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/api_client.dart';
 import '../auth/auth_controller.dart';
 import '../leaves/leave_repository.dart';
 import '../punch/punch_repository.dart';
-import '../tasks/my_tasks_screen.dart';
 
 // =============================================================================
-// HomeDashboardScreen — dark theme dashboard inspired by the reference design.
-// Sections:
-//   1. Header — avatar + name/role + GPS toggle bell
-//   2. Overview header + "See all"
-//   3. Featured lime-green card — three-column KPI strip (Today Punches /
-//      Presence / Late). Punch IN button anchored at the bottom right.
-//   4. Two large tiles — Total Tasks (mission-amber) + Pending Leaves
-//   5. "Upcoming items" header + "See all"
-//   6. Date-chipped task cards
+// HomeDashboardScreen — light HR dashboard matching the supplied mockup.
+//
+// Layout:
+//   1. Navy gradient hero (greeting, sub-title, bell, avatar)
+//      + clock-in / clock-out pill row floating over the bottom edge
+//   2. "Summary" — three pastel KPI cards (Missed / Pending Approval / New)
+//   3. "Modules" — 6-tile grid (Punch, Tasks, Visits, Movements, Expenses,
+//      Directory) with pastel-blue circular icon containers
 // =============================================================================
 
 final _todayProvider = FutureProvider.autoDispose(
   (ref) => ref.watch(punchRepoProvider).today(),
 );
 
-final _myTasksProviderHome =
-    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
-  try {
-    return await ref.read(myTasksProvider.future);
-  } catch (_) {
-    return [];
-  }
-});
-
-final _myLeavesProviderHome =
+final _myLeavesProvider =
     FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   try {
     return await ref.read(leaveRepoProvider).mine();
   } catch (_) {
-    return [];
+    return const [];
+  }
+});
+
+final _pendingApprovalsProvider =
+    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  try {
+    return await ref.read(leaveRepoProvider).pending();
+  } catch (_) {
+    return const [];
+  }
+});
+
+final _notificationsProvider =
+    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  try {
+    final dio = ref.watch(dioProvider);
+    final res = await dio.get('/notifications', queryParameters: {'limit': 50});
+    final raw = (res.data['data']?['notifications'] ??
+            res.data['notifications'] ??
+            res.data['data'] ??
+            []) as List;
+    return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
+  } catch (_) {
+    return const [];
   }
 });
 
@@ -51,502 +65,522 @@ class HomeDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final today = ref.watch(_todayProvider);
-    final tasks = ref.watch(_myTasksProviderHome);
-    final leaves = ref.watch(_myLeavesProviderHome);
+    final leaves = ref.watch(_myLeavesProvider);
+    final approvals = ref.watch(_pendingApprovalsProvider);
+    final notifs = ref.watch(_notificationsProvider);
     final user = ref.watch(authControllerProvider).valueOrNull?.user;
 
     final fullName = (user?['fullName'] ?? user?['name'] ?? 'Field Officer') as String;
     final firstName = fullName.split(' ').first;
-    final role = user?['role']?.toString() ?? 'Staff';
+    final initials = _initials(fullName);
+
+    final punches = today.maybeWhen(
+      data: (d) => (d['punches'] as List?) ?? const [],
+      orElse: () => const [],
+    );
+    final clockIn = _firstTime(punches, 'IN');
+    final clockOut = _firstTime(punches, 'OUT');
+
+    final missed = leaves.maybeWhen(
+      data: (rows) => rows.where((r) => r['status'] == 'rejected').length,
+      orElse: () => 0,
+    );
+    final pendingCount = approvals.maybeWhen(
+      data: (rows) => rows.length,
+      orElse: () => 0,
+    );
+    final notifCount = notifs.maybeWhen(
+      data: (rows) => rows.where((r) => r['readAt'] == null).length,
+      orElse: () => 0,
+    );
 
     return RefreshIndicator(
-      color: kLime500,
-      backgroundColor: kSurfaceCardDk,
+      color: kAmber500,
+      backgroundColor: kSurfaceLight,
       onRefresh: () async {
         ref.invalidate(_todayProvider);
-        ref.invalidate(_myTasksProviderHome);
-        ref.invalidate(_myLeavesProviderHome);
+        ref.invalidate(_myLeavesProvider);
+        ref.invalidate(_pendingApprovalsProvider);
+        ref.invalidate(_notificationsProvider);
       },
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
+        padding: EdgeInsets.zero,
         children: [
-          _Header(name: firstName, role: role, fullName: fullName),
-          const SizedBox(height: 18),
+          _HeroHeader(
+            firstName: firstName,
+            initials: initials,
+            clockIn: clockIn,
+            clockOut: clockOut,
+            unreadNotifs: notifCount,
+            onBell: () => context.go('/notifications'),
+          ),
+          const SizedBox(height: 24),
 
-          // Overview header
-          Row(
-            children: [
-              Text('Overview',
-                style: GoogleFonts.inter(
-                  fontSize: 20, fontWeight: FontWeight.w800, color: kTextDk,
-                  letterSpacing: -0.3,
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () => context.go('/today'),
-                child: Text('See all',
-                  style: GoogleFonts.inter(
-                    fontSize: 13, fontWeight: FontWeight.w600,
-                    color: kTextDkMuted,
+          // ----- Summary --------------------------------------------------
+          const _SectionLabel(title: 'Summary'),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _KpiCard(
+                    icon: Icons.event_busy_outlined,
+                    bg: kKpiPinkBg,
+                    fg: kKpiPinkInk,
+                    value: _two(missed),
+                    label: 'Missed\nAttendance',
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          // Featured lime-green KPI strip
-          today.when(
-            loading: () => const SkeletonBox(height: 110, radius: 22),
-            error: (_, _) => const _OverviewCard(present: 0, today: 0, late: 0),
-            data: (d) => _OverviewCard(
-              present:    d['isClockedIn'] == true ? 1 : 0,
-              today:      (d['punches'] as List? ?? []).length,
-              late:       0,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _KpiCard(
+                    icon: Icons.fact_check_outlined,
+                    bg: kKpiCreamBg,
+                    fg: kKpiCreamInk,
+                    value: _two(pendingCount),
+                    label: 'Pending\nApproval',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _KpiCard(
+                    icon: Icons.campaign_outlined,
+                    bg: kKpiMintBg,
+                    fg: kKpiMintInk,
+                    value: _two(notifCount),
+                    label: 'New\nNotices',
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 12),
-
-          // Two larger feature tiles
-          Row(
-            children: [
-              Expanded(
-                child: _FeatureTile(
-                  icon: Icons.task_alt,
-                  iconBg: const Color(0xFF18374C),
-                  iconFg: kLime500,
-                  title: tasks.maybeWhen(
-                    data: (rows) => '${rows.length}',
-                    orElse: () => '—',
-                  ),
-                  caption: 'My tasks',
-                  onTap: () => context.go('/tasks'),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _FeatureTile(
-                  icon: Icons.event_available,
-                  iconBg: const Color(0xFF3A2638),
-                  iconFg: kPillPink,
-                  title: leaves.maybeWhen(
-                    data: (rows) => '${rows.where((r) => r['status'] == 'Pending').length}',
-                    orElse: () => '—',
-                  ),
-                  caption: 'Pending leaves',
-                  onTap: () => context.go('/more'),
-                ),
-              ),
-            ],
           ),
           const SizedBox(height: 22),
 
-          // Upcoming items header
-          Row(
-            children: [
-              Text('Upcoming tasks',
-                style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w800, color: kTextDk,
-                  letterSpacing: -0.3,
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () => context.go('/tasks'),
-                child: Text('See all',
-                  style: GoogleFonts.inter(
-                    fontSize: 13, fontWeight: FontWeight.w600,
-                    color: kTextDkMuted,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-
-          // Tasks as date-chip cards
-          tasks.when(
-            loading: () => Column(
-              children: const [
-                SkeletonBox(height: 86, radius: 18),
-                SizedBox(height: 8),
-                SkeletonBox(height: 86, radius: 18),
-              ],
-            ),
-            error: (e, _) => ErrorBox(message: e.toString()),
-            data: (rows) {
-              if (rows.isEmpty) {
-                return const EmptyState(
-                  title: 'No upcoming tasks',
-                  message: 'When tasks are assigned to you, they\'ll appear here.',
-                  icon: Icons.checklist_outlined,
-                );
-              }
-              final upcoming = rows.take(4).toList();
-              return Column(
-                children: [
-                  for (final t in upcoming) ...[
-                    _UpcomingTaskCard(task: t, onTap: () => context.go('/tasks')),
-                    const SizedBox(height: 8),
-                  ],
-                ],
-              );
-            },
-          ),
+          // ----- Modules --------------------------------------------------
+          const _SectionLabel(title: 'Modules'),
+          const SizedBox(height: 8),
+          const _ModulesGrid(),
+          const SizedBox(height: 28),
         ],
       ),
     );
   }
-}
 
-// -----------------------------------------------------------------------------
-
-class _Header extends StatelessWidget {
-  final String name;
-  final String role;
-  final String fullName;
-  const _Header({required this.name, required this.role, required this.fullName});
-
-  String _initials(String n) {
-    final parts = n.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+  static String _initials(String name) {
+    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
     if (parts.isEmpty) return '?';
     if (parts.length == 1) return parts.first.characters.first.toUpperCase();
     return (parts.first.characters.first + parts.last.characters.first).toUpperCase();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 44, height: 44,
-          decoration: BoxDecoration(
-            color: kSurfaceCardDk,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: kBorderDk),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            _initials(fullName),
-            style: GoogleFonts.inter(
-              color: kLime500, fontWeight: FontWeight.w800, fontSize: 16,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: GoogleFonts.inter(
-                  color: kTextDk, fontSize: 16,
-                  fontWeight: FontWeight.w800, height: 1.1,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                role,
-                style: GoogleFonts.inter(
-                  color: kTextDkMuted, fontSize: 12.5,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+  static String _two(int n) => n.toString().padLeft(2, '0');
+
+  static String? _firstTime(List punches, String type) {
+    for (final p in punches) {
+      if (p is Map && p['type']?.toString().toUpperCase() == type) {
+        final ts = p['createdAt'] ?? p['punchedAt'] ?? p['time'];
+        if (ts is String) {
+          try {
+            return DateFormat('h:mm a').format(DateTime.parse(ts).toLocal());
+          } catch (_) {}
+        }
+      }
+    }
+    return null;
   }
 }
 
 // -----------------------------------------------------------------------------
-// Overview card — lime green featured strip with three KPIs.
+// Hero header — navy gradient with greeting, bell, avatar, and floating
+// "Clock-in / Clock-out" pill cards anchored on the bottom edge.
+// -----------------------------------------------------------------------------
 
-class _OverviewCard extends StatelessWidget {
-  final int present;
-  final int today;
-  final int late;
-  const _OverviewCard({
-    required this.present,
-    required this.today,
-    required this.late,
+class _HeroHeader extends StatelessWidget {
+  final String firstName;
+  final String initials;
+  final String? clockIn;
+  final String? clockOut;
+  final int unreadNotifs;
+  final VoidCallback onBell;
+  const _HeroHeader({
+    required this.firstName,
+    required this.initials,
+    required this.clockIn,
+    required this.clockOut,
+    required this.unreadNotifs,
+    required this.onBell,
   });
 
   @override
   Widget build(BuildContext context) {
+    final topPad = MediaQuery.of(context).padding.top;
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFB7F25C), Color(0xFF7BD63B)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      // Extra bottom padding gives the floating pill row visual room.
+      padding: EdgeInsets.fromLTRB(20, topPad + 18, 20, 56),
+      decoration: const BoxDecoration(
+        gradient: kBrandGradient,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
-        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // Hamburger-style spacer (matches mockup left icon area).
+                  Container(
+                    width: 38, height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.menu_rounded, color: Colors.white, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hi, $firstName!',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                            color: Colors.white, fontSize: 18,
+                            fontWeight: FontWeight.w800, letterSpacing: -0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 1),
+                        Text(
+                          'Explore the dashboard',
+                          style: GoogleFonts.inter(
+                            color: Colors.white.withValues(alpha: 0.70),
+                            fontSize: 12, fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Bell with unread dot
+                  GestureDetector(
+                    onTap: onBell,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          width: 38, height: 38,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.10),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.notifications_none_rounded,
+                              color: Colors.white, size: 20),
+                        ),
+                        if (unreadNotifs > 0)
+                          Positioned(
+                            top: -2, right: -2,
+                            child: Container(
+                              width: 10, height: 10,
+                              decoration: BoxDecoration(
+                                color: kAmber500,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: kNavy900, width: 1.5),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Avatar chip
+                  Container(
+                    width: 38, height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: kAmber500,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      initials,
+                      style: GoogleFonts.inter(
+                        color: kNavy900, fontSize: 13, fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // Floating clock pill row anchored to the bottom of the hero.
+          Positioned(
+            left: 0, right: 0, bottom: -28,
+            child: Row(
+              children: [
+                Expanded(
+                  child: _ClockPill(
+                    icon: Icons.login_rounded,
+                    label: clockIn ?? '— : —',
+                    sub: 'Clock in',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _ClockPill(
+                    icon: Icons.logout_rounded,
+                    label: clockOut ?? '— : —',
+                    sub: 'Clock out',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ClockPill extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String sub;
+  const _ClockPill({required this.icon, required this.label, required this.sub});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: kSurfaceLight,
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: kLime500.withValues(alpha: 0.20),
-            blurRadius: 20, offset: const Offset(0, 8),
+            color: kNavy900.withValues(alpha: 0.10),
+            blurRadius: 18, offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
-          _OverviewMetric(
-            label: 'Presence',
-            value: '$present',
-          ),
-          _OverviewDivider(),
-          _OverviewMetric(
-            label: 'Punches',
-            value: '$today',
-          ),
-          _OverviewDivider(),
-          _OverviewMetric(
-            label: 'Late',
-            value: late == 0 ? '0h' : '${late}h',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OverviewMetric extends StatelessWidget {
-  final String label;
-  final String value;
-  const _OverviewMetric({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 12, color: const Color(0xFF15411D),
-              fontWeight: FontWeight.w600,
+          Container(
+            width: 30, height: 30,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: kKpiSkyBg,
+              borderRadius: BorderRadius.circular(8),
             ),
+            child: Icon(icon, size: 16, color: kKpiSkyInk),
           ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: GoogleFonts.inter(
-              fontSize: 24, fontWeight: FontWeight.w800,
-              color: const Color(0xFF0E2C13), letterSpacing: -0.5,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    fontSize: 13.5, fontWeight: FontWeight.w800,
+                    color: kInk900,
+                  ),
+                ),
+                Text(
+                  sub,
+                  style: GoogleFonts.inter(
+                    fontSize: 10.5, fontWeight: FontWeight.w600,
+                    color: kInk500, letterSpacing: 0.2,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _OverviewDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 1, height: 40,
-      color: const Color(0xFF15411D).withValues(alpha: 0.18),
     );
   }
 }
 
 // -----------------------------------------------------------------------------
-// Feature tile — large dark card with icon-bg + value + caption.
 
-class _FeatureTile extends StatelessWidget {
-  final IconData icon;
-  final Color iconBg;
-  final Color iconFg;
+class _SectionLabel extends StatelessWidget {
   final String title;
-  final String caption;
-  final VoidCallback onTap;
+  const _SectionLabel({required this.title});
 
-  const _FeatureTile({
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 16, fontWeight: FontWeight.w800,
+              color: kInk900, letterSpacing: -0.2,
+            ),
+          ),
+          const Spacer(),
+          Icon(Icons.tune_rounded, size: 16, color: kInk400),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+
+class _KpiCard extends StatelessWidget {
+  final IconData icon;
+  final Color bg;
+  final Color fg;
+  final String value;
+  final String label;
+  const _KpiCard({
     required this.icon,
-    required this.iconBg,
-    required this.iconFg,
-    required this.title,
-    required this.caption,
-    required this.onTap,
+    required this.bg,
+    required this.fg,
+    required this.value,
+    required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: kSurfaceCardDk,
-      borderRadius: BorderRadius.circular(22),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: kBorderDk),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               Container(
-                width: 44, height: 44,
-                decoration: BoxDecoration(
-                  color: iconBg,
-                  borderRadius: BorderRadius.circular(14),
-                ),
+                width: 28, height: 28,
                 alignment: Alignment.center,
-                child: Icon(icon, color: iconFg, size: 22),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                title,
-                style: GoogleFonts.inter(
-                  fontSize: 28, fontWeight: FontWeight.w800,
-                  color: kTextDk, letterSpacing: -0.6, height: 1.0,
+                decoration: BoxDecoration(
+                  color: kSurfaceLight,
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                child: Icon(icon, size: 16, color: fg),
               ),
-              const SizedBox(height: 4),
+              const Spacer(),
               Text(
-                caption,
+                value,
                 style: GoogleFonts.inter(
-                  fontSize: 12.5, color: kTextDkMuted,
+                  fontSize: 22, fontWeight: FontWeight.w900,
+                  color: fg, letterSpacing: -0.5,
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 10),
+          Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(
+              fontSize: 11.5, fontWeight: FontWeight.w700,
+              color: kInk900, height: 1.3,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 // -----------------------------------------------------------------------------
-// Date-chip task card — left date stack + title + time + Get Details link.
+// Module grid — 6 tiles with pastel-blue circular icon container + label.
+// -----------------------------------------------------------------------------
 
-class _UpcomingTaskCard extends StatelessWidget {
-  final Map<String, dynamic> task;
-  final VoidCallback onTap;
-  const _UpcomingTaskCard({required this.task, required this.onTap});
-
-  ({String day, String month}) _date() {
-    final raw = task['dueDate']?.toString() ?? task['date']?.toString();
-    if (raw != null) {
-      try {
-        final d = DateTime.parse(raw).toLocal();
-        return (
-          day: DateFormat('d').format(d),
-          month: DateFormat('MMM').format(d),
-        );
-      } catch (_) {}
-    }
-    return (day: '—', month: '');
-  }
+class _ModulesGrid extends StatelessWidget {
+  const _ModulesGrid();
 
   @override
   Widget build(BuildContext context) {
-    final d = _date();
-    final priority = task['priority']?.toString() ?? '';
-    final priorityTone = priority == 'Urgent' ? kDanger600
-                       : priority == 'High'   ? kPillPink
-                       : priority == 'Medium' ? kPillSky
-                       : kPillPurple;
+    final modules = const [
+      _ModuleTile('Break Time', Icons.coffee_outlined,           '/punch'),
+      _ModuleTile('Task',       Icons.check_box_outlined,        '/tasks'),
+      _ModuleTile('Check\nIn/Out', Icons.qr_code_scanner_rounded,'/punch'),
+      _ModuleTile('Claim',      Icons.payments_outlined,         '/expenses'),
+      _ModuleTile('Visits',     Icons.location_on_outlined,      '/visits'),
+      _ModuleTile('Approvals',  Icons.fact_check_outlined,       '/approvals'),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GridView.count(
+        crossAxisCount: 3,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.92,
+        children: [for (final m in modules) m],
+      ),
+    );
+  }
+}
 
+class _ModuleTile extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final String route;
+  const _ModuleTile(this.label, this.icon, this.route);
+
+  @override
+  Widget build(BuildContext context) {
     return Material(
-      color: kSurfaceCardDk,
-      borderRadius: BorderRadius.circular(22),
+      color: kSurfaceLight,
+      borderRadius: BorderRadius.circular(18),
       child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
+        onTap: () { Haptics.select(); context.go(route); },
+        borderRadius: BorderRadius.circular(18),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(14, 14, 16, 14),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: kBorderDk),
-          ),
-          child: Row(
-            children: [
-              // Date stack
-              Container(
-                width: 48, height: 56,
-                decoration: BoxDecoration(
-                  color: kSurfaceLiftDk,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(d.day,
-                      style: GoogleFonts.inter(
-                        fontSize: 18, fontWeight: FontWeight.w800,
-                        color: kTextDk, height: 1.0,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(d.month,
-                      style: GoogleFonts.inter(
-                        fontSize: 10, color: kTextDkMuted,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+            color: kSurfaceLight,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: kBorderLight),
+            boxShadow: [
+              BoxShadow(
+                color: kNavy900.withValues(alpha: 0.04),
+                blurRadius: 14, offset: const Offset(0, 4),
               ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task['title']?.toString() ?? 'Task',
-                      style: GoogleFonts.inter(
-                        fontSize: 14, fontWeight: FontWeight.w800,
-                        color: kTextDk, letterSpacing: -0.2, height: 1.2,
-                      ),
-                      maxLines: 1, overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        if (priority.isNotEmpty)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: priorityTone.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Text(priority,
-                              style: GoogleFonts.inter(
-                                fontSize: 10, fontWeight: FontWeight.w800,
-                                color: priorityTone,
-                                letterSpacing: 0.4,
-                              ),
-                            ),
-                          ),
-                        if (priority.isNotEmpty) const SizedBox(width: 8),
-                        Text(
-                          (task['project']?['projectName'] ??
-                            task['project']?['name'] ?? '—').toString(),
-                          style: GoogleFonts.inter(
-                            fontSize: 11.5, color: kTextDkMuted,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text('Get Details',
-                      style: GoogleFonts.inter(
-                        fontSize: 11.5, fontWeight: FontWeight.w700,
-                        color: kLime500,
-                      ),
-                    ),
-                  ],
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 46, height: 46,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: kKpiSkyBg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 22, color: kNavy900),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.inter(
+                  fontSize: 12, fontWeight: FontWeight.w700,
+                  color: kInk900, height: 1.2,
                 ),
               ),
             ],

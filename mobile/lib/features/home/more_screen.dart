@@ -42,7 +42,6 @@ class MoreScreen extends ConsumerWidget {
       _Tile('Vehicle requests',  Icons.airport_shuttle_outlined, '/vehicle-requests',     kNavy900),
       _Tile('Accommodation',     Icons.hotel_outlined,            '/accommodation-requests', kMission600),
       _Tile('Fuel claims',       Icons.local_gas_station,         '/fuel-claims',          kMission600),
-      _Tile('Shifts',            Icons.calendar_view_week,        '/shifts',               kNavy900),
     ];
     final hrFinance = const [
       _Tile('Leave',           Icons.event_busy_outlined,    '/leaves',    kNavy900),
@@ -185,7 +184,9 @@ class _IdentityCard extends StatelessWidget {
                     color: Colors.white, fontSize: 17,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
+                    height: 1.25,
                   ),
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (role != null)
@@ -194,6 +195,7 @@ class _IdentityCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       color: kInk200, fontSize: 12.5, height: 1.4,
                     ),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
               ],
@@ -260,7 +262,9 @@ class _TrackingTile extends StatelessWidget {
                   tracking
                       ? 'Field movements are being recorded.'
                       : 'Tap to enable background location.',
-                  style: GoogleFonts.inter(fontSize: 11.5, color: kInk500),
+                  style: GoogleFonts.inter(fontSize: 11.5, color: kInk500, height: 1.35),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

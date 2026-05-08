@@ -42,14 +42,14 @@ class SoftCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final card = Container(
       decoration: BoxDecoration(
-        color: color ?? kSurfaceCardDk,
+        color: color ?? kSurfaceLight,
         borderRadius: BorderRadius.circular(radius == 14 ? 20 : radius),
-        border: Border.all(color: kBorderDk),
+        border: Border.all(color: kBorderLight),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.20),
-            blurRadius: 14,
-            offset: const Offset(0, 3),
+            color: kNavy900.withValues(alpha: 0.05),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
