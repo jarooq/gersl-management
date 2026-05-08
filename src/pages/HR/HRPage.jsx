@@ -210,18 +210,21 @@ const HRPage = () => {
       .sort((a, b) => b.count - a.count);
   }, [staff]);
 
-  // Calculate leave statistics dynamically
+  // Calculate leave statistics dynamically.
+  // Backend rows: { id, userId, leaveType, startDate, endDate, daysCount,
+  //                 status, reason, createdAt, requester: { fullName }, staff: { fullName } }
   const leaveStatistics = React.useMemo(() => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
-    // Filter leaves for current month
-    const currentMonthLeaves = leaveRequests.filter(leave => {
-      const leaveDate = new Date(leave.appliedDate);
-      return leaveDate.getMonth() === currentMonth && leaveDate.getFullYear() === currentYear;
+    const currentMonthLeaves = (leaveRequests || []).filter(leave => {
+      const raw = leave?.createdAt || leave?.appliedDate || leave?.startDate;
+      if (!raw) return false;
+      const d = new Date(raw);
+      if (Number.isNaN(d.getTime())) return false;
+      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
 
-    // Calculate by leave type
     const leaveTypes = {
       'Annual Leave': { count: 0, approved: 0, pending: 0, color: 'bg-green-500' },
       'Sick Leave': { count: 0, approved: 0, pending: 0, color: 'bg-red-500' },
@@ -231,32 +234,18 @@ const HRPage = () => {
     };
 
     currentMonthLeaves.forEach(leave => {
-      const type = leave.leaveType || 'Other';
-      if (leaveTypes[type]) {
-        leaveTypes[type].count += leave.days || 1;
-        if (leave.status === 'Approved') {
-          leaveTypes[type].approved += leave.days || 1;
-        } else if (leave.status === 'Pending') {
-          leaveTypes[type].pending += leave.days || 1;
-        }
-      } else {
-        leaveTypes['Other'].count += leave.days || 1;
-        if (leave.status === 'Approved') {
-          leaveTypes['Other'].approved += leave.days || 1;
-        } else if (leave.status === 'Pending') {
-          leaveTypes['Other'].pending += leave.days || 1;
-        }
-      }
+      const type = leave.leaveType && leaveTypes[leave.leaveType] ? leave.leaveType : 'Other';
+      const days = Number(leave.daysCount ?? leave.days ?? 1) || 1;
+      leaveTypes[type].count += days;
+      if (leave.status === 'Approved')      leaveTypes[type].approved += days;
+      else if (leave.status === 'Pending')  leaveTypes[type].pending  += days;
     });
 
-    const totalLeaves = Object.values(leaveTypes).reduce((sum, type) => sum + type.count, 0);
+    const totalLeaves = Object.values(leaveTypes).reduce((sum, t) => sum + t.count, 0);
 
     return {
       total: totalLeaves,
-      types: Object.entries(leaveTypes).map(([type, data]) => ({
-        type,
-        ...data
-      }))
+      types: Object.entries(leaveTypes).map(([type, data]) => ({ type, ...data }))
     };
   }, [leaveRequests]);
 
@@ -1025,38 +1014,55 @@ const HRPage = () => {
               </div>
 
               <div className="space-y-3">
-                {leaveRequests.map((leave, index) => (
+                {(leaveRequests || []).length === 0 && (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">
+                    No leave requests yet. Mobile-submitted leaves will appear here.
+                  </div>
+                )}
+                {(leaveRequests || []).map((leave) => {
+                  // Resolve display fields against multiple possible shapes:
+                  // mobile-side: { userId, requester: { fullName } }
+                  // legacy admin: { staffId, staff: { fullName }, employeeName }
+                  const displayName =
+                    leave?.requester?.fullName
+                    || leave?.staff?.fullName
+                    || leave?.employeeName
+                    || `Staff #${leave?.userId ?? leave?.staffId ?? '?'}`;
+                  const initial = (displayName || '?').toString().charAt(0).toUpperCase();
+                  const days = leave?.daysCount ?? leave?.days ?? '—';
+                  return (
                   <div
                     key={leave.id}
                     className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4"
-                    
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-primary-50 border border-primary-200 text-primary-700 text-white rounded-lg flex items-center justify-center font-bold">
-                            {leave.employeeName.charAt(0)}
+                          <div className="w-10 h-10 bg-navy-50 border border-navy-200 text-navy-800 rounded-lg flex items-center justify-center font-bold">
+                            {initial}
                           </div>
                           <div>
-                            <h3 className="font-bold text-ink-900">{leave.employeeName}</h3>
-                            <p className="text-sm text-ink-600">{leave.leaveType} Leave - {leave.days} days</p>
+                            <h3 className="font-bold text-ink-900">{displayName}</h3>
+                            <p className="text-sm text-ink-600">{leave.leaveType || 'Leave'} — {days} day{days === 1 ? '' : 's'}</p>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
                             <span className="text-ink-500">From:</span>
-                            <span className="ml-2 font-semibold text-ink-900">{leave.startDate}</span>
+                            <span className="ml-2 font-semibold text-ink-900">{leave.startDate || '—'}</span>
                           </div>
                           <div>
                             <span className="text-ink-500">To:</span>
-                            <span className="ml-2 font-semibold text-ink-900">{leave.endDate}</span>
+                            <span className="ml-2 font-semibold text-ink-900">{leave.endDate || '—'}</span>
                           </div>
                         </div>
 
-                        <div className="mt-2 p-2 bg-ink-50 rounded-lg">
-                          <p className="text-sm text-ink-700"><span className="font-semibold">Reason:</span> {leave.reason}</p>
-                        </div>
+                        {leave.reason && (
+                          <div className="mt-2 p-2 bg-ink-50 rounded-lg">
+                            <p className="text-sm text-ink-700"><span className="font-semibold">Reason:</span> {leave.reason}</p>
+                          </div>
+                        )}
                       </div>
 
                       <span className={`px-3 py-1 rounded-full text-xs font-bold flex-shrink-0 ml-4 ${
@@ -1064,7 +1070,7 @@ const HRPage = () => {
                         leave.status === 'Rejected' ? 'bg-red-100 text-red-700 border border-red-200' :
                         'bg-yellow-100 text-yellow-700 border border-yellow-200'
                       }`}>
-                        {leave.status}
+                        {leave.status || 'Pending'}
                       </span>
                     </div>
 
@@ -1087,15 +1093,16 @@ const HRPage = () => {
                       </div>
                     )}
 
-                    {leave.status !== 'Pending' && (
+                    {leave.status && leave.status !== 'Pending' && (
                       <div className="mt-3 pt-3 border-t border-ink-100 text-xs text-ink-500">
-                        {leave.status} by {leave.approvedBy} on {leave.approvedDate}
+                        {leave.status}{leave.approvedBy ? ` by ${leave.approver?.fullName ?? `User #${leave.approvedBy}`}` : ''}{leave.approvalDate ? ` on ${new Date(leave.approvalDate).toLocaleDateString()}` : ''}
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
 
-                {leaveRequests.length === 0 && (
+                {(leaveRequests || []).length === 0 && (
                   <div className="text-center py-12 text-ink-500">
                     <Calendar className="w-12 h-12 mx-auto mb-3 text-ink-400" />
                     <p>No leave requests at the moment</p>
