@@ -497,34 +497,9 @@ const SocialMediaPage = () => {
               <div>
                 <h3 className="text-sm font-bold text-ink-900 mb-4">Platform Performance</h3>
                 <div className="space-y-4">
-                  {[].map((platform, idx) => (
-                    <div key={idx} className="p-4 bg-white border border-ink-100 rounded-xl">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 bg-${platform.color}-500 rounded-lg flex items-center justify-center`}>
-                            <platform.icon className="text-white" size={20} />
-                          </div>
-                          <div>
-                            <p className="font-bold text-ink-900">{platform.platform}</p>
-                            <p className="text-xs text-ink-600">{platform.followers.toLocaleString()} followers</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-center">
-                            <p className="text-xs text-ink-600">Growth</p>
-                            <p className="text-sm font-bold text-green-600">{platform.growth}</p>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-xs text-ink-600">Engagement</p>
-                            <p className="text-sm font-bold text-ink-900">{platform.engagement}</p>
-                          </div>
-                          <div className="w-24 bg-ink-200 rounded-full h-1.5">
-                            <div className={`bg-${platform.color}-500 h-1.5 rounded-full`} style={{ width: platform.engagement }}></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  <div className="p-6 text-center text-sm text-ink-500 bg-white border border-ink-100 rounded-xl">
+                    Connect a social media account from the Settings tab to see per-platform performance here.
+                  </div>
                 </div>
               </div>
 
@@ -532,26 +507,9 @@ const SocialMediaPage = () => {
               <div>
                 <h3 className="text-sm font-bold text-ink-900 mb-4">Top Performing Posts</h3>
                 <div className="space-y-3">
-                  {[].map((post, idx) => (
-                    <div key={idx} className="p-4 bg-ink-50 border border-ink-100 rounded-lg">
-                      <p className="font-semibold text-ink-900 mb-2">{post.content}</p>
-                      <div className="flex items-center gap-6 text-sm">
-                        <span className="text-ink-600 flex items-center gap-1">
-                          <ThumbsUp size={14} />
-                          {post.likes}
-                        </span>
-                        <span className="text-ink-600 flex items-center gap-1">
-                          <MessageCircle size={14} />
-                          {post.comments}
-                        </span>
-                        <span className="text-ink-600 flex items-center gap-1">
-                          <Share size={14} />
-                          {post.shares}
-                        </span>
-                        <span className="ml-auto text-xs text-ink-500">{post.platform}</span>
-                      </div>
-                    </div>
-                  ))}
+                  <div className="p-6 text-center text-sm text-ink-500 bg-white border border-ink-100 rounded-xl">
+                    Top-performing posts will appear here once content is published and engagement data syncs back from the connected platforms.
+                  </div>
                 </div>
               </div>
             </div>

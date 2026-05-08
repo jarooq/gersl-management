@@ -266,18 +266,34 @@ const PartnersPage = () => {
             </div>
           </div>
           <div className="space-y-3">
-            {[].map((item, index) => (
-              <div key={index} className="" >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-ink-700">{item.type}</span>
-                  <span className="text-xs font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
+            {(() => {
+              // Compute by partner type from the live partners array.
+              const byType = {};
+              for (const p of (partners || [])) {
+                const k = p.partnerType || p.type || 'Other';
+                byType[k] = (byType[k] || 0) + Number(p.totalContribution || p.contribution || 0);
+              }
+              const total = Object.values(byType).reduce((s, v) => s + v, 0);
+              const items = Object.entries(byType)
+                .map(([type, amount]) => ({ type, amount, percent: total > 0 ? Math.round((amount / total) * 100) : 0 }))
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 6);
+              if (items.length === 0) {
+                return <p className="text-xs text-ink-500 text-center py-4">No contribution data yet.</p>;
+              }
+              return items.map((item, index) => (
+                <div key={index}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-ink-700">{item.type}</span>
+                    <span className="text-xs font-bold text-ink-900">LKR {(item.amount / 1000000).toFixed(1)}M</span>
+                  </div>
+                  <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
+                    <div className="h-1.5 rounded-full bg-navy-900 transition-all duration-500"
+                      style={{ width: `${item.percent}%` }}></div>
+                  </div>
                 </div>
-                <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
-                  <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
-                    style={{ width: `${item.percent}%` }}></div>
-                </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
 
@@ -293,20 +309,37 @@ const PartnersPage = () => {
             </div>
           </div>
           <div className="space-y-4">
-            {[].map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-ink-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                  <span className="text-sm font-medium text-ink-700">{item.status}</span>
+            {(() => {
+              const byStatus = {};
+              for (const p of (partners || [])) {
+                const k = p.status || 'Unknown';
+                byStatus[k] = (byStatus[k] || 0) + 1;
+              }
+              const colorMap = {
+                Active: 'bg-green-500', Pending: 'bg-yellow-500',
+                Inactive: 'bg-ink-400', Closed: 'bg-red-500',
+              };
+              const items = Object.entries(byStatus)
+                .map(([status, count]) => ({ status, count, color: colorMap[status] || 'bg-ink-500' }))
+                .sort((a, b) => b.count - a.count);
+              if (items.length === 0) {
+                return <p className="text-xs text-ink-500 text-center py-4">No partners on file yet.</p>;
+              }
+              return items.map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-ink-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                    <span className="text-sm font-medium text-ink-700">{item.status}</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-bold text-ink-900">{item.count} partners</span>
+                    <span className="text-xs text-ink-600 bg-white px-2 py-1 rounded">
+                      {stats.totalPartners > 0 ? Math.round((item.count / stats.totalPartners) * 100) : 0}%
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-bold text-ink-900">{item.count} partners</span>
-                  <span className="text-xs text-ink-600 bg-white px-2 py-1 rounded">
-                    {Math.round((item.count / stats.totalPartners) * 100)}%
-                  </span>
-                </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
 
@@ -329,17 +362,44 @@ const PartnersPage = () => {
             </div>
           </div>
           <div className="space-y-2">
-            {[].map((item, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <span className="text-xs font-medium text-ink-600 w-20">{item.month}</span>
-                <div className="flex-1">
-                  <div className="bg-navy-900 h-8 rounded transition-all duration-300 flex items-center justify-end pr-2"
-                    style={{ width: `${(item.amount / 20) * 100}%` }}>
-                    <span className="text-white text-xs font-bold">{item.amount}M</span>
+            {(() => {
+              // Compute partners-acquired trend by createdAt month.
+              // (True contribution-trend would need a monthly contributions
+              // history table which doesn't yet exist — partners-acquired
+              // is the closest proxy from current data.)
+              const months = [];
+              const now = new Date();
+              for (let i = 5; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                months.push({
+                  key: `${d.getFullYear()}-${d.getMonth()}`,
+                  label: d.toLocaleString('en', { month: 'short' }),
+                  count: 0,
+                });
+              }
+              for (const p of (partners || [])) {
+                if (!p.createdAt) continue;
+                const d = new Date(p.createdAt);
+                const k = `${d.getFullYear()}-${d.getMonth()}`;
+                const m = months.find(x => x.key === k);
+                if (m) m.count += 1;
+              }
+              const max = Math.max(1, ...months.map(m => m.count));
+              if (months.every(m => m.count === 0)) {
+                return <p className="text-xs text-ink-500 text-center py-4">No partner activity in the last 6 months.</p>;
+              }
+              return months.map((m, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="text-xs font-medium text-ink-600 w-20">{m.label}</span>
+                  <div className="flex-1">
+                    <div className="bg-navy-900 h-8 rounded transition-all duration-300 flex items-center justify-end pr-2"
+                      style={{ width: `${Math.max(8, (m.count / max) * 100)}%` }}>
+                      <span className="text-white text-xs font-bold">{m.count}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
 
@@ -359,7 +419,20 @@ const PartnersPage = () => {
             </div>
           </div>
           <div className="space-y-4">
-            {[].map((item, index) => (
+            {(() => {
+              const total = (partners || []).length;
+              const active = (partners || []).filter(p => p.status === 'Active').length;
+              const withFollowUp = (partners || []).filter(p => p.lastFollowUpDate).length;
+              const withContact = (partners || []).filter(p => p.email || p.phone).length;
+              const items = total === 0 ? [] : [
+                { metric: 'Active rate',          value: Math.round((active / total) * 100),       target: 70 },
+                { metric: 'Follow-up coverage',   value: Math.round((withFollowUp / total) * 100), target: 60 },
+                { metric: 'Contact info on file', value: Math.round((withContact / total) * 100),  target: 90 },
+              ].map(it => ({ ...it, status: it.value >= it.target ? 'above' : 'below' }));
+              if (items.length === 0) {
+                return <p className="text-xs text-ink-500 text-center py-4">No partners to score.</p>;
+              }
+              return items.map((item, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-ink-700">{item.metric}</span>
@@ -374,11 +447,7 @@ const PartnersPage = () => {
                 </div>
                 <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
                   <div
-                    className={`h-1.5 rounded-full transition-all duration-500 ${
-                      item.status === 'above'
-                        ? 'bg-navy-900'
-                        : 'bg-navy-900'
-                    }`}
+                    className="h-1.5 rounded-full bg-navy-900 transition-all duration-500"
                     style={{ width: `${item.value}%` }}
                   ></div>
                 </div>
@@ -391,7 +460,8 @@ const PartnersPage = () => {
                   </span>
                 </div>
               </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
       </div>

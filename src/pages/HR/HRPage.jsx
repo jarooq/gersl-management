@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useHR } from '../../contexts/HRContext';
-import API from '../../services/api';
+import { useProjects } from '../../contexts/ProjectContext';
+import API, { ExpenseAPI } from '../../services/api';
 import StaffProfileModal from '../../components/hr/StaffProfileModal';
 import {
   Users, UserPlus, Clock, Calendar, TrendingUp, CheckCircle,
@@ -31,6 +32,49 @@ const HRPage = () => {
   };
 
   // Modal states
+  // Project Expenses tab — pulls all mobile-submitted expense claims with
+  // a non-null projectId and groups them per project. Lazy-fetched on tab open.
+  const { projects: allProjects } = useProjects();
+  const [staffExpenses, setStaffExpenses] = useState([]);
+  const [staffExpensesLoaded, setStaffExpensesLoaded] = useState(false);
+  useEffect(() => {
+    if (activeTab !== 'expenses' || staffExpensesLoaded) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const rows = await ExpenseAPI.listAdmin({ status: 'Approved' });
+        if (!cancelled) { setStaffExpenses(rows || []); setStaffExpensesLoaded(true); }
+      } catch (e) {
+        if (!cancelled) setStaffExpensesLoaded(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [activeTab, staffExpensesLoaded]);
+
+  const projectExpenseCards = useMemo(() => {
+    if (!Array.isArray(staffExpenses) || !Array.isArray(allProjects)) return [];
+    const grouped = {};
+    for (const e of staffExpenses) {
+      const pid = e.projectId;
+      if (!pid) continue;
+      if (!grouped[pid]) grouped[pid] = { totalExpenses: 0, transactions: 0, byCategory: {} };
+      const amt = Number(e.amount || 0);
+      grouped[pid].totalExpenses += amt;
+      grouped[pid].transactions  += 1;
+      const cat = e.category || 'Other';
+      grouped[pid].byCategory[cat] = (grouped[pid].byCategory[cat] || 0) + amt;
+    }
+    return allProjects
+      .filter(p => grouped[p.id])
+      .map(p => ({
+        id: p.id,
+        projectName: p.name || p.projectName || `Project #${p.id}`,
+        budget: Number(p.budget || 0),
+        ...grouped[p.id],
+      }))
+      .sort((a, b) => b.totalExpenses - a.totalExpenses);
+  }, [staffExpenses, allProjects]);
+
   const [showAddStaffModal, setShowAddStaffModal] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showAppraisalModal, setShowAppraisalModal] = useState(false);
@@ -1326,95 +1370,72 @@ const HRPage = () => {
             </div>
           )}
 
-          {/* Expenses Tab */}
+          {/* Expenses Tab — aggregates approved staff expense claims by project. */}
           {activeTab === 'expenses' && (
             <div className="space-y-4">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-ink-900">Project Expenses (Vehicle & Accommodation)</h2>
-                <button
-                  onClick={() => alert('Full expense report will be generated and downloaded')}
+                <h2 className="text-lg font-bold text-ink-900">Project Expenses</h2>
+                <a
+                  href="/admin/hr/staff-expenses"
                   className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-md font-medium shadow-card transition">
                   <Receipt size={18} />
-                  View Full Report
-                </button>
+                  Open all claims
+                </a>
               </div>
 
-
-              {/* Expense by Project */}
-              <h3 className="font-bold text-ink-900 mb-3">Expenses by Project</h3>
+              <h3 className="font-bold text-ink-900 mb-3">Approved expenses by project</h3>
               <div className="space-y-3">
-                {[].map((project) => {
-                  const budgetUsed = (project.totalExpenses / project.budget) * 100;
+                {!staffExpensesLoaded ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">Loading…</div>
+                ) : projectExpenseCards.length === 0 ? (
+                  <div className="bg-white border border-ink-100 rounded-lg2 shadow-card p-8 text-center text-ink-500 text-sm">
+                    No project-linked expenses yet. Approved claims with a project assignment will roll up here.
+                  </div>
+                ) : projectExpenseCards.map((project) => {
+                  const budgetUsed = project.budget > 0 ? (project.totalExpenses / project.budget) * 100 : 0;
+                  const cats = Object.entries(project.byCategory).sort((a, b) => b[1] - a[1]);
                   return (
                     <div key={project.id} className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
                           <h3 className="font-bold text-ink-900 mb-1">{project.projectName}</h3>
-                          <p className="text-sm text-ink-600">{project.transactions} transactions this month</p>
+                          <p className="text-sm text-ink-600">{project.transactions} approved claim{project.transactions === 1 ? '' : 's'}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-ink-500 mb-1">Budget Used</p>
                           <p className={`text-lg font-bold ${
                             budgetUsed > 80 ? 'text-red-600' : budgetUsed > 60 ? 'text-yellow-600' : 'text-green-600'
                           }`}>
-                            {budgetUsed.toFixed(0)}%
+                            {project.budget > 0 ? `${budgetUsed.toFixed(0)}%` : '—'}
                           </p>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                        <div className="p-3 bg-blue-50 rounded-lg">
-                          <p className="text-xs text-ink-500 mb-1">Vehicle</p>
-                          <p className="text-sm font-bold text-blue-600">
-                            LKR {project.vehicleExpenses.toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-rose-50 rounded-lg">
-                          <p className="text-xs text-ink-500 mb-1">Accommodation</p>
-                          <p className="text-sm font-bold text-rose-600">
-                            LKR {project.accommodationExpenses.toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-indigo-50 rounded-lg">
-                          <p className="text-xs text-ink-500 mb-1">Total Expenses</p>
-                          <p className="text-sm font-bold text-indigo-600">
-                            LKR {project.totalExpenses.toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-ink-50 rounded-lg">
-                          <p className="text-xs text-ink-500 mb-1">Budget</p>
-                          <p className="text-sm font-bold text-ink-900">
-                            LKR {project.budget.toLocaleString()}
-                          </p>
+                        {cats.slice(0, 3).map(([cat, amt]) => (
+                          <div key={cat} className="p-3 bg-ink-50 rounded-lg">
+                            <p className="text-xs text-ink-500 mb-1">{cat}</p>
+                            <p className="text-sm font-bold text-ink-900">LKR {amt.toLocaleString()}</p>
+                          </div>
+                        ))}
+                        <div className="p-3 bg-mission-50 rounded-lg">
+                          <p className="text-xs text-ink-500 mb-1">Total expenses</p>
+                          <p className="text-sm font-bold text-mission-700">LKR {project.totalExpenses.toLocaleString()}</p>
                         </div>
                       </div>
 
-                      {/* Budget Progress Bar */}
-                      <div className="mb-3">
-                        <div className="flex items-center justify-between text-xs text-ink-600 mb-1">
-                          <span>Budget Utilization</span>
-                          <span>
-                            LKR {project.totalExpenses.toLocaleString()} / {project.budget.toLocaleString()}
-                          </span>
+                      {project.budget > 0 && (
+                        <div className="mb-2">
+                          <div className="flex items-center justify-between text-xs text-ink-600 mb-1">
+                            <span>Budget Utilization</span>
+                            <span>LKR {project.totalExpenses.toLocaleString()} / {project.budget.toLocaleString()}</span>
+                          </div>
+                          <div className="w-full h-2 bg-ink-200 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full bg-navy-900"
+                              style={{ width: `${Math.min(budgetUsed, 100)}%` }}></div>
+                          </div>
                         </div>
-                        <div className="w-full h-2 bg-ink-200 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full ${
-                              budgetUsed > 80 ? 'bg-navy-900' :
-                              budgetUsed > 60 ? 'bg-navy-900' :
-                              'bg-navy-900'
-                            }`}
-                            style={{ width: `${Math.min(budgetUsed, 100)}%` }}
-                          ></div>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => alert(`Viewing detailed expense breakdown for ${project.projectName}\n\nVehicle: LKR ${project.vehicleExpenses.toLocaleString()}\nAccommodation: LKR ${project.accommodationExpenses.toLocaleString()}\nTotal: LKR ${project.totalExpenses.toLocaleString()}`)}
-                        className="w-full px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-all text-sm font-semibold border border-indigo-200 flex items-center justify-center gap-1">
-                        <Eye size={14} />
-                        View Detailed Breakdown
-                      </button>
+                      )}
                     </div>
                   );
                 })}

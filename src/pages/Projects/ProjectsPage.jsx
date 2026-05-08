@@ -252,18 +252,39 @@ const ProjectsPage = () => {
             </div>
           </div>
           <div className="space-y-3">
-            {[].map((item, index) => (
-              <div key={index} className="" >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-ink-700">{item.programme}</span>
-                  <span className="text-xs font-bold text-ink-900">${(item.budget / 1000).toFixed(0)}K</span>
+            {(() => {
+              // Compute budget distribution from the live `projects` array.
+              // Group by programmeArea, sum budget, sort desc, take top 6.
+              const byProgramme = {};
+              for (const p of projects) {
+                const key = p.programmeArea || p.programme || 'Other';
+                byProgramme[key] = (byProgramme[key] || 0) + Number(p.budget || 0);
+              }
+              const totalBudget = Object.values(byProgramme).reduce((s, v) => s + v, 0);
+              const items = Object.entries(byProgramme)
+                .map(([programme, budget]) => ({
+                  programme,
+                  budget,
+                  percent: totalBudget > 0 ? Math.round((budget / totalBudget) * 100) : 0,
+                }))
+                .sort((a, b) => b.budget - a.budget)
+                .slice(0, 6);
+              if (items.length === 0) {
+                return <p className="text-xs text-ink-500 text-center py-4">No project budgets to chart.</p>;
+              }
+              return items.map((item, index) => (
+                <div key={index}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-ink-700">{item.programme}</span>
+                    <span className="text-xs font-bold text-ink-900">LKR {(item.budget / 1000).toFixed(0)}K</span>
+                  </div>
+                  <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
+                    <div className="h-1.5 rounded-full bg-navy-900 transition-all duration-500"
+                      style={{ width: `${item.percent}%` }}></div>
+                  </div>
                 </div>
-                <div className="w-full bg-ink-100 rounded-full h-1.5 overflow-hidden">
-                  <div className={`h-1.5 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
-                    style={{ width: `${item.percent}%` }}></div>
-                </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
 

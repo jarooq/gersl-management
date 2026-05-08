@@ -50,7 +50,11 @@ const CBOPage = () => {
     addDueDiligence,
     addCBOProject,
     addCFMFeedback,
-    resolveCFMFeedback
+    resolveCFMFeedback,
+    fundraisingApproveProposal,
+    fundraisingRejectProposal,
+    ceoApproveProposal,
+    ceoRejectProposal,
   } = useCBO();
 
   const [activeTab, setActiveTab] = useState('cbos');
@@ -759,18 +763,53 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
     proposal.cboName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleApprove = (proposalId, approvalData) => {
-    console.log('Approve proposal:', proposalId, approvalData);
-    // This will be connected to CBOContext method
-    alert('Approval functionality will be connected to CBOContext');
-    setShowProposalDetail(false);
+  const handleApprove = async (proposalId, approvalData = {}) => {
+    try {
+      const stage = approvalData.stage || 'fundraising';
+      const reviewer = approvalData.reviewer || 'Admin';
+      if (stage === 'ceo') {
+        await ceoApproveProposal(
+          proposalId,
+          approvalData.comments || '',
+          approvalData.approver || reviewer,
+          approvalData.approvedBudget,
+        );
+      } else {
+        await fundraisingApproveProposal(
+          proposalId,
+          approvalData.score ?? 0,
+          approvalData.comments || '',
+          reviewer,
+        );
+      }
+      setShowProposalDetail(false);
+    } catch (e) {
+      alert(e?.message || 'Failed to approve proposal');
+    }
   };
 
-  const handleReject = (proposalId, approvalData) => {
-    console.log('Reject proposal:', proposalId, approvalData);
-    // This will be connected to CBOContext method
-    alert('Rejection functionality will be connected to CBOContext');
-    setShowProposalDetail(false);
+  const handleReject = async (proposalId, approvalData = {}) => {
+    try {
+      const stage = approvalData.stage || 'fundraising';
+      const reviewer = approvalData.reviewer || 'Admin';
+      if (stage === 'ceo') {
+        await ceoRejectProposal(
+          proposalId,
+          approvalData.comments || '',
+          approvalData.approver || reviewer,
+        );
+      } else {
+        await fundraisingRejectProposal(
+          proposalId,
+          approvalData.score ?? 0,
+          approvalData.comments || '',
+          reviewer,
+        );
+      }
+      setShowProposalDetail(false);
+    } catch (e) {
+      alert(e?.message || 'Failed to reject proposal');
+    }
   };
 
   const handleSubmit = async (e) => {
