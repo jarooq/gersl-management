@@ -109,13 +109,33 @@ class HomeDashboardScreen extends ConsumerWidget {
           _HeroHeader(
             firstName: firstName,
             initials: initials,
-            clockIn: clockIn,
-            clockOut: clockOut,
             unreadNotifs: notifCount,
             onBell: () => context.go('/notifications'),
           ),
-          // Floating clock pills extend ~32px below the hero — leave space.
-          const SizedBox(height: 44),
+          const SizedBox(height: 14),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _ClockPill(
+                    icon: Icons.login_rounded,
+                    label: clockIn ?? '— : —',
+                    sub: 'Clock in',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _ClockPill(
+                    icon: Icons.logout_rounded,
+                    label: clockOut ?? '— : —',
+                    sub: 'Clock out',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 22),
 
           // ----- Summary --------------------------------------------------
           const _SectionLabel(title: 'Summary'),
@@ -199,15 +219,11 @@ class HomeDashboardScreen extends ConsumerWidget {
 class _HeroHeader extends StatelessWidget {
   final String firstName;
   final String initials;
-  final String? clockIn;
-  final String? clockOut;
   final int unreadNotifs;
   final VoidCallback onBell;
   const _HeroHeader({
     required this.firstName,
     required this.initials,
-    required this.clockIn,
-    required this.clockOut,
     required this.unreadNotifs,
     required this.onBell,
   });
@@ -215,23 +231,17 @@ class _HeroHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
-    // Outer Stack lets the pill row hang below the navy edge
-    // (Clip.none + Positioned bottom: -32).
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        // ----- Navy hero card --------------------------------------------
-        Container(
-          padding: EdgeInsets.fromLTRB(20, topPad + 18, 20, 28),
-          decoration: const BoxDecoration(
-            gradient: kBrandGradient,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(28),
-              bottomRight: Radius.circular(28),
-            ),
-          ),
-          child: Row(
-            children: [
+    return Container(
+      padding: EdgeInsets.fromLTRB(20, topPad + 18, 20, 22),
+      decoration: const BoxDecoration(
+        gradient: kBrandGradient,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+      ),
+      child: Row(
+        children: [
               Container(
                 width: 38, height: 38,
                 alignment: Alignment.center,
@@ -317,33 +327,7 @@ class _HeroHeader extends StatelessWidget {
               ),
             ],
           ),
-        ),
-
-        // ----- Floating pill row straddling the navy bottom edge ---------
-        Positioned(
-          left: 16, right: 16, bottom: -32,
-          child: Row(
-            children: [
-              Expanded(
-                child: _ClockPill(
-                  icon: Icons.login_rounded,
-                  label: clockIn ?? '— : —',
-                  sub: 'Clock in',
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _ClockPill(
-                  icon: Icons.logout_rounded,
-                  label: clockOut ?? '— : —',
-                  sub: 'Clock out',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+        );
   }
 }
 
