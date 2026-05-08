@@ -114,7 +114,8 @@ class HomeDashboardScreen extends ConsumerWidget {
             unreadNotifs: notifCount,
             onBell: () => context.go('/notifications'),
           ),
-          const SizedBox(height: 24),
+          // Floating clock pills extend ~32px below the hero — leave space.
+          const SizedBox(height: 44),
 
           // ----- Summary --------------------------------------------------
           const _SectionLabel(title: 'Summary'),
@@ -214,136 +215,134 @@ class _HeroHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
-    return Container(
-      // Extra bottom padding gives the floating pill row visual room.
-      padding: EdgeInsets.fromLTRB(20, topPad + 18, 20, 56),
-      decoration: const BoxDecoration(
-        gradient: kBrandGradient,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    // Outer Stack lets the pill row hang below the navy edge
+    // (Clip.none + Positioned bottom: -32).
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // ----- Navy hero card --------------------------------------------
+        Container(
+          padding: EdgeInsets.fromLTRB(20, topPad + 18, 20, 28),
+          decoration: const BoxDecoration(
+            gradient: kBrandGradient,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(28),
+              bottomRight: Radius.circular(28),
+            ),
+          ),
+          child: Row(
             children: [
-              Row(
-                children: [
-                  // Hamburger-style spacer (matches mockup left icon area).
-                  Container(
-                    width: 38, height: 38,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.menu_rounded, color: Colors.white, size: 20),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hi, $firstName!',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            color: Colors.white, fontSize: 18,
-                            fontWeight: FontWeight.w800, letterSpacing: -0.3,
-                          ),
-                        ),
-                        const SizedBox(height: 1),
-                        Text(
-                          'Explore the dashboard',
-                          style: GoogleFonts.inter(
-                            color: Colors.white.withValues(alpha: 0.70),
-                            fontSize: 12, fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Bell with unread dot
-                  GestureDetector(
-                    onTap: onBell,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          width: 38, height: 38,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.10),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.notifications_none_rounded,
-                              color: Colors.white, size: 20),
-                        ),
-                        if (unreadNotifs > 0)
-                          Positioned(
-                            top: -2, right: -2,
-                            child: Container(
-                              width: 10, height: 10,
-                              decoration: BoxDecoration(
-                                color: kAmber500,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: kNavy900, width: 1.5),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Avatar chip
-                  Container(
-                    width: 38, height: 38,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: kAmber500,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      initials,
+              Container(
+                width: 38, height: 38,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.menu_rounded, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Hi, $firstName!',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
-                        color: kNavy900, fontSize: 13, fontWeight: FontWeight.w800,
+                        color: Colors.white, fontSize: 18,
+                        fontWeight: FontWeight.w800, letterSpacing: -0.3,
                       ),
                     ),
+                    const SizedBox(height: 1),
+                    Text(
+                      'Explore the dashboard',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        color: Colors.white.withValues(alpha: 0.70),
+                        fontSize: 12, fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: onBell,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 38, height: 38,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.notifications_none_rounded,
+                          color: Colors.white, size: 20),
+                    ),
+                    if (unreadNotifs > 0)
+                      Positioned(
+                        top: -2, right: -2,
+                        child: Container(
+                          width: 10, height: 10,
+                          decoration: BoxDecoration(
+                            color: kAmber500,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: kNavy900, width: 1.5),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 38, height: 38,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: kAmber500,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  initials,
+                  style: GoogleFonts.inter(
+                    color: kNavy900, fontSize: 13, fontWeight: FontWeight.w800,
                   ),
-                ],
+                ),
               ),
             ],
           ),
+        ),
 
-          // Floating clock pill row anchored to the bottom of the hero.
-          Positioned(
-            left: 0, right: 0, bottom: -28,
-            child: Row(
-              children: [
-                Expanded(
-                  child: _ClockPill(
-                    icon: Icons.login_rounded,
-                    label: clockIn ?? '— : —',
-                    sub: 'Clock in',
-                  ),
+        // ----- Floating pill row straddling the navy bottom edge ---------
+        Positioned(
+          left: 16, right: 16, bottom: -32,
+          child: Row(
+            children: [
+              Expanded(
+                child: _ClockPill(
+                  icon: Icons.login_rounded,
+                  label: clockIn ?? '— : —',
+                  sub: 'Clock in',
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _ClockPill(
-                    icon: Icons.logout_rounded,
-                    label: clockOut ?? '— : —',
-                    sub: 'Clock out',
-                  ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _ClockPill(
+                  icon: Icons.logout_rounded,
+                  label: clockOut ?? '— : —',
+                  sub: 'Clock out',
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
