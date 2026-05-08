@@ -21,6 +21,7 @@ import '../features/leaves/leaves_screen.dart';
 import '../features/leaves/new_leave_screen.dart';
 import '../features/movement/fuel_claims_screen.dart';
 import '../features/movement/movements_screen.dart';
+import '../features/movement/new_movement_screen.dart';
 import '../features/payslips/payslips_screen.dart';
 import '../features/punch/punch_screen.dart';
 import '../features/tasks/my_tasks_screen.dart';
@@ -68,6 +69,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/advances/new',  builder: (context, state) => const NewAdvanceScreen()),
       GoRoute(path: '/leaves/new',    builder: (context, state) => const NewLeaveScreen()),
       GoRoute(path: '/expenses/new',  builder: (context, state) => const NewExpenseScreen()),
+      GoRoute(path: '/movements/new', builder: (context, state) => const NewMovementScreen()),
     ],
   );
 });

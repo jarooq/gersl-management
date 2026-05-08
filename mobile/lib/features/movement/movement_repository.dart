@@ -15,6 +15,50 @@ class MovementRepository {
     return raw.cast<Map>().map((m) => Map<String, dynamic>.from(m)).toList();
   }
 
+  Future<Map<String, dynamic>> create({
+    required String fromLocation,
+    required String toLocation,
+    String? purpose,
+    DateTime? plannedDepartureAt,
+    DateTime? plannedReturnAt,
+    int? vehicleId,
+    int? projectId,
+    String? notes,
+  }) async {
+    final res = await _dio.post('/movements', data: {
+      'fromLocation': fromLocation,
+      'toLocation': toLocation,
+      if (purpose != null && purpose.isNotEmpty) 'purpose': purpose,
+      if (plannedDepartureAt != null) 'plannedDepartureAt': plannedDepartureAt.toIso8601String(),
+      if (plannedReturnAt    != null) 'plannedReturnAt':    plannedReturnAt.toIso8601String(),
+      if (vehicleId != null) 'vehicleId': vehicleId,
+      if (projectId != null) 'projectId': projectId,
+      if (notes != null && notes.isNotEmpty) 'notes': notes,
+    });
+    return (res.data['data']?['movement'] as Map).cast<String, dynamic>();
+  }
+
+  Future<Map<String, dynamic>> depart(int id) async {
+    final res = await _dio.patch('/movements/$id/depart');
+    return (res.data['data']?['movement'] as Map).cast<String, dynamic>();
+  }
+
+  Future<Map<String, dynamic>> arrive(int id) async {
+    final res = await _dio.patch('/movements/$id/arrive');
+    return (res.data['data']?['movement'] as Map).cast<String, dynamic>();
+  }
+
+  Future<Map<String, dynamic>> returnTrip(int id) async {
+    final res = await _dio.patch('/movements/$id/return');
+    return (res.data['data']?['movement'] as Map).cast<String, dynamic>();
+  }
+
+  Future<Map<String, dynamic>> cancel(int id, {String? reason}) async {
+    final res = await _dio.patch('/movements/$id/cancel',
+        data: { if (reason != null && reason.isNotEmpty) 'reason': reason });
+    return (res.data['data']?['movement'] as Map).cast<String, dynamic>();
+  }
+
   Future<List<Map<String, dynamic>>> myFuelClaims() async {
     final res = await _dio.get('/fuel-claims');
     final raw = (res.data['data'] as List?) ??
