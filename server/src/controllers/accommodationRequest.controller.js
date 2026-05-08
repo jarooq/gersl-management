@@ -1,6 +1,7 @@
 // Accommodation requests — staff book lodging for field trips; HR/Ops approve.
 import asyncHandler from 'express-async-handler';
 import { AccommodationRequest, User } from '../models/index.js';
+import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
 
 const isApprover = (u) =>
   ['Admin', 'CEO', 'HR Manager', 'HR Officer', 'Programme Manager'].includes(u?.role);
@@ -48,6 +49,15 @@ export const create = asyncHandler(async (req, res) => {
     guestCount: guestCount || 1,
     status: 'Pending',
   });
+  await createApprovalRow({
+    type: 'HR_ACCOMMODATION_REQUEST',
+    entityType: 'accommodation_request',
+    entityId: row.id,
+    requestedBy: req.user.id,
+    amount: estimatedCost ? Number(estimatedCost) : null,
+    title: `Accommodation — ${location}`,
+    description: `${checkInDate} → ${checkOutDate}, ${guestCount || 1} guest${(guestCount || 1) === 1 ? '' : 's'} · ${purpose}`,
+  });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -72,5 +82,14 @@ export const decide = asyncHandler(async (req, res) => {
   row.decidedAt = new Date();
   if (req.body?.notes) row.decisionNotes = req.body.notes;
   await row.save();
+  if (action === 'approve' || action === 'reject' || action === 'cancel') {
+    await syncApprovalDecision({
+      entityType: 'accommodation_request',
+      entityId: row.id,
+      status: row.status,
+      decidedBy: req.user.id,
+      notes: req.body?.notes ?? null,
+    });
+  }
   res.json({ success: true, data: row });
 });

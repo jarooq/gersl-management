@@ -11,9 +11,12 @@
 import { Approval } from '../models/index.js';
 
 const APPROVER_ROLE_FOR_TYPE = {
-  HR_LEAVE_REQUEST:   'HR Manager',
-  FINANCE_EXPENSE:    'Finance Manager',
-  HR_SALARY_ADVANCE:  'HR Manager',
+  HR_LEAVE_REQUEST:        'HR Manager',
+  FINANCE_EXPENSE:         'Finance Manager',
+  HR_SALARY_ADVANCE:       'HR Manager',
+  HR_VEHICLE_REQUEST:      'HR Manager',
+  HR_ACCOMMODATION_REQUEST:'HR Manager',
+  HR_ASSET_ASSIGNMENT:     'HR Manager',
 };
 
 function buildSingleStepChain(role) {

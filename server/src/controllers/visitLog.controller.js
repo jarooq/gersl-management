@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { OrphanVisitLog, OrphanProgressRating, Orphan, User } from '../models/index.js';
+import { OrphanVisitLog, OrphanProgressRating, Orphan, User, Visit } from '../models/index.js';
 import { Op } from 'sequelize';
 
 /**
@@ -72,32 +72,54 @@ export const getVisitLogsByOrphan = asyncHandler(async (req, res) => {
   const { orphanId } = req.params;
   const { limit = 20, offset = 0 } = req.query;
 
-  const { count, rows: visitLogs } = await OrphanVisitLog.findAndCountAll({
-    where: { orphanId },
-    limit: parseInt(limit),
-    offset: parseInt(offset),
-    order: [['visitDate', 'DESC']],
-    include: [
-      {
-        model: User,
-        as: 'coordinator',
-        attributes: ['id', 'username', 'fullName']
-      },
-      {
-        model: OrphanProgressRating,
-        as: 'rating'
-      }
-    ]
-  });
+  // Pull from BOTH the legacy OrphanVisitLog table (admin-created visits with
+  // progress ratings + coordinator) AND the new generic Visit table (mobile-
+  // logged visits where the field staff selected this orphan). Merge by date.
+  const [vlResp, visitRows] = await Promise.all([
+    OrphanVisitLog.findAndCountAll({
+      where: { orphanId },
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      order: [['visitDate', 'DESC']],
+      include: [
+        { model: User, as: 'coordinator', attributes: ['id', 'username', 'fullName'] },
+        { model: OrphanProgressRating, as: 'rating' },
+      ],
+    }),
+    Visit.findAll({
+      where: { orphanId },
+      order: [['occurredAt', 'DESC']],
+      include: [{ model: User, as: 'user', attributes: ['id', 'username', 'fullName'] }],
+    }).catch(() => []),
+  ]);
+
+  const adapted = (visitRows || []).map(v => ({
+    id: `mobile-${v.id}`,
+    source: 'mobile',
+    orphanId: v.orphanId,
+    visitDate: v.occurredAt,
+    visitType: v.visitType || 'general',
+    notes: v.notes || v.purpose || null,
+    photoUrl: v.photoUrl || null,
+    latitude: v.latitude,
+    longitude: v.longitude,
+    coordinator: v.user || null,
+    rating: null,
+  }));
+
+  const merged = [
+    ...vlResp.rows.map(r => ({ ...r.toJSON(), source: 'web' })),
+    ...adapted,
+  ].sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
 
   res.json({
     success: true,
     data: {
-      visitLogs,
-      count,
+      visitLogs: merged,
+      count: vlResp.count + adapted.length,
       limit: parseInt(limit),
-      offset: parseInt(offset)
-    }
+      offset: parseInt(offset),
+    },
   });
 });
 

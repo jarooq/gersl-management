@@ -2,6 +2,7 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 import { VehicleRequest, User, Vehicle } from '../models/index.js';
+import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
 
 const isApprover = (u) =>
   ['Admin', 'CEO', 'HR Manager', 'HR Officer', 'Programme Manager'].includes(u?.role);
@@ -57,6 +58,14 @@ export const create = asyncHandler(async (req, res) => {
     passengerCount: passengerCount || 1,
     status: 'Pending',
   });
+  await createApprovalRow({
+    type: 'HR_VEHICLE_REQUEST',
+    entityType: 'vehicle_request',
+    entityId: row.id,
+    requestedBy: req.user.id,
+    title: `Vehicle request — ${purpose}`,
+    description: `${pickupLocation || '—'} → ${dropoffLocation || '—'}, ${new Date(startDate).toLocaleString()} → ${new Date(endDate).toLocaleString()}`,
+  });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -83,5 +92,15 @@ export const decide = asyncHandler(async (req, res) => {
   row.decidedAt = new Date();
   if (req.body?.notes) row.decisionNotes = req.body.notes;
   await row.save();
+  // Sync decisive transitions to the central Approval row.
+  if (action === 'approve' || action === 'reject' || action === 'cancel') {
+    await syncApprovalDecision({
+      entityType: 'vehicle_request',
+      entityId: row.id,
+      status: row.status,
+      decidedBy: req.user.id,
+      notes: req.body?.notes ?? null,
+    });
+  }
   res.json({ success: true, data: row });
 });

@@ -5411,6 +5411,11 @@ const SalaryAdvance = sequelize.define('SalaryAdvance', {
 });
 
 // Generic field visit (distinct from OrphanVisitLog which is orphan-care specific).
+// Visit — generic field-trip log written by the mobile app. Optionally
+// linked to a Project / Task / Orphan. The legacy OrphanVisitLog table
+// (with progress ratings + coordinator workflow) lives alongside this
+// for orphan-care-specific data; new rows can use either, and the
+// orphans/:id/visits endpoint reads both.
 const Visit = sequelize.define('Visit', {
   userId:    { type: DataTypes.INTEGER, allowNull: false, field: 'user_id', references: { model: 'users', key: 'id' } },
   customerName: { type: DataTypes.STRING(200), field: 'customer_name' },
@@ -5422,6 +5427,8 @@ const Visit = sequelize.define('Visit', {
   beneficiariesServed: { type: DataTypes.INTEGER, field: 'beneficiaries_served' },
   projectId: { type: DataTypes.INTEGER, field: 'project_id', references: { model: 'projects', key: 'id' } },
   taskId:    { type: DataTypes.INTEGER, field: 'task_id',    references: { model: 'tasks',    key: 'id' } },
+  orphanId:  { type: DataTypes.INTEGER, field: 'orphan_id',  references: { model: 'orphans',  key: 'id' } },
+  visitType: { type: DataTypes.STRING(20), field: 'visit_type', defaultValue: 'general' }, // general | orphan | field
   notes:     { type: DataTypes.TEXT }
 }, {
   tableName: 'visits',
@@ -5430,6 +5437,7 @@ const Visit = sequelize.define('Visit', {
   indexes: [
     { fields: ['user_id'] },
     { fields: ['project_id'] },
+    { fields: ['orphan_id'] },
     { fields: ['occurred_at'] }
   ]
 });

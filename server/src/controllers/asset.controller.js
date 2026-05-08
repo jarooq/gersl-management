@@ -5,6 +5,7 @@
 import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 import { Asset } from '../models/index.js';
+import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
 
 const ALLOWED_STATUSES = ['Active', 'Assigned', 'Under Repair', 'Disposed'];
 
@@ -105,6 +106,19 @@ export const assign = asyncHandler(async (req, res) => {
   row.assignmentNotes = assignmentNotes || null;
   row.status = 'Assigned';
   await row.save();
+  // Log assignment to the central Approval table as an audit-style entry
+  // (no approval gate — HR has already actioned it inline).
+  await createApprovalRow({
+    type: 'HR_ASSET_ASSIGNMENT',
+    entityType: 'asset',
+    entityId: row.id,
+    requestedBy: req.user.id,
+    title: `Asset assigned: ${row.assetName} (${row.assetTag}) → ${assignedTo}`,
+    description: assignmentNotes || null,
+  });
+  await syncApprovalDecision({
+    entityType: 'asset', entityId: row.id, status: 'Approved', decidedBy: req.user.id,
+  });
   res.json({ success: true, data: row });
 });
 

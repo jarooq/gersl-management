@@ -14,6 +14,8 @@ import '../features/home/home_dashboard_screen.dart';
 import '../features/home/home_shell.dart';
 import '../features/home/more_screen.dart';
 import '../features/notifications/notifications_screen.dart';
+import '../features/requests/vehicle_requests_screen.dart';
+import '../features/requests/accommodation_requests_screen.dart';
 import '../features/leaves/leaves_screen.dart';
 import '../features/leaves/new_leave_screen.dart';
 import '../features/movement/fuel_claims_screen.dart';
@@ -49,6 +51,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/more',          builder: (context, state) => const MoreScreen()),
           GoRoute(path: '/notifications', builder: (context, state) => const NotificationsScreen()),
           GoRoute(path: '/incidents',     builder: (context, state) => const IncidentReportScreen()),
+          GoRoute(path: '/vehicle-requests',       builder: (context, state) => const VehicleRequestsScreen()),
+          GoRoute(path: '/accommodation-requests', builder: (context, state) => const AccommodationRequestsScreen()),
           GoRoute(path: '/advances',      builder: (context, state) => const AdvancesScreen()),
           GoRoute(path: '/announcements', builder: (context, state) => const AnnouncementsScreen()),
           GoRoute(path: '/movements',     builder: (context, state) => const MovementsScreen()),

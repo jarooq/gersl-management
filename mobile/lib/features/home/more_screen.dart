@@ -38,9 +38,11 @@ class MoreScreen extends ConsumerWidget {
     final tracking = ref.watch(isTrackingProvider);
 
     final fieldWork = const [
-      _Tile('Movements',   Icons.directions_car_outlined, '/movements',   kNavy900),
-      _Tile('Fuel claims', Icons.local_gas_station,        '/fuel-claims', kMission600),
-      _Tile('Shifts',      Icons.calendar_view_week,       '/shifts',      kNavy900),
+      _Tile('Movements',         Icons.directions_car_outlined, '/movements',             kNavy900),
+      _Tile('Vehicle requests',  Icons.airport_shuttle_outlined, '/vehicle-requests',     kNavy900),
+      _Tile('Accommodation',     Icons.hotel_outlined,            '/accommodation-requests', kMission600),
+      _Tile('Fuel claims',       Icons.local_gas_station,         '/fuel-claims',          kMission600),
+      _Tile('Shifts',            Icons.calendar_view_week,        '/shifts',               kNavy900),
     ];
     final hrFinance = const [
       _Tile('Leave',           Icons.event_busy_outlined,    '/leaves',    kNavy900),
