@@ -36,6 +36,7 @@ const FinancePage = lazy(() => import('../pages/Finance/FinancePage'));
 const HRPage = lazy(() => import('../pages/HR/HRPage'));
 const AttendancePage = lazy(() => import('../pages/HR/AttendancePage'));
 const OnboardingPage = lazy(() => import('../pages/HR/OnboardingPage'));
+const StaffRegisterPage = lazy(() => import('../pages/HR/StaffRegisterPage'));
 const AppraisalPage = lazy(() => import('../pages/HR/AppraisalPage'));
 const ContractManagementPage = lazy(() => import('../pages/HR/ContractManagementPage'));
 const PayrollPage = lazy(() => import('../pages/HR/PayrollPage'));
@@ -564,6 +565,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
                 <PermissionRoute permission={PERMISSIONS.HR_MANAGE_ONBOARDING}>
                   <Suspense fallback={<PageLoader />}>
                     <OnboardingPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="staff-register"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_VIEW}>
+                  <Suspense fallback={<PageLoader />}>
+                    <StaffRegisterPage />
                   </Suspense>
                 </PermissionRoute>
               }
