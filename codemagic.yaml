@@ -16,7 +16,7 @@
 #      the comment in build_apk_unsigned step below.)
 #   4. iOS signing: Settings → Code signing → iOS → connect Apple Developer
 #      account, let Codemagic auto-create cert + provisioning profile. Set
-#      bundle id to org.gersl.gersl_mobile (or whatever you used in
+#      bundle id to org.gersl.gerslMobile (or whatever you used in
 #      mobile/ios/Runner.xcodeproj).
 #   5. Push this file; Codemagic auto-detects it. Trigger workflows from
 #      the dashboard.
@@ -112,7 +112,7 @@ workflows:
     max_build_duration: 60
 
     integrations:
-      app_store_connect: codemagic   # rename in dashboard → Integrations
+      app_store_connect: codemagic   # rename if your integration uses a different name
 
     environment:
       flutter: stable
@@ -122,11 +122,11 @@ workflows:
         SENTRY_DSN: $SENTRY_DSN
         API_BASE_URL: $API_BASE_URL
         ENV: production
-        BUNDLE_ID: "org.gersl.gersl_mobile"  # must match Runner.xcodeproj
-        APP_STORE_APP_ID: "1234567890"        # numeric App Store Connect ID
+        BUNDLE_ID: "org.gersl.gerslMobile"  # matches Runner.xcodeproj PRODUCT_BUNDLE_IDENTIFIER
+        # APP_STORE_APP_ID: "1234567890"    # set this in Codemagic env vars after first TestFlight upload
       ios_signing:
         distribution_type: app_store          # or ad_hoc / development
-        bundle_identifier: org.gersl.gersl_mobile
+        bundle_identifier: org.gersl.gerslMobile
 
     cache:
       cache_paths:
@@ -157,10 +157,14 @@ workflows:
       - name: Increment build number
         working_directory: mobile
         script: |
-          # bumps mobile/pubspec.yaml `version: x.y.z+BUILD` so each upload
-          # gets a fresh build number (App Store Connect rejects duplicates)
-          BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
+          # Each TestFlight upload needs a unique build number. Use the
+          # Codemagic build number as a guaranteed-monotonic source.
+          # ($PROJECT_BUILD_NUMBER is auto-injected by Codemagic.)
+          BUILD_NUMBER="$PROJECT_BUILD_NUMBER"
+          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="$BUILD_NUMBER"; fi
           sed -i.bak "s/^version: \(.*\)+.*$/version: \1+$BUILD_NUMBER/" pubspec.yaml || true
+          rm -f pubspec.yaml.bak
+          grep "^version:" pubspec.yaml
 
       - name: Build release IPA
         working_directory: mobile
@@ -183,9 +187,11 @@ workflows:
         notify:
           success: true
           failure: true
-      # Uncomment to push to TestFlight after signing is configured:
-      # app_store_connect:
-      #   auth: integration
-      #   submit_to_testflight: true
-      #   beta_groups:
-      #     - GERSL Internal
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # Add your internal tester group name once it exists in App Store
+        # Connect → TestFlight → Internal Testing. Until then, the build
+        # uploads but you'll need to add testers manually.
+        # beta_groups:
+        #   - GERSL Internal
