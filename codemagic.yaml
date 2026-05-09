@@ -116,12 +116,18 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+      # Pull the App Store Connect API key from the `gerhr` variable group
+      # in Codemagic UI — that's where these three live:
+      #   APP_STORE_CONNECT_KEY_IDENTIFIER
+      #   APP_STORE_CONNECT_ISSUER_ID
+      #   APP_STORE_CONNECT_PRIVATE_KEY
+      groups:
+        - gerhr
       vars:
         SENTRY_DSN: $SENTRY_DSN
         API_BASE_URL: $API_BASE_URL
         ENV: production
-        BUNDLE_ID: "com.gersl.gerhr"  # matches Runner.xcodeproj PRODUCT_BUNDLE_IDENTIFIER
-        # APP_STORE_APP_ID: "1234567890"    # set in Codemagic env vars after first TestFlight upload
+        BUNDLE_ID: "com.gersl.gerhr"
       # NOTE: no `ios_signing:` block on purpose. That block makes Codemagic
       # look up profiles in its UI-managed signing-identities store, which
       # we're not using. We fetch the profile via App Store Connect API in
@@ -169,11 +175,37 @@ workflows:
           app-store-connect list-certificates --type IOS_DISTRIBUTION --json || true
 
       - name: Fetch (or create) signing files
-        # Creates the App Store distribution profile + cert via App Store
-        # Connect API if none exists yet. One-line form so YAML/shell line
-        # continuation can't mangle args. --verbose intentionally omitted —
-        # not a valid flag on this subcommand in current CLI versions.
-        script: app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+        script: |
+          # Hard-fail early with a clear message if any required env var is
+          # missing in the build environment. Apple's CLI usage dump is
+          # confusing; this is unambiguous.
+          MISSING=""
+          [ -z "$APP_STORE_CONNECT_KEY_IDENTIFIER" ] && MISSING="$MISSING APP_STORE_CONNECT_KEY_IDENTIFIER"
+          [ -z "$APP_STORE_CONNECT_ISSUER_ID" ]      && MISSING="$MISSING APP_STORE_CONNECT_ISSUER_ID"
+          [ -z "$APP_STORE_CONNECT_PRIVATE_KEY" ]    && MISSING="$MISSING APP_STORE_CONNECT_PRIVATE_KEY"
+          if [ -n "$MISSING" ]; then
+            echo "==============================================="
+            echo "❌ Missing Codemagic environment variable(s):"
+            for v in $MISSING; do echo "   - $v"; done
+            echo ""
+            echo "Fix in Codemagic UI:"
+            echo "  1. Open your Application page (NOT team page)"
+            echo "  2. Find the 'Environment variables' section"
+            echo "  3. Add each missing variable above as a new row"
+            echo "     • Variable name = the literal string above"
+            echo "     • Value         = the matching value from Apple"
+            echo "     • Secure        = ON"
+            echo "  4. Click Save (sometimes there's a separate save button)"
+            echo "  5. Re-trigger this workflow"
+            echo "==============================================="
+            exit 99
+          fi
+          # Pass everything explicitly to rule out auto-discovery quirks.
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --type IOS_APP_STORE \
+            --create
 
       - name: Set up signing certificate
         script: keychain add-certificates
