@@ -190,7 +190,7 @@ export const createStaff = asyncHandler(async (req, res) => {
 export const publicRegisterStaff = asyncHandler(async (req, res) => {
   const {
     fullName, email, phone, department, position, joiningDate,
-    leaveBalance, employmentType,
+    employmentType,
     username, password
   } = req.body;
 
@@ -214,7 +214,10 @@ export const publicRegisterStaff = asyncHandler(async (req, res) => {
 
   const transaction = await sequelize.transaction();
   try {
-    // Always Pending + Guest. HR activates and re-roles via the admin app.
+    // User.status ENUM is ('Active', 'Inactive', 'Suspended') — no 'Pending'.
+    // Use 'Inactive' for new self-registrations; HR flips to 'Active' from
+    // the admin app to allow login. Role is forced to 'Guest' (lowest
+    // privilege) regardless of what the client sent.
     const user = await User.create({
       username,
       email,
@@ -222,10 +225,12 @@ export const publicRegisterStaff = asyncHandler(async (req, res) => {
       fullName,
       phone,
       role: 'Guest',
-      status: 'Pending',
+      status: 'Inactive',
       department
     }, { transaction });
 
+    // Staff.status is a free STRING — 'Pending' here is the visible HR
+    // signal in the Staff Directory that this row hasn't been approved yet.
     const staff = await Staff.create({
       fullName,
       email,
@@ -234,7 +239,6 @@ export const publicRegisterStaff = asyncHandler(async (req, res) => {
       position,
       joinDate: joiningDate || null,
       salary: 0,
-      leaveBalance: parseInt(leaveBalance, 10) || 21,
       employmentType: employmentType || 'Full-Time',
       status: 'Pending',
       userId: user.id
