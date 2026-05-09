@@ -165,16 +165,41 @@ workflows:
       - name: Initialise keychain
         script: keychain initialize
 
-      - name: Generate fresh RSA key for the iOS distribution certificate
+      - name: Restore stable iOS distribution certificate private key
         # Two different "private keys" are needed in this flow:
         #   1. The App Store Connect API key (.p8) — auth with Apple's API
         #   2. The iOS Distribution Certificate private key — signs the IPA
-        # This step creates #2. fetch-signing-files binds it to a fresh cert.
-        # If Apple's "max distribution certs" limit is hit, this returns a
-        # 409 — revoke an unused cert in Apple Developer Portal and retry.
+        #
+        # We REUSE #2 across builds by storing it in the gerhr group as
+        # IOS_CERT_PRIVATE_KEY (base64). On the first build with this key,
+        # fetch-signing-files creates one distribution cert tied to it.
+        # On every subsequent build, it finds the existing cert via the
+        # private-key fingerprint and reuses it — never hitting Apple's
+        # 2-cert-per-team limit.
+        #
+        # If IOS_CERT_PRIVATE_KEY is missing, fall back to generating a
+        # fresh one and print it so it can be saved for next time.
         script: |
           mkdir -p /tmp/cm-cert
-          openssl genrsa -out /tmp/cm-cert/private_key.pem 2048
+          KEY_FILE=/tmp/cm-cert/private_key.pem
+
+          if [ -n "$IOS_CERT_PRIVATE_KEY" ]; then
+            echo "Restoring stable cert private key from IOS_CERT_PRIVATE_KEY env var."
+            echo "$IOS_CERT_PRIVATE_KEY" | tr -d ' \n\r\t' | base64 -d > "$KEY_FILE"
+            if ! head -1 "$KEY_FILE" | grep -q "BEGIN"; then
+              echo "❌ IOS_CERT_PRIVATE_KEY is not valid base64 of a PEM file."
+              exit 97
+            fi
+          else
+            echo "⚠️  IOS_CERT_PRIVATE_KEY not set — generating a fresh one."
+            echo "   Save the base64 string below as IOS_CERT_PRIVATE_KEY in the"
+            echo "   gerhr group (Secret ON) so future builds reuse the cert."
+            openssl genrsa -out "$KEY_FILE" 2048
+            echo "----- BEGIN_BASE64_KEY -----"
+            base64 -w 0 "$KEY_FILE"
+            echo ""
+            echo "----- END_BASE64_KEY -----"
+          fi
 
       - name: Verify App Store Connect API auth
         # Self-diagnose: print partial values so we can see which Key ID
