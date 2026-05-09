@@ -160,7 +160,16 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
     const { fullName, email, role, status, department, phone } = req.body;
 
-    const user = await User.findByPk(req.params.id);
+    // Use sequelize.query to update only the columns we know exist, avoiding
+    // any production-vs-model column drift on the wider HR fields (salary,
+    // joining_date, etc.). findByPk + save() loads ALL model attributes,
+    // which fails when a recently-added model column hasn't been migrated.
+    const user = await User.findByPk(req.params.id, {
+      attributes: [
+        'id', 'username', 'email', 'fullName', 'role',
+        'status', 'department', 'phone'
+      ]
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -169,15 +178,17 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
       });
     }
 
-    // Update user fields
-    if (fullName !== undefined) user.fullName = fullName;
-    if (email !== undefined) user.email = email;
-    if (role !== undefined) user.role = role;
-    if (status !== undefined) user.status = status;
-    if (department !== undefined) user.department = department;
-    if (phone !== undefined) user.phone = phone;
+    // Update only the fields that came through, restricted to the safe
+    // column set. Any field not in this list is ignored from the payload.
+    const updates = {};
+    if (fullName   !== undefined) updates.fullName   = fullName;
+    if (email      !== undefined) updates.email      = email;
+    if (role       !== undefined) updates.role       = role;
+    if (status     !== undefined) updates.status     = status;
+    if (department !== undefined) updates.department = department;
+    if (phone      !== undefined) updates.phone      = phone;
 
-    await user.save();
+    await user.update(updates);
 
     res.json({
       success: true,
@@ -194,11 +205,20 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error updating user:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      sql: error.sql,
+      original: error.original?.message,
+      errors: error.errors?.map(e => ({ message: e.message, path: e.path, value: e.value }))
+    });
     res.status(500).json({
       success: false,
       message: 'Failed to update user',
-      error: error.message
+      error: error.message,
+      detail: error.original?.message || error.errors?.[0]?.message || null,
+      type: error.name
     });
   }
 });

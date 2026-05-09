@@ -2204,13 +2204,17 @@ const HRPage = () => {
                       window.location.reload();
                     } catch (error) {
                       console.error('Error updating staff:', error, error?.response?.data);
-                      // Show the underlying error if the backend gave us one
-                      // (the generic "Failed to update user" wrapper hides
-                      // the real Sequelize/validation message).
-                      const detail = error.response?.data?.error
-                        || error.response?.data?.message
-                        || error.message;
-                      alert('❌ Error updating staff member:\n' + detail);
+                      const data = error.response?.data || {};
+                      // Show whatever the backend actually said, including
+                      // the type and any Sequelize-original message.
+                      const lines = [
+                        'Error updating staff member:',
+                        data.message || error.message,
+                        data.detail ? `Detail: ${data.detail}` : null,
+                        data.type   ? `Type: ${data.type}`   : null,
+                        data.error && data.error !== data.message ? `Raw: ${data.error}` : null,
+                      ].filter(Boolean);
+                      alert('❌ ' + lines.join('\n'));
                     }
                   }}
                   className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
