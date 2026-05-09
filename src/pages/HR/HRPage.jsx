@@ -2203,8 +2203,14 @@ const HRPage = () => {
                       setShowEditStaffModal(false);
                       window.location.reload();
                     } catch (error) {
-                      console.error('Error updating staff:', error);
-                      alert('❌ Error updating staff member: ' + (error.response?.data?.message || error.message));
+                      console.error('Error updating staff:', error, error?.response?.data);
+                      // Show the underlying error if the backend gave us one
+                      // (the generic "Failed to update user" wrapper hides
+                      // the real Sequelize/validation message).
+                      const detail = error.response?.data?.error
+                        || error.response?.data?.message
+                        || error.message;
+                      alert('❌ Error updating staff member:\n' + detail);
                     }
                   }}
                   className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
