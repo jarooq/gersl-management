@@ -97,41 +97,28 @@ workflows:
     # in Codemagic UI — see Codemagic docs.
 
   # ---------------------------------------------------------------------------
-  # iOS — signed IPA (requires Apple Developer + Codemagic signing)
+  # iOS — signed IPA via App Store Connect integration
+  # Mirrors the working `petroclouds-appstore` pattern from petrocloud-mobile.
+  # The integration stores the .p8 once at the Codemagic account level, so we
+  # don't need any APP_STORE_CONNECT_* env vars in this project at all.
   # ---------------------------------------------------------------------------
   ios-workflow:
     name: GERSL iOS (release)
     instance_type: mac_mini_m2
-    max_build_duration: 60
+    max_build_duration: 90
 
-    # No `integrations:` block — using App Store Connect API key directly
-    # via env vars below. Set these in Codemagic UI → Project → Environment
-    # variables (all three marked Secure):
-    #   APP_STORE_CONNECT_KEY_IDENTIFIER  (10-char Key ID, e.g. S32WP7H448)
-    #   APP_STORE_CONNECT_ISSUER_ID       (UUID from App Store Connect)
-    #   APP_STORE_CONNECT_PRIVATE_KEY     (full .p8 file contents)
-    # The app-store-connect CLI auto-detects them from this exact triple.
+    integrations:
+      app_store_connect: petroclouds-appstore
 
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
-      # Pull the App Store Connect API key from the `gerhr` variable group
-      # in Codemagic UI — that's where these three live:
-      #   APP_STORE_CONNECT_KEY_IDENTIFIER
-      #   APP_STORE_CONNECT_ISSUER_ID
-      #   APP_STORE_CONNECT_PRIVATE_KEY
-      groups:
-        - gerhr
       vars:
         SENTRY_DSN: $SENTRY_DSN
         API_BASE_URL: $API_BASE_URL
         ENV: production
         BUNDLE_ID: "com.gersl.gerhr"
-      # NOTE: no `ios_signing:` block on purpose. That block makes Codemagic
-      # look up profiles in its UI-managed signing-identities store, which
-      # we're not using. We fetch the profile via App Store Connect API in
-      # the scripts below instead.
 
     cache:
       cache_paths:
@@ -156,69 +143,34 @@ workflows:
         script: |
           find . -name "Podfile" -execdir pod install --repo-update \;
 
-      - name: Initialise keychain
+      - name: Initialize keychain
         script: keychain initialize
 
-      - name: Verify App Store Connect API auth
-        # Self-diagnose: print whether the three secrets the CLI needs are
-        # actually present, and list profiles Apple already has for this
-        # bundle id. If you see "EMPTY" next to any var, set it in Codemagic
-        # project → Environment variables (Secure).
+      - name: Generate fresh private key for distribution cert
         script: |
-          echo "KEY_IDENTIFIER set? $([ -n "$APP_STORE_CONNECT_KEY_IDENTIFIER" ] && echo YES || echo EMPTY)"
-          echo "ISSUER_ID      set? $([ -n "$APP_STORE_CONNECT_ISSUER_ID" ]      && echo YES || echo EMPTY)"
-          echo "PRIVATE_KEY    set? $([ -n "$APP_STORE_CONNECT_PRIVATE_KEY" ]    && echo YES || echo EMPTY)"
-          echo "Bundle id     : $BUNDLE_ID"
-          echo "--- existing profiles for this bundle ---"
-          app-store-connect list-profiles --bundle-id "$BUNDLE_ID" --json || echo "(list-profiles failed — auth or role issue)"
-          echo "--- existing certificates ---"
-          app-store-connect list-certificates --type IOS_DISTRIBUTION --json || true
+          mkdir -p /tmp/cm-cert
+          openssl genrsa -out /tmp/cm-cert/private_key.pem 2048
 
-      - name: Fetch (or create) signing files
+      - name: Fetch signing files (creates new cert + profile)
         script: |
-          # Hard-fail early with a clear message if any required env var is
-          # missing in the build environment. Apple's CLI usage dump is
-          # confusing; this is unambiguous.
-          MISSING=""
-          [ -z "$APP_STORE_CONNECT_KEY_IDENTIFIER" ] && MISSING="$MISSING APP_STORE_CONNECT_KEY_IDENTIFIER"
-          [ -z "$APP_STORE_CONNECT_ISSUER_ID" ]      && MISSING="$MISSING APP_STORE_CONNECT_ISSUER_ID"
-          [ -z "$APP_STORE_CONNECT_PRIVATE_KEY" ]    && MISSING="$MISSING APP_STORE_CONNECT_PRIVATE_KEY"
-          if [ -n "$MISSING" ]; then
-            echo "==============================================="
-            echo "❌ Missing Codemagic environment variable(s):"
-            for v in $MISSING; do echo "   - $v"; done
-            echo ""
-            echo "Fix in Codemagic UI:"
-            echo "  1. Open your Application page (NOT team page)"
-            echo "  2. Find the 'Environment variables' section"
-            echo "  3. Add each missing variable above as a new row"
-            echo "     • Variable name = the literal string above"
-            echo "     • Value         = the matching value from Apple"
-            echo "     • Secure        = ON"
-            echo "  4. Click Save (sometimes there's a separate save button)"
-            echo "  5. Re-trigger this workflow"
-            echo "==============================================="
-            exit 99
-          fi
-          # Pass everything explicitly to rule out auto-discovery quirks.
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --type IOS_APP_STORE \
-            --create
+            --create \
+            --certificate-key=@file:/tmp/cm-cert/private_key.pem
 
-      - name: Set up signing certificate
+      - name: Add certificates to keychain
         script: keychain add-certificates
 
-      - name: Set up code signing
-        script: xcode-project use-profiles
+      - name: Set up provisioning profile
+        script: |
+          xcode-project use-profiles \
+            --project mobile/ios/Runner.xcodeproj
 
       - name: Increment build number
         working_directory: mobile
         script: |
           # Each TestFlight upload needs a unique build number. Use the
           # Codemagic build number as a guaranteed-monotonic source.
-          # ($PROJECT_BUILD_NUMBER is auto-injected by Codemagic.)
           BUILD_NUMBER="$PROJECT_BUILD_NUMBER"
           if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="$BUILD_NUMBER"; fi
           sed -i.bak "s/^version: \(.*\)+.*$/version: \1+$BUILD_NUMBER/" pubspec.yaml || true
@@ -240,13 +192,8 @@ workflows:
       - mobile/flutter_drive.log
 
     publishing:
-      # email block omitted — Codemagic emails build owner by default.
       app_store_connect:
-        # Use the same API-key env vars from the project Environment Variables
-        # (set as Secure). No Codemagic-side "integration" needed.
-        api_key:    $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id:     $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id:  $APP_STORE_CONNECT_ISSUER_ID
+        auth: integration
         submit_to_testflight: true
         # Add your internal tester group name once it exists in App Store
         # Connect → TestFlight → Internal Testing. Until then, the build
