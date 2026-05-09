@@ -144,6 +144,23 @@ workflows:
         script: |
           find . -name "Podfile" -execdir pod install --repo-update \;
 
+      - name: Initialise keychain
+        script: keychain initialize
+
+      - name: Fetch (or create) signing files
+        # Forces profile creation via App Store Connect API if no matching
+        # profile exists yet. The plain `ios_signing` block + `use-profiles`
+        # only LOOKS UP profiles; this step actually CREATES one when the
+        # bundle id has none.
+        script: |
+          app-store-connect fetch-signing-files \
+            "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+
+      - name: Set up signing certificate
+        script: keychain add-certificates
+
       - name: Set up code signing
         script: xcode-project use-profiles
 
