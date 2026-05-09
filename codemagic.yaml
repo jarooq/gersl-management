@@ -104,8 +104,13 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
 
-    integrations:
-      app_store_connect: codemagic   # rename if your integration uses a different name
+    # No `integrations:` block — using App Store Connect API key directly
+    # via env vars below. Set these in Codemagic UI → Project → Environment
+    # variables (all three marked Secure):
+    #   APP_STORE_CONNECT_KEY_IDENTIFIER  (10-char Key ID, e.g. S32WP7H448)
+    #   APP_STORE_CONNECT_ISSUER_ID       (UUID from App Store Connect)
+    #   APP_STORE_CONNECT_PRIVATE_KEY     (full .p8 file contents)
+    # The app-store-connect CLI auto-detects them from this exact triple.
 
     environment:
       flutter: stable
@@ -116,7 +121,7 @@ workflows:
         API_BASE_URL: $API_BASE_URL
         ENV: production
         BUNDLE_ID: "com.gersl.gerhr"  # matches Runner.xcodeproj PRODUCT_BUNDLE_IDENTIFIER
-        # APP_STORE_APP_ID: "1234567890"    # set this in Codemagic env vars after first TestFlight upload
+        # APP_STORE_APP_ID: "1234567890"    # set in Codemagic env vars after first TestFlight upload
       ios_signing:
         distribution_type: app_store          # or ad_hoc / development
         bundle_identifier: com.gersl.gerhr
@@ -193,7 +198,9 @@ workflows:
     publishing:
       # email block omitted — Codemagic emails build owner by default.
       app_store_connect:
-        auth: integration
+        # Use the same API-key env vars defined at the top of this workflow
+        # (no Codemagic "integration" needed).
+        auth: keys
         submit_to_testflight: true
         # Add your internal tester group name once it exists in App Store
         # Connect → TestFlight → Internal Testing. Until then, the build
