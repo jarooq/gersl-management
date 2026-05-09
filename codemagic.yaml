@@ -159,6 +159,17 @@ workflows:
       - name: Initialise keychain
         script: keychain initialize
 
+      - name: Generate fresh RSA key for the iOS distribution certificate
+        # Two different "private keys" are needed in this flow:
+        #   1. The App Store Connect API key (.p8) — auth with Apple's API
+        #   2. The iOS Distribution Certificate private key — signs the IPA
+        # This step creates #2. fetch-signing-files binds it to a fresh cert.
+        # If Apple's "max distribution certs" limit is hit, this returns a
+        # 409 — revoke an unused cert in Apple Developer Portal and retry.
+        script: |
+          mkdir -p /tmp/cm-cert
+          openssl genrsa -out /tmp/cm-cert/private_key.pem 2048
+
       - name: Verify App Store Connect API auth
         # Self-diagnose: print whether the three secrets the CLI needs are
         # actually present, and list profiles Apple already has for this
@@ -213,12 +224,14 @@ workflows:
             exit 98
           fi
 
-          # Pass everything explicitly. Use --private-key=@file: so the CLI
-          # reads the well-formed PEM from disk rather than the mangled env.
+          # Pass everything explicitly:
+          #   --private-key      → App Store Connect API key (the .p8)
+          #   --certificate-key  → iOS Distribution Certificate's RSA key
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --private-key=@file:"$KEY_FILE" \
+            --certificate-key=@file:/tmp/cm-cert/private_key.pem \
             --type IOS_APP_STORE \
             --create
 
