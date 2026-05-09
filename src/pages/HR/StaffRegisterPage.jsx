@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
-import API from '../../services/api';
+
+const API_BASE = (import.meta.env?.VITE_API_BASE_URL || '/api').replace(/\/+$/, '');
 
 // =============================================================================
 // StaffRegisterPage — full-page clone of the HR Add-Staff modal.
@@ -9,17 +10,6 @@ import API from '../../services/api';
 // /admin/staff-register so HR can hand a tablet to a new staff member to
 // fill out their own basics (name, email, department, position, login).
 // =============================================================================
-
-const ROLES = [
-  'Admin', 'BOD', 'CEO', 'Director Programmes', 'Programme Manager',
-  'Finance Manager', 'Finance Officer', 'Fundraising Manager',
-  'HR Manager', 'HR Officer', 'Project Officer WASH', 'Project Officer Orphans',
-  'Project Officer Livelihoods', 'Project Officer Infrastructure',
-  'Project Officer Education', 'Project Officer Women', 'Project Officer',
-  'Field Officer', 'MEAL Officer', 'Media Production Officer', 'Media Officer',
-  'Accountant', 'Project Assistant', 'Finance Assistant', 'Fundraising Assistant',
-  'HR Assistant', 'Orphan Coordinator', 'Guest'
-];
 
 const DEPARTMENTS = [
   'Governance', 'Executive', 'Programmes', 'Finance',
@@ -44,13 +34,9 @@ const EMPTY = {
   department: '',
   position: '',
   joiningDate: '',
-  salary: '',
   leaveBalance: 21,
-  status: 'Active',
   username: '',
-  password: '',
-  userRole: '',
-  userStatus: 'Active'
+  password: ''
 };
 
 const StaffRegisterPage = () => {
@@ -77,17 +63,18 @@ const StaffRegisterPage = () => {
       setError('Password must be at least 8 characters');
       return;
     }
-    if (!staffForm.userRole) {
-      setError('Please select a user role');
-      return;
-    }
 
     setBusy(true);
     try {
-      await API.HR.create({
-        ...staffForm,
-        salary: parseFloat(staffForm.salary) || 0
+      const res = await fetch(`${API_BASE}/staff-register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(staffForm),
       });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(body?.message || `Registration failed (${res.status})`);
+      }
       setSuccess(true);
       setStaffForm(EMPTY);
     } catch (err) {
@@ -104,9 +91,10 @@ const StaffRegisterPage = () => {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="text-green-600" size={32} />
           </div>
-          <h2 className="text-h2 font-bold text-ink-900 mb-2">Staff registered</h2>
+          <h2 className="text-h2 font-bold text-ink-900 mb-2">Registration submitted</h2>
           <p className="text-ink-600 mb-6">
-            The staff member can now log in with the credentials they set.
+            Your details have been received. HR will review and activate your
+            account — you'll be able to log in once approved.
           </p>
           <div className="flex gap-3 justify-center">
             <button
@@ -114,12 +102,6 @@ const StaffRegisterPage = () => {
               className="px-6 py-3 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-50 font-semibold"
             >
               Register another
-            </button>
-            <button
-              onClick={() => navigate('/admin/hr')}
-              className="px-6 py-3 bg-navy-900 text-white rounded-lg hover:bg-navy-800 font-semibold"
-            >
-              Back to HR
             </button>
           </div>
         </div>
@@ -231,17 +213,6 @@ const StaffRegisterPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-ink-700 mb-2">Monthly Salary (LKR)</label>
-              <input
-                type="number"
-                value={staffForm.salary}
-                onChange={(e) => update('salary', e.target.value)}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                placeholder="75000"
-              />
-            </div>
-
-            <div>
               <label className="block text-sm font-semibold text-ink-700 mb-2">Annual Leave Balance (Days)</label>
               <input
                 type="number"
@@ -250,19 +221,6 @@ const StaffRegisterPage = () => {
                 className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="21"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-ink-700 mb-2">Status</label>
-              <select
-                value={staffForm.status}
-                onChange={(e) => update('status', e.target.value)}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-              >
-                <option value="Active">Active</option>
-                <option value="On Leave">On Leave</option>
-                <option value="Inactive">Inactive</option>
-              </select>
             </div>
           </div>
 
@@ -275,7 +233,8 @@ const StaffRegisterPage = () => {
               <h3 className="text-lg font-bold text-ink-800">User Account Settings</h3>
             </div>
             <p className="text-sm text-ink-600 mb-4">
-              Create login credentials for this staff member to access the system
+              Choose a username and password. Your account will be reviewed and
+              activated by HR before you can log in.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -289,6 +248,7 @@ const StaffRegisterPage = () => {
                   onChange={(e) => update('username', e.target.value)}
                   className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="john.doe"
+                  autoComplete="username"
                 />
                 <p className="text-xs text-ink-500 mt-1">This will be used for logging in</p>
               </div>
@@ -303,36 +263,9 @@ const StaffRegisterPage = () => {
                   onChange={(e) => update('password', e.target.value)}
                   className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="••••••••"
+                  autoComplete="new-password"
                 />
                 <p className="text-xs text-ink-500 mt-1">Minimum 8 characters</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-ink-700 mb-2">
-                  User Role <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={staffForm.userRole}
-                  onChange={(e) => update('userRole', e.target.value)}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Select Role</option>
-                  {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-                </select>
-                <p className="text-xs text-ink-500 mt-1">Determines system access level</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-ink-700 mb-2">Account Status</label>
-                <select
-                  value={staffForm.userStatus}
-                  onChange={(e) => update('userStatus', e.target.value)}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-                <p className="text-xs text-ink-500 mt-1">Can be changed later</p>
               </div>
             </div>
           </div>

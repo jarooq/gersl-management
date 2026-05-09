@@ -22,6 +22,7 @@ import projectTeamRoutes from './routes/projectTeam.routes.js';
 import proposalRoutes from './routes/proposal.routes.js';
 import financeRoutes from './routes/finance.routes.js';
 import hrRoutes from './routes/hr.routes.js';
+import staffRegisterRoutes from './routes/staffRegister.routes.js';
 import cboRoutes from './routes/cbo.routes.js';
 import partnerRoutes from './routes/partner.routes.js';
 import mealRoutes from './routes/meal.routes.js';
@@ -249,6 +250,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/staff-register', staffRegisterRoutes); // Public — no auth
 app.use('/api/users', usersRoutes);
 app.use('/api/orphans', orphanRoutes);
 app.use('/api/projects', projectRoutes);

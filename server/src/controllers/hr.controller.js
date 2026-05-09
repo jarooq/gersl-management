@@ -180,6 +180,80 @@ export const createStaff = asyncHandler(async (req, res) => {
 });
 
 // ============================================
+// PUBLIC SELF-REGISTRATION
+// Used by /staff-register on the web. No auth required, BUT every record
+// is forced to status='Pending' on the user side (must be activated by HR
+// before login works) and the role is forced to 'Guest' (lowest privilege)
+// regardless of what the client sent. Salary is dropped — staff don't set
+// their own salary on a public form.
+// ============================================
+export const publicRegisterStaff = asyncHandler(async (req, res) => {
+  const {
+    fullName, email, phone, department, position, joiningDate,
+    leaveBalance, employmentType,
+    username, password
+  } = req.body;
+
+  if (!fullName || !email || !department || !position) {
+    throw new BadRequestError('Full name, email, department, and position are required');
+  }
+  if (!username || !password) {
+    throw new BadRequestError('Username and password are required');
+  }
+  if (password.length < 8) {
+    throw new BadRequestError('Password must be at least 8 characters');
+  }
+
+  const existingUser = await User.findOne({
+    where: { [Op.or]: [{ email }, { username }] }
+  });
+  if (existingUser) {
+    if (existingUser.email === email)       throw new ConflictError('Email already registered');
+    if (existingUser.username === username) throw new ConflictError('Username already taken');
+  }
+
+  const transaction = await sequelize.transaction();
+  try {
+    // Always Pending + Guest. HR activates and re-roles via the admin app.
+    const user = await User.create({
+      username,
+      email,
+      password,
+      fullName,
+      phone,
+      role: 'Guest',
+      status: 'Pending',
+      department
+    }, { transaction });
+
+    const staff = await Staff.create({
+      fullName,
+      email,
+      phone,
+      department,
+      position,
+      joinDate: joiningDate || null,
+      salary: 0,
+      leaveBalance: parseInt(leaveBalance, 10) || 21,
+      employmentType: employmentType || 'Full-Time',
+      status: 'Pending',
+      userId: user.id
+    }, { transaction });
+
+    await transaction.commit();
+
+    res.status(201).json({
+      success: true,
+      message: 'Registered. Awaiting HR approval before you can log in.',
+      data: { staffId: staff.id }
+    });
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+});
+
+// ============================================
 // UPDATE STAFF
 // ============================================
 export const updateStaff = asyncHandler(async (req, res) => {

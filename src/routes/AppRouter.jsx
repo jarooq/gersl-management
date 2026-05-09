@@ -235,17 +235,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin/login" element={<Login />} />
 
-        {/* Standalone Staff Registration — auth-gated but renders WITHOUT
-            the MainLayout sidebar so HR can hand a tablet to a new staff
-            member without showing them the whole admin nav. */}
+        {/* Public Staff Self-Registration — no auth required. Renders
+            standalone (no admin sidebar) so anyone with the URL can fill
+            their basics. Backend forces status='Pending' + role='Guest' so
+            the account can't log in until HR activates it. */}
         <Route
           path="/staff-register"
           element={
-            <ProtectedRoute>
-              <Suspense fallback={<PageLoader />}>
-                <StaffRegisterPage />
-              </Suspense>
-            </ProtectedRoute>
+            <Suspense fallback={<PageLoader />}>
+              <StaffRegisterPage />
+            </Suspense>
           }
         />
 
