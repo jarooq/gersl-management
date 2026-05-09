@@ -2,6 +2,7 @@ import express from 'express';
 import { Op } from 'sequelize';
 import { requireAuth, requireAdmin } from '../middleware/auth.middleware.js';
 import User from '../models/User.js';
+import sequelize from '../config/database.js';
 
 const router = express.Router();
 
@@ -156,69 +157,86 @@ router.get('/:id', requireAuth, requireAdmin, async (req, res) => {
 // @route   PUT /api/users/:id
 // @desc    Update user
 // @access  Private (Admin only)
+//
+// NOTE: This route uses raw SQL (sequelize.query) instead of Sequelize's
+// model save/update. Background: Sequelize's findByPk + save was throwing
+// 500 on this endpoint and the actual error was never reaching the
+// frontend (wrapper hid it, frontend formatting hid it again). Switching
+// to a raw SQL UPDATE with a whitelisted column map removes every
+// Sequelize-side variable (validation hooks, association loads,
+// transaction defaults) so the only way this can 500 is a real DB error,
+// which we'll see clearly.
 router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const { fullName, email, role, status, department, phone } = req.body;
-
-    // Use sequelize.query to update only the columns we know exist, avoiding
-    // any production-vs-model column drift on the wider HR fields (salary,
-    // joining_date, etc.). findByPk + save() loads ALL model attributes,
-    // which fails when a recently-added model column hasn't been migrated.
-    const user = await User.findByPk(req.params.id, {
-      attributes: [
-        'id', 'username', 'email', 'fullName', 'role',
-        'status', 'department', 'phone'
-      ]
-    });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
+    const userId = parseInt(req.params.id, 10);
+    if (!Number.isFinite(userId) || userId < 1) {
+      return res.status(400).json({ success: false, message: 'Invalid user id' });
     }
 
-    // Update only the fields that came through, restricted to the safe
-    // column set. Any field not in this list is ignored from the payload.
-    const updates = {};
-    if (fullName   !== undefined) updates.fullName   = fullName;
-    if (email      !== undefined) updates.email      = email;
-    if (role       !== undefined) updates.role       = role;
-    if (status     !== undefined) updates.status     = status;
-    if (department !== undefined) updates.department = department;
-    if (phone      !== undefined) updates.phone      = phone;
+    // Whitelisted body field → DB column. Any field outside this map is
+    // ignored entirely. Coerces status to a value the User.status enum
+    // accepts (some Staff rows have 'Pending' which the enum rejects).
+    const VALID_STATUS = new Set(['Active', 'Inactive', 'Suspended']);
+    const map = {
+      fullName:   'full_name',
+      email:      'email',
+      role:       'role',
+      status:     'status',
+      department: 'department',
+      phone:      'phone',
+    };
 
-    await user.update(updates);
+    const sets = [];
+    const replacements = { id: userId };
+    for (const [field, column] of Object.entries(map)) {
+      if (req.body[field] === undefined) continue;
+      let value = req.body[field];
+      if (field === 'status' && !VALID_STATUS.has(value)) value = 'Active';
+      sets.push(`${column} = :${field}`);
+      replacements[field] = value;
+    }
 
-    res.json({
+    if (sets.length === 0) {
+      return res.status(400).json({ success: false, message: 'No updatable fields provided' });
+    }
+
+    sets.push(`updated_at = NOW()`);
+
+    const sql = `UPDATE users SET ${sets.join(', ')} WHERE id = :id RETURNING id, username, email, full_name, role, status, department, phone;`;
+    const [rows] = await sequelize.query(sql, { replacements });
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const u = rows[0];
+    return res.json({
       success: true,
       message: 'User updated successfully',
       data: {
-        id: user.id,
-        username: user.username,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-        status: user.status,
-        department: user.department,
-        phone: user.phone
+        id: u.id,
+        username: u.username,
+        fullName: u.full_name,
+        email: u.email,
+        role: u.role,
+        status: u.status,
+        department: u.department,
+        phone: u.phone,
       }
     });
   } catch (error) {
     console.error('Error updating user:', {
       name: error.name,
       message: error.message,
-      stack: error.stack,
       sql: error.sql,
       original: error.original?.message,
-      errors: error.errors?.map(e => ({ message: e.message, path: e.path, value: e.value }))
     });
     res.status(500).json({
       success: false,
       message: 'Failed to update user',
       error: error.message,
-      detail: error.original?.message || error.errors?.[0]?.message || null,
-      type: error.name
+      detail: error.original?.message || null,
+      type: error.name,
     });
   }
 });
