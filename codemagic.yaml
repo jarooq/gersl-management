@@ -1,0 +1,191 @@
+# =============================================================================
+# Codemagic CI for the GERSL mobile app (Flutter, lives in /mobile)
+#
+# Two workflows you can launch from the Codemagic dashboard:
+#   • android-workflow  → release APK + AAB
+#   • ios-workflow      → signed IPA (needs Apple Developer + signing set up)
+#
+# Quick-start (one-time):
+#   1. Sign up at codemagic.io, "Add application" → connect this GitHub repo.
+#   2. In the project, Settings → Environment variables, add:
+#        SENTRY_DSN     (optional — leave blank to disable crash reporting)
+#        API_BASE_URL   (optional — defaults to the prod Vercel URL)
+#   3. Android signing: Settings → Code signing → Android → upload your
+#      keystore.jks and add aliases. Reference name = "gersl_keystore".
+#      (Skip if you only want unsigned APKs for internal testing — see
+#      the comment in build_apk_unsigned step below.)
+#   4. iOS signing: Settings → Code signing → iOS → connect Apple Developer
+#      account, let Codemagic auto-create cert + provisioning profile. Set
+#      bundle id to org.gersl.gersl_mobile (or whatever you used in
+#      mobile/ios/Runner.xcodeproj).
+#   5. Push this file; Codemagic auto-detects it. Trigger workflows from
+#      the dashboard.
+#
+# Free tier gives 500 build minutes/month — plenty for a small team.
+# =============================================================================
+
+workflows:
+
+  # ---------------------------------------------------------------------------
+  # ANDROID — release APK + AAB
+  # ---------------------------------------------------------------------------
+  android-workflow:
+    name: GERSL Android (release)
+    instance_type: linux_x2
+    max_build_duration: 60
+
+    environment:
+      flutter: stable
+      java: 17
+      vars:
+        # Build-time --dart-define values. Leave blank if not configured.
+        SENTRY_DSN: $SENTRY_DSN
+        API_BASE_URL: $API_BASE_URL
+        ENV: production
+      # Uncomment when you've uploaded a keystore in Codemagic UI:
+      # android_signing:
+      #   - gersl_keystore
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+        - $HOME/.gradle/caches
+
+    triggering:
+      events: []  # manual only; flip to [push] if you want auto-builds on main
+
+    scripts:
+      - name: Show Flutter version
+        script: |
+          flutter --version
+          flutter doctor
+
+      - name: Get pub packages
+        working_directory: mobile
+        script: flutter pub get
+
+      - name: Static analysis
+        working_directory: mobile
+        ignore_failure: true
+        script: flutter analyze
+
+      - name: Build release APK
+        working_directory: mobile
+        script: |
+          flutter build apk --release \
+            --dart-define=SENTRY_DSN="$SENTRY_DSN" \
+            --dart-define=API_BASE_URL="$API_BASE_URL" \
+            --dart-define=ENV="$ENV"
+
+      - name: Build release AAB (Play Store bundle)
+        working_directory: mobile
+        script: |
+          flutter build appbundle --release \
+            --dart-define=SENTRY_DSN="$SENTRY_DSN" \
+            --dart-define=API_BASE_URL="$API_BASE_URL" \
+            --dart-define=ENV="$ENV"
+
+    artifacts:
+      - mobile/build/**/outputs/**/*.apk
+      - mobile/build/**/outputs/**/*.aab
+      - mobile/build/**/outputs/**/mapping.txt
+
+    publishing:
+      email:
+        recipients:
+          - $CM_BUILD_RECIPIENT_EMAIL  # set this env var in the dashboard
+        notify:
+          success: true
+          failure: true
+      # Uncomment to push to Play Store internal track once you've connected
+      # a Google Play service account in Codemagic UI:
+      # google_play:
+      #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+      #   track: internal
+
+  # ---------------------------------------------------------------------------
+  # iOS — signed IPA (requires Apple Developer + Codemagic signing)
+  # ---------------------------------------------------------------------------
+  ios-workflow:
+    name: GERSL iOS (release)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    integrations:
+      app_store_connect: codemagic   # rename in dashboard → Integrations
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        SENTRY_DSN: $SENTRY_DSN
+        API_BASE_URL: $API_BASE_URL
+        ENV: production
+        BUNDLE_ID: "org.gersl.gersl_mobile"  # must match Runner.xcodeproj
+        APP_STORE_APP_ID: "1234567890"        # numeric App Store Connect ID
+      ios_signing:
+        distribution_type: app_store          # or ad_hoc / development
+        bundle_identifier: org.gersl.gersl_mobile
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+
+    triggering:
+      events: []   # manual
+
+    scripts:
+      - name: Show Flutter version
+        script: |
+          flutter --version
+          flutter doctor
+
+      - name: Get pub packages
+        working_directory: mobile
+        script: flutter pub get
+
+      - name: Pod install
+        working_directory: mobile/ios
+        script: |
+          find . -name "Podfile" -execdir pod install --repo-update \;
+
+      - name: Set up code signing
+        script: xcode-project use-profiles
+
+      - name: Increment build number
+        working_directory: mobile
+        script: |
+          # bumps mobile/pubspec.yaml `version: x.y.z+BUILD` so each upload
+          # gets a fresh build number (App Store Connect rejects duplicates)
+          BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0) + 1))
+          sed -i.bak "s/^version: \(.*\)+.*$/version: \1+$BUILD_NUMBER/" pubspec.yaml || true
+
+      - name: Build release IPA
+        working_directory: mobile
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist \
+            --dart-define=SENTRY_DSN="$SENTRY_DSN" \
+            --dart-define=API_BASE_URL="$API_BASE_URL" \
+            --dart-define=ENV="$ENV"
+
+    artifacts:
+      - mobile/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - mobile/flutter_drive.log
+
+    publishing:
+      email:
+        recipients:
+          - $CM_BUILD_RECIPIENT_EMAIL
+        notify:
+          success: true
+          failure: true
+      # Uncomment to push to TestFlight after signing is configured:
+      # app_store_connect:
+      #   auth: integration
+      #   submit_to_testflight: true
+      #   beta_groups:
+      #     - GERSL Internal
