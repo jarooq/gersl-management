@@ -169,15 +169,11 @@ workflows:
           app-store-connect list-certificates --type IOS_DISTRIBUTION --json || true
 
       - name: Fetch (or create) signing files
-        # Creates the App Store distribution profile via App Store Connect
-        # API if none exists yet. Verbose so the log shows exactly what the
-        # CLI did.
-        script: |
-          app-store-connect fetch-signing-files \
-            "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create \
-            --verbose
+        # Creates the App Store distribution profile + cert via App Store
+        # Connect API if none exists yet. One-line form so YAML/shell line
+        # continuation can't mangle args. --verbose intentionally omitted —
+        # not a valid flag on this subcommand in current CLI versions.
+        script: app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
 
       - name: Set up signing certificate
         script: keychain add-certificates
