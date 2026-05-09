@@ -20,6 +20,11 @@
 			<string>location</string>
 			<string>processing</string>
 		</array>
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+			<string>com.gersl.gerhr.background_refresh</string>
+			<string>com.gersl.gerhr.background_processing</string>
+		</array>
 		<key>NSCameraUsageDescription</key>
 		<string>The camera is used for selfie attendance, distribution photos, and document evidence.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
