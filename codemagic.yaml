@@ -90,22 +90,11 @@ workflows:
       - mobile/build/**/outputs/**/*.aab
       - mobile/build/**/outputs/**/mapping.txt
 
-    publishing:
-      # Codemagic emails the build owner on success/failure by default —
-      # no explicit recipients block needed. To add extras, set the
-      # CM_BUILD_RECIPIENT_EMAIL env var and uncomment the block below.
-      # email:
-      #   recipients:
-      #     - $CM_BUILD_RECIPIENT_EMAIL
-      #   notify:
-      #     success: true
-      #     failure: true
-      #
-      # Uncomment to push to Play Store internal track once you've connected
-      # a Google Play service account in Codemagic UI:
-      # google_play:
-      #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #   track: internal
+    # No `publishing:` block on purpose. Codemagic emails the build owner
+    # by default; artifacts are downloadable from the build page. To wire
+    # Play Store internal-track auto-publish, add a `publishing:` block
+    # with `google_play:` after connecting a Google Play service account
+    # in Codemagic UI — see Codemagic docs.
 
   # ---------------------------------------------------------------------------
   # iOS — signed IPA (requires Apple Developer + Codemagic signing)
