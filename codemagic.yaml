@@ -40,7 +40,10 @@ workflows:
       vars:
         # Build-time --dart-define values. Leave blank if not configured.
         SENTRY_DSN: $SENTRY_DSN
-        API_BASE_URL: $API_BASE_URL
+        # Hardcoded — production URL is stable and shouldn't be a Codemagic
+        # secret. If you ever need to override, add API_BASE_URL to the
+        # gerhr group and that will take precedence.
+        API_BASE_URL: https://gersl-management-jet.vercel.app/api
         ENV: production
       # Uncomment when you've uploaded a keystore in Codemagic UI:
       # android_signing:
@@ -125,7 +128,10 @@ workflows:
         - gerhr
       vars:
         SENTRY_DSN: $SENTRY_DSN
-        API_BASE_URL: $API_BASE_URL
+        # Hardcoded — production URL is stable and shouldn't be a Codemagic
+        # secret. If you ever need to override, add API_BASE_URL to the
+        # gerhr group and that will take precedence.
+        API_BASE_URL: https://gersl-management-jet.vercel.app/api
         ENV: production
         BUNDLE_ID: "com.gersl.gerhr"
       # NOTE: no `ios_signing:` block on purpose. That block makes Codemagic
