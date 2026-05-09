@@ -177,8 +177,7 @@ workflows:
       - name: Fetch (or create) signing files
         script: |
           # Hard-fail early with a clear message if any required env var is
-          # missing in the build environment. Apple's CLI usage dump is
-          # confusing; this is unambiguous.
+          # missing in the build environment.
           MISSING=""
           [ -z "$APP_STORE_CONNECT_KEY_IDENTIFIER" ] && MISSING="$MISSING APP_STORE_CONNECT_KEY_IDENTIFIER"
           [ -z "$APP_STORE_CONNECT_ISSUER_ID" ]      && MISSING="$MISSING APP_STORE_CONNECT_ISSUER_ID"
@@ -187,23 +186,39 @@ workflows:
             echo "==============================================="
             echo "❌ Missing Codemagic environment variable(s):"
             for v in $MISSING; do echo "   - $v"; done
-            echo ""
-            echo "Fix in Codemagic UI:"
-            echo "  1. Open your Application page (NOT team page)"
-            echo "  2. Find the 'Environment variables' section"
-            echo "  3. Add each missing variable above as a new row"
-            echo "     • Variable name = the literal string above"
-            echo "     • Value         = the matching value from Apple"
-            echo "     • Secure        = ON"
-            echo "  4. Click Save (sometimes there's a separate save button)"
-            echo "  5. Re-trigger this workflow"
             echo "==============================================="
             exit 99
           fi
-          # Pass everything explicitly to rule out auto-discovery quirks.
+
+          # Codemagic's env-var input often mangles multi-line PEM (collapses
+          # newlines), so the CLI complains "not a valid PEM encoded private
+          # key". Accept BOTH raw PEM and base64-encoded forms — write the
+          # decoded key to a real file and pass it via --private-key=@file:.
+          KEY_FILE=/tmp/app_store_connect_key.p8
+          if printf '%s' "$APP_STORE_CONNECT_PRIVATE_KEY" | head -c 200 | grep -q "BEGIN PRIVATE KEY"; then
+            # Already in PEM format — write as-is.
+            printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$KEY_FILE"
+            echo "Detected raw PEM private key in env var."
+          else
+            # Assume base64 — decode to file. tr strips any newlines/spaces.
+            echo "$APP_STORE_CONNECT_PRIVATE_KEY" | tr -d ' \n\r\t' | base64 -d > "$KEY_FILE"
+            echo "Decoded base64-encoded private key to $KEY_FILE"
+          fi
+
+          # Quick sanity check — file should start with PEM header now.
+          if ! head -1 "$KEY_FILE" | grep -q "BEGIN"; then
+            echo "❌ APP_STORE_CONNECT_PRIVATE_KEY is neither valid PEM nor"
+            echo "   valid base64 of a PEM file. Re-check the value in"
+            echo "   Codemagic env vars (gerhr group)."
+            exit 98
+          fi
+
+          # Pass everything explicitly. Use --private-key=@file: so the CLI
+          # reads the well-formed PEM from disk rather than the mangled env.
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key=@file:"$KEY_FILE" \
             --type IOS_APP_STORE \
             --create
 
