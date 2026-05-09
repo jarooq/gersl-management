@@ -34,7 +34,6 @@ const EMPTY = {
   department: '',
   position: '',
   joiningDate: '',
-  leaveBalance: 21,
   username: '',
   password: ''
 };
@@ -212,16 +211,6 @@ const StaffRegisterPage = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-ink-700 mb-2">Annual Leave Balance (Days)</label>
-              <input
-                type="number"
-                value={staffForm.leaveBalance}
-                onChange={(e) => update('leaveBalance', parseInt(e.target.value) || 0)}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                placeholder="21"
-              />
-            </div>
           </div>
 
           {/* User Account Settings */}
