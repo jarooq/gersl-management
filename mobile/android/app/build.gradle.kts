@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "org.gersl.gersl_mobile"
+    namespace = "com.gersl.gerhr"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "org.gersl.gersl_mobile"
+        applicationId = "com.gersl.gerhr"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion // flutter_background_service + flutter_local_notifications need API 21+

@@ -1,4 +1,4 @@
-package org.gersl.gersl_mobile
+package com.gersl.gerhr
 
 import io.flutter.embedding.android.FlutterActivity
 

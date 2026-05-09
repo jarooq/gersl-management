@@ -16,7 +16,7 @@
 #      the comment in build_apk_unsigned step below.)
 #   4. iOS signing: Settings → Code signing → iOS → connect Apple Developer
 #      account, let Codemagic auto-create cert + provisioning profile. Set
-#      bundle id to org.gersl.gerslMobile (or whatever you used in
+#      bundle id to com.gersl.gerhr (or whatever you used in
 #      mobile/ios/Runner.xcodeproj).
 #   5. Push this file; Codemagic auto-detects it. Trigger workflows from
 #      the dashboard.
@@ -115,11 +115,11 @@ workflows:
         SENTRY_DSN: $SENTRY_DSN
         API_BASE_URL: $API_BASE_URL
         ENV: production
-        BUNDLE_ID: "org.gersl.gerslMobile"  # matches Runner.xcodeproj PRODUCT_BUNDLE_IDENTIFIER
+        BUNDLE_ID: "com.gersl.gerhr"  # matches Runner.xcodeproj PRODUCT_BUNDLE_IDENTIFIER
         # APP_STORE_APP_ID: "1234567890"    # set this in Codemagic env vars after first TestFlight upload
       ios_signing:
         distribution_type: app_store          # or ad_hoc / development
-        bundle_identifier: org.gersl.gerslMobile
+        bundle_identifier: com.gersl.gerhr
 
     cache:
       cache_paths:
