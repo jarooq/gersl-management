@@ -91,12 +91,16 @@ workflows:
       - mobile/build/**/outputs/**/mapping.txt
 
     publishing:
-      email:
-        recipients:
-          - $CM_BUILD_RECIPIENT_EMAIL  # set this env var in the dashboard
-        notify:
-          success: true
-          failure: true
+      # Codemagic emails the build owner on success/failure by default —
+      # no explicit recipients block needed. To add extras, set the
+      # CM_BUILD_RECIPIENT_EMAIL env var and uncomment the block below.
+      # email:
+      #   recipients:
+      #     - $CM_BUILD_RECIPIENT_EMAIL
+      #   notify:
+      #     success: true
+      #     failure: true
+      #
       # Uncomment to push to Play Store internal track once you've connected
       # a Google Play service account in Codemagic UI:
       # google_play:
@@ -181,12 +185,7 @@ workflows:
       - mobile/flutter_drive.log
 
     publishing:
-      email:
-        recipients:
-          - $CM_BUILD_RECIPIENT_EMAIL
-        notify:
-          success: true
-          failure: true
+      # email block omitted — Codemagic emails build owner by default.
       app_store_connect:
         auth: integration
         submit_to_testflight: true
