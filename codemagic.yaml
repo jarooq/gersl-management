@@ -198,9 +198,11 @@ workflows:
     publishing:
       # email block omitted — Codemagic emails build owner by default.
       app_store_connect:
-        # Use the same API-key env vars defined at the top of this workflow
-        # (no Codemagic "integration" needed).
-        auth: keys
+        # Use the same API-key env vars from the project Environment Variables
+        # (set as Secure). No Codemagic-side "integration" needed.
+        api_key:    $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id:     $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id:  $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         # Add your internal tester group name once it exists in App Store
         # Connect → TestFlight → Internal Testing. Until then, the build
