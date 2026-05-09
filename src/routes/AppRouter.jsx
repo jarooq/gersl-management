@@ -235,6 +235,20 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin/login" element={<Login />} />
 
+        {/* Standalone Staff Registration — auth-gated but renders WITHOUT
+            the MainLayout sidebar so HR can hand a tablet to a new staff
+            member without showing them the whole admin nav. */}
+        <Route
+          path="/staff-register"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <StaffRegisterPage />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected Admin Routes */}
         <Route
           path="/admin"
@@ -565,16 +579,6 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
                 <PermissionRoute permission={PERMISSIONS.HR_MANAGE_ONBOARDING}>
                   <Suspense fallback={<PageLoader />}>
                     <OnboardingPage />
-                  </Suspense>
-                </PermissionRoute>
-              }
-            />
-            <Route
-              path="staff-register"
-              element={
-                <PermissionRoute permission={PERMISSIONS.HR_VIEW}>
-                  <Suspense fallback={<PageLoader />}>
-                    <StaffRegisterPage />
                   </Suspense>
                 </PermissionRoute>
               }
