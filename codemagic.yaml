@@ -122,9 +122,10 @@ workflows:
         ENV: production
         BUNDLE_ID: "com.gersl.gerhr"  # matches Runner.xcodeproj PRODUCT_BUNDLE_IDENTIFIER
         # APP_STORE_APP_ID: "1234567890"    # set in Codemagic env vars after first TestFlight upload
-      ios_signing:
-        distribution_type: app_store          # or ad_hoc / development
-        bundle_identifier: com.gersl.gerhr
+      # NOTE: no `ios_signing:` block on purpose. That block makes Codemagic
+      # look up profiles in its UI-managed signing-identities store, which
+      # we're not using. We fetch the profile via App Store Connect API in
+      # the scripts below instead.
 
     cache:
       cache_paths:
