@@ -2183,15 +2183,12 @@ const HRPage = () => {
                 <button
                   onClick={async () => {
                     try {
-                      const response = await API.put(`/users/${editStaffForm.id}`, editStaffForm);
-                      if (response.data.success) {
-                        alert('✅ Staff member updated successfully!');
-                        setShowEditStaffModal(false);
-                        // Refresh the staff list or update locally
-                        window.location.reload();
-                      } else {
-                        alert('❌ Error: ' + response.data.message);
-                      }
+                      // API is a registry of sub-clients (API.Users, API.HR…)
+                      // — it has no .put method. Use the proper sub-client.
+                      await API.Users.update(editStaffForm.id, editStaffForm);
+                      alert('✅ Staff member updated successfully!');
+                      setShowEditStaffModal(false);
+                      window.location.reload();
                     } catch (error) {
                       console.error('Error updating staff:', error);
                       alert('❌ Error updating staff member: ' + (error.response?.data?.message || error.message));
