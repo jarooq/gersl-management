@@ -2183,9 +2183,22 @@ const HRPage = () => {
                 <button
                   onClick={async () => {
                     try {
-                      // API is a registry of sub-clients (API.Users, API.HR…)
-                      // — it has no .put method. Use the proper sub-client.
-                      await API.Users.update(editStaffForm.id, editStaffForm);
+                      // User.status is ENUM('Active','Inactive','Suspended').
+                      // Staff.status is a free STRING that can hold 'Pending'.
+                      // If the editor opened a Pending staff and the admin
+                      // didn't change the dropdown, the payload still says
+                      // 'Pending' which Sequelize rejects → 500. Coerce it
+                      // to a valid User.status before posting. Treat the
+                      // Pending state as Active by default — that's what
+                      // activating a self-registered staff actually means.
+                      const VALID = new Set(['Active', 'Inactive', 'Suspended']);
+                      const payload = {
+                        ...editStaffForm,
+                        status: VALID.has(editStaffForm.status)
+                          ? editStaffForm.status
+                          : 'Active',
+                      };
+                      await API.Users.update(editStaffForm.id, payload);
                       alert('✅ Staff member updated successfully!');
                       setShowEditStaffModal(false);
                       window.location.reload();
