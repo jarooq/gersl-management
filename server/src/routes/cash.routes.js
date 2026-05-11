@@ -38,6 +38,7 @@ import {
   cancelReplenishment
 } from '../controllers/pettyCashReplenishment.controller.js';
 import { getCashBookReport } from '../controllers/cashBookReport.controller.js';
+import { renderCashVoucherPdf } from '../controllers/cashVoucherPdf.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -72,6 +73,7 @@ router.post  ('/transactions/disburse',           requireCashWrite, disburseFrom
 router.post  ('/transactions/disburse-payroll',   requireCashWrite, disbursePayroll);
 router.post  ('/transactions/transfer',           requireCashWrite, transferBetweenAccounts);
 router.get   ('/transactions/:id',                validateId(), requireCashView, getTransaction);
+router.get   ('/transactions/:id/voucher',        validateId(), requireCashView, renderCashVoucherPdf);
 router.patch ('/transactions/:id/approve',        validateId(), requireCashApprover, approveTransaction);
 router.patch ('/transactions/:id/reject',         validateId(), requireCashApprover, rejectTransaction);
 router.post  ('/transactions/:id/reverse',        validateId(), requireCashApprover, reverseTransaction);

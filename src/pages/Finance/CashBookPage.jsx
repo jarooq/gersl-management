@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CashAPI } from '../../services/api';
+import { CashAPI, TokenManager } from '../../services/api';
+import { API_BASE_URL } from '../../config/apiBase';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasPermission } from '../../utils/permissions';
 import RecordCashTxModal from './components/RecordCashTxModal';
 import TransferCashModal from './components/TransferCashModal';
 import CashCountModal from './components/CashCountModal';
 import RequestReplenishmentModal from './components/RequestReplenishmentModal';
+
+// Open the voucher PDF in a new tab. Auth via ?token=… because PDF viewers
+// can't carry Authorization headers — the backend whitelists this surface.
+const openVoucher = (transactionId) => {
+  const token = TokenManager?.getAccessToken?.() || localStorage.getItem('accessToken') || '';
+  const url = `${API_BASE_URL.replace(/\/$/, '')}/cash/transactions/${transactionId}/voucher${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+};
 
 const STATUS_BADGE = {
   Posted: 'bg-green-100 text-green-700',
@@ -218,6 +227,15 @@ export default function CashBookPage() {
                   </span>
                 </td>
                 <td className="px-3 py-2 text-sm text-right space-x-2 whitespace-nowrap">
+                  {r.status === 'Posted' && (
+                    <button
+                      onClick={() => openVoucher(r.id)}
+                      className="text-navy-700 hover:underline"
+                      title="Download printable voucher PDF"
+                    >
+                      Voucher
+                    </button>
+                  )}
                   {r.status === 'Pending-Approval' && canApprove && r.performer?.id !== user?.id && (
                     <>
                       <button onClick={() => onApprove(r.id)} className="text-green-700 hover:underline">Approve</button>
