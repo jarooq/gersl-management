@@ -161,6 +161,13 @@ export default function CashBookPage() {
           href={CashAPI.cashBookReportUrl(id, 'csv', { from, to })}
           className="px-3 py-1.5 text-sm border border-ink-200 rounded-md hover:bg-ink-50"
         >Download CSV</a>
+        <a
+          href={CashAPI.cashBookReportUrl(id, 'pdf', { from, to })}
+          target="_blank"
+          rel="noreferrer"
+          className="px-3 py-1.5 text-sm font-medium text-white bg-red-700 rounded-md hover:bg-red-800"
+          title="Audit-friendly cash book PDF for the selected period"
+        >Download PDF</a>
         <div className="ml-auto flex gap-2">
           {canRecord && (
             <>

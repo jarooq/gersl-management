@@ -22,7 +22,7 @@ export const verifyToken = async (req, res, next) => {
     // mobile app launches an external viewer that can't carry headers.
     // Tokens leak in server access logs — keep this surface narrow.
     if (!token && req.method === 'GET' && req.query?.token &&
-        /\/(pdf|payslips\/\d+\/pdf|fuel-claims\/\d+\/pdf|cash\/transactions\/\d+\/voucher)/.test(req.originalUrl)) {
+        /\/(pdf|payslips\/\d+\/pdf|fuel-claims\/\d+\/pdf|cash\/transactions\/\d+\/voucher|cash\/accounts\/\d+\/cash-book)/.test(req.originalUrl)) {
       token = String(req.query.token);
     }
 

@@ -1,3 +1,4 @@
+import PDFDocument from 'pdfkit';
 import { CashAccount, CashTransaction, User } from '../models/index.js';
 import { Op } from 'sequelize';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
@@ -165,6 +166,99 @@ const renderCsv = (payload) => {
   return rows.map(r => r.map(escapeCsv).join(',')).join('\n');
 };
 
+// PDF render — landscape A4 with a tabular ledger. Uses pdfkit (same lib as
+// voucher / payslip / fuel-claim PDFs) so no new dependency.
+const streamPdf = (res, payload) => {
+  const a = payload.account;
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition',
+    `inline; filename="cashbook-${a.id}-${new Date(payload.period.from).toISOString().slice(0,10)}-${new Date(payload.period.to).toISOString().slice(0,10)}.pdf"`);
+
+  const doc = new PDFDocument({ size: 'A4', layout: 'landscape', margins: { top: 36, bottom: 36, left: 36, right: 36 } });
+  doc.pipe(res);
+
+  // Header
+  doc.fontSize(15).fillColor('#0D1D3D').text('Cash Book', { align: 'left' });
+  doc.fontSize(11).fillColor('#000').text(`${a.name} · ${a.type} · ${a.currency}`);
+  doc.fontSize(9).fillColor('#666').text(
+    `${new Date(payload.period.from).toLocaleDateString('en-GB')} → ${new Date(payload.period.to).toLocaleDateString('en-GB')}`
+  );
+  doc.moveDown(0.8);
+
+  // Column geometry
+  const pageW = doc.page.width - 72;
+  const cols = [
+    { key: 'date',     label: 'Date',        w: 65,  align: 'left'  },
+    { key: 'voucher',  label: 'Voucher',     w: 70,  align: 'left'  },
+    { key: 'type',     label: 'Type',        w: 60,  align: 'left'  },
+    { key: 'parts',    label: 'Particulars', w: 0,   align: 'left'  }, // flexes
+    { key: 'receipt',  label: 'Receipt',     w: 75,  align: 'right' },
+    { key: 'payment',  label: 'Payment',     w: 75,  align: 'right' },
+    { key: 'balance',  label: 'Balance',     w: 85,  align: 'right' },
+  ];
+  const fixed = cols.reduce((s, c) => s + c.w, 0);
+  cols[3].w = pageW - fixed; // particulars takes the rest
+
+  const drawRow = (vals, opts = {}) => {
+    const y = doc.y;
+    let x = 36;
+    doc.fontSize(opts.bold ? 9 : 8.5).fillColor(opts.color || '#000');
+    for (let i = 0; i < cols.length; i++) {
+      const c = cols[i];
+      const v = vals[i] ?? '';
+      doc.text(String(v), x + 2, y + 2, { width: c.w - 4, align: c.align, ellipsis: true, lineBreak: false });
+      x += c.w;
+    }
+    doc.y = y + 14;
+    doc.moveTo(36, doc.y).lineTo(36 + pageW, doc.y).strokeColor('#eee').stroke();
+  };
+
+  // Header row
+  drawRow(cols.map(c => c.label), { bold: true });
+
+  // Opening balance row
+  drawRow(['', '', '', 'Opening balance', '', '', fmt(payload.opening)], { color: '#444' });
+
+  // Body
+  for (const l of payload.lines) {
+    if (doc.y > doc.page.height - 80) {
+      doc.addPage();
+    }
+    const color = l.status === 'Posted' ? '#000' : '#999';
+    drawRow([
+      new Date(l.date).toLocaleDateString('en-GB'),
+      l.voucherNo || '',
+      l.transactionType,
+      l.particulars + (l.status !== 'Posted' ? ` (${l.status})` : ''),
+      l.receipt != null ? fmt(l.receipt) : '',
+      l.payment != null ? fmt(l.payment) : '',
+      l.runningBalance != null ? fmt(l.runningBalance) : '',
+    ], { color });
+  }
+
+  // Totals row
+  doc.moveDown(0.3);
+  doc.moveTo(36, doc.y).lineTo(36 + pageW, doc.y).strokeColor('#333').stroke();
+  drawRow(
+    ['', '', '', 'Period totals', fmt(payload.totals.receipts), fmt(payload.totals.payments), fmt(payload.closing)],
+    { bold: true, color: '#0D1D3D' }
+  );
+
+  // Summary line
+  doc.moveDown(0.6);
+  doc.fontSize(9).fillColor('#444').text(
+    `Opening ${fmt(payload.opening)}  +  Receipts ${fmt(payload.totals.receipts)}  −  Payments ${fmt(payload.totals.payments)}  =  Closing ${fmt(payload.closing)}`
+  );
+
+  // Footer timestamp
+  doc.fontSize(7).fillColor('#999').text(
+    `Generated: ${new Date().toISOString().replace('T', ' ').slice(0, 19)} UTC`,
+    36, doc.page.height - 36, { align: 'right', width: pageW }
+  );
+
+  doc.end();
+};
+
 export const getCashBookReport = asyncHandler(async (req, res) => {
   const account = await CashAccount.findByPk(req.params.id);
   if (!account) throw new NotFoundError('Cash account not found');
@@ -192,8 +286,11 @@ export const getCashBookReport = asyncHandler(async (req, res) => {
     res.set('Content-Disposition', `attachment; filename="cashbook-${account.id}-${new Date(payload.period.from).toISOString().slice(0,10)}-${new Date(payload.period.to).toISOString().slice(0,10)}.csv"`);
     return res.send(renderCsv(payload));
   }
+  if (format === 'pdf') {
+    return streamPdf(res, payload);
+  }
   if (format !== 'json') {
-    throw new BadRequestError('format must be one of: json, html, csv');
+    throw new BadRequestError('format must be one of: json, html, csv, pdf');
   }
 
   res.json({ success: true, data: payload });
