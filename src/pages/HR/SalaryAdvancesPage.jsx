@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { DollarSign, CheckCircle, XCircle, Clock, RefreshCw, ThumbsUp, ThumbsDown } from 'lucide-react';
-import { SalaryAdvanceAPI } from '../../services/api';
+import { DollarSign, CheckCircle, XCircle, Clock, RefreshCw, ThumbsUp, ThumbsDown, Wallet, X } from 'lucide-react';
+import { SalaryAdvanceAPI, CashAPI } from '../../services/api';
 
 // Canonical admin page: navy hero + tinted stat cards + filterable table.
 // Uses the same shape as ExpensesPage (HR view).
@@ -20,6 +20,45 @@ const SalaryAdvancesPage = () => {
   const [filterStatus, setFilterStatus] = useState('All');
   const [search, setSearch] = useState('');
   const [busyId, setBusyId] = useState(null);
+  // Disburse-from-cash UI state
+  const [disburseRow, setDisburseRow]   = useState(null);
+  const [cashAccounts, setCashAccounts] = useState([]);
+  const [pickedAccountId, setPickedAccountId] = useState('');
+  const [disburseBusy, setDisburseBusy] = useState(false);
+
+  const openDisburse = async (row) => {
+    setDisburseRow(row);
+    setError(null);
+    if (cashAccounts.length === 0) {
+      try {
+        const resp = await CashAPI.listAccounts();
+        const list = resp?.data?.accounts || resp?.data || [];
+        const active = list.filter(a => a.isActive !== false);
+        setCashAccounts(active);
+        if (active.length === 1) setPickedAccountId(String(active[0].id));
+      } catch (e) {
+        setError('Could not load cash accounts: ' + (e?.message || 'unknown'));
+      }
+    }
+  };
+
+  const confirmDisburse = async () => {
+    if (!disburseRow || !pickedAccountId) return;
+    setDisburseBusy(true); setError(null);
+    try {
+      await CashAPI.disburseFromSource(
+        'SalaryAdvance', disburseRow.id, parseInt(pickedAccountId, 10),
+        { payeeName: disburseRow.user?.fullName || disburseRow.staffName || null }
+      );
+      setDisburseRow(null);
+      setPickedAccountId('');
+      await load();
+    } catch (e) {
+      setError(e?.response?.data?.message || e?.message || 'Disburse failed');
+    } finally {
+      setDisburseBusy(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true); setError(null);
@@ -171,7 +210,7 @@ const SalaryAdvancesPage = () => {
                       {row.decidedAt && <div className="text-xs text-ink-500">{fmtDate(row.decidedAt)}</div>}
                     </Td>
                     <Td align="right">
-                      {row.status === 'Pending' ? (
+                      {row.status === 'Pending' && (
                         <div className="inline-flex gap-2">
                           <button
                             disabled={busyId === row.id}
@@ -188,7 +227,16 @@ const SalaryAdvancesPage = () => {
                             <ThumbsDown size={13} /> Reject
                           </button>
                         </div>
-                      ) : (
+                      )}
+                      {row.status === 'Approved' && (
+                        <button
+                          onClick={() => openDisburse(row)}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-md bg-navy-900 text-white hover:bg-navy-800 transition"
+                        >
+                          <Wallet size={13} /> Pay from cash
+                        </button>
+                      )}
+                      {!['Pending', 'Approved'].includes(row.status) && (
                         <span className="text-xs text-ink-400">—</span>
                       )}
                     </Td>
@@ -199,6 +247,65 @@ const SalaryAdvancesPage = () => {
           </table>
         </div>
       </div>
+
+      {disburseRow && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !disburseBusy && setDisburseRow(null)}>
+          <div className="bg-white rounded-lg2 shadow-pop max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Wallet className="text-navy-700" size={20} />
+                <h3 className="text-lg font-bold text-ink-900">Pay advance from cash</h3>
+              </div>
+              <button onClick={() => !disburseBusy && setDisburseRow(null)} className="text-ink-500 hover:text-ink-900">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="text-sm text-ink-600 mb-1">
+              <span className="font-semibold text-ink-900">{disburseRow.user?.fullName || disburseRow.staffName || '—'}</span>
+              {disburseRow.reason ? ` — ${disburseRow.reason}` : ''}
+            </div>
+            <div className="text-2xl font-extrabold text-ink-900 mb-4">
+              LKR {Number(disburseRow.amount || 0).toLocaleString()}
+            </div>
+
+            <label className="block text-xs font-semibold text-ink-700 mb-1 uppercase tracking-wider">
+              Cash account
+            </label>
+            <select
+              value={pickedAccountId}
+              onChange={(e) => setPickedAccountId(e.target.value)}
+              className="w-full px-3 py-2.5 border border-ink-200 rounded-md text-sm focus:ring-2 focus:ring-navy-700 focus:border-transparent mb-2"
+            >
+              <option value="">— Select an account —</option>
+              {cashAccounts.map(a => (
+                <option key={a.id} value={a.id}>
+                  {a.name} · {a.type} · {a.currency} {Number(a.currentBalance || 0).toLocaleString()}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-ink-500 mb-5">
+              Posts a Payment voucher in the chosen account. The advance status stays
+              Approved until it's recovered from a future payroll run (Deducted).
+            </p>
+
+            <div className="flex gap-2 justify-end">
+              <button
+                disabled={disburseBusy}
+                onClick={() => setDisburseRow(null)}
+                className="px-4 py-2 text-sm font-semibold border border-ink-200 text-ink-700 rounded-md hover:bg-ink-50 disabled:opacity-50"
+              >Cancel</button>
+              <button
+                disabled={disburseBusy || !pickedAccountId}
+                onClick={confirmDisburse}
+                className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-md bg-navy-900 text-white hover:bg-navy-800 disabled:opacity-50"
+              >
+                <Wallet size={14} />
+                {disburseBusy ? 'Posting…' : 'Disburse'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

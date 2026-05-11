@@ -1,4 +1,4 @@
-import { CashAccount, CashTransaction, User } from '../models/index.js';
+import { CashAccount, CashTransaction, Expense, SalaryAdvance, User } from '../models/index.js';
 import sequelize from '../config/database.js';
 import { Op } from 'sequelize';
 import {
@@ -454,6 +454,111 @@ export const reverseTransaction = asyncHandler(async (req, res) => {
     await t.commit();
     const reloaded = await CashTransaction.findByPk(reversal.id, { include: txInclude });
     res.status(201).json({ success: true, data: { reversal: reloaded } });
+  } catch (err) {
+    if (!t.finished) await t.rollback();
+    throw err;
+  }
+});
+
+// ============================================
+// DISBURSE — pay an approved Expense or SalaryAdvance from a cash account.
+// Body: { sourceType, sourceId, cashAccountId, payeeName?, description? }
+//   sourceType: 'Expense' | 'SalaryAdvance'
+//   sourceId:   id of the row in that table
+// Creates one Payment-type CashTransaction with referenceType/referenceId
+// linking back to the source. On Expense, also flips Expense.status -> 'Paid'.
+// Wires the "accountant clicks one button to disburse" flow that previously
+// required manual cash-ledger re-entry.
+// ============================================
+export const disburseFromSource = asyncHandler(async (req, res) => {
+  const { sourceType, sourceId, cashAccountId, payeeName, description } = req.body;
+
+  if (!sourceType || !sourceId || !cashAccountId) {
+    throw new BadRequestError('sourceType, sourceId, and cashAccountId are required');
+  }
+  if (!['Expense', 'SalaryAdvance'].includes(sourceType)) {
+    throw new BadRequestError(`sourceType must be 'Expense' or 'SalaryAdvance'`);
+  }
+
+  // Load + validate the source record
+  let source;
+  let amount;
+  let defaultDescription;
+  if (sourceType === 'Expense') {
+    source = await Expense.findByPk(sourceId);
+    if (!source) throw new NotFoundError('Expense not found');
+    if (source.status !== 'Approved') {
+      throw new BadRequestError(`Expense must be in 'Approved' status to disburse (current: ${source.status})`);
+    }
+    amount = Number(source.amount);
+    defaultDescription = `Expense #${source.id}: ${source.description || source.category || 'staff expense'}`;
+  } else {
+    source = await SalaryAdvance.findByPk(sourceId);
+    if (!source) throw new NotFoundError('Salary advance not found');
+    if (source.status !== 'Approved') {
+      throw new BadRequestError(`Salary advance must be in 'Approved' status to disburse (current: ${source.status})`);
+    }
+    amount = Number(source.amount);
+    defaultDescription = `Salary advance #${source.id}`;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new BadRequestError(`Source ${sourceType} has invalid amount (${amount})`);
+  }
+
+  // Post the cash transaction (Payment, direction Out) — mirrors recordTransaction's
+  // logic but skips the user-supplied amount and pins it to the source's amount.
+  const t = await sequelize.transaction();
+  try {
+    const account = await lockAccount(cashAccountId, t);
+    const newBalance = computeNewBalance(account.currentBalance, 'Out', amount);
+    if (newBalance < 0) {
+      throw new BadRequestError(`Disburse would push ${account.name} balance below zero`);
+    }
+
+    const required = requiredApproverRole(account, amount, req.user.role);
+    const status = required ? 'Pending-Approval' : 'Posted';
+    const voucherNo = status === 'Posted' ? await nextVoucherNo(account.id, t) : null;
+
+    const tx = await CashTransaction.create({
+      cashAccountId: account.id,
+      transactionType: 'Payment',
+      direction: 'Out',
+      amount,
+      currency: account.currency,
+      balanceAfter: status === 'Posted' ? newBalance : null,
+      voucherNo,
+      referenceType: sourceType,
+      referenceId: source.id,
+      payeeName: payeeName || null,
+      description: description || defaultDescription,
+      status,
+      performedBy: req.user.id,
+      occurredAt: new Date()
+    }, { transaction: t });
+
+    if (status === 'Posted') {
+      await account.update({ currentBalance: newBalance }, { transaction: t });
+      // Flip the source record so HR/Finance pages reflect the payment
+      if (sourceType === 'Expense') {
+        await source.update({ status: 'Paid' }, { transaction: t });
+      }
+      // SalaryAdvance.status enum has no 'Paid' (the workflow is Pending →
+      // Approved → Deducted, where Deducted means recovered via payroll).
+      // We leave its status alone; the cash transaction's reference fields
+      // are the audit trail.
+    }
+
+    await t.commit();
+    const reloaded = await CashTransaction.findByPk(tx.id, { include: txInclude });
+    res.status(201).json({
+      success: true,
+      data: {
+        transaction: reloaded,
+        sourceStatus: sourceType === 'Expense' && status === 'Posted' ? 'Paid' : source.status,
+        requiresApprovalBy: required
+      }
+    });
   } catch (err) {
     if (!t.finished) await t.rollback();
     throw err;

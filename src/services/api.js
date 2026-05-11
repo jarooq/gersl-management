@@ -3286,6 +3286,19 @@ export const CashAPI = {
   getTransaction: (id) => request(`/cash/transactions/${id}`),
   recordTransaction: (data) =>
     request('/cash/transactions', { method: 'POST', body: JSON.stringify(data) }),
+  /**
+   * Disburse an approved Expense or SalaryAdvance from a cash account.
+   * One call instead of "record cash payment + manually flip status".
+   * @param sourceType  'Expense' | 'SalaryAdvance'
+   * @param sourceId    id of the row in that table
+   * @param cashAccountId  which cash account the payment comes out of
+   * @param opts        { payeeName?, description? }
+   */
+  disburseFromSource: (sourceType, sourceId, cashAccountId, opts = {}) =>
+    request('/cash/transactions/disburse', {
+      method: 'POST',
+      body: JSON.stringify({ sourceType, sourceId, cashAccountId, ...opts }),
+    }),
   transferCash: (data) =>
     request('/cash/transactions/transfer', { method: 'POST', body: JSON.stringify(data) }),
   approveTransaction: (id) =>
