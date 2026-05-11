@@ -46,6 +46,12 @@ dependencies:
   # Charting (Attendance donut)
   fl_chart: ^0.69.0
 
+  # On-device face detection for Punch — blocks attempts where the captured
+  # selfie has no human face (paper photo, wall shot, etc.). Recognition
+  # (matching a specific staff member) is NOT implemented — this is presence
+  # only. Adds ~10-15 MB to the APK via Google ML Kit native lib.
+  google_mlkit_face_detection: ^0.13.1
+
   # Crash + error reporting (init lazily — no DSN = no-op).
   # Pinned to 9.x because Kotlin 2.2 compiler no longer accepts 8.x's
   # languageVersion 1.6.

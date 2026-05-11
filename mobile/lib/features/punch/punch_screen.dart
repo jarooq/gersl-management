@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -39,6 +40,26 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     );
   }
 
+  /// Quick face-presence check. Returns true if the photo contains at least
+  /// one human face. Fails OPEN (returns true) on ML Kit errors so a model
+  /// glitch never blocks legitimate punches.
+  Future<bool> _hasFace(String imagePath) async {
+    final detector = FaceDetector(
+      options: FaceDetectorOptions(
+        performanceMode: FaceDetectorMode.fast,
+        minFaceSize: 0.15,
+      ),
+    );
+    try {
+      final faces = await detector.processImage(InputImage.fromFilePath(imagePath));
+      return faces.isNotEmpty;
+    } catch (_) {
+      return true; // fail-open: don't block work because ML Kit choked
+    } finally {
+      await detector.close();
+    }
+  }
+
   Future<String?> _captureSelfie() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(
@@ -48,6 +69,19 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
       maxWidth: 1024,
     );
     if (picked == null) return null;
+
+    // Face-presence gate — block punches where the selfie has no human face
+    // (paper photo, wall, eyes-closed silhouette, etc.).
+    final hasFace = await _hasFace(picked.path);
+    if (!hasFace) {
+      if (mounted) {
+        setState(() => _error =
+            'No face detected in the selfie. Hold the phone in front of your '
+            'face with good lighting and try again.');
+      }
+      return null;
+    }
+
     try {
       final dio = ref.read(dioProvider);
       final form = FormData.fromMap({
@@ -59,6 +93,10 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
       final data = res.data['data'] ?? res.data;
       return (data['url'] ?? data['path'])?.toString();
     } catch (_) {
+      if (mounted) {
+        setState(() => _error =
+            'Could not upload the selfie. Check your connection and try again.');
+      }
       return null;
     }
   }
@@ -68,7 +106,15 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     try {
       final pos = await _resolveLocation();
       String? selfieUrl;
-      if (withSelfie) selfieUrl = await _captureSelfie();
+      if (withSelfie) {
+        selfieUrl = await _captureSelfie();
+        // If the face check or upload failed, abort the punch — _error is
+        // already set by _captureSelfie, so just stop here.
+        if (selfieUrl == null) {
+          if (mounted) setState(() => _busy = false);
+          return;
+        }
+      }
       await ref.read(punchRepoProvider).record(
         punchType: punchType,
         latitude: pos?.latitude,
