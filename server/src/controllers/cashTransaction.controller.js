@@ -1,4 +1,4 @@
-import { Bill, CashAccount, CashTransaction, Expense, SalaryAdvance, User } from '../models/index.js';
+import { Bill, CashAccount, CashTransaction, Expense, Payroll, SalaryAdvance, User } from '../models/index.js';
 import sequelize from '../config/database.js';
 import { Op } from 'sequelize';
 import {
@@ -587,6 +587,119 @@ export const disburseFromSource = asyncHandler(async (req, res) => {
           ? source.status  // refreshed by the .update() above
           : source.status,
         requiresApprovalBy: required
+      }
+    });
+  } catch (err) {
+    if (!t.finished) await t.rollback();
+    throw err;
+  }
+});
+
+// ============================================
+// BATCH DISBURSE — pay an entire payroll run from a cash account.
+// Body: { payrollIds: number[], cashAccountId, description? }
+// Each payroll row in payrollIds that's in 'Pending' or 'Processed' status
+// gets a single Payment-type CashTransaction posted for its netPay amount.
+// Failures on individual rows roll back the whole batch (single sequelize
+// transaction) so an accountant either pays everyone or nobody — no partial
+// disbursement messes that have to be untangled by hand.
+// ============================================
+export const disbursePayroll = asyncHandler(async (req, res) => {
+  const { payrollIds, cashAccountId, description } = req.body;
+
+  if (!Array.isArray(payrollIds) || payrollIds.length === 0) {
+    throw new BadRequestError('payrollIds must be a non-empty array');
+  }
+  if (!cashAccountId) {
+    throw new BadRequestError('cashAccountId is required');
+  }
+
+  const payrolls = await Payroll.findAll({ where: { id: payrollIds } });
+  if (payrolls.length === 0) {
+    throw new NotFoundError('No matching payroll records found');
+  }
+
+  // Reject if any selected row is already Paid (idempotency / mistake guard).
+  const alreadyPaid = payrolls.filter(p => p.status === 'Paid');
+  if (alreadyPaid.length) {
+    throw new BadRequestError(
+      `Already paid: ${alreadyPaid.map(p => p.payrollCode).join(', ')}`
+    );
+  }
+
+  const totalNet = payrolls.reduce((s, p) => s + Number(p.netPay || 0), 0);
+  if (!Number.isFinite(totalNet) || totalNet <= 0) {
+    throw new BadRequestError(`Total net pay is invalid (${totalNet})`);
+  }
+
+  const t = await sequelize.transaction();
+  try {
+    const account = await lockAccount(cashAccountId, t);
+
+    // Block early if the account doesn't have enough cash to cover the batch.
+    const finalBalance = Number(account.currentBalance) - totalNet;
+    if (finalBalance < 0) {
+      throw new BadRequestError(
+        `Account ${account.name} would go below zero: balance ${account.currency} ${account.currentBalance} - payout ${totalNet}`
+      );
+    }
+
+    // For payroll batches we always self-post — the payroll batch itself is
+    // the approval surface. Threshold approvals would block the disbursement
+    // mid-batch, which is the partial-state nightmare we're avoiding.
+    let runningBalance = Number(account.currentBalance);
+    const vouchers = [];
+
+    for (const p of payrolls) {
+      const amt = Number(p.netPay || 0);
+      if (amt <= 0) {
+        throw new BadRequestError(`Payroll ${p.payrollCode} has invalid netPay (${amt})`);
+      }
+      runningBalance -= amt;
+      const voucherNo = await nextVoucherNo(account.id, t);
+
+      const tx = await CashTransaction.create({
+        cashAccountId: account.id,
+        transactionType: 'Payment',
+        direction: 'Out',
+        amount: amt,
+        currency: account.currency,
+        balanceAfter: runningBalance,
+        voucherNo,
+        referenceType: 'Payroll',
+        referenceId: p.id,
+        description: description
+          ? `${description} (${p.payrollCode})`
+          : `Payroll ${p.payrollCode}: ${p.payPeriodStart} → ${p.payPeriodEnd}`,
+        status: 'Posted',
+        performedBy: req.user.id,
+        occurredAt: new Date()
+      }, { transaction: t });
+
+      await p.update({
+        status: 'Paid',
+        paymentMethod: 'Cash',
+        paymentReference: voucherNo,
+        processedBy: p.processedBy || req.user.id,
+        processedDate: p.processedDate || new Date(),
+      }, { transaction: t });
+
+      vouchers.push({ payrollId: p.id, payrollCode: p.payrollCode, voucherNo, amount: amt, transactionId: tx.id });
+    }
+
+    await account.update({ currentBalance: runningBalance }, { transaction: t });
+    await t.commit();
+
+    res.status(201).json({
+      success: true,
+      data: {
+        count: vouchers.length,
+        totalPaid: totalNet,
+        currency: account.currency,
+        accountId: account.id,
+        accountName: account.name,
+        finalBalance: runningBalance,
+        vouchers,
       }
     });
   } catch (err) {

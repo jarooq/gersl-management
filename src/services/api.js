@@ -3299,6 +3299,18 @@ export const CashAPI = {
       method: 'POST',
       body: JSON.stringify({ sourceType, sourceId, cashAccountId, ...opts }),
     }),
+  /**
+   * Disburse a whole payroll batch from a single cash account.
+   * Atomic — all-or-nothing. Each row gets its own voucher number.
+   * @param payrollIds    array of Payroll.id values to pay out
+   * @param cashAccountId the account to debit
+   * @param opts          { description? }
+   */
+  disbursePayroll: (payrollIds, cashAccountId, opts = {}) =>
+    request('/cash/transactions/disburse-payroll', {
+      method: 'POST',
+      body: JSON.stringify({ payrollIds, cashAccountId, ...opts }),
+    }),
   transferCash: (data) =>
     request('/cash/transactions/transfer', { method: 'POST', body: JSON.stringify(data) }),
   approveTransaction: (id) =>

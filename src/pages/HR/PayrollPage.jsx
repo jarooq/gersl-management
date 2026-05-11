@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PayrollAPI, HRAPI } from '../../services/api';
+import { PayrollAPI, HRAPI, CashAPI } from '../../services/api';
 import { DollarSign, Plus, Edit, Trash2, Eye, CheckCircle, Clock, Calendar, Search, Filter, Download, X, Wallet, TrendingUp } from 'lucide-react';
 
 const PayrollPage = () => {
@@ -12,6 +12,13 @@ const PayrollPage = () => {
   const [selectedPayroll, setSelectedPayroll] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+
+  // Batch disburse-to-cash state
+  const [showDisburseModal, setShowDisburseModal] = useState(false);
+  const [cashAccounts, setCashAccounts] = useState([]);
+  const [disburseAccountId, setDisburseAccountId] = useState('');
+  const [disburseBusy, setDisburseBusy] = useState(false);
+  const [disburseError, setDisburseError] = useState(null);
 
   const [formData, setFormData] = useState({
     staffId: '',
@@ -174,6 +181,46 @@ const PayrollPage = () => {
     }
   };
 
+  // Payroll rows that can be disbursed (already approved/processed but not Paid)
+  const disbursable = payrolls.filter(p => p.status === 'Processed' || p.status === 'Approved' || p.status === 'Pending');
+  const disbursableTotal = disbursable.reduce((s, p) => s + Number(p.netPay || 0), 0);
+
+  const openDisburse = async () => {
+    setShowDisburseModal(true);
+    setDisburseError(null);
+    if (cashAccounts.length === 0) {
+      try {
+        const resp = await CashAPI.listAccounts();
+        const list = resp?.data?.accounts || resp?.data || [];
+        const active = list.filter(a => a.isActive !== false);
+        setCashAccounts(active);
+        if (active.length === 1) setDisburseAccountId(String(active[0].id));
+      } catch (e) {
+        setDisburseError('Could not load cash accounts: ' + (e?.message || 'unknown'));
+      }
+    }
+  };
+
+  const confirmDisburse = async () => {
+    if (!disburseAccountId || disbursable.length === 0) return;
+    setDisburseBusy(true);
+    setDisburseError(null);
+    try {
+      const ids = disbursable.map(p => p.id);
+      const resp = await CashAPI.disbursePayroll(ids, parseInt(disburseAccountId, 10));
+      const count = resp?.data?.count ?? ids.length;
+      const total = resp?.data?.totalPaid ?? disbursableTotal;
+      alert(`✅ Paid ${count} payroll record(s) — total LKR ${Number(total).toLocaleString()}`);
+      setShowDisburseModal(false);
+      setDisburseAccountId('');
+      await fetchData();
+    } catch (e) {
+      setDisburseError(e?.response?.data?.message || e?.message || 'Disburse failed');
+    } finally {
+      setDisburseBusy(false);
+    }
+  };
+
   const handleProcess = async (id) => {
     if (!window.confirm('Are you sure you want to process this payroll? This action cannot be undone.')) return;
 
@@ -289,6 +336,16 @@ const PayrollPage = () => {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <div className="flex gap-3">
+              {disbursable.length > 0 && (
+                <button
+                  onClick={openDisburse}
+                  className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-white/10 hover:bg-white/15 border border-white/20 text-white transition"
+                  title={`${disbursable.length} unpaid payroll record(s) — LKR ${disbursableTotal.toLocaleString()}`}
+                >
+                  <Wallet size={18} />
+                  Disburse to cash ({disbursable.length})
+                </button>
+              )}
               <button
                 onClick={() => setShowAddModal(true)}
                 className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-md bg-mission-500 hover:bg-mission-600 text-navy-900 shadow-card transition"
@@ -896,6 +953,84 @@ const PayrollPage = () => {
                   Close
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Batch disburse-to-cash modal */}
+      {showDisburseModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
+          onClick={() => !disburseBusy && setShowDisburseModal(false)}
+        >
+          <div className="bg-white rounded-lg2 shadow-pop max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Wallet className="text-navy-700" size={20} />
+                <h3 className="text-lg font-bold text-ink-900">Disburse payroll from cash</h3>
+              </div>
+              <button
+                onClick={() => !disburseBusy && setShowDisburseModal(false)}
+                className="text-ink-500 hover:text-ink-900"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="bg-ink-50 border border-ink-100 rounded-md p-4 mb-4">
+              <div className="flex justify-between text-sm mb-1">
+                <span className="text-ink-600">Records to pay</span>
+                <span className="font-bold text-ink-900">{disbursable.length}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-ink-600">Total net pay</span>
+                <span className="font-extrabold text-ink-900 text-base">
+                  LKR {disbursableTotal.toLocaleString()}
+                </span>
+              </div>
+            </div>
+
+            <label className="block text-xs font-semibold text-ink-700 mb-1 uppercase tracking-wider">
+              Cash account
+            </label>
+            <select
+              value={disburseAccountId}
+              onChange={(e) => setDisburseAccountId(e.target.value)}
+              className="w-full px-3 py-2.5 border border-ink-200 rounded-md text-sm focus:ring-2 focus:ring-navy-700 focus:border-transparent mb-2"
+            >
+              <option value="">— Select an account —</option>
+              {cashAccounts.map(a => (
+                <option key={a.id} value={a.id}>
+                  {a.name} · {a.type} · {a.currency} {Number(a.currentBalance || 0).toLocaleString()}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-ink-500 mb-5">
+              Atomic — all records get paid or none do. Each row gets its own
+              voucher number and the payroll status flips to Paid.
+            </p>
+
+            {disburseError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 rounded-md px-4 py-3 text-sm mb-4">
+                {disburseError}
+              </div>
+            )}
+
+            <div className="flex gap-2 justify-end">
+              <button
+                disabled={disburseBusy}
+                onClick={() => setShowDisburseModal(false)}
+                className="px-4 py-2 text-sm font-semibold border border-ink-200 text-ink-700 rounded-md hover:bg-ink-50 disabled:opacity-50"
+              >Cancel</button>
+              <button
+                disabled={disburseBusy || !disburseAccountId}
+                onClick={confirmDisburse}
+                className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-md bg-navy-900 text-white hover:bg-navy-800 disabled:opacity-50"
+              >
+                <Wallet size={14} />
+                {disburseBusy ? 'Posting…' : `Disburse ${disbursable.length} record(s)`}
+              </button>
             </div>
           </div>
         </div>
