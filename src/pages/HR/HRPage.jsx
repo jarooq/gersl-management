@@ -839,6 +839,39 @@ const HRPage = () => {
                           className="flex-1 px-3 py-1.5 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition-all text-xs font-semibold border border-orange-200">
                           View Profile
                         </button>
+                        {member.user && member.user.status !== 'Active' && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                await API.Users.update(member.user.id, { status: 'Active', role: 'Field Officer' });
+                                alert(`✅ Activated ${member.fullName}`);
+                                window.location.reload();
+                              } catch (err) {
+                                const d = err.response?.data;
+                                alert(`❌ Activate failed:\n${d?.detail || d?.error || d?.message || err.message}`);
+                              }
+                            }}
+                            className="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-all text-xs font-semibold border border-green-200">
+                            Activate
+                          </button>
+                        )}
+                        {member.user && member.user.status === 'Active' && (
+                          <button
+                            onClick={async () => {
+                              if (!window.confirm(`Deactivate ${member.fullName}? They won't be able to log in.`)) return;
+                              try {
+                                await API.Users.update(member.user.id, { status: 'Inactive' });
+                                alert(`✅ Deactivated ${member.fullName}`);
+                                window.location.reload();
+                              } catch (err) {
+                                const d = err.response?.data;
+                                alert(`❌ Deactivate failed:\n${d?.detail || d?.error || d?.message || err.message}`);
+                              }
+                            }}
+                            className="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-all text-xs font-semibold border border-red-200">
+                            Deactivate
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
