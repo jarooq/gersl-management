@@ -1,4 +1,4 @@
-import { CashAccount, CashTransaction, Expense, SalaryAdvance, User } from '../models/index.js';
+import { Bill, CashAccount, CashTransaction, Expense, SalaryAdvance, User } from '../models/index.js';
 import sequelize from '../config/database.js';
 import { Op } from 'sequelize';
 import {
@@ -476,8 +476,8 @@ export const disburseFromSource = asyncHandler(async (req, res) => {
   if (!sourceType || !sourceId || !cashAccountId) {
     throw new BadRequestError('sourceType, sourceId, and cashAccountId are required');
   }
-  if (!['Expense', 'SalaryAdvance'].includes(sourceType)) {
-    throw new BadRequestError(`sourceType must be 'Expense' or 'SalaryAdvance'`);
+  if (!['Expense', 'SalaryAdvance', 'Bill'].includes(sourceType)) {
+    throw new BadRequestError(`sourceType must be 'Expense', 'SalaryAdvance', or 'Bill'`);
   }
 
   // Load + validate the source record
@@ -492,7 +492,7 @@ export const disburseFromSource = asyncHandler(async (req, res) => {
     }
     amount = Number(source.amount);
     defaultDescription = `Expense #${source.id}: ${source.description || source.category || 'staff expense'}`;
-  } else {
+  } else if (sourceType === 'SalaryAdvance') {
     source = await SalaryAdvance.findByPk(sourceId);
     if (!source) throw new NotFoundError('Salary advance not found');
     if (source.status !== 'Approved') {
@@ -500,6 +500,23 @@ export const disburseFromSource = asyncHandler(async (req, res) => {
     }
     amount = Number(source.amount);
     defaultDescription = `Salary advance #${source.id}`;
+  } else { // Bill
+    source = await Bill.findByPk(sourceId);
+    if (!source) throw new NotFoundError('Bill not found');
+    if (source.status === 'Paid') {
+      throw new BadRequestError(`Bill ${source.billNumber} is already fully paid`);
+    }
+    // Pay the outstanding balance, falling back to the total when paidAmount
+    // hasn't been tracked yet (legacy rows). Allows the same endpoint to
+    // close out partially-paid bills correctly.
+    const total = Number(source.totalAmount);
+    const paid  = Number(source.paidAmount || 0);
+    const balance = Number(source.balanceDue ?? (total - paid));
+    if (!Number.isFinite(balance) || balance <= 0) {
+      throw new BadRequestError(`Bill ${source.billNumber} has no outstanding balance`);
+    }
+    amount = balance;
+    defaultDescription = `Bill ${source.billNumber} — ${source.vendorName || 'vendor'}`;
   }
 
   if (!Number.isFinite(amount) || amount <= 0) {
@@ -542,6 +559,17 @@ export const disburseFromSource = asyncHandler(async (req, res) => {
       // Flip the source record so HR/Finance pages reflect the payment
       if (sourceType === 'Expense') {
         await source.update({ status: 'Paid' }, { transaction: t });
+      } else if (sourceType === 'Bill') {
+        // Increment paidAmount, recompute balanceDue, flip status to Paid
+        // when balance lands at zero.
+        const total = Number(source.totalAmount);
+        const newPaid = Number(source.paidAmount || 0) + amount;
+        const newBalance = total - newPaid;
+        await source.update({
+          paidAmount: newPaid,
+          balanceDue: newBalance,
+          status: newBalance <= 0 ? 'Paid' : (source.status || 'PartiallyPaid'),
+        }, { transaction: t });
       }
       // SalaryAdvance.status enum has no 'Paid' (the workflow is Pending →
       // Approved → Deducted, where Deducted means recovered via payroll).
@@ -555,7 +583,9 @@ export const disburseFromSource = asyncHandler(async (req, res) => {
       success: true,
       data: {
         transaction: reloaded,
-        sourceStatus: sourceType === 'Expense' && status === 'Posted' ? 'Paid' : source.status,
+        sourceStatus: status === 'Posted' && (sourceType === 'Expense' || sourceType === 'Bill')
+          ? source.status  // refreshed by the .update() above
+          : source.status,
         requiresApprovalBy: required
       }
     });
