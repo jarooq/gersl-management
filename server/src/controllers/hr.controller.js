@@ -32,7 +32,7 @@ export const getAllStaff = asyncHandler(async (req, res) => {
       {
         model: User,
         as: 'user',
-        attributes: ['id', 'username', 'role']
+        attributes: ['id', 'username', 'role', 'status']
       }
     ]
   });
@@ -277,7 +277,7 @@ export const updateStaff = asyncHandler(async (req, res) => {
       {
         model: User,
         as: 'user',
-        attributes: ['id', 'username', 'role']
+        attributes: ['id', 'username', 'role', 'status']
       }
     ]
   });

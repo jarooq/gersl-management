@@ -843,7 +843,12 @@ const HRPage = () => {
                           <button
                             onClick={async () => {
                               try {
-                                await API.Users.update(member.user.id, { status: 'Active', role: 'Field Officer' });
+                                // Update BOTH tables — User.status controls login,
+                                // Staff.status drives the badge shown on this card.
+                                await Promise.all([
+                                  API.Users.update(member.user.id, { status: 'Active', role: 'Field Officer' }),
+                                  API.HR.update(member.id, { status: 'Active' }),
+                                ]);
                                 alert(`✅ Activated ${member.fullName}`);
                                 window.location.reload();
                               } catch (err) {
@@ -860,7 +865,10 @@ const HRPage = () => {
                             onClick={async () => {
                               if (!window.confirm(`Deactivate ${member.fullName}? They won't be able to log in.`)) return;
                               try {
-                                await API.Users.update(member.user.id, { status: 'Inactive' });
+                                await Promise.all([
+                                  API.Users.update(member.user.id, { status: 'Inactive' }),
+                                  API.HR.update(member.id, { status: 'Inactive' }),
+                                ]);
                                 alert(`✅ Deactivated ${member.fullName}`);
                                 window.location.reload();
                               } catch (err) {
