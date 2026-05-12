@@ -16,6 +16,7 @@ import {
   sequelize,
 } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { createNextStageTask } from '../utils/programmeTasks.js';
 
 const STAGE_ORDER = ['Ordered', 'Surveyed', 'Materials', 'Construction', 'Testing', 'HandedOver', 'Reported', 'Cancelled'];
 const STAGE_TIMESTAMP_FIELD = {
@@ -270,6 +271,15 @@ export const transitionStage = asyncHandler(async (req, res) => {
     longitude:       longitude ?? null,
     updatedBy:       req.user?.id,
     source:          source || (req.headers['x-client'] === 'mobile' ? 'mobile' : 'web'),
+  });
+
+  // Auto-create a Task for the next operational step. Best-effort —
+  // never throws and never blocks the transition response.
+  await createNextStageTask({
+    kind: 'wash',
+    item,            // already has .order loaded above
+    newStage,
+    triggeredBy: req.user?.id,
   });
 
   res.json({ success: true, data: item });
