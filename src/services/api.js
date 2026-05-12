@@ -332,6 +332,14 @@ export const ProjectAPI = {
     return data.data.indicators;
   },
 
+  getBudgetActual: async (id, params = {}) => {
+    const qs = new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v != null && v !== ''))
+    ).toString();
+    const data = await request(`/projects/${id}/budget-actual${qs ? `?${qs}` : ''}`);
+    return data.data;
+  },
+
   getStats: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     const data = await request(`/projects/stats?${queryString}`);

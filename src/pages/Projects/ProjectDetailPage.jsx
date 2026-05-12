@@ -13,6 +13,7 @@ import { useCompliance } from '../../contexts/ComplianceContext';
 import CreateTaskModal from '../Operations/components/CreateTaskModal';
 import TaskFormModal from '../Operations/components/TaskFormModal';
 import TaskViewModal from '../Operations/components/TaskViewModal';
+import BudgetActualReport from './components/BudgetActualReport';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
@@ -442,6 +443,11 @@ const ProjectDetailPage = () => {
 
         {activeTab === 'financial' && (
           <div className="space-y-6">
+            {/* Budget vs Actual report — server-side aggregation across all
+                project expenses (Approved/Paid), with per-category breakdown
+                and monthly trend. */}
+            <BudgetActualReport projectId={id} />
+
             <div className="bg-ink-50 border border-ink-200 rounded-lg2 shadow-card p-6">
               <h3 className="text-lg font-bold text-ink-900 mb-6 flex items-center gap-2">
                 <DollarSign className="text-green-600" size={22} />

@@ -10,6 +10,7 @@ import {
   getProjectExpenses,
   getProjectIndicators
 } from '../controllers/project.controller.js';
+import { getProjectBudgetActual } from '../controllers/projectBudgetActual.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
 
@@ -49,6 +50,17 @@ router.get(
   requirePermission(PERMISSIONS.PROJECTS_VIEW),
   validateId(),
   getProjectIndicators
+);
+
+// @route   GET /api/projects/:id/budget-actual
+// @desc    Project budget vs actual roll-up
+// @access  Private (View permission)
+router.get(
+  '/:id/budget-actual',
+  requireAuth,
+  requirePermission(PERMISSIONS.PROJECTS_VIEW),
+  validateId(),
+  getProjectBudgetActual
 );
 
 // @route   PUT /api/projects/:id/progress
