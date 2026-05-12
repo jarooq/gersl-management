@@ -4,18 +4,6 @@ import { Visit, Project, Task, User } from '../models/index.js';
 
 const isAdmin = (user) => ['Admin', 'CEO', 'Programme Manager', 'MEAL Officer', 'Director Programmes'].includes(user?.role);
 
-// orphanId / visitType columns were added to the Visit model for the
-// orphan-visit unification feature, but the migration to ALTER TABLE on the
-// production DB hasn't been run yet. Until it is, default Visit queries 500
-// with `column visits.orphan_id does not exist`. Excluding those attributes
-// keeps the list/get endpoints working; the orphan-visit merge in
-// visitLog.controller.js already wraps its Visit query in .catch(()=>[]).
-// Once `migrations/add_visits_orphan_columns.sql` has been applied, this
-// exclude can be dropped.
-const SAFE_VISIT_ATTRIBUTES = {
-  exclude: ['orphanId', 'visitType']
-};
-
 export const list = asyncHandler(async (req, res) => {
   const where = {};
   if (!isAdmin(req.user)) where.userId = req.user.id;
@@ -28,7 +16,6 @@ export const list = asyncHandler(async (req, res) => {
   }
   const rows = await Visit.findAll({
     where,
-    attributes: SAFE_VISIT_ATTRIBUTES,
     include: [
       { model: User,    as: 'user',    attributes: ['id', 'fullName'] },
       { model: Project, as: 'project', attributes: ['id', 'name'] },
@@ -42,7 +29,6 @@ export const list = asyncHandler(async (req, res) => {
 
 export const get = asyncHandler(async (req, res) => {
   const row = await Visit.findByPk(req.params.id, {
-    attributes: SAFE_VISIT_ATTRIBUTES,
     include: [
       { model: Project, as: 'project' },
       { model: Task,    as: 'task' },

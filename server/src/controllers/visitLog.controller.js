@@ -90,7 +90,7 @@ export const getVisitLogsByOrphan = asyncHandler(async (req, res) => {
       where: { orphanId },
       order: [['occurredAt', 'DESC']],
       include: [{ model: User, as: 'user', attributes: ['id', 'username', 'fullName'] }],
-    }).catch(() => []),
+    }),
   ]);
 
   const adapted = (visitRows || []).map(v => ({
