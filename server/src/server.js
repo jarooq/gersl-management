@@ -127,6 +127,8 @@ import uploadsStaticRouter from './routes/uploads-static.js';
 import cashRoutes from './routes/cash.routes.js';
 import movementRoutes from './routes/movement.routes.js';
 import deviceRoutes from './routes/device.routes.js';
+import washRoutes from './routes/wash.routes.js';
+import igpRoutes from './routes/igp.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -340,6 +342,12 @@ app.use('/api/audit-logs', auditLogRoutes);
 
 // Cash module (Locker / CashBook / PettyCash)
 app.use('/api/cash', cashRoutes);
+
+// WASH + IGP programme modules (donor-funded asset distribution).
+// Connect to existing entities (partners, projects, proposals, beneficiaries,
+// vendors, invoices) so all dashboards and reports pick them up automatically.
+app.use('/api/wash', washRoutes);
+app.use('/api/igp',  igpRoutes);
 
 // Movement register + vehicles
 app.use('/api', movementRoutes);
