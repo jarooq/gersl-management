@@ -130,6 +130,7 @@ import deviceRoutes from './routes/device.routes.js';
 import washRoutes from './routes/wash.routes.js';
 import igpRoutes from './routes/igp.routes.js';
 import mapRoutes from './routes/map.routes.js';
+import cronRoutes from './routes/cron.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -354,6 +355,10 @@ app.use('/api/igp',  igpRoutes);
 // beneficiary entities for the shared BeneficiaryMap component.
 app.use('/api/map', mapRoutes);
 
+// Scheduled job triggers (Vercel Cron / external scheduler). Auth via
+// x-cron-secret header against CRON_SECRET env var.
+app.use('/api/cron', cronRoutes);
+
 // Movement register + vehicles
 app.use('/api', movementRoutes);
 
@@ -445,6 +450,20 @@ const startServer = async () => {
           console.log(`🛰  Movement cluster ${dateStr}:`, summary.length, 'users processed');
         } catch (e) {
           console.error('❌ Movement cluster failed:', e.message);
+        }
+      });
+
+      // Daily programme deadline reminders — runs at 08:00 server-time.
+      // Sends a digest to each supervisor with items overdue, due tomorrow,
+      // or due this week. Skipped on Vercel; trigger the HTTP endpoint below
+      // from a Vercel Cron schedule instead.
+      cron.schedule('0 8 * * *', async () => {
+        try {
+          const { sendDeadlineReminders } = await import('./utils/programmeDeadlineReminders.js');
+          const result = await sendDeadlineReminders();
+          console.log('📧 Programme deadline reminders:', result);
+        } catch (e) {
+          console.error('❌ Deadline reminders failed:', e.message);
         }
       });
     }
