@@ -25,11 +25,12 @@ CREATE INDEX IF NOT EXISTS idx_expenses_date          ON expenses (date);
 CREATE INDEX IF NOT EXISTS idx_expenses_status_proj   ON expenses (status, project_id);
 
 -- --- visits --------------------------------------------------------------
--- visit.controller.js list endpoint scopes by user_id, project_id, orphan_id
--- and filters by status.
-CREATE INDEX IF NOT EXISTS idx_visits_status     ON visits (status);
-CREATE INDEX IF NOT EXISTS idx_visits_user_id    ON visits (user_id);
-CREATE INDEX IF NOT EXISTS idx_visits_project_id ON visits (project_id);
+-- visit.controller.js list endpoint scopes by user_id and project_id.
+-- The visits table has no status column — visits are append-only event rows
+-- (occurred_at is the relevant timeline column), so no status index here.
+CREATE INDEX IF NOT EXISTS idx_visits_user_id     ON visits (user_id);
+CREATE INDEX IF NOT EXISTS idx_visits_project_id  ON visits (project_id);
+CREATE INDEX IF NOT EXISTS idx_visits_occurred_at ON visits (occurred_at);
 
 -- --- users ---------------------------------------------------------------
 -- /api/users list filters by status; auth lookups filter by username/email
