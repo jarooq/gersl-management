@@ -2224,30 +2224,55 @@ const HRPage = () => {
                 <button
                   onClick={async () => {
                     try {
-                      // User.status is ENUM('Active','Inactive','Suspended').
-                      // Staff.status is a free STRING that can hold 'Pending'.
-                      // If the editor opened a Pending staff and the admin
-                      // didn't change the dropdown, the payload still says
-                      // 'Pending' which Sequelize rejects → 500. Coerce it
-                      // to a valid User.status before posting. Treat the
-                      // Pending state as Active by default — that's what
-                      // activating a self-registered staff actually means.
+                      // Split the form between User columns (login + identity)
+                      // and Staff columns (HR profile). The backend has two
+                      // tables; sending everything to /api/users would silently
+                      // drop the Staff fields. User.status enum doesn't accept
+                      // 'Pending' — coerce to Active when the dropdown still
+                      // reads Pending.
                       const VALID = new Set(['Active', 'Inactive', 'Suspended']);
-                      const payload = {
-                        ...editStaffForm,
-                        status: VALID.has(editStaffForm.status)
-                          ? editStaffForm.status
-                          : 'Active',
+                      const userStatus = VALID.has(editStaffForm.status)
+                        ? editStaffForm.status : 'Active';
+
+                      const userPayload = {
+                        fullName:   editStaffForm.fullName,
+                        email:      editStaffForm.email,
+                        phone:      editStaffForm.phone,
+                        department: editStaffForm.department,
+                        status:     userStatus,
                       };
-                      await API.Users.update(editStaffForm.id, payload);
+                      // Only Staff-model attributes (fullName, email, phone,
+                      // position, department, salary, joinDate, status,
+                      // employmentType). Fields the model doesn't define
+                      // (employeeId, dateOfBirth, gender, address, bio,
+                      // contractType, workHours, emergencyContact, leaveBalance)
+                      // are dropped silently by Sequelize's instance.update —
+                      // they're collected in the form for future migration but
+                      // intentionally not sent.
+                      const staffPayload = {
+                        fullName:       editStaffForm.fullName,
+                        email:          editStaffForm.email,
+                        phone:          editStaffForm.phone,
+                        department:     editStaffForm.department,
+                        position:       editStaffForm.position,
+                        salary:         editStaffForm.salary || null,
+                        joinDate:       editStaffForm.joiningDate || null,
+                        status:         editStaffForm.status, // Staff allows 'Pending'
+                        employmentType: editStaffForm.contractType || undefined,
+                      };
+
+                      const calls = [API.HR.update(editStaffForm.staffId, staffPayload)];
+                      if (editStaffForm.userId) {
+                        calls.push(API.Users.update(editStaffForm.userId, userPayload));
+                      }
+                      await Promise.all(calls);
+
                       alert('✅ Staff member updated successfully!');
                       setShowEditStaffModal(false);
                       window.location.reload();
                     } catch (error) {
                       console.error('Error updating staff:', error, error?.response?.data);
                       const data = error.response?.data || {};
-                      // Show whatever the backend actually said, including
-                      // the type and any Sequelize-original message.
                       const lines = [
                         'Error updating staff member:',
                         data.message || error.message,
@@ -3000,8 +3025,11 @@ const HRPage = () => {
             setSelectedStaff(null);
           }}
           onEdit={(staff) => {
+            // staff.id is the Staff PK; staff.user.id is the User PK.
+            // We need both — User update touches users, Staff update touches staff.
             setEditStaffForm({
-              id: staff.id,
+              staffId: staff.id,
+              userId:  staff.user?.id ?? staff.userId ?? null,
               fullName: staff.fullName || '',
               email: staff.email || '',
               phone: staff.phone || '',
