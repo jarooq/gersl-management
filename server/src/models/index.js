@@ -5568,6 +5568,218 @@ MovementSegment.belongsTo(User, { as: 'user', foreignKey: 'userId' });
 User.hasMany(MovementSegment, { as: 'movementSegments', foreignKey: 'userId' });
 
 // ============================================
+// WASH & IGP MODULES
+// ============================================
+// Parallel modules to orphan-care. Each module has:
+//   Order      — a donor-funded batch (or standing arrangement for drip donors)
+//   Item       — one installation/asset for one named beneficiary
+//   StageUpdate— append-only timeline of progress entries (photos, GPS, notes)
+//
+// Connects to existing entities (no duplication):
+//   donor      → partners.id
+//   project    → projects.id (Programme umbrella)
+//   proposal   → proposals.id (optional — Order created via "Convert to Order")
+//   invoice    → invoices.id (auto-generated per donor's invoice_timing)
+//   beneficiary→ beneficiaries.id (same person can receive across programmes)
+//   contractor → vendors.id (Vendor.isContractor = true)
+//   supervisor → users.id
+
+const WashOrder = sequelize.define('WashOrder', {
+  orderCode:        { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'order_code' },
+  donorId:          { type: DataTypes.INTEGER, field: 'donor_id',    references: { model: 'partners',  key: 'id' } },
+  projectId:        { type: DataTypes.INTEGER, field: 'project_id',  references: { model: 'projects',  key: 'id' } },
+  proposalId:       { type: DataTypes.INTEGER, field: 'proposal_id', references: { model: 'proposals', key: 'id' } },
+  title:            { type: DataTypes.STRING(300), allowNull: false },
+  description:      { type: DataTypes.TEXT },
+  unitType:         { type: DataTypes.STRING(50), field: 'unit_type' },
+  quantity:         { type: DataTypes.INTEGER, allowNull: false },
+  unitCost:         { type: DataTypes.DECIMAL(15, 2), field: 'unit_cost' },
+  totalBudget:      { type: DataTypes.DECIMAL(15, 2), field: 'total_budget' },
+  currency:         { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  orderDate:        { type: DataTypes.DATEONLY, allowNull: false, field: 'order_date' },
+  deadline:         { type: DataTypes.DATEONLY, allowNull: false },
+  committedDate:    { type: DataTypes.DATEONLY, field: 'committed_date' },
+  expectedDelivery: { type: DataTypes.DATEONLY, field: 'expected_delivery' },
+  deliveryCadence:  { type: DataTypes.STRING(20), defaultValue: 'Batch', field: 'delivery_cadence' },
+  invoiceTiming:    { type: DataTypes.STRING(20), defaultValue: 'AfterWork', field: 'invoice_timing' },
+  workStartCondition:{ type: DataTypes.STRING(30), defaultValue: 'OnAcceptance', field: 'work_start_condition' },
+  donorReporting:   { type: DataTypes.STRING(20), defaultValue: 'PerItem', field: 'donor_reporting' },
+  invoiceId:        { type: DataTypes.INTEGER, field: 'invoice_id',  references: { model: 'invoices',  key: 'id' } },
+  paymentStatus:    { type: DataTypes.STRING(20), defaultValue: 'Pending', field: 'payment_status' },
+  amountReceived:   { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_received' },
+  status:           { type: DataTypes.STRING(20), defaultValue: 'Active' },
+  donorRef:         { type: DataTypes.STRING(100), field: 'donor_ref' },
+  notes:            { type: DataTypes.TEXT },
+  createdBy:        { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } },
+}, { tableName: 'wash_orders', timestamps: true, underscored: true });
+
+const WashItem = sequelize.define('WashItem', {
+  itemCode:             { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'item_code' },
+  orderId:              { type: DataTypes.INTEGER, allowNull: false, field: 'order_id', references: { model: 'wash_orders', key: 'id' } },
+  beneficiaryId:        { type: DataTypes.INTEGER, field: 'beneficiary_id', references: { model: 'beneficiaries', key: 'id' } },
+  beneficiaryName:      { type: DataTypes.STRING(200), field: 'beneficiary_name' },
+  beneficiaryNic:       { type: DataTypes.STRING(20),  field: 'beneficiary_nic' },
+  beneficiaryPhone:     { type: DataTypes.STRING(20),  field: 'beneficiary_phone' },
+  householdSize:        { type: DataTypes.INTEGER, field: 'household_size' },
+  province:             { type: DataTypes.STRING(100) },
+  district:             { type: DataTypes.STRING(100) },
+  dsDivision:           { type: DataTypes.STRING(150), field: 'ds_division' },
+  gnDivision:           { type: DataTypes.STRING(150), field: 'gn_division' },
+  address:              { type: DataTypes.TEXT },
+  installationLat:      { type: DataTypes.DECIMAL(10, 7), field: 'installation_lat' },
+  installationLng:      { type: DataTypes.DECIMAL(10, 7), field: 'installation_lng' },
+  unitType:             { type: DataTypes.STRING(50), allowNull: false, field: 'unit_type' },
+  plannedCost:          { type: DataTypes.DECIMAL(15, 2), field: 'planned_cost' },
+  actualCost:           { type: DataTypes.DECIMAL(15, 2), field: 'actual_cost' },
+  assignedContractorId: { type: DataTypes.INTEGER, field: 'assigned_contractor_id', references: { model: 'vendors', key: 'id' } },
+  assignedSupervisorId: { type: DataTypes.INTEGER, field: 'assigned_supervisor_id', references: { model: 'users',   key: 'id' } },
+  stage:                { type: DataTypes.STRING(30), defaultValue: 'Ordered' },
+  surveyedAt:           { type: DataTypes.DATE, field: 'surveyed_at' },
+  materialsAt:          { type: DataTypes.DATE, field: 'materials_at' },
+  constructionAt:       { type: DataTypes.DATE, field: 'construction_at' },
+  testingAt:            { type: DataTypes.DATE, field: 'testing_at' },
+  handoverAt:           { type: DataTypes.DATE, field: 'handover_at' },
+  reportedAt:           { type: DataTypes.DATE, field: 'reported_at' },
+  plannedCompletion:    { type: DataTypes.DATEONLY, field: 'planned_completion' },
+  slaDays:              { type: DataTypes.INTEGER, field: 'sla_days' },
+  overdueReason:        { type: DataTypes.TEXT, field: 'overdue_reason' },
+  donorRef:             { type: DataTypes.STRING(100), field: 'donor_ref' },
+  reportPdfUrl:         { type: DataTypes.STRING(1000), field: 'report_pdf_url' },
+  notes:                { type: DataTypes.TEXT },
+  createdBy:            { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } },
+}, { tableName: 'wash_items', timestamps: true, underscored: true });
+
+const WashStageUpdate = sequelize.define('WashStageUpdate', {
+  itemId:          { type: DataTypes.INTEGER, allowNull: false, field: 'item_id', references: { model: 'wash_items', key: 'id' } },
+  stage:           { type: DataTypes.STRING(30), allowNull: false },
+  percentComplete: { type: DataTypes.INTEGER, defaultValue: 0, field: 'percent_complete' },
+  notes:           { type: DataTypes.TEXT },
+  photoUrls:       { type: DataTypes.JSONB, defaultValue: [], field: 'photo_urls' },
+  latitude:        { type: DataTypes.DECIMAL(10, 7) },
+  longitude:       { type: DataTypes.DECIMAL(10, 7) },
+  updatedBy:       { type: DataTypes.INTEGER, field: 'updated_by', references: { model: 'users', key: 'id' } },
+  source:          { type: DataTypes.STRING(20), defaultValue: 'web' },
+}, { tableName: 'wash_stage_updates', timestamps: true, updatedAt: false, underscored: true });
+
+const IgpOrder = sequelize.define('IgpOrder', {
+  orderCode:        { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'order_code' },
+  donorId:          { type: DataTypes.INTEGER, field: 'donor_id',    references: { model: 'partners',  key: 'id' } },
+  projectId:        { type: DataTypes.INTEGER, field: 'project_id',  references: { model: 'projects',  key: 'id' } },
+  proposalId:       { type: DataTypes.INTEGER, field: 'proposal_id', references: { model: 'proposals', key: 'id' } },
+  title:            { type: DataTypes.STRING(300), allowNull: false },
+  description:      { type: DataTypes.TEXT },
+  assetMix:         { type: DataTypes.JSONB, field: 'asset_mix' },
+  quantity:         { type: DataTypes.INTEGER, allowNull: false },
+  totalBudget:      { type: DataTypes.DECIMAL(15, 2), field: 'total_budget' },
+  currency:         { type: DataTypes.STRING(8), defaultValue: 'LKR' },
+  orderDate:        { type: DataTypes.DATEONLY, allowNull: false, field: 'order_date' },
+  deadline:         { type: DataTypes.DATEONLY, allowNull: false },
+  committedDate:    { type: DataTypes.DATEONLY, field: 'committed_date' },
+  expectedDelivery: { type: DataTypes.DATEONLY, field: 'expected_delivery' },
+  deliveryCadence:  { type: DataTypes.STRING(20), defaultValue: 'Batch', field: 'delivery_cadence' },
+  invoiceTiming:    { type: DataTypes.STRING(20), defaultValue: 'AfterWork', field: 'invoice_timing' },
+  workStartCondition:{ type: DataTypes.STRING(30), defaultValue: 'OnAcceptance', field: 'work_start_condition' },
+  donorReporting:   { type: DataTypes.STRING(20), defaultValue: 'PerItem', field: 'donor_reporting' },
+  invoiceId:        { type: DataTypes.INTEGER, field: 'invoice_id',  references: { model: 'invoices',  key: 'id' } },
+  paymentStatus:    { type: DataTypes.STRING(20), defaultValue: 'Pending', field: 'payment_status' },
+  amountReceived:   { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_received' },
+  status:           { type: DataTypes.STRING(20), defaultValue: 'Active' },
+  donorRef:         { type: DataTypes.STRING(100), field: 'donor_ref' },
+  notes:            { type: DataTypes.TEXT },
+  createdBy:        { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } },
+}, { tableName: 'igp_orders', timestamps: true, underscored: true });
+
+const IgpItem = sequelize.define('IgpItem', {
+  itemCode:             { type: DataTypes.STRING(50), unique: true, allowNull: false, field: 'item_code' },
+  orderId:              { type: DataTypes.INTEGER, allowNull: false, field: 'order_id', references: { model: 'igp_orders', key: 'id' } },
+  beneficiaryId:        { type: DataTypes.INTEGER, field: 'beneficiary_id', references: { model: 'beneficiaries', key: 'id' } },
+  beneficiaryName:      { type: DataTypes.STRING(200), field: 'beneficiary_name' },
+  beneficiaryNic:       { type: DataTypes.STRING(20),  field: 'beneficiary_nic' },
+  beneficiaryPhone:     { type: DataTypes.STRING(20),  field: 'beneficiary_phone' },
+  householdSize:        { type: DataTypes.INTEGER, field: 'household_size' },
+  province:             { type: DataTypes.STRING(100) },
+  district:             { type: DataTypes.STRING(100) },
+  dsDivision:           { type: DataTypes.STRING(150), field: 'ds_division' },
+  gnDivision:           { type: DataTypes.STRING(150), field: 'gn_division' },
+  address:              { type: DataTypes.TEXT },
+  deliveryLat:          { type: DataTypes.DECIMAL(10, 7), field: 'delivery_lat' },
+  deliveryLng:          { type: DataTypes.DECIMAL(10, 7), field: 'delivery_lng' },
+  assetType:            { type: DataTypes.STRING(50), allowNull: false, field: 'asset_type' },
+  assetSpecification:   { type: DataTypes.TEXT, field: 'asset_specification' },
+  plannedCost:          { type: DataTypes.DECIMAL(15, 2), field: 'planned_cost' },
+  actualCost:           { type: DataTypes.DECIMAL(15, 2), field: 'actual_cost' },
+  assignedContractorId: { type: DataTypes.INTEGER, field: 'assigned_contractor_id', references: { model: 'vendors', key: 'id' } },
+  assignedSupervisorId: { type: DataTypes.INTEGER, field: 'assigned_supervisor_id', references: { model: 'users',   key: 'id' } },
+  trainingRequired:     { type: DataTypes.BOOLEAN, defaultValue: false, field: 'training_required' },
+  trainingHours:        { type: DataTypes.INTEGER, field: 'training_hours' },
+  trainingCompletedAt:  { type: DataTypes.DATE, field: 'training_completed_at' },
+  trainerId:            { type: DataTypes.INTEGER, field: 'trainer_id', references: { model: 'users', key: 'id' } },
+  certificateUrl:       { type: DataTypes.STRING(1000), field: 'certificate_url' },
+  stage:                { type: DataTypes.STRING(30), defaultValue: 'Ordered' },
+  surveyedAt:           { type: DataTypes.DATE, field: 'surveyed_at' },
+  procuredAt:           { type: DataTypes.DATE, field: 'procured_at' },
+  deliveredAt:          { type: DataTypes.DATE, field: 'delivered_at' },
+  reportedAt:           { type: DataTypes.DATE, field: 'reported_at' },
+  plannedCompletion:    { type: DataTypes.DATEONLY, field: 'planned_completion' },
+  followUpAt:           { type: DataTypes.DATEONLY, field: 'follow_up_at' },
+  incomeBaseline:       { type: DataTypes.DECIMAL(15, 2), field: 'income_baseline' },
+  incomeFollowup:       { type: DataTypes.DECIMAL(15, 2), field: 'income_followup' },
+  donorRef:             { type: DataTypes.STRING(100), field: 'donor_ref' },
+  reportPdfUrl:         { type: DataTypes.STRING(1000), field: 'report_pdf_url' },
+  notes:                { type: DataTypes.TEXT },
+  createdBy:            { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } },
+}, { tableName: 'igp_items', timestamps: true, underscored: true });
+
+const IgpStageUpdate = sequelize.define('IgpStageUpdate', {
+  itemId:          { type: DataTypes.INTEGER, allowNull: false, field: 'item_id', references: { model: 'igp_items', key: 'id' } },
+  stage:           { type: DataTypes.STRING(30), allowNull: false },
+  percentComplete: { type: DataTypes.INTEGER, defaultValue: 0, field: 'percent_complete' },
+  notes:           { type: DataTypes.TEXT },
+  photoUrls:       { type: DataTypes.JSONB, defaultValue: [], field: 'photo_urls' },
+  latitude:        { type: DataTypes.DECIMAL(10, 7) },
+  longitude:       { type: DataTypes.DECIMAL(10, 7) },
+  updatedBy:       { type: DataTypes.INTEGER, field: 'updated_by', references: { model: 'users', key: 'id' } },
+  source:          { type: DataTypes.STRING(20), defaultValue: 'web' },
+}, { tableName: 'igp_stage_updates', timestamps: true, updatedAt: false, underscored: true });
+
+// --- WASH associations
+WashOrder.belongsTo(Partner,  { as: 'donor',    foreignKey: 'donorId' });
+WashOrder.belongsTo(Project,  { as: 'project',  foreignKey: 'projectId' });
+WashOrder.belongsTo(Proposal, { as: 'proposal', foreignKey: 'proposalId' });
+WashOrder.belongsTo(Invoice,  { as: 'invoice',  foreignKey: 'invoiceId' });
+WashOrder.belongsTo(User,     { as: 'creator',  foreignKey: 'createdBy' });
+WashOrder.hasMany(WashItem,   { as: 'items',    foreignKey: 'orderId' });
+
+WashItem.belongsTo(WashOrder,   { as: 'order',       foreignKey: 'orderId' });
+WashItem.belongsTo(Beneficiary, { as: 'beneficiary', foreignKey: 'beneficiaryId' });
+WashItem.belongsTo(Vendor,      { as: 'contractor',  foreignKey: 'assignedContractorId' });
+WashItem.belongsTo(User,        { as: 'supervisor',  foreignKey: 'assignedSupervisorId' });
+WashItem.belongsTo(User,        { as: 'creator',     foreignKey: 'createdBy' });
+WashItem.hasMany(WashStageUpdate, { as: 'stageUpdates', foreignKey: 'itemId' });
+
+WashStageUpdate.belongsTo(WashItem, { as: 'item',    foreignKey: 'itemId' });
+WashStageUpdate.belongsTo(User,     { as: 'updater', foreignKey: 'updatedBy' });
+
+// --- IGP associations
+IgpOrder.belongsTo(Partner,  { as: 'donor',    foreignKey: 'donorId' });
+IgpOrder.belongsTo(Project,  { as: 'project',  foreignKey: 'projectId' });
+IgpOrder.belongsTo(Proposal, { as: 'proposal', foreignKey: 'proposalId' });
+IgpOrder.belongsTo(Invoice,  { as: 'invoice',  foreignKey: 'invoiceId' });
+IgpOrder.belongsTo(User,     { as: 'creator',  foreignKey: 'createdBy' });
+IgpOrder.hasMany(IgpItem,    { as: 'items',    foreignKey: 'orderId' });
+
+IgpItem.belongsTo(IgpOrder,    { as: 'order',       foreignKey: 'orderId' });
+IgpItem.belongsTo(Beneficiary, { as: 'beneficiary', foreignKey: 'beneficiaryId' });
+IgpItem.belongsTo(Vendor,      { as: 'contractor',  foreignKey: 'assignedContractorId' });
+IgpItem.belongsTo(User,        { as: 'supervisor',  foreignKey: 'assignedSupervisorId' });
+IgpItem.belongsTo(User,        { as: 'trainer',     foreignKey: 'trainerId' });
+IgpItem.belongsTo(User,        { as: 'creator',     foreignKey: 'createdBy' });
+IgpItem.hasMany(IgpStageUpdate, { as: 'stageUpdates', foreignKey: 'itemId' });
+
+IgpStageUpdate.belongsTo(IgpItem, { as: 'item',    foreignKey: 'itemId' });
+IgpStageUpdate.belongsTo(User,    { as: 'updater', foreignKey: 'updatedBy' });
+
+// ============================================
 // EXPORTS
 // ============================================
 
@@ -5691,6 +5903,13 @@ export {
   LeaveBalance,
   MovementSegment,
   GerhrMigration,
+  // WASH & IGP modules
+  WashOrder,
+  WashItem,
+  WashStageUpdate,
+  IgpOrder,
+  IgpItem,
+  IgpStageUpdate,
   sequelize
 };
 
@@ -5850,5 +6069,12 @@ export default {
   LeaveBalance,
   MovementSegment,
   GerhrMigration,
+  // WASH & IGP modules
+  WashOrder,
+  WashItem,
+  WashStageUpdate,
+  IgpOrder,
+  IgpItem,
+  IgpStageUpdate,
   sequelize
 };
