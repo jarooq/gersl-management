@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { Campaign, Donation, User } from '../models/index.js';
 import { asyncHandler, NotFoundError, ValidationError } from '../middleware/error.middleware.js';
+import { sendDonorReceipt } from '../services/email.service.js';
 
 // ============================================
 // GET ALL DONATIONS
@@ -91,13 +92,21 @@ export const createDonation = asyncHandler(async (req, res) => {
   const donation = await Donation.create(donationData);
 
   // Update campaign raised amount if payment is completed
+  let campaign = null;
   if (donationData.campaignId && donationData.paymentStatus === 'Completed') {
-    const campaign = await Campaign.findByPk(donationData.campaignId);
+    campaign = await Campaign.findByPk(donationData.campaignId);
     if (campaign) {
       await campaign.update({
         raisedAmount: parseFloat(campaign.raisedAmount) + parseFloat(donationData.amount)
       });
     }
+  }
+
+  // Fire donor receipt email when the donation is created already-Completed.
+  // The email service short-circuits if SMTP isn't configured or the donor
+  // is anonymous / has no email.
+  if (donation.paymentStatus === 'Completed') {
+    await sendDonorReceipt({ donation, campaign });
   }
 
   res.status(201).json({
@@ -121,7 +130,10 @@ export const updateDonation = asyncHandler(async (req, res) => {
   }
 
   // Handle payment status change to Completed
-  if (updateData.paymentStatus === 'Completed' && donation.paymentStatus !== 'Completed') {
+  const becameCompleted =
+    updateData.paymentStatus === 'Completed' && donation.paymentStatus !== 'Completed';
+  let receiptCampaign = null;
+  if (becameCompleted) {
     // Generate receipt number if not provided
     if (!updateData.receiptNumber) {
       const year = new Date().getFullYear();
@@ -131,10 +143,10 @@ export const updateDonation = asyncHandler(async (req, res) => {
 
     // Update campaign raised amount
     if (donation.campaignId) {
-      const campaign = await Campaign.findByPk(donation.campaignId);
-      if (campaign) {
-        await campaign.update({
-          raisedAmount: parseFloat(campaign.raisedAmount) + parseFloat(donation.amount)
+      receiptCampaign = await Campaign.findByPk(donation.campaignId);
+      if (receiptCampaign) {
+        await receiptCampaign.update({
+          raisedAmount: parseFloat(receiptCampaign.raisedAmount) + parseFloat(donation.amount)
         });
       }
     }
@@ -154,6 +166,11 @@ export const updateDonation = asyncHandler(async (req, res) => {
   }
 
   await donation.update(updateData);
+
+  // Send donor receipt on the transition Pending/Failed → Completed.
+  if (becameCompleted) {
+    await sendDonorReceipt({ donation, campaign: receiptCampaign });
+  }
 
   res.json({
     success: true,

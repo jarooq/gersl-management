@@ -190,6 +190,56 @@ export const notifySalaryAdvanceSubmitted = async ({ advance, requester }) => {
 // Decision notifications (to requesters)
 // ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// Donor receipt — sent automatically when a donation flips to paymentStatus
+// 'Completed'. Anonymous donations and donations without an email address
+// short-circuit. Receipt body is intentionally minimal so the same template
+// also reads well when forwarded to finance/audit teams.
+// ----------------------------------------------------------------------------
+
+export const sendDonorReceipt = async ({ donation, campaign }) => {
+  if (!donation || donation.isAnonymous) return false;
+  if (!donation.donorEmail) return false;
+
+  const formattedDate = donation.donationDate
+    ? new Date(donation.donationDate).toLocaleDateString('en-LK', {
+        year: 'numeric', month: 'long', day: 'numeric',
+      })
+    : new Date().toLocaleDateString('en-LK');
+
+  const body = `
+    <p>Dear <strong>${escape(donation.donorName || 'Donor')}</strong>,</p>
+    <p>Thank you for your generous contribution to Global Ehsan Relief Sri Lanka.
+       Your support directly funds our work with orphans, food security, and
+       community resilience programmes across Sri Lanka.</p>
+    <table style="font-size:13px;margin:14px 0;border-collapse:collapse;">
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Receipt no.</td>
+          <td style="font-weight:700;">${escape(donation.receiptNumber || donation.donationCode)}</td></tr>
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Date</td>
+          <td>${escape(formattedDate)}</td></tr>
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Amount</td>
+          <td style="font-weight:700;color:#16a34a;">${fmtAmount(donation.amount, donation.currency || 'LKR')}</td></tr>
+      ${donation.paymentMethod
+        ? `<tr><td style="color:#666;padding:4px 16px 4px 0;">Method</td><td>${escape(donation.paymentMethod)}</td></tr>`
+        : ''}
+      ${campaign?.title
+        ? `<tr><td style="color:#666;padding:4px 16px 4px 0;">Campaign</td><td>${escape(campaign.title)}</td></tr>`
+        : ''}
+    </table>
+    <p style="margin-top:14px;font-size:13px;color:#444;">
+      This receipt is issued for your records. Please retain it for tax or
+      audit purposes where applicable. If you have any questions about your
+      donation, simply reply to this email and our team will respond.
+    </p>
+    <p style="font-size:13px;color:#444;">With gratitude,<br/><strong>The GERSL Team</strong></p>`;
+
+  return sendEmail({
+    to: donation.donorEmail,
+    subject: `Donation receipt — ${donation.receiptNumber || donation.donationCode}`,
+    html: wrap('Thank you for your donation', body),
+  });
+};
+
 export const notifyDecision = async ({ to, kind, decision, reason }) => {
   if (!to) return false;
   const approved = decision === 'Approved' || decision === 'approve';
