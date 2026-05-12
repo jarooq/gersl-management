@@ -5950,6 +5950,34 @@ withAuditLog(AttendanceCorrection, 'AttendanceCorrection');
 withAuditLog(AttendancePunch, 'AttendancePunch');
 withAuditLog(Attendance, 'Attendance');
 
+// --- Invoice → WASH/IGP order auto-reconciliation -------------------------
+// When an invoice's paidAmount changes, propagate the payment status onto
+// any linked WashOrder or IgpOrder so dashboards and the funds-gate logic
+// react immediately. Best-effort — never throws back to the caller.
+Invoice.afterUpdate(async (invoice) => {
+  if (!invoice.changed('paidAmount') && !invoice.changed('status')) return;
+  try {
+    const total = Number(invoice.totalAmount || 0);
+    const paid  = Number(invoice.paidAmount || 0);
+    const newStatus =
+      paid >= total && total > 0 ? 'Paid'
+      : paid > 0                  ? 'PartiallyPaid'
+                                  : 'Pending';
+    await Promise.all([
+      WashOrder.update(
+        { paymentStatus: newStatus, amountReceived: paid },
+        { where: { invoiceId: invoice.id } }
+      ),
+      IgpOrder.update(
+        { paymentStatus: newStatus, amountReceived: paid },
+        { where: { invoiceId: invoice.id } }
+      ),
+    ]);
+  } catch (err) {
+    console.error('[invoice.afterUpdate] failed to reconcile orders:', err.message);
+  }
+});
+
 export default {
   User,
   Orphan,

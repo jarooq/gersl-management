@@ -5,6 +5,7 @@ import {
   transitionStage, addStageUpdate, listStageUpdates, recordFollowUp,
   listMyItems, getSummary,
 } from '../controllers/igp.controller.js';
+import { generateInvoiceForIgpOrder, reconcileIgpOrder } from '../controllers/orderConversion.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -33,7 +34,9 @@ router.post  ('/orders',         requireIgpWrite, createOrder);
 router.get   ('/orders/:id',     validateId(), requireIgpView,  getOrder);
 router.patch ('/orders/:id',     validateId(), requireIgpWrite, updateOrder);
 router.delete('/orders/:id',     validateId(), requireIgpWrite, cancelOrder);
-router.post  ('/orders/:id/items', validateId(), requireIgpWrite, bulkCreateItems);
+router.post  ('/orders/:id/items',             validateId(), requireIgpWrite, bulkCreateItems);
+router.post  ('/orders/:id/generate-invoice',  validateId(), requireIgpWrite, generateInvoiceForIgpOrder);
+router.patch ('/orders/:id/reconcile',         validateId(), requireIgpWrite, reconcileIgpOrder);
 
 router.get   ('/items',          requireIgpView,        listItems);
 router.get   ('/items/:id',      validateId(), requireIgpView,        getItem);

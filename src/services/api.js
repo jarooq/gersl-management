@@ -4194,6 +4194,10 @@ export const WashAPI = {
   // Stage updates
   listStageUpdates: (id)        => request(`/wash/items/${id}/stage-updates`).then(r => r.data),
   addStageUpdate:   (id, body)  => request(`/wash/items/${id}/stage-updates`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+
+  // Finance integration
+  generateInvoice:  (orderId)        => request(`/wash/orders/${orderId}/generate-invoice`, { method: 'POST' }).then(r => r.data),
+  reconcile:        (orderId)        => request(`/wash/orders/${orderId}/reconcile`, { method: 'PATCH' }).then(r => r.data),
 };
 
 // ============================================
@@ -4226,6 +4230,18 @@ export const IgpAPI = {
 
   listStageUpdates: (id)        => request(`/igp/items/${id}/stage-updates`).then(r => r.data),
   addStageUpdate:   (id, body)  => request(`/igp/items/${id}/stage-updates`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+
+  // Finance integration
+  generateInvoice:  (orderId)        => request(`/igp/orders/${orderId}/generate-invoice`, { method: 'POST' }).then(r => r.data),
+  reconcile:        (orderId)        => request(`/igp/orders/${orderId}/reconcile`, { method: 'PATCH' }).then(r => r.data),
+};
+
+// ============================================
+// PROPOSAL CONVERSION (to WASH/IGP order)
+// ============================================
+export const ProposalConversionAPI = {
+  convertToOrder: (proposalId, body) =>
+    request(`/proposals/${proposalId}/convert-to-order`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
 };
 
 export default API;

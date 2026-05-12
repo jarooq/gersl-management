@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Droplets, Upload, Plus, MapPin, X, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Droplets, Upload, Plus, MapPin, X, ChevronRight, FileText, CheckCircle } from 'lucide-react';
 import { WashAPI } from '../../services/api';
 
 const fmt = (n) => `LKR ${Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`;
@@ -71,6 +71,9 @@ const WashOrderDetailPage = () => {
         <Tile label="Budget"      value={fmt(order.totalBudget)} />
         <Tile label="Actual cost" value={fmt(summary.actualCostSum)} />
       </div>
+
+      {/* Finance integration */}
+      <InvoiceCard order={order} onUpdated={load} />
 
       {/* Stage breakdown */}
       {summary.totalItems > 0 && (
@@ -168,6 +171,73 @@ const Tile = ({ label, value }) => (
     <p className="text-h2 text-ink-900 mt-1">{value}</p>
   </div>
 );
+
+// Finance integration card — generate invoice, reconcile, surface status.
+const InvoiceCard = ({ order, onUpdated }) => {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr]   = useState(null);
+
+  const genInvoice = async () => {
+    setBusy(true); setErr(null);
+    try { await WashAPI.generateInvoice(order.id); onUpdated(); }
+    catch (e) { setErr(e.message || 'Failed to generate invoice'); }
+    finally { setBusy(false); }
+  };
+  const reconcile = async () => {
+    setBusy(true); setErr(null);
+    try { await WashAPI.reconcile(order.id); onUpdated(); }
+    catch (e) { setErr(e.message || 'Reconciliation failed'); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase text-ink-500 inline-flex items-center gap-1.5">
+            <FileText size={14} /> Invoice
+          </p>
+          {order.invoiceId ? (
+            <p className="text-sm mt-1">
+              Invoice #{order.invoiceId} · <span className="font-semibold">{fmt(order.amountReceived)}</span> received of <span className="font-semibold">{fmt(order.totalBudget)}</span>
+              <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold ${
+                order.paymentStatus === 'Paid'          ? 'bg-green-100 text-green-700' :
+                order.paymentStatus === 'PartiallyPaid' ? 'bg-orange-100 text-orange-700' :
+                order.paymentStatus === 'Overdue'       ? 'bg-red-100 text-red-700' :
+                                                          'bg-yellow-100 text-yellow-700'
+              }`}>{order.paymentStatus}</span>
+            </p>
+          ) : (
+            <p className="text-sm text-ink-500 mt-1">
+              No invoice yet. {order.invoiceTiming === 'BeforeWork' ? 'Proforma' : 'Post-delivery'} invoice — generate when ready.
+            </p>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {!order.invoiceId && (
+            <button
+              onClick={genInvoice}
+              disabled={busy}
+              className="inline-flex items-center gap-1.5 bg-mission-500 hover:bg-mission-600 text-navy-900 font-bold rounded-md px-3 py-1.5 text-sm transition disabled:opacity-50"
+            >
+              <FileText size={14} /> {busy ? 'Generating…' : 'Generate invoice'}
+            </button>
+          )}
+          {order.invoiceId && order.paymentStatus !== 'Paid' && (
+            <button
+              onClick={reconcile}
+              disabled={busy}
+              className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-3 py-1.5 text-sm transition disabled:opacity-50"
+            >
+              <CheckCircle size={14} /> {busy ? '…' : 'Reconcile payment'}
+            </button>
+          )}
+        </div>
+      </div>
+      {err && <div className="mt-2 bg-red-50 border border-red-200 text-red-700 text-xs rounded p-2">{err}</div>}
+    </div>
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Bulk import — CSV paste or per-row form. CSV columns:

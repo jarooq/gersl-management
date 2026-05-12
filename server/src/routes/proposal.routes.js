@@ -10,6 +10,7 @@ import {
   getProposalStats,
   convertProposalToProject
 } from '../controllers/proposal.controller.js';
+import { convertProposalToOrder } from '../controllers/orderConversion.controller.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
@@ -33,5 +34,10 @@ router.patch('/:id/link-project', linkProposalToProject);
 
 // Atomic conversion endpoint
 router.post('/:id/convert', convertProposalToProject);
+
+// Convert proposal to a WASH or IGP order (instead of a Project). Body must
+// include { kind: 'wash' | 'igp', deadline, ... }. Stamps the proposal with
+// convertedOrderType + convertedOrderId so the link is bidirectional.
+router.post('/:id/convert-to-order', convertProposalToOrder);
 
 export default router;

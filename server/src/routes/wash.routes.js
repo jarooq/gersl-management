@@ -5,6 +5,7 @@ import {
   transitionStage, addStageUpdate, listStageUpdates,
   listMyItems, getSummary,
 } from '../controllers/wash.controller.js';
+import { generateInvoiceForWashOrder, reconcileWashOrder } from '../controllers/orderConversion.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -39,7 +40,9 @@ router.post  ('/orders',         requireWashWrite, createOrder);
 router.get   ('/orders/:id',     validateId(), requireWashView,  getOrder);
 router.patch ('/orders/:id',     validateId(), requireWashWrite, updateOrder);
 router.delete('/orders/:id',     validateId(), requireWashWrite, cancelOrder);
-router.post  ('/orders/:id/items', validateId(), requireWashWrite, bulkCreateItems);
+router.post  ('/orders/:id/items',             validateId(), requireWashWrite, bulkCreateItems);
+router.post  ('/orders/:id/generate-invoice',  validateId(), requireWashWrite, generateInvoiceForWashOrder);
+router.patch ('/orders/:id/reconcile',         validateId(), requireWashWrite, reconcileWashOrder);
 
 // Items
 router.get   ('/items',          requireWashView,        listItems);
