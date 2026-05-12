@@ -3322,6 +3322,15 @@ export const CashAPI = {
       method: 'POST',
       body: JSON.stringify({ cashAccountId, rows }),
     }),
+  /**
+   * Org-wide cash activity summary for a date range. Used by the
+   * "Activity" section on CashAccountsPage for monthly board reports.
+   * Returns receipts/payments/net per account + per reference type.
+   */
+  getActivitySummary: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/cash/activity-summary${qs ? `?${qs}` : ''}`);
+  },
   transferCash: (data) =>
     request('/cash/transactions/transfer', { method: 'POST', body: JSON.stringify(data) }),
   approveTransaction: (id) =>

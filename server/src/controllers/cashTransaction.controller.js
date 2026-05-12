@@ -109,6 +109,100 @@ export const getTransaction = asyncHandler(async (req, res) => {
 });
 
 // ============================================
+// ACTIVITY SUMMARY — org-wide cash movement for a date range, broken down by
+// account and by reference type. Used by Finance Manager / accountant for
+// monthly board reports.
+// Query: ?from=YYYY-MM-DD&to=YYYY-MM-DD (defaults: last 30 days)
+// ============================================
+export const getActivitySummary = asyncHandler(async (req, res) => {
+  const toDate = req.query.to ? new Date(req.query.to) : new Date();
+  const fromDate = req.query.from
+    ? new Date(req.query.from)
+    : (() => { const d = new Date(toDate); d.setDate(d.getDate() - 30); return d; })();
+
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+    throw new BadRequestError('Invalid date range');
+  }
+
+  // Pull only Posted transactions in window. Pending-Approval and Reversed
+  // intentionally excluded so the summary matches what actually moved cash.
+  const txs = await CashTransaction.findAll({
+    where: {
+      status: 'Posted',
+      occurredAt: { [Op.gte]: fromDate, [Op.lte]: toDate }
+    },
+    include: [{ model: CashAccount, as: 'account', attributes: ['id', 'name', 'type', 'currency'] }],
+    order: [['occurredAt', 'ASC']]
+  });
+
+  // By account
+  const byAccountMap = new Map();
+  // By reference type (Expense / SalaryAdvance / Bill / Payroll / null)
+  const byRefMap = new Map();
+  let totalIn = 0;
+  let totalOut = 0;
+
+  for (const t of txs) {
+    const amt = Number(t.amount);
+    const accId = t.cashAccountId;
+    if (!byAccountMap.has(accId)) {
+      byAccountMap.set(accId, {
+        accountId: accId,
+        accountName: t.account?.name || `Account #${accId}`,
+        accountType: t.account?.type || null,
+        currency: t.account?.currency || 'LKR',
+        receipts: 0,
+        payments: 0,
+        net: 0,
+        txCount: 0,
+      });
+    }
+    const acc = byAccountMap.get(accId);
+    acc.txCount += 1;
+    if (t.direction === 'In')  { acc.receipts += amt; totalIn  += amt; }
+    else                       { acc.payments += amt; totalOut += amt; }
+    acc.net = acc.receipts - acc.payments;
+
+    const refKey = t.referenceType || 'Manual';
+    if (!byRefMap.has(refKey)) {
+      byRefMap.set(refKey, { referenceType: refKey, count: 0, in: 0, out: 0 });
+    }
+    const ref = byRefMap.get(refKey);
+    ref.count += 1;
+    if (t.direction === 'In') ref.in  += amt;
+    else                      ref.out += amt;
+  }
+
+  res.json({
+    success: true,
+    data: {
+      period: { from: fromDate.toISOString(), to: toDate.toISOString() },
+      totals: {
+        receipts: Number(totalIn.toFixed(2)),
+        payments: Number(totalOut.toFixed(2)),
+        net:      Number((totalIn - totalOut).toFixed(2)),
+        transactionCount: txs.length,
+      },
+      byAccount: [...byAccountMap.values()]
+        .map(a => ({
+          ...a,
+          receipts: Number(a.receipts.toFixed(2)),
+          payments: Number(a.payments.toFixed(2)),
+          net:      Number(a.net.toFixed(2)),
+        }))
+        .sort((a, b) => b.receipts + b.payments - (a.receipts + a.payments)),
+      byReferenceType: [...byRefMap.values()]
+        .map(r => ({
+          ...r,
+          in:  Number(r.in.toFixed(2)),
+          out: Number(r.out.toFixed(2)),
+        }))
+        .sort((a, b) => b.in + b.out - (a.in + a.out)),
+    }
+  });
+});
+
+// ============================================
 // RECORD — Receipt / Payment / Adjustment
 // Body: { cashAccountId, transactionType, amount, payeeName?, description?,
 //         categoryId?, projectId?, referenceType?, referenceId?,

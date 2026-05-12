@@ -18,7 +18,8 @@ import {
   reverseTransaction,
   disburseFromSource,
   disbursePayroll,
-  bulkReceipts
+  bulkReceipts,
+  getActivitySummary
 } from '../controllers/cashTransaction.controller.js';
 import {
   listCounts,
@@ -68,6 +69,7 @@ router.patch ('/accounts/:id/reactivate', validateId(), requireCashManager, reac
 router.get   ('/accounts/:id/cash-book',  validateId(), requireCashView, getCashBookReport);
 
 // Cash transactions
+router.get   ('/activity-summary',                requireCashView, getActivitySummary);
 router.get   ('/transactions',                    requireCashView, listTransactions);
 router.post  ('/transactions',                    requireCashWrite, recordTransaction);
 router.post  ('/transactions/disburse',           requireCashWrite, disburseFromSource);
