@@ -156,6 +156,17 @@ export const convertProposalToProject = async (id, conversionData) => {
   });
 };
 
+// Convert proposal to a WASH or IGP order. Body needs { kind: 'wash'|'igp',
+// deadline, projectId?, invoiceTiming?, workStartCondition?, donorReporting? }.
+// Stamps the proposal with convertedOrderType + convertedOrderId so the
+// upstream proposal page knows to hide the convert buttons after success.
+export const convertProposalToOrder = async (id, body) => {
+  return await request(`/proposals/${id}/convert-to-order`, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+};
+
 export default {
   fetchProposals,
   fetchProposalById,
@@ -165,5 +176,6 @@ export default {
   updateProposalStatus,
   linkProposalToProject,
   fetchProposalStats,
-  convertProposalToProject
+  convertProposalToProject,
+  convertProposalToOrder
 };

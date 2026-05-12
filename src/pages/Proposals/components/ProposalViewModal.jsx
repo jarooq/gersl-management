@@ -3,11 +3,11 @@ import {
   X, Calendar, DollarSign, Users, Target, MapPin, Building2,
   CheckCircle, AlertCircle, BarChart3, Users2, Shield, FileText,
   TrendingUp, MessageSquare, ArrowRight, Loader, Send, Eye, ThumbsUp, ThumbsDown, XCircle,
-  FileEdit, Mail, CheckCircle2, Rocket, Download
+  FileEdit, Mail, CheckCircle2, Rocket, Download, Droplets, Briefcase
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import API from '../../../services/api';
-import { convertProposalToProject } from '../../../services/proposalService';
+import { convertProposalToProject, convertProposalToOrder } from '../../../services/proposalService';
 import { generateProposalPDF } from '../../../utils/proposalPdfGenerator';
 import EmailModal from '../../../components/proposals/EmailModal';
 import DonorDecisionModal from '../../../components/proposals/DonorDecisionModal';
@@ -27,6 +27,12 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
   const [donorDecision, setDonorDecision] = useState(null);
   const [workflowAction, setWorkflowAction] = useState(null);
   const [comments, setComments] = useState('');
+  // Convert-to-Order modal state (separate from convertToProject so both flows can coexist).
+  const [showConvertOrderModal, setShowConvertOrderModal] = useState(false);
+  const [orderKind, setOrderKind] = useState('wash');
+  const [orderDeadline, setOrderDeadline] = useState('');
+  const [convertingOrder, setConvertingOrder] = useState(false);
+  const [orderConvertError, setOrderConvertError] = useState('');
 
   if (!proposal) return null;
 
@@ -81,6 +87,41 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
       setConversionError(error.message || 'An error occurred during conversion');
     } finally {
       setConverting(false);
+    }
+  };
+
+  /**
+   * Convert proposal directly to a WASH or IGP order. Sibling of
+   * handleConvertToProject — same approved-by-donor gate, different output.
+   */
+  const handleConvertToOrder = async () => {
+    if (!orderDeadline) {
+      setOrderConvertError('Deadline is required');
+      return;
+    }
+    setConvertingOrder(true);
+    setOrderConvertError('');
+    try {
+      const result = await convertProposalToOrder(proposal.id, {
+        kind: orderKind,
+        deadline: orderDeadline,
+      });
+      if (result?.success !== false) {
+        const orderId = result?.data?.orderId;
+        setShowConvertOrderModal(false);
+        if (onUpdate) onUpdate({ ...proposal, convertedOrderType: orderKind, convertedOrderId: orderId, status: 'Donor Approved' });
+        if (orderId) {
+          window.location.href = `/admin/${orderKind}/orders/${orderId}`;
+        } else {
+          onClose();
+        }
+      } else {
+        throw new Error(result.message || 'Conversion failed');
+      }
+    } catch (e) {
+      setOrderConvertError(e.message || 'Conversion failed');
+    } finally {
+      setConvertingOrder(false);
     }
   };
 
@@ -247,6 +288,14 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
     fundraisingRoles.includes(currentUser.role) &&
     proposal.status === 'Donor Approved' &&
     !proposal.linkedProjectId; // Don't show if already converted
+
+  // Convert-to-Order is offered once the donor has approved and the proposal
+  // hasn't already been turned into a WASH/IGP order. Programme Managers also
+  // get this action (alongside fundraising) since they own delivery.
+  const canConvertToOrder = currentUser &&
+    [...fundraisingRoles, 'Programme Manager', 'Director Programmes'].includes(currentUser.role) &&
+    proposal.status === 'Donor Approved' &&
+    !proposal.convertedOrderId;
 
   const totalDirectBeneficiaries = (
     (proposal.beneficiaryBreakdown?.directMale || 0) +
@@ -1239,6 +1288,25 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                   )}
                 </button>
               )}
+              {canConvertToOrder && !conversionSuccess && (
+                <button
+                  onClick={() => setShowConvertOrderModal(true)}
+                  disabled={convertingOrder || workflowLoading}
+                  className="flex items-center gap-2 px-6 py-2 bg-mission-500 hover:bg-mission-600 text-navy-900 rounded-lg transition font-bold shadow-card hover:shadow-lift disabled:opacity-50"
+                  title="Turn this approved proposal into a WASH or IGP order with items"
+                >
+                  <Droplets size={18} />
+                  Convert to Order
+                </button>
+              )}
+              {proposal.convertedOrderId && proposal.convertedOrderType && (
+                <a
+                  href={`/admin/${proposal.convertedOrderType}/orders/${proposal.convertedOrderId}`}
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg font-semibold text-sm border border-emerald-200 hover:bg-emerald-200 transition"
+                >
+                  Open {proposal.convertedOrderType.toUpperCase()} order
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -1251,6 +1319,92 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
           onClose={() => setShowEmailModal(false)}
           onSend={handleEmailSend}
         />
+      )}
+
+      {/* Convert-to-Order Modal */}
+      {showConvertOrderModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-pop max-w-md w-full">
+            <div className="bg-navy-900 text-white px-5 py-3 rounded-t-xl flex items-center justify-between">
+              <h3 className="font-bold inline-flex items-center gap-2">
+                <ArrowRight size={18} /> Convert to programme order
+              </h3>
+              <button onClick={() => setShowConvertOrderModal(false)} className="hover:bg-white/20 rounded p-1">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-5 space-y-4 text-sm">
+              <p className="text-ink-600">
+                Turn this approved proposal into a delivery order. Line items
+                from the proposal carry through; you'll bulk-import beneficiary
+                names on the next screen.
+              </p>
+              <div>
+                <label className="block text-xs font-semibold text-ink-600 mb-1.5">Order type</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOrderKind('wash')}
+                    className={`flex flex-col items-center gap-1 py-3 rounded-lg border-2 transition ${
+                      orderKind === 'wash'
+                        ? 'border-sky-500 bg-sky-50 text-sky-700'
+                        : 'border-ink-200 hover:border-ink-300'
+                    }`}
+                  >
+                    <Droplets size={20} />
+                    <span className="text-xs font-bold">WASH</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOrderKind('igp')}
+                    className={`flex flex-col items-center gap-1 py-3 rounded-lg border-2 transition ${
+                      orderKind === 'igp'
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                        : 'border-ink-200 hover:border-ink-300'
+                    }`}
+                  >
+                    <Briefcase size={20} />
+                    <span className="text-xs font-bold">IGP</span>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-ink-600 mb-1">Deadline *</label>
+                <input
+                  type="date"
+                  value={orderDeadline}
+                  onChange={e => setOrderDeadline(e.target.value)}
+                  className="w-full border border-ink-200 rounded px-3 py-1.5"
+                />
+                <p className="text-xs text-ink-500 mt-1">Final date for delivery to all beneficiaries.</p>
+              </div>
+              {orderConvertError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 rounded px-3 py-2 text-xs">
+                  {orderConvertError}
+                </div>
+              )}
+            </div>
+            <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
+              <button
+                onClick={() => setShowConvertOrderModal(false)}
+                className="px-3 py-1.5 text-sm border border-ink-200 rounded hover:bg-ink-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConvertToOrder}
+                disabled={convertingOrder || !orderDeadline}
+                className="bg-navy-900 text-white text-sm font-semibold rounded px-4 py-1.5 disabled:opacity-50 hover:bg-navy-800 inline-flex items-center gap-1.5"
+              >
+                {convertingOrder ? (
+                  <><Loader size={14} className="animate-spin" /> Creating order…</>
+                ) : (
+                  <><ArrowRight size={14} /> Create {orderKind.toUpperCase()} order</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Donor Decision Modal */}
