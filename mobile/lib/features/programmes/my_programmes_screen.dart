@@ -23,6 +23,13 @@ class MyProgrammesScreen extends ConsumerWidget {
         elevation: 0,
         backgroundColor: const Color(0xFF0D1D3D),
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.map_outlined),
+            tooltip: 'Map view',
+            onPressed: () => context.push('/programmes/map'),
+          ),
+        ],
       ),
       body: feed.when(
         loading: () => const Center(child: CircularProgressIndicator()),

@@ -37,12 +37,31 @@ const WashItemDetailPage = () => {
 
   const stageIdx = STAGES.indexOf(item.stage);
   const nextStage = stageIdx >= 0 && stageIdx < STAGES.length - 1 ? STAGES[stageIdx + 1] : null;
+  const fundsGateBlocked =
+    item.order?.workStartCondition === 'OnFundsReceived' && item.order?.paymentStatus !== 'Paid';
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-5">
       <button onClick={() => navigate(`/admin/wash/orders/${item.orderId}`)} className="inline-flex items-center gap-1 text-sm text-ink-600 hover:text-ink-900">
         <ArrowLeft size={14} /> Back to order {item.order?.orderCode}
       </button>
+
+      {/* Funds-gate warning — donor configured this order to start only after
+          funds are received, and the order is still unpaid. Soft warning,
+          not a hard block (server still allows the transition; admins can
+          override with intent). */}
+      {fundsGateBlocked && (
+        <div className="bg-amber-50 border border-amber-300 rounded-lg2 p-3 flex gap-2 items-start">
+          <span className="text-amber-700 font-bold shrink-0 mt-0.5">⚠</span>
+          <div className="text-sm">
+            <p className="font-bold text-amber-900">Funds not received yet</p>
+            <p className="text-amber-800">
+              This order is set to start work only after donor payment (status: <strong>{item.order?.paymentStatus}</strong>).
+              Advancing the stage now means GERSL is fronting the cost — make sure that's intentional.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">

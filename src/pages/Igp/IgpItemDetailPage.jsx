@@ -43,12 +43,28 @@ const IgpItemDetailPage = () => {
     : null;
   const incomeUplift = (item.incomeBaseline != null && item.incomeFollowup != null)
     ? Number(item.incomeFollowup) - Number(item.incomeBaseline) : null;
+  const fundsGateBlocked =
+    item.order?.workStartCondition === 'OnFundsReceived' && item.order?.paymentStatus !== 'Paid';
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-5">
       <button onClick={() => navigate(`/admin/igp/orders/${item.orderId}`)} className="inline-flex items-center gap-1 text-sm text-ink-600 hover:text-ink-900">
         <ArrowLeft size={14} /> Back to order {item.order?.orderCode}
       </button>
+
+      {/* Funds-gate warning — see WashItemDetailPage.jsx for the rationale. */}
+      {fundsGateBlocked && (
+        <div className="bg-amber-50 border border-amber-300 rounded-lg2 p-3 flex gap-2 items-start">
+          <span className="text-amber-700 font-bold shrink-0 mt-0.5">⚠</span>
+          <div className="text-sm">
+            <p className="font-bold text-amber-900">Funds not received yet</p>
+            <p className="text-amber-800">
+              This order is set to start work only after donor payment (status: <strong>{item.order?.paymentStatus}</strong>).
+              Advancing the stage now means GERSL is fronting the cost — make sure that's intentional.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
         <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">{item.itemCode} · IGP item</p>

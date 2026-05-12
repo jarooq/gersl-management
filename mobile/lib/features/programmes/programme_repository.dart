@@ -93,6 +93,62 @@ class ProgrammeRepository {
   }
 
   // ---------------------------------------------------------------------------
+  // IGP income follow-up — recorded in the field after the asset has been
+  // delivered and the beneficiary has had time to use it. Server flips the
+  // stage to FollowUp and timestamps it.
+  // ---------------------------------------------------------------------------
+  Future<void> recordIgpFollowUp(int itemId, {
+    required num incomeFollowup,
+    String? notes,
+    List<String>? photoUrls,
+    double? latitude,
+    double? longitude,
+  }) async {
+    await _dio.post(
+      '/igp/items/$itemId/follow-up',
+      data: {
+        'incomeFollowup': incomeFollowup,
+        'notes': notes,
+        'photoUrls': photoUrls ?? const <String>[],
+        'latitude':  latitude,
+        'longitude': longitude,
+      },
+      options: Options(headers: {'X-Client': 'mobile'}),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Add a single new item to an existing order during field survey. Server
+  // creates a temp item code then patches with the real WI-YYYY-NNNNN.
+  // ---------------------------------------------------------------------------
+  Future<Map<String, dynamic>> addItemToOrder(String kind, int orderId, Map<String, dynamic> item) async {
+    final res = await _dio.post(
+      '/$kind/orders/$orderId/items',
+      data: {'items': [item]},
+      options: Options(headers: {'X-Client': 'mobile'}),
+    );
+    final list = res.data['data']?['items'];
+    if (list is List && list.isNotEmpty) {
+      return Map<String, dynamic>.from(list.first as Map);
+    }
+    return <String, dynamic>{};
+  }
+
+  // ---------------------------------------------------------------------------
+  // Fetch a single order (with its embedded item summary). Used by the
+  // order-level screen on mobile.
+  // ---------------------------------------------------------------------------
+  Future<Map<String, dynamic>> getOrder(String kind, int orderId) async {
+    final res = await _dio.get('/$kind/orders/$orderId');
+    return extractMap(res.data, const []) ?? <String, dynamic>{};
+  }
+
+  Future<List<Map<String, dynamic>>> listOrderItems(String kind, int orderId) async {
+    final res = await _dio.get('/$kind/items', queryParameters: {'orderId': orderId});
+    return extractMapList(res.data, const []);
+  }
+
+  // ---------------------------------------------------------------------------
   // Photo upload (reuses the existing /upload/visit endpoint — it just stores
   // a file under uploads/ and returns the URL; not actually visit-specific).
   // ---------------------------------------------------------------------------

@@ -29,6 +29,8 @@ import '../features/visits/new_visit_screen.dart';
 import '../features/visits/visits_screen.dart';
 import '../features/programmes/my_programmes_screen.dart';
 import '../features/programmes/programme_item_screen.dart';
+import '../features/programmes/programme_order_screen.dart';
+import '../features/programmes/programme_map_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
@@ -67,6 +69,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/approvals',     builder: (context, state) => const ApprovalsScreen()),
           GoRoute(path: '/programmes',    builder: (context, state) => const MyProgrammesScreen()),
         ],
+      ),
+      GoRoute(
+        path: '/programmes/:kind/order/:id',
+        builder: (context, state) => ProgrammeOrderScreen(
+          kind: state.pathParameters['kind']!,
+          orderId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: '/programmes/map',
+        builder: (context, state) => const ProgrammeMapScreen(),
       ),
       GoRoute(
         path: '/programmes/:kind/:id',
