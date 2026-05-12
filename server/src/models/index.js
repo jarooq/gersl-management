@@ -599,7 +599,18 @@ const Staff = sequelize.define('Staff', {
       key: 'id'
     },
     field: 'user_id'
-  }
+  },
+  // HR profile extensions (added 2026 — backed by extend_staff_columns.sql).
+  // Each is nullable so existing rows remain valid.
+  employeeId:       { type: DataTypes.STRING(50),  field: 'employee_id' },
+  dateOfBirth:      { type: DataTypes.DATEONLY,    field: 'date_of_birth' },
+  gender:           { type: DataTypes.STRING(20) },
+  address:          { type: DataTypes.TEXT },
+  bio:              { type: DataTypes.TEXT },
+  contractType:     { type: DataTypes.STRING(50),  field: 'contract_type' },
+  workHours:        { type: DataTypes.STRING(50),  field: 'work_hours' },
+  emergencyContact: { type: DataTypes.STRING(200), field: 'emergency_contact' },
+  leaveBalance:     { type: DataTypes.INTEGER,     field: 'leave_balance', defaultValue: 21 },
 }, {
   tableName: 'staff',
   timestamps: true,

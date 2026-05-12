@@ -2241,24 +2241,29 @@ const HRPage = () => {
                         department: editStaffForm.department,
                         status:     userStatus,
                       };
-                      // Only Staff-model attributes (fullName, email, phone,
-                      // position, department, salary, joinDate, status,
-                      // employmentType). Fields the model doesn't define
-                      // (employeeId, dateOfBirth, gender, address, bio,
-                      // contractType, workHours, emergencyContact, leaveBalance)
-                      // are dropped silently by Sequelize's instance.update —
-                      // they're collected in the form for future migration but
-                      // intentionally not sent.
+                      // All form fields now persist — the staff table was
+                      // extended with HR profile columns via the
+                      // extend_staff_columns.sql migration.
                       const staffPayload = {
-                        fullName:       editStaffForm.fullName,
-                        email:          editStaffForm.email,
-                        phone:          editStaffForm.phone,
-                        department:     editStaffForm.department,
-                        position:       editStaffForm.position,
-                        salary:         editStaffForm.salary || null,
-                        joinDate:       editStaffForm.joiningDate || null,
-                        status:         editStaffForm.status, // Staff allows 'Pending'
-                        employmentType: editStaffForm.contractType || undefined,
+                        fullName:         editStaffForm.fullName,
+                        email:            editStaffForm.email,
+                        phone:            editStaffForm.phone,
+                        department:       editStaffForm.department,
+                        position:         editStaffForm.position,
+                        salary:           editStaffForm.salary || null,
+                        joinDate:         editStaffForm.joiningDate || null,
+                        status:           editStaffForm.status, // Staff allows 'Pending'
+                        employmentType:   editStaffForm.contractType || undefined,
+                        // Newly persisted columns
+                        employeeId:       editStaffForm.employeeId || null,
+                        dateOfBirth:      editStaffForm.dateOfBirth || null,
+                        gender:           editStaffForm.gender || null,
+                        address:          editStaffForm.address || null,
+                        bio:              editStaffForm.bio || null,
+                        contractType:     editStaffForm.contractType || null,
+                        workHours:        editStaffForm.workHours || null,
+                        emergencyContact: editStaffForm.emergencyContact || null,
+                        leaveBalance:     editStaffForm.leaveBalance ?? 21,
                       };
 
                       const calls = [API.HR.update(editStaffForm.staffId, staffPayload)];
