@@ -74,6 +74,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       ]
     },
     { path: '/admin/beneficiaries', icon: Users, label: 'Beneficiaries', icc: ICON.blue, permission: PERMISSIONS.BENEFICIARIES_VIEW },
+    { path: '/admin/map', icon: MapPin, label: 'Beneficiary Map', icc: ICON.sky },
     {
       label: 'Fund Development', icon: Award, icc: ICON.emerald, hasSubmenu: true,
       subItems: [

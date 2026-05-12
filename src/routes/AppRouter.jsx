@@ -85,6 +85,9 @@ const IgpPage              = lazy(() => import('../pages/Igp/IgpPage'));
 const IgpOrderDetailPage   = lazy(() => import('../pages/Igp/IgpOrderDetailPage'));
 const IgpItemDetailPage    = lazy(() => import('../pages/Igp/IgpItemDetailPage'));
 
+// Shared beneficiary map (all programmes, layered)
+const BeneficiaryMapPage   = lazy(() => import('../pages/Map/BeneficiaryMapPage'));
+
 // Loading component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-ink-50">
@@ -376,6 +379,14 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
             path="igp/items/:id"
             element={
               <Suspense fallback={<PageLoader />}><IgpItemDetailPage /></Suspense>
+            }
+          />
+
+          {/* Unified beneficiary/programme map */}
+          <Route
+            path="map"
+            element={
+              <Suspense fallback={<PageLoader />}><BeneficiaryMapPage /></Suspense>
             }
           />
 

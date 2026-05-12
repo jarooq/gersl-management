@@ -129,6 +129,7 @@ import movementRoutes from './routes/movement.routes.js';
 import deviceRoutes from './routes/device.routes.js';
 import washRoutes from './routes/wash.routes.js';
 import igpRoutes from './routes/igp.routes.js';
+import mapRoutes from './routes/map.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -348,6 +349,10 @@ app.use('/api/cash', cashRoutes);
 // vendors, invoices) so all dashboards and reports pick them up automatically.
 app.use('/api/wash', washRoutes);
 app.use('/api/igp',  igpRoutes);
+
+// Unified map pins endpoint — returns layered pins across wash/igp/orphan/
+// beneficiary entities for the shared BeneficiaryMap component.
+app.use('/api/map', mapRoutes);
 
 // Movement register + vehicles
 app.use('/api', movementRoutes);

@@ -4199,6 +4199,13 @@ export const WashAPI = {
 // ============================================
 // IGP MODULE API
 // ============================================
+// ============================================
+// MAP API — unified pin feed across all programme entities
+// ============================================
+export const MapAPI = {
+  getPins: (params = {}) => request(`/map/pins?${qs(params)}`).then(r => r.data),
+};
+
 export const IgpAPI = {
   getSummary: () => request('/igp/summary').then(r => r.data),
 
