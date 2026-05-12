@@ -5,7 +5,7 @@ import {
   Shield, BarChart, Settings, Users2, ChevronDown, ChevronRight, Share2,
   FileBarChart, FolderKanban, Target, ClipboardCheck, CheckCircle, Clock,
   Calendar, Award, MapPin, UserPlus, TrendingUp, Megaphone, Store, X,
-  UserCheck, Wallet, Activity, ShoppingCart,
+  UserCheck, Wallet, Activity, ShoppingCart, Droplets,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
@@ -65,10 +65,12 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', icc: ICON.blue, permission: PERMISSIONS.DASHBOARD_VIEW },
     { path: '/admin/my-dashboard', icon: Activity, label: 'My Dashboard', icc: ICON.indigo, showOnlyWithoutPermission: PERMISSIONS.DASHBOARD_VIEW },
     {
-      label: 'Orphan Care', icon: Baby, icc: ICON.pink, hasSubmenu: true,
+      label: 'Programmes', icon: Award, icc: ICON.pink, hasSubmenu: true,
       subItems: [
-        { path: '/admin/orphans', icon: Baby, label: 'Orphan Management', icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
-        { path: '/admin/coordinators', icon: UserCheck, label: 'Coordinators', icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
+        { path: '/admin/orphans',      icon: Baby,      label: 'Orphan Care',   icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
+        { path: '/admin/wash',         icon: Droplets,  label: 'WASH',          icc: ICON.sky },
+        { path: '/admin/igp',          icon: Briefcase, label: 'IGP',           icc: ICON.emerald },
+        { path: '/admin/coordinators', icon: UserCheck, label: 'Coordinators',  icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
       ]
     },
     { path: '/admin/beneficiaries', icon: Users, label: 'Beneficiaries', icc: ICON.blue, permission: PERMISSIONS.BENEFICIARIES_VIEW },

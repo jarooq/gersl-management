@@ -77,6 +77,14 @@ const BeneficiariesPage = lazy(() => import('../pages/Beneficiaries/Beneficiarie
 const CoordinatorsPage = lazy(() => import('../pages/Coordinators/CoordinatorsPage'));
 const CoordinatorDetailsPage = lazy(() => import('../pages/Coordinators/CoordinatorDetailsPage'));
 
+// WASH + IGP programme modules
+const WashPage             = lazy(() => import('../pages/Wash/WashPage'));
+const WashOrderDetailPage  = lazy(() => import('../pages/Wash/WashOrderDetailPage'));
+const WashItemDetailPage   = lazy(() => import('../pages/Wash/WashItemDetailPage'));
+const IgpPage              = lazy(() => import('../pages/Igp/IgpPage'));
+const IgpOrderDetailPage   = lazy(() => import('../pages/Igp/IgpOrderDetailPage'));
+const IgpItemDetailPage    = lazy(() => import('../pages/Igp/IgpItemDetailPage'));
+
 // Loading component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-ink-50">
@@ -331,6 +339,46 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               </PermissionRoute>
             }
           />
+          {/* WASH module — water/sanitation/hygiene installations */}
+          <Route
+            path="wash"
+            element={
+              <Suspense fallback={<PageLoader />}><WashPage /></Suspense>
+            }
+          />
+          <Route
+            path="wash/orders/:id"
+            element={
+              <Suspense fallback={<PageLoader />}><WashOrderDetailPage /></Suspense>
+            }
+          />
+          <Route
+            path="wash/items/:id"
+            element={
+              <Suspense fallback={<PageLoader />}><WashItemDetailPage /></Suspense>
+            }
+          />
+
+          {/* IGP module — income-generating asset distribution */}
+          <Route
+            path="igp"
+            element={
+              <Suspense fallback={<PageLoader />}><IgpPage /></Suspense>
+            }
+          />
+          <Route
+            path="igp/orders/:id"
+            element={
+              <Suspense fallback={<PageLoader />}><IgpOrderDetailPage /></Suspense>
+            }
+          />
+          <Route
+            path="igp/items/:id"
+            element={
+              <Suspense fallback={<PageLoader />}><IgpItemDetailPage /></Suspense>
+            }
+          />
+
           <Route
             path="projects"
             element={

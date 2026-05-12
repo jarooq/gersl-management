@@ -4162,4 +4162,63 @@ export const getImageUrl = (imageUrl) => {
   return result;
 };
 
+// ============================================
+// WASH MODULE API
+// ============================================
+const qs = (params) =>
+  Object.entries(params || {})
+    .filter(([, v]) => v !== undefined && v !== null && v !== '')
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&');
+
+export const WashAPI = {
+  // Org-wide summary tile.
+  getSummary: () => request('/wash/summary').then(r => r.data),
+
+  // Orders
+  listOrders:    (params = {}) => request(`/wash/orders?${qs(params)}`).then(r => r.data),
+  getOrder:      (id)          => request(`/wash/orders/${id}`).then(r => r.data),
+  createOrder:   (body)        => request('/wash/orders', { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+  updateOrder:   (id, patch)   => request(`/wash/orders/${id}`, { method: 'PATCH', body: JSON.stringify(patch) }).then(r => r.data),
+  cancelOrder:   (id)          => request(`/wash/orders/${id}`, { method: 'DELETE' }).then(r => r.data),
+  bulkAddItems:  (orderId, items) =>
+    request(`/wash/orders/${orderId}/items`, { method: 'POST', body: JSON.stringify({ items }) }).then(r => r.data),
+
+  // Items
+  listItems:        (params = {}) => request(`/wash/items?${qs(params)}`).then(r => r.data),
+  getItem:          (id)          => request(`/wash/items/${id}`).then(r => r.data),
+  updateItem:       (id, patch)   => request(`/wash/items/${id}`, { method: 'PATCH', body: JSON.stringify(patch) }).then(r => r.data),
+  transitionStage:  (id, body)    => request(`/wash/items/${id}/stage`, { method: 'PATCH', body: JSON.stringify(body) }).then(r => r.data),
+  listMyItems:      ()            => request('/wash/items/mine').then(r => r.data),
+
+  // Stage updates
+  listStageUpdates: (id)        => request(`/wash/items/${id}/stage-updates`).then(r => r.data),
+  addStageUpdate:   (id, body)  => request(`/wash/items/${id}/stage-updates`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+};
+
+// ============================================
+// IGP MODULE API
+// ============================================
+export const IgpAPI = {
+  getSummary: () => request('/igp/summary').then(r => r.data),
+
+  listOrders:    (params = {}) => request(`/igp/orders?${qs(params)}`).then(r => r.data),
+  getOrder:      (id)          => request(`/igp/orders/${id}`).then(r => r.data),
+  createOrder:   (body)        => request('/igp/orders', { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+  updateOrder:   (id, patch)   => request(`/igp/orders/${id}`, { method: 'PATCH', body: JSON.stringify(patch) }).then(r => r.data),
+  cancelOrder:   (id)          => request(`/igp/orders/${id}`, { method: 'DELETE' }).then(r => r.data),
+  bulkAddItems:  (orderId, items) =>
+    request(`/igp/orders/${orderId}/items`, { method: 'POST', body: JSON.stringify({ items }) }).then(r => r.data),
+
+  listItems:        (params = {}) => request(`/igp/items?${qs(params)}`).then(r => r.data),
+  getItem:          (id)          => request(`/igp/items/${id}`).then(r => r.data),
+  updateItem:       (id, patch)   => request(`/igp/items/${id}`, { method: 'PATCH', body: JSON.stringify(patch) }).then(r => r.data),
+  transitionStage:  (id, body)    => request(`/igp/items/${id}/stage`, { method: 'PATCH', body: JSON.stringify(body) }).then(r => r.data),
+  recordFollowUp:   (id, body)    => request(`/igp/items/${id}/follow-up`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+  listMyItems:      ()            => request('/igp/items/mine').then(r => r.data),
+
+  listStageUpdates: (id)        => request(`/igp/items/${id}/stage-updates`).then(r => r.data),
+  addStageUpdate:   (id, body)  => request(`/igp/items/${id}/stage-updates`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
+};
+
 export default API;
