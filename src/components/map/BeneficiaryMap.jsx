@@ -46,6 +46,8 @@ const BeneficiaryMap = ({
   types: initialTypes,
   projectId,
   donorId,
+  washOrderId,
+  igpOrderId,
   district,
   stage,
   height = 500,
@@ -69,7 +71,7 @@ const BeneficiaryMap = ({
     try {
       const data = await MapAPI.getPins({
         types: [...enabled].join(','),
-        projectId, donorId, district, stage,
+        projectId, donorId, washOrderId, igpOrderId, district, stage,
       });
       setPins(data?.pins || []);
     } catch (e) {
@@ -80,7 +82,7 @@ const BeneficiaryMap = ({
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [enabled, projectId, donorId, district, stage]);
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [enabled, projectId, donorId, washOrderId, igpOrderId, district, stage]);
 
   const visiblePins = pins;
   const counts = useMemo(() => {

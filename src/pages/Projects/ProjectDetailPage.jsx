@@ -14,6 +14,7 @@ import CreateTaskModal from '../Operations/components/CreateTaskModal';
 import TaskFormModal from '../Operations/components/TaskFormModal';
 import TaskViewModal from '../Operations/components/TaskViewModal';
 import BudgetActualReport from './components/BudgetActualReport';
+import BeneficiaryMap from '../../components/map/BeneficiaryMap';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
@@ -153,6 +154,7 @@ const ProjectDetailPage = () => {
     { id: 'overview', label: 'Overview' },
     { id: 'team', label: 'Team Members', count: teamMembers.length },
     { id: 'financial', label: 'Financial' },
+    { id: 'map', label: 'Map' },
     { id: 'tasks', label: 'Tasks', count: tasks.length },
     { id: 'meal', label: 'MEAL', count: projectIndicators.length + projectEvaluations.length + projectComplaints.length },
   ];
@@ -558,6 +560,12 @@ const ProjectDetailPage = () => {
                 )}
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'map' && (
+          <div className="space-y-4">
+            <BeneficiaryMap projectId={Number(id)} height={620} />
           </div>
         )}
 

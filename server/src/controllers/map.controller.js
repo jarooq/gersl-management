@@ -24,10 +24,12 @@ export const getMapPins = asyncHandler(async (req, res) => {
   const types = requested.filter(t => ALL_KINDS.has(t));
   if (types.length === 0) throw new BadRequestError('no valid types');
 
-  const projectId = num(req.query.projectId);
-  const donorId   = num(req.query.donorId);
-  const district  = req.query.district || null;
-  const stage     = req.query.stage    || null;
+  const projectId   = num(req.query.projectId);
+  const donorId     = num(req.query.donorId);
+  const washOrderId = num(req.query.washOrderId);
+  const igpOrderId  = num(req.query.igpOrderId);
+  const district    = req.query.district || null;
+  const stage       = req.query.stage    || null;
 
   const pins = [];
 
@@ -37,8 +39,9 @@ export const getMapPins = asyncHandler(async (req, res) => {
       installationLat: { [Op.ne]: null },
       installationLng: { [Op.ne]: null },
     };
-    if (stage)    whereItem.stage = stage;
-    if (district) whereItem.district = district;
+    if (stage)       whereItem.stage    = stage;
+    if (district)    whereItem.district = district;
+    if (washOrderId) whereItem.orderId  = washOrderId;
 
     const orderWhere = {};
     if (projectId) orderWhere.projectId = projectId;
@@ -77,8 +80,9 @@ export const getMapPins = asyncHandler(async (req, res) => {
       deliveryLat: { [Op.ne]: null },
       deliveryLng: { [Op.ne]: null },
     };
-    if (stage)    whereItem.stage = stage;
-    if (district) whereItem.district = district;
+    if (stage)      whereItem.stage    = stage;
+    if (district)   whereItem.district = district;
+    if (igpOrderId) whereItem.orderId  = igpOrderId;
 
     const orderWhere = {};
     if (projectId) orderWhere.projectId = projectId;

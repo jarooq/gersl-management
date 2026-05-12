@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Briefcase, Upload, Plus, MapPin, X, ChevronRight, FileText, CheckCircle, FileDown, Mail } from 'lucide-react';
 import { IgpAPI } from '../../services/api';
+import BeneficiaryMap from '../../components/map/BeneficiaryMap';
 
 const fmt = (n) => `LKR ${Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`;
 
@@ -77,6 +78,13 @@ const IgpOrderDetailPage = () => {
 
       {/* Reporting */}
       <ReportingCard order={order} />
+
+      {/* Map — delivery locations for this order only */}
+      <BeneficiaryMap
+        types={['igp']}
+        igpOrderId={Number(id)}
+        height={420}
+      />
 
       {/* Asset mix breakdown */}
       {order.assetMix && order.assetMix.length > 0 && (

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Droplets, Upload, Plus, MapPin, X, ChevronRight, FileText, CheckCircle, FileDown, Mail } from 'lucide-react';
 import { WashAPI } from '../../services/api';
+import BeneficiaryMap from '../../components/map/BeneficiaryMap';
 
 const fmt = (n) => `LKR ${Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`;
 
@@ -77,6 +78,13 @@ const WashOrderDetailPage = () => {
 
       {/* Reporting */}
       <ReportingCard order={order} />
+
+      {/* Map — installation locations for this order only */}
+      <BeneficiaryMap
+        types={['wash']}
+        washOrderId={Number(id)}
+        height={420}
+      />
 
       {/* Stage breakdown */}
       {summary.totalItems > 0 && (
