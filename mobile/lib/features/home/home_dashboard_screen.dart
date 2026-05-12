@@ -500,6 +500,7 @@ class _ModulesGrid extends StatelessWidget {
       _ModuleTile('Claim',      Icons.payments_outlined,         '/expenses'),
       _ModuleTile('Visits',     Icons.location_on_outlined,      '/visits'),
       _ModuleTile('Approvals',  Icons.fact_check_outlined,       '/approvals'),
+      _ModuleTile('Programmes', Icons.water_drop_outlined,       '/programmes'),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

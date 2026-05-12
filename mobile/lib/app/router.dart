@@ -27,6 +27,8 @@ import '../features/punch/punch_screen.dart';
 import '../features/tasks/my_tasks_screen.dart';
 import '../features/visits/new_visit_screen.dart';
 import '../features/visits/visits_screen.dart';
+import '../features/programmes/my_programmes_screen.dart';
+import '../features/programmes/programme_item_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
@@ -63,7 +65,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/expenses',      builder: (context, state) => const ExpensesScreen()),
           GoRoute(path: '/payslips',      builder: (context, state) => const PayslipsScreen()),
           GoRoute(path: '/approvals',     builder: (context, state) => const ApprovalsScreen()),
+          GoRoute(path: '/programmes',    builder: (context, state) => const MyProgrammesScreen()),
         ],
+      ),
+      GoRoute(
+        path: '/programmes/:kind/:id',
+        builder: (context, state) => ProgrammeItemScreen(
+          kind: state.pathParameters['kind']!,
+          itemId: int.parse(state.pathParameters['id']!),
+        ),
       ),
       GoRoute(path: '/visits/new',    builder: (context, state) => const NewVisitScreen()),
       GoRoute(path: '/advances/new',  builder: (context, state) => const NewAdvanceScreen()),
