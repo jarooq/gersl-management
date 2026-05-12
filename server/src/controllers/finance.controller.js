@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { Expense, Project, User } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { notifyDecision } from '../services/email.service.js';
 
 // ============================================
 // GET ALL EXPENSES
@@ -228,6 +229,19 @@ export const approveExpense = asyncHandler(async (req, res) => {
       }
     ]
   });
+
+  // Notify the submitter of the decision (best-effort).
+  if (expense.submittedBy) {
+    const submitter = await User.findByPk(expense.submittedBy, { attributes: ['email'] });
+    if (submitter?.email) {
+      await notifyDecision({
+        to: submitter.email,
+        kind: 'expense',
+        decision: status,
+        reason: remarks || null,
+      });
+    }
+  }
 
   res.json({
     success: true,

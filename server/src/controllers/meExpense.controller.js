@@ -6,6 +6,7 @@
 import asyncHandler from 'express-async-handler';
 import { Expense, User } from '../models/index.js';
 import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
+import { notifyExpenseSubmitted, notifyDecision } from '../services/email.service.js';
 
 const isApprover = (user) => ['Admin', 'CEO', 'Finance Manager', 'HR Manager'].includes(user?.role);
 
@@ -81,6 +82,7 @@ export const createMine = asyncHandler(async (req, res) => {
     title: `${category} — LKR ${amount}`,
     description: description,
   });
+  await notifyExpenseSubmitted({ expense: row, requester: req.user });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -114,5 +116,15 @@ export const decide = asyncHandler(async (req, res) => {
     entityType: 'expense', entityId: row.id, status: row.status,
     decidedBy: req.user.id, notes: req.body.notes ?? null,
   });
+  // Notify the submitter of the decision (best-effort).
+  const submitter = await User.findByPk(row.submittedBy, { attributes: ['email'] });
+  if (submitter?.email) {
+    await notifyDecision({
+      to: submitter.email,
+      kind: 'expense',
+      decision: row.status,
+      reason: req.body.notes || null,
+    });
+  }
   res.json({ success: true, data: row });
 });

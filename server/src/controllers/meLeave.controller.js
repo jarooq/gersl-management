@@ -7,6 +7,7 @@ import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 import { LeaveRequest, User } from '../models/index.js';
 import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
+import { notifyLeaveSubmitted, notifyDecision } from '../services/email.service.js';
 
 const isApprover = (user) => ['Admin', 'CEO', 'HR Manager', 'HR Officer', 'Manager'].includes(user?.role);
 
@@ -62,6 +63,7 @@ export const createMine = asyncHandler(async (req, res) => {
     title: `${leaveType} leave — ${row.daysCount} day${row.daysCount === 1 ? '' : 's'}`,
     description: reason || `${startDate} → ${endDate}`,
   });
+  await notifyLeaveSubmitted({ leave: row, requester: req.user });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -96,5 +98,15 @@ export const decide = asyncHandler(async (req, res) => {
     entityType: 'leave_request', entityId: row.id, status: row.status,
     decidedBy: req.user.id, notes: req.body.reason ?? null,
   });
+  // Notify the requester of the decision (best-effort).
+  const requester = await User.findByPk(row.userId, { attributes: ['email'] });
+  if (requester?.email) {
+    await notifyDecision({
+      to: requester.email,
+      kind: 'leave',
+      decision: row.status,
+      reason: req.body.reason || null,
+    });
+  }
   res.json({ success: true, data: row });
 });

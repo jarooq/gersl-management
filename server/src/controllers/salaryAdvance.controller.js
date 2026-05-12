@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { SalaryAdvance, User } from '../models/index.js';
 import { createApprovalRow, syncApprovalDecision } from '../utils/approvalSync.js';
+import { notifySalaryAdvanceSubmitted, notifyDecision } from '../services/email.service.js';
 
 const isAdmin = (user) => ['Admin', 'CEO', 'HR Manager', 'Finance Manager'].includes(user?.role);
 
@@ -35,6 +36,7 @@ export const create = asyncHandler(async (req, res) => {
     title: `Salary advance — LKR ${amount}`,
     description: reason || null,
   });
+  await notifySalaryAdvanceSubmitted({ advance: row, requester: req.user });
   res.status(201).json({ success: true, data: row });
 });
 
@@ -53,6 +55,16 @@ export const decide = asyncHandler(async (req, res) => {
     entityType: 'salary_advance', entityId: row.id, status: row.status,
     decidedBy: req.user.id, notes: req.body.notes ?? null,
   });
+  // Notify the requester of the decision (best-effort).
+  const requester = await User.findByPk(row.userId, { attributes: ['email'] });
+  if (requester?.email) {
+    await notifyDecision({
+      to: requester.email,
+      kind: 'salary advance',
+      decision: row.status,
+      reason: req.body.notes || null,
+    });
+  }
   res.json({ success: true, data: row });
 });
 
