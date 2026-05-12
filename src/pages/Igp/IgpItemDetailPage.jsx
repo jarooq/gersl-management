@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Briefcase, MapPin, Clock, User, ChevronRight, X, Save, Camera, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Briefcase, MapPin, Clock, User, ChevronRight, X, Save, Camera, TrendingUp, FileDown } from 'lucide-react';
 import { IgpAPI } from '../../services/api';
 
 const STAGES = ['Ordered', 'Surveyed', 'Procured', 'Training', 'Delivered', 'FollowUp', 'Reported'];
@@ -88,6 +88,14 @@ const IgpItemDetailPage = () => {
               <TrendingUp size={14} /> Record income follow-up
             </button>
           )}
+          <a
+            href={IgpAPI.itemReportUrl(item.id)}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 bg-navy-900 hover:bg-navy-800 text-white text-sm font-semibold rounded-md px-4 py-2 transition"
+          >
+            <FileDown size={14} /> Open item PDF
+          </a>
         </div>
       </div>
 

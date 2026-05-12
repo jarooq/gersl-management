@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Droplets, MapPin, Clock, User, ChevronRight, X, Save, Camera } from 'lucide-react';
+import { ArrowLeft, Droplets, MapPin, Clock, User, ChevronRight, X, Save, Camera, FileDown } from 'lucide-react';
 import { WashAPI } from '../../services/api';
 
 const STAGES = ['Ordered', 'Surveyed', 'Materials', 'Construction', 'Testing', 'HandedOver', 'Reported'];
@@ -72,14 +72,24 @@ const WashItemDetailPage = () => {
             );
           })}
         </div>
-        {nextStage && (
-          <button
-            onClick={() => setShowStageModal(true)}
-            className="mt-3 inline-flex items-center gap-2 bg-mission-500 hover:bg-mission-600 text-navy-900 font-bold rounded-md px-4 py-2 text-sm transition"
+        <div className="mt-3 flex flex-wrap gap-2">
+          {nextStage && (
+            <button
+              onClick={() => setShowStageModal(true)}
+              className="inline-flex items-center gap-2 bg-mission-500 hover:bg-mission-600 text-navy-900 font-bold rounded-md px-4 py-2 text-sm transition"
+            >
+              Advance to {nextStage} <ChevronRight size={14} />
+            </button>
+          )}
+          <a
+            href={WashAPI.itemReportUrl(item.id)}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 bg-navy-900 hover:bg-navy-800 text-white text-sm font-semibold rounded-md px-4 py-2 transition"
           >
-            Advance to {nextStage} <ChevronRight size={14} />
-          </button>
-        )}
+            <FileDown size={14} /> Open item PDF
+          </a>
+        </div>
       </div>
 
       {/* Beneficiary + Location card */}

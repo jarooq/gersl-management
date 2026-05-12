@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Droplets, Upload, Plus, MapPin, X, ChevronRight, FileText, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Droplets, Upload, Plus, MapPin, X, ChevronRight, FileText, CheckCircle, FileDown, Mail } from 'lucide-react';
 import { WashAPI } from '../../services/api';
 
 const fmt = (n) => `LKR ${Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`;
@@ -74,6 +74,9 @@ const WashOrderDetailPage = () => {
 
       {/* Finance integration */}
       <InvoiceCard order={order} onUpdated={load} />
+
+      {/* Reporting */}
+      <ReportingCard order={order} />
 
       {/* Stage breakdown */}
       {summary.totalItems > 0 && (
@@ -240,6 +243,55 @@ const InvoiceCard = ({ order, onUpdated }) => {
 };
 
 // ---------------------------------------------------------------------------
+const ReportingCard = ({ order }) => {
+  const [emailing, setEmailing] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  const emailReport = async () => {
+    if (!window.confirm('Send the donor bundle report by email now?')) return;
+    setEmailing(true); setMsg(null);
+    try {
+      const r = await WashAPI.emailDonorReport(order.id);
+      setMsg(r.ok ? 'Report sent to donor' : `Skipped: ${r.reason}`);
+    } catch (e) {
+      setMsg(e.message || 'Email failed');
+    } finally { setEmailing(false); }
+  };
+
+  return (
+    <div className="bg-white rounded-lg2 shadow-card border border-ink-100 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase text-ink-500 inline-flex items-center gap-1.5">
+            <FileDown size={14} /> Reports
+          </p>
+          <p className="text-sm text-ink-600 mt-1">
+            Donor bundle PDF includes a cover sheet + one page per beneficiary with GPS, photos, and progress timeline.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href={WashAPI.donorReportUrl(order.id)}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 bg-navy-900 hover:bg-navy-800 text-white text-sm font-semibold rounded-md px-3 py-1.5 transition"
+          >
+            <FileDown size={14} /> Open donor PDF
+          </a>
+          <button
+            onClick={emailReport}
+            disabled={emailing}
+            className="inline-flex items-center gap-1.5 bg-mission-500 hover:bg-mission-600 text-navy-900 font-bold rounded-md px-3 py-1.5 text-sm transition disabled:opacity-50"
+          >
+            <Mail size={14} /> {emailing ? 'Sending…' : 'Email donor'}
+          </button>
+        </div>
+      </div>
+      {msg && <div className="mt-2 text-xs bg-blue-50 border border-blue-200 text-blue-800 rounded p-2">{msg}</div>}
+    </div>
+  );
+};
+
 // Bulk import — CSV paste or per-row form. CSV columns:
 //   beneficiaryName, beneficiaryNic, beneficiaryPhone, district, gnDivision,
 //   address, installationLat, installationLng

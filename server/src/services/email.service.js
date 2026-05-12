@@ -240,6 +240,77 @@ export const sendDonorReceipt = async ({ donation, campaign }) => {
   });
 };
 
+// ----------------------------------------------------------------------------
+// Programme donor reports — email the donor when a WASH or IGP order delivers.
+// Body summarises the order; the per-beneficiary PDF is attached if provided.
+// ----------------------------------------------------------------------------
+export const sendProgrammeReport = async ({ donorEmail, donorName, programme, order, pdfBuffer }) => {
+  if (!donorEmail) return false;
+  const titleKind = programme === 'wash' ? 'WASH' : 'IGP';
+  const body = `
+    <p>Dear <strong>${escape(donorName || 'Partner')}</strong>,</p>
+    <p>Please find attached the delivery report for the ${titleKind} programme order
+       below. Every beneficiary record, location, and progress update is included
+       — feel free to forward to your team.</p>
+    <table style="font-size:13px;margin:14px 0;border-collapse:collapse;">
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Order code</td>
+          <td style="font-weight:700;">${escape(order.orderCode)}</td></tr>
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Title</td>
+          <td>${escape(order.title)}</td></tr>
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Quantity</td>
+          <td>${escape(String(order.quantity))}</td></tr>
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Total budget</td>
+          <td>${fmtAmount(order.totalBudget, order.currency || 'LKR')}</td></tr>
+      <tr><td style="color:#666;padding:4px 16px 4px 0;">Status</td>
+          <td>${escape(order.status)}</td></tr>
+    </table>
+    <p style="margin-top:14px;font-size:13px;color:#444;">
+      If you have questions, simply reply to this email and our team will respond.
+    </p>
+    <p style="font-size:13px;color:#444;">With thanks,<br/><strong>The GERSL Team</strong></p>`;
+
+  const attachments = pdfBuffer ? [{
+    filename: `${titleKind}-${order.orderCode}-donor-report.pdf`,
+    content:  pdfBuffer,
+    contentType: 'application/pdf',
+  }] : [];
+
+  return sendEmailWithAttachments({
+    to: donorEmail,
+    subject: `${titleKind} delivery report — ${order.orderCode}`,
+    html: wrap(`${titleKind} delivery report`, body),
+    attachments,
+  });
+};
+
+// sendEmail variant that supports attachments. Falls through the same dormancy
+// check + transporter init as the plain text/html sendEmail.
+const sendEmailWithAttachments = async ({ to, subject, html, attachments }) => {
+  if (!enabled()) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[email] skipped (SMTP not configured): to=${to} subject="${subject}"`);
+    }
+    return false;
+  }
+  if (!to) return false;
+  const transporter = await getTransporter();
+  if (!transporter) return false;
+  try {
+    await transporter.sendMail({
+      from: fromAddr,
+      to,
+      subject,
+      html,
+      text: stripHtml(html || ''),
+      attachments,
+    });
+    return true;
+  } catch (err) {
+    console.error(`[email] sendWithAttachments failed (subject="${subject}"):`, err.message);
+    return false;
+  }
+};
+
 export const notifyDecision = async ({ to, kind, decision, reason }) => {
   if (!to) return false;
   const approved = decision === 'Approved' || decision === 'approve';

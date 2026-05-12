@@ -6,6 +6,7 @@ import {
   listMyItems, getSummary,
 } from '../controllers/igp.controller.js';
 import { generateInvoiceForIgpOrder, reconcileIgpOrder } from '../controllers/orderConversion.controller.js';
+import { renderIgpItemPdf, renderIgpDonorBundle, emailIgpDonorReport } from '../controllers/programmeReportPdf.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -46,5 +47,9 @@ router.post  ('/items/:id/follow-up', validateId(), requireIgpFieldUpdate, recor
 
 router.get ('/items/:id/stage-updates', validateId(), requireIgpView,        listStageUpdates);
 router.post('/items/:id/stage-updates', validateId(), requireIgpFieldUpdate, addStageUpdate);
+
+router.get ('/items/:id/report',              validateId(), requireIgpView,  renderIgpItemPdf);
+router.get ('/orders/:id/donor-report',       validateId(), requireIgpView,  renderIgpDonorBundle);
+router.post('/orders/:id/email-donor-report', validateId(), requireIgpWrite, emailIgpDonorReport);
 
 export default router;

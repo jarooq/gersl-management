@@ -4198,6 +4198,11 @@ export const WashAPI = {
   // Finance integration
   generateInvoice:  (orderId)        => request(`/wash/orders/${orderId}/generate-invoice`, { method: 'POST' }).then(r => r.data),
   reconcile:        (orderId)        => request(`/wash/orders/${orderId}/reconcile`, { method: 'PATCH' }).then(r => r.data),
+
+  // Reports
+  itemReportUrl:    (itemId)         => `${API_BASE_URL}/wash/items/${itemId}/report`,
+  donorReportUrl:   (orderId)        => `${API_BASE_URL}/wash/orders/${orderId}/donor-report`,
+  emailDonorReport: (orderId)        => request(`/wash/orders/${orderId}/email-donor-report`, { method: 'POST' }).then(r => r.data),
 };
 
 // ============================================
@@ -4234,6 +4239,11 @@ export const IgpAPI = {
   // Finance integration
   generateInvoice:  (orderId)        => request(`/igp/orders/${orderId}/generate-invoice`, { method: 'POST' }).then(r => r.data),
   reconcile:        (orderId)        => request(`/igp/orders/${orderId}/reconcile`, { method: 'PATCH' }).then(r => r.data),
+
+  // Reports
+  itemReportUrl:    (itemId)         => `${API_BASE_URL}/igp/items/${itemId}/report`,
+  donorReportUrl:   (orderId)        => `${API_BASE_URL}/igp/orders/${orderId}/donor-report`,
+  emailDonorReport: (orderId)        => request(`/igp/orders/${orderId}/email-donor-report`, { method: 'POST' }).then(r => r.data),
 };
 
 // ============================================

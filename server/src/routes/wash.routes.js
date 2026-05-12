@@ -6,6 +6,7 @@ import {
   listMyItems, getSummary,
 } from '../controllers/wash.controller.js';
 import { generateInvoiceForWashOrder, reconcileWashOrder } from '../controllers/orderConversion.controller.js';
+import { renderWashItemPdf, renderWashDonorBundle, emailWashDonorReport } from '../controllers/programmeReportPdf.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
@@ -53,5 +54,11 @@ router.patch ('/items/:id/stage', validateId(), requireWashFieldUpdate, transiti
 // Stage updates (append-only progress timeline)
 router.get ('/items/:id/stage-updates', validateId(), requireWashView,        listStageUpdates);
 router.post('/items/:id/stage-updates', validateId(), requireWashFieldUpdate, addStageUpdate);
+
+// PDF reports (per-item + donor bundle). Opened in a new tab — token can be
+// passed in ?token= for cookieless contexts (see auth.middleware.js whitelist).
+router.get ('/items/:id/report',              validateId(), requireWashView,  renderWashItemPdf);
+router.get ('/orders/:id/donor-report',       validateId(), requireWashView,  renderWashDonorBundle);
+router.post('/orders/:id/email-donor-report', validateId(), requireWashWrite, emailWashDonorReport);
 
 export default router;
