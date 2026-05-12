@@ -20,45 +20,30 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let isMounted = true;
 
-    // Check for stored session and validate token
+    // Source of truth on boot is /api/me — the httpOnly cookie (or legacy
+    // Bearer token kept by TokenManager) authenticates the request. If the
+    // call succeeds we're logged in; a 401 means we're not. We deliberately
+    // do NOT read user data from localStorage anymore — keeping a copy
+    // there is XSS-exfiltrable for no real gain, and any local copy can
+    // drift from the server's view (stale role, stale permissions).
     const initAuth = async () => {
       try {
-        const storedUser = localStorage.getItem('currentUser');
-        const token = TokenManager.getAccessToken();
-
-        // Only validate session if we have both user data AND a valid token
-        if (storedUser && token && isMounted) {
-          try {
-            const user = JSON.parse(storedUser);
-            // Verify session is still valid by fetching current user
-            const userData = await API.Auth.getCurrentUser();
-            if (isMounted) {
-              setCurrentUser(userData);
-              setIsLoggedIn(true);
-            }
-          } catch (error) {
-            // Session invalid or expired - silently clear
-            console.log('Session validation failed, clearing stored data');
-            if (isMounted) {
-              TokenManager.clearTokens();
-              localStorage.removeItem('currentUser');
-            }
-          }
-        } else if (storedUser && !token) {
-          // Have user data but no token - clear stale data
-          console.log('Found user data without token, clearing stale session');
-          localStorage.removeItem('currentUser');
+        const userData = await API.Auth.getCurrentUser();
+        if (isMounted && userData) {
+          setCurrentUser(userData);
+          setIsLoggedIn(true);
         }
       } catch (error) {
-        // Handle any JSON parse errors
-        console.error('Auth initialization error:', error);
+        // 401 / network error — treat as logged-out and clear any stale
+        // tokens left over from older clients.
         if (isMounted) {
-          localStorage.removeItem('currentUser');
+          TokenManager.clearTokens();
         }
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        // Belt-and-braces: scrub any pre-existing currentUser entry from
+        // a previous app version that wrote it.
+        localStorage.removeItem('currentUser');
+        if (isMounted) setLoading(false);
       }
     };
 
@@ -76,10 +61,10 @@ export const AuthProvider = ({ children }) => {
       // Store tokens
       TokenManager.setTokens(response.accessToken, response.refreshToken);
 
-      // Store user data
+      // Store user data — in-memory only. Server is the source of truth
+      // for current-user data via /api/me on subsequent reloads.
       setCurrentUser(response.user);
       setIsLoggedIn(true);
-      localStorage.setItem('currentUser', JSON.stringify(response.user));
 
       return { success: true, user: response.user };
     } catch (error) {
@@ -95,11 +80,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await API.Auth.register(userData);
 
-      // Automatically log in after registration
+      // Automatically log in after registration. In-memory user only.
       TokenManager.setTokens(response.accessToken, response.refreshToken);
       setCurrentUser(response.user);
       setIsLoggedIn(true);
-      localStorage.setItem('currentUser', JSON.stringify(response.user));
 
       return { success: true, user: response.user };
     } catch (error) {
@@ -117,11 +101,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Clear state regardless of API call success
+      // Clear state regardless of API call success. TokenManager.clearTokens
+      // also strips any legacy currentUser entry.
       setCurrentUser(null);
       setIsLoggedIn(false);
       TokenManager.clearTokens();
-      localStorage.removeItem('currentUser');
     }
   };
 
@@ -129,7 +113,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const updatedUser = await API.Auth.updateProfile(profileData);
       setCurrentUser(updatedUser);
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
       return { success: true, user: updatedUser };
     } catch (error) {
       console.error('Profile update error:', error);
@@ -159,37 +142,12 @@ export const AuthProvider = ({ children }) => {
    * @returns {boolean}
    */
   const hasPermission = (permission) => {
-    console.log('🔍 hasPermission called for:', permission);
-    console.log('🔍 currentUser:', currentUser);
-
-    if (!currentUser) {
-      console.log('❌ No currentUser - returning false');
-      return false;
-    }
-
-    console.log('🔍 currentUser.permissions:', currentUser.permissions);
-    console.log('🔍 Is array?', Array.isArray(currentUser.permissions));
-
-    // Use database permissions from user object
-    if (currentUser.permissions && Array.isArray(currentUser.permissions)) {
-      console.log('✅ Permissions array exists with', currentUser.permissions.length, 'items');
-
-      // Check for wildcard permission (admin has all permissions)
-      const hasWildcard = currentUser.permissions.some(p => p.permissionKey === '*');
-      console.log('🔍 Has wildcard (*)?', hasWildcard);
-
-      if (hasWildcard) {
-        console.log('✅ WILDCARD FOUND - GRANTING ACCESS');
-        return true;
-      }
-
-      const hasSpecific = currentUser.permissions.some(p => p.permissionKey === permission);
-      console.log('🔍 Has specific permission?', hasSpecific);
-      return hasSpecific;
-    }
-
-    console.log('❌ No permissions array - returning false');
-    return false;
+    if (!currentUser) return false;
+    const perms = currentUser.permissions;
+    if (!Array.isArray(perms)) return false;
+    // Admins carry a '*' wildcard; everyone else has an explicit list.
+    if (perms.some(p => p.permissionKey === '*')) return true;
+    return perms.some(p => p.permissionKey === permission);
   };
 
   /**

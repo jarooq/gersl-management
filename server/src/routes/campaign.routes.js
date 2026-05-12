@@ -18,11 +18,16 @@ router.get('/:id(\\d+)', campaignController.getCampaignById);
 // All routes defined after this middleware require authentication
 router.use(protect);
 
-router.post('/', campaignController.createCampaign);
-router.put('/:id', campaignController.updateCampaign);
-router.delete('/:id', campaignController.deleteCampaign);
+// Campaign writes are restricted to fundraising/admin roles. Any authenticated
+// user could previously update or delete any campaign — there's no ownership
+// concept on the model, so role-based gating is the only practical control.
+const requireCampaignManager = authorize('Admin', 'CEO', 'Fundraising Manager', 'Manager');
 
-// Admin only routes
-router.put('/:id/approve', authorize('Admin', 'Manager'), campaignController.approveCampaign);
+router.post('/', requireCampaignManager, campaignController.createCampaign);
+router.put('/:id', requireCampaignManager, campaignController.updateCampaign);
+router.delete('/:id', requireCampaignManager, campaignController.deleteCampaign);
+
+// Approval is reserved for senior approvers.
+router.put('/:id/approve', authorize('Admin', 'CEO', 'Manager'), campaignController.approveCampaign);
 
 export default router;

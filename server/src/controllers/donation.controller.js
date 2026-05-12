@@ -1,7 +1,16 @@
 import { Op } from 'sequelize';
+import { randomBytes } from 'crypto';
 import { Campaign, Donation, User } from '../models/index.js';
 import { asyncHandler, NotFoundError, ValidationError } from '../middleware/error.middleware.js';
 import { sendDonorReceipt } from '../services/email.service.js';
+
+// Codes are derived from the row's autoincrement id, which is atomic — two
+// concurrent inserts can never produce the same number. Because donationCode
+// is NOT NULL with a UNIQUE index, we insert with a random placeholder first
+// and then UPDATE with the real code once the id is known.
+const tempCode = (prefix) => `${prefix}-TMP-${randomBytes(5).toString('hex').toUpperCase()}`;
+const codeFromId = (id) => `DON-${String(id).padStart(6, '0')}`;
+const receiptFromId = (id) => `RCT-${new Date().getFullYear()}-${String(id).padStart(5, '0')}`;
 
 // ============================================
 // GET ALL DONATIONS
@@ -74,30 +83,29 @@ export const getDonationById = asyncHandler(async (req, res) => {
 // CREATE DONATION
 // ============================================
 export const createDonation = asyncHandler(async (req, res) => {
-  const donationData = req.body;
+  const donationData = { ...req.body };
 
-  // Generate donation code if not provided
-  if (!donationData.donationCode) {
-    const count = await Donation.count();
-    donationData.donationCode = `DON-${String(count + 1).padStart(6, '0')}`;
-  }
-
-  // Generate receipt number if payment is completed
-  if (donationData.paymentStatus === 'Completed' && !donationData.receiptNumber) {
-    const year = new Date().getFullYear();
-    const count = await Donation.count({ where: { paymentStatus: 'Completed' } });
-    donationData.receiptNumber = `RCT-${year}-${String(count + 1).padStart(5, '0')}`;
-  }
+  // Strip any client-supplied codes — server is the source of truth and we
+  // want race-free numbering even when callers try to be helpful.
+  const wantsCompleted = donationData.paymentStatus === 'Completed';
+  delete donationData.donationCode;
+  delete donationData.receiptNumber;
+  donationData.donationCode = tempCode('DON');
 
   const donation = await Donation.create(donationData);
 
+  // Now the id is known — flip to the real id-derived codes in one UPDATE.
+  const finalUpdates = { donationCode: codeFromId(donation.id) };
+  if (wantsCompleted) finalUpdates.receiptNumber = receiptFromId(donation.id);
+  await donation.update(finalUpdates);
+
   // Update campaign raised amount if payment is completed
   let campaign = null;
-  if (donationData.campaignId && donationData.paymentStatus === 'Completed') {
-    campaign = await Campaign.findByPk(donationData.campaignId);
+  if (donation.campaignId && donation.paymentStatus === 'Completed') {
+    campaign = await Campaign.findByPk(donation.campaignId);
     if (campaign) {
       await campaign.update({
-        raisedAmount: parseFloat(campaign.raisedAmount) + parseFloat(donationData.amount)
+        raisedAmount: parseFloat(campaign.raisedAmount) + parseFloat(donation.amount)
       });
     }
   }
@@ -134,11 +142,12 @@ export const updateDonation = asyncHandler(async (req, res) => {
     updateData.paymentStatus === 'Completed' && donation.paymentStatus !== 'Completed';
   let receiptCampaign = null;
   if (becameCompleted) {
-    // Generate receipt number if not provided
-    if (!updateData.receiptNumber) {
-      const year = new Date().getFullYear();
-      const count = await Donation.count({ where: { paymentStatus: 'Completed' } });
-      updateData.receiptNumber = `RCT-${year}-${String(count + 1).padStart(5, '0')}`;
+    // Receipt derived from this donation's own id — atomic, race-free.
+    // Ignore any client-supplied receipt number to keep the format consistent.
+    if (!donation.receiptNumber) {
+      updateData.receiptNumber = receiptFromId(donation.id);
+    } else {
+      delete updateData.receiptNumber;
     }
 
     // Update campaign raised amount
