@@ -8,6 +8,7 @@ import RecordCashTxModal from './components/RecordCashTxModal';
 import TransferCashModal from './components/TransferCashModal';
 import CashCountModal from './components/CashCountModal';
 import RequestReplenishmentModal from './components/RequestReplenishmentModal';
+import BulkReceiptsModal from './components/BulkReceiptsModal';
 
 // Open the voucher PDF in a new tab. Auth via ?token=… because PDF viewers
 // can't carry Authorization headers — the backend whitelists this surface.
@@ -54,6 +55,7 @@ export default function CashBookPage() {
   const [showCount, setShowCount] = useState(false);
   const [activeCount, setActiveCount] = useState(null);
   const [showReplen, setShowReplen] = useState(false);
+  const [showBulk, setShowBulk] = useState(false);
   const [replenishments, setReplenishments] = useState([]);
 
   const load = async () => {
@@ -172,6 +174,7 @@ export default function CashBookPage() {
           {canRecord && (
             <>
               <button onClick={() => setShowRecord(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-navy-900 rounded-md hover:bg-navy-800 shadow-card transition">Record receipt / payment</button>
+              <button onClick={() => setShowBulk(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-green-700 rounded-md hover:bg-green-800" title="Paste a CSV of donor / fundraiser receipts to post in one shot">Bulk import</button>
               <button onClick={() => setShowTransfer(true)} className="px-3 py-1.5 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Transfer</button>
             </>
           )}
@@ -328,6 +331,19 @@ export default function CashBookPage() {
           account={account}
           onClose={() => setShowRecord(false)}
           onSaved={() => { setShowRecord(false); load(); }}
+        />
+      )}
+      {showBulk && (
+        <BulkReceiptsModal
+          accountId={account.id}
+          accountName={account.name}
+          currency={account.currency}
+          onClose={() => setShowBulk(false)}
+          onSuccess={({ count, total }) => {
+            setShowBulk(false);
+            alert(`✅ Posted ${count} receipt${count !== 1 ? 's' : ''} — total ${account.currency} ${Number(total).toLocaleString(undefined, { minimumFractionDigits: 2 })}`);
+            load();
+          }}
         />
       )}
       {showTransfer && (

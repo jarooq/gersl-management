@@ -159,6 +159,17 @@ export const recordTransaction = asyncHandler(async (req, res) => {
     if (direction === 'Out' && newBalance < 0) {
       throw new BadRequestError('Transaction would push balance below zero');
     }
+    // Imprest ceiling — petty-cash accounts have an imprestLimit (max float).
+    // Block In-direction transactions that would push the balance over it so
+    // the float doesn't quietly drift above policy.
+    if (direction === 'In' && account.type === 'PettyCash'
+        && Number(account.imprestLimit) > 0 && newBalance > Number(account.imprestLimit)) {
+      throw new BadRequestError(
+        `Receipt would push ${account.name} above its imprest limit `
+        + `(${account.currency} ${account.imprestLimit}). Current balance: `
+        + `${account.currentBalance}; this receipt: ${amt}.`
+      );
+    }
 
     const required = requiredApproverRole(account, amt, req.user.role);
     const status = required ? 'Pending-Approval' : 'Posted';
@@ -695,6 +706,107 @@ export const disbursePayroll = asyncHandler(async (req, res) => {
       data: {
         count: vouchers.length,
         totalPaid: totalNet,
+        currency: account.currency,
+        accountId: account.id,
+        accountName: account.name,
+        finalBalance: runningBalance,
+        vouchers,
+      }
+    });
+  } catch (err) {
+    if (!t.finished) await t.rollback();
+    throw err;
+  }
+});
+
+// ============================================
+// BULK RECEIPTS — batch-post many cash receipts to a single account.
+// Body: {
+//   cashAccountId,
+//   rows: [{ amount, payeeName?, description?, occurredAt?, referenceType?, referenceId? }]
+// }
+// Designed for donor / fundraiser receipt batches the accountant enters from
+// a spreadsheet. Every row is a Receipt (In). Atomic — if any row fails
+// validation, none post. Each row still gets its own voucher number.
+// ============================================
+export const bulkReceipts = asyncHandler(async (req, res) => {
+  const { cashAccountId, rows } = req.body;
+
+  if (!cashAccountId) {
+    throw new BadRequestError('cashAccountId is required');
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw new BadRequestError('rows must be a non-empty array');
+  }
+  if (rows.length > 200) {
+    throw new BadRequestError('Maximum 200 rows per batch — split larger imports');
+  }
+
+  // Validate every row's amount up front before opening the transaction.
+  const cleanRows = rows.map((r, idx) => {
+    const amt = Number(r.amount);
+    if (!Number.isFinite(amt) || amt <= 0) {
+      throw new BadRequestError(`Row ${idx + 1}: invalid amount (${r.amount})`);
+    }
+    return {
+      amount: amt,
+      payeeName: r.payeeName ? String(r.payeeName).slice(0, 200) : null,
+      description: r.description ? String(r.description).slice(0, 500) : null,
+      occurredAt: r.occurredAt ? new Date(r.occurredAt) : new Date(),
+      referenceType: r.referenceType ? String(r.referenceType).slice(0, 50) : null,
+      referenceId:   r.referenceId   ? Number(r.referenceId) || null : null,
+    };
+  });
+
+  const totalIn = cleanRows.reduce((s, r) => s + r.amount, 0);
+
+  const t = await sequelize.transaction();
+  try {
+    const account = await lockAccount(cashAccountId, t);
+    const startingBalance = Number(account.currentBalance);
+
+    // Imprest ceiling check up-front for petty-cash accounts.
+    if (account.type === 'PettyCash' && Number(account.imprestLimit) > 0
+        && startingBalance + totalIn > Number(account.imprestLimit)) {
+      throw new BadRequestError(
+        `Batch would push ${account.name} above its imprest limit `
+        + `(${account.currency} ${account.imprestLimit}). Starting: ${startingBalance}, batch total: ${totalIn}.`
+      );
+    }
+
+    let runningBalance = startingBalance;
+    const vouchers = [];
+
+    for (const r of cleanRows) {
+      runningBalance += r.amount;
+      const voucherNo = await nextVoucherNo(account.id, t);
+      const tx = await CashTransaction.create({
+        cashAccountId: account.id,
+        transactionType: 'Receipt',
+        direction: 'In',
+        amount: r.amount,
+        currency: account.currency,
+        balanceAfter: runningBalance,
+        voucherNo,
+        referenceType: r.referenceType,
+        referenceId: r.referenceId,
+        payeeName: r.payeeName,
+        description: r.description,
+        status: 'Posted',
+        performedBy: req.user.id,
+        occurredAt: r.occurredAt,
+      }, { transaction: t });
+      vouchers.push({ voucherNo, amount: r.amount, transactionId: tx.id });
+    }
+
+    await account.update({ currentBalance: runningBalance }, { transaction: t });
+    await t.commit();
+
+    res.status(201).json({
+      success: true,
+      data: {
+        count: vouchers.length,
+        totalReceived: totalIn,
         currency: account.currency,
         accountId: account.id,
         accountName: account.name,

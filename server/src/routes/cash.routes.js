@@ -17,7 +17,8 @@ import {
   rejectTransaction,
   reverseTransaction,
   disburseFromSource,
-  disbursePayroll
+  disbursePayroll,
+  bulkReceipts
 } from '../controllers/cashTransaction.controller.js';
 import {
   listCounts,
@@ -71,6 +72,7 @@ router.get   ('/transactions',                    requireCashView, listTransacti
 router.post  ('/transactions',                    requireCashWrite, recordTransaction);
 router.post  ('/transactions/disburse',           requireCashWrite, disburseFromSource);
 router.post  ('/transactions/disburse-payroll',   requireCashWrite, disbursePayroll);
+router.post  ('/transactions/bulk-receipts',      requireCashWrite, bulkReceipts);
 router.post  ('/transactions/transfer',           requireCashWrite, transferBetweenAccounts);
 router.get   ('/transactions/:id',                validateId(), requireCashView, getTransaction);
 router.get   ('/transactions/:id/voucher',        validateId(), requireCashView, renderCashVoucherPdf);

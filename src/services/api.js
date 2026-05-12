@@ -3311,6 +3311,17 @@ export const CashAPI = {
       method: 'POST',
       body: JSON.stringify({ payrollIds, cashAccountId, ...opts }),
     }),
+  /**
+   * Bulk-post receipts to a single cash account (donor batch, fundraiser).
+   * Atomic — if any row is invalid, none post. Each row gets its own voucher.
+   * @param cashAccountId  the account to credit
+   * @param rows           [{ amount, payeeName?, description?, occurredAt? }, ...]
+   */
+  bulkReceipts: (cashAccountId, rows) =>
+    request('/cash/transactions/bulk-receipts', {
+      method: 'POST',
+      body: JSON.stringify({ cashAccountId, rows }),
+    }),
   transferCash: (data) =>
     request('/cash/transactions/transfer', { method: 'POST', body: JSON.stringify(data) }),
   approveTransaction: (id) =>
