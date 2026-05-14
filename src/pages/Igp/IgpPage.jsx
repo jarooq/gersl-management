@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Briefcase, Plus, Calendar, AlertTriangle, CheckCircle, Wallet, Search, X, TrendingUp } from 'lucide-react';
-import { IgpAPI } from '../../services/api';
+import API, { IgpAPI } from '../../services/api';
 
 const fmt = (n) => `LKR ${Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`;
 
@@ -175,6 +175,8 @@ const Tile = ({ icon, label, value, tone = 'ink' }) => {
 
 const CreateIgpOrderModal = ({ onClose, onCreated }) => {
   const [form, setForm] = useState({
+    donorId: '',
+    projectId: '',
     title: '',
     quantity: 1,
     totalBudget: '',
@@ -188,11 +190,35 @@ const CreateIgpOrderModal = ({ onClose, onCreated }) => {
     description: '',
   });
   const [mixRows, setMixRows] = useState([{ type: 'SewingMachine', qty: 1, unit: '' }]);
+  const [partners, setPartners] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState(null);
 
   const totalQty = mixRows.reduce((s, r) => s + Number(r.qty || 0), 0);
   const totalSum = mixRows.reduce((s, r) => s + Number(r.qty || 0) * Number(r.unit || 0), 0);
+
+  // Load partners + projects for the pickers (mirror of the WASH modal).
+  useEffect(() => {
+    let alive = true;
+    Promise.all([
+      API.Partner.getAll({ status: 'Active' }).catch(() => ({ partners: [] })),
+      API.Project.getAll({ limit: 200 }).catch(() => ({ projects: [] })),
+    ]).then(([pResp, projResp]) => {
+      if (!alive) return;
+      setPartners(Array.isArray(pResp?.partners) ? pResp.partners : Array.isArray(pResp) ? pResp : []);
+      setProjects(Array.isArray(projResp?.projects) ? projResp.projects : Array.isArray(projResp) ? projResp : []);
+    });
+    return () => { alive = false; };
+  }, []);
+
+  const projectsForPartner = form.donorId
+    ? projects.filter(p => {
+        if (p.partnerId && Number(p.partnerId) === Number(form.donorId)) return true;
+        const partner = partners.find(pt => Number(pt.id) === Number(form.donorId));
+        return partner && p.donor && p.donor.toLowerCase().trim() === partner.name.toLowerCase().trim();
+      })
+    : projects;
 
   const submit = async () => {
     if (!form.title || !form.deadline || totalQty === 0) {
@@ -203,6 +229,8 @@ const CreateIgpOrderModal = ({ onClose, onCreated }) => {
     try {
       const data = await IgpAPI.createOrder({
         ...form,
+        donorId:     form.donorId   ? Number(form.donorId)   : null,
+        projectId:   form.projectId ? Number(form.projectId) : null,
         quantity:    totalQty,
         totalBudget: form.totalBudget ? Number(form.totalBudget) : totalSum || null,
         assetMix:    mixRows.filter(r => r.type && r.qty).map(r => ({ type: r.type, qty: Number(r.qty), unit: r.unit ? Number(r.unit) : null })),
@@ -223,6 +251,30 @@ const CreateIgpOrderModal = ({ onClose, onCreated }) => {
           <button onClick={onClose} className="hover:bg-white/20 rounded p-1"><X size={16} /></button>
         </div>
         <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <Field label="Partner / Donor *" colSpan={1}>
+            <select
+              value={form.donorId}
+              onChange={e => setForm({ ...form, donorId: e.target.value, projectId: '' })}
+              className="w-full border border-ink-200 rounded px-2 py-1.5 bg-white"
+            >
+              <option value="">— Select partner —</option>
+              {partners.map(p => (
+                <option key={p.id} value={p.id}>{p.name}{p.partnerCode ? ` (${p.partnerCode})` : ''}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Project (umbrella)">
+            <select
+              value={form.projectId}
+              onChange={e => setForm({ ...form, projectId: e.target.value })}
+              className="w-full border border-ink-200 rounded px-2 py-1.5 bg-white"
+            >
+              <option value="">— None / one-off —</option>
+              {projectsForPartner.map(p => (
+                <option key={p.id} value={p.id}>{p.name}{p.projectCode ? ` (${p.projectCode})` : ''}</option>
+              ))}
+            </select>
+          </Field>
           <Field label="Title *" colSpan={2}><input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border border-ink-200 rounded px-2 py-1.5" placeholder="One Nation — March IGP" /></Field>
 
           <div className="md:col-span-2">

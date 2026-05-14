@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Droplets, Plus, Calendar, AlertTriangle, CheckCircle, Clock, Wallet, Search, X } from 'lucide-react';
-import { WashAPI } from '../../services/api';
+import API, { WashAPI } from '../../services/api';
 
 const fmt = (n) => `LKR ${Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 })}`;
 
@@ -176,6 +176,8 @@ const SummaryTile = ({ icon, label, value, tone = 'ink' }) => {
 
 const CreateOrderModal = ({ onClose, onCreated }) => {
   const [form, setForm] = useState({
+    donorId: '',
+    projectId: '',
     title: '',
     unitType: 'HandPump',
     quantity: 1,
@@ -190,8 +192,43 @@ const CreateOrderModal = ({ onClose, onCreated }) => {
     donorRef: '',
     description: '',
   });
+  const [partners, setPartners] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState(null);
+
+  // Load active partners + projects for the pickers. Partners come from
+  // /api/partners (active only), projects from /api/projects. We narrow
+  // the project picker by selected partner on the client so finance can
+  // always see the link is intentional.
+  useEffect(() => {
+    let alive = true;
+    Promise.all([
+      API.Partner.getAll({ status: 'Active' }).catch(() => ({ partners: [] })),
+      API.Project.getAll({ limit: 200 }).catch(() => ({ projects: [] })),
+    ]).then(([pResp, projResp]) => {
+      if (!alive) return;
+      const partnerList = Array.isArray(pResp?.partners) ? pResp.partners
+                       : Array.isArray(pResp)            ? pResp
+                       : [];
+      const projectList = Array.isArray(projResp?.projects) ? projResp.projects
+                       : Array.isArray(projResp)            ? projResp
+                       : [];
+      setPartners(partnerList);
+      setProjects(projectList);
+    });
+    return () => { alive = false; };
+  }, []);
+
+  // When a partner is selected, surface the projects that belong to them
+  // (matched by partner_id, or fall back to donor-name match for legacy rows).
+  const projectsForPartner = form.donorId
+    ? projects.filter(p => {
+        if (p.partnerId && Number(p.partnerId) === Number(form.donorId)) return true;
+        const partner = partners.find(pt => Number(pt.id) === Number(form.donorId));
+        return partner && p.donor && p.donor.toLowerCase().trim() === partner.name.toLowerCase().trim();
+      })
+    : projects;
 
   const submit = async () => {
     if (!form.title || !form.deadline || !form.quantity) {
@@ -202,6 +239,8 @@ const CreateOrderModal = ({ onClose, onCreated }) => {
     try {
       const data = await WashAPI.createOrder({
         ...form,
+        donorId:     form.donorId   ? Number(form.donorId)   : null,
+        projectId:   form.projectId ? Number(form.projectId) : null,
         quantity:    Number(form.quantity),
         unitCost:    form.unitCost ? Number(form.unitCost) : null,
         totalBudget: form.totalBudget ? Number(form.totalBudget) : (form.unitCost ? Number(form.unitCost) * Number(form.quantity) : null),
@@ -220,6 +259,31 @@ const CreateOrderModal = ({ onClose, onCreated }) => {
           <button onClick={onClose} className="hover:bg-white/20 rounded p-1"><X size={16} /></button>
         </div>
         <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <Field label="Partner / Donor *" colSpan={1}>
+            <select
+              value={form.donorId}
+              onChange={e => setForm({ ...form, donorId: e.target.value, projectId: '' })}
+              className="w-full border border-ink-200 rounded px-2 py-1.5 bg-white"
+            >
+              <option value="">— Select partner —</option>
+              {partners.map(p => (
+                <option key={p.id} value={p.id}>{p.name}{p.partnerCode ? ` (${p.partnerCode})` : ''}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Project (umbrella)">
+            <select
+              value={form.projectId}
+              onChange={e => setForm({ ...form, projectId: e.target.value })}
+              className="w-full border border-ink-200 rounded px-2 py-1.5 bg-white"
+              disabled={!form.donorId && projects.length > 50}
+            >
+              <option value="">— None / one-off —</option>
+              {projectsForPartner.map(p => (
+                <option key={p.id} value={p.id}>{p.name}{p.projectCode ? ` (${p.projectCode})` : ''}</option>
+              ))}
+            </select>
+          </Field>
           <Field label="Title *" colSpan={2}><input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border border-ink-200 rounded px-2 py-1.5" placeholder="One Nation — 50 hand pumps April" /></Field>
           <Field label="Unit type"><select value={form.unitType} onChange={e => setForm({ ...form, unitType: e.target.value })} className="w-full border border-ink-200 rounded px-2 py-1.5">
             {['HandPump','CommunityWell','HybridWell','TubeWell','Filter','Tank','Latrine','Mixed'].map(t => <option key={t}>{t}</option>)}
