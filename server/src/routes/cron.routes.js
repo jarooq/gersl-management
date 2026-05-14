@@ -9,17 +9,27 @@
 // =============================================================================
 
 import express from 'express';
+import { timingSafeEqual } from 'crypto';
 import { sendDeadlineReminders } from '../utils/programmeDeadlineReminders.js';
 
 const router = express.Router();
+
+// Constant-time comparison so attackers can't probe the secret one byte at a
+// time by measuring response latency. Buffer lengths must match for
+// timingSafeEqual; we pad/short-circuit when they don't.
+const constantEq = (a, b) => {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+};
 
 const requireCronSecret = (req, res, next) => {
   const expected = process.env.CRON_SECRET;
   if (!expected) {
     return res.status(503).json({ success: false, message: 'CRON_SECRET not configured' });
   }
-  const got = req.headers['x-cron-secret'] || req.query.secret;
-  if (got !== expected) {
+  const got = String(req.headers['x-cron-secret'] || req.query.secret || '');
+  if (!constantEq(got, expected)) {
     return res.status(401).json({ success: false, message: 'Invalid cron secret' });
   }
   next();

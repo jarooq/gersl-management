@@ -157,7 +157,7 @@ const WashItemDetailPage = () => {
           <div className="divide-y divide-ink-100">
             {item.stageUpdates.map(u => (
               <div key={u.id} className="p-4 flex gap-3">
-                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${STAGE_COLORS[u.stage]?.split(' ')[0].replace('bg-', 'bg-')}`}></div>
+                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${STAGE_COLORS[u.stage]?.split(' ')[0] || 'bg-ink-300'}`}></div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-baseline gap-2">
                     <span className={`px-2 py-0.5 rounded text-xs font-bold ${STAGE_COLORS[u.stage] || 'bg-ink-100 text-ink-700'}`}>{u.stage}</span>

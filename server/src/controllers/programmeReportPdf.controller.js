@@ -20,7 +20,8 @@ import {
   IgpOrder, IgpItem, IgpStageUpdate,
   Partner, Beneficiary, Vendor, User, Project,
 } from '../models/index.js';
-import { NotFoundError } from '../middleware/error.middleware.js';
+import { NotFoundError, ForbiddenError } from '../middleware/error.middleware.js';
+import { canPerformDelivery } from '../utils/programmeAccess.js';
 
 const PRIMARY  = '#0D1D3D';
 const ACCENT   = '#a4f056';
@@ -238,11 +239,16 @@ const renderDonorBundle = async (kind, orderId, res) => {
     include: [{ model: Beneficiary, as: 'beneficiary' }, { model: Vendor, as: 'contractor' }, { model: User, as: 'supervisor' }],
     order: [['createdAt', 'ASC']],
   });
-  const allStages = await StageModel.findAll({
-    where: { itemId: items.map(i => i.id) },
-    include: [{ model: User, as: 'updater', attributes: ['id', 'fullName'] }],
-    order: [['createdAt', 'ASC']],
-  });
+  // Guard against the empty-items case — Postgres rejects WHERE item_id IN ()
+  // with a syntax error, so we skip the stage-updates query entirely when
+  // there are no items to look up.
+  const allStages = items.length === 0
+    ? []
+    : await StageModel.findAll({
+        where: { itemId: items.map(i => i.id) },
+        include: [{ model: User, as: 'updater', attributes: ['id', 'fullName'] }],
+        order: [['createdAt', 'ASC']],
+      });
   const stagesByItem = allStages.reduce((acc, s) => {
     (acc[s.itemId] ||= []).push(s); return acc;
   }, {});
@@ -326,11 +332,14 @@ const buildDonorBundleBuffer = async (kind, orderId) => {
     include: [{ model: Beneficiary, as: 'beneficiary' }, { model: Vendor, as: 'contractor' }, { model: User, as: 'supervisor' }],
     order: [['createdAt', 'ASC']],
   });
-  const allStages = await StageModel.findAll({
-    where: { itemId: items.map(i => i.id) },
-    include: [{ model: User, as: 'updater', attributes: ['id', 'fullName'] }],
-    order: [['createdAt', 'ASC']],
-  });
+  // Same empty-items guard as renderDonorBundle — IN () is a syntax error.
+  const allStages = items.length === 0
+    ? []
+    : await StageModel.findAll({
+        where: { itemId: items.map(i => i.id) },
+        include: [{ model: User, as: 'updater', attributes: ['id', 'fullName'] }],
+        order: [['createdAt', 'ASC']],
+      });
   const stagesByItem = allStages.reduce((acc, s) => { (acc[s.itemId] ||= []).push(s); return acc; }, {});
   const anonymize = !!order.donor?.anonymizeReports;
   const titleKind = kind === 'wash' ? 'WASH' : 'IGP';
@@ -396,11 +405,32 @@ const emailDonorBundle = async (kind, orderId) => {
   return { ok: sent, reason: sent ? 'sent' : 'email service skipped (SMTP not configured?)' };
 };
 
+// Emailing the bundled donor report is a delivery-side action — it goes
+// directly to the donor's inbox with a PDF attached, so we restrict it to
+// programme/finance leadership and explicitly to people connected to the
+// order (creator, project manager, or the assigned supervisor of any item).
+const userCanEmailOrder = async (user, OrderModel, ItemModel, orderId) => {
+  if (canPerformDelivery(user)) return true;
+  const order = await OrderModel.findByPk(orderId, { attributes: ['id', 'createdBy', 'projectId'] });
+  if (!order) return false;
+  if (order.createdBy === user?.id) return true;
+  // Otherwise allow if the user supervises any item in this order.
+  const supervised = await ItemModel.findOne({
+    where: { orderId, assignedSupervisorId: user?.id },
+    attributes: ['id'],
+  });
+  return !!supervised;
+};
+
 export const emailWashDonorReport = asyncHandler(async (req, res) => {
+  const allowed = await userCanEmailOrder(req.user, WashOrder, WashItem, req.params.id);
+  if (!allowed) throw new ForbiddenError('You cannot email this order to the donor');
   const result = await emailDonorBundle('wash', req.params.id);
   res.json({ success: true, data: result });
 });
 export const emailIgpDonorReport = asyncHandler(async (req, res) => {
+  const allowed = await userCanEmailOrder(req.user, IgpOrder, IgpItem, req.params.id);
+  if (!allowed) throw new ForbiddenError('You cannot email this order to the donor');
   const result = await emailDonorBundle('igp', req.params.id);
   res.json({ success: true, data: result });
 });

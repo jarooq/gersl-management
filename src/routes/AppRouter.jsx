@@ -342,23 +342,31 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               </PermissionRoute>
             }
           />
-          {/* WASH module — water/sanitation/hygiene installations */}
+          {/* WASH module — water/sanitation/hygiene installations.
+              Gated to PROJECTS_VIEW so field/coordinator/finance staff who
+              already have project visibility get programme delivery too. */}
           <Route
             path="wash"
             element={
-              <Suspense fallback={<PageLoader />}><WashPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><WashPage /></Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="wash/orders/:id"
             element={
-              <Suspense fallback={<PageLoader />}><WashOrderDetailPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><WashOrderDetailPage /></Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="wash/items/:id"
             element={
-              <Suspense fallback={<PageLoader />}><WashItemDetailPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><WashItemDetailPage /></Suspense>
+              </PermissionRoute>
             }
           />
 
@@ -366,19 +374,25 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
           <Route
             path="igp"
             element={
-              <Suspense fallback={<PageLoader />}><IgpPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><IgpPage /></Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="igp/orders/:id"
             element={
-              <Suspense fallback={<PageLoader />}><IgpOrderDetailPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><IgpOrderDetailPage /></Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="igp/items/:id"
             element={
-              <Suspense fallback={<PageLoader />}><IgpItemDetailPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><IgpItemDetailPage /></Suspense>
+              </PermissionRoute>
             }
           />
 
@@ -386,7 +400,9 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
           <Route
             path="map"
             element={
-              <Suspense fallback={<PageLoader />}><BeneficiaryMapPage /></Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}><BeneficiaryMapPage /></Suspense>
+              </PermissionRoute>
             }
           />
 

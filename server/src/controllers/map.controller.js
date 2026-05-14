@@ -13,6 +13,7 @@
 import { Op } from 'sequelize';
 import { WashItem, IgpItem, Orphan, Beneficiary, WashOrder, IgpOrder } from '../models/index.js';
 import { asyncHandler, BadRequestError } from '../middleware/error.middleware.js';
+import { isFullView } from '../utils/programmeAccess.js';
 
 const ALL_KINDS = new Set(['wash', 'igp', 'orphan', 'beneficiary']);
 
@@ -31,6 +32,13 @@ export const getMapPins = asyncHandler(async (req, res) => {
   const district    = req.query.district || null;
   const stage       = req.query.stage    || null;
 
+  // Field staff only see pins on items they supervise. Senior roles see all
+  // — but only via the explicit map page or per-project/donor scoping; raw
+  // unfiltered pins still pose a privacy concern even for senior users, so
+  // a manager poking at /api/map/pins without filters gets the whole org
+  // intentionally (they have authority); a Field Officer gets only theirs.
+  const restrictToSupervisor = !isFullView(req.user) && req.user?.id;
+
   const pins = [];
 
   // ----- WASH items
@@ -42,6 +50,7 @@ export const getMapPins = asyncHandler(async (req, res) => {
     if (stage)       whereItem.stage    = stage;
     if (district)    whereItem.district = district;
     if (washOrderId) whereItem.orderId  = washOrderId;
+    if (restrictToSupervisor) whereItem.assignedSupervisorId = req.user.id;
 
     const orderWhere = {};
     if (projectId) orderWhere.projectId = projectId;
@@ -83,6 +92,7 @@ export const getMapPins = asyncHandler(async (req, res) => {
     if (stage)      whereItem.stage    = stage;
     if (district)   whereItem.district = district;
     if (igpOrderId) whereItem.orderId  = igpOrderId;
+    if (restrictToSupervisor) whereItem.assignedSupervisorId = req.user.id;
 
     const orderWhere = {};
     if (projectId) orderWhere.projectId = projectId;
@@ -122,6 +132,8 @@ export const getMapPins = asyncHandler(async (req, res) => {
       longitude: { [Op.ne]: null },
     };
     if (district) where.district = district;
+    // Field staff only see orphans they coordinate.
+    if (restrictToSupervisor) where.coordinatorId = req.user.id;
     const rows = await Orphan.findAll({
       where,
       attributes: ['id', 'fullName', 'district', 'latitude', 'longitude', 'orphanCode'],
@@ -144,8 +156,11 @@ export const getMapPins = asyncHandler(async (req, res) => {
   }
 
   // ----- Beneficiaries (pure registry rows that aren't yet attached to a
-  //       wash/igp item — useful for "all known households")
-  if (types.includes('beneficiary')) {
+  //       wash/igp item — useful for "all known households").
+  // Field staff don't see the org-wide beneficiary registry — there's no
+  // per-user ownership column on this table, so the safest restriction is
+  // to hide the layer entirely from non-senior roles.
+  if (types.includes('beneficiary') && !restrictToSupervisor) {
     const where = {
       household_lat: { [Op.ne]: null },
       household_lng: { [Op.ne]: null },

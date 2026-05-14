@@ -320,21 +320,40 @@ const BulkImportModal = ({ orderId, orderUnitType, onClose, onImported }) => {
     const headerCols = hasHeader
       ? lines[0].split(',').map(s => s.trim().toLowerCase())
       : ['beneficiaryname', 'beneficiarynic', 'beneficiaryphone', 'district', 'gndivision', 'address', 'installationlat', 'installationlng'];
-    return rows.map(line => {
+    // Validate numerics — bad GPS values silently coerce to NaN and then
+    // get persisted, polluting the map. Reject the whole row if Number() on
+    // a coordinate produces NaN.
+    const numOrNull = (v) => {
+      if (v === '' || v == null) return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 'INVALID';
+    };
+    const out = [];
+    for (const line of rows) {
       const cells = line.split(',').map(c => c.trim());
       const row = {};
+      let invalid = false;
       headerCols.forEach((col, i) => {
         const v = cells[i] || '';
-        if (col === 'installationlat' || col === 'lat')      row.installationLat = v ? Number(v) : null;
-        else if (col === 'installationlng' || col === 'lng') row.installationLng = v ? Number(v) : null;
-        else if (col === 'beneficiaryname' || col === 'name')   row.beneficiaryName = v;
+        if (col === 'installationlat' || col === 'lat') {
+          const n = numOrNull(v);
+          if (n === 'INVALID') invalid = true; else row.installationLat = n;
+        } else if (col === 'installationlng' || col === 'lng') {
+          const n = numOrNull(v);
+          if (n === 'INVALID') invalid = true; else row.installationLng = n;
+        } else if (col === 'beneficiaryname' || col === 'name')   row.beneficiaryName = v;
         else if (col === 'beneficiarynic'  || col === 'nic')    row.beneficiaryNic = v;
         else if (col === 'beneficiaryphone'|| col === 'phone')  row.beneficiaryPhone = v;
         else if (col === 'gndivision' || col === 'gn')          row.gnDivision = v;
         else row[col] = v;
       });
-      return row;
-    }).filter(r => r.beneficiaryName);
+      // Sri Lanka rough bounds — flag anything implausible so a typo doesn't
+      // place a beneficiary in Greenland.
+      if (row.installationLat != null && (row.installationLat < 5 || row.installationLat > 10)) invalid = true;
+      if (row.installationLng != null && (row.installationLng < 79 || row.installationLng > 82)) invalid = true;
+      if (!invalid && row.beneficiaryName) out.push(row);
+    }
+    return out;
   };
 
   const handleCsv = (text) => {

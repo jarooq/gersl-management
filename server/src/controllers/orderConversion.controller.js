@@ -280,9 +280,14 @@ const reconcileForOrder = async (orderModel, orderId) => {
 
   const paid    = Number(invoice.paidAmount || 0);
   const total   = Number(invoice.totalAmount || 0);
+  // deadline comes back from Sequelize as a Date object for DATEONLY columns;
+  // comparing a Date to a string via < silently coerces and gives wrong
+  // results. Normalise to YYYY-MM-DD strings on both sides.
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const deadlineStr = order.deadline ? new Date(order.deadline).toISOString().slice(0, 10) : null;
   const newStatus = paid >= total
     ? 'Paid'
-    : paid > 0 ? 'PartiallyPaid' : (order.deadline < new Date().toISOString().slice(0, 10) ? 'Overdue' : 'Pending');
+    : paid > 0 ? 'PartiallyPaid' : (deadlineStr && deadlineStr < todayStr ? 'Overdue' : 'Pending');
 
   await order.update({ paymentStatus: newStatus, amountReceived: paid });
   return order;

@@ -276,7 +276,6 @@ const CreateOrderModal = ({ onClose, onCreated }) => {
               value={form.projectId}
               onChange={e => setForm({ ...form, projectId: e.target.value })}
               className="w-full border border-ink-200 rounded px-2 py-1.5 bg-white"
-              disabled={!form.donorId && projects.length > 50}
             >
               <option value="">— None / one-off —</option>
               {projectsForPartner.map(p => (

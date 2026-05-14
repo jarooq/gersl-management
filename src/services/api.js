@@ -9,8 +9,9 @@
 import { API_BASE_URL, API_ORIGIN } from '../config/apiBase';
 const API_TIMEOUT = 30000;
 
-// Log API URL for debugging (development only)
-if (import.meta.env.DEV) {
+// One-time DEV log — easier to see in the network panel than a logged-once
+// flag in module scope. Set window.__DEBUG_API__ in console to opt back in.
+if (import.meta.env.DEV && typeof window !== 'undefined' && window.__DEBUG_API__) {
   console.log('🔗 API Base URL:', API_BASE_URL);
   console.log('📝 Environment:', import.meta.env.MODE);
   console.log('📝 VITE_API_URL:', import.meta.env.VITE_API_URL);

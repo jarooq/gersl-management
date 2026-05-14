@@ -220,6 +220,28 @@ const Proposal = sequelize.define('Proposal', {
     type: DataTypes.DATEONLY
   },
 
+  // ============================================================================
+  // WASH / IGP extensions (added 2026 — backed by create_wash_igp_modules.sql)
+  // ============================================================================
+  // proposalType: 'WASH' | 'IGP' | 'Orphan' | 'General' | 'Mixed' — enables
+  //               typed line-item editing in the proposal builder.
+  // proposalLineItems: JSONB array, e.g.
+  //   [{type:'SewingMachine', qty:15, unit:45000}, ...]
+  // standingProposal: framework/umbrella proposal (B-pattern, recurring donors)
+  // totalQuantityCap: ceiling for standing proposals (200 hand pumps/year)
+  // namedBeneficiaries: when true, conversion pre-stubs N empty items
+  // convertedOrderType / convertedOrderId: bidirectional pointer to the WASH
+  //   or IGP order created via convert-to-order. Without these, the UI's
+  //   "Open WASH/IGP order" shortcut and the "already converted" check are
+  //   silently broken.
+  proposalType:        { type: DataTypes.STRING(20),  field: 'proposal_type' },
+  proposalLineItems:   { type: DataTypes.JSONB,        field: 'proposal_line_items' },
+  standingProposal:    { type: DataTypes.BOOLEAN,      field: 'standing_proposal',    defaultValue: false },
+  totalQuantityCap:    { type: DataTypes.INTEGER,      field: 'total_quantity_cap' },
+  namedBeneficiaries:  { type: DataTypes.BOOLEAN,      field: 'named_beneficiaries',  defaultValue: false },
+  convertedOrderType:  { type: DataTypes.STRING(20),  field: 'converted_order_type' },
+  convertedOrderId:    { type: DataTypes.INTEGER,      field: 'converted_order_id' },
+
   // Audit fields
   createdBy: {
     type: DataTypes.INTEGER,

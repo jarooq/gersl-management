@@ -16,8 +16,9 @@ import {
   Partner, Project, Proposal, Vendor, User, Beneficiary,
   sequelize,
 } from '../models/index.js';
-import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { asyncHandler, NotFoundError, BadRequestError, ForbiddenError } from '../middleware/error.middleware.js';
 import { createNextStageTask } from '../utils/programmeTasks.js';
+import { isFullView } from '../utils/programmeAccess.js';
 
 const STAGE_ORDER = ['Ordered', 'Surveyed', 'Procured', 'Training', 'Delivered', 'FollowUp', 'Reported', 'Cancelled'];
 const STAGE_TIMESTAMP_FIELD = {
@@ -64,9 +65,19 @@ export const listOrders = asyncHandler(async (req, res) => {
       { donorRef:  { [Op.iLike]: `%${search}%` } },
     ];
   }
+  // Field-level users only see orders where they supervise at least one item.
+  const orderInclude = [...orderIncludes];
+  if (!isFullView(req.user) && req.user?.id) {
+    orderInclude.push({
+      model: IgpItem, as: 'items',
+      attributes: ['id'],
+      where: { assignedSupervisorId: req.user.id },
+      required: true,
+    });
+  }
   const rows = await IgpOrder.findAll({
     where,
-    include: orderIncludes,
+    include: orderInclude,
     order: [['deadline', 'ASC'], ['createdAt', 'DESC']],
     limit: 200,
   });
@@ -200,6 +211,10 @@ export const listItems = asyncHandler(async (req, res) => {
       { beneficiaryNic:  { [Op.iLike]: `%${search}%` } },
       { donorRef:        { [Op.iLike]: `%${search}%` } },
     ];
+  }
+  // Field-level users only see items they supervise.
+  if (!isFullView(req.user) && req.user?.id) {
+    where.assignedSupervisorId = req.user.id;
   }
   const rows = await IgpItem.findAll({
     where,

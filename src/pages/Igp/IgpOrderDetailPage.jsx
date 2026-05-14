@@ -328,23 +328,38 @@ const BulkImportModal = ({ orderId, orderAssetTypes, onClose, onImported }) => {
     const headerCols = hasHeader
       ? lines[0].split(',').map(s => s.trim().toLowerCase())
       : ['beneficiaryname', 'beneficiarynic', 'beneficiaryphone', 'district', 'gndivision', 'address', 'assettype', 'deliverylat', 'deliverylng'];
-    return rows.map(line => {
+    // Validate numerics + Sri Lanka GPS bounds — same as WASH bulk import.
+    const numOrNull = (v) => {
+      if (v === '' || v == null) return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 'INVALID';
+    };
+    const out = [];
+    for (const line of rows) {
       const cells = line.split(',').map(c => c.trim());
       const row = {};
+      let invalid = false;
       headerCols.forEach((col, i) => {
         const v = cells[i] || '';
-        if (col === 'deliverylat' || col === 'lat')           row.deliveryLat = v ? Number(v) : null;
-        else if (col === 'deliverylng' || col === 'lng')      row.deliveryLng = v ? Number(v) : null;
-        else if (col === 'beneficiaryname' || col === 'name') row.beneficiaryName = v;
+        if (col === 'deliverylat' || col === 'lat') {
+          const n = numOrNull(v);
+          if (n === 'INVALID') invalid = true; else row.deliveryLat = n;
+        } else if (col === 'deliverylng' || col === 'lng') {
+          const n = numOrNull(v);
+          if (n === 'INVALID') invalid = true; else row.deliveryLng = n;
+        } else if (col === 'beneficiaryname' || col === 'name') row.beneficiaryName = v;
         else if (col === 'beneficiarynic'  || col === 'nic')  row.beneficiaryNic = v;
         else if (col === 'beneficiaryphone'|| col === 'phone')row.beneficiaryPhone = v;
         else if (col === 'gndivision' || col === 'gn')        row.gnDivision = v;
         else if (col === 'assettype' || col === 'asset')      row.assetType = v;
         else row[col] = v;
       });
+      if (row.deliveryLat != null && (row.deliveryLat < 5  || row.deliveryLat > 10))  invalid = true;
+      if (row.deliveryLng != null && (row.deliveryLng < 79 || row.deliveryLng > 82)) invalid = true;
       if (!row.assetType) row.assetType = defaultAssetType;
-      return row;
-    }).filter(r => r.beneficiaryName);
+      if (!invalid && row.beneficiaryName) out.push(row);
+    }
+    return out;
   };
 
   const handleCsv = (text) => {

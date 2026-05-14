@@ -197,7 +197,21 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Rate limiting
+// Rate limiting — strict limit on auth endpoints (brute-force defence) then
+// the looser app-wide limit on everything else.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,            // 10 attempts per 15 min per IP — enough for legitimate
+                      //   retries but slams the door on credential stuffing.
+  message: 'Too many authentication attempts. Try again in 15 minutes.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,  // only count failed login/refresh attempts
+});
+app.use('/api/auth/login',    authLimiter);
+app.use('/api/auth/register', authLimiter);
+app.use('/api/auth/refresh',  authLimiter);
+
 const limiter = rateLimit({
   windowMs: (parseInt(process.env.RATE_LIMIT_WINDOW) || 15) * 60 * 1000,
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,

@@ -4,6 +4,7 @@
 // that differs is the stage list.
 // =============================================================================
 
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -220,12 +221,14 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
   // `?token=` query whitelist on /api/{wash,igp}/items/:id/report.
   Future<void> _openPdf() async {
     final token = await TokenStore().readAccess();
+    if (!mounted) return;
     if (token == null) {
       _toast('Not signed in — cannot open report');
       return;
     }
     final url = '${Env.apiBaseUrl}/${widget.kind}/items/${widget.itemId}/report?token=$token';
     final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    if (!mounted) return;
     if (!ok) _toast('Could not open PDF viewer');
   }
 
@@ -347,6 +350,12 @@ class _TransitionSheetState extends ConsumerState<_TransitionSheet> {
   bool _busy = false;
   String? _error;
 
+  @override
+  void dispose() {
+    _notes.dispose();
+    super.dispose();
+  }
+
   Future<void> _captureGps() async {
     setState(() { _error = null; });
     try {
@@ -356,9 +365,14 @@ class _TransitionSheetState extends ConsumerState<_TransitionSheet> {
         setState(() => _error = 'Location permission denied');
         return;
       }
+      // Outer timeout in case the platform layer hangs past the inner
+      // Geolocator timeLimit (rare but possible on weak signal).
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
-      );
+      ).timeout(const Duration(seconds: 15), onTimeout: () {
+        throw TimeoutException('GPS lock timed out');
+      });
+      if (!mounted) return;
       setState(() { _lat = pos.latitude; _lng = pos.longitude; });
     } catch (e) {
       setState(() => _error = 'GPS failed: $e');
@@ -741,6 +755,13 @@ class _IgpFollowUpSheetState extends ConsumerState<_IgpFollowUpSheet> {
   bool _busy = false;
   String? _error;
 
+  @override
+  void dispose() {
+    _income.dispose();
+    _notes.dispose();
+    super.dispose();
+  }
+
   Future<void> _captureGps() async {
     setState(() => _error = null);
     try {
@@ -750,9 +771,14 @@ class _IgpFollowUpSheetState extends ConsumerState<_IgpFollowUpSheet> {
         setState(() => _error = 'Location permission denied');
         return;
       }
+      // Outer timeout in case the platform layer hangs past the inner
+      // Geolocator timeLimit (rare but possible on weak signal).
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
-      );
+      ).timeout(const Duration(seconds: 15), onTimeout: () {
+        throw TimeoutException('GPS lock timed out');
+      });
+      if (!mounted) return;
       setState(() { _lat = pos.latitude; _lng = pos.longitude; });
     } catch (e) {
       setState(() => _error = 'GPS failed: $e');

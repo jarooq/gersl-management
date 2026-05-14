@@ -15,8 +15,9 @@ import {
   Partner, Project, Proposal, Vendor, User, Beneficiary,
   sequelize,
 } from '../models/index.js';
-import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { asyncHandler, NotFoundError, BadRequestError, ForbiddenError } from '../middleware/error.middleware.js';
 import { createNextStageTask } from '../utils/programmeTasks.js';
+import { isFullView } from '../utils/programmeAccess.js';
 
 const STAGE_ORDER = ['Ordered', 'Surveyed', 'Materials', 'Construction', 'Testing', 'HandedOver', 'Reported', 'Cancelled'];
 const STAGE_TIMESTAMP_FIELD = {
@@ -68,9 +69,22 @@ export const listOrders = asyncHandler(async (req, res) => {
       { donorRef:  { [Op.iLike]: `%${search}%` } },
     ];
   }
+
+  // Role scoping: field-level users only see orders where they supervise
+  // at least one item. Senior programme/finance roles see everything.
+  const orderInclude = [...orderIncludes];
+  if (!isFullView(req.user) && req.user?.id) {
+    orderInclude.push({
+      model: WashItem, as: 'items',
+      attributes: ['id'],
+      where: { assignedSupervisorId: req.user.id },
+      required: true,
+    });
+  }
+
   const rows = await WashOrder.findAll({
     where,
-    include: orderIncludes,
+    include: orderInclude,
     order: [['deadline', 'ASC'], ['createdAt', 'DESC']],
     limit: 200,
   });
@@ -201,6 +215,10 @@ export const listItems = asyncHandler(async (req, res) => {
       { beneficiaryNic:  { [Op.iLike]: `%${search}%` } },
       { donorRef:        { [Op.iLike]: `%${search}%` } },
     ];
+  }
+  // Field-level users only see items they supervise. Senior roles see all.
+  if (!isFullView(req.user) && req.user?.id) {
+    where.assignedSupervisorId = req.user.id;
   }
   const rows = await WashItem.findAll({
     where,

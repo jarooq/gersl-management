@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   X, Calendar, DollarSign, Users, Target, MapPin, Building2,
   CheckCircle, AlertCircle, BarChart3, Users2, Shield, FileText,
@@ -14,6 +15,7 @@ import DonorDecisionModal from '../../../components/proposals/DonorDecisionModal
 
 const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [converting, setConverting] = useState(false);
   const [conversionSuccess, setConversionSuccess] = useState(false);
@@ -62,11 +64,13 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
 
       if (result.success) {
         setConversionSuccess(true);
-        console.log('✅ Proposal converted to project:', {
-          project: result.data.project,
-          indicatorsCreated: result.data.indicatorsCreated,
-          approvalCreated: result.data.approvalCreated
-        });
+        if (import.meta.env.DEV) {
+          console.log('✅ Proposal converted to project:', {
+            project: result.data.project,
+            indicatorsCreated: result.data.indicatorsCreated,
+            approvalCreated: result.data.approvalCreated
+          });
+        }
 
         // Notify parent component to refresh proposal list
         if (onUpdate) {
@@ -76,8 +80,8 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
         // Show success message for 2 seconds, then close modal
         setTimeout(() => {
           onClose();
-          // Navigate to projects page to view the new project
-          window.location.href = '/projects';
+          // SPA navigation — preserves state and avoids a full reload.
+          navigate('/admin/projects');
         }, 2000);
       } else {
         throw new Error(result.message || 'Failed to convert proposal to project');
@@ -111,7 +115,7 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
         setShowConvertOrderModal(false);
         if (onUpdate) onUpdate({ ...proposal, convertedOrderType: orderKind, convertedOrderId: orderId, status: 'Donor Approved' });
         if (orderId) {
-          window.location.href = `/admin/${orderKind}/orders/${orderId}`;
+          navigate(`/admin/${orderKind}/orders/${orderId}`);
         } else {
           onClose();
         }
@@ -189,7 +193,7 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
     try {
       // In production, this would call an API endpoint to send the email
       // For now, we'll just update the proposal status to "Submitted to Donor"
-      console.log('Email payload:', emailPayload);
+      if (import.meta.env.DEV) console.log('Email payload:', emailPayload);
 
       // Update proposal status
       await executeStatusChange('Submitted to Donor',
@@ -211,7 +215,7 @@ const ProposalViewModal = ({ proposal, onClose, onUpdate }) => {
    */
   const handleDonorDecisionSubmit = async (decisionData) => {
     try {
-      console.log('Donor decision data:', decisionData);
+      if (import.meta.env.DEV) console.log('Donor decision data:', decisionData);
 
       // Determine new status based on decision
       const newStatus = decisionData.decision === 'approved' ? 'Donor Approved' : 'Donor Rejected';
@@ -244,14 +248,6 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
       throw error;
     }
   };
-
-  // Debug logging
-  console.log('ProposalViewModal Debug:', {
-    currentUser,
-    userRole: currentUser?.role,
-    proposalStatus: proposal.status,
-    hasCurrentUser: !!currentUser
-  });
 
   // Permission checks based on user role and proposal status
   // Roles that can submit proposals for approval

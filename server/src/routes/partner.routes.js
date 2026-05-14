@@ -16,7 +16,7 @@ import {
   deletePartnerCommunication,
   getPartnerFinancials
 } from '../controllers/partner.controller.js';
-import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
+import { requireAuth, requirePermission, requireRole, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
@@ -68,11 +68,14 @@ router.get(
 // @desc    Comprehensive financial rollup for a partner — committed budgets,
 //          funds received, money spent, net position, plus the underlying
 //          lists of orders, invoices, expenses, bills, and projects.
-// @access  Private (View permission)
+// @access  Senior finance / fundraising / executive roles only. Lower-level
+//          PARTNERS_VIEW gives access to the partner profile but not the
+//          financial breakdown, which exposes contractor bills, cash flows,
+//          and donor payment terms.
 router.get(
   '/:id/financials',
   requireAuth,
-  requirePermission(PERMISSIONS.PARTNERS_VIEW),
+  requireRole('Admin', 'CEO', 'BOD', 'Finance Manager', 'Finance Officer', 'Accountant', 'Fundraising Manager', 'Director Programmes', 'Programme Manager'),
   validateId(),
   getPartnerFinancials
 );

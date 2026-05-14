@@ -7,6 +7,8 @@
 // the user's current GPS; if location is denied, falls back to Sri Lanka.
 // =============================================================================
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 const _sriLankaCentre = LatLng(7.8731, 80.7718);
 
@@ -80,8 +83,9 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
       final pins = <_Pin>[];
       if (_layers.contains('wash')) {
         final res = await dio.get('/wash/items/mine');
-        for (final row in (res.data['data'] as List? ?? [])) {
-          final m = Map<String, dynamic>.from(row as Map);
+        for (final row in extractList(res.data)) {
+          if (row is! Map) continue;
+          final m = Map<String, dynamic>.from(row);
           final lat = m['installationLat'];
           final lng = m['installationLng'];
           if (lat is num && lng is num) {
@@ -99,8 +103,9 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
       }
       if (_layers.contains('igp')) {
         final res = await dio.get('/igp/items/mine');
-        for (final row in (res.data['data'] as List? ?? [])) {
-          final m = Map<String, dynamic>.from(row as Map);
+        for (final row in extractList(res.data)) {
+          if (row is! Map) continue;
+          final m = Map<String, dynamic>.from(row);
           final lat = m['deliveryLat'];
           final lng = m['deliveryLng'];
           if (lat is num && lng is num) {
@@ -128,6 +133,10 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
         });
       } else if (pins.length == 1) {
         _mapController.move(LatLng(pins.first.lat, pins.first.lng), 14);
+      } else {
+        // Empty result — reset to user's GPS centre or Sri Lanka so the map
+        // doesn't get stuck at whatever the previous filter showed.
+        _mapController.move(_initialCentre, 9);
       }
     } catch (e) {
       setState(() { _error = e.toString(); _loading = false; });

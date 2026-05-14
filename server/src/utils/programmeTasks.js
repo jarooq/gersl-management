@@ -10,6 +10,7 @@
 // shouldn't block a field officer from updating the stage.
 // =============================================================================
 
+import { Op } from 'sequelize';
 import { Task } from '../models/index.js';
 
 // Define the workflow step that follows each stage transition. Keys are the
@@ -63,6 +64,18 @@ export const createNextStageTask = async ({ kind, item, newStage, triggeredBy })
     const dueDate  = dueDateFor(tpl.dueOffsetDays, order?.deadline);
     const itemCode = item.itemCode || `#${item.id}`;
     const beneficiary = item.beneficiaryName || 'beneficiary';
+
+    // Idempotency: if the same item already has an open task for this exact
+    // stage (e.g. a previous transition that got reverted and re-applied),
+    // don't pile up duplicates. Match on the item-code-suffixed title plus
+    // a non-terminal status.
+    const existing = await Task.findOne({
+      where: {
+        title:  { [Op.like]: `${tpl.title} — ${itemCode}` },
+        status: { [Op.notIn]: ['Completed', 'Cancelled'] },
+      },
+    });
+    if (existing) return existing;
 
     // Create with a placeholder code, then patch with the real id-derived one
     // so the code is unique and predictable even under concurrent writes.

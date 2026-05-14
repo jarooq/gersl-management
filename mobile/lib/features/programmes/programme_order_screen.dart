@@ -6,6 +6,7 @@
 // item to the order during field survey.
 // =============================================================================
 
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -280,6 +281,17 @@ class _AddItemSheetState extends ConsumerState<_AddItemSheet> {
   bool _busy = false;
   String? _error;
 
+  @override
+  void dispose() {
+    _name.dispose();
+    _nic.dispose();
+    _phone.dispose();
+    _district.dispose();
+    _gn.dispose();
+    _address.dispose();
+    super.dispose();
+  }
+
   Future<void> _captureGps() async {
     setState(() => _error = null);
     try {
@@ -291,7 +303,10 @@ class _AddItemSheetState extends ConsumerState<_AddItemSheet> {
       }
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
-      );
+      ).timeout(const Duration(seconds: 15), onTimeout: () {
+        throw TimeoutException('GPS lock timed out');
+      });
+      if (!mounted) return;
       setState(() { _lat = pos.latitude; _lng = pos.longitude; });
     } catch (e) {
       setState(() => _error = 'GPS failed: $e');

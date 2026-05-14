@@ -5994,6 +5994,12 @@ withAuditLog(FuelClaim, 'FuelClaim');
 withAuditLog(AttendanceCorrection, 'AttendanceCorrection');
 withAuditLog(AttendancePunch, 'AttendancePunch');
 withAuditLog(Attendance, 'Attendance');
+// WASH/IGP — high-value programme state; audit every order/item change
+// so finance and donors have a defensible trail of who-changed-what.
+withAuditLog(WashOrder, 'WashOrder');
+withAuditLog(WashItem, 'WashItem');
+withAuditLog(IgpOrder, 'IgpOrder');
+withAuditLog(IgpItem, 'IgpItem');
 
 // --- Invoice → WASH/IGP order auto-reconciliation -------------------------
 // When an invoice's paidAmount changes, propagate the payment status onto

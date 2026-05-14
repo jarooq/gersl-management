@@ -50,13 +50,10 @@ const getTransporter = async () => {
   }
 };
 
-/**
- * Send a single email. Returns a Promise that resolves to true on success,
- * false on any failure. NEVER throws — callers can `await` without try/catch
- * and proceed even when email delivery fails. Business logic should not
- * depend on email success.
- */
-export const sendEmail = async ({ to, subject, html, text }) => {
+// Internal: shared transporter + send path used by both sendEmail and
+// sendEmailWithAttachments. Keeps dormancy + recipient-normalisation logic
+// in one place so the two variants can't drift.
+const _doSend = async ({ to, subject, html, text, attachments }) => {
   if (!enabled()) {
     if (process.env.NODE_ENV !== 'production') {
       console.log(`[email] skipped (SMTP not configured): to=${to} subject="${subject}"`);
@@ -75,6 +72,7 @@ export const sendEmail = async ({ to, subject, html, text }) => {
       subject,
       text: text || stripHtml(html || ''),
       html,
+      ...(attachments && attachments.length ? { attachments } : {}),
     });
     return true;
   } catch (err) {
@@ -82,6 +80,13 @@ export const sendEmail = async ({ to, subject, html, text }) => {
     return false;
   }
 };
+
+/**
+ * Send a single email. Returns true on success, false on any failure.
+ * NEVER throws — callers can `await` without try/catch and proceed even
+ * when email delivery fails.
+ */
+export const sendEmail = async (opts) => _doSend(opts);
 
 // Strip tags for the plain-text fallback. Tiny — not RFC-strict.
 const stripHtml = (s) => String(s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
@@ -283,39 +288,16 @@ export const sendProgrammeReport = async ({ donorEmail, donorName, programme, or
   });
 };
 
-// sendEmail variant that supports attachments. Falls through the same dormancy
-// check + transporter init as the plain text/html sendEmail.
-const sendEmailWithAttachments = async ({ to, subject, html, attachments }) => {
-  if (!enabled()) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`[email] skipped (SMTP not configured): to=${to} subject="${subject}"`);
-    }
-    return false;
-  }
-  if (!to) return false;
-  const transporter = await getTransporter();
-  if (!transporter) return false;
-  try {
-    await transporter.sendMail({
-      from: fromAddr,
-      to,
-      subject,
-      html,
-      text: stripHtml(html || ''),
-      attachments,
-    });
-    return true;
-  } catch (err) {
-    console.error(`[email] sendWithAttachments failed (subject="${subject}"):`, err.message);
-    return false;
-  }
-};
+// Attachment-bearing variant — delegates to the shared _doSend.
+const sendEmailWithAttachments = (opts) => _doSend(opts);
 
 export const notifyDecision = async ({ to, kind, decision, reason }) => {
   if (!to) return false;
   const approved = decision === 'Approved' || decision === 'approve';
   const label = approved ? 'approved' : 'rejected';
-  const heading = approved ? '✓ Approved' : '✗ Rejected';
+  // Plain-text heading so the email subject works in gateways that strip
+  // emoji (legitimate corporate filters do this).
+  const heading = approved ? 'Approved' : 'Rejected';
   const accent  = approved ? '#16a34a'   : '#dc2626';
   const body = `
     <p>Your <strong>${escape(kind)}</strong> request has been <span style="color:${accent};font-weight:700;">${label}</span>.</p>
