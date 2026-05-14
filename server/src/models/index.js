@@ -413,6 +413,13 @@ const Expense = sequelize.define('Expense', {
       key: 'id'
     }
   },
+  // Set by the application layer (or backfill SQL) so finance can produce
+  // partner-wise expense reports without string-matching the donor name.
+  partnerId: {
+    type: DataTypes.INTEGER,
+    field: 'partner_id',
+    references: { model: 'partners', key: 'id' }
+  },
   status: {
     type: DataTypes.ENUM('Pending', 'Approved', 'Paid', 'Rejected'),
     defaultValue: 'Pending'
@@ -2770,6 +2777,17 @@ Complaint.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 
 // Expense associations
 Expense.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+Expense.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
+
+// When an Expense is created and only references a Project (no partnerId),
+// inherit the project's partner_id automatically so finance reports roll up.
+Expense.beforeCreate(async (expense) => {
+  if (expense.partnerId || !expense.projectId) return;
+  try {
+    const proj = await Project.findByPk(expense.projectId, { attributes: ['partnerId'] });
+    if (proj?.partnerId) expense.partnerId = proj.partnerId;
+  } catch (_) { /* best-effort inheritance — never block insert */ }
+});
 Expense.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 Expense.belongsTo(User, { as: 'submitter', foreignKey: 'submittedBy' });
 
@@ -3484,6 +3502,7 @@ const Bill = sequelize.define('Bill', {
   vendorEmail: { type: DataTypes.STRING(100), field: 'vendor_email' },
   vendorAddress: { type: DataTypes.TEXT, field: 'vendor_address' },
   projectId: { type: DataTypes.INTEGER, references: { model: 'projects', key: 'id' }, field: 'project_id' },
+  partnerId: { type: DataTypes.INTEGER, references: { model: 'partners', key: 'id' }, field: 'partner_id' },
   subtotal: { type: DataTypes.DECIMAL(12, 2), defaultValue: 0 },
   taxAmount: { type: DataTypes.DECIMAL(12, 2), defaultValue: 0, field: 'tax_amount' },
   totalAmount: { type: DataTypes.DECIMAL(12, 2), allowNull: false, field: 'total_amount' },
@@ -5029,6 +5048,21 @@ Invoice.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
 Invoice.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 
 Bill.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+Bill.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
+
+// Mirror of the Expense hook — auto-inherit partner_id from project on insert.
+Bill.beforeCreate(async (bill) => {
+  if (bill.partnerId || !bill.projectId) return;
+  try {
+    const proj = await Project.findByPk(bill.projectId, { attributes: ['partnerId'] });
+    if (proj?.partnerId) bill.partnerId = proj.partnerId;
+  } catch (_) { /* best-effort */ }
+});
+
+Project.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
+Partner.hasMany(Project,  { as: 'projects', foreignKey: 'partnerId' });
+Partner.hasMany(Expense,  { as: 'expenses', foreignKey: 'partnerId' });
+Partner.hasMany(Bill,     { as: 'bills',    foreignKey: 'partnerId' });
 Bill.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 
 PurchaseOrder.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });

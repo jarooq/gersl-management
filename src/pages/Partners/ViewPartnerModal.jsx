@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Building2, Mail, Phone, Globe, MapPin, Calendar, Target, Briefcase, Heart, DollarSign, Image } from 'lucide-react';
+import PartnerFinancialsPanel from './PartnerFinancialsPanel';
 
 const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
   if (!isOpen || !partner) return null;
@@ -242,6 +243,12 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
               )}
             </div>
           </div>
+
+          {/* Financial rollup — pulled from /api/partners/:id/financials.
+              Shows committed budgets, funds received, money spent, net
+              position, plus drill-down lists of orders, invoices, bills,
+              and expenses tied to this partner. */}
+          <PartnerFinancialsPanel partnerId={partner.id} />
         </div>
 
         {/* Footer */}

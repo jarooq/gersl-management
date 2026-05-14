@@ -1,10 +1,17 @@
-import { Op } from 'sequelize';
+import { Op, fn, col } from 'sequelize';
 import {
   Partner,
   PartnerContribution,
   PartnerCommunication,
   User,
-  Project
+  Project,
+  Expense,
+  Bill,
+  Invoice,
+  WashOrder,
+  WashItem,
+  IgpOrder,
+  IgpItem
 } from '../models/index.js';
 import { asyncHandler, NotFoundError, ValidationError } from '../middleware/error.middleware.js';
 
@@ -470,5 +477,172 @@ export const deletePartnerCommunication = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Communication deleted successfully'
+  });
+});
+
+// ============================================================================
+// GET PARTNER FINANCIALS — committed/received/spent/net rollup
+// ============================================================================
+// Returns a comprehensive financial snapshot for one partner: budgets
+// committed (via WASH+IGP orders), funds received (paid invoices +
+// recorded contributions), money spent (expenses + bills + item actual
+// costs), and the net position. Used by the Partner detail page's
+// Financials tab and any donor-reporting workflow.
+//
+// All sums respect the partner FK we added in
+// add_partner_id_to_finance_tables.sql. Tables without a direct FK
+// (cash_transactions, etc.) are reached through the order/invoice
+// references and rolled up here.
+// ============================================================================
+export const getPartnerFinancials = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const partner = await Partner.findByPk(id);
+  if (!partner) throw new NotFoundError('Partner not found');
+
+  const sumDecimal = (rows, key = 'total') =>
+    rows.reduce((s, r) => s + Number(r.get?.(key) ?? r[key] ?? 0), 0);
+
+  // -------- WASH side --------------------------------------------------------
+  const washOrders = await WashOrder.findAll({
+    where: { donorId: id },
+    attributes: [
+      'id', 'orderCode', 'title', 'status', 'paymentStatus',
+      'totalBudget', 'amountReceived', 'deadline', 'invoiceId',
+    ],
+    order: [['createdAt', 'DESC']],
+    raw: true,
+  });
+  const washItemCostRow = washOrders.length === 0
+    ? [{ total: 0 }]
+    : await WashItem.findAll({
+        where: { orderId: washOrders.map(o => o.id) },
+        attributes: [[fn('COALESCE', fn('SUM', col('actual_cost')), 0), 'total']],
+        raw: true,
+      });
+  const washItemSpend = Number(washItemCostRow[0]?.total || 0);
+
+  // -------- IGP side ---------------------------------------------------------
+  const igpOrders = await IgpOrder.findAll({
+    where: { donorId: id },
+    attributes: [
+      'id', 'orderCode', 'title', 'status', 'paymentStatus',
+      'totalBudget', 'amountReceived', 'deadline', 'invoiceId',
+    ],
+    order: [['createdAt', 'DESC']],
+    raw: true,
+  });
+  const igpItemCostRow = igpOrders.length === 0
+    ? [{ total: 0 }]
+    : await IgpItem.findAll({
+        where: { orderId: igpOrders.map(o => o.id) },
+        attributes: [[fn('COALESCE', fn('SUM', col('actual_cost')), 0), 'total']],
+        raw: true,
+      });
+  const igpItemSpend = Number(igpItemCostRow[0]?.total || 0);
+
+  // -------- Invoices (funds expected + received) ----------------------------
+  const invoices = await Invoice.findAll({
+    where: { partnerId: id },
+    attributes: ['id', 'invoiceNumber', 'invoiceDate', 'totalAmount', 'paidAmount', 'status', 'projectId'],
+    order: [['invoiceDate', 'DESC']],
+    raw: true,
+  });
+  const invoiceTotal = invoices.reduce((s, i) => s + Number(i.totalAmount || 0), 0);
+  const invoicePaid  = invoices.reduce((s, i) => s + Number(i.paidAmount  || 0), 0);
+
+  // -------- Direct contributions (non-invoiced donations) -------------------
+  const contributions = await PartnerContribution.findAll({
+    where: { partnerId: id },
+    attributes: ['id', 'contributionType', 'description', 'amount', 'contributionDate'],
+    order: [['contributionDate', 'DESC']],
+    raw: true,
+  });
+  const contributionsTotal = contributions.reduce((s, c) => s + Number(c.amount || 0), 0);
+
+  // -------- Expenses charged to this partner ---------------------------------
+  const expenseRows = await Expense.findAll({
+    where: { partnerId: id },
+    attributes: ['id', 'date', 'category', 'description', 'amount', 'status', 'projectId'],
+    order: [['date', 'DESC']],
+    raw: true,
+  });
+  const expensesTotal = expenseRows.reduce((s, e) => s + Number(e.amount || 0), 0);
+
+  // -------- Bills charged to this partner -----------------------------------
+  const billRows = await Bill.findAll({
+    where: { partnerId: id },
+    attributes: ['id', 'billNumber', 'billDate', 'vendorName', 'totalAmount', 'paidAmount', 'status', 'projectId'],
+    order: [['billDate', 'DESC']],
+    raw: true,
+  });
+  const billsTotal = billRows.reduce((s, b) => s + Number(b.totalAmount || 0), 0);
+  const billsPaid  = billRows.reduce((s, b) => s + Number(b.paidAmount  || 0), 0);
+
+  // -------- Projects this partner funds -------------------------------------
+  const projects = await Project.findAll({
+    where: { partnerId: id },
+    attributes: ['id', 'name', 'projectCode', 'status', 'budget', 'spent'],
+    order: [['createdAt', 'DESC']],
+    raw: true,
+  });
+
+  // -------- Headline figures --------------------------------------------------
+  const committed = washOrders.reduce((s, o) => s + Number(o.totalBudget || 0), 0)
+                  + igpOrders.reduce((s, o) => s + Number(o.totalBudget || 0), 0);
+
+  // "Received" = paid invoices + raw donor contributions (the two ways
+  // money actually enters the org under this partner). amountReceived on
+  // the order is already a mirror of invoice.paidAmount via the
+  // reconciliation hook, so we don't add it again.
+  const received = invoicePaid + contributionsTotal;
+
+  // "Spent" = actual cost of delivered items (the ground truth for
+  // programme delivery) + any direct expenses/bills tagged to this
+  // partner that aren't already captured in item actual cost. Bills
+  // raised against contractors for WASH/IGP items WILL double-count
+  // if the contractor invoice was also captured as an item actual_cost;
+  // that's a data-discipline concern, not a model concern — flag it on
+  // the UI so finance can tell.
+  const spentByItems   = washItemSpend + igpItemSpend;
+  const spentByExpense = expensesTotal;
+  const spentByBills   = billsPaid;
+  const spentTotal     = spentByItems + spentByExpense + spentByBills;
+
+  res.json({
+    success: true,
+    data: {
+      partner: {
+        id: partner.id, name: partner.name, partnerCode: partner.partnerCode,
+        contactPerson: partner.contactPerson, country: partner.country,
+        status: partner.status,
+      },
+      headline: {
+        committed,
+        received,
+        spent: spentTotal,
+        net: received - spentTotal,
+        outstandingInvoiceBalance: invoiceTotal - invoicePaid,
+      },
+      breakdown: {
+        spentByItems,
+        spentByExpense,
+        spentByBills,
+        contributionsTotal,
+        invoiceTotal,
+        invoicePaid,
+        billsTotal,
+        billsPaid,
+        expensesTotal,
+      },
+      lists: {
+        washOrders,
+        igpOrders,
+        invoices,
+        contributions,
+        expenses: expenseRows,
+        bills:    billRows,
+        projects,
+      },
+    },
   });
 });

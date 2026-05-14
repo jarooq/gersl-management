@@ -13,7 +13,8 @@ import {
   getPartnerCommunications,
   createPartnerCommunication,
   updatePartnerCommunication,
-  deletePartnerCommunication
+  deletePartnerCommunication,
+  getPartnerFinancials
 } from '../controllers/partner.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
@@ -61,6 +62,19 @@ router.get(
   requirePermission(PERMISSIONS.PARTNERS_VIEW),
   validateId(),
   getPartnerById
+);
+
+// @route   GET /api/partners/:id/financials
+// @desc    Comprehensive financial rollup for a partner — committed budgets,
+//          funds received, money spent, net position, plus the underlying
+//          lists of orders, invoices, expenses, bills, and projects.
+// @access  Private (View permission)
+router.get(
+  '/:id/financials',
+  requireAuth,
+  requirePermission(PERMISSIONS.PARTNERS_VIEW),
+  validateId(),
+  getPartnerFinancials
 );
 
 // @route   PUT /api/partners/:id

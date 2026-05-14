@@ -63,6 +63,14 @@ const Project = sequelize.define('Project', {
     type: DataTypes.STRING(255),
     field: 'donor'
   },
+  // Foreign key to Partner — added so finance can produce partner-wise
+  // expense + bill rollups without string-matching on `donor`. Nullable for
+  // legacy rows; new flows should populate it.
+  partnerId: {
+    type: DataTypes.INTEGER,
+    field: 'partner_id',
+    references: { model: 'partners', key: 'id' }
+  },
 
   // Programme & Management
   programmeArea: {

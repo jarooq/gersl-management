@@ -1193,6 +1193,13 @@ export const PartnerAPI = {
     return data.data;
   },
 
+  // Comprehensive financial rollup — orders, invoices, expenses, bills,
+  // contributions, and a headline summary (committed/received/spent/net).
+  getFinancials: async (partnerId) => {
+    const data = await request(`/partners/${partnerId}/financials`);
+    return data.data;
+  },
+
   // Contribution operations
   getContributions: async (partnerId, params = {}) => {
     const queryString = new URLSearchParams(params).toString();
