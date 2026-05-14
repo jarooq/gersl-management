@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Mobile build artefacts — rebuilt by Codemagic on every run; never commit.
+*.apk
+*.aab
+*.ipa
+
 # Environment Variables (CRITICAL - DO NOT COMMIT!)
 .env
 .env.local
