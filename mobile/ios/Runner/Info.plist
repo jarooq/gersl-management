@@ -19,7 +19,10 @@
 			<string>fetch</string>
 			<string>location</string>
 			<string>processing</string>
+			<string>remote-notification</string>
 		</array>
+		<key>FirebaseAppDelegateProxyEnabled</key>
+		<true/>
 		<key>BGTaskSchedulerPermittedIdentifiers</key>
 		<array>
 			<string>com.gersl.gerhr.background_refresh</string>

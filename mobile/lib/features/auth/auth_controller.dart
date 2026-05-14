@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
 import '../../services/observability.dart';
+import '../../services/push_service.dart';
 
 class AuthState {
   final bool isAuthenticated;
@@ -63,6 +64,10 @@ class AuthController extends AsyncNotifier<AuthState> {
       );
       _tagSentryUser(user);
       state = AsyncData(AuthState(isAuthenticated: true, user: user));
+      // Register this device for push after login. Fire-and-forget — never
+      // blocks the auth flow.
+      // ignore: discarded_futures
+      PushService.registerWithServer();
     } catch (err, st) {
       state = AsyncError(err, st);
       rethrow;
@@ -74,6 +79,9 @@ class AuthController extends AsyncNotifier<AuthState> {
     try {
       await ref.read(dioProvider).post('/auth/logout');
     } catch (_) {/* ignore network errors on logout */}
+    // Drop the FCM token + stop listening for refreshes before clearing
+    // local tokens. Best-effort.
+    await PushService.unregisterFromServer();
     await tokens.clear();
     clearUserContext();
     state = const AsyncData(AuthState(isAuthenticated: false));

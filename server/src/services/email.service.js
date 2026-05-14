@@ -18,6 +18,10 @@
 
 import { Op } from 'sequelize';
 import { User } from '../models/index.js';
+// Push notifications fire alongside emails — the helper is dormant when
+// FIREBASE_SERVICE_ACCOUNT_JSON isn't configured, so this import is safe
+// to leave wired even before FCM is provisioned.
+import { sendPush } from './push.service.js';
 
 let _transporter = null;
 let _transporterInitTried = false;
@@ -104,6 +108,20 @@ export const getRoleEmails = async (roles) => {
   return [...new Set(users.map(u => u.email).filter(Boolean))];
 };
 
+/**
+ * Sibling to getRoleEmails — returns user IDs for push-notification fan-out.
+ * The push service can't use emails, it needs user_ids to look up active
+ * device tokens.
+ */
+export const getRoleUserIds = async (roles) => {
+  if (!Array.isArray(roles) || roles.length === 0) return [];
+  const users = await User.findAll({
+    where: { role: { [Op.in]: roles }, status: 'Active' },
+    attributes: ['id'],
+  });
+  return users.map(u => u.id).filter(Boolean);
+};
+
 // ----------------------------------------------------------------------------
 // Templating helpers — kept simple. Each notification gets its own helper so
 // the wording is consistent and easy to tweak in one place.
@@ -137,7 +155,19 @@ const btn = (label, href) =>
 // ----------------------------------------------------------------------------
 
 export const notifyLeaveSubmitted = async ({ leave, requester }) => {
-  const recipients = await getRoleEmails(['HR Manager', 'HR Officer', 'Admin', 'CEO']);
+  const roles = ['HR Manager', 'HR Officer', 'Admin', 'CEO'];
+  const recipients = await getRoleEmails(roles);
+  // Push fan-out runs in parallel with email — same approvers, mobile-style.
+  // Errors in either path are best-effort.
+  const userIds = await getRoleUserIds(roles);
+  if (userIds.length > 0) {
+    sendPush({
+      userIds,
+      title: 'New leave request',
+      body:  `${requester.fullName} submitted a ${leave.leaveType || ''} leave request.`,
+      data:  { type: 'leave_submitted', requestId: String(leave.id) },
+    }).catch(() => {});
+  }
   if (recipients.length === 0) return false;
   const body = `
     <p><strong>${escape(requester.fullName)}</strong> submitted a leave request.</p>
@@ -156,7 +186,17 @@ export const notifyLeaveSubmitted = async ({ leave, requester }) => {
 };
 
 export const notifyExpenseSubmitted = async ({ expense, requester }) => {
-  const recipients = await getRoleEmails(['Finance Manager', 'Finance Officer', 'Admin', 'CEO']);
+  const roles = ['Finance Manager', 'Finance Officer', 'Admin', 'CEO'];
+  const recipients = await getRoleEmails(roles);
+  const userIds = await getRoleUserIds(roles);
+  if (userIds.length > 0) {
+    sendPush({
+      userIds,
+      title: 'New expense claim',
+      body:  `${requester.fullName} submitted ${fmtAmount(expense.amount, expense.currency)} for ${expense.category || 'expenses'}.`,
+      data:  { type: 'expense_submitted', requestId: String(expense.id) },
+    }).catch(() => {});
+  }
   if (recipients.length === 0) return false;
   const body = `
     <p><strong>${escape(requester.fullName)}</strong> submitted an expense claim.</p>
@@ -175,7 +215,17 @@ export const notifyExpenseSubmitted = async ({ expense, requester }) => {
 };
 
 export const notifySalaryAdvanceSubmitted = async ({ advance, requester }) => {
-  const recipients = await getRoleEmails(['HR Manager', 'HR Officer', 'Finance Manager', 'Admin', 'CEO']);
+  const roles = ['HR Manager', 'HR Officer', 'Finance Manager', 'Admin', 'CEO'];
+  const recipients = await getRoleEmails(roles);
+  const userIds = await getRoleUserIds(roles);
+  if (userIds.length > 0) {
+    sendPush({
+      userIds,
+      title: 'New salary advance',
+      body:  `${requester.fullName} requested an advance of ${fmtAmount(advance.amount)}.`,
+      data:  { type: 'advance_submitted', requestId: String(advance.id) },
+    }).catch(() => {});
+  }
   if (recipients.length === 0) return false;
   const body = `
     <p><strong>${escape(requester.fullName)}</strong> requested a salary advance.</p>
@@ -291,14 +341,28 @@ export const sendProgrammeReport = async ({ donorEmail, donorName, programme, or
 // Attachment-bearing variant — delegates to the shared _doSend.
 const sendEmailWithAttachments = (opts) => _doSend(opts);
 
-export const notifyDecision = async ({ to, kind, decision, reason }) => {
-  if (!to) return false;
+// `userId` is optional — when provided, fires a push alongside the email.
+// All existing callers pass `to` (email); new ones can pass `userId` too.
+export const notifyDecision = async ({ to, userId, kind, decision, reason }) => {
+  if (!to && !userId) return false;
   const approved = decision === 'Approved' || decision === 'approve';
   const label = approved ? 'approved' : 'rejected';
   // Plain-text heading so the email subject works in gateways that strip
   // emoji (legitimate corporate filters do this).
   const heading = approved ? 'Approved' : 'Rejected';
   const accent  = approved ? '#16a34a'   : '#dc2626';
+
+  if (userId) {
+    sendPush({
+      userIds: userId,
+      title: `${heading} — ${kind}`,
+      body:  reason
+        ? `Your ${kind} request was ${label}. ${reason}`
+        : `Your ${kind} request was ${label}.`,
+      data:  { type: 'decision', kind: String(kind), decision: label },
+    }).catch(() => {});
+  }
+  if (!to) return true;
   const body = `
     <p>Your <strong>${escape(kind)}</strong> request has been <span style="color:${accent};font-weight:700;">${label}</span>.</p>
     ${reason ? `<p style="background:#f9fafb;border-left:3px solid #d1d5db;padding:8px 10px;margin:8px 0;font-size:13px;"><em>Note:</em> ${escape(reason)}</p>` : ''}

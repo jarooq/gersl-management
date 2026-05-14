@@ -5,6 +5,14 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Apply the Google Services plugin ONLY when google-services.json is present.
+// This keeps the project buildable in the dormant state (no Firebase config
+// yet); once the file is dropped into mobile/android/app/, FCM registration
+// activates automatically on the next build.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "com.gersl.gerhr"
     compileSdk = flutter.compileSdkVersion
