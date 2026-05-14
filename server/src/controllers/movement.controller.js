@@ -42,6 +42,8 @@ export const listMovements = asyncHandler(async (req, res) => {
     status,
     from,
     to,
+    flagged,        // 'true' | '1' → only deviation-flagged movements
+    reviewStatus,   // 'OK' | 'OffRoute' | 'PersonalUse' | 'unreviewed'
     page = 1,
     limit = 50
   } = req.query;
@@ -53,6 +55,21 @@ export const listMovements = asyncHandler(async (req, res) => {
     where.departureAt = {};
     if (from) where.departureAt[Op.gte] = new Date(from);
     if (to)   where.departureAt[Op.lte] = new Date(to);
+  }
+
+  // Anti-abuse filters — only approvers see these.
+  if (flagged === 'true' || flagged === '1') {
+    if (!isApprover(req.user)) throw new ForbiddenError('Approvers only');
+    where.flaggedAt = { [Op.ne]: null };
+  }
+  if (reviewStatus) {
+    if (!isApprover(req.user)) throw new ForbiddenError('Approvers only');
+    if (reviewStatus === 'unreviewed') {
+      where.reviewStatus = null;
+      where.flaggedAt = { [Op.ne]: null };
+    } else {
+      where.reviewStatus = reviewStatus;
+    }
   }
 
   if (scope === 'mine') where.userId = req.user.id;
@@ -241,8 +258,87 @@ export const returnMovement = asyncHandler(async (req, res) => {
     returnAt: req.body?.returnAt ? new Date(req.body.returnAt) : new Date(),
     distanceKm: distanceKm != null ? Number(distanceKm) : m.distanceKm
   });
+
+  // Kick off deviation analysis async — never blocks the response. If
+  // analysis fails we just leave analyzedAt unset; daily cron picks it up.
+  import('../utils/movementAnalyzer.js')
+    .then(({ analyzeMovement }) => analyzeMovement(m.dataValues || m))
+    .catch((e) => console.error('[movement.return] analyze failed:', e.message));
+
   const reloaded = await MovementLog.findByPk(m.id, { include });
   res.json({ success: true, data: { movement: reloaded } });
+});
+
+// ============================================
+// ANALYZE — manual trigger for the deviation/abuse analyzer.
+// Useful for re-running after the cron, or running on a movement that
+// pre-dates the analyzer's introduction.
+// ============================================
+export const analyzeMovementHandler = asyncHandler(async (req, res) => {
+  const m = await MovementLog.findByPk(req.params.id);
+  if (!m) throw new NotFoundError('Movement not found');
+  const HR_ROLES = ['Admin', 'CEO', 'BOD', 'Programme Manager', 'HR Manager', 'Finance Manager'];
+  if (m.userId !== req.user.id && !HR_ROLES.includes(req.user.role)) {
+    throw new ForbiddenError('Cannot analyze another user\'s movement');
+  }
+  const { analyzeMovement } = await import('../utils/movementAnalyzer.js');
+  const result = await analyzeMovement(m.dataValues || m);
+  const reloaded = await MovementLog.findByPk(m.id, { include });
+  res.json({ success: true, data: { movement: reloaded, analysis: result } });
+});
+
+// ============================================
+// REVIEW FLAGS — manager disposes of deviation flags. Doesn't change
+// status; records who reviewed + their notes + decision.
+// PATCH body: { reviewStatus: 'OK' | 'OffRoute' | 'PersonalUse', notes }
+// ============================================
+export const reviewMovement = asyncHandler(async (req, res) => {
+  const ALLOWED = ['OK', 'OffRoute', 'PersonalUse'];
+  const HR_ROLES = ['Admin', 'CEO', 'BOD', 'Programme Manager', 'HR Manager', 'Finance Manager'];
+  if (!HR_ROLES.includes(req.user.role)) {
+    throw new ForbiddenError('Only managers can review movement flags');
+  }
+  const m = await MovementLog.findByPk(req.params.id);
+  if (!m) throw new NotFoundError('Movement not found');
+  const { reviewStatus, notes } = req.body || {};
+  if (!ALLOWED.includes(reviewStatus)) {
+    throw new BadRequestError(`reviewStatus must be one of ${ALLOWED.join(', ')}`);
+  }
+  await m.update({
+    reviewStatus,
+    reviewNotes: (notes || '').toString().trim() || null,
+    reviewedBy:  req.user.id,
+    reviewedAt:  new Date(),
+  });
+  const reloaded = await MovementLog.findByPk(m.id, { include });
+  res.json({ success: true, data: { movement: reloaded } });
+});
+
+// ============================================
+// GPS TRACK — return the location_points captured for one movement
+// (between departureAt and returnAt). Used by the map polyline view.
+// ============================================
+export const gpsTrackHandler = asyncHandler(async (req, res) => {
+  const m = await MovementLog.findByPk(req.params.id);
+  if (!m) throw new NotFoundError('Movement not found');
+  const HR_ROLES = ['Admin', 'CEO', 'BOD', 'Programme Manager', 'HR Manager', 'Finance Manager'];
+  if (m.userId !== req.user.id && !HR_ROLES.includes(req.user.role)) {
+    throw new ForbiddenError('Cannot view another user\'s GPS track');
+  }
+  if (!m.departureAt || !m.returnAt) {
+    return res.json({ success: true, data: { points: [] } });
+  }
+  const { LocationPoint } = await import('../models/index.js');
+  const points = await LocationPoint.findAll({
+    where: {
+      userId: m.userId,
+      recordedAt: { [Op.gte]: m.departureAt, [Op.lte]: m.returnAt },
+    },
+    attributes: ['recordedAt', 'latitude', 'longitude', 'speedKmh', 'accuracyM'],
+    order: [['recordedAt', 'ASC']],
+    raw: true,
+  });
+  res.json({ success: true, data: { points } });
 });
 
 // ============================================

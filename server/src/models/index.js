@@ -4109,7 +4109,21 @@ const MovementLog = sequelize.define('MovementLog', {
     references: { model: 'movement_log', key: 'id' },
     comment: 'When isPassenger=true, points at the rider’s movement'
   },
-  notes: { type: DataTypes.TEXT }
+  notes: { type: DataTypes.TEXT },
+
+  // Abuse-detection metadata (added 2026 — backed by
+  // add_movement_deviation_flags.sql). Populated by analyzeMovementDeviation
+  // after the movement is Returned; supervisor disposes via reviewStatus.
+  actualDistanceKm: { type: DataTypes.DECIMAL(10, 2), field: 'actual_distance_km' },
+  deviationPct:     { type: DataTypes.DECIMAL(6, 2),  field: 'deviation_pct' },
+  extendedStops:    { type: DataTypes.JSONB,          field: 'extended_stops' },
+  analyzedAt:       { type: DataTypes.DATE,            field: 'analyzed_at' },
+  flagReasons:      { type: DataTypes.JSONB,           field: 'flag_reasons' },
+  flaggedAt:        { type: DataTypes.DATE,            field: 'flagged_at' },
+  reviewStatus:     { type: DataTypes.STRING(20),      field: 'review_status' },
+  reviewedBy:       { type: DataTypes.INTEGER,         field: 'reviewed_by', references: { model: 'users', key: 'id' } },
+  reviewNotes:      { type: DataTypes.TEXT,            field: 'review_notes' },
+  reviewedAt:       { type: DataTypes.DATE,            field: 'reviewed_at' }
 }, {
   tableName: 'movement_log',
   timestamps: true,

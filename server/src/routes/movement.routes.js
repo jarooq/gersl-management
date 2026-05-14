@@ -9,7 +9,10 @@ import {
   arriveMovement,
   returnMovement,
   cancelMovement,
-  pingMovement
+  pingMovement,
+  analyzeMovementHandler,
+  reviewMovement,
+  gpsTrackHandler
 } from '../controllers/movement.controller.js';
 import {
   listVehicles,
@@ -67,6 +70,11 @@ router.patch ('/movements/:id/arrive',      validateId(), arriveMovement);
 router.patch ('/movements/:id/return',      validateId(), returnMovement);
 router.patch ('/movements/:id/cancel',      validateId(), cancelMovement);
 router.post  ('/movements/:id/ping',        validateId(), pingMovement);
+
+// Anti-abuse / deviation analyzer + supervisor review queue + map polyline.
+router.post  ('/movements/:id/analyze',     validateId(), analyzeMovementHandler);
+router.patch ('/movements/:id/review',      validateId(), requireApprover, reviewMovement);
+router.get   ('/movements/:id/gps-track',   validateId(), gpsTrackHandler);
 
 // Fuel rates
 const requireFinanceManager = requireRole('Admin', 'CEO', 'Finance Manager', 'HR Manager');
