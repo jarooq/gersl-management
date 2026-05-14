@@ -37,6 +37,12 @@ class MoreScreen extends ConsumerWidget {
     final user = ref.watch(authControllerProvider).valueOrNull?.user;
     final tracking = ref.watch(isTrackingProvider);
 
+    final programmes = const [
+      _Tile('My Programmes', Icons.water_drop_outlined,    '/programmes',    kNavy900),
+      _Tile('My Orphans',    Icons.child_care_outlined,     '/orphans',       kMission600),
+      _Tile('Beneficiaries', Icons.person_search_outlined, '/beneficiaries', kSuccess600),
+      _Tile('Visits',        Icons.location_on_outlined,   '/visits',        kNavy900),
+    ];
     final fieldWork = const [
       _Tile('Movements',         Icons.directions_car_outlined, '/movements',             kNavy900),
       _Tile('Vehicle requests',  Icons.airport_shuttle_outlined, '/vehicle-requests',     kNavy900),
@@ -69,6 +75,7 @@ class MoreScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 18),
 
+        _GridSection(title: 'Programmes', tiles: programmes),
         _GridSection(title: 'Field work', tiles: fieldWork),
         const SizedBox(height: 18),
         _GridSection(title: 'HR & Finance', tiles: hrFinance),
@@ -103,7 +110,11 @@ class MoreScreen extends ConsumerWidget {
       ref.read(isTrackingProvider.notifier).state = false;
       return;
     }
-    final ok = await BackgroundLocationService.start(accessToken: access);
+    final refresh = await TokenStore().readRefresh();
+    final ok = await BackgroundLocationService.start(
+      accessToken: access,
+      refreshToken: refresh,
+    );
     ref.read(isTrackingProvider.notifier).state = ok;
     if (!ok && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -31,6 +31,9 @@ import '../features/programmes/my_programmes_screen.dart';
 import '../features/programmes/programme_item_screen.dart';
 import '../features/programmes/programme_order_screen.dart';
 import '../features/programmes/programme_map_screen.dart';
+import '../features/orphans/my_orphans_screen.dart';
+import '../features/orphans/orphan_detail_screen.dart';
+import '../features/beneficiaries/beneficiaries_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
@@ -68,7 +71,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/payslips',      builder: (context, state) => const PayslipsScreen()),
           GoRoute(path: '/approvals',     builder: (context, state) => const ApprovalsScreen()),
           GoRoute(path: '/programmes',    builder: (context, state) => const MyProgrammesScreen()),
+          GoRoute(path: '/orphans',       builder: (context, state) => const MyOrphansScreen()),
+          GoRoute(path: '/beneficiaries', builder: (context, state) => const BeneficiariesScreen()),
         ],
+      ),
+
+      GoRoute(
+        path: '/orphans/:id',
+        builder: (context, state) => OrphanDetailScreen(
+          orphanId: int.parse(state.pathParameters['id']!),
+        ),
       ),
       GoRoute(
         path: '/programmes/:kind/order/:id',

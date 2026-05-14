@@ -44,6 +44,22 @@ class ExpensesScreen extends ConsumerWidget {
               itemBuilder: (_, i) => _ExpenseCard(
                 row: rows[i],
                 onCancel: () async {
+                  final ok = await showDialog<bool>(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Cancel claim?'),
+                      content: const Text('This withdraws your expense claim. You can submit a new one later.'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Keep it')),
+                        FilledButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style: FilledButton.styleFrom(backgroundColor: kDanger600),
+                          child: const Text('Yes, cancel'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (ok != true) return;
                   await ref.read(expenseRepoProvider).cancel(rows[i]['id'] as int);
                   ref.invalidate(myExpensesProvider);
                 },

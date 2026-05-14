@@ -436,6 +436,23 @@ export const getOrphansByCoordinator = asyncHandler(async (req, res) => {
 });
 
 // ============================================
+// GET MY ORPHANS — mobile convenience endpoint
+// ============================================
+// Returns orphans where the requesting user is the assigned coordinator.
+// Field staff use this on mobile to see who they're meant to visit. No
+// query-string juggling needed; the server resolves req.user.id.
+export const getMyOrphans = asyncHandler(async (req, res) => {
+  const orphans = await Orphan.findAll({
+    where: { coordinatorId: req.user.id },
+    order: [['updatedAt', 'DESC']],
+    attributes: ['id', 'fullName', 'orphanCode', 'dateOfBirth', 'age', 'gender',
+                 'district', 'photoUrl', 'approvalStatus', 'latitude', 'longitude',
+                 'guardianName', 'guardianRelationship', 'updatedAt'],
+  });
+  res.json({ success: true, data: orphans });
+});
+
+// ============================================
 // UPLOAD DOCUMENTS
 // ============================================
 

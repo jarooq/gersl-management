@@ -44,6 +44,8 @@ class LeavesScreen extends ConsumerWidget {
               itemBuilder: (_, i) => _LeaveCard(
                 row: rows[i],
                 onCancel: () async {
+                  final ok = await _confirmCancel(context, 'Cancel this leave request?');
+                  if (ok != true) return;
                   await ref.read(leaveRepoProvider).cancel(rows[i]['id'] as int);
                   ref.invalidate(myLeavesProvider);
                 },
@@ -154,4 +156,24 @@ class _LeaveCard extends StatelessWidget {
     try { return DateFormat('d MMM').format(DateTime.parse(d)); }
     catch (_) { return d; }
   }
+}
+
+// Shared confirmation helper — uses showDialog so the user has to tap a
+// distinct "Yes" button instead of a swipe-away cancel.
+Future<bool?> _confirmCancel(BuildContext context, String message) {
+  return showDialog<bool>(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: const Text('Confirm cancel'),
+      content: Text(message),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No, keep it')),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: FilledButton.styleFrom(backgroundColor: kDanger600),
+          child: const Text('Yes, cancel'),
+        ),
+      ],
+    ),
+  );
 }

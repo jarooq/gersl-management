@@ -586,44 +586,59 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
               </PermissionRoute>
             }
           />
+          {/* Operations sub-pages — all require basic project visibility.
+              Field staff with PROJECTS_VIEW use these for their day-to-day
+              work; anyone without it doesn't see the sidebar links anyway. */}
           <Route
             path="operations/field-visits"
             element={
-              <Suspense fallback={<PageLoader />}>
-                <FieldVisitsPage />
-              </Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <FieldVisitsPage />
+                </Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="operations/movements"
             element={
-              <Suspense fallback={<PageLoader />}>
-                <MovementRegisterPage />
-              </Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <MovementRegisterPage />
+                </Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="operations/fuel-claims"
             element={
-              <Suspense fallback={<PageLoader />}>
-                <FuelClaimsPage />
-              </Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <FuelClaimsPage />
+                </Suspense>
+              </PermissionRoute>
             }
           />
           <Route
             path="operations/fuel-rates"
             element={
-              <Suspense fallback={<PageLoader />}>
-                <FuelRatesPage />
-              </Suspense>
+              <PermissionRoute permission={PERMISSIONS.PROJECTS_VIEW}>
+                <Suspense fallback={<PageLoader />}>
+                  <FuelRatesPage />
+                </Suspense>
+              </PermissionRoute>
             }
           />
+          {/* Announcement management gated to settings-manage (admin-side).
+              Read-only announcement view for staff lives on the mobile app. */}
           <Route
             path="announcements"
             element={
-              <Suspense fallback={<PageLoader />}>
-                <AnnouncementsAdminPage />
-              </Suspense>
+              <PermissionRoute permission={PERMISSIONS.SETTINGS_MANAGE}>
+                <Suspense fallback={<PageLoader />}>
+                  <AnnouncementsAdminPage />
+                </Suspense>
+              </PermissionRoute>
             }
           />
           <Route path="hr">

@@ -8,6 +8,7 @@ import {
   approveOrphan,
   getOrphanStats,
   getOrphansByCoordinator,
+  getMyOrphans,
   bulkImportOrphans
 } from '../controllers/orphan.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
@@ -40,6 +41,12 @@ router.get(
   validateId('coordinatorId'),
   getOrphansByCoordinator
 );
+
+// @route   GET /api/orphans/mine
+// @desc    Get orphans where the current user is the assigned coordinator
+//          (mobile convenience — no need to know your own user id)
+// @access  Authenticated
+router.get('/mine', requireAuth, getMyOrphans);
 
 // ============================================
 // CRUD ROUTES

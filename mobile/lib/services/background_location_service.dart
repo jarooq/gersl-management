@@ -34,8 +34,9 @@ import '../app/env.dart';
 const _notifChannelId = 'gersl_tracking';
 const _notifId = 888;
 
-const _prefAccessToken = 'bg.accessToken';
-const _prefBaseUrl     = 'bg.baseUrl';
+const _prefAccessToken  = 'bg.accessToken';
+const _prefRefreshToken = 'bg.refreshToken';
+const _prefBaseUrl      = 'bg.baseUrl';
 
 class BackgroundLocationService {
   static final _service = FlutterBackgroundService();
@@ -76,10 +77,15 @@ class BackgroundLocationService {
   }
 
   /// Starts the foreground service. Caller must have already obtained
-  /// location permission and stored the access token.
-  static Future<bool> start({required String accessToken}) async {
+  /// location permission and stored the access token. Passes the refresh
+  /// token too so the background isolate can self-recover when access
+  /// expires mid-session (would otherwise silently drop GPS points).
+  static Future<bool> start({required String accessToken, String? refreshToken}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefAccessToken, accessToken);
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      await prefs.setString(_prefRefreshToken, refreshToken);
+    }
     await prefs.setString(_prefBaseUrl, Env.apiBaseUrl);
     return _service.startService();
   }
@@ -98,26 +104,69 @@ void _onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
 
   final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString(_prefAccessToken) ?? '';
+  var accessToken  = prefs.getString(_prefAccessToken) ?? '';
+  var refreshToken = prefs.getString(_prefRefreshToken) ?? '';
   final baseUrl = prefs.getString(_prefBaseUrl) ?? Env.apiBaseUrl;
 
   final dio = Dio(BaseOptions(
     baseUrl: baseUrl,
-    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken'},
     connectTimeout: const Duration(seconds: 15),
     receiveTimeout: const Duration(seconds: 30),
   ));
+
+  // 401 recovery in the isolate. The main app's Dio interceptor doesn't run
+  // here, so without this the service silently drops GPS points the moment
+  // the access token expires. Try the refresh token; if that also fails,
+  // surface a notification and stop the buffer flush loop so we don't
+  // hammer /locations/batch with 401s forever.
+  var refreshDisabled = false;
+  Future<bool> tryRefresh() async {
+    if (refreshDisabled || refreshToken.isEmpty) return false;
+    try {
+      final r = await Dio().post(
+        '$baseUrl/auth/refresh',
+        data: {'refreshToken': refreshToken},
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+      final body = r.data is Map ? Map<String, dynamic>.from(r.data as Map) : <String, dynamic>{};
+      final newAccess  = (body['accessToken']  ?? body['data']?['accessToken'])?.toString();
+      final newRefresh = (body['refreshToken'] ?? body['data']?['refreshToken'])?.toString();
+      if (newAccess == null || newAccess.isEmpty) {
+        refreshDisabled = true;
+        return false;
+      }
+      accessToken = newAccess;
+      if (newRefresh != null && newRefresh.isNotEmpty) refreshToken = newRefresh;
+      await prefs.setString(_prefAccessToken, accessToken);
+      if (newRefresh != null) await prefs.setString(_prefRefreshToken, newRefresh);
+      dio.options.headers['Authorization'] = 'Bearer $accessToken';
+      return true;
+    } catch (_) {
+      refreshDisabled = true;
+      return false;
+    }
+  }
 
   final buffer = <Map<String, dynamic>>[];
   Timer? flushTimer;
 
   Future<void> flush() async {
-    if (buffer.isEmpty) return;
+    if (buffer.isEmpty || refreshDisabled) return;
     final payload = List<Map<String, dynamic>>.from(buffer);
     buffer.clear();
     try {
       await dio.post('/locations/batch', data: jsonEncode({'points': payload}));
-    } catch (_) {
+    } catch (e) {
+      // On 401 try a single refresh + retry. Other errors push points back
+      // onto the buffer for the next flush cycle.
+      final isAuthError = e is DioException && e.response?.statusCode == 401;
+      if (isAuthError && await tryRefresh()) {
+        try {
+          await dio.post('/locations/batch', data: jsonEncode({'points': payload}));
+          return;
+        } catch (_) { /* fall through to re-buffer */ }
+      }
       buffer.insertAll(0, payload);
     }
   }

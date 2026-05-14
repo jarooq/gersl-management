@@ -69,6 +69,28 @@ class AdvancesScreen extends ConsumerWidget {
                 canApprove: canApprove,
                 isMine: rows[i]['userId'] == me?['id'],
                 onDecide: (approve) async {
+                  // Confirm before sending — approve and reject are
+                  // visible to the requester immediately.
+                  final ok = await showDialog<bool>(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text(approve ? 'Approve advance?' : 'Reject advance?'),
+                      content: Text(approve
+                          ? 'This will mark the salary advance as Approved and notify the requester.'
+                          : 'This will mark the salary advance as Rejected and notify the requester.'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Back')),
+                        FilledButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: approve ? kSuccess600 : kDanger600,
+                          ),
+                          child: Text(approve ? 'Approve' : 'Reject'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (ok != true) return;
                   await ref.read(advanceRepoProvider).decide(
                     rows[i]['id'] as int,
                     approve: approve,
@@ -76,6 +98,22 @@ class AdvancesScreen extends ConsumerWidget {
                   ref.invalidate(advancesProvider);
                 },
                 onCancel: () async {
+                  final ok = await showDialog<bool>(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Cancel advance?'),
+                      content: const Text('This withdraws your salary advance request.'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Keep it')),
+                        FilledButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style: FilledButton.styleFrom(backgroundColor: kDanger600),
+                          child: const Text('Yes, cancel'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (ok != true) return;
                   await ref.read(advanceRepoProvider).cancel(rows[i]['id'] as int);
                   ref.invalidate(advancesProvider);
                 },

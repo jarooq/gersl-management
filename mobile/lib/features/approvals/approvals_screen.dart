@@ -220,13 +220,40 @@ class _DecideButtons extends StatelessWidget {
   final Future<void> Function(bool approve) onDecide;
   const _DecideButtons({required this.onDecide});
 
+  // Decisions are immediately visible to the requester, so the user has
+  // to tap a distinct confirmation button to fire them — avoids the
+  // "fat-finger an approve" failure mode that audit flagged.
+  Future<void> _confirmAndDecide(BuildContext context, bool approve) async {
+    Haptics.medium();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(approve ? 'Approve request?' : 'Reject request?'),
+        content: Text(approve
+            ? 'The requester will see this approved immediately.'
+            : 'The requester will see this rejected immediately.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Back')),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: approve ? kSuccess600 : kDanger600,
+            ),
+            child: Text(approve ? 'Approve' : 'Reject'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) await onDecide(approve);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: OutlinedButton(
-            onPressed: () { Haptics.medium(); onDecide(false); },
+            onPressed: () => _confirmAndDecide(context, false),
             style: OutlinedButton.styleFrom(
               foregroundColor: kDanger600,
               minimumSize: const Size(0, 38),
@@ -238,7 +265,7 @@ class _DecideButtons extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: FilledButton(
-            onPressed: () { Haptics.medium(); onDecide(true); },
+            onPressed: () => _confirmAndDecide(context, true),
             style: FilledButton.styleFrom(
               backgroundColor: kSuccess600,
               foregroundColor: Colors.white,

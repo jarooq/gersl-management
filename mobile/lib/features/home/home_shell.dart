@@ -146,7 +146,11 @@ class HomeShell extends ConsumerWidget {
       ref.read(isTrackingProvider.notifier).state = false;
       return;
     }
-    final ok = await BackgroundLocationService.start(accessToken: access);
+    final refresh = await TokenStore().readRefresh();
+    final ok = await BackgroundLocationService.start(
+      accessToken: access,
+      refreshToken: refresh,
+    );
     ref.read(isTrackingProvider.notifier).state = ok;
     if (!ok && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
