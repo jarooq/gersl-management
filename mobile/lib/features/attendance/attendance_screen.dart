@@ -27,6 +27,19 @@ final _myPunchesProvider = FutureProvider.autoDispose<List>(
   },
 );
 
+// Weekly hours per the 45h + 1h auto-lunch rule. Falls back to an empty
+// shape so the card renders zeros instead of an error if SMTP is down /
+// the user has no punches yet.
+final _weeklyHoursProvider = FutureProvider.autoDispose<Map<String, dynamic>>(
+  (ref) async {
+    try {
+      return await ref.watch(punchRepoProvider).weeklyHours();
+    } catch (_) {
+      return const { 'totalHours': 0, 'targetHours': 45, 'balance': -45, 'daily': [] };
+    }
+  },
+);
+
 class AttendanceScreen extends ConsumerWidget {
   const AttendanceScreen({super.key});
 
@@ -43,11 +56,15 @@ class AttendanceScreen extends ConsumerWidget {
       data: (rows) => _summarizeWeek(rows),
       orElse: () => _emptyWeek(),
     );
+    final weeklyHours = ref.watch(_weeklyHoursProvider);
 
     return RefreshIndicator(
       color: kAmber500,
       backgroundColor: kSurfaceLight,
-      onRefresh: () async => ref.invalidate(_myPunchesProvider),
+      onRefresh: () async {
+        ref.invalidate(_myPunchesProvider);
+        ref.invalidate(_weeklyHoursProvider);
+      },
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -61,6 +78,18 @@ class AttendanceScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: _WeeklyAttendanceCard(week: week),
+          ),
+          const SizedBox(height: 14),
+
+          // Net work hours toward the 45h weekly target. Pure pulled-data
+          // card — server applies the 1h auto lunch and the BreakIn/Out
+          // deductions, so the totals here match what HR will see.
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: weeklyHours.maybeWhen(
+              data: (d) => _WeeklyHoursCard(data: d),
+              orElse: () => _WeeklyHoursCard.skeleton(),
+            ),
           ),
           const SizedBox(height: 22),
 
@@ -458,5 +487,137 @@ class _AttTile extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// _WeeklyHoursCard — net work hours toward the 45h weekly target. Shows a
+// progress bar with the totals overlay, plus a 7-day strip so the staff
+// member can see which days are short / OT.
+// -----------------------------------------------------------------------------
+class _WeeklyHoursCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+  const _WeeklyHoursCard({required this.data});
+
+  factory _WeeklyHoursCard.skeleton() => const _WeeklyHoursCard(data: {
+    'totalHours': 0, 'targetHours': 45, 'balance': -45, 'daily': []
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final total  = (data['totalHours']  ?? 0).toDouble();
+    final target = (data['targetHours'] ?? 45).toDouble();
+    final balance = total - target;
+    final pct = target > 0 ? (total / target).clamp(0.0, 1.2) : 0.0;
+    final isOver  = total > target;
+    final daily   = data['daily'] is List ? (data['daily'] as List) : const [];
+
+    return SoftCard(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('Hours This Week',
+                  style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk900)),
+              const Spacer(),
+              Text(
+                isOver
+                    ? '+${balance.toStringAsFixed(1)}h overtime'
+                    : '${(-balance).toStringAsFixed(1)}h to target',
+                style: GoogleFonts.inter(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  color: isOver ? kSuccess600 : kInk500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Progress bar with target line at 45h.
+          Stack(
+            children: [
+              Container(
+                height: 12,
+                decoration: BoxDecoration(
+                  color: kInk100,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: pct.clamp(0.0, 1.0),
+                child: Container(
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: isOver ? kSuccess600 : kNavy900,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ),
+              if (pct > 1.0)
+                Positioned(
+                  left: MediaQuery.of(context).size.width * 0.0,
+                  child: const SizedBox.shrink(),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '${total.toStringAsFixed(1)}h worked / ${target.toStringAsFixed(0)}h target  •  1h lunch auto-deducted past 5h',
+            style: GoogleFonts.inter(fontSize: 10.5, color: kInk500),
+          ),
+          if (daily.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Row(children: daily.map<Widget>((d) {
+              final dStr = (d is Map ? d['date'] : '').toString();
+              final h = (d is Map ? (d['netHours'] ?? 0) : 0).toDouble();
+              final missing = d is Map ? d['missing'] : null;
+              final dayChar = dStr.length >= 10
+                  ? _weekdayChar(DateTime.tryParse(dStr))
+                  : '';
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1.5),
+                  child: Column(
+                    children: [
+                      Text(dayChar,
+                          style: GoogleFonts.inter(fontSize: 10, color: kInk500)),
+                      const SizedBox(height: 4),
+                      Container(
+                        height: 28,
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: (h / 10 * 28).clamp(2, 28).toDouble(),
+                          decoration: BoxDecoration(
+                            color: missing != null ? kDanger600.withValues(alpha: 0.35)
+                                                    : kNavy900,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        missing == null ? h.toStringAsFixed(1) : '!',
+                        style: GoogleFonts.inter(
+                          fontSize: 9,
+                          color: missing != null ? kDanger600 : kInk500,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList()),
+          ],
+        ],
+      ),
+    );
+  }
+
+  static String _weekdayChar(DateTime? d) {
+    if (d == null) return '';
+    return const ['M', 'T', 'W', 'T', 'F', 'S', 'S'][d.weekday - 1];
   }
 }

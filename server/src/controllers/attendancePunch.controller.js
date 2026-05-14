@@ -130,6 +130,28 @@ export const listPunchesByUser = asyncHandler(async (req, res) => {
 // to surface mobile punches alongside the legacy attendance records.
 // Query: ?from=YYYY-MM-DD&to=YYYY-MM-DD&limit=500
 // ============================================
+
+// ============================================
+// WEEKLY HOURS — 45h tracker per Sri Lanka labour rule
+// ============================================
+// GET /api/attendance/punches/weekly?weekOf=YYYY-MM-DD&userId=X
+//   - Returning the requesting user's hours requires no role.
+//   - Looking at another user's hours requires HR/admin.
+// Returns { daily, totalHours, targetHours: 45, balance, weekStart, weekEnd }.
+export const weeklyHours = asyncHandler(async (req, res) => {
+  const { getWeeklyHours } = await import('../utils/attendanceHours.js');
+  const HR_ROLES = ['Admin', 'CEO', 'BOD', 'HR Manager', 'HR Officer', 'Programme Manager'];
+  const targetUserId = req.query.userId
+    ? parseInt(req.query.userId, 10)
+    : req.user.id;
+  if (targetUserId !== req.user.id && !HR_ROLES.includes(req.user.role)) {
+    return res.status(403).json({ success: false, message: "Cannot view another user's hours" });
+  }
+  const weekOf = req.query.weekOf || new Date().toISOString().slice(0, 10);
+  const result = await getWeeklyHours(targetUserId, weekOf);
+  res.json({ success: true, data: result });
+});
+
 export const listAllPunches = asyncHandler(async (req, res) => {
   const HR_ROLES = ['Admin', 'CEO', 'HR Manager', 'HR Officer'];
   if (!HR_ROLES.includes(req.user.role)) {

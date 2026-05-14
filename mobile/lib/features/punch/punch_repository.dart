@@ -37,6 +37,21 @@ class PunchRepository {
     final res = await _dio.get('/attendance/punches/me');
     return (res.data['data']['punches'] as List? ?? []);
   }
+
+  // Net weekly hours per the 45h + 1h auto-lunch policy. Returns the raw
+  // server payload so the screen can read totalHours, targetHours,
+  // balance, and the daily breakdown.
+  Future<Map<String, dynamic>> weeklyHours({String? weekOf}) async {
+    final res = await _dio.get(
+      '/attendance/punches/weekly',
+      queryParameters: weekOf == null ? null : {'weekOf': weekOf},
+    );
+    final body = res.data;
+    if (body is Map && body['data'] is Map) {
+      return Map<String, dynamic>.from(body['data'] as Map);
+    }
+    return <String, dynamic>{};
+  }
 }
 
 final punchRepoProvider = Provider<PunchRepository>(
