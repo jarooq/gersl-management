@@ -3,6 +3,38 @@ import { Proposal, User, Project, Indicator, Approval, Notification } from '../m
 import { Op } from 'sequelize';
 import sequelize from '../config/database.js';
 import { DEPARTMENT_RESTRICTED_ROLES } from '../constants/roles.js';
+import { assertProposalTransition } from '../utils/proposalStateMachine.js';
+
+// Whitelist of currency codes the org transacts in. New entries should match
+// the frontend CURRENCIES list (frontend/src/pages/ProposalsPage.jsx).
+const ALLOWED_CURRENCIES = ['LKR', 'USD', 'EUR', 'GBP', 'AED', 'SAR'];
+
+// Programme types the proposal-to-order conversion knows how to handle.
+const VALID_PROPOSAL_TYPES = ['WASH', 'IGP', 'Orphan', 'General', 'Mixed'];
+
+// Validate proposalLineItems JSONB shape — each entry must look like
+// { type, qty, unit } with numeric qty/unit. Returns sanitised array.
+const sanitiseLineItems = (raw) => {
+  if (raw == null) return null;
+  if (!Array.isArray(raw)) {
+    const err = new Error('proposalLineItems must be an array');
+    err.statusCode = 400;
+    throw err;
+  }
+  return raw.map((li, idx) => {
+    const qty = Number(li.qty ?? li.quantity ?? 0);
+    const unit = Number(li.unit ?? li.unitCost ?? 0);
+    if (!Number.isFinite(qty) || qty < 0) {
+      const err = new Error(`proposalLineItems[${idx}].qty must be a non-negative number`);
+      err.statusCode = 400; throw err;
+    }
+    if (!Number.isFinite(unit) || unit < 0) {
+      const err = new Error(`proposalLineItems[${idx}].unit must be a non-negative number`);
+      err.statusCode = 400; throw err;
+    }
+    return { type: String(li.type || li.assetType || 'Other'), qty, unit };
+  });
+};
 
 /**
  * @desc    Get all proposals
@@ -118,6 +150,31 @@ export const getProposalById = asyncHandler(async (req, res) => {
 export const createProposal = asyncHandler(async (req, res) => {
   const proposalData = req.body;
 
+  // Required-field validation (audit found Postman could POST {} and succeed).
+  if (!proposalData.title || String(proposalData.title).trim().length < 3) {
+    res.status(400); throw new Error('title is required (min 3 characters)');
+  }
+  if (proposalData.budgetRequested != null) {
+    const b = Number(proposalData.budgetRequested);
+    if (!Number.isFinite(b) || b < 0) {
+      res.status(400); throw new Error('budgetRequested must be a non-negative number');
+    }
+  }
+  if (proposalData.proposalType && !VALID_PROPOSAL_TYPES.includes(proposalData.proposalType)) {
+    res.status(400); throw new Error(`proposalType must be one of ${VALID_PROPOSAL_TYPES.join(', ')}`);
+  }
+  if (proposalData.budgetCurrency && !ALLOWED_CURRENCIES.includes(proposalData.budgetCurrency)) {
+    res.status(400); throw new Error(`budgetCurrency must be one of ${ALLOWED_CURRENCIES.join(', ')}`);
+  }
+  // Sanitise JSONB structures so downstream arithmetic doesn't silently coerce.
+  if (proposalData.proposalLineItems !== undefined) {
+    proposalData.proposalLineItems = sanitiseLineItems(proposalData.proposalLineItems);
+  }
+
+  // New proposals always start in Draft regardless of what the client sends —
+  // moving to other states must go through /status which enforces the SM.
+  proposalData.status = 'Draft';
+
   // Set created by and submitted by from authenticated user
   proposalData.createdBy = req.user.id;
   proposalData.submittedBy = req.user.id;
@@ -173,7 +230,28 @@ export const updateProposal = asyncHandler(async (req, res) => {
     throw new Error('Proposal not found');
   }
 
-  const updatedData = req.body;
+  const updatedData = { ...req.body };
+  // Status moves are gated by the state machine — never accept them via the
+  // generic update route. Use PATCH /:id/status which validates transitions.
+  delete updatedData.status;
+  // Conversion pointers are managed by /convert and /convert-to-order — never
+  // let the client patch them in directly to fake a linked project.
+  delete updatedData.linkedProjectId;
+  delete updatedData.linkedProjectCode;
+  delete updatedData.convertedToProjectDate;
+  delete updatedData.convertedOrderId;
+  delete updatedData.convertedOrderType;
+
+  if (updatedData.proposalType && !VALID_PROPOSAL_TYPES.includes(updatedData.proposalType)) {
+    res.status(400); throw new Error(`proposalType must be one of ${VALID_PROPOSAL_TYPES.join(', ')}`);
+  }
+  if (updatedData.budgetCurrency && !ALLOWED_CURRENCIES.includes(updatedData.budgetCurrency)) {
+    res.status(400); throw new Error(`budgetCurrency must be one of ${ALLOWED_CURRENCIES.join(', ')}`);
+  }
+  if (updatedData.proposalLineItems !== undefined) {
+    updatedData.proposalLineItems = sanitiseLineItems(updatedData.proposalLineItems);
+  }
+
   updatedData.lastEditedBy = req.user.id;
 
   await proposal.update(updatedData);
@@ -214,7 +292,33 @@ export const deleteProposal = asyncHandler(async (req, res) => {
     throw new Error('Proposal not found');
   }
 
-  await proposal.destroy();
+  // Block delete if the proposal has already produced downstream work — the
+  // linked project and any WASH/IGP order would be left with a dangling FK.
+  if (proposal.linkedProjectId) {
+    res.status(400);
+    throw new Error(
+      `Cannot delete: proposal is linked to project #${proposal.linkedProjectId}. ` +
+      `Cancel the project first or contact Admin.`
+    );
+  }
+  if (proposal.convertedOrderId) {
+    res.status(400);
+    throw new Error(
+      `Cannot delete: proposal has been converted to ${proposal.convertedOrderType} order ` +
+      `#${proposal.convertedOrderId}. Cancel the order first.`
+    );
+  }
+  // Only allow deletion of early-stage proposals — submissions to donors are
+  // part of the audit trail and must be retained as Rejected, not deleted.
+  if (!['Draft', 'Rejected', 'Donor Rejected'].includes(proposal.status)) {
+    res.status(400);
+    throw new Error(
+      `Cannot delete proposal in "${proposal.status}" status. ` +
+      `Only Draft / Rejected / Donor Rejected proposals can be deleted.`
+    );
+  }
+
+  await proposal.destroy(); // soft-delete once paranoid migration runs
 
   res.json({
     success: true,
@@ -236,25 +340,31 @@ export const updateProposalStatus = asyncHandler(async (req, res) => {
     throw new Error('Proposal not found');
   }
 
-  // Valid proposal statuses including donor workflow statuses
-  const validStatuses = [
-    'Draft',
-    'Submitted',
-    'Under Review',
-    'Approved',
-    'Rejected',
-    'Submitted to Donor',
-    'Donor Approved',
-    'Donor Rejected'
-  ];
-
-  if (!validStatuses.includes(status)) {
-    res.status(400);
-    throw new Error('Invalid status');
+  // State machine: validates the transition AND the requesting role.
+  // Replaces the previous free-for-all where any user could move Draft to
+  // "Donor Approved" in one PATCH.
+  try {
+    assertProposalTransition({
+      fromStatus: proposal.status,
+      toStatus: status,
+      userRole: req.user.role,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 400);
+    throw err;
   }
 
   proposal.status = status;
   proposal.lastEditedBy = req.user.id;
+  // Stamp the approval/rejection trail so audit log doesn't have to crawl
+  // separate AuditLog rows to answer "when did this get approved?".
+  if (status === 'Approved' || status === 'Donor Approved') {
+    proposal.approvedBy = req.user.id;
+    proposal.approvalDate = new Date();
+  } else if (status === 'Rejected' || status === 'Donor Rejected') {
+    proposal.rejectedBy = req.user.id;
+    proposal.rejectionDate = new Date();
+  }
   await proposal.save();
 
   res.json({
@@ -350,6 +460,14 @@ export const getProposalStats = asyncHandler(async (req, res) => {
 export const convertProposalToProject = asyncHandler(async (req, res) => {
   const proposalId = req.params.id;
   const { projectManagerId, approvalChain } = req.body;
+
+  // Role gate: converting a proposal opens a Project budget. Only senior
+  // leadership + fundraising manager can do that.
+  const allowedConvertRoles = ['Admin', 'CEO', 'Programme Manager', 'Fundraising Manager'];
+  if (!allowedConvertRoles.includes(req.user.role)) {
+    res.status(403);
+    throw new Error(`Your role (${req.user.role}) cannot convert proposals. Required: ${allowedConvertRoles.join(', ')}`);
+  }
 
   // Start transaction for atomic operation
   const transaction = await sequelize.transaction();

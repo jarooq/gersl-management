@@ -18,6 +18,7 @@ import {
   Invoice, Partner, sequelize,
 } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { assertOrderWithinBudget } from '../utils/budgetGuard.js';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -53,8 +54,16 @@ export const convertProposalToOrder = asyncHandler(async (req, res) => {
 
   const proposal = await Proposal.findByPk(proposalId);
   if (!proposal) throw new NotFoundError('Proposal not found');
-  if (proposal.convertedOrderId) {
+  if (proposal.convertedOrderId && !proposal.standingProposal) {
     throw new BadRequestError(`Already converted to ${proposal.convertedOrderType} order ${proposal.convertedOrderId}`);
+  }
+  // Conversion implies a real donor commitment. Block early-stage proposals
+  // from going straight to programme orders without internal review.
+  const validForConversion = ['Approved', 'Submitted to Donor', 'Donor Approved'];
+  if (!validForConversion.includes(proposal.status)) {
+    throw new BadRequestError(
+      `Proposal must be Approved/Submitted to Donor/Donor Approved to convert. Current: "${proposal.status}".`
+    );
   }
 
   // Try to find a Partner matching the proposal donor name. If we can't, the
@@ -87,6 +96,29 @@ export const convertProposalToOrder = asyncHandler(async (req, res) => {
   const totalBudget = lineItems.length > 0
     ? lineItems.reduce((s, li) => s + (Number(li.qty || li.quantity || 0) * Number(li.unit || li.unitCost || 0)), 0)
     : Number(proposal.totalBudget || proposal.budgetRequested || 0);
+
+  // Standing proposal: enforce totalQuantityCap across cumulative conversions
+  // so a "well-pad" proposal of 100 units can be split across orders but
+  // never exceed the cap.
+  if (proposal.standingProposal) {
+    const cap = Number(proposal.totalQuantityCap || 0);
+    if (cap > 0) {
+      const already = Number(proposal.committedQuantity || 0);
+      if (already + totalQty > cap) {
+        throw new BadRequestError(
+          `Standing proposal cap of ${cap} would be exceeded. ` +
+          `Already committed ${already}, this conversion adds ${totalQty} → ${already + totalQty}.`
+        );
+      }
+    }
+  }
+
+  // Block over-commit on the linked project: sum of active order budgets
+  // must stay within Project.budget. No-op when no project is linked yet.
+  const targetProjectId = projectId || proposal.linkedProjectId || null;
+  if (targetProjectId) {
+    await assertOrderWithinBudget({ projectId: targetProjectId, orderBudget: totalBudget });
+  }
 
   // For WASH, infer the unit type from the (homogeneous) line items if all
   // entries share a type. Otherwise leave 'Mixed'.
@@ -160,13 +192,19 @@ export const convertProposalToOrder = asyncHandler(async (req, res) => {
     }
 
     // Mark the proposal as converted.
-    await proposal.update({
+    const proposalUpdates = {
       convertedOrderType: kind,
       convertedOrderId:   createdOrder.id,
       // If it isn't already in an approved-by-donor state, surface that it's been actioned.
       status: ['Donor Approved'].includes(proposal.status) ? proposal.status : 'Donor Approved',
       convertedToProjectDate: new Date().toISOString().slice(0, 10),
-    }, { transaction: t });
+    };
+    // Track cumulative usage on standing proposals so the cap can be enforced
+    // across multiple conversions.
+    if (proposal.standingProposal) {
+      proposalUpdates.committedQuantity = Number(proposal.committedQuantity || 0) + Number(totalQty);
+    }
+    await proposal.update(proposalUpdates, { transaction: t });
   });
 
   res.status(201).json({

@@ -18,8 +18,14 @@ import {
 import { asyncHandler, NotFoundError, BadRequestError, ForbiddenError } from '../middleware/error.middleware.js';
 import { createNextStageTask } from '../utils/programmeTasks.js';
 import { isFullView } from '../utils/programmeAccess.js';
+import { assertStageForward, assertEvidenceForStage, assertItemAssignment, geofenceWarning } from '../utils/stageGuard.js';
+import { assertOrderWithinBudget, recalcProjectSpent } from '../utils/budgetGuard.js';
 
 const STAGE_ORDER = ['Ordered', 'Surveyed', 'Materials', 'Construction', 'Testing', 'HandedOver', 'Reported', 'Cancelled'];
+// Evidence-critical stages — photos + GPS are mandatory at these points.
+// Earlier stages still accept the optional evidence the field officer chose
+// to upload, but we don't force them.
+const WASH_EVIDENCE_STAGES = ['Construction', 'Testing', 'HandedOver', 'Reported'];
 const STAGE_TIMESTAMP_FIELD = {
   Surveyed:     'surveyedAt',
   Materials:    'materialsAt',
@@ -125,6 +131,10 @@ export const createOrder = asyncHandler(async (req, res) => {
     }
   }
 
+  // Budget guard — sum of active orders on this project must stay within
+  // Project.budget. The audit found we could silently overcommit.
+  await assertOrderWithinBudget({ projectId: body.projectId, orderBudget: body.totalBudget });
+
   body.orderCode = tempOrder();
   body.createdBy = req.user?.id;
   const order = await WashOrder.create(body);
@@ -139,6 +149,17 @@ export const updateOrder = asyncHandler(async (req, res) => {
   // Never let the client overwrite the code or creator.
   delete req.body.orderCode;
   delete req.body.createdBy;
+
+  // If totalBudget or projectId are changing, re-check the project budget
+  // guard, excluding this order from the existing-commit sum.
+  if (req.body.totalBudget != null || req.body.projectId != null) {
+    await assertOrderWithinBudget({
+      projectId: req.body.projectId ?? order.projectId,
+      orderBudget: req.body.totalBudget ?? order.totalBudget,
+      excludeWashId: order.id,
+    });
+  }
+
   await order.update(req.body);
   res.json({ success: true, data: order });
 });
@@ -152,6 +173,9 @@ export const cancelOrder = asyncHandler(async (req, res) => {
     { stage: 'Cancelled' },
     { where: { orderId: order.id, stage: { [Op.notIn]: ['HandedOver', 'Reported', 'Cancelled'] } } }
   );
+  // Refund the cancelled budget back to the project — Project.spent is
+  // sourced from delivered items now, so simply recompute.
+  if (order.projectId) recalcProjectSpent(order.projectId);
   res.json({ success: true, data: order });
 });
 
@@ -261,16 +285,39 @@ export const transitionStage = asyncHandler(async (req, res) => {
   if (!STAGE_ORDER.includes(newStage)) throw new BadRequestError(`unknown stage: ${newStage}`);
 
   const item = await WashItem.findByPk(req.params.id, {
-    include: [{ model: WashOrder, as: 'order' }],
+    include: [
+      { model: WashOrder, as: 'order' },
+      { model: Beneficiary, as: 'beneficiary', attributes: ['id', 'household_lat', 'household_lng'] },
+    ],
   });
   if (!item) throw new NotFoundError('Wash item not found');
+
+  // Assignment gate: field officers may only transition items they supervise.
+  // Senior programme/finance roles fall through via isFullView.
+  assertItemAssignment({ item, user: req.user });
+
+  // Stage sequencing — block jumps over intermediate stages (e.g. Ordered →
+  // HandedOver). Cancelled is allowed at any point.
+  assertStageForward({ STAGE_ORDER, currentStage: item.stage, newStage });
+
+  // Evidence gate — photos + GPS required at construction onwards.
+  assertEvidenceForStage({
+    newStage,
+    evidenceStages: WASH_EVIDENCE_STAGES,
+    photoUrls,
+    latitude,
+    longitude,
+  });
+
+  // Soft geofence: warn if the captured GPS is more than 500m from the
+  // beneficiary's household. Surfaces a response header; doesn't block.
+  const geo = geofenceWarning({ latitude, longitude, beneficiary: item.beneficiary });
+  if (geo) res.set('X-Geofence-Warning', String(geo.distance));
 
   // Soft-warn (but don't block) when funds gate is active and donor hasn't paid.
   if (item.order?.workStartCondition === 'OnFundsReceived'
       && item.order?.paymentStatus !== 'Paid'
       && newStage !== 'Cancelled') {
-    // Surfaced to the client so the UI can show an override confirmation,
-    // but we proceed — see audit log for the override trail.
     res.set('X-Funds-Gate-Warning', 'true');
   }
 
@@ -300,6 +347,23 @@ export const transitionStage = asyncHandler(async (req, res) => {
     triggeredBy: req.user?.id,
   });
 
+  // Auto-complete the order once every item is Reported or Cancelled — saves
+  // the manual "mark complete" step the audit flagged.
+  if (newStage === 'Reported' || newStage === 'Cancelled') {
+    const openItems = await WashItem.count({
+      where: { orderId: item.orderId, stage: { [Op.notIn]: ['Reported', 'Cancelled'] } },
+    });
+    if (openItems === 0 && item.order?.status === 'Active') {
+      await WashOrder.update(
+        { status: 'Completed', completedAt: new Date() },
+        { where: { id: item.orderId } }
+      );
+    }
+  }
+
+  // Refresh project.spent — best-effort; never blocks the response.
+  if (item.order?.projectId) recalcProjectSpent(item.order.projectId);
+
   res.json({ success: true, data: item });
 });
 
@@ -308,6 +372,9 @@ export const transitionStage = asyncHandler(async (req, res) => {
 export const addStageUpdate = asyncHandler(async (req, res) => {
   const item = await WashItem.findByPk(req.params.id);
   if (!item) throw new NotFoundError('Wash item not found');
+  // Same assignment gate as transitionStage — non-supervisors can't post
+  // progress to someone else's item.
+  assertItemAssignment({ item, user: req.user });
   const { notes, photoUrls, latitude, longitude, percentComplete, source } = req.body;
   const row = await WashStageUpdate.create({
     itemId:          item.id,

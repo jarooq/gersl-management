@@ -253,7 +253,12 @@ const Orphan = sequelize.define('Orphan', {
 }, {
   tableName: 'orphans',
   timestamps: true,
-  underscored: true
+  underscored: true,
+  // Paranoid soft-delete — orphan PII has retention obligations; we must
+  // preserve the record after deletion. controller already blocks deletion
+  // on Active/Approved orphans, but for the early-stage stubs that can be
+  // removed, we keep the row with deleted_at set rather than DROP.
+  paranoid: true
 });
 
 // ============================================
@@ -5678,6 +5683,9 @@ const WashOrder = sequelize.define('WashOrder', {
   paymentStatus:    { type: DataTypes.STRING(20), defaultValue: 'Pending', field: 'payment_status' },
   amountReceived:   { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_received' },
   status:           { type: DataTypes.STRING(20), defaultValue: 'Active' },
+  // Stamped when transitionStage auto-completes the order (last open item
+  // reaches Reported/Cancelled). Read by reporting for delivery-cycle time.
+  completedAt:      { type: DataTypes.DATE, field: 'completed_at' },
   donorRef:         { type: DataTypes.STRING(100), field: 'donor_ref' },
   notes:            { type: DataTypes.TEXT },
   createdBy:        { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } },
@@ -5754,6 +5762,9 @@ const IgpOrder = sequelize.define('IgpOrder', {
   paymentStatus:    { type: DataTypes.STRING(20), defaultValue: 'Pending', field: 'payment_status' },
   amountReceived:   { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_received' },
   status:           { type: DataTypes.STRING(20), defaultValue: 'Active' },
+  // Stamped when transitionStage auto-completes the order (last open item
+  // reaches Reported/Cancelled). Read by reporting for delivery-cycle time.
+  completedAt:      { type: DataTypes.DATE, field: 'completed_at' },
   donorRef:         { type: DataTypes.STRING(100), field: 'donor_ref' },
   notes:            { type: DataTypes.TEXT },
   createdBy:        { type: DataTypes.INTEGER, field: 'created_by', references: { model: 'users', key: 'id' } },

@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import { Expense, Project, User } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
 import { notifyDecision } from '../services/email.service.js';
+import { recalcProjectSpent } from '../utils/budgetGuard.js';
 
 // ============================================
 // GET ALL EXPENSES
@@ -180,7 +181,15 @@ export const deleteExpense = asyncHandler(async (req, res) => {
     throw new BadRequestError('Cannot delete paid expenses');
   }
 
+  const wasApproved = expense.status === 'Approved';
+  const projectId = expense.projectId;
   await expense.destroy();
+
+  // If the expense was Approved when deleted, project.spent had this amount
+  // baked in — recompute to back it out.
+  if (wasApproved && projectId) {
+    await recalcProjectSpent(projectId);
+  }
 
   res.json({
     success: true,
@@ -205,19 +214,19 @@ export const approveExpense = asyncHandler(async (req, res) => {
     throw new BadRequestError('Invalid approval status');
   }
 
+  const previousStatus = expense.status;
   expense.status = status;
   expense.approvedBy = req.user.id;
   expense.approvalDate = new Date();
 
   await expense.save();
 
-  // Update project spent amount if approved
-  if (status === 'Approved' && expense.projectId) {
-    const project = await Project.findByPk(expense.projectId);
-    if (project) {
-      project.spent = parseFloat(project.spent) + parseFloat(expense.amount);
-      await project.save();
-    }
+  // Recompute project.spent from the source of truth on EITHER decision —
+  // previously we only added on Approved, which meant a later Reject left
+  // the previously-added amount stuck in project.spent forever.
+  if (expense.projectId &&
+      (status === 'Approved' || previousStatus === 'Approved')) {
+    await recalcProjectSpent(expense.projectId);
   }
 
   const updatedExpense = await Expense.findByPk(id, {

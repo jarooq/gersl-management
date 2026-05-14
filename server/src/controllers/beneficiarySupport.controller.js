@@ -2,6 +2,11 @@ import sequelize from '../config/database.js';
 import { QueryTypes } from 'sequelize';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
 
+// Currencies the org is willing to record support in. Audit flagged that
+// LKR was hard-coded; allow the few we actually transact in but reject
+// arbitrary strings so reporting math stays sane.
+const ALLOWED_SUPPORT_CURRENCIES = ['LKR', 'USD', 'EUR', 'GBP', 'AED', 'SAR'];
+
 // ============================================
 // GET ALL SUPPORT RECORDS
 // ============================================
@@ -183,17 +188,48 @@ export const createSupport = asyncHandler(async (req, res) => {
   const supportData = req.body;
   const userId = req.user.id;
 
-  // Verify beneficiary exists
-  const beneficiaryCheck = await sequelize.query(
-    'SELECT id FROM beneficiaries WHERE id = :beneficiaryId',
+  // Verify beneficiary exists AND, when the beneficiary is an orphan, that
+  // the orphan record has cleared approval — auditors found we were funding
+  // unapproved orphans which violates the donor agreement.
+  const [beneficiary] = await sequelize.query(
+    `SELECT b.id, b.beneficiary_type, b.orphan_id, o.approval_status AS orphan_approval_status
+     FROM beneficiaries b
+     LEFT JOIN orphans o ON o.id = b.orphan_id
+     WHERE b.id = :beneficiaryId`,
     {
       replacements: { beneficiaryId: supportData.beneficiary_id },
       type: QueryTypes.SELECT
     }
   );
 
-  if (beneficiaryCheck.length === 0) {
+  if (!beneficiary) {
     throw new NotFoundError('Beneficiary not found');
+  }
+
+  if (
+    beneficiary.beneficiary_type === 'Orphan' &&
+    beneficiary.orphan_id &&
+    beneficiary.orphan_approval_status !== 'Approved'
+  ) {
+    throw new BadRequestError(
+      `Cannot record support: linked orphan (#${beneficiary.orphan_id}) is not in Approved status ` +
+      `(currently "${beneficiary.orphan_approval_status || 'Pending'}"). Approve the orphan first.`
+    );
+  }
+
+  // Currency validation — reject arbitrary 3-letter codes.
+  if (supportData.currency && !ALLOWED_SUPPORT_CURRENCIES.includes(supportData.currency)) {
+    throw new BadRequestError(`currency must be one of ${ALLOWED_SUPPORT_CURRENCIES.join(', ')}`);
+  }
+
+  // Numeric sanity — block negative amounts that would corrupt project rollups.
+  for (const numField of ['estimated_value', 'actual_value', 'quantity', 'satisfaction_rating']) {
+    if (supportData[numField] != null && supportData[numField] !== '') {
+      const n = Number(supportData[numField]);
+      if (!Number.isFinite(n) || n < 0) {
+        throw new BadRequestError(`${numField} must be a non-negative number`);
+      }
+    }
   }
 
   const query = `

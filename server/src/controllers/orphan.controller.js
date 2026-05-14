@@ -1,6 +1,35 @@
 import { Op } from 'sequelize';
 import { Orphan, User } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import sequelize from '../config/database.js';
+
+// Roles allowed to see unredacted guardian/mother NIC + phone numbers and
+// document URLs. Field Officers and MEAL Officers must work blind on PII.
+const PII_FULL_VIEW_ROLES = ['Admin', 'CEO', 'Programme Manager', 'Project Officer'];
+
+// Coordinator-only-scope roles — Field Officers see only orphans they are
+// assigned as coordinator for (matches mobile expectation of /mine).
+const COORDINATOR_SCOPED_ROLES = ['Field Officer', 'MEAL Officer'];
+
+// Mask PII fields on Orphan rows for roles that can see records but not
+// sensitive identifiers. Keeps the record useful (name, district, status)
+// while protecting NIC/phone/documents from accidental over-share.
+const maskOrphanPII = (orphan, user) => {
+  if (!orphan) return orphan;
+  if (PII_FULL_VIEW_ROLES.includes(user?.role)) return orphan;
+  const plain = typeof orphan.get === 'function' ? orphan.get({ plain: true }) : { ...orphan };
+  const REDACT = '••• REDACTED •••';
+  const sensitiveFields = [
+    'guardianNic', 'guardianNIC', 'motherNic', 'motherNIC',
+    'guardianPhone', 'motherPhone', 'guardianAddress',
+    'bankAccountNumber', 'bankAccountName',
+    'documents',
+  ];
+  for (const f of sensitiveFields) {
+    if (plain[f] != null && plain[f] !== '') plain[f] = REDACT;
+  }
+  return plain;
+};
 
 // ============================================
 // GET ALL ORPHANS
@@ -31,6 +60,11 @@ export const getAllOrphans = asyncHandler(async (req, res) => {
     where.approvalStatus = approvalStatus;
   }
 
+  // Role scope: field/MEAL officers only see orphans they coordinate.
+  if (COORDINATOR_SCOPED_ROLES.includes(req.user?.role)) {
+    where.coordinatorId = req.user.id;
+  }
+
   // Fetch orphans with pagination
   const { count, rows: orphans } = await Orphan.findAndCountAll({
     where,
@@ -54,7 +88,7 @@ export const getAllOrphans = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     data: {
-      orphans,
+      orphans: orphans.map(o => maskOrphanPII(o, req.user)),
       pagination: {
         currentPage: parseInt(page),
         totalPages: Math.ceil(count / limit),
@@ -90,9 +124,14 @@ export const getOrphanById = asyncHandler(async (req, res) => {
     throw new NotFoundError('Orphan not found');
   }
 
+  // Coordinator scope: Field/MEAL officers can only view their own orphans.
+  if (COORDINATOR_SCOPED_ROLES.includes(req.user?.role) && orphan.coordinatorId !== req.user.id) {
+    throw new NotFoundError('Orphan not found'); // intentionally 404 not 403
+  }
+
   res.json({
     success: true,
-    data: { orphan }
+    data: { orphan: maskOrphanPII(orphan, req.user) }
   });
 });
 
@@ -279,7 +318,29 @@ export const deleteOrphan = asyncHandler(async (req, res) => {
     throw new NotFoundError('Orphan not found');
   }
 
-  await orphan.destroy();
+  // Block delete on approved/active orphans — PII has to survive in the
+  // record retention window. Only Pending/Rejected stubs can be removed.
+  if (orphan.approvalStatus === 'Approved' || orphan.status === 'Active') {
+    throw new BadRequestError(
+      `Cannot delete an approved/active orphan. Mark them Inactive or Graduated instead.`
+    );
+  }
+
+  // Block delete if any BeneficiarySupport records are linked — those rows
+  // would otherwise point at a missing PII identifier.
+  const [supportLinked] = await sequelize.query(
+    `SELECT 1 FROM beneficiary_support
+     WHERE beneficiary_id IN (SELECT id FROM beneficiaries WHERE orphan_id = :id)
+     LIMIT 1`,
+    { replacements: { id }, type: sequelize.QueryTypes.SELECT }
+  );
+  if (supportLinked) {
+    throw new BadRequestError(
+      'Cannot delete: this orphan has support records. Mark them Inactive instead.'
+    );
+  }
+
+  await orphan.destroy(); // soft-delete after paranoid migration
 
   res.json({
     success: true,

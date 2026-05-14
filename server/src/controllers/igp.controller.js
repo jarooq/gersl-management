@@ -19,8 +19,12 @@ import {
 import { asyncHandler, NotFoundError, BadRequestError, ForbiddenError } from '../middleware/error.middleware.js';
 import { createNextStageTask } from '../utils/programmeTasks.js';
 import { isFullView } from '../utils/programmeAccess.js';
+import { assertStageForward, assertEvidenceForStage, assertItemAssignment, geofenceWarning } from '../utils/stageGuard.js';
+import { assertOrderWithinBudget, recalcProjectSpent } from '../utils/budgetGuard.js';
 
 const STAGE_ORDER = ['Ordered', 'Surveyed', 'Procured', 'Training', 'Delivered', 'FollowUp', 'Reported', 'Cancelled'];
+// IGP "evidence-critical" — photos + GPS required from procurement onwards.
+const IGP_EVIDENCE_STAGES = ['Procured', 'Training', 'Delivered', 'FollowUp', 'Reported'];
 const STAGE_TIMESTAMP_FIELD = {
   Surveyed:  'surveyedAt',
   Procured:  'procuredAt',
@@ -117,6 +121,10 @@ export const createOrder = asyncHandler(async (req, res) => {
     }
   }
 
+  // Budget guard — block creating an order that would push the linked
+  // project past its approved budget.
+  await assertOrderWithinBudget({ projectId: body.projectId, orderBudget: body.totalBudget });
+
   body.orderCode = tempOrder();
   body.createdBy = req.user?.id;
   const order = await IgpOrder.create(body);
@@ -130,6 +138,13 @@ export const updateOrder = asyncHandler(async (req, res) => {
   if (!order) throw new NotFoundError('IGP order not found');
   delete req.body.orderCode;
   delete req.body.createdBy;
+  if (req.body.totalBudget != null || req.body.projectId != null) {
+    await assertOrderWithinBudget({
+      projectId: req.body.projectId ?? order.projectId,
+      orderBudget: req.body.totalBudget ?? order.totalBudget,
+      excludeIgpId: order.id,
+    });
+  }
   await order.update(req.body);
   res.json({ success: true, data: order });
 });
@@ -142,6 +157,8 @@ export const cancelOrder = asyncHandler(async (req, res) => {
     { stage: 'Cancelled' },
     { where: { orderId: order.id, stage: { [Op.notIn]: ['Delivered', 'Reported', 'Cancelled'] } } }
   );
+  // Refund cancelled budget — Project.spent is sourced from delivered items.
+  if (order.projectId) recalcProjectSpent(order.projectId);
   res.json({ success: true, data: order });
 });
 
@@ -251,9 +268,26 @@ export const transitionStage = asyncHandler(async (req, res) => {
   if (!STAGE_ORDER.includes(newStage)) throw new BadRequestError(`unknown stage: ${newStage}`);
 
   const item = await IgpItem.findByPk(req.params.id, {
-    include: [{ model: IgpOrder, as: 'order' }],
+    include: [
+      { model: IgpOrder, as: 'order' },
+      { model: Beneficiary, as: 'beneficiary', attributes: ['id', 'household_lat', 'household_lng'] },
+    ],
   });
   if (!item) throw new NotFoundError('IGP item not found');
+
+  // Assignment, sequence, and evidence gates — mirror WASH.
+  assertItemAssignment({ item, user: req.user });
+  assertStageForward({ STAGE_ORDER, currentStage: item.stage, newStage });
+  assertEvidenceForStage({
+    newStage,
+    evidenceStages: IGP_EVIDENCE_STAGES,
+    photoUrls,
+    latitude,
+    longitude,
+  });
+
+  const geo = geofenceWarning({ latitude, longitude, beneficiary: item.beneficiary });
+  if (geo) res.set('X-Geofence-Warning', String(geo.distance));
 
   if (item.order?.workStartCondition === 'OnFundsReceived'
       && item.order?.paymentStatus !== 'Paid'
@@ -290,12 +324,29 @@ export const transitionStage = asyncHandler(async (req, res) => {
     triggeredBy: req.user?.id,
   });
 
+  // Auto-complete the order when every item is Reported or Cancelled.
+  if (newStage === 'Reported' || newStage === 'Cancelled') {
+    const openItems = await IgpItem.count({
+      where: { orderId: item.orderId, stage: { [Op.notIn]: ['Reported', 'Cancelled'] } },
+    });
+    if (openItems === 0 && item.order?.status === 'Active') {
+      await IgpOrder.update(
+        { status: 'Completed', completedAt: new Date() },
+        { where: { id: item.orderId } }
+      );
+    }
+  }
+
+  if (item.order?.projectId) recalcProjectSpent(item.order.projectId);
+
   res.json({ success: true, data: item });
 });
 
 export const addStageUpdate = asyncHandler(async (req, res) => {
   const item = await IgpItem.findByPk(req.params.id);
   if (!item) throw new NotFoundError('IGP item not found');
+  // Assignment gate — same as WASH.
+  assertItemAssignment({ item, user: req.user });
   const { notes, photoUrls, latitude, longitude, percentComplete, source } = req.body;
   const row = await IgpStageUpdate.create({
     itemId:          item.id,

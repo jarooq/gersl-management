@@ -238,9 +238,26 @@ const Proposal = sequelize.define('Proposal', {
   proposalLineItems:   { type: DataTypes.JSONB,        field: 'proposal_line_items' },
   standingProposal:    { type: DataTypes.BOOLEAN,      field: 'standing_proposal',    defaultValue: false },
   totalQuantityCap:    { type: DataTypes.INTEGER,      field: 'total_quantity_cap' },
+  // Running total of quantity already committed via convert-to-order calls.
+  // Audit found totalQuantityCap was declared but never enforced — orders
+  // were converted from standing proposals beyond the cap. This column +
+  // assertOrderWithinBudget close that hole.
+  committedQuantity:   { type: DataTypes.INTEGER,      field: 'committed_quantity', defaultValue: 0 },
   namedBeneficiaries:  { type: DataTypes.BOOLEAN,      field: 'named_beneficiaries',  defaultValue: false },
   convertedOrderType:  { type: DataTypes.STRING(20),  field: 'converted_order_type' },
   convertedOrderId:    { type: DataTypes.INTEGER,      field: 'converted_order_id' },
+
+  // Currency for budgetRequested / totalBudget. Audit flagged that the web
+  // form offered a currency picker but the DB never stored the choice.
+  budgetCurrency:      { type: DataTypes.STRING(3),    field: 'budget_currency',    defaultValue: 'LKR' },
+
+  // Approval/rejection trail — populated by the state machine in
+  // updateProposalStatus so reviewers and audit trail can answer
+  // "who approved / rejected and when?" without crawling AuditLog.
+  approvedBy:          { type: DataTypes.INTEGER,      field: 'approved_by' },
+  approvalDate:        { type: DataTypes.DATE,         field: 'approval_date' },
+  rejectedBy:          { type: DataTypes.INTEGER,      field: 'rejected_by' },
+  rejectionDate:       { type: DataTypes.DATE,         field: 'rejection_date' },
 
   // Audit fields
   createdBy: {
@@ -254,13 +271,17 @@ const Proposal = sequelize.define('Proposal', {
   tableName: 'proposals',
   timestamps: true,
   underscored: true,
+  // Paranoid soft-delete keeps the audit trail intact when a proposal is
+  // removed — the deleted_at column is set instead of a DROP ROW.
+  paranoid: true,
   indexes: [
     { fields: ['proposal_code'] },
     { fields: ['status'] },
     { fields: ['donor_name'] },
     { fields: ['project_area'] },
     { fields: ['created_by'] },
-    { fields: ['linked_project_id'] }
+    { fields: ['linked_project_id'] },
+    { fields: ['converted_order_id'] }
   ]
 });
 
