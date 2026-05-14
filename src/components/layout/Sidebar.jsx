@@ -123,6 +123,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { path: '/admin/hr/attendance', icon: Clock, label: 'Attendance', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW_ATTENDANCE },
         { path: '/staff-register', icon: UserPlus, label: 'Register Staff', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/onboarding', icon: UserPlus, label: 'Onboarding', icc: ICON.orange, permission: PERMISSIONS.HR_MANAGE_ONBOARDING },
+        { path: '/admin/hr/weekly-hours', icon: Clock, label: 'Weekly Hours', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/payroll', icon: Wallet, label: 'Payroll', icc: ICON.orange, permission: PERMISSIONS.FINANCE_VIEW_PAYROLL },
         { path: '/admin/hr/salary-advances', icon: DollarSign, label: 'Salary Advances', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },
         { path: '/admin/hr/staff-expenses', icon: ClipboardCheck, label: 'Staff Expenses', icc: ICON.orange, permission: PERMISSIONS.HR_VIEW },

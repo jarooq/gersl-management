@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { MovementAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import NewMovementModal from './components/NewMovementModal';
+import MovementGpsMapModal from './components/MovementGpsMapModal';
 
 const STATUS_BADGE = {
   Planned:    'bg-ink-100 text-ink-700',
@@ -30,12 +31,18 @@ export default function MovementRegisterPage() {
   const [error, setError] = useState(null);
   const [showNew, setShowNew] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [mapFor, setMapFor] = useState(null);  // movement to display on the map
 
   const load = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await MovementAPI.listMovements({ scope: tab, limit: 200 });
+      // The 'flagged' tab uses team scope + the new flagged filter; the
+      // others pass through as-is.
+      const params = tab === 'flagged'
+        ? { scope: 'team', flagged: 'true', limit: 200 }
+        : { scope: tab, limit: 200 };
+      const res = await MovementAPI.listMovements(params);
       setRows(res?.data?.movements || []);
     } catch (e) {
       setError(e?.message || 'Failed to load movements');
@@ -69,6 +76,19 @@ export default function MovementRegisterPage() {
   const onCancel = (m) => {
     const reason = window.prompt('Cancel reason (optional)?') || '';
     action(() => MovementAPI.cancelMovement(m.id, reason));
+  };
+
+  const onReview = (m) => {
+    const choice = window.prompt(
+      'Disposition? Type one of:\n  OK   — looks fine\n  OffRoute — took a detour\n  PersonalUse — personal errand on org trip\n',
+      'OK'
+    );
+    if (!choice) return;
+    const valid = ['OK', 'OffRoute', 'PersonalUse'];
+    if (!valid.includes(choice)) return alert('Invalid choice. Try OK / OffRoute / PersonalUse.');
+    const notes = window.prompt('Notes (required — what did you check?)', '');
+    if (!notes || !notes.trim()) return;
+    action(() => MovementAPI.reviewMovement(m.id, choice, notes.trim()));
   };
 
   const onClaimFuel = async (m) => {
@@ -113,6 +133,15 @@ export default function MovementRegisterPage() {
             onClick={() => setTab('team')}
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'team' ? 'border-blue-600 text-blue-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
           >Team queue</button>
+        )}
+        {isApprover && (
+          <button
+            onClick={() => setTab('flagged')}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px inline-flex items-center gap-1 ${tab === 'flagged' ? 'border-red-600 text-red-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+            Flagged
+          </button>
         )}
       </div>
 
@@ -166,6 +195,12 @@ export default function MovementRegisterPage() {
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[m.status] || 'bg-ink-100'}`}>
                       {m.status}
                     </span>
+                    {Array.isArray(m.flagReasons) && m.flagReasons.length > 0 && (
+                      <div className={`text-xs mt-1 ${m.reviewedAt ? 'text-ink-500' : 'text-amber-700'}`}>
+                        {m.reviewedAt ? '✓' : '⚑'} {m.flagReasons.length} flag{m.flagReasons.length > 1 ? 's' : ''}
+                        {m.reviewStatus && ` · ${m.reviewStatus}`}
+                      </div>
+                    )}
                   </td>
                   <td className="px-3 py-2 text-sm space-x-2 whitespace-nowrap">
                     {tab === 'team' && m.status === 'Planned' && isApprover && !isOwn && (
@@ -189,6 +224,12 @@ export default function MovementRegisterPage() {
                     {isOwn && m.status === 'Returned' && !m.isPassenger && (
                       <button disabled={busy} onClick={() => onClaimFuel(m)} className="text-amber-700 hover:underline">Claim fuel</button>
                     )}
+                    {m.status === 'Returned' && (
+                      <button onClick={() => setMapFor(m)} className="text-indigo-700 hover:underline">Map</button>
+                    )}
+                    {isApprover && !isOwn && Array.isArray(m.flagReasons) && m.flagReasons.length > 0 && !m.reviewedAt && (
+                      <button disabled={busy} onClick={() => onReview(m)} className="text-amber-700 hover:underline">Review</button>
+                    )}
                   </td>
                 </tr>
               );
@@ -202,6 +243,9 @@ export default function MovementRegisterPage() {
           onClose={() => setShowNew(false)}
           onSaved={() => { setShowNew(false); load(); }}
         />
+      )}
+      {mapFor && (
+        <MovementGpsMapModal movement={mapFor} onClose={() => setMapFor(null)} />
       )}
     </div>
   );

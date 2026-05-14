@@ -2712,6 +2712,20 @@ export const ComplianceAPI = {
 // ============================================
 
 export const AttendanceAPI = {
+  // Net weekly hours (45h target, 1h auto lunch). Org-wide endpoint is
+  // HR/manager-only; single-user endpoint is the requester's own week
+  // by default or another user's when ?userId= is supplied.
+  weeklyHours: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/attendance/punches/weekly${qs ? `?${qs}` : ''}`);
+    return data.data;
+  },
+  weeklyHoursAll: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/attendance/punches/weekly/all${qs ? `?${qs}` : ''}`);
+    return data.data;
+  },
+
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     const data = await request(`/attendance?${queryString}`);
@@ -3437,6 +3451,17 @@ export const MovementAPI = {
     request(`/movements/${id}/return`, { method: 'PATCH', body: JSON.stringify({ distanceKm }) }),
   cancelMovement: (id, reason) =>
     request(`/movements/${id}/cancel`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
+
+  // Anti-abuse / deviation review
+  analyzeMovement: (id) =>
+    request(`/movements/${id}/analyze`, { method: 'POST' }),
+  reviewMovement: (id, reviewStatus, notes) =>
+    request(`/movements/${id}/review`, {
+      method: 'PATCH',
+      body: JSON.stringify({ reviewStatus, notes })
+    }),
+  gpsTrack: (id) =>
+    request(`/movements/${id}/gps-track`),
 
   // Fuel rates
   listFuelRates: (params = {}) => {

@@ -40,6 +40,7 @@ const StaffRegisterPage = lazy(() => import('../pages/HR/StaffRegisterPage'));
 const AppraisalPage = lazy(() => import('../pages/HR/AppraisalPage'));
 const ContractManagementPage = lazy(() => import('../pages/HR/ContractManagementPage'));
 const PayrollPage = lazy(() => import('../pages/HR/PayrollPage'));
+const WeeklyHoursPage = lazy(() => import('../pages/HR/WeeklyHoursPage'));
 const SalaryAdvancesPage = lazy(() => import('../pages/HR/SalaryAdvancesPage'));
 const StaffExpensesPage = lazy(() => import('../pages/HR/StaffExpensesPage'));
 const FieldVisitsPage = lazy(() => import('../pages/Operations/FieldVisitsPage'));
@@ -698,6 +699,16 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
                 <PermissionRoute permission={PERMISSIONS.FINANCE_VIEW_PAYROLL}>
                   <Suspense fallback={<PageLoader />}>
                     <PayrollPage />
+                  </Suspense>
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="weekly-hours"
+              element={
+                <PermissionRoute permission={PERMISSIONS.HR_VIEW}>
+                  <Suspense fallback={<PageLoader />}>
+                    <WeeklyHoursPage />
                   </Suspense>
                 </PermissionRoute>
               }

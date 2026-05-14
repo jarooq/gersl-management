@@ -152,6 +152,67 @@ export const weeklyHours = asyncHandler(async (req, res) => {
   res.json({ success: true, data: result });
 });
 
+// ============================================
+// ALL-STAFF WEEKLY HOURS — HR/manager view
+// ============================================
+// GET /api/attendance/punches/weekly/all?weekOf=YYYY-MM-DD
+//
+// Returns one row per active staff member with their weekly totals so
+// HR can spot under-time / over-time across the team in one table. Heavy
+// query but bounded by org size; ~50ms at 100 staff.
+export const weeklyHoursAll = asyncHandler(async (req, res) => {
+  const { getWeeklyHours, weekStartOf } = await import('../utils/attendanceHours.js');
+  const HR_ROLES = ['Admin', 'CEO', 'BOD', 'HR Manager', 'HR Officer', 'Programme Manager'];
+  if (!HR_ROLES.includes(req.user.role)) {
+    return res.status(403).json({ success: false, message: 'HR/manager roles only' });
+  }
+  const weekOf = req.query.weekOf || new Date().toISOString().slice(0, 10);
+  const start  = weekStartOf(weekOf);
+  const startStr = start.toISOString().slice(0, 10);
+  const endDate  = new Date(start);  endDate.setDate(endDate.getDate() + 7);
+  const endStr   = endDate.toISOString().slice(0, 10);
+
+  // Active staff (User table — we don't restrict by department here; HR
+  // wants visibility across the org). Limit to status=Active to skip
+  // deactivated accounts.
+  const { User } = await import('../models/index.js');
+  const users = await User.findAll({
+    where: { status: 'Active' },
+    attributes: ['id', 'fullName', 'role', 'department', 'email'],
+    order: [['fullName', 'ASC']],
+  });
+
+  // Roll up each user's hours. Run in parallel since the heavy lifting is
+  // already inside getWeeklyHours' single-user DB call.
+  const rows = await Promise.all(users.map(async (u) => {
+    const h = await getWeeklyHours(u.id, weekOf);
+    return {
+      userId: u.id, fullName: u.fullName, role: u.role, department: u.department,
+      totalHours:  h.totalHours,
+      targetHours: h.targetHours,
+      balance:     h.balance,
+      daily:       h.daily,
+      missingDays: h.daily.filter(d => d.missing).length,
+    };
+  }));
+
+  res.json({
+    success: true,
+    data: {
+      weekStart: startStr,
+      weekEnd: endStr,
+      rows,
+      summary: {
+        staffCount:   rows.length,
+        averageHours: rows.length === 0 ? 0 :
+          +(rows.reduce((s, r) => s + r.totalHours, 0) / rows.length).toFixed(2),
+        underTarget:  rows.filter(r => r.totalHours < 35).length,
+        overTarget:   rows.filter(r => r.totalHours > 50).length,
+      },
+    },
+  });
+});
+
 export const listAllPunches = asyncHandler(async (req, res) => {
   const HR_ROLES = ['Admin', 'CEO', 'HR Manager', 'HR Officer'];
   if (!HR_ROLES.includes(req.user.role)) {

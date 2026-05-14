@@ -16,7 +16,8 @@ import {
   todayStatus,
   listPunchesByUser,
   listAllPunches,
-  weeklyHours
+  weeklyHours,
+  weeklyHoursAll
 } from '../controllers/attendancePunch.controller.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
@@ -49,7 +50,10 @@ router.post('/punches',           recordPunch);
 router.get ('/punches/today',     todayStatus);
 router.get ('/punches/me',        listMyPunches);
 // Weekly net-hours tracker — Sri Lanka 45h/week rule with 1h auto lunch.
-router.get ('/punches/weekly',    weeklyHours);
+// Org-wide variant (HR-scoped) must come BEFORE the parameterised one so
+// Express doesn't match /weekly/all as ?userId=all.
+router.get ('/punches/weekly/all', weeklyHoursAll);
+router.get ('/punches/weekly',     weeklyHours);
 // HR view: list all staff punches in a window (NB: must come before the
 // userId-required handler so the all-punches fetch isn't gated on userId).
 router.get ('/punches/all',       listAllPunches);
