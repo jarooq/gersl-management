@@ -37,11 +37,18 @@ export default function FuelClaimsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await MovementAPI.listFuelClaims({ scope: tab });
+      // `flagged` tab is server-side filtered (only claims with flag_reasons).
+      // `mine` / `pending` use the existing scope filter.
+      const params = tab === 'flagged'
+        ? { scope: 'pending', flagged: 'true' }
+        : { scope: tab };
+      const res = await MovementAPI.listFuelClaims(params);
       const claims = res?.data?.claims || [];
       setRows(claims);
-      // Pre-fetch duplicate checks for Submitted claims when on the pending tab
-      if (tab === 'pending') {
+      // For the pending tab, pre-fetch live duplicate-check too — covers
+      // claims that weren't auto-flagged at submit (e.g. the other claim
+      // landed afterwards) so reviewers always see the latest overlap.
+      if (tab === 'pending' || tab === 'flagged') {
         const dups = {};
         await Promise.all(claims.slice(0, 20).map(async c => {
           try {
@@ -84,6 +91,15 @@ export default function FuelClaimsPage() {
     if (!window.confirm('Cancel this claim?')) return;
     action(() => MovementAPI.cancelFuelClaim(c.id));
   };
+  const onReviewFlags = (c) => {
+    const notes = window.prompt(
+      'Reviewer notes — what did you check / decide?\n\n' +
+      'This records that an approver saw the flags. Approve / Reject / Merge are still separate actions.',
+      ''
+    );
+    if (notes == null || !notes.trim()) return;
+    action(() => MovementAPI.reviewFuelFlags(c.id, notes.trim()));
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
@@ -107,6 +123,15 @@ export default function FuelClaimsPage() {
             onClick={() => setTab('pending')}
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px ${tab === 'pending' ? 'border-blue-600 text-blue-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
           >Pending approval</button>
+        )}
+        {isApprover && (
+          <button
+            onClick={() => setTab('flagged')}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px inline-flex items-center gap-1 ${tab === 'flagged' ? 'border-red-600 text-red-600' : 'border-transparent text-ink-500 hover:text-ink-700'}`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+            Flagged
+          </button>
         )}
       </div>
 
@@ -164,13 +189,27 @@ export default function FuelClaimsPage() {
                         </ul>
                       </div>
                     )}
+                    {Array.isArray(c.flagReasons) && c.flagReasons.length > 0 && (
+                      <div className={`text-xs mt-1 ${c.reviewedAt ? 'text-ink-500' : 'text-amber-700'}`}>
+                        {c.reviewedAt ? '✓' : '⚑'} {c.flagReasons.length} flag{c.flagReasons.length > 1 ? 's' : ''}
+                        {c.reviewedAt && ' (reviewed)'}
+                        <ul className="text-[11px] mt-0.5">
+                          {c.flagReasons.slice(0, 3).map((f, i) => (
+                            <li key={i}>{f.message || f.kind}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </td>
                   <td className="px-3 py-2 text-sm space-x-2 whitespace-nowrap">
                     {c.userId === user?.id && c.status === 'Draft' && (
                       <button disabled={busy} onClick={() => onSubmit(c)} className="text-blue-600 hover:underline">Submit</button>
                     )}
-                    {tab === 'pending' && c.userId !== user?.id && c.status === 'Submitted' && (
+                    {(tab === 'pending' || tab === 'flagged') && c.userId !== user?.id && c.status === 'Submitted' && (
                       <>
+                        {Array.isArray(c.flagReasons) && c.flagReasons.length > 0 && !c.reviewedAt && (
+                          <button disabled={busy} onClick={() => onReviewFlags(c)} className="text-amber-700 hover:underline">Review flags</button>
+                        )}
                         <button disabled={busy} onClick={() => onApprove(c)} className="text-green-700 hover:underline">Approve</button>
                         <button disabled={busy} onClick={() => onReject(c)}  className="text-red-700 hover:underline">Reject</button>
                         {dups.filter(d => d.otherClaimId).slice(0, 1).map(d => (

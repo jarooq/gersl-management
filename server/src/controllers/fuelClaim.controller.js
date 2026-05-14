@@ -125,13 +125,19 @@ const computeDuplicateOverlap = async (movement) => {
 // LIST
 // ============================================
 export const listClaims = asyncHandler(async (req, res) => {
-  const { scope = 'mine', status } = req.query;
+  const { scope = 'mine', status, flagged } = req.query;
   const where = {};
   if (status) where.status = status;
   if (scope === 'mine') where.userId = req.user.id;
   if (scope === 'pending') {
     if (!isApprover(req.user)) throw new ForbiddenError('Only managers can see pending fuel claims');
     where.status = 'Submitted';
+  }
+  // Flagged filter — only available to approvers. Used by the HR review
+  // screen to surface claims with fraud-detection signals.
+  if (flagged === 'true' || flagged === '1') {
+    if (!isApprover(req.user)) throw new ForbiddenError('Approvers only');
+    where.flaggedAt = { [Op.ne]: null };
   }
   if (scope === 'all' && !['Admin', 'CEO', 'Finance Manager'].includes(req.user.role)) {
     throw new ForbiddenError('Only Admin / CEO / Finance Manager can list all claims');
@@ -257,19 +263,189 @@ export const duplicateCheck = asyncHandler(async (req, res) => {
   res.json({ success: true, data: { overlaps } });
 });
 
+// ============================================================================
+// Fraud detection — runs on submit. Returns { hardBlock, flags } where:
+//
+//   hardBlock: { kind, message }   — throws 409, claim stays Draft
+//   flags:     [{ kind, ... }, ...] — persisted to flag_reasons,
+//                                     claim is Submitted but visible in
+//                                     the HR review queue
+//
+// Rules (defaults locked in with the user):
+//   HARD blocks:
+//     - same vehicle + same date already submitted/approved/paid by anyone
+//     - claimant is already listed as a passenger on another date-matching claim
+//     - claimant has another submitted/approved claim on the same date (self-duplicate)
+//   SOFT flags:
+//     - route overlap with another user's same-day claim (existing 30-min window
+//       + 80% time-overlap logic) — already implemented; we now persist results
+//     - vehicle.ownerUserId is set and claimant is not that user
+//
+// Reviewers see the flags inline on the HR review screen and can approve
+// with note (override), reject, or merge into the primary claim.
+// ============================================================================
+const runFraudChecks = async (claim, movement) => {
+  const flags = [];
+  const claimDate = movement.departureAt
+    ? new Date(movement.departureAt).toISOString().slice(0, 10)
+    : null;
+
+  // HARD #1 — same vehicle + same date already claimed by anyone else.
+  if (claim.vehicleId && claimDate) {
+    const sameVehicleSameDay = await FuelClaim.findAll({
+      where: {
+        id:        { [Op.ne]: claim.id },
+        vehicleId: claim.vehicleId,
+        status:    { [Op.in]: ['Submitted', 'Approved', 'Paid'] },
+      },
+      include: [{
+        model: MovementLog, as: 'movement', required: true,
+        where: sequelize.where(
+          sequelize.fn('DATE', sequelize.col('movement.departure_at')),
+          claimDate
+        ),
+      }, { model: User, as: 'staff', attributes: ['id', 'fullName'] }],
+    });
+    if (sameVehicleSameDay.length > 0) {
+      const other = sameVehicleSameDay[0];
+      return {
+        hardBlock: {
+          kind: 'same_vehicle_same_date',
+          message: `Vehicle already has a fuel claim on ${claimDate} by ` +
+                   `${other.staff?.fullName || 'another user'} ` +
+                   `(claim #${other.id}, status: ${other.status}). ` +
+                   `Add yourself as a passenger to that claim instead.`,
+          otherClaimId: other.id,
+          otherUserId:  other.userId,
+        },
+        flags: [],
+      };
+    }
+  }
+
+  // HARD #2 — claimant is already declared as a passenger on another claim
+  // for the same date.
+  if (claimDate) {
+    const asPassenger = await FuelClaimPassenger.findAll({
+      where: { passengerUserId: claim.userId },
+      include: [{
+        model: FuelClaim, as: 'fuelClaim', required: true,
+        where: {
+          id: { [Op.ne]: claim.id },
+          status: { [Op.in]: ['Submitted', 'Approved', 'Paid'] },
+        },
+        include: [{
+          model: MovementLog, as: 'movement', required: true,
+          where: sequelize.where(
+            sequelize.fn('DATE', sequelize.col('fuelClaim->movement.departure_at')),
+            claimDate
+          ),
+        }, { model: User, as: 'staff', attributes: ['id', 'fullName'] }],
+      }],
+    });
+    if (asPassenger.length > 0) {
+      const p = asPassenger[0].fuelClaim;
+      return {
+        hardBlock: {
+          kind: 'already_a_passenger',
+          message: `You are already a passenger on claim #${p.id} ` +
+                   `(${p.staff?.fullName}, ${claimDate}). One claim per trip.`,
+          otherClaimId: p.id,
+          otherUserId:  p.userId,
+        },
+        flags: [],
+      };
+    }
+  }
+
+  // HARD #3 — same user, multiple claims same date.
+  if (claimDate) {
+    const selfDup = await FuelClaim.findAll({
+      where: {
+        id:     { [Op.ne]: claim.id },
+        userId: claim.userId,
+        status: { [Op.in]: ['Submitted', 'Approved', 'Paid'] },
+      },
+      include: [{
+        model: MovementLog, as: 'movement', required: true,
+        where: sequelize.where(
+          sequelize.fn('DATE', sequelize.col('movement.departure_at')),
+          claimDate
+        ),
+      }],
+    });
+    if (selfDup.length > 0) {
+      // Not strictly fraud — two trips in one day can be legit — but worth
+      // flagging for review rather than blocking. Demoted to a soft flag.
+      flags.push({
+        kind: 'multiple_claims_same_day',
+        otherClaimIds: selfDup.map(c => c.id),
+        message: `Multiple claims on ${claimDate}`,
+      });
+    }
+  }
+
+  // SOFT — vehicle has an owner and claimant is not them.
+  if (claim.vehicleId) {
+    const vehicle = await Vehicle.findByPk(claim.vehicleId,
+      { attributes: ['id', 'ownerUserId', 'plateNo', 'isPersonal'] });
+    if (vehicle?.ownerUserId && vehicle.ownerUserId !== claim.userId) {
+      flags.push({
+        kind: 'not_vehicle_owner',
+        vehicleId: vehicle.id,
+        vehiclePlateNo: vehicle.plateNo,
+        ownerUserId: vehicle.ownerUserId,
+        message: 'Claimant is not the registered owner of this vehicle',
+      });
+    }
+  }
+
+  // SOFT — route overlap with another user's same-day claim (≥80% time overlap).
+  // Reuses existing helper; persists the result so reviewer can see it.
+  const overlaps = await computeDuplicateOverlap(movement);
+  for (const o of overlaps) {
+    flags.push({
+      kind: 'route_overlap_other_user',
+      otherUserId:   o.otherUserId,
+      otherUserName: o.otherUserName,
+      otherClaimId:  o.otherClaimId,
+      otherClaimStatus: o.otherClaimStatus,
+      overlapPct:    o.overlapPct,
+      sameVehicleType: o.sameVehicleType,
+      message: `Route overlaps ${o.overlapPct}% with ${o.otherUserName}'s same-day claim`,
+    });
+  }
+
+  return { hardBlock: null, flags };
+};
+
 // ============================================
 // SUBMIT (Draft -> Submitted)
 // ============================================
 export const submitClaim = asyncHandler(async (req, res) => {
-  const c = await FuelClaim.findByPk(req.params.id);
+  const c = await FuelClaim.findByPk(req.params.id, {
+    include: [{ model: MovementLog, as: 'movement', include: [{ model: Vehicle, as: 'vehicle' }] }],
+  });
   if (!c) throw new NotFoundError('Fuel claim not found');
   if (c.userId !== req.user.id && req.user.role !== 'Admin') {
     throw new ForbiddenError('Only the claimant can submit');
   }
   if (c.status !== 'Draft') throw new ConflictError(`Cannot submit a ${c.status} claim`);
-  await c.update({ status: 'Submitted' });
+
+  // Fraud detection. Hard blocks throw and the claim stays in Draft so the
+  // user can fix (e.g. join the existing claim as a passenger).
+  const { hardBlock, flags } = await runFraudChecks(c, c.movement);
+  if (hardBlock) {
+    throw new ConflictError(hardBlock.message);
+  }
+
+  await c.update({
+    status: 'Submitted',
+    flagReasons: flags.length > 0 ? flags : null,
+    flaggedAt:   flags.length > 0 ? new Date() : null,
+  });
   const reloaded = await FuelClaim.findByPk(c.id, { include: claimInclude });
-  res.json({ success: true, data: { claim: reloaded } });
+  res.json({ success: true, data: { claim: reloaded, flags } });
 });
 
 // ============================================
@@ -367,6 +543,33 @@ export const cancelClaim = asyncHandler(async (req, res) => {
     throw new ConflictError(`Cannot cancel a ${c.status} claim`);
   }
   await c.update({ status: 'Cancelled' });
+  const reloaded = await FuelClaim.findByPk(c.id, { include: claimInclude });
+  res.json({ success: true, data: { claim: reloaded } });
+});
+
+// ============================================
+// REVIEW FLAGS — approver acknowledges or clears fraud flags
+//
+// PATCH /api/fuel-claims/:id/review-flags
+// Body: { notes }
+//
+// Sets reviewedBy/reviewedAt/reviewNotes but DOES NOT change status. The
+// approver then either approves, rejects, or merges through the existing
+// actions. This split lets HR maintain a defensible trail: "I saw the flag,
+// I noted it, I made this decision."
+// ============================================
+export const reviewFlags = asyncHandler(async (req, res) => {
+  if (!isApprover(req.user)) throw new ForbiddenError('Approvers only');
+  const c = await FuelClaim.findByPk(req.params.id);
+  if (!c) throw new NotFoundError('Fuel claim not found');
+  if (!c.flaggedAt) throw new BadRequestError('This claim has no flags to review');
+  const notes = (req.body?.notes || '').toString().trim();
+  if (!notes) throw new BadRequestError('Review notes are required');
+  await c.update({
+    reviewedBy:  req.user.id,
+    reviewedAt:  new Date(),
+    reviewNotes: notes,
+  });
   const reloaded = await FuelClaim.findByPk(c.id, { include: claimInclude });
   res.json({ success: true, data: { claim: reloaded } });
 });

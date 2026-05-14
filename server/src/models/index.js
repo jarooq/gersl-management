@@ -3999,7 +3999,18 @@ const FuelClaim = sequelize.define('FuelClaim', {
   paidWithBillId:    { type: DataTypes.INTEGER, field: 'paid_with_bill_id' },
   paidWithCashTxId:  { type: DataTypes.INTEGER, field: 'paid_with_cash_tx_id' },
   paidAt: { type: DataTypes.DATE, field: 'paid_at' },
-  notes: { type: DataTypes.TEXT }
+  notes: { type: DataTypes.TEXT },
+
+  // Fraud-detection metadata (added 2026 — backed by
+  // add_fuel_claim_fraud_flags.sql).
+  // Hard-block conditions throw on submit and never set these. Soft flags
+  // land here so the HR review queue can surface them inline. Approvers
+  // can dispose via reviewedBy/reviewedAt/reviewNotes.
+  flagReasons: { type: DataTypes.JSONB, field: 'flag_reasons' },
+  flaggedAt:   { type: DataTypes.DATE,  field: 'flagged_at' },
+  reviewedBy:  { type: DataTypes.INTEGER, field: 'reviewed_by', references: { model: 'users', key: 'id' } },
+  reviewNotes: { type: DataTypes.TEXT, field: 'review_notes' },
+  reviewedAt:  { type: DataTypes.DATE, field: 'reviewed_at' }
 }, {
   tableName: 'fuel_claims',
   timestamps: true,

@@ -3468,6 +3468,8 @@ export const MovementAPI = {
     request(`/fuel-claims/${id}/reject`, { method: 'PATCH', body: JSON.stringify({ reason }) }),
   mergeFuelClaim: (id, primaryClaimId, sharePct) =>
     request(`/fuel-claims/${id}/merge`, { method: 'PATCH', body: JSON.stringify({ primaryClaimId, sharePct }) }),
+  reviewFuelFlags: (id, notes) =>
+    request(`/fuel-claims/${id}/review-flags`, { method: 'PATCH', body: JSON.stringify({ notes }) }),
   cancelFuelClaim: (id) =>
     request(`/fuel-claims/${id}/cancel`, { method: 'PATCH' })
 };
