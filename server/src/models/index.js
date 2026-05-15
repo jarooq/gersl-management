@@ -26,6 +26,15 @@ const Orphan = sequelize.define('Orphan', {
     primaryKey: true,
     autoIncrement: true
   },
+  // Stable human-readable identifier (e.g. ORP-2026-001). The controllers
+  // (getMyOrphans, map.controller) and the mobile + web UI all expect this
+  // field, but it wasn't declared in the model — caused the orphans/mine
+  // endpoint to 500 with "column orphan_code does not exist". Added via
+  // migration add_orphan_code_column.sql which backfills existing rows.
+  orphanCode: {
+    type: DataTypes.STRING(50),
+    field: 'orphan_code'
+  },
   fullName: {
     type: DataTypes.STRING(100),
     allowNull: false
