@@ -13,7 +13,10 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/background_location_service.dart';
 import '../../services/friendly_error.dart';
+import '../../services/location_tracker.dart';
+import '../../services/token_store.dart';
 import 'punch_repository.dart';
 
 final todayProvider = FutureProvider.autoDispose((ref) async {
@@ -124,6 +127,16 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
         selfieUrl: selfieUrl,
       );
       ref.invalidate(todayProvider);
+
+      // Attendance drives GPS tracking: punching In auto-starts background
+      // location tracking, punching Out stops it. Best-effort — wrapped so a
+      // tracking hiccup never fails the punch itself.
+      if (punchType == 'In') {
+        await _autoStartTracking();
+      } else if (punchType == 'Out') {
+        await _autoStopTracking();
+      }
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Punched $punchType')),
@@ -134,6 +147,37 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  /// Start background GPS tracking after a Punch In. Silent on failure
+  /// (denied permission etc.) — the punch already succeeded, we never want
+  /// a tracking problem to look like a punch problem.
+  Future<void> _autoStartTracking() async {
+    try {
+      if (await BackgroundLocationService.isRunning()) {
+        if (mounted) ref.read(isTrackingProvider.notifier).state = true;
+        return;
+      }
+      final foregroundOk = await ref.read(locationTrackerProvider).start();
+      if (!foregroundOk) return; // location permission denied
+      final access = await TokenStore().readAccess();
+      if (access == null) return;
+      final refresh = await TokenStore().readRefresh();
+      final ok = await BackgroundLocationService.start(
+        accessToken: access,
+        refreshToken: refresh,
+      );
+      if (mounted) ref.read(isTrackingProvider.notifier).state = ok;
+    } catch (_) { /* best-effort */ }
+  }
+
+  /// Stop background GPS tracking after a Punch Out.
+  Future<void> _autoStopTracking() async {
+    try {
+      await BackgroundLocationService.stop();
+      await ref.read(locationTrackerProvider).stop();
+      if (mounted) ref.read(isTrackingProvider.notifier).state = false;
+    } catch (_) { /* best-effort */ }
   }
 
   @override
