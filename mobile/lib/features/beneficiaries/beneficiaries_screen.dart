@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import '../../services/api_response.dart';
 
@@ -67,8 +68,6 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Beneficiary Lookup'),
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [

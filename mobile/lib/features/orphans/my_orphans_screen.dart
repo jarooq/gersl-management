@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import 'orphan_repository.dart';
 
@@ -29,8 +30,6 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Orphans'),
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),

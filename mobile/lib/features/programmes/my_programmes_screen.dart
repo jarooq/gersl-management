@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import 'programme_repository.dart';
 
@@ -22,8 +23,6 @@ class MyProgrammesScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('My Programmes'),
         elevation: 0,
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.map_outlined),

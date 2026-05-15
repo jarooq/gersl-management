@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/env.dart';
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import '../../services/token_store.dart';
 import 'programme_repository.dart';
@@ -60,8 +61,6 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(isWash ? 'WASH item' : 'IGP item'),
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -104,13 +103,13 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D1D3D),
+              color: kNavy900,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text((item['itemCode'] ?? '').toString(), style: const TextStyle(color: Color(0xFFa4f056), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                Text((item['itemCode'] ?? '').toString(), style: const TextStyle(color: kAmber500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                 const SizedBox(height: 4),
                 Text(ben, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
@@ -185,8 +184,8 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
                     ? 'Advance anyway (funds not received)'
                     : 'Advance to $nextStage'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: fundsGateBlocked ? Colors.amber.shade700 : const Color(0xFFa4f056),
-                  foregroundColor: fundsGateBlocked ? Colors.white : const Color(0xFF0D1D3D),
+                  backgroundColor: fundsGateBlocked ? Colors.amber.shade700 : kAmber500,
+                  foregroundColor: fundsGateBlocked ? Colors.white : kNavy900,
                   minimumSize: const Size.fromHeight(48),
                 ),
               ),
@@ -273,7 +272,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
   }
 
   Widget _heroChip(String label, String value) => Row(mainAxisSize: MainAxisSize.min, children: [
-        Text('$label: ', style: const TextStyle(color: Color(0xFFa4f056), fontSize: 11)),
+        Text('$label: ', style: const TextStyle(color: kAmber500, fontSize: 11)),
         Text(value, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
       ]);
 
@@ -441,7 +440,7 @@ class _TransitionSheetState extends ConsumerState<_TransitionSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              const Icon(Icons.arrow_forward, color: Color(0xFF0D1D3D)),
+              const Icon(Icons.arrow_forward, color: kNavy900),
               const SizedBox(width: 8),
               Expanded(child: Text('Advance to ${widget.newStage}',
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
@@ -497,12 +496,12 @@ class _TransitionSheetState extends ConsumerState<_TransitionSheet> {
             FilledButton(
               onPressed: _busy ? null : _submit,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFa4f056),
-                foregroundColor: const Color(0xFF0D1D3D),
+                backgroundColor: kAmber500,
+                foregroundColor: kNavy900,
                 minimumSize: const Size.fromHeight(48),
               ),
               child: _busy
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0D1D3D)))
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: kNavy900))
                   : Text('Advance to ${widget.newStage}', style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],

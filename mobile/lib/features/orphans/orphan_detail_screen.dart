@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import '../programmes/programme_repository.dart' show programmeRepoProvider;
 import 'orphan_repository.dart';
@@ -55,11 +56,7 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Orphan'),
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(title: const Text('Orphan')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
@@ -69,8 +66,8 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
         onPressed: _openLogVisit,
         icon: const Icon(Icons.add_a_photo_outlined),
         label: const Text('Log visit'),
-        backgroundColor: const Color(0xFFa4f056),
-        foregroundColor: const Color(0xFF0D1D3D),
+        backgroundColor: kAmber500,
+        foregroundColor: kNavy900,
       ),
     );
   }
@@ -86,14 +83,14 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D1D3D),
+              color: kNavy900,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text((o['orphanCode'] ?? '').toString(),
-                    style: const TextStyle(color: Color(0xFFa4f056), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    style: const TextStyle(color: kAmber500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                 const SizedBox(height: 4),
                 Text((o['fullName'] ?? '—').toString(),
                     style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
@@ -159,7 +156,7 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
   }
 
   Widget _chip(String label, String value) => Row(mainAxisSize: MainAxisSize.min, children: [
-        Text('$label: ', style: const TextStyle(color: Color(0xFFa4f056), fontSize: 11)),
+        Text('$label: ', style: const TextStyle(color: kAmber500, fontSize: 11)),
         Text(value, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
       ]);
 
@@ -343,7 +340,7 @@ class _LogVisitSheetState extends ConsumerState<_LogVisitSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Row(children: [
-              Icon(Icons.child_care, color: Color(0xFF0D1D3D)),
+              Icon(Icons.child_care, color: kNavy900),
               SizedBox(width: 8),
               Expanded(child: Text('Log orphan visit',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
@@ -390,12 +387,12 @@ class _LogVisitSheetState extends ConsumerState<_LogVisitSheet> {
             FilledButton(
               onPressed: _busy ? null : _submit,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFa4f056),
-                foregroundColor: const Color(0xFF0D1D3D),
+                backgroundColor: kAmber500,
+                foregroundColor: kNavy900,
                 minimumSize: const Size.fromHeight(48),
               ),
               child: _busy
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0D1D3D)))
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: kNavy900))
                   : const Text('Save visit', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],

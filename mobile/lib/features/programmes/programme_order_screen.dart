@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import 'programme_repository.dart';
 
@@ -62,15 +63,13 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(isWash ? 'WASH order' : 'IGP order'),
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
       ),
       floatingActionButton: _order == null ? null : FloatingActionButton.extended(
         onPressed: _openAddItemSheet,
         icon: const Icon(Icons.person_add_alt_1),
         label: const Text('Add beneficiary'),
-        backgroundColor: const Color(0xFFa4f056),
-        foregroundColor: const Color(0xFF0D1D3D),
+        backgroundColor: kAmber500,
+        foregroundColor: kNavy900,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -101,13 +100,13 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D1D3D),
+              color: kNavy900,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(code, style: const TextStyle(color: Color(0xFFa4f056), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                Text(code, style: const TextStyle(color: kAmber500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                 const SizedBox(height: 4),
                 Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
@@ -173,7 +172,7 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
   }
 
   Widget _heroChip(String label, String value) => Row(mainAxisSize: MainAxisSize.min, children: [
-        Text('$label: ', style: const TextStyle(color: Color(0xFFa4f056), fontSize: 11)),
+        Text('$label: ', style: const TextStyle(color: kAmber500, fontSize: 11)),
         Text(value, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
       ]);
 
@@ -370,7 +369,7 @@ class _AddItemSheetState extends ConsumerState<_AddItemSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Row(children: [
-              Icon(Icons.person_add_alt_1, color: Color(0xFF0D1D3D)),
+              Icon(Icons.person_add_alt_1, color: kNavy900),
               SizedBox(width: 8),
               Expanded(child: Text('Add beneficiary',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
@@ -422,12 +421,12 @@ class _AddItemSheetState extends ConsumerState<_AddItemSheet> {
             FilledButton(
               onPressed: _busy ? null : _submit,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFa4f056),
-                foregroundColor: const Color(0xFF0D1D3D),
+                backgroundColor: kAmber500,
+                foregroundColor: kNavy900,
                 minimumSize: const Size.fromHeight(48),
               ),
               child: _busy
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0D1D3D)))
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: kNavy900))
                   : const Text('Add beneficiary', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],

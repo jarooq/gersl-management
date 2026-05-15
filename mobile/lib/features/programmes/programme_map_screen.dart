@@ -14,6 +14,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -161,8 +162,6 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Items Map'),
-        backgroundColor: const Color(0xFF0D1D3D),
-        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -307,8 +306,8 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
               icon: const Icon(Icons.arrow_forward),
               label: const Text('Open item'),
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFa4f056),
-                foregroundColor: const Color(0xFF0D1D3D),
+                backgroundColor: kAmber500,
+                foregroundColor: kNavy900,
                 minimumSize: const Size.fromHeight(44),
               ),
             ),
