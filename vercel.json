@@ -5,6 +5,7 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/api/((?!cron/).*)", "destination": "/api/index" },
+    { "source": "/uploads/(.*)", "destination": "/api/index" },
     { "source": "/((?!assets/|.*\\.[a-zA-Z0-9]+$).*)", "destination": "/index.html" }
   ],
   "crons": [
