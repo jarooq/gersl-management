@@ -26,36 +26,100 @@ class PayslipsScreen extends ConsumerWidget {
           children: [ErrorBox(message: friendlyError(e))],
         ),
         data: (rows) {
-          if (rows.isEmpty) {
-            return ListView(
-              padding: const EdgeInsets.all(16),
-              children: const [
-                EmptyState(
+          final latestNet = rows.isEmpty ? null : rows.first['netPay'];
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 28),
+            children: [
+              _PayrollBanner(latestNet: latestNet, count: rows.length),
+              const SizedBox(height: 14),
+              if (rows.isEmpty)
+                const EmptyState(
                   title: 'No payslips yet',
                   message: 'Once your payroll is processed, payslips appear here for download.',
                   icon: Icons.payments_outlined,
-                ),
-              ],
-            );
-          }
-          return ListView.separated(
-            padding: const EdgeInsets.all(12),
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemCount: rows.length,
-            itemBuilder: (_, i) => _PayslipCard(
-              row: rows[i],
-              onOpenPdf: () async {
-                final token = await TokenStore().readAccess();
-                if (token == null) return;
-                final url = ref.read(payslipRepoProvider).pdfUrl(rows[i]['id'] as int, token);
-                final uri = Uri.parse(url);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
-                }
-              },
-            ),
+                )
+              else
+                for (final row in rows) ...[
+                  _PayslipCard(
+                    row: row,
+                    onOpenPdf: () async {
+                      final token = await TokenStore().readAccess();
+                      if (token == null) return;
+                      final url = ref.read(payslipRepoProvider).pdfUrl(row['id'] as int, token);
+                      final uri = Uri.parse(url);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
+            ],
           );
         },
+      ),
+    );
+  }
+}
+
+// Blue gradient banner — shows the most-recent net pay at a glance.
+class _PayrollBanner extends StatelessWidget {
+  final Object? latestNet;
+  final int count;
+  const _PayrollBanner({required this.latestNet, required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+      decoration: BoxDecoration(
+        gradient: kBlueBanner,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: glow(kNavy700, blur: 24, opacity: 0.30),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 40, height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.account_balance_wallet_outlined,
+                    color: Colors.white, size: 21),
+              ),
+              const SizedBox(width: 12),
+              Text('Payroll',
+                  style: GoogleFonts.inter(
+                    color: Colors.white, fontSize: 16,
+                    fontWeight: FontWeight.w800, letterSpacing: -0.2,
+                  )),
+              const Spacer(),
+              Text('$count payslip${count == 1 ? '' : 's'}',
+                  style: GoogleFonts.inter(
+                    color: Colors.white.withValues(alpha: 0.78), fontSize: 12,
+                  )),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Text('LATEST NET PAY',
+              style: GoogleFonts.inter(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 1.1,
+              )),
+          const SizedBox(height: 2),
+          Text(
+            latestNet == null ? '—' : 'LKR $latestNet',
+            style: GoogleFonts.inter(
+              color: Colors.white, fontSize: 26,
+              fontWeight: FontWeight.w900, letterSpacing: -0.6,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -107,15 +171,15 @@ class _PayslipCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: kSurfaceLift,
-              borderRadius: BorderRadius.circular(10),
+              color: kNavy900,
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
                 Text(
                   'NET PAY',
                   style: GoogleFonts.inter(
-                    color: kMission300,
+                    color: kAmber300,
                     fontSize: 10.5,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.0,

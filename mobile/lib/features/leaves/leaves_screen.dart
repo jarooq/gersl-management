@@ -26,31 +26,33 @@ class LeavesScreen extends ConsumerWidget {
             children: [ErrorBox(message: friendlyError(e))],
           ),
           data: (rows) {
-            if (rows.isEmpty) {
-              return ListView(
-                padding: const EdgeInsets.all(16),
-                children: const [
-                  EmptyState(
+            final pending  = rows.where((r) => r['status'] == 'Pending').length;
+            final approved = rows.where((r) => r['status'] == 'Approved').length;
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
+              children: [
+                _LeaveBanner(pending: pending, approved: approved, total: rows.length),
+                const SizedBox(height: 14),
+                if (rows.isEmpty)
+                  const EmptyState(
                     title: 'No leave requests',
                     message: 'Submit a new leave request from the button below.',
                     icon: Icons.event_busy_outlined,
-                  ),
-                ],
-              );
-            }
-            return ListView.separated(
-              padding: const EdgeInsets.all(12),
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
-              itemCount: rows.length,
-              itemBuilder: (_, i) => _LeaveCard(
-                row: rows[i],
-                onCancel: () async {
-                  final ok = await _confirmCancel(context, 'Cancel this leave request?');
-                  if (ok != true) return;
-                  await ref.read(leaveRepoProvider).cancel(rows[i]['id'] as int);
-                  ref.invalidate(myLeavesProvider);
-                },
-              ),
+                  )
+                else
+                  for (final row in rows) ...[
+                    _LeaveCard(
+                      row: row,
+                      onCancel: () async {
+                        final ok = await _confirmCancel(context, 'Cancel this leave request?');
+                        if (ok != true) return;
+                        await ref.read(leaveRepoProvider).cancel(row['id'] as int);
+                        ref.invalidate(myLeavesProvider);
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+              ],
             );
           },
         ),
@@ -64,6 +66,86 @@ class LeavesScreen extends ConsumerWidget {
         label: Text('Request leave',
             style: GoogleFonts.inter(fontWeight: FontWeight.w800)),
       ),
+    );
+  }
+}
+
+// Gradient summary banner — mirrors the Home dashboard's banner language.
+class _LeaveBanner extends StatelessWidget {
+  final int pending;
+  final int approved;
+  final int total;
+  const _LeaveBanner({required this.pending, required this.approved, required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+      decoration: BoxDecoration(
+        gradient: kBrandGradient,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: glow(kNavy700, blur: 24, opacity: 0.28),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44, height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: const Icon(Icons.event_note_outlined, color: Colors.white, size: 23),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('My Leave',
+                    style: GoogleFonts.inter(
+                      color: Colors.white, fontSize: 16,
+                      fontWeight: FontWeight.w800, letterSpacing: -0.2,
+                    )),
+                const SizedBox(height: 2),
+                Text('$total request${total == 1 ? '' : 's'} this year',
+                    style: GoogleFonts.inter(
+                      color: Colors.white.withValues(alpha: 0.78), fontSize: 12,
+                    )),
+              ],
+            ),
+          ),
+          _MiniStat(value: pending,  label: 'Pending',  tone: kAmber300),
+          const SizedBox(width: 14),
+          _MiniStat(value: approved, label: 'Approved', tone: const Color(0xFF6FE3A8)),
+        ],
+      ),
+    );
+  }
+}
+
+class _MiniStat extends StatelessWidget {
+  final int value;
+  final String label;
+  final Color tone;
+  const _MiniStat({required this.value, required this.label, required this.tone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('$value',
+            style: GoogleFonts.inter(
+              color: tone, fontSize: 20, fontWeight: FontWeight.w900,
+              letterSpacing: -0.5,
+            )),
+        Text(label,
+            style: GoogleFonts.inter(
+              color: Colors.white.withValues(alpha: 0.7), fontSize: 10,
+              fontWeight: FontWeight.w600,
+            )),
+      ],
     );
   }
 }
