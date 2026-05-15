@@ -94,11 +94,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // touch above the optical centre.
                 child: IntrinsicHeight(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Spacer(flex: 2),
                       _BrandLockup(),
-                      const SizedBox(height: 22),
+                      const SizedBox(height: 26),
                       _GlassFormCard(
                         username: _username,
                         password: _password,
@@ -204,58 +204,71 @@ class _Blob extends StatelessWidget {
 }
 
 // =============================================================================
-// Brand lockup — logo tile + organisation name.
+// Brand lockup — centred app-icon badge + organisation name.
+//
+// The icon asset (icon.png) ships with its own light backing, so rather than
+// fight it we present it as a deliberate rounded app-icon badge: white tile,
+// soft shadow, generous corner radius. Reads as a polished product mark
+// instead of a stray white box.
 // =============================================================================
 
 class _BrandLockup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 54, height: 54,
-          alignment: Alignment.center,
+          width: 92, height: 92,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.30),
+                blurRadius: 28,
+                offset: const Offset(0, 14),
+              ),
+              BoxShadow(
+                color: kAmber500.withValues(alpha: 0.18),
+                blurRadius: 36,
+                spreadRadius: -4,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
             child: Image.asset(
-              'assets/icon/icon_foreground.png',
-              fit: BoxFit.contain,
+              'assets/icon/icon.png',
+              fit: BoxFit.cover,
               // Fallback if the asset is missing in dev — still renders
               // something instead of throwing.
               errorBuilder: (_, _, _) => const Icon(
-                Icons.volunteer_activism, color: Colors.white, size: 24,
+                Icons.volunteer_activism, color: kNavy900, size: 40,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 14),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'GERSL',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.4,
-              ),
-            ),
-            Text(
-              'Global Ehsan Relief · Sri Lanka',
-              style: GoogleFonts.inter(
-                color: Colors.white.withValues(alpha: 0.70),
-                fontSize: 11.5,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+        const SizedBox(height: 16),
+        Text(
+          'Global Ehsan Relief',
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.3,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          'Sri Lanka · Staff Portal',
+          style: GoogleFonts.inter(
+            color: Colors.white.withValues(alpha: 0.62),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
+          ),
         ),
       ],
     );
