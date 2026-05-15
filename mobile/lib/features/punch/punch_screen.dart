@@ -139,11 +139,17 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
   @override
   Widget build(BuildContext context) {
     final today = ref.watch(todayProvider);
-    return RefreshIndicator(
-      color: kAmber500,
-      onRefresh: () async { ref.invalidate(todayProvider); },
-      child: ListView(
-        padding: const EdgeInsets.all(16),
+    // SafeArea here so the navy header card always clears the status bar,
+    // regardless of how /punch was reached (swipe-to-check-in from Home, or
+    // the Attendance tile). SafeArea is idempotent — if the shell already
+    // applied one, this inner SafeArea simply adds nothing.
+    return SafeArea(
+      bottom: false,
+      child: RefreshIndicator(
+        color: kAmber500,
+        onRefresh: () async { ref.invalidate(todayProvider); },
+        child: ListView(
+          padding: const EdgeInsets.all(16),
         children: [
           today.when(
             loading: () => SoftCard(
@@ -253,6 +259,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
             },
           ),
         ],
+      ),
       ),
     );
   }
