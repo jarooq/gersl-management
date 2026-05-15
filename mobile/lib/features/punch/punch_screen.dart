@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/friendly_error.dart';
 import 'punch_repository.dart';
 
 final todayProvider = FutureProvider.autoDispose((ref) async {
@@ -129,7 +130,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
         );
       }
     } catch (e) {
-      setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -151,7 +152,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
                 child: CircularProgressIndicator(color: kNavy900),
               ),
             ),
-            error: (e, _) => _ErrorBox(message: e.toString()),
+            error: (e, _) => _ErrorBox(message: friendlyError(e)),
             data: (d) => _TodayCard(data: d),
           ),
 

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/friendly_error.dart';
 import 'movement_repository.dart';
 
 // =============================================================================
@@ -94,7 +95,7 @@ class _NewMovementScreenState extends ConsumerState<NewMovementScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+          SnackBar(content: Text(friendlyError(e))),
         );
       }
     } finally {

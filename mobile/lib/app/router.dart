@@ -41,6 +41,11 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/login',
     redirect: (context, state) {
+      // Audit-hardening 2026-05: during cold boot the auth controller is in
+      // AsyncLoading for ~250ms while it reads the stored token. Previously
+      // we treated loading as "not logged in" → user saw a flash of the
+      // login screen before snapping to /today. Defer routing while loading.
+      if (auth.isLoading) return null;
       final loggedIn = auth.value?.isAuthenticated ?? false;
       final atLogin = state.matchedLocation == '/login';
       if (!loggedIn && !atLogin) return '/login';

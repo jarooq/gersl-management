@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/env.dart';
+import '../../services/friendly_error.dart';
 import '../../services/token_store.dart';
 import 'programme_repository.dart';
 
@@ -49,7 +50,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
           : await repo.getIgpItem(widget.itemId);
       setState(() { _item = item; _loading = false; });
     } catch (e) {
-      setState(() { _error = e.toString(); _loading = false; });
+      setState(() { _error = friendlyError(e); _loading = false; });
     }
   }
 
@@ -65,7 +66,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(_error!, textAlign: TextAlign.center)))
+              ? ErrorView(error: _error!, onRetry: _load)
               : _buildBody(),
     );
   }

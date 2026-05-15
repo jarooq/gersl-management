@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/friendly_error.dart';
 import 'leave_repository.dart';
 
 const _leaveTypes = ['Annual', 'Casual', 'Sick', 'Maternity', 'Compassionate', 'Unpaid'];
@@ -27,11 +28,14 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
   void dispose() { _reason.dispose(); super.dispose(); }
 
   Future<void> _pickRange() async {
+    // Clamp the picker to a sensible window — backdating supports sick-leave
+    // entered after-the-fact, future cap of 1 year prevents the audit case
+    // where leave start dates of 2099 made it past approval.
     final now = DateTime.now();
     final picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime(now.year - 1),
-      lastDate: DateTime(now.year + 2),
+      lastDate: DateTime(now.year + 1, now.month, now.day),
       initialDateRange: _start != null && _end != null
           ? DateTimeRange(start: _start!, end: _end!)
           : DateTimeRange(start: now, end: now),
@@ -56,7 +60,7 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
       ref.invalidate(myLeavesProvider);
       if (mounted) context.pop();
     } catch (e) {
-      setState(() => _error = e.toString());
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

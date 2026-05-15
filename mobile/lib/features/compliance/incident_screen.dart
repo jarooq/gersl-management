@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/friendly_error.dart';
 import '../auth/auth_controller.dart';
 
 // Mobile-side safeguarding incident reporter. Field staff often see issues
@@ -53,7 +54,7 @@ class IncidentReportScreen extends ConsumerWidget {
           loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
-            children: [ErrorBox(message: e.toString())],
+            children: [ErrorBox(message: friendlyError(e))],
           ),
           data: (rows) => ListView(
             padding: const EdgeInsets.all(16),
@@ -236,7 +237,7 @@ class _NewIncidentFormState extends ConsumerState<_NewIncidentForm> {
       await ref.read(dioProvider).post('/compliance/incidents', data: body);
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
-      setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

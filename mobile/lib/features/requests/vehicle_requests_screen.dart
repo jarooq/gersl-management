@@ -8,6 +8,7 @@ import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
 import '../../services/api_response.dart';
+import '../../services/friendly_error.dart';
 
 final _vehicleRequestsProvider =
     FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
@@ -30,7 +31,7 @@ class VehicleRequestsScreen extends ConsumerWidget {
           loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
-            children: [ErrorBox(message: e.toString())],
+            children: [ErrorBox(message: friendlyError(e))],
           ),
           data: (rows) {
             if (rows.isEmpty) {
@@ -182,7 +183,7 @@ class _NewVehicleRequestFormState extends ConsumerState<_NewVehicleRequestForm> 
       });
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
-      setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

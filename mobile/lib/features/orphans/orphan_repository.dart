@@ -34,8 +34,11 @@ class OrphanRepository {
   }
 
   // Visit history for one orphan — pulls from the unified visit-log endpoint.
+  // Endpoint path corrected 2026-05-15: server route is /visit-logs/orphan/:id
+  // (see visitLog.routes.js). Mobile previously hit /visit-logs/by-orphan/:id
+  // which always 404'd silently → empty visit history in the dossier.
   Future<List<Map<String, dynamic>>> visitsFor(int orphanId) async {
-    final res = await _dio.get('/visit-logs/by-orphan/$orphanId',
+    final res = await _dio.get('/visit-logs/orphan/$orphanId',
         queryParameters: {'limit': 50});
     return extractMapList(res.data, const ['logs', 'visits']);
   }

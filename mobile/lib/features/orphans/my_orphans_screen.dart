@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../services/friendly_error.dart';
 import 'orphan_repository.dart';
 
 final myOrphansProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>(
@@ -33,10 +34,10 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(e.toString(), textAlign: TextAlign.center),
-        )),
+        error: (e, _) => ErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(myOrphansProvider),
+        ),
         data: (rows) {
           final q = _q.trim().toLowerCase();
           final filtered = q.isEmpty ? rows : rows.where((o) {

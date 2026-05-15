@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/friendly_error.dart';
 import 'expense_repository.dart';
 
 class ExpensesScreen extends ConsumerWidget {
@@ -22,7 +23,7 @@ class ExpensesScreen extends ConsumerWidget {
           loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
-            children: [ErrorBox(message: e.toString())],
+            children: [ErrorBox(message: friendlyError(e))],
           ),
           data: (rows) {
             if (rows.isEmpty) {

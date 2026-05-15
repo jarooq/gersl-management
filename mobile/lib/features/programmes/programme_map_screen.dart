@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../services/friendly_error.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -139,7 +141,7 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
         _mapController.move(_initialCentre, 9);
       }
     } catch (e) {
-      setState(() { _error = e.toString(); _loading = false; });
+      if (mounted) setState(() { _error = friendlyError(e); _loading = false; });
     }
   }
 

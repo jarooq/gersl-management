@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/friendly_error.dart';
 
 final _notificationsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   final Dio dio = ref.watch(dioProvider);
@@ -28,7 +29,7 @@ class NotificationsScreen extends ConsumerWidget {
         loading: () => const SkeletonList(),
         error: (e, _) => ListView(
           padding: const EdgeInsets.all(16),
-          children: [ErrorBox(message: e.toString())],
+          children: [ErrorBox(message: friendlyError(e))],
         ),
         data: (rows) {
           if (rows.isEmpty) {

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/friendly_error.dart';
 import '../../services/token_store.dart';
 import 'payslip_repository.dart';
 
@@ -22,7 +23,7 @@ class PayslipsScreen extends ConsumerWidget {
         loading: () => const SkeletonList(),
         error: (e, _) => ListView(
           padding: const EdgeInsets.all(16),
-          children: [ErrorBox(message: e.toString())],
+          children: [ErrorBox(message: friendlyError(e))],
         ),
         data: (rows) {
           if (rows.isEmpty) {

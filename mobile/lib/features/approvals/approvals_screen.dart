@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/friendly_error.dart';
 import '../advances/advance_repository.dart';
 import '../auth/auth_controller.dart';
 import '../expenses/expense_repository.dart';
@@ -89,7 +90,7 @@ class ApprovalsScreen extends ConsumerWidget {
           ),
           leaves.when(
             loading: () => const _LoadingTile(),
-            error:   (e, _) => ErrorBox(message: e.toString()),
+            error:   (e, _) => ErrorBox(message: friendlyError(e)),
             data:    (rows) => rows.isEmpty
                 ? const _EmptyTile(text: 'No pending leave requests.')
                 : Column(children: [
@@ -113,7 +114,7 @@ class ApprovalsScreen extends ConsumerWidget {
           ),
           advances.when(
             loading: () => const _LoadingTile(),
-            error:   (e, _) => ErrorBox(message: e.toString()),
+            error:   (e, _) => ErrorBox(message: friendlyError(e)),
             data:    (rows) => rows.isEmpty
                 ? const _EmptyTile(text: 'No pending advances.')
                 : Column(children: [
@@ -137,7 +138,7 @@ class ApprovalsScreen extends ConsumerWidget {
           ),
           expenses.when(
             loading: () => const _LoadingTile(),
-            error:   (e, _) => ErrorBox(message: e.toString()),
+            error:   (e, _) => ErrorBox(message: friendlyError(e)),
             data:    (rows) => rows.isEmpty
                 ? const _EmptyTile(text: 'No pending expense claims.')
                 : Column(children: [

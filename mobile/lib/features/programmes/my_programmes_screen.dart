@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../services/friendly_error.dart';
 import 'programme_repository.dart';
 
 class MyProgrammesScreen extends ConsumerWidget {
@@ -33,7 +34,7 @@ class MyProgrammesScreen extends ConsumerWidget {
       ),
       body: feed.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => _ErrorView(message: e.toString(), onRetry: () => ref.invalidate(myProgrammeItemsProvider)),
+        error: (e, _) => ErrorView(error: e, onRetry: () => ref.invalidate(myProgrammeItemsProvider)),
         data: (items) {
           if (items.isEmpty) return const _EmptyState();
           return RefreshIndicator(
@@ -181,27 +182,5 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
-            const SizedBox(height: 12),
-            Text(message, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade700)),
-            const SizedBox(height: 12),
-            FilledButton.icon(onPressed: onRetry, icon: const Icon(Icons.refresh), label: const Text('Retry')),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// _ErrorView removed — replaced by the shared ErrorView from
+// services/friendly_error.dart so error UI stays consistent across screens.

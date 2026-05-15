@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/api_client.dart';
+import '../../services/friendly_error.dart';
 
 // Update task status via the existing /tasks/:id/status endpoint. Field staff
 // use this from mobile to close out their auto-generated WASH/IGP stage
@@ -38,7 +39,7 @@ class MyTasksScreen extends ConsumerWidget {
         loading: () => const SkeletonList(),
         error: (e, _) => ListView(
           padding: const EdgeInsets.all(16),
-          children: [ErrorBox(message: e.toString())],
+          children: [ErrorBox(message: friendlyError(e))],
         ),
         data: (rows) {
           if (rows.isEmpty) {

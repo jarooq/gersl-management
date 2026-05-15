@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/friendly_error.dart';
 import 'expense_repository.dart';
 
 const _categories = ['Travel', 'Meal', 'Communication', 'Stationery', 'Fuel', 'Other'];
@@ -69,7 +70,7 @@ class _NewExpenseScreenState extends ConsumerState<NewExpenseScreen> {
       ref.invalidate(myExpensesProvider);
       if (mounted) context.pop();
     } catch (e) {
-      setState(() => _error = e.toString());
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

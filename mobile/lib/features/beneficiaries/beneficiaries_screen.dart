@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/friendly_error.dart';
 import '../../services/api_response.dart';
 
 class BeneficiariesScreen extends ConsumerStatefulWidget {
@@ -57,7 +58,7 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
       setState(() { _rows = list; _loading = false; });
     } catch (e) {
       if (!mounted) return;
-      setState(() { _error = e.toString(); _loading = false; });
+      if (mounted) setState(() { _error = friendlyError(e); _loading = false; });
     }
   }
 
@@ -198,7 +199,7 @@ class _BenefDetailSheetState extends ConsumerState<_BenefDetailSheet> {
       setState(() { _detail = data; _loading = false; });
     } catch (e) {
       if (!mounted) return;
-      setState(() { _error = e.toString(); _loading = false; });
+      if (mounted) setState(() { _error = friendlyError(e); _loading = false; });
     }
   }
 

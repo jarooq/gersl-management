@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../services/friendly_error.dart';
 import 'advance_repository.dart';
 
 class NewAdvanceScreen extends ConsumerStatefulWidget {
@@ -34,7 +35,7 @@ class _NewAdvanceScreenState extends ConsumerState<NewAdvanceScreen> {
       ref.invalidate(advancesProvider);
       if (mounted) context.pop();
     } catch (e) {
-      setState(() => _error = e.toString());
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

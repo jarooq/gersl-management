@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../services/friendly_error.dart';
 import 'programme_repository.dart';
 
 class ProgrammeOrderScreen extends ConsumerStatefulWidget {
@@ -51,7 +52,7 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
         _loading = false;
       });
     } catch (e) {
-      setState(() { _error = e.toString(); _loading = false; });
+      setState(() { _error = friendlyError(e); _loading = false; });
     }
   }
 
@@ -74,7 +75,7 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(_error!, textAlign: TextAlign.center)))
+              ? ErrorView(error: _error!, onRetry: _load)
               : _buildBody(),
     );
   }

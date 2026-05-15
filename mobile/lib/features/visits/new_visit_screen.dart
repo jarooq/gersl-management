@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../services/friendly_error.dart';
 import 'visit_repository.dart';
 
 class NewVisitScreen extends ConsumerStatefulWidget {
@@ -56,7 +57,7 @@ class _NewVisitScreenState extends ConsumerState<NewVisitScreen> {
       ref.invalidate(myVisitsProvider);
       if (mounted) context.pop();
     } catch (e) {
-      setState(() => _error = e.toString());
+      if (mounted) setState(() => _error = friendlyError(e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

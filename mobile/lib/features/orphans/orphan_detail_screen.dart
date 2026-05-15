@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../services/friendly_error.dart';
 import '../programmes/programme_repository.dart' show programmeRepoProvider;
 import 'orphan_repository.dart';
 
@@ -47,7 +48,7 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() { _error = e.toString(); _loading = false; });
+      setState(() { _error = friendlyError(e); _loading = false; });
     }
   }
 
@@ -62,7 +63,7 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(_error!, textAlign: TextAlign.center)))
+              ? ErrorView(error: _error!, onRetry: _load)
               : _buildBody(),
       floatingActionButton: (_loading || _error != null) ? null : FloatingActionButton.extended(
         onPressed: _openLogVisit,

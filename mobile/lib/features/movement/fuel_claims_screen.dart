@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/friendly_error.dart';
 import '../../services/token_store.dart';
 import 'movement_repository.dart';
 
@@ -30,7 +31,7 @@ class FuelClaimsScreen extends ConsumerWidget {
         loading: () => const SkeletonList(),
         error: (e, _) => ListView(
           padding: const EdgeInsets.all(16),
-          children: [ErrorBox(message: e.toString())],
+          children: [ErrorBox(message: friendlyError(e))],
         ),
         data: (rows) {
           if (rows.isEmpty) {
@@ -206,7 +207,7 @@ class _ClaimDetailSheetState extends ConsumerState<_ClaimDetailSheet> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+          SnackBar(content: Text(friendlyError(e))),
         );
       }
     } finally {

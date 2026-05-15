@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../services/friendly_error.dart';
 import '../auth/auth_controller.dart';
 import 'advance_repository.dart';
 
@@ -45,7 +46,7 @@ class AdvancesScreen extends ConsumerWidget {
           loading: () => const SkeletonList(),
           error: (e, _) => ListView(
             padding: const EdgeInsets.all(16),
-            children: [ErrorBox(message: e.toString())],
+            children: [ErrorBox(message: friendlyError(e))],
           ),
           data: (rows) {
             if (rows.isEmpty) {

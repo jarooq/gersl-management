@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,6 +24,38 @@ final dioProvider = Provider<Dio>((ref) {
   Future<void> forceSignOut() async {
     final controller = ref.read(authControllerProvider.notifier);
     await controller.forceLogout();
+  }
+
+  // 401 refresh mutex (audit-hardening 2026-05). Previously N concurrent
+  // 401s spawned N refresh calls, each writing a different access token to
+  // storage; the last one wins, all earlier retries used a token that was
+  // overwritten mid-flight. We now share a single in-flight refresh future
+  // so concurrent 401s wait for the same result.
+  Future<String?>? inFlightRefresh;
+  Future<String?> refreshAccessToken() {
+    return inFlightRefresh ??= (() async {
+      try {
+        final refresh = await tokens.readRefresh();
+        if (refresh == null || refresh.isEmpty) return null;
+        final r = await Dio().post(
+          '${Env.apiBaseUrl}/auth/refresh',
+          data: {'refreshToken': refresh},
+          options: Options(headers: {'Content-Type': 'application/json'}),
+        );
+        final newAccess = r.data['accessToken'] ?? r.data['data']?['accessToken'];
+        if (newAccess is String && newAccess.isNotEmpty) {
+          await tokens.save(accessToken: newAccess, refreshToken: refresh);
+          return newAccess;
+        }
+        return null;
+      } catch (_) {
+        return null;
+      } finally {
+        // Release the mutex on the next microtask so any other 401s that
+        // were just about to read inFlightRefresh see a non-null future.
+        scheduleMicrotask(() { inFlightRefresh = null; });
+      }
+    })();
   }
 
   dio.interceptors.add(InterceptorsWrapper(
@@ -59,31 +93,14 @@ final dioProvider = Provider<Dio>((ref) {
                              url.contains('/auth/logout');
 
       if (e.response?.statusCode == 401 && !isAuthEndpoint) {
-        final refresh = await tokens.readRefresh();
-        if (refresh != null && refresh.isNotEmpty) {
-          try {
-            final r = await Dio().post(
-              '${Env.apiBaseUrl}/auth/refresh',
-              data: {'refreshToken': refresh},
-              options: Options(headers: {'Content-Type': 'application/json'}),
-            );
-            final newAccess = r.data['accessToken'] ?? r.data['data']?['accessToken'];
-            if (newAccess is String && newAccess.isNotEmpty) {
-              await tokens.save(accessToken: newAccess, refreshToken: refresh);
-              final retry = await dio.fetch(e.requestOptions
-                ..headers['Authorization'] = 'Bearer $newAccess');
-              return handler.resolve(retry);
-            }
-            // Refresh succeeded but returned no token — treat as logout.
-            await forceSignOut();
-          } catch (_) {
-            // Refresh failed — token is dead, force the user back to login.
-            await forceSignOut();
-          }
-        } else {
-          // No refresh token at all — force a clean login.
-          await forceSignOut();
+        final newAccess = await refreshAccessToken();
+        if (newAccess != null) {
+          final retry = await dio.fetch(e.requestOptions
+            ..headers['Authorization'] = 'Bearer $newAccess');
+          return handler.resolve(retry);
         }
+        // Refresh failed / no refresh token — force the user back to login.
+        await forceSignOut();
       }
       handler.next(e);
     },
