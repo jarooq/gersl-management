@@ -59,18 +59,23 @@ class HomeShell extends ConsumerWidget {
     final name = (user?['fullName'] ?? user?['name'] ?? '?') as String;
     final role = user?['role'] as String?;
 
-    // Tabs that render their own navy gradient hero header (Home, Attendance).
-    // For these, we hide the white AppBar and let the body fill from the top.
-    final heroTab = selected == 0 || selected == 1;
-
-    // Deeper routes inside the More branch (e.g. /orphans, /tasks, /visits)
-    // already carry their own AppBar inside the child Scaffold. Showing the
-    // shell AppBar on top of those would stack two app bars. Suppress it
-    // when we're not at the tab's root location.
+    // Hero screens render their OWN navy gradient header (which already adds
+    // status-bar padding). Decided by route, not branch index — /punch lives
+    // in the Home branch but is NOT a hero screen, so it must not be treated
+    // like the dashboard.
     final loc = GoRouterState.of(context).matchedLocation;
-    final tabRoots = {'/today', '/punch', '/attendance', '/leaves', '/payslips', '/more'};
-    final atBranchRoot = tabRoots.contains(loc);
-    final showShellAppBar = !heroTab && atBranchRoot;
+    const heroRoutes = {'/today', '/attendance'};
+    final heroTab = heroRoutes.contains(loc);
+
+    // Tab-root screens that get the plain white shell AppBar (Leave / Payroll
+    // / More). Deeper routes carry their own AppBar inside the child.
+    const appBarRoots = {'/leaves', '/payslips', '/more'};
+    final showShellAppBar = appBarRoots.contains(loc);
+
+    // Any screen with neither a hero header nor the shell AppBar (e.g.
+    // /punch, /notifications) would otherwise render flush under the status
+    // bar — wrap those in a SafeArea so their content clears it.
+    final needsSafeTop = !heroTab && !showShellAppBar;
 
     return Scaffold(
       backgroundColor: kBgLight,
@@ -103,7 +108,9 @@ class HomeShell extends ConsumerWidget {
                 ),
               ],
             ),
-      body: navigationShell,
+      body: needsSafeTop
+          ? SafeArea(bottom: false, child: navigationShell)
+          : navigationShell,
       bottomNavigationBar: _BottomBar(
         selected: selected,
         onSelect: (i) {
