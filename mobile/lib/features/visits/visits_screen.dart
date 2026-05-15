@@ -17,7 +17,7 @@ class VisitsScreen extends ConsumerWidget {
     final visits = ref.watch(myVisitsProvider);
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(myVisitsProvider),
         child: visits.when(
           loading: () => const SkeletonList(),

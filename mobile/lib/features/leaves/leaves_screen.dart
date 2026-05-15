@@ -17,7 +17,7 @@ class LeavesScreen extends ConsumerWidget {
     final leaves = ref.watch(myLeavesProvider);
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(myLeavesProvider),
         child: leaves.when(
           loading: () => const SkeletonList(),

@@ -70,7 +70,7 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
                           ? 'No orphans assigned to you yet.'
                           : 'No orphans match "$_q".',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade600),
+                      style: TextStyle(color: kInk500),
                     ),
                   )
                 else
@@ -88,13 +88,13 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
     final id = (o['id'] as num?)?.toInt();
     final age = o['age'];
     final approval = (o['approvalStatus'] ?? '').toString();
-    final approvalColor = approval == 'Approved' ? Colors.green :
-                          approval == 'Rejected' ? Colors.red   :
-                          Colors.amber;
+    final approvalColor = approval == 'Approved' ? kSuccess600 :
+                          approval == 'Rejected' ? kDanger600   :
+                          kAmber500;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Material(
-        color: Colors.white,
+        color: kSurfaceLight,
         elevation: 1,
         borderRadius: BorderRadius.circular(10),
         child: InkWell(
@@ -105,8 +105,8 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Colors.pink.shade50,
-                  child: Icon(Icons.child_care, color: Colors.pink.shade700, size: 18),
+                  backgroundColor: kKpiPinkBg,
+                  child: Icon(Icons.child_care, color: kKpiPinkInk, size: 18),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -123,7 +123,7 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
                           o['gender'],
                           o['district'],
                         ].where((x) => x != null && x.toString().isNotEmpty).join(' · '),
-                        style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
+                        style: TextStyle(color: kInk500, fontSize: 12),
                       ),
                     ],
                   ),
@@ -137,7 +137,7 @@ class _MyOrphansScreenState extends ConsumerState<MyOrphansScreen> {
                     ),
                     child: Text(approval,
                         style: TextStyle(
-                            color: approvalColor.shade800,
+                            color: approvalColor,
                             fontWeight: FontWeight.bold, fontSize: 11)),
                   ),
               ],

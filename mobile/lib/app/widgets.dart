@@ -47,9 +47,9 @@ class SoftCard extends StatelessWidget {
         border: Border.all(color: kBorderLight),
         boxShadow: [
           BoxShadow(
-            color: kNavy900.withValues(alpha: 0.05),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
+            color: Colors.black.withValues(alpha: 0.45),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -644,7 +644,7 @@ class KpiPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: kSurfaceLight,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onTap == null ? null : () { Haptics.light(); onTap!(); },
@@ -652,12 +652,12 @@ class KpiPill extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: kInk100),
+            border: Border.all(color: kBorderLight),
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: kInk900.withValues(alpha: 0.04),
-                blurRadius: 12, offset: const Offset(0, 3),
+                color: Colors.black.withValues(alpha: 0.35),
+                blurRadius: 14, offset: const Offset(0, 5),
               ),
             ],
           ),
@@ -722,8 +722,8 @@ class QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = primary ? kMission500 : Colors.white;
-    final fg = primary ? kNavy900 : (tone ?? kNavy900);
+    final bg = primary ? kMission500 : kSurfaceLight;
+    final fg = primary ? kNavy900 : (tone ?? kInk900);
     return Material(
       color: bg,
       borderRadius: BorderRadius.circular(14),
@@ -875,9 +875,9 @@ class SearchFilterBar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: kSurfaceLift,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: kInk100),
+              border: Border.all(color: kBorderLight),
             ),
             child: Row(
               children: [
@@ -912,7 +912,7 @@ class SearchFilterBar extends StatelessWidget {
                   final f = filters[i];
                   final selected = (selectedFilter ?? filters.first) == f;
                   return Material(
-                    color: selected ? kNavy900 : Colors.white,
+                    color: selected ? kAmber500 : kSurfaceLift,
                     borderRadius: BorderRadius.circular(999),
                     child: InkWell(
                       onTap: () { Haptics.select(); onFilterChange?.call(f); },
@@ -921,7 +921,7 @@ class SearchFilterBar extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(999),
-                          border: selected ? null : Border.all(color: kInk200),
+                          border: selected ? null : Border.all(color: kBorderLight),
                         ),
                         alignment: Alignment.center,
                         child: Text(
@@ -929,7 +929,7 @@ class SearchFilterBar extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
-                            color: selected ? Colors.white : kInk700,
+                            color: selected ? kNavy900 : kInk700,
                           ),
                         ),
                       ),

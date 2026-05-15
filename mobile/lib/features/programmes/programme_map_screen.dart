@@ -174,11 +174,11 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
         children: [
           // Layer toggle bar
           Container(
-            color: Colors.white,
+            color: kSurfaceLight,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                Text('Layers', style: TextStyle(color: Colors.grey.shade700, fontSize: 12, fontWeight: FontWeight.bold)),
+                Text('Layers', style: TextStyle(color: kInk500, fontSize: 12, fontWeight: FontWeight.bold)),
                 const SizedBox(width: 8),
                 _layerChip('wash', 'WASH', const Color(0xFF0EA5E9), Icons.water_drop_outlined),
                 const SizedBox(width: 6),
@@ -187,15 +187,15 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
                 if (_loading)
                   const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                 else
-                  Text('${_pins.length} pins', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                  Text('${_pins.length} pins', style: TextStyle(color: kInk500, fontSize: 12)),
               ],
             ),
           ),
           if (_error != null)
             Container(
-              color: Colors.red.shade50,
+              color: kDanger600.withValues(alpha: 0.14),
               padding: const EdgeInsets.all(8),
-              child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+              child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
             ),
           // Map
           Expanded(
@@ -215,7 +215,7 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
                 ),
                 MarkerLayer(
                   markers: _pins.map((p) {
-                    final colour = _stageColors[p.stage] ?? Colors.grey;
+                    final colour = _stageColors[p.stage] ?? kInk500;
                     return Marker(
                       point: LatLng(p.lat, p.lng),
                       width: 36,
@@ -260,14 +260,14 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: on ? colour : Colors.grey.shade200,
+          color: on ? colour : kInk400,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(icon, size: 13, color: on ? Colors.white : Colors.grey.shade600),
+          Icon(icon, size: 13, color: on ? Colors.white : kInk500),
           const SizedBox(width: 4),
           Text(label, style: TextStyle(
-            color: on ? Colors.white : Colors.grey.shade600,
+            color: on ? Colors.white : kInk500,
             fontWeight: FontWeight.bold, fontSize: 11,
           )),
         ]),
@@ -276,7 +276,7 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
   }
 
   void _openPinSheet(_Pin p) {
-    final colour = _stageColors[p.stage] ?? Colors.grey;
+    final colour = _stageColors[p.stage] ?? kInk500;
     showModalBottomSheet(
       context: context,
       builder: (_) => Padding(
@@ -296,7 +296,7 @@ class _ProgrammeMapScreenState extends ConsumerState<ProgrammeMapScreen> {
               ),
             ]),
             const SizedBox(height: 8),
-            Text(p.sublabel, style: TextStyle(color: Colors.grey.shade700)),
+            Text(p.sublabel, style: TextStyle(color: kInk500)),
             const SizedBox(height: 16),
             FilledButton.icon(
               onPressed: () {

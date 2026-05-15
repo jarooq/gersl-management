@@ -79,7 +79,7 @@ class ApprovalsScreen extends ConsumerWidget {
     }
 
     return RefreshIndicator(
-      color: kNavy900,
+      color: kAmber500,
       onRefresh: refreshAll,
       child: ListView(
         padding: const EdgeInsets.all(12),
@@ -195,7 +195,7 @@ class _LoadingTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const SoftCard(
         padding: EdgeInsets.all(20),
-        child: Center(child: CircularProgressIndicator(color: kNavy900)),
+        child: Center(child: CircularProgressIndicator(color: kAmber500)),
       );
 }
 

@@ -48,7 +48,7 @@ class IncidentReportScreen extends ConsumerWidget {
 
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(_myIncidentsProvider),
         child: feed.when(
           loading: () => const SkeletonList(),

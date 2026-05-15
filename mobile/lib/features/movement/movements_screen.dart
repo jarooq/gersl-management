@@ -25,7 +25,7 @@ class MovementsScreen extends ConsumerWidget {
     final movements = ref.watch(myMovementsProvider);
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(myMovementsProvider),
         child: movements.when(
           loading: () => const SkeletonList(),
@@ -331,7 +331,7 @@ class _MovementDetailSheetState extends ConsumerState<_MovementDetailSheet> {
           if (_busy)
             const Center(child: Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: CircularProgressIndicator(color: kNavy900),
+              child: CircularProgressIndicator(color: kAmber500),
             ))
           else if (canDepart || canArrive || canReturn || canCancel || canClaimFuel) ...[
             if (canDepart)

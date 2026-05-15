@@ -17,7 +17,7 @@ class PayslipsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final payslips = ref.watch(myPayslipsProvider);
     return RefreshIndicator(
-      color: kNavy900,
+      color: kAmber500,
       onRefresh: () async => ref.invalidate(myPayslipsProvider),
       child: payslips.when(
         loading: () => const SkeletonList(),
@@ -107,7 +107,7 @@ class _PayslipCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: kNavy900,
+              color: kSurfaceLift,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(

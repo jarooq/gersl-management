@@ -103,7 +103,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: kNavy900,
+              color: kSurfaceLift,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -184,7 +184,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
                     ? 'Advance anyway (funds not received)'
                     : 'Advance to $nextStage'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: fundsGateBlocked ? Colors.amber.shade700 : kAmber500,
+                  backgroundColor: fundsGateBlocked ? kAmber600 : kAmber500,
                   foregroundColor: fundsGateBlocked ? Colors.white : kNavy900,
                   minimumSize: const Size.fromHeight(48),
                 ),
@@ -198,8 +198,8 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
                 icon: const Icon(Icons.trending_up),
                 label: const Text('Record income follow-up'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.purple.shade700,
-                  side: BorderSide(color: Colors.purple.shade300),
+                  foregroundColor: kKpiPurpleInk,
+                  side: BorderSide(color: kKpiPurpleInk),
                   minimumSize: const Size.fromHeight(48),
                 ),
               ),
@@ -248,7 +248,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
           TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.amber.shade700),
+            style: FilledButton.styleFrom(backgroundColor: kAmber600),
             child: const Text('Advance anyway'),
           ),
         ],
@@ -282,7 +282,7 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+            Text(label, style: TextStyle(color: kInk500, fontSize: 12)),
             const SizedBox(width: 8),
             Flexible(child: Text(value, textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w600))),
           ],
@@ -313,14 +313,14 @@ class _SectionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kSurfaceLight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: kInk400),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title.toUpperCase(), style: TextStyle(color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+          Text(title.toUpperCase(), style: TextStyle(color: kInk500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
           const SizedBox(height: 8),
           ...children,
         ],
@@ -488,8 +488,8 @@ class _TransitionSheetState extends ConsumerState<_TransitionSheet> {
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.red.shade200)),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+                decoration: BoxDecoration(color: kDanger600.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6), border: Border.all(color: kDanger600)),
+                child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
               ),
             ],
             const SizedBox(height: 16),
@@ -534,10 +534,10 @@ class _OrderSummaryCard extends StatelessWidget {
     final title = (order['title'] ?? '').toString();
     final deadline = (order['deadline'] ?? '—').toString();
     final paymentStatus = (order['paymentStatus'] ?? 'Pending').toString();
-    final color = _paymentColors[paymentStatus] ?? Colors.grey;
+    final color = _paymentColors[paymentStatus] ?? kInk500;
 
     return Material(
-      color: Colors.white,
+      color: kSurfaceLight,
       borderRadius: BorderRadius.circular(12),
       elevation: 1,
       child: InkWell(
@@ -555,12 +555,12 @@ class _OrderSummaryCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.folder_outlined, size: 16, color: Colors.grey.shade600),
+                  Icon(Icons.folder_outlined, size: 16, color: kInk500),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(code, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, fontFamily: 'monospace')),
                   ),
-                  Icon(Icons.chevron_right, size: 18, color: Colors.grey.shade400),
+                  Icon(Icons.chevron_right, size: 18, color: kInk400),
                 ],
               ),
               const SizedBox(height: 4),
@@ -568,9 +568,9 @@ class _OrderSummaryCard extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.event_outlined, size: 12, color: Colors.grey.shade600),
+                  Icon(Icons.event_outlined, size: 12, color: kInk500),
                   const SizedBox(width: 4),
-                  Text('Deadline $deadline', style: TextStyle(color: Colors.grey.shade700, fontSize: 12)),
+                  Text('Deadline $deadline', style: TextStyle(color: kInk500, fontSize: 12)),
                   const SizedBox(width: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -584,12 +584,12 @@ class _OrderSummaryCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
+                    color: kKpiCreamBg,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.amber.shade200),
+                    border: Border.all(color: kAmber300),
                   ),
                   child: Row(children: [
-                    Icon(Icons.warning_amber_rounded, color: Colors.amber.shade800, size: 16),
+                    Icon(Icons.warning_amber_rounded, color: kAmber600, size: 16),
                     const SizedBox(width: 8),
                     const Expanded(child: Text(
                       'Funds not received yet — work should not start until donor pays.',
@@ -634,25 +634,25 @@ class _StageTimeline extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kSurfaceLight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: kInk400),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('PROGRESS TIMELINE',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+              style: TextStyle(color: kInk500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
           const SizedBox(height: 12),
           if (updates.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text('No stage updates yet.', style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+              child: Text('No stage updates yet.', style: TextStyle(color: kInk500, fontSize: 13)),
             )
           else
             ...updates.map((u) {
               final stage  = (u['stage'] ?? '').toString();
-              final colour = _stageColors[stage] ?? Colors.grey;
+              final colour = _stageColors[stage] ?? kInk500;
               final notes  = (u['notes'] ?? '').toString();
               final percent = u['percentComplete'];
               final updater = u['updater']?['fullName']?.toString() ?? 'system';
@@ -678,10 +678,10 @@ class _StageTimeline extends StatelessWidget {
                               child: Text(stage, style: TextStyle(color: colour, fontSize: 11, fontWeight: FontWeight.bold)),
                             ),
                             if (percent != null)
-                              Text('$percent%', style: TextStyle(color: Colors.grey.shade600, fontSize: 11)),
-                            Text(_relativeTime(createdAt), style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+                              Text('$percent%', style: TextStyle(color: kInk500, fontSize: 11)),
+                            Text(_relativeTime(createdAt), style: TextStyle(color: kInk400, fontSize: 11)),
                           ]),
-                          Text(updater, style: TextStyle(color: Colors.grey.shade600, fontSize: 11)),
+                          Text(updater, style: TextStyle(color: kInk500, fontSize: 11)),
                           if (notes.isNotEmpty) ...[
                             const SizedBox(height: 4),
                             Text(notes, style: const TextStyle(fontSize: 13)),
@@ -689,19 +689,19 @@ class _StageTimeline extends StatelessWidget {
                           if (lat != null && lng != null) ...[
                             const SizedBox(height: 4),
                             Row(children: [
-                              Icon(Icons.location_on_outlined, size: 11, color: Colors.grey.shade500),
+                              Icon(Icons.location_on_outlined, size: 11, color: kInk400),
                               const SizedBox(width: 2),
                               Text('${(lat as num).toStringAsFixed(5)}, ${(lng as num).toStringAsFixed(5)}',
-                                  style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+                                  style: TextStyle(color: kInk400, fontSize: 11)),
                             ]),
                           ],
                           if (photos is List && photos.isNotEmpty) ...[
                             const SizedBox(height: 4),
                             Row(children: [
-                              Icon(Icons.image_outlined, size: 12, color: Colors.grey.shade500),
+                              Icon(Icons.image_outlined, size: 12, color: kInk400),
                               const SizedBox(width: 4),
                               Text('${photos.length} photo${photos.length == 1 ? '' : 's'}',
-                                  style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+                                  style: TextStyle(color: kInk400, fontSize: 11)),
                             ]),
                           ],
                         ],
@@ -839,7 +839,7 @@ class _IgpFollowUpSheetState extends ConsumerState<_IgpFollowUpSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Icon(Icons.trending_up, color: Colors.purple.shade700),
+              Icon(Icons.trending_up, color: kKpiPurpleInk),
               const SizedBox(width: 8),
               const Expanded(child: Text('Income follow-up',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
@@ -849,7 +849,7 @@ class _IgpFollowUpSheetState extends ConsumerState<_IgpFollowUpSheet> {
               baseline != null
                   ? 'Baseline (pre-asset): LKR $baseline'
                   : 'No baseline recorded yet — uplift cannot be calculated.',
-              style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+              style: TextStyle(color: kInk500, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -866,14 +866,14 @@ class _IgpFollowUpSheetState extends ConsumerState<_IgpFollowUpSheet> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (delta >= 0 ? Colors.green : Colors.red).shade50,
+                  color: (delta >= 0 ? kSuccess600 : kDanger600).withValues(alpha: 0.14),
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: (delta >= 0 ? Colors.green : Colors.red).shade200),
+                  border: Border.all(color: (delta >= 0 ? kSuccess600 : kDanger600).withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   'Change: ${delta >= 0 ? '+' : ''}LKR ${delta.abs().toStringAsFixed(0)}',
                   style: TextStyle(
-                    color: (delta >= 0 ? Colors.green : Colors.red).shade800,
+                    color: (delta >= 0 ? kSuccess600 : kDanger600),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -914,15 +914,15 @@ class _IgpFollowUpSheetState extends ConsumerState<_IgpFollowUpSheet> {
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.red.shade200)),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+                decoration: BoxDecoration(color: kDanger600.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6), border: Border.all(color: kDanger600)),
+                child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
               ),
             ],
             const SizedBox(height: 16),
             FilledButton(
               onPressed: _busy ? null : _submit,
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.purple.shade700,
+                backgroundColor: kKpiPurpleInk,
                 minimumSize: const Size.fromHeight(48),
               ),
               child: _busy

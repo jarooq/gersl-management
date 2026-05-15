@@ -83,7 +83,7 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: kNavy900,
+              color: kSurfaceLift,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -131,19 +131,19 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: kSurfaceLight,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(color: kInk400),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('VISIT HISTORY',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+                    style: TextStyle(color: kInk500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
                 const SizedBox(height: 8),
                 if (_visits.isEmpty)
                   Text('No visits recorded yet.',
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 13))
+                      style: TextStyle(color: kInk500, fontSize: 13))
                 else
                   ..._visits.take(20).map(_visitTile),
               ],
@@ -169,14 +169,14 @@ class _OrphanDetailScreenState extends ConsumerState<OrphanDetailScreen> {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(width: 8, height: 8,
           margin: const EdgeInsets.only(top: 6),
-          decoration: BoxDecoration(color: Colors.pink.shade400, shape: BoxShape.circle)),
+          decoration: BoxDecoration(color: kKpiPinkInk, shape: BoxShape.circle)),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(_formatDate(at), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           if (notes.isNotEmpty)
             Text(notes, style: const TextStyle(fontSize: 12)),
           if (source.isNotEmpty)
-            Text('source: $source', style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+            Text('source: $source', style: TextStyle(fontSize: 10, color: kInk400)),
         ])),
       ]),
     );
@@ -212,15 +212,15 @@ class _Card extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kSurfaceLight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: kInk400),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title.toUpperCase(),
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+              style: TextStyle(color: kInk500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
           const SizedBox(height: 8),
           ...rows.map((r) {
             final value = (r[1] ?? '').toString();
@@ -228,10 +228,10 @@ class _Card extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 SizedBox(width: 100, child: Text(r[0].toString(),
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12))),
+                  style: TextStyle(color: kInk500, fontSize: 12))),
                 Expanded(child: Text(
                   value.isEmpty ? '—' : value,
-                  style: TextStyle(color: value.isEmpty ? Colors.grey.shade400 : Colors.black87, fontSize: 13),
+                  style: TextStyle(color: value.isEmpty ? kInk400 : Colors.black87, fontSize: 13),
                 )),
               ]),
             );
@@ -378,9 +378,9 @@ class _LogVisitSheetState extends ConsumerState<_LogVisitSheet> {
               const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.red.shade200)),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+                decoration: BoxDecoration(color: kDanger600.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: kDanger600)),
+                child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
               ),
             ],
             const SizedBox(height: 16),

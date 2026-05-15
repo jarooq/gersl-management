@@ -96,8 +96,8 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
               padding: const EdgeInsets.all(12),
               child: Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6)),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+                decoration: BoxDecoration(color: kDanger600.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6)),
+                child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
               ),
             ),
           Expanded(
@@ -109,7 +109,7 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
                         _searchCtrl.text.trim().length < 2
                             ? 'Type at least 2 characters to search.'
                             : (_loading ? 'Searching…' : 'No matches.'),
-                        style: TextStyle(color: Colors.grey.shade600),
+                        style: TextStyle(color: kInk500),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -139,8 +139,8 @@ class _BenefRow extends ConsumerWidget {
     final phone    = (b['contactNumber'] ?? '').toString();
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: Colors.indigo.shade50,
-        child: Icon(Icons.person_outline, color: Colors.indigo.shade700),
+        backgroundColor: kKpiPurpleBg,
+        child: Icon(Icons.person_outline, color: kKpiPurpleInk),
       ),
       title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(
@@ -149,7 +149,7 @@ class _BenefRow extends ConsumerWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: Text('#$code', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontFamily: 'monospace')),
+      trailing: Text('#$code', style: TextStyle(color: kInk400, fontSize: 11, fontFamily: 'monospace')),
       onTap: () => _open(context, ref),
     );
   }
@@ -217,8 +217,8 @@ class _BenefDetailSheetState extends ConsumerState<_BenefDetailSheet> {
           children: [
             Row(children: [
               CircleAvatar(
-                backgroundColor: Colors.indigo.shade50,
-                child: Icon(Icons.person, color: Colors.indigo.shade700),
+                backgroundColor: kKpiPurpleBg,
+                child: Icon(Icons.person, color: kKpiPurpleInk),
               ),
               const SizedBox(width: 12),
               Expanded(child: Column(
@@ -228,7 +228,7 @@ class _BenefDetailSheetState extends ConsumerState<_BenefDetailSheet> {
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   if (b['beneficiaryId'] != null)
                     Text('#${b['beneficiaryId']}',
-                        style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+                        style: TextStyle(color: kInk400, fontSize: 11)),
                 ],
               )),
             ]),
@@ -238,8 +238,8 @@ class _BenefDetailSheetState extends ConsumerState<_BenefDetailSheet> {
             if (_error != null)
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6)),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+                decoration: BoxDecoration(color: kDanger600.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6)),
+                child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
               ),
             _row('NIC',        b['nic']),
             _row('Phone',      b['contactNumber']),
@@ -255,7 +255,7 @@ class _BenefDetailSheetState extends ConsumerState<_BenefDetailSheet> {
               'Programme history for a single beneficiary will show here once '
               'the cross-programme rollup endpoint is exposed. For now, search '
               'the WASH/IGP order screens by beneficiary name.',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 12, fontStyle: FontStyle.italic),
+              style: TextStyle(color: kInk500, fontSize: 12, fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 12),
           ],
@@ -271,7 +271,7 @@ class _BenefDetailSheetState extends ConsumerState<_BenefDetailSheet> {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(width: 90, child: Text(label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12))),
+            style: TextStyle(color: kInk500, fontSize: 12))),
         Expanded(child: Text(v, style: const TextStyle(fontSize: 13))),
       ]),
     );

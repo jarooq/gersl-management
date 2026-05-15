@@ -284,7 +284,7 @@ class _AvatarChip extends StatelessWidget {
         width: 34, height: 34,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: kNavy900,
+          color: kSurfaceLift,
           borderRadius: BorderRadius.circular(11),
         ),
         child: Text(

@@ -140,7 +140,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
   Widget build(BuildContext context) {
     final today = ref.watch(todayProvider);
     return RefreshIndicator(
-      color: kNavy900,
+      color: kAmber500,
       onRefresh: () async { ref.invalidate(todayProvider); },
       child: ListView(
         padding: const EdgeInsets.all(16),
@@ -149,7 +149,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
             loading: () => SoftCard(
               padding: const EdgeInsets.all(28),
               child: const Center(
-                child: CircularProgressIndicator(color: kNavy900),
+                child: CircularProgressIndicator(color: kAmber500),
               ),
             ),
             error: (e, _) => _ErrorBox(message: friendlyError(e)),
@@ -273,7 +273,7 @@ class _TodayCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
       decoration: BoxDecoration(
-        color: kNavy900,
+        color: kSurfaceLift,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -402,7 +402,7 @@ class _ActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = filled ? kMission500 : Colors.white;
+    final bg = filled ? kMission500 : kSurfaceLight;
     final fg = filled ? kNavy900 : kNavy900;
     return Material(
       color: bg,

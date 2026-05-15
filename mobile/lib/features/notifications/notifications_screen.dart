@@ -23,7 +23,7 @@ class NotificationsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feed = ref.watch(_notificationsProvider);
     return RefreshIndicator(
-      color: kNavy900,
+      color: kAmber500,
       onRefresh: () async => ref.invalidate(_notificationsProvider),
       child: feed.when(
         loading: () => const SkeletonList(),

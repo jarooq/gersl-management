@@ -25,7 +25,7 @@ class FuelClaimsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final claims = ref.watch(myFuelClaimsProvider);
     return RefreshIndicator(
-      color: kNavy900,
+      color: kAmber500,
       onRefresh: () async => ref.invalidate(myFuelClaimsProvider),
       child: claims.when(
         loading: () => const SkeletonList(),
@@ -373,7 +373,7 @@ class _ClaimDetailSheetState extends ConsumerState<_ClaimDetailSheet> {
           if (_busy)
             const Center(child: Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: CircularProgressIndicator(color: kNavy900),
+              child: CircularProgressIndicator(color: kAmber500),
             ))
           else ...[
             if (canSubmit)

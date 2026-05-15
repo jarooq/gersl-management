@@ -40,7 +40,7 @@ class AdvancesScreen extends ConsumerWidget {
 
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(advancesProvider),
         child: advances.when(
           loading: () => const SkeletonList(),

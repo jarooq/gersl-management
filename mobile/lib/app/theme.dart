@@ -3,78 +3,85 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // =============================================================================
-// GERSL mobile design — LIGHT theme (modern HR dashboard).
-//   Page bg:     kBgLight   (#F2F4F8) — soft cool grey/lavender
-//   Card:        kSurface   (#FFFFFF)
-//   Primary:     kNavy900   (#0E1E3A) — deep navy for headers, body text
-//   Accent CTA:  kAmber500  (#F8B834) — warm golden yellow
-//   KPI pastels: pink / cream / mint for Summary tiles
-//   Module icon: kSky100 circle with navy glyph
-// All legacy/dark token names (kSurfaceDark, kLime500, kInk900…) are aliased
-// onto this scheme so screens that imported them continue to compile.
+// GERSL mobile design — FUTURISTIC DARK theme (2026 redesign).
+//
+//   Page bg:     kBgLight   (#070A14) — deep-space navy-black
+//   Card:        kSurface   (#121A2E) — elevated dark glass surface
+//   Primary txt: kInk900    (#EEF2FB) — near-white
+//   Accent CTA:  kAmber500  (#F8B834) — warm amber, glows on dark
+//   Glow accent: kGlowCyan  (#3DE0F5) — electric cyan for highlights
+//
+// The token NAMES are unchanged from the old light theme so every screen
+// keeps compiling — only the VALUES flipped to the dark scheme. Screens that
+// use tokens transform automatically; screens with hardcoded Colors.white /
+// Colors.grey are swept separately.
+//
+// All legacy/dark-alias token names (kSurfaceDark, kLime500, kInk900…) remain
+// aliased so older imports still resolve.
 // =============================================================================
 
-// --- LIGHT SURFACE PALETTE -----------------------------------------------
-const Color kBgLight        = Color(0xFFF2F4F8);
-const Color kSurfaceLight   = Color(0xFFFFFFFF);
-const Color kSurfaceLift    = Color(0xFFF8FAFC);
-const Color kBorderLight    = Color(0xFFE6EAF1);
-const Color kBorderSofter   = Color(0xFFEEF1F6);
+// --- DARK SURFACE PALETTE ------------------------------------------------
+const Color kBgLight        = Color(0xFF070A14); // page background — deepest
+const Color kSurfaceLight   = Color(0xFF121A2E); // cards / panels
+const Color kSurfaceLift    = Color(0xFF1A2440); // raised / hover surface
+const Color kBorderLight    = Color(0xFF263150); // hairline borders
+const Color kBorderSofter   = Color(0xFF1C2540);
 
-// Ink scale for text on light surfaces
-const Color kInk900 = Color(0xFF0E1E3A); // primary text / navy
-const Color kInk800 = Color(0xFF1F2D4F);
-const Color kInk700 = Color(0xFF334566);
-const Color kInk500 = Color(0xFF6B7A99); // muted / secondary text
-const Color kInk400 = Color(0xFF94A3B8); // hint / tertiary
-const Color kInk200 = Color(0xFFE2E8F0);
-const Color kInk100 = Color(0xFFF1F5F9);
+// Ink scale — now LIGHT text on dark surfaces.
+const Color kInk900 = Color(0xFFEEF2FB); // primary text — near white
+const Color kInk800 = Color(0xFFD6DEEF);
+const Color kInk700 = Color(0xFFB4C0DA);
+const Color kInk500 = Color(0xFF7E8BA8); // muted / secondary text
+const Color kInk400 = Color(0xFF566085); // hint / tertiary text
+const Color kInk200 = Color(0xFF2A3454); // chip bg / divider on dark
+const Color kInk100 = Color(0xFF1A2238); // darker chip bg
 const Color kInk50  = kBgLight;
 
-// --- BRAND NAVY (header gradient, primary navy) --------------------------
-const Color kNavy900 = Color(0xFF0E1E3A);
-const Color kNavy800 = Color(0xFF152B55);
-const Color kNavy700 = Color(0xFF1F3A6E);
-const Color kNavy50  = Color(0xFFE8EDF7);
+// --- BRAND NAVY (deep header gradient) -----------------------------------
+const Color kNavy900 = Color(0xFF0A0E1C); // deepest navy — header base
+const Color kNavy800 = Color(0xFF111A33);
+const Color kNavy700 = Color(0xFF1B2748);
+const Color kNavy50  = Color(0xFF1A2440); // legacy "tint" → dark raised
 
-// --- AMBER ACCENT (yellow CTA) -------------------------------------------
+// --- AMBER ACCENT (yellow CTA — glows on dark) ---------------------------
 const Color kAmber500 = Color(0xFFF8B834);
 const Color kAmber600 = Color(0xFFE0A41A);
 const Color kAmber300 = Color(0xFFFCD58F);
-const Color kAmber50  = Color(0xFFFEF6E3);
+const Color kAmber50  = Color(0xFF2A2410); // legacy light tint → dark amber wash
 
-// --- KPI PASTEL TONES ----------------------------------------------------
-// Used by the "Summary" strip on the dashboard.
-const Color kKpiPinkBg     = Color(0xFFFCDDD6);
-const Color kKpiPinkInk    = Color(0xFFE74C3C);
-const Color kKpiCreamBg    = Color(0xFFFFEFCC);
-const Color kKpiCreamInk   = Color(0xFFD08A1A);
-const Color kKpiMintBg     = Color(0xFFD7F2DA);
-const Color kKpiMintInk    = Color(0xFF2E9F4A);
-const Color kKpiSkyBg      = Color(0xFFDCEBFF);
-const Color kKpiSkyInk     = Color(0xFF2A6BD8);
-const Color kKpiPurpleBg   = Color(0xFFE5DEFB);
-const Color kKpiPurpleInk  = Color(0xFF6B4CD1);
+// --- ELECTRIC GLOW ACCENT (futuristic highlight) -------------------------
+const Color kGlowCyan   = Color(0xFF3DE0F5);
+const Color kGlowViolet = Color(0xFF8B7CFF);
 
-// --- STATUS COLOURS ------------------------------------------------------
-const Color kSuccess600 = Color(0xFF2E9F4A);
-const Color kDanger600  = Color(0xFFE74C3C);
-const Color kWarn600    = Color(0xFFD08A1A);
+// --- KPI TONES (deep tint bg + bright glowing ink for dark cards) --------
+const Color kKpiPinkBg     = Color(0xFF2C1820);
+const Color kKpiPinkInk    = Color(0xFFFF7A8A);
+const Color kKpiCreamBg    = Color(0xFF2C2410);
+const Color kKpiCreamInk   = Color(0xFFFFC857);
+const Color kKpiMintBg     = Color(0xFF11281E);
+const Color kKpiMintInk    = Color(0xFF4FE3A0);
+const Color kKpiSkyBg      = Color(0xFF112236);
+const Color kKpiSkyInk     = Color(0xFF56B6FF);
+const Color kKpiPurpleBg   = Color(0xFF1F1B38);
+const Color kKpiPurpleInk  = Color(0xFFA593FF);
+
+// --- STATUS COLOURS (bright on dark) -------------------------------------
+const Color kSuccess600 = Color(0xFF34D399);
+const Color kDanger600  = Color(0xFFFB6B6B);
+const Color kWarn600    = Color(0xFFFBBF4D);
 
 // --- WEEKLY-DONUT SLICE COLOURS (Attendance screen) ----------------------
-const Color kDotPresent = Color(0xFF2E9F4A);
+const Color kDotPresent = Color(0xFF34D399);
 const Color kDotExDelay = Color(0xFFF8B834);
-const Color kDotAbsent  = Color(0xFFE74C3C);
-const Color kDotLeave   = Color(0xFF6B4CD1);
-const Color kDotVisit   = Color(0xFF2A6BD8);
-const Color kDotWeekend = Color(0xFF7B8BA8);
-const Color kDotDelay   = Color(0xFFFF8A47);
-const Color kDotHoliday = Color(0xFF3CC1B5);
+const Color kDotAbsent  = Color(0xFFFB6B6B);
+const Color kDotLeave   = Color(0xFFA593FF);
+const Color kDotVisit   = Color(0xFF56B6FF);
+const Color kDotWeekend = Color(0xFF5A6685);
+const Color kDotDelay   = Color(0xFFFF9B5A);
+const Color kDotHoliday = Color(0xFF3DE0F5);
 
 // =============================================================================
-// LEGACY / DARK-ALIAS LAYER
-// Keep the dark-named tokens compiling but redirect them onto the light scheme
-// so existing screens auto-inherit the new look without code edits.
+// LEGACY / ALIAS LAYER — keep every old token name resolving.
 // =============================================================================
 const Color kSurfaceDark   = kBgLight;
 const Color kSurfaceCardDk = kSurfaceLight;
@@ -94,15 +101,14 @@ const Color kMission600 = kAmber600;
 const Color kMission300 = kAmber300;
 const Color kMission50  = kAmber50;
 
-const Color kPillPink   = Color(0xFFE74C3C);
-const Color kPillPurple = Color(0xFF6B4CD1);
-const Color kPillSky    = Color(0xFF2A6BD8);
-const Color kPillTeal   = Color(0xFF3CC1B5);
+const Color kPillPink   = kKpiPinkInk;
+const Color kPillPurple = kKpiPurpleInk;
+const Color kPillSky    = kKpiSkyInk;
+const Color kPillTeal   = kGlowCyan;
 
-// Other legacy aliases used across older screens.
 const Color kBrand       = kNavy900;
 const Color kBrandDark   = kNavy900;
-const Color kAccent      = kNavy700;
+const Color kAccent      = kGlowCyan;
 const Color kSun         = kAmber500;
 const Color kMint        = kSuccess600;
 const Color kCoral       = kDanger600;
@@ -114,10 +120,10 @@ const Color kSurfaceCard = kSurfaceLight;
 
 const String kMissionTagline = 'Serving communities across Sri Lanka';
 
-// Header gradient — navy-blue with a hint of brighter blue at the bottom-right.
+// Header gradient — deep-space navy with a faint lift toward the corner.
 const LinearGradient kBrandGradient = LinearGradient(
   colors: [kNavy900, kNavy800, kNavy700],
-  stops: [0.0, 0.55, 1.0],
+  stops: [0.0, 0.6, 1.0],
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
 );
@@ -125,21 +131,33 @@ const LinearGradient kBrandGradient = LinearGradient(
 const List<Color> kBrandGradientStops   = [kNavy900, kNavy800];
 const List<Color> kMissionGradientStops = [kAmber600, kAmber500];
 
+// Soft coloured glow — use as a BoxShadow for the "futuristic" lift.
+List<BoxShadow> glow(Color color, {double blur = 24, double opacity = 0.34}) => [
+  BoxShadow(
+    color: color.withValues(alpha: opacity),
+    blurRadius: blur,
+    spreadRadius: -4,
+    offset: const Offset(0, 8),
+  ),
+];
+
 ThemeData buildGerslTheme() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: kSurfaceLight,
-    systemNavigationBarIconBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.light,   // light icons on dark bg
+    systemNavigationBarColor: kBgLight,
+    systemNavigationBarIconBrightness: Brightness.light,
   ));
 
   final scheme = ColorScheme.fromSeed(
     seedColor: kNavy900,
-    brightness: Brightness.light,
-    primary: kNavy900,
-    secondary: kAmber500,
+    brightness: Brightness.dark,
+    primary: kAmber500,
+    onPrimary: kNavy900,
+    secondary: kGlowCyan,
     tertiary: kAmber300,
     surface: kSurfaceLight,
+    onSurface: kInk900,
     error: kDanger600,
   );
 
@@ -151,7 +169,7 @@ ThemeData buildGerslTheme() {
   return ThemeData(
     colorScheme: scheme,
     useMaterial3: true,
-    brightness: Brightness.light,
+    brightness: Brightness.dark,
     scaffoldBackgroundColor: kBgLight,
     splashFactory: InkSparkle.splashFactory,
     textTheme: textTheme.copyWith(
@@ -185,7 +203,7 @@ ThemeData buildGerslTheme() {
         fontSize: 18, fontWeight: FontWeight.w800,
         color: kInk900, letterSpacing: -0.3,
       ),
-      systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+      systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
         statusBarColor: Colors.transparent,
       ),
     ),
@@ -194,7 +212,7 @@ ThemeData buildGerslTheme() {
       margin: EdgeInsets.zero,
       color: kSurfaceLight,
       surfaceTintColor: Colors.transparent,
-      shadowColor: kNavy900.withValues(alpha: 0.06),
+      shadowColor: Colors.black.withValues(alpha: 0.4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: const BorderSide(color: kBorderLight),
@@ -206,10 +224,10 @@ ThemeData buildGerslTheme() {
         backgroundColor: kAmber500,
         foregroundColor: kNavy900,
         elevation: 0,
-        shadowColor: kAmber500.withValues(alpha: 0.30),
+        shadowColor: kAmber500.withValues(alpha: 0.40),
         textStyle: GoogleFonts.inter(
             fontSize: 15, fontWeight: FontWeight.w800, letterSpacing: 0.1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -218,41 +236,44 @@ ThemeData buildGerslTheme() {
         foregroundColor: kInk900,
         side: const BorderSide(color: kBorderLight, width: 1.4),
         textStyle: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: kNavy900,
+        foregroundColor: kAmber500,
         textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: kSurfaceLight,
+      fillColor: kSurfaceLift,
       hintStyle: GoogleFonts.inter(color: kInk400, fontSize: 14),
       labelStyle: GoogleFonts.inter(color: kInk500, fontSize: 14),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: kBorderLight),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: kBorderLight),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: kNavy900, width: 1.6),
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: kAmber500, width: 1.6),
       ),
     ),
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: kNavy900,
+      backgroundColor: kSurfaceLift,
       contentTextStyle: GoogleFonts.inter(
-          color: Colors.white, fontWeight: FontWeight.w500),
+          color: kInk900, fontWeight: FontWeight.w500),
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: const BorderSide(color: kBorderLight),
+      ),
     ),
     chipTheme: ChipThemeData(
       backgroundColor: kInk100,
@@ -271,41 +292,50 @@ ThemeData buildGerslTheme() {
         return GoogleFonts.inter(
           fontSize: 11.5,
           fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-          color: selected ? kNavy900 : kInk500,
+          color: selected ? kInk900 : kInk500,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         final selected = states.contains(WidgetState.selected);
         return IconThemeData(
-          color: selected ? kNavy900 : kInk500,
+          color: selected ? kAmber500 : kInk500,
           size: 22,
         );
       }),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: kSurfaceLight,
-      selectedItemColor: kNavy900,
+      selectedItemColor: kAmber500,
       unselectedItemColor: kInk500,
       type: BottomNavigationBarType.fixed,
       elevation: 0,
       selectedLabelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
       unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
     ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: kSurfaceLight,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: kBorderLight),
+      ),
+    ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: kSurfaceLight,
+      surfaceTintColor: Colors.transparent,
+    ),
     dividerTheme: const DividerThemeData(
       color: kBorderLight,
       thickness: 1,
       space: 1,
     ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: kAmber500,
+    ),
+    iconTheme: const IconThemeData(color: kInk700),
   );
 }
 
 // Backwards-compat — old code still calls these names.
 ThemeData get gerslLightTheme => buildGerslTheme();
-ThemeData gerslDarkTheme = ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: kNavy900, brightness: Brightness.light, primary: kNavy900,
-    secondary: kAmber500,
-  ),
-  appBarTheme: const AppBarTheme(centerTitle: false, scrolledUnderElevation: 0),
-);
+ThemeData gerslDarkTheme = buildGerslTheme();

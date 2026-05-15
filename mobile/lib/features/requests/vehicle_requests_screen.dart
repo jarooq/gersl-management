@@ -25,7 +25,7 @@ class VehicleRequestsScreen extends ConsumerWidget {
     final feed = ref.watch(_vehicleRequestsProvider);
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(_vehicleRequestsProvider),
         child: feed.when(
           loading: () => const SkeletonList(),

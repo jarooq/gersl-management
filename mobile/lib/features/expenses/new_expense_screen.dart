@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
 import 'expense_repository.dart';
 
@@ -136,10 +137,10 @@ class _NewExpenseScreenState extends ConsumerState<NewExpenseScreen> {
                 const SizedBox(height: 16),
                 if (_error != null)
                   Card(
-                    color: Colors.red.shade50,
+                    color: kDanger600.withValues(alpha: 0.14),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Text(_error!, style: TextStyle(color: Colors.red.shade900)),
+                      child: Text(_error!, style: TextStyle(color: kDanger600)),
                     ),
                   ),
                 const SizedBox(height: 16),

@@ -17,7 +17,7 @@ class ExpensesScreen extends ConsumerWidget {
     final expenses = ref.watch(myExpensesProvider);
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(myExpensesProvider),
         child: expenses.when(
           loading: () => const SkeletonList(),

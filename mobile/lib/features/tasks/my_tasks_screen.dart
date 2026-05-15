@@ -33,7 +33,7 @@ class MyTasksScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tasks = ref.watch(myTasksProvider);
     return RefreshIndicator(
-      color: kNavy900,
+      color: kAmber500,
       onRefresh: () async { ref.invalidate(myTasksProvider); },
       child: tasks.when(
         loading: () => const SkeletonList(),

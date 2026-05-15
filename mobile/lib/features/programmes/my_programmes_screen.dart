@@ -67,7 +67,7 @@ class _ItemCard extends StatelessWidget {
     final deadline = (item['plannedCompletion'] ?? item['order']?['deadline'] ?? '').toString();
 
     return Material(
-      color: Colors.white,
+      color: kSurfaceLight,
       borderRadius: BorderRadius.circular(12),
       elevation: 1,
       child: InkWell(
@@ -97,17 +97,17 @@ class _ItemCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '$typeLabel${district.isNotEmpty ? ' · $district' : ''}',
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                      style: TextStyle(color: kInk500, fontSize: 12),
                     ),
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        Text(itemCode, style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontFamily: 'monospace')),
+                        Text(itemCode, style: TextStyle(color: kInk400, fontSize: 11, fontFamily: 'monospace')),
                         if (deadline.isNotEmpty) ...[
                           const SizedBox(width: 8),
-                          Icon(Icons.event_outlined, size: 12, color: Colors.grey.shade500),
+                          Icon(Icons.event_outlined, size: 12, color: kInk400),
                           const SizedBox(width: 2),
-                          Text(deadline, style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+                          Text(deadline, style: TextStyle(color: kInk400, fontSize: 11)),
                         ],
                       ],
                     ),
@@ -144,7 +144,7 @@ class _StageBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = _colors[stage] ?? Colors.grey;
+    final c = _colors[stage] ?? kInk500;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(color: c.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
@@ -164,7 +164,7 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.event_available_outlined, size: 56, color: Colors.grey.shade300),
+            Icon(Icons.event_available_outlined, size: 56, color: kInk400),
             const SizedBox(height: 12),
             const Text('No programme items assigned to you',
               style: TextStyle(fontWeight: FontWeight.bold)),
@@ -172,7 +172,7 @@ class _EmptyState extends StatelessWidget {
             Text(
               'When a programme officer assigns you to a WASH installation or an IGP delivery, it will appear here with a deadline.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+              style: TextStyle(color: kInk500, fontSize: 13),
             ),
           ],
         ),

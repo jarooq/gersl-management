@@ -25,7 +25,7 @@ class AccommodationRequestsScreen extends ConsumerWidget {
     final feed = ref.watch(_accommodationRequestsProvider);
     return Scaffold(
       body: RefreshIndicator(
-        color: kNavy900,
+        color: kAmber500,
         onRefresh: () async => ref.invalidate(_accommodationRequestsProvider),
         child: feed.when(
           loading: () => const SkeletonList(),

@@ -100,7 +100,7 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: kNavy900,
+              color: kSurfaceLift,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -126,18 +126,18 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: kSurfaceLight,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: kInk400),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('BY STAGE',
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+                      style: TextStyle(color: kInk500, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
                   const SizedBox(height: 8),
                   Wrap(spacing: 6, runSpacing: 6, children: byStage.entries.map((e) {
-                    final colour = _stageColors[e.key.toString()] ?? Colors.grey;
+                    final colour = _stageColors[e.key.toString()] ?? kInk500;
                     return Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(color: colour.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
@@ -154,14 +154,14 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
             child: Text('Items (${_items.length})',
-                style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.bold)),
+                style: TextStyle(color: kInk500, fontWeight: FontWeight.bold)),
           ),
           if (_items.isEmpty)
             Padding(
               padding: const EdgeInsets.all(24),
               child: Text('No items yet. Tap the button to add the first beneficiary.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey.shade600)),
+                  style: TextStyle(color: kInk500)),
             )
           else
             ..._items.map((it) => _ItemTile(item: it, kind: widget.kind)),
@@ -212,12 +212,12 @@ class _ItemTile extends StatelessWidget {
     final stage = (item['stage'] ?? 'Ordered').toString();
     final ben = (item['beneficiaryName'] ?? item['beneficiary']?['fullName'] ?? '—').toString();
     final type = isWash ? (item['unitType'] ?? '').toString() : (item['assetType'] ?? '').toString();
-    final colour = _stageColors[stage] ?? Colors.grey;
+    final colour = _stageColors[stage] ?? kInk500;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Material(
-        color: Colors.white,
+        color: kSurfaceLight,
         borderRadius: BorderRadius.circular(10),
         elevation: 1,
         child: InkWell(
@@ -236,7 +236,7 @@ class _ItemTile extends StatelessWidget {
                     Text(ben, style: const TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 2),
                     Text('${item['itemCode'] ?? ''}${type.isNotEmpty ? ' · $type' : ''}',
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                        style: TextStyle(color: kInk500, fontSize: 12)),
                   ],
                 )),
                 Container(
@@ -413,8 +413,8 @@ class _AddItemSheetState extends ConsumerState<_AddItemSheet> {
               const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.red.shade200)),
-                child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 12)),
+                decoration: BoxDecoration(color: kDanger600.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6), border: Border.all(color: kDanger600)),
+                child: Text(_error!, style: TextStyle(color: kDanger600, fontSize: 12)),
               ),
             ],
             const SizedBox(height: 16),
