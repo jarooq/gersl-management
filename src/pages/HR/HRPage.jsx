@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useHR } from '../../contexts/HRContext';
 import { useProjects } from '../../contexts/ProjectContext';
-import API, { ExpenseAPI, AssetAPI, VehicleRequestAPI, AccommodationRequestAPI } from '../../services/api';
+import API, { ExpenseAPI, AssetAPI, VehicleRequestAPI, AccommodationRequestAPI, LeaveRequestAPI } from '../../services/api';
 import StaffProfileModal from '../../components/hr/StaffProfileModal';
 // Audit-hardening 2026-05-15: role/position dropdown sourced from the
 // shared ROLE_PERMISSIONS map so HR ↔ Settings stay aligned. Previously
@@ -400,6 +400,30 @@ const HRPage = () => {
       types: Object.entries(leaveTypes).map(([type, data]) => ({ type, ...data }))
     };
   }, [leaveRequests]);
+
+  // Leave approve / reject. These were referenced by the Pending-leave
+  // buttons but never defined — clicking Reject threw a ReferenceError
+  // and blanked the page. Wired to LeaveRequestAPI.approve, which takes an
+  // approvalStatus ('Approved' | 'Rejected') + optional remarks.
+  const approveLeave = async (id) => {
+    try {
+      await LeaveRequestAPI.approve(id, 'Approved', '');
+      await refreshHRData();
+    } catch (err) {
+      alert(err?.message || 'Failed to approve leave request.');
+    }
+  };
+
+  const rejectLeave = async (id) => {
+    const reason = window.prompt('Reason for rejecting this leave request? (optional)');
+    if (reason === null) return; // user cancelled the prompt
+    try {
+      await LeaveRequestAPI.approve(id, 'Rejected', reason || '');
+      await refreshHRData();
+    } catch (err) {
+      alert(err?.message || 'Failed to reject leave request.');
+    }
+  };
 
   // Handle Add Staff
   const handleAddStaff = async () => {
