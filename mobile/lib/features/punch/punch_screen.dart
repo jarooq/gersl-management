@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,18 +86,24 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
 
     try {
       final dio = ref.read(dioProvider);
+      // Explicit image/jpeg content type — image_picker re-encodes to JPEG
+      // when imageQuality is set, but without this the multipart part can
+      // arrive as application/octet-stream, which the server's upload
+      // file-type filter rejects with a 400. Dio sets the multipart
+      // boundary itself, so we no longer pass a manual Content-Type header.
       final form = FormData.fromMap({
-        'image': await MultipartFile.fromFile(picked.path,
-            filename: File(picked.path).uri.pathSegments.last),
+        'image': await MultipartFile.fromFile(
+          picked.path,
+          filename: 'selfie.jpg',
+          contentType: DioMediaType('image', 'jpeg'),
+        ),
       });
-      final res = await dio.post('/upload/punch', data: form,
-          options: Options(headers: {'Content-Type': 'multipart/form-data'}));
+      final res = await dio.post('/upload/punch', data: form);
       final data = res.data['data'] ?? res.data;
       return (data['url'] ?? data['path'])?.toString();
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
-        setState(() => _error =
-            'Could not upload the selfie. Check your connection and try again.');
+        setState(() => _error = 'Selfie upload failed: ${friendlyError(e)}');
       }
       return null;
     }

@@ -37,12 +37,24 @@ const _notifId = 888;
 const _prefAccessToken      = 'bg.accessToken';
 const _prefRefreshToken     = 'bg.refreshToken';
 const _prefBaseUrl          = 'bg.baseUrl';
+const _prefTracking         = 'bg.tracking';
 
 class BackgroundLocationService {
   static final _service = FlutterBackgroundService();
+  static bool _configured = false;
 
-  /// One-time initialization. Call from main() before runApp.
-  static Future<void> init() async {
+  /// Lazily configures the background-service plugin. Deferred until the
+  /// first [start] call — NOT run at app launch.
+  ///
+  /// Why: configuring at boot (the old `init()` in main()) made iOS pop the
+  /// location-permission prompt the moment the app opened, because the iOS
+  /// background-service plugin wires up location updates as soon as it is
+  /// configured while `location` is in UIBackgroundModes. Configuring only
+  /// when the user actually starts tracking (punch in / manual toggle) means
+  /// the prompt appears at the right time, in context.
+  static Future<void> _ensureConfigured() async {
+    if (_configured) return;
+
     final notif = FlutterLocalNotificationsPlugin();
 
     // Channel required for Android 8+ foreground services.
@@ -74,6 +86,8 @@ class BackgroundLocationService {
         onBackground: _onIosBackground,
       ),
     );
+
+    _configured = true;
   }
 
   /// Starts the foreground service. Caller must have already obtained
@@ -81,21 +95,31 @@ class BackgroundLocationService {
   /// token too so the background isolate can self-recover when access
   /// expires mid-session (would otherwise silently drop GPS points).
   static Future<bool> start({required String accessToken, String? refreshToken}) async {
+    await _ensureConfigured();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefAccessToken, accessToken);
     if (refreshToken != null && refreshToken.isNotEmpty) {
       await prefs.setString(_prefRefreshToken, refreshToken);
     }
     await prefs.setString(_prefBaseUrl, Env.apiBaseUrl);
+    // Marks tracking as intended — _onStart bails out unless this is set, so
+    // a spurious iOS onForeground callback never subscribes to GPS.
+    await prefs.setBool(_prefTracking, true);
     return _service.startService();
   }
 
   static Future<void> stop() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prefTracking, false);
+    if (!_configured) return;
     final running = await _service.isRunning();
     if (running) _service.invoke('stop');
   }
 
-  static Future<bool> isRunning() => _service.isRunning();
+  static Future<bool> isRunning() async {
+    if (!_configured) return false;
+    return _service.isRunning();
+  }
 }
 
 // Top-level entry point — runs in a separate isolate.
@@ -104,6 +128,16 @@ void _onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
 
   final prefs = await SharedPreferences.getInstance();
+
+  // On iOS, onForeground runs _onStart whenever the app foregrounds. Bail
+  // out unless tracking was explicitly requested — otherwise we'd subscribe
+  // to the GPS stream (and trigger a location prompt) when the user never
+  // started tracking at all.
+  if (prefs.getBool(_prefTracking) != true) {
+    service.stopSelf();
+    return;
+  }
+
   var accessToken  = prefs.getString(_prefAccessToken) ?? '';
   var refreshToken = prefs.getString(_prefRefreshToken) ?? '';
   final baseUrl = prefs.getString(_prefBaseUrl) ?? Env.apiBaseUrl;

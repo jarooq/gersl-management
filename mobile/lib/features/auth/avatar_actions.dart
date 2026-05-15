@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,14 +48,18 @@ Future<void> pickAndUploadAvatar(BuildContext context, WidgetRef ref) async {
   );
   try {
     final dio = ref.read(dioProvider);
+    // Explicit image/jpeg content type — image_picker re-encodes to JPEG, but
+    // without this the multipart part can arrive as application/octet-stream
+    // and the server's upload file-type filter rejects it with a 400. Dio
+    // sets the multipart boundary itself, so no manual Content-Type header.
     final form = FormData.fromMap({
       'image': await MultipartFile.fromFile(
         picked.path,
-        filename: File(picked.path).uri.pathSegments.last,
+        filename: 'avatar.jpg',
+        contentType: DioMediaType('image', 'jpeg'),
       ),
     });
-    final res = await dio.post('/upload/profile', data: form,
-        options: Options(headers: {'Content-Type': 'multipart/form-data'}));
+    final res = await dio.post('/upload/profile', data: form);
     final data = res.data['data'] ?? res.data;
     final url = (data['url'] ?? data['path'])?.toString();
     if (url == null || url.isEmpty) {
