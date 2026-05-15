@@ -169,4 +169,42 @@ router.post(
 // @access  Private
 router.delete('/', deleteUploadedFile);
 
+// ============================================
+// UPLOAD ERROR HANDLER
+// ============================================
+// Router-scoped error middleware. The global handler hides 500 messages in
+// production ("Internal server error"), which made prod upload failures
+// impossible to diagnose from the client. Uploads fail for a small set of
+// well-understood reasons — surface each one clearly. Authenticated route,
+// HTTPS only, so echoing the real reason here is acceptable.
+router.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  console.error('[upload] failed:', {
+    name: err?.name, code: err?.code, message: err?.message,
+  });
+
+  if (err?.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ success: false, message: 'File too large. Maximum size is 5MB.' });
+  }
+  if (err?.name === 'MulterError') {
+    return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
+  }
+  if (err?.statusCode) {
+    return res.status(err.statusCode).json({ success: false, message: err.message });
+  }
+  // Read-only / inaccessible filesystem: disk fallback is being used but the
+  // platform won't allow writes (Vercel serverless is read-only outside
+  // /tmp). The real fix is to configure S3/R2 object storage.
+  if (err?.code === 'EROFS' || err?.code === 'EACCES') {
+    return res.status(500).json({
+      success: false,
+      message: 'Server file storage is not configured. Object storage (S3 / Cloudflare R2) must be set up — the serverless filesystem is read-only.',
+    });
+  }
+  return res.status(500).json({
+    success: false,
+    message: `Upload failed: ${err?.message || 'unknown error'}`,
+  });
+});
+
 export default router;
