@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
+import '../../app/swipe_action.dart';
 import '../../services/api_client.dart';
 import '../../services/api_response.dart';
 import '../auth/auth_controller.dart';
@@ -13,28 +14,18 @@ import '../leaves/leave_repository.dart';
 import '../punch/punch_repository.dart';
 
 // =============================================================================
-// HomeDashboardScreen — light HR dashboard matching the supplied mockup.
+// HomeDashboardScreen — 2026 redesign.
 //
-// Layout:
-//   1. Navy gradient hero (greeting, sub-title, bell, avatar)
-//      + clock-in / clock-out pill row floating over the bottom edge
-//   2. "Summary" — three pastel KPI cards (Missed / Pending Approval / New)
-//   3. "Modules" — 6-tile grid (Punch, Tasks, Visits, Movements, Expenses,
-//      Directory) with pastel-blue circular icon containers
+//   1. Indigo hero — avatar, greeting, notification bell
+//   2. "Mark Your Attendance" blue banner with a swipe-to-check-in slider
+//      (or an on-duty status strip once the user has punched in)
+//   3. Quick Actions — pastel tile grid
+//   4. Alert card — pending approvals / notices
 // =============================================================================
 
 final _todayProvider = FutureProvider.autoDispose(
   (ref) => ref.watch(punchRepoProvider).today(),
 );
-
-final _myLeavesProvider =
-    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
-  try {
-    return await ref.read(leaveRepoProvider).mine();
-  } catch (_) {
-    return const [];
-  }
-});
 
 final _pendingApprovalsProvider =
     FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
@@ -62,7 +53,6 @@ class HomeDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final today = ref.watch(_todayProvider);
-    final leaves = ref.watch(_myLeavesProvider);
     final approvals = ref.watch(_pendingApprovalsProvider);
     final notifs = ref.watch(_notificationsProvider);
     final user = ref.watch(authControllerProvider).valueOrNull?.user;
@@ -80,107 +70,52 @@ class HomeDashboardScreen extends ConsumerWidget {
     );
     final clockIn = _firstTime(punches, 'IN');
     final clockOut = _firstTime(punches, 'OUT');
+    final onDuty = clockIn != null && clockOut == null;
 
-    final missed = leaves.maybeWhen(
-      data: (rows) => rows.where((r) => r['status'] == 'rejected').length,
-      orElse: () => 0,
-    );
     final pendingCount = approvals.maybeWhen(
-      data: (rows) => rows.length,
-      orElse: () => 0,
-    );
+      data: (rows) => rows.length, orElse: () => 0);
     final notifCount = notifs.maybeWhen(
       data: (rows) => rows.where((r) => r['readAt'] == null).length,
-      orElse: () => 0,
-    );
+      orElse: () => 0);
 
     return RefreshIndicator(
-      color: kAmber500,
+      color: kNavy700,
       backgroundColor: kSurfaceLight,
       onRefresh: () async {
         ref.invalidate(_todayProvider);
-        ref.invalidate(_myLeavesProvider);
         ref.invalidate(_pendingApprovalsProvider);
         ref.invalidate(_notificationsProvider);
       },
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          _HeroHeader(
+          _Hero(
             firstName: firstName,
             initials: initials,
-            unreadNotifs: notifCount,
+            unread: notifCount,
             onBell: () => context.go('/notifications'),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 18),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _ClockPill(
-                    icon: Icons.login_rounded,
-                    label: clockIn ?? '— : —',
-                    sub: 'Clock in',
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _ClockPill(
-                    icon: Icons.logout_rounded,
-                    label: clockOut ?? '— : —',
-                    sub: 'Clock out',
-                  ),
-                ),
-              ],
+            child: _AttendanceBanner(
+              onDuty: onDuty,
+              clockIn: clockIn,
+              onSwiped: () async {
+                await context.push('/punch');
+                ref.invalidate(_todayProvider);
+              },
             ),
           ),
           const SizedBox(height: 22),
-
-          // ----- Summary --------------------------------------------------
-          const _SectionLabel(title: 'Summary'),
+          const _SectionHeader(title: 'Quick Actions', actionLabel: 'View all', actionRoute: '/more'),
+          const SizedBox(height: 12),
+          const _QuickActionGrid(),
+          const SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _KpiCard(
-                    icon: Icons.event_busy_outlined,
-                    bg: kKpiPinkBg,
-                    fg: kKpiPinkInk,
-                    value: _two(missed),
-                    label: 'Missed\nAttendance',
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _KpiCard(
-                    icon: Icons.fact_check_outlined,
-                    bg: kKpiCreamBg,
-                    fg: kKpiCreamInk,
-                    value: _two(pendingCount),
-                    label: 'Pending\nApproval',
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _KpiCard(
-                    icon: Icons.campaign_outlined,
-                    bg: kKpiMintBg,
-                    fg: kKpiMintInk,
-                    value: _two(notifCount),
-                    label: 'New\nNotices',
-                  ),
-                ),
-              ],
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _AlertCard(pendingCount: pendingCount),
           ),
-          const SizedBox(height: 22),
-
-          // ----- Modules --------------------------------------------------
-          const _SectionLabel(title: 'Modules'),
-          const SizedBox(height: 8),
-          const _ModulesGrid(),
           const SizedBox(height: 28),
         ],
       ),
@@ -193,8 +128,6 @@ class HomeDashboardScreen extends ConsumerWidget {
     if (parts.length == 1) return parts.first.characters.first.toUpperCase();
     return (parts.first.characters.first + parts.last.characters.first).toUpperCase();
   }
-
-  static String _two(int n) => n.toString().padLeft(2, '0');
 
   static String? _firstTime(List punches, String type) {
     for (final p in punches) {
@@ -211,179 +144,115 @@ class HomeDashboardScreen extends ConsumerWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
-// Hero header — navy gradient with greeting, bell, avatar, and floating
-// "Clock-in / Clock-out" pill cards anchored on the bottom edge.
-// -----------------------------------------------------------------------------
+// =============================================================================
+// Hero — indigo gradient band, avatar + greeting + bell.
+// =============================================================================
 
-class _HeroHeader extends StatelessWidget {
+class _Hero extends StatelessWidget {
   final String firstName;
   final String initials;
-  final int unreadNotifs;
+  final int unread;
   final VoidCallback onBell;
-  const _HeroHeader({
+  const _Hero({
     required this.firstName,
     required this.initials,
-    required this.unreadNotifs,
+    required this.unread,
     required this.onBell,
   });
+
+  String get _greeting {
+    final h = DateTime.now().hour;
+    if (h < 12) return 'Good Morning';
+    if (h < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  }
 
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
     return Container(
-      padding: EdgeInsets.fromLTRB(20, topPad + 18, 20, 22),
+      padding: EdgeInsets.fromLTRB(20, topPad + 20, 20, 30),
       decoration: const BoxDecoration(
         gradient: kBrandGradient,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
         ),
       ),
       child: Row(
         children: [
-              Container(
-                width: 38, height: 38,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.menu_rounded, color: Colors.white, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Hi, $firstName!',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        color: Colors.white, fontSize: 18,
-                        fontWeight: FontWeight.w800, letterSpacing: -0.3,
-                      ),
-                    ),
-                    const SizedBox(height: 1),
-                    Text(
-                      'Explore the dashboard',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        color: Colors.white.withValues(alpha: 0.70),
-                        fontSize: 12, fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onTap: onBell,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 38, height: 38,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.10),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.notifications_none_rounded,
-                          color: Colors.white, size: 20),
-                    ),
-                    if (unreadNotifs > 0)
-                      Positioned(
-                        top: -2, right: -2,
-                        child: Container(
-                          width: 10, height: 10,
-                          decoration: BoxDecoration(
-                            color: kAmber500,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: kNavy900, width: 1.5),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                width: 38, height: 38,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: kAmber500,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  initials,
-                  style: GoogleFonts.inter(
-                    color: kNavy900, fontSize: 13, fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-  }
-}
-
-class _ClockPill extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String sub;
-  const _ClockPill({required this.icon, required this.label, required this.sub});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: kSurfaceLight,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: kNavy900.withValues(alpha: 0.10),
-            blurRadius: 18, offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
           Container(
-            width: 30, height: 30,
+            width: 48, height: 48,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: kKpiSkyBg,
-              borderRadius: BorderRadius.circular(8),
+              color: Colors.white.withValues(alpha: 0.16),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withValues(alpha: 0.30)),
             ),
-            child: Icon(icon, size: 16, color: kKpiSkyInk),
+            child: Text(
+              initials,
+              style: GoogleFonts.inter(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  label,
+                  'Hi, $firstName',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
-                    fontSize: 13.5, fontWeight: FontWeight.w800,
-                    color: kInk900,
+                    color: Colors.white.withValues(alpha: 0.78),
+                    fontSize: 13, fontWeight: FontWeight.w500,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
-                  sub,
+                  _greeting,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
-                    fontSize: 10.5, fontWeight: FontWeight.w600,
-                    color: kInk500, letterSpacing: 0.2,
+                    color: Colors.white, fontSize: 23,
+                    fontWeight: FontWeight.w800, letterSpacing: -0.4,
                   ),
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () { Haptics.light(); onBell(); },
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 44, height: 44,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.16),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.24)),
+                  ),
+                  child: const Icon(Icons.notifications_none_rounded,
+                      color: Colors.white, size: 21),
+                ),
+                if (unread > 0)
+                  Positioned(
+                    top: 0, right: 0,
+                    child: Container(
+                      width: 12, height: 12,
+                      decoration: BoxDecoration(
+                        color: kAmber500,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: kNavy800, width: 2),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -393,56 +262,28 @@ class _ClockPill extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
+// =============================================================================
+// Attendance banner — blue gradient card with swipe-to-check-in.
+// =============================================================================
 
-class _SectionLabel extends StatelessWidget {
-  final String title;
-  const _SectionLabel({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.inter(
-              fontSize: 16, fontWeight: FontWeight.w800,
-              color: kInk900, letterSpacing: -0.2,
-            ),
-          ),
-          const Spacer(),
-          Icon(Icons.tune_rounded, size: 16, color: kInk400),
-        ],
-      ),
-    );
-  }
-}
-
-// -----------------------------------------------------------------------------
-
-class _KpiCard extends StatelessWidget {
-  final IconData icon;
-  final Color bg;
-  final Color fg;
-  final String value;
-  final String label;
-  const _KpiCard({
-    required this.icon,
-    required this.bg,
-    required this.fg,
-    required this.value,
-    required this.label,
+class _AttendanceBanner extends StatelessWidget {
+  final bool onDuty;
+  final String? clockIn;
+  final Future<void> Function() onSwiped;
+  const _AttendanceBanner({
+    required this.onDuty,
+    required this.clockIn,
+    required this.onSwiped,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
       decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(18),
+        gradient: kBlueBanner,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: glow(kNavy700, blur: 26, opacity: 0.32),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,57 +291,135 @@ class _KpiCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 28, height: 28,
+                width: 40, height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: kSurfaceLight,
-                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, size: 16, color: fg),
+                child: Icon(
+                  onDuty ? Icons.verified_outlined : Icons.fingerprint,
+                  color: Colors.white, size: 22,
+                ),
               ),
-              const Spacer(),
-              Text(
-                value,
-                style: GoogleFonts.inter(
-                  fontSize: 22, fontWeight: FontWeight.w900,
-                  color: fg, letterSpacing: -0.5,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      onDuty ? "You're on duty" : 'Mark Your Attendance',
+                      style: GoogleFonts.inter(
+                        color: Colors.white, fontSize: 16.5,
+                        fontWeight: FontWeight.w800, letterSpacing: -0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      onDuty
+                          ? 'Checked in at ${clockIn ?? '—'}'
+                          : 'Log your start time & stay on track today.',
+                      style: GoogleFonts.inter(
+                        color: Colors.white.withValues(alpha: 0.82),
+                        fontSize: 12, height: 1.35,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            label,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 11.5, fontWeight: FontWeight.w700,
-              color: kInk900, height: 1.3,
+          const SizedBox(height: 16),
+          if (onDuty)
+            // Already punched in — show a static status strip + a tap target
+            // to open the punch screen for break / check-out.
+            Material(
+              color: Colors.white.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(29),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(29),
+                onTap: () { Haptics.light(); onSwiped(); },
+                child: Container(
+                  height: 52,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Open attendance  →',
+                    style: GoogleFonts.inter(
+                      color: Colors.white, fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          else
+            SwipeToConfirm(
+              label: 'Swipe to check in',
+              thumbIcon: Icons.fingerprint,
+              onConfirmed: onSwiped,
             ),
-          ),
         ],
       ),
     );
   }
 }
 
-// -----------------------------------------------------------------------------
-// Module grid — 6 tiles with pastel-blue circular icon container + label.
-// -----------------------------------------------------------------------------
+// =============================================================================
+// Section header — title + optional "View all" action.
+// =============================================================================
 
-class _ModulesGrid extends StatelessWidget {
-  const _ModulesGrid();
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final String? actionLabel;
+  final String? actionRoute;
+  const _SectionHeader({required this.title, this.actionLabel, this.actionRoute});
 
   @override
   Widget build(BuildContext context) {
-    final modules = const [
-      _ModuleTile('Break Time', Icons.coffee_outlined,           '/punch'),
-      _ModuleTile('Task',       Icons.check_box_outlined,        '/tasks'),
-      _ModuleTile('Check\nIn/Out', Icons.qr_code_scanner_rounded,'/punch'),
-      _ModuleTile('Claim',      Icons.payments_outlined,         '/expenses'),
-      _ModuleTile('Visits',     Icons.location_on_outlined,      '/visits'),
-      _ModuleTile('Approvals',  Icons.fact_check_outlined,       '/approvals'),
-      _ModuleTile('Programmes', Icons.water_drop_outlined,       '/programmes'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 17, fontWeight: FontWeight.w800,
+              color: kInk900, letterSpacing: -0.3,
+            ),
+          ),
+          const Spacer(),
+          if (actionLabel != null && actionRoute != null)
+            GestureDetector(
+              onTap: () { Haptics.light(); context.go(actionRoute!); },
+              child: Text(
+                actionLabel!,
+                style: GoogleFonts.inter(
+                  fontSize: 13, fontWeight: FontWeight.w700, color: kNavy700,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Quick-action grid — pastel tinted tiles.
+// =============================================================================
+
+class _QuickActionGrid extends StatelessWidget {
+  const _QuickActionGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    const tiles = <_Qa>[
+      _Qa('Leave',      Icons.event_note_outlined,    '/leaves',     kKpiPurpleBg, kKpiPurpleInk),
+      _Qa('Attendance', Icons.fingerprint,            '/punch',      kKpiSkyBg,    kKpiSkyInk),
+      _Qa('Payslip',    Icons.account_balance_wallet_outlined, '/payslips', kKpiCreamBg, kKpiCreamInk),
+      _Qa('Tasks',      Icons.check_box_outlined,     '/tasks',      kKpiMintBg,   kKpiMintInk),
+      _Qa('Visits',     Icons.location_on_outlined,   '/visits',     kKpiPinkBg,   kKpiPinkInk),
+      _Qa('Programmes', Icons.water_drop_outlined,    '/programmes', kKpiSkyBg,    kKpiSkyInk),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -510,37 +429,42 @@ class _ModulesGrid extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 0.92,
-        children: [for (final m in modules) m],
+        childAspectRatio: 0.96,
+        children: [for (final t in tiles) _QaTile(t)],
       ),
     );
   }
 }
 
-class _ModuleTile extends StatelessWidget {
+class _Qa {
   final String label;
   final IconData icon;
   final String route;
-  const _ModuleTile(this.label, this.icon, this.route);
+  final Color tint;
+  final Color ink;
+  const _Qa(this.label, this.icon, this.route, this.tint, this.ink);
+}
+
+class _QaTile extends StatelessWidget {
+  final _Qa qa;
+  const _QaTile(this.qa);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: kSurfaceLight,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(20),
       child: InkWell(
-        onTap: () { Haptics.select(); context.go(route); },
-        borderRadius: BorderRadius.circular(18),
+        onTap: () { Haptics.select(); context.go(qa.route); },
+        borderRadius: BorderRadius.circular(20),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
           decoration: BoxDecoration(
-            color: kSurfaceLight,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(color: kBorderLight),
             boxShadow: [
               BoxShadow(
                 color: kNavy900.withValues(alpha: 0.04),
-                blurRadius: 14, offset: const Offset(0, 4),
+                blurRadius: 12, offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -548,25 +472,95 @@ class _ModuleTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 46, height: 46,
+                width: 52, height: 52,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: kKpiSkyBg,
-                  shape: BoxShape.circle,
+                  color: qa.tint,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(icon, size: 22, color: kNavy900),
+                child: Icon(qa.icon, color: qa.ink, size: 25),
               ),
               const SizedBox(height: 10),
               Text(
-                label,
+                qa.label,
                 textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
-                  fontSize: 12, fontWeight: FontWeight.w700,
-                  color: kInk900, height: 1.2,
+                  fontSize: 12, fontWeight: FontWeight.w700, color: kInk900,
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Alert card — pending approvals nudge (peach/amber), or an all-clear note.
+// =============================================================================
+
+class _AlertCard extends StatelessWidget {
+  final int pendingCount;
+  const _AlertCard({required this.pendingCount});
+
+  @override
+  Widget build(BuildContext context) {
+    final has = pendingCount > 0;
+    return Material(
+      color: has ? kAmber50 : kKpiMintBg,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: has ? () { Haptics.light(); context.go('/approvals'); } : null,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: (has ? kAmber500 : kKpiMintInk).withValues(alpha: 0.35),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44, height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: (has ? kAmber500 : kKpiMintInk).withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  has ? Icons.fact_check_outlined : Icons.check_circle_outline,
+                  color: has ? kAmber600 : kKpiMintInk, size: 22,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      has ? 'Approvals waiting' : "You're all caught up",
+                      style: GoogleFonts.inter(
+                        fontSize: 14.5, fontWeight: FontWeight.w800,
+                        color: kInk900,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      has
+                          ? '$pendingCount item${pendingCount == 1 ? '' : 's'} need your decision.'
+                          : 'No pending approvals right now.',
+                      style: GoogleFonts.inter(
+                        fontSize: 12, color: kInk500, height: 1.35,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (has)
+                const Icon(Icons.chevron_right_rounded, color: kInk400),
             ],
           ),
         ),

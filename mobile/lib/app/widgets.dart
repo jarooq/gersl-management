@@ -47,9 +47,9 @@ class SoftCard extends StatelessWidget {
         border: Border.all(color: kBorderLight),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.45),
-            blurRadius: 22,
-            offset: const Offset(0, 10),
+            color: kNavy900.withValues(alpha: 0.06),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -656,8 +656,8 @@ class KpiPill extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.35),
-                blurRadius: 14, offset: const Offset(0, 5),
+                color: kNavy900.withValues(alpha: 0.05),
+                blurRadius: 12, offset: const Offset(0, 3),
               ),
             ],
           ),
