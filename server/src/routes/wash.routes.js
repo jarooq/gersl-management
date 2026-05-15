@@ -7,27 +7,18 @@ import {
 } from '../controllers/wash.controller.js';
 import { generateInvoiceForWashOrder, reconcileWashOrder } from '../controllers/orderConversion.controller.js';
 import { renderWashItemPdf, renderWashDonorBundle, emailWashDonorReport } from '../controllers/programmeReportPdf.controller.js';
-import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
+import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
 router.use(requireAuth);
 
-// Programme management = WASH module write roles. Field officers can still
-// read, but order creation and contractor assignment are gated.
-const requireWashView = requireRole(
-  'Admin', 'CEO', 'Programme Manager', 'Director Programmes',
-  'Programme Officer', 'Field Officer', 'MEAL Officer',
-  'Finance Manager', 'Finance Officer'
-);
-const requireWashWrite = requireRole(
-  'Admin', 'CEO', 'Programme Manager', 'Director Programmes',
-  'Programme Officer'
-);
-const requireWashFieldUpdate = requireRole(
-  'Admin', 'CEO', 'Programme Manager', 'Director Programmes',
-  'Programme Officer', 'Field Officer', 'MEAL Officer'
-);
+// Permission-driven gates — admin can re-wire which roles hold each perm
+// via Settings → Roles & Permissions. Field officers without
+// WASH_STAGE_UPDATE can read but not transition stages.
+const requireWashView        = requirePermission(PERMISSIONS.WASH_VIEW);
+const requireWashWrite       = requirePermission(PERMISSIONS.WASH_ORDER_WRITE);
+const requireWashFieldUpdate = requirePermission(PERMISSIONS.WASH_STAGE_UPDATE);
 
 // Org-wide summary tile for dashboards.
 router.get('/summary',           requireWashView,  getSummary);

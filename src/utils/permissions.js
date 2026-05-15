@@ -20,6 +20,9 @@ export const PERMISSIONS = {
   ORPHANS_ASSIGN_COORDINATOR: 'orphans:assign_coordinator',
   ORPHANS_REGISTER_BENEFICIARY: 'orphans:register_beneficiary',
   ORPHANS_SPONSORSHIP_MANAGE: 'orphans:sponsorship_manage',
+  // Audit-hardening (2026-05): unredacted guardian NIC/phone/docs view.
+  // Roles without this see redacted PII (•••).
+  ORPHANS_VIEW_PII: 'orphans:view_pii',
 
   // Project Management
   PROJECTS_VIEW: 'projects:view',
@@ -107,6 +110,14 @@ export const PERMISSIONS = {
   PROPOSALS_DELETE: 'proposals:delete',
   PROPOSALS_SUBMIT: 'proposals:submit',
   PROPOSALS_APPROVE: 'proposals:approve',
+  // Audit-hardening (2026-05): granular gates used by the proposal state
+  // machine. STATUS_CHANGE is the umbrella perm (any transition). The
+  // INTERNAL/DONOR pair separates the two review tracks — Programme
+  // Manager owns internal review, Fundraising Manager owns donor side.
+  PROPOSALS_STATUS_CHANGE: 'proposals:status_change',
+  PROPOSALS_INTERNAL_APPROVE: 'proposals:internal_approve',
+  PROPOSALS_DONOR_APPROVE: 'proposals:donor_approve',
+  PROPOSALS_CONVERT: 'proposals:convert',
 
   // MEAL Management - General
   MEAL_VIEW: 'meal:view',
@@ -221,6 +232,20 @@ export const PERMISSIONS = {
   BENEFICIARIES_EDIT: 'beneficiaries:edit',
   BENEFICIARIES_DELETE: 'beneficiaries:delete',
 
+  // WASH Programme (audit-hardening 2026-05) — order = donor commitment,
+  // stage updates = on-the-ground delivery progress.
+  WASH_VIEW: 'wash:view',
+  WASH_ORDER_WRITE: 'wash:order_write',
+  WASH_STAGE_UPDATE: 'wash:stage_update',
+
+  // IGP Programme (income-generating asset distribution).
+  IGP_VIEW: 'igp:view',
+  IGP_ORDER_WRITE: 'igp:order_write',
+  IGP_STAGE_UPDATE: 'igp:stage_update',
+
+  // BeneficiarySupport approvals (gates createSupport for unapproved orphans).
+  BENEFICIARY_SUPPORT_APPROVE: 'beneficiary_support:approve',
+
   // Procurement
   PROCUREMENT_DASHBOARD_VIEW: 'procurement:dashboard:view',
   PROCUREMENT_REQUEST_VIEW: 'procurement:request:view',
@@ -327,6 +352,16 @@ export const ROLE_PERMISSIONS = {
 
     PERMISSIONS.PROPOSALS_VIEW,
     PERMISSIONS.PROPOSALS_APPROVE,
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+    PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
+
+    // Programme oversight (read) + PII view for CEO escalation cases.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.ORPHANS_VIEW_PII,
+    PERMISSIONS.BENEFICIARY_SUPPORT_APPROVE,
 
     PERMISSIONS.MEAL_VIEW,
     PERMISSIONS.MEAL_APPROVE,
@@ -411,6 +446,19 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.PROPOSALS_CREATE,
     PERMISSIONS.PROPOSALS_EDIT,
     PERMISSIONS.PROPOSALS_APPROVE,
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
+
+    // Programme oversight (read + write) for sign-off & escalation.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_ORDER_WRITE,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_ORDER_WRITE,
+    PERMISSIONS.IGP_STAGE_UPDATE,
+    PERMISSIONS.ORPHANS_VIEW_PII,
+    PERMISSIONS.BENEFICIARY_SUPPORT_APPROVE,
 
     PERMISSIONS.MEAL_VIEW,
     PERMISSIONS.MEAL_APPROVE,
@@ -471,6 +519,21 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.PROPOSALS_VIEW,
     PERMISSIONS.PROPOSALS_CREATE,
     PERMISSIONS.PROPOSALS_EDIT,
+    // Programme Manager runs the internal review track + signs proposals
+    // off for the donor side. Conversion moves money so PM holds that perm.
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
+
+    // Direct ownership of WASH/IGP order pipeline.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_ORDER_WRITE,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_ORDER_WRITE,
+    PERMISSIONS.IGP_STAGE_UPDATE,
+    PERMISSIONS.ORPHANS_VIEW_PII,
+    PERMISSIONS.BENEFICIARY_SUPPORT_APPROVE,
 
     PERMISSIONS.MEAL_VIEW,
     PERMISSIONS.MEAL_CREATE,
@@ -541,6 +604,8 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.CBO_VIEW,
     PERMISSIONS.PARTNERS_VIEW,
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.IGP_VIEW,
 
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_GENERATE,
@@ -564,6 +629,11 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.PROPOSALS_VIEW,
     PERMISSIONS.PROPOSALS_CREATE,
     PERMISSIONS.PROPOSALS_EDIT,
+    // Fundraising owns the donor-facing track: submitting to donor, marking
+    // Donor Approved/Rejected, converting accepted proposals into orders.
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
 
     PERMISSIONS.CAMPAIGNS_VIEW,
     PERMISSIONS.CAMPAIGNS_CREATE,
@@ -643,6 +713,13 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_EDIT,
     PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
 
+    // Owns the WASH order pipeline for their projects.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_ORDER_WRITE,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    // Read-only awareness of IGP for cross-programme reporting.
+    PERMISSIONS.IGP_VIEW,
+
     PERMISSIONS.CBO_VIEW,
 
     PERMISSIONS.MEAL_VIEW,
@@ -671,6 +748,11 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_EDIT,
     PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
 
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_ORDER_WRITE,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+
     PERMISSIONS.CBO_VIEW,
 
     PERMISSIONS.MEAL_VIEW,
@@ -696,6 +778,8 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
     PERMISSIONS.ORPHANS_ASSIGN_COORDINATOR,
     PERMISSIONS.ORPHANS_SPONSORSHIP_MANAGE,
+    // Sees full PII because they manage sponsor matching and guardian docs.
+    PERMISSIONS.ORPHANS_VIEW_PII,
 
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.PROJECTS_CREATE,
@@ -725,6 +809,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
     PERMISSIONS.ORPHANS_ASSIGN_COORDINATOR,
     PERMISSIONS.ORPHANS_SPONSORSHIP_MANAGE,
+    PERMISSIONS.ORPHANS_VIEW_PII,
 
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.PROJECTS_CREATE,
@@ -884,6 +969,15 @@ export const ROLE_PERMISSIONS = {
 
     PERMISSIONS.PROJECTS_VIEW,
 
+    // Field officers are the actual hands on WASH/IGP delivery. They can
+    // see and update stages on items they're assigned to. The controller
+    // additionally checks assignedSupervisorId so they can't touch
+    // someone else's items.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_STAGE_UPDATE,
+
     PERMISSIONS.MEAL_VIEW,
     PERMISSIONS.MEAL_CREATE,
 
@@ -956,6 +1050,11 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.CBO_VIEW,
     PERMISSIONS.FINANCE_VIEW,
+    // MEAL captures verification stage updates against delivered items.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_STAGE_UPDATE,
 
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_GENERATE,
@@ -1154,6 +1253,9 @@ export const ROLE_PERMISSIONS = {
 
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_EDIT,
+    // Coordinators interact with families weekly; they need the guardian
+    // contact info and IDs to do visits and verification.
+    PERMISSIONS.ORPHANS_VIEW_PII,
 
     PERMISSIONS.PROJECTS_VIEW,
 

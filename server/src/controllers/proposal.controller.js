@@ -4,6 +4,7 @@ import { Op } from 'sequelize';
 import sequelize from '../config/database.js';
 import { DEPARTMENT_RESTRICTED_ROLES } from '../constants/roles.js';
 import { assertProposalTransition } from '../utils/proposalStateMachine.js';
+import { hasPermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
 // Whitelist of currency codes the org transacts in. New entries should match
 // the frontend CURRENCIES list (frontend/src/pages/ProposalsPage.jsx).
@@ -340,14 +341,16 @@ export const updateProposalStatus = asyncHandler(async (req, res) => {
     throw new Error('Proposal not found');
   }
 
-  // State machine: validates the transition AND the requesting role.
-  // Replaces the previous free-for-all where any user could move Draft to
-  // "Donor Approved" in one PATCH.
+  // State machine: validates the transition AND the requesting role's
+  // permissions. Replaces the previous free-for-all where any user could
+  // move Draft to "Donor Approved" in one PATCH. The required permission
+  // per target state is defined in proposalStateMachine.js — admin can
+  // re-wire which roles hold which perm via Settings → Roles.
   try {
     assertProposalTransition({
       fromStatus: proposal.status,
       toStatus: status,
-      userRole: req.user.role,
+      user: req.user,
     });
   } catch (err) {
     res.status(err.statusCode || 400);
@@ -461,12 +464,12 @@ export const convertProposalToProject = asyncHandler(async (req, res) => {
   const proposalId = req.params.id;
   const { projectManagerId, approvalChain } = req.body;
 
-  // Role gate: converting a proposal opens a Project budget. Only senior
-  // leadership + fundraising manager can do that.
-  const allowedConvertRoles = ['Admin', 'CEO', 'Programme Manager', 'Fundraising Manager'];
-  if (!allowedConvertRoles.includes(req.user.role)) {
+  // Permission gate: converting a proposal opens a Project budget.
+  // Replaces the previous hardcoded role list — admin can now re-wire who
+  // holds PROPOSALS_CONVERT via Settings → Roles.
+  if (!hasPermission(req.user, PERMISSIONS.PROPOSALS_CONVERT)) {
     res.status(403);
-    throw new Error(`Your role (${req.user.role}) cannot convert proposals. Required: ${allowedConvertRoles.join(', ')}`);
+    throw new Error(`Your role (${req.user.role}) lacks the proposals:convert permission.`);
   }
 
   // Start transaction for atomic operation

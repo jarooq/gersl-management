@@ -2,21 +2,18 @@ import { Op } from 'sequelize';
 import { Orphan, User } from '../models/index.js';
 import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
 import sequelize from '../config/database.js';
+import { hasPermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
-// Roles allowed to see unredacted guardian/mother NIC + phone numbers and
-// document URLs. Field Officers and MEAL Officers must work blind on PII.
-const PII_FULL_VIEW_ROLES = ['Admin', 'CEO', 'Programme Manager', 'Project Officer'];
-
-// Coordinator-only-scope roles — Field Officers see only orphans they are
-// assigned as coordinator for (matches mobile expectation of /mine).
+// Coordinator-only-scope roles — Field/MEAL officers see only orphans they
+// are assigned as coordinator for (matches mobile expectation of /mine).
+// Kept role-based because it's a *scoping* rule, not a permission ceiling.
 const COORDINATOR_SCOPED_ROLES = ['Field Officer', 'MEAL Officer'];
 
-// Mask PII fields on Orphan rows for roles that can see records but not
-// sensitive identifiers. Keeps the record useful (name, district, status)
-// while protecting NIC/phone/documents from accidental over-share.
+// Mask PII fields on Orphan rows for roles that lack ORPHANS_VIEW_PII.
+// Admin can re-wire which roles hold that permission via Settings → Roles.
 const maskOrphanPII = (orphan, user) => {
   if (!orphan) return orphan;
-  if (PII_FULL_VIEW_ROLES.includes(user?.role)) return orphan;
+  if (hasPermission(user, PERMISSIONS.ORPHANS_VIEW_PII)) return orphan;
   const plain = typeof orphan.get === 'function' ? orphan.get({ plain: true }) : { ...orphan };
   const REDACT = '••• REDACTED •••';
   const sensitiveFields = [

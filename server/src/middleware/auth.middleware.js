@@ -120,6 +120,34 @@ const PERMISSIONS = {
   ORPHANS_EDIT: 'orphans:edit',
   ORPHANS_DELETE: 'orphans:delete',
   ORPHANS_APPROVE: 'orphans:approve',
+  // Audit-hardening 2026-05: unredacted PII view (NIC, phone, docs).
+  ORPHANS_VIEW_PII: 'orphans:view_pii',
+
+  // Proposal permissions (audit-hardening 2026-05). STATUS_CHANGE is the
+  // umbrella perm, INTERNAL_APPROVE / DONOR_APPROVE split the two review
+  // tracks. CONVERT gates POST /:id/convert and /convert-to-order.
+  PROPOSALS_VIEW: 'proposals:view',
+  PROPOSALS_CREATE: 'proposals:create',
+  PROPOSALS_EDIT: 'proposals:edit',
+  PROPOSALS_DELETE: 'proposals:delete',
+  PROPOSALS_APPROVE: 'proposals:approve',
+  PROPOSALS_STATUS_CHANGE: 'proposals:status_change',
+  PROPOSALS_INTERNAL_APPROVE: 'proposals:internal_approve',
+  PROPOSALS_DONOR_APPROVE: 'proposals:donor_approve',
+  PROPOSALS_CONVERT: 'proposals:convert',
+
+  // WASH / IGP programme delivery (audit-hardening 2026-05). Splits read,
+  // order management, and stage transitions so a Field Officer can update
+  // stages without being able to create orders.
+  WASH_VIEW: 'wash:view',
+  WASH_ORDER_WRITE: 'wash:order_write',
+  WASH_STAGE_UPDATE: 'wash:stage_update',
+  IGP_VIEW: 'igp:view',
+  IGP_ORDER_WRITE: 'igp:order_write',
+  IGP_STAGE_UPDATE: 'igp:stage_update',
+
+  // BeneficiarySupport approvals — gates createSupport for unapproved orphans.
+  BENEFICIARY_SUPPORT_APPROVE: 'beneficiary_support:approve',
 
   // Project permissions
   PROJECTS_VIEW: 'projects:view',
@@ -193,13 +221,23 @@ const ROLE_PERMISSIONS = {
   'CEO': [
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_APPROVE,
+    PERMISSIONS.ORPHANS_VIEW_PII,
     PERMISSIONS.BENEFICIARIES_VIEW,
     PERMISSIONS.BENEFICIARIES_CREATE,
     PERMISSIONS.BENEFICIARIES_EDIT,
     PERMISSIONS.BENEFICIARIES_DELETE,
+    PERMISSIONS.BENEFICIARY_SUPPORT_APPROVE,
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.PROJECTS_CREATE,
     PERMISSIONS.PROJECTS_EDIT,
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_APPROVE,
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+    PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.IGP_VIEW,
     PERMISSIONS.FINANCE_VIEW,
     PERMISSIONS.FINANCE_CEO_APPROVE,
     PERMISSIONS.HR_VIEW,
@@ -216,13 +254,28 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_CREATE,
     PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_APPROVE,
+    PERMISSIONS.ORPHANS_VIEW_PII,
     PERMISSIONS.BENEFICIARIES_VIEW,
     PERMISSIONS.BENEFICIARIES_CREATE,
     PERMISSIONS.BENEFICIARIES_EDIT,
     PERMISSIONS.BENEFICIARIES_DELETE,
+    PERMISSIONS.BENEFICIARY_SUPPORT_APPROVE,
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.PROJECTS_CREATE,
     PERMISSIONS.PROJECTS_EDIT,
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_CREATE,
+    PERMISSIONS.PROPOSALS_EDIT,
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_ORDER_WRITE,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_ORDER_WRITE,
+    PERMISSIONS.IGP_STAGE_UPDATE,
     PERMISSIONS.CBO_VIEW,
     PERMISSIONS.CBO_CREATE,
     PERMISSIONS.CBO_EDIT,
@@ -242,6 +295,10 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.FINANCE_APPROVE,
     PERMISSIONS.BENEFICIARIES_VIEW,
     PERMISSIONS.PROJECTS_VIEW,
+    // Read access to programme orders to verify spend before approval.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.PROPOSALS_VIEW,
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_EXPORT
   ],
@@ -251,6 +308,8 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.FINANCE_CREATE,
     PERMISSIONS.FINANCE_EDIT,
     PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.IGP_VIEW,
     PERMISSIONS.REPORTS_VIEW
   ],
 
@@ -259,6 +318,13 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.PARTNERS_CREATE,
     PERMISSIONS.PARTNERS_EDIT,
     PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROPOSALS_VIEW,
+    PERMISSIONS.PROPOSALS_CREATE,
+    PERMISSIONS.PROPOSALS_EDIT,
+    // Owns donor-side proposal approvals + conversion to project/order.
+    PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+    PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+    PERMISSIONS.PROPOSALS_CONVERT,
     PERMISSIONS.FINANCE_VIEW,
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_EXPORT
@@ -283,6 +349,14 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_CREATE,
     PERMISSIONS.ORPHANS_EDIT,
+    // Project Officers see all programme tabs (read) and can update stages
+    // on items they're assigned to. Specialisations like
+    // "Project Officer (WASH)" inherit this via normaliseRole below.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_STAGE_UPDATE,
+    PERMISSIONS.PROPOSALS_VIEW,
     PERMISSIONS.MEAL_VIEW,
     PERMISSIONS.MEAL_CREATE,
     PERMISSIONS.REPORTS_VIEW
@@ -292,6 +366,12 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.ORPHANS_VIEW,
     PERMISSIONS.ORPHANS_EDIT,
     PERMISSIONS.PROJECTS_VIEW,
+    // Front-line stage updates — controller additionally enforces
+    // assignedSupervisorId check.
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_STAGE_UPDATE,
     PERMISSIONS.MEAL_VIEW,
     PERMISSIONS.MEAL_CREATE,
     PERMISSIONS.CBO_VIEW,
@@ -305,6 +385,10 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.MEAL_DELETE,
     PERMISSIONS.PROJECTS_VIEW,
     PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.WASH_VIEW,
+    PERMISSIONS.WASH_STAGE_UPDATE,
+    PERMISSIONS.IGP_VIEW,
+    PERMISSIONS.IGP_STAGE_UPDATE,
     PERMISSIONS.CBO_VIEW,
     PERMISSIONS.REPORTS_VIEW,
     PERMISSIONS.REPORTS_EXPORT
@@ -325,11 +409,30 @@ const ROLE_PERMISSIONS = {
   ]
 };
 
-// Check if user has specific permission
+// Normalise specialisation roles to their base for permission lookup.
+//   'Project Officer (WASH)'   → 'Project Officer'
+//   'Project Officer WASH'     → 'Project Officer'
+//   'Project Officer (Orphans)' → 'Project Officer'
+// Lets the audit-hardening permission gates work for the 20+ specialised
+// "Project Officer" roles without copying every entry into ROLE_PERMISSIONS.
+const SPEC_SUFFIX = /\s*(\(.*\)|(?:WASH|IGP|Orphans|Livelihoods|Infrastructure|Education|Women|General))$/i;
+const normaliseRole = (role) => {
+  if (!role) return null;
+  return role.replace(SPEC_SUFFIX, '').trim();
+};
+
+// Check if user has specific permission. Tries the exact role first, then
+// falls back to the normalised base role for specialisation variants.
 export const hasPermission = (user, permission) => {
   if (!user || !user.role) return false;
-  const rolePermissions = ROLE_PERMISSIONS[user.role] || [];
-  return rolePermissions.includes(permission);
+  const direct = ROLE_PERMISSIONS[user.role];
+  if (direct && direct.includes(permission)) return true;
+  const base = normaliseRole(user.role);
+  if (base !== user.role) {
+    const fallback = ROLE_PERMISSIONS[base] || [];
+    if (fallback.includes(permission)) return true;
+  }
+  return false;
 };
 
 // Middleware to check permission

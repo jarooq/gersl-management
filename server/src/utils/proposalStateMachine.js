@@ -3,11 +3,12 @@
 //
 // Donor-facing audits ask "show me the proposal lifecycle". Before this file,
 // updateProposalStatus accepted ANY transition — Draft could jump straight to
-// "Donor Approved", which broke that audit trail. We now enforce the allowed
-// edges and gate them by role.
-//
-// Roles are checked by name (matches auth.middleware.js role strings).
+// "Donor Approved", which broke that audit trail. We enforce allowed edges
+// and gate them by *permission* (so admin can re-wire roles via Settings →
+// Roles & Permissions without code changes).
 // =============================================================================
+
+import { hasPermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
 // Forward transitions allowed for each status. `[]` means terminal — no
 // further moves except Draft (re-open) which is handled separately.
@@ -22,26 +23,28 @@ const TRANSITIONS = {
   'Rejected':           ['Draft'],           // can revise & re-submit
 };
 
-// Who is allowed to drive each transition. Admin always passes; CEO can
-// override any donor-side step. Programme Manager runs the internal review.
-const TRANSITION_ROLES = {
-  'Submitted':          ['Admin', 'CEO', 'Programme Manager', 'Project Officer', 'Fundraising Manager'],
-  'Under Review':       ['Admin', 'CEO', 'Programme Manager'],
-  'Approved':           ['Admin', 'CEO', 'Programme Manager'],
-  'Rejected':           ['Admin', 'CEO', 'Programme Manager'],
-  'Submitted to Donor': ['Admin', 'CEO', 'Programme Manager', 'Fundraising Manager'],
-  'Donor Approved':     ['Admin', 'CEO', 'Fundraising Manager'],
-  'Donor Rejected':     ['Admin', 'CEO', 'Fundraising Manager'],
-  'Draft':              ['Admin', 'CEO', 'Programme Manager', 'Project Officer', 'Fundraising Manager'],
+// Permission required to drive each transition. STATUS_CHANGE is the basic
+// umbrella; INTERNAL_APPROVE covers the internal review track, DONOR_APPROVE
+// the donor-facing side. Admin holds all permissions by default.
+const TRANSITION_PERMISSIONS = {
+  'Submitted':          PERMISSIONS.PROPOSALS_STATUS_CHANGE,
+  'Under Review':       PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+  'Approved':           PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+  'Rejected':           PERMISSIONS.PROPOSALS_INTERNAL_APPROVE,
+  'Submitted to Donor': PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+  'Donor Approved':     PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+  'Donor Rejected':     PERMISSIONS.PROPOSALS_DONOR_APPROVE,
+  'Draft':              PERMISSIONS.PROPOSALS_STATUS_CHANGE,
 };
 
 export const VALID_STATUSES = Object.keys(TRANSITIONS);
 
 /**
- * Throw a BadRequestError-shaped Error if the transition isn't allowed.
- * Returns silently on success.
+ * Throw a 400/403-shaped Error if the transition isn't allowed.
+ * Caller signature: ({ fromStatus, toStatus, user }) — `user` is the full
+ * req.user object so hasPermission can do role normalisation.
  */
-export const assertProposalTransition = ({ fromStatus, toStatus, userRole }) => {
+export const assertProposalTransition = ({ fromStatus, toStatus, user }) => {
   if (!VALID_STATUSES.includes(toStatus)) {
     const err = new Error(`Invalid proposal status: ${toStatus}`);
     err.statusCode = 400;
@@ -59,11 +62,11 @@ export const assertProposalTransition = ({ fromStatus, toStatus, userRole }) => 
     throw err;
   }
 
-  const requiredRoles = TRANSITION_ROLES[toStatus] || [];
-  if (requiredRoles.length > 0 && !requiredRoles.includes(userRole)) {
+  const requiredPerm = TRANSITION_PERMISSIONS[toStatus];
+  if (requiredPerm && !hasPermission(user, requiredPerm)) {
     const err = new Error(
-      `Your role (${userRole}) cannot move a proposal to "${toStatus}". ` +
-      `Required: ${requiredRoles.join(', ')}`
+      `Your role (${user?.role}) lacks permission "${requiredPerm}" required ` +
+      `to move a proposal to "${toStatus}".`
     );
     err.statusCode = 403;
     throw err;

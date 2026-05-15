@@ -7,25 +7,18 @@ import {
 } from '../controllers/igp.controller.js';
 import { generateInvoiceForIgpOrder, reconcileIgpOrder } from '../controllers/orderConversion.controller.js';
 import { renderIgpItemPdf, renderIgpDonorBundle, emailIgpDonorReport } from '../controllers/programmeReportPdf.controller.js';
-import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
+import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
 router.use(requireAuth);
 
-const requireIgpView = requireRole(
-  'Admin', 'CEO', 'Programme Manager', 'Director Programmes',
-  'Programme Officer', 'Field Officer', 'MEAL Officer',
-  'Finance Manager', 'Finance Officer'
-);
-const requireIgpWrite = requireRole(
-  'Admin', 'CEO', 'Programme Manager', 'Director Programmes',
-  'Programme Officer'
-);
-const requireIgpFieldUpdate = requireRole(
-  'Admin', 'CEO', 'Programme Manager', 'Director Programmes',
-  'Programme Officer', 'Field Officer', 'MEAL Officer'
-);
+// Permission-driven gates (audit-hardening 2026-05). Admin can re-wire
+// which roles hold IGP_VIEW / IGP_ORDER_WRITE / IGP_STAGE_UPDATE via
+// Settings → Roles & Permissions.
+const requireIgpView        = requirePermission(PERMISSIONS.IGP_VIEW);
+const requireIgpWrite       = requirePermission(PERMISSIONS.IGP_ORDER_WRITE);
+const requireIgpFieldUpdate = requirePermission(PERMISSIONS.IGP_STAGE_UPDATE);
 
 router.get('/summary',           requireIgpView,  getSummary);
 router.get('/items/mine',        requireIgpView,  listMyItems);
