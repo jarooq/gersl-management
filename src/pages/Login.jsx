@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LogIn, Heart, Users, Sparkles, ShieldCheck } from 'lucide-react';
 
@@ -120,7 +120,18 @@ const Login = () => {
             </label>
 
             <label className="block">
-              <span className="block text-xs font-medium text-ink-700 mb-1">Password</span>
+              <div className="flex items-center justify-between mb-1">
+                <span className="block text-xs font-medium text-ink-700">Password</span>
+                {/* Added 2026-05-15. Backend has had /api/auth/forgot-password
+                    + /reset-password since launch; this is the first time we
+                    surface the entry point on the web login. */}
+                <Link
+                  to="/forgot-password"
+                  className="text-[11px] text-navy-700 hover:text-navy-900 font-medium"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 type="password"
                 value={password}

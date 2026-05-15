@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../app/theme.dart';
@@ -250,11 +251,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ],
                               ),
                             ),
-                            Text(
-                              'Forgot Password?',
-                              style: GoogleFonts.inter(
-                                color: kAmber300,
-                                fontSize: 12.5, fontWeight: FontWeight.w700,
+                            // Wired 2026-05-15: opens the request-reset
+                            // screen which posts to /api/auth/forgot-password.
+                            // Backend has been ready since launch; this UI
+                            // was a static label until now.
+                            InkWell(
+                              onTap: () => context.push('/forgot-password'),
+                              borderRadius: BorderRadius.circular(6),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: GoogleFonts.inter(
+                                    color: kAmber300,
+                                    fontSize: 12.5, fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
                             ),
                           ],

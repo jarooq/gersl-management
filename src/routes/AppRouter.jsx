@@ -7,6 +7,8 @@ import CommandPalette from '../components/common/CommandPalette';
 
 // Immediate imports (required for initial render)
 import Login from '../pages/Login';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 import MainLayout from '../components/layout/MainLayout';
 
 // Public Portal Pages (lazy-loaded)
@@ -246,6 +248,12 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
         {/* Admin Login */}
         <Route path="/login" element={<Login />} />
         <Route path="/admin/login" element={<Login />} />
+
+        {/* Password-reset flow — public routes, no auth guard. The reset
+            email's link lands at /reset-password?token=… which extracts the
+            token from the query param. */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password"  element={<ResetPassword />} />
 
         {/* Public Staff Self-Registration — no auth required. Renders
             standalone (no admin sidebar) so anyone with the URL can fill

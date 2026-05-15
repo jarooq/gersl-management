@@ -31,7 +31,8 @@ const HRPage = () => {
     gpsAttendance,
     assetCheckouts,
     vehicleRequests,
-    accommodationRequests
+    accommodationRequests,
+    refreshHRData,
   } = useHR();
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -3053,10 +3054,22 @@ const HRPage = () => {
             setShowStaffProfileModal(false);
             setShowEditStaffModal(true);
           }}
-          onDelete={(staff) => {
-            // TODO: Implement delete functionality
-            if (window.confirm(`Are you sure you want to remove ${staff.fullName}?`)) {
-              console.log('Delete staff:', staff);
+          onDelete={async (staff) => {
+            // Wired 2026-05-15. Server's deleteStaff cascades to the linked
+            // User row so Settings → User Management stays in sync — both
+            // sides now share the same delete path.
+            if (!window.confirm(
+              `Permanently remove ${staff.fullName}?\n\n` +
+              `This also deletes their login account. Use "Set Inactive" ` +
+              `instead if you only want to suspend access.`
+            )) return;
+            try {
+              await API.HR.delete(staff.id);
+              setShowStaffProfileModal(false);
+              await refreshHRData();
+              alert(`${staff.fullName} removed successfully.`);
+            } catch (err) {
+              alert(err?.message || 'Failed to delete staff. Please try again.');
             }
           }}
         />

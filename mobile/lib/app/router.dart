@@ -7,7 +7,9 @@ import '../features/announcements/announcements_screen.dart';
 import '../features/approvals/approvals_screen.dart';
 import '../features/attendance/attendance_screen.dart';
 import '../features/auth/auth_controller.dart';
+import '../features/auth/forgot_password_screen.dart';
 import '../features/auth/login_screen.dart';
+import '../features/auth/reset_password_screen.dart';
 import '../features/expenses/expenses_screen.dart';
 import '../features/expenses/new_expense_screen.dart';
 import '../features/compliance/incident_screen.dart';
@@ -59,13 +61,27 @@ final routerProvider = Provider<GoRouter>((ref) {
       // before snapping to /today.
       if (auth.isLoading) return null;
       final loggedIn = auth.value?.isAuthenticated ?? false;
-      final atLogin = state.matchedLocation == '/login';
-      if (!loggedIn && !atLogin) return '/login';
-      if (loggedIn && atLogin) return '/today';
+      // Public auth flows that an unauthenticated user must be able to reach.
+      const publicPaths = {'/login', '/forgot-password', '/reset-password'};
+      final atPublic = publicPaths.contains(state.matchedLocation);
+      if (!loggedIn && !atPublic) return '/login';
+      if (loggedIn && state.matchedLocation == '/login') return '/today';
       return null;
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+      // Public auth flows — sit outside the shell so the bottom nav is hidden.
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/reset-password',
+        builder: (context, state) => ResetPasswordScreen(
+          // Token comes from the email link's ?token=… query param.
+          token: state.uri.queryParameters['token'],
+        ),
+      ),
 
       // Five-branch indexed-stack shell. Each branch corresponds to one
       // bottom-nav tab. Sub-routes (e.g. /tasks under More) live inside
