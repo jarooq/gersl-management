@@ -238,16 +238,16 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
   Future<void> _confirmFundsGateOverride(String newStage) async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dCtx) => AlertDialog(
         title: const Text('Funds not received'),
         content: const Text(
           'This order is configured to start work only after donor funds arrive. '
           'Advancing now means you are working on credit. Continue anyway?',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Cancel')),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dCtx, true),
             style: FilledButton.styleFrom(backgroundColor: kAmber600),
             child: const Text('Advance anyway'),
           ),

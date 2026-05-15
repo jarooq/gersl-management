@@ -177,28 +177,31 @@ class _TaskCard extends ConsumerWidget {
   }
 
   void _showActions(BuildContext context, WidgetRef ref, int taskId, String current) {
+    // Pop with the sheet's own context (sCtx) — under StatefulShellRoute the
+    // outer context resolves to the branch navigator, so popping with it
+    // dismisses the whole screen (black screen) instead of the sheet.
     showModalBottomSheet(
       context: context,
-      builder: (_) => SafeArea(child: Wrap(children: [
+      builder: (sCtx) => SafeArea(child: Wrap(children: [
         ListTile(
           leading: const Icon(Icons.play_arrow, color: kNavy900),
           title: const Text('Mark as In Progress'),
-          onTap: () { Navigator.pop(context); _quickUpdate(context, ref, taskId, 'In Progress', 50); },
+          onTap: () { Navigator.pop(sCtx); _quickUpdate(context, ref, taskId, 'In Progress', 50); },
         ),
         ListTile(
           leading: const Icon(Icons.pause, color: kMission500),
           title: const Text('Mark as On Hold'),
-          onTap: () { Navigator.pop(context); _quickUpdate(context, ref, taskId, 'On Hold', null); },
+          onTap: () { Navigator.pop(sCtx); _quickUpdate(context, ref, taskId, 'On Hold', null); },
         ),
         ListTile(
           leading: const Icon(Icons.check_circle, color: kSuccess600),
           title: const Text('Mark as Completed'),
-          onTap: () { Navigator.pop(context); _quickUpdate(context, ref, taskId, 'Completed', 100); },
+          onTap: () { Navigator.pop(sCtx); _quickUpdate(context, ref, taskId, 'Completed', 100); },
         ),
         ListTile(
           leading: const Icon(Icons.cancel, color: kDanger600),
           title: const Text('Cancel task'),
-          onTap: () { Navigator.pop(context); _confirmCancel(context, ref, taskId); },
+          onTap: () { Navigator.pop(sCtx); _confirmCancel(context, ref, taskId); },
         ),
       ])),
     );
@@ -207,13 +210,13 @@ class _TaskCard extends ConsumerWidget {
   Future<void> _confirmCancel(BuildContext context, WidgetRef ref, int taskId) async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dCtx) => AlertDialog(
         title: const Text('Cancel task?'),
         content: const Text('This marks the task as Cancelled. Cannot be undone from mobile.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No')),
+          TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('No')),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dCtx, true),
             style: FilledButton.styleFrom(backgroundColor: kDanger600),
             child: const Text('Cancel task'),
           ),

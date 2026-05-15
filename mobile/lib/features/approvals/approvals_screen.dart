@@ -228,15 +228,15 @@ class _DecideButtons extends StatelessWidget {
     Haptics.medium();
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dCtx) => AlertDialog(
         title: Text(approve ? 'Approve request?' : 'Reject request?'),
         content: Text(approve
             ? 'The requester will see this approved immediately.'
             : 'The requester will see this rejected immediately.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Back')),
+          TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Back')),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dCtx, true),
             style: FilledButton.styleFrom(
               backgroundColor: approve ? kSuccess600 : kDanger600,
             ),

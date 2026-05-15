@@ -47,13 +47,13 @@ class ExpensesScreen extends ConsumerWidget {
                 onCancel: () async {
                   final ok = await showDialog<bool>(
                     context: context,
-                    builder: (_) => AlertDialog(
+                    builder: (dCtx) => AlertDialog(
                       title: const Text('Cancel claim?'),
                       content: const Text('This withdraws your expense claim. You can submit a new one later.'),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Keep it')),
+                        TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Keep it')),
                         FilledButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => Navigator.pop(dCtx, true),
                           style: FilledButton.styleFrom(backgroundColor: kDanger600),
                           child: const Text('Yes, cancel'),
                         ),

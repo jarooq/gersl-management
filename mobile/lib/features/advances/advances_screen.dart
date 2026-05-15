@@ -74,15 +74,15 @@ class AdvancesScreen extends ConsumerWidget {
                   // visible to the requester immediately.
                   final ok = await showDialog<bool>(
                     context: context,
-                    builder: (_) => AlertDialog(
+                    builder: (dCtx) => AlertDialog(
                       title: Text(approve ? 'Approve advance?' : 'Reject advance?'),
                       content: Text(approve
                           ? 'This will mark the salary advance as Approved and notify the requester.'
                           : 'This will mark the salary advance as Rejected and notify the requester.'),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Back')),
+                        TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Back')),
                         FilledButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => Navigator.pop(dCtx, true),
                           style: FilledButton.styleFrom(
                             backgroundColor: approve ? kSuccess600 : kDanger600,
                           ),
@@ -101,13 +101,13 @@ class AdvancesScreen extends ConsumerWidget {
                 onCancel: () async {
                   final ok = await showDialog<bool>(
                     context: context,
-                    builder: (_) => AlertDialog(
+                    builder: (dCtx) => AlertDialog(
                       title: const Text('Cancel advance?'),
                       content: const Text('This withdraws your salary advance request.'),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Keep it')),
+                        TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Keep it')),
                         FilledButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => Navigator.pop(dCtx, true),
                           style: FilledButton.styleFrom(backgroundColor: kDanger600),
                           child: const Text('Yes, cancel'),
                         ),

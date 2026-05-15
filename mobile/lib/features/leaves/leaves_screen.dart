@@ -246,13 +246,16 @@ class _LeaveCard extends StatelessWidget {
 Future<bool?> _confirmCancel(BuildContext context, String message) {
   return showDialog<bool>(
     context: context,
-    builder: (_) => AlertDialog(
+    // Use the dialog's own context to pop — with StatefulShellRoute the
+    // outer `context` resolves to the branch navigator, so popping with it
+    // would dismiss the screen instead of the dialog (black screen).
+    builder: (dCtx) => AlertDialog(
       title: const Text('Confirm cancel'),
       content: Text(message),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No, keep it')),
+        TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('No, keep it')),
         FilledButton(
-          onPressed: () => Navigator.pop(context, true),
+          onPressed: () => Navigator.pop(dCtx, true),
           style: FilledButton.styleFrom(backgroundColor: kDanger600),
           child: const Text('Yes, cancel'),
         ),
