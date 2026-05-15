@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,10 +10,16 @@ import '../../services/friendly_error.dart';
 import 'auth_controller.dart';
 
 // =============================================================================
-// LoginScreen — modern HR look matching the supplied mockup.
-//   Top half (white):  brand mark + illustration
-//   Bottom half (navy round-top card): username / password / yellow CTA
-//   Footer pill: "Remember me" toggle + "Forgot password?" link
+// LoginScreen — "Mission Hero" redesign (2026-05-15).
+//
+// Full-screen navy gradient with the brand mark + mission tagline, then a
+// frosted-glass form card. Matches the visual language of the web admin's
+// left mission panel (Login.jsx) so staff who use both surfaces feel they're
+// in the same product.
+//
+// Decorative blurred amber + sky "blobs" in the corners create depth on the
+// flat navy without shipping an asset. Form lives in a translucent white
+// glass card with a backdrop blur — looks premium on iOS and Android.
 // =============================================================================
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -29,7 +37,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _remember = true;
   String? _error;
 
+  @override
+  void dispose() {
+    _username.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
   Future<void> _submit() async {
+    if (_username.text.trim().isEmpty || _password.text.isEmpty) {
+      setState(() => _error = 'Enter your username and password.');
+      return;
+    }
     setState(() { _busy = true; _error = null; });
     try {
       await ref.read(authControllerProvider.notifier)
@@ -45,238 +64,131 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final auth = ref.watch(authControllerProvider);
     final loading = auth.isLoading || _busy;
+    final viewInsets = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
-      backgroundColor: kBgLight,
+      backgroundColor: kNavy900,
       resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.zero,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.vertical,
-            ),
-            child: IntrinsicHeight(
-              child: Column(
-                children: [
-                  // ----- Brand + illustration -------------------------------
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(28, 24, 28, 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 56, height: 56,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: kSurfaceLight,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: kBorderLight),
-                            boxShadow: [
-                              BoxShadow(
-                                color: kNavy900.withValues(alpha: 0.08),
-                                blurRadius: 14, offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(Icons.volunteer_activism,
-                              color: kNavy900, size: 26),
-                        ),
-                      ],
+      body: Stack(
+        children: [
+          // -- Navy gradient base + decorative blurred colour blobs --
+          const _MissionBackdrop(),
+
+          // -- Scrolling foreground content --
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + viewInsets),
+              physics: const BouncingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.vertical -
+                      48 -
+                      viewInsets,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+                    _BrandLockup(),
+                    const SizedBox(height: 28),
+                    _MissionHeadline(),
+                    const Spacer(),
+                    _GlassFormCard(
+                      username: _username,
+                      password: _password,
+                      showPassword: _showPassword,
+                      onTogglePassword: () =>
+                          setState(() => _showPassword = !_showPassword),
+                      remember: _remember,
+                      onToggleRemember: () =>
+                          setState(() => _remember = !_remember),
+                      error: _error,
+                      loading: loading,
+                      onSubmit: loading ? null : _submit,
                     ),
-                  ),
-
-                  // Decorative illustration block (mockup uses a stylized
-                  // person + chart; here we render a friendly composition
-                  // entirely in code so we don't ship raster assets).
-                  Expanded(
-                    flex: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      child: const _LoginIllustration(),
-                    ),
-                  ),
-
-                  // ----- Sign-in card ---------------------------------------
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(24, 26, 24, 28),
-                    decoration: const BoxDecoration(
-                      color: kNavy900,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(28),
-                        topRight: Radius.circular(28),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-                            const SizedBox(width: 12),
-                            Text(
-                              'Login',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 22),
-
-                        _DarkField(
-                          controller: _username,
-                          hint: 'Username',
-                          icon: Icons.person_outline,
-                          autofillHints: const [AutofillHints.username],
-                        ),
-                        const SizedBox(height: 12),
-                        _DarkField(
-                          controller: _password,
-                          hint: 'Password',
-                          icon: Icons.lock_outline,
-                          obscure: !_showPassword,
-                          autofillHints: const [AutofillHints.password],
-                          onSubmitted: (_) => loading ? null : _submit(),
-                          suffix: GestureDetector(
-                            onTap: () => setState(() => _showPassword = !_showPassword),
-                            child: Icon(
-                              _showPassword
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: Colors.white.withValues(alpha: 0.55),
-                              size: 18,
-                            ),
-                          ),
-                        ),
-
-                        if (_error != null) ...[
-                          const SizedBox(height: 14),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: kDanger600.withValues(alpha: 0.18),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: kDanger600.withValues(alpha: 0.40),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.error_outline,
-                                    size: 18, color: kDanger600),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    _error!,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12.5,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-
-                        const SizedBox(height: 18),
-                        SizedBox(
-                          height: 52,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: kAmber500,
-                              foregroundColor: kNavy900,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              textStyle: GoogleFonts.inter(
-                                fontSize: 15, fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            onPressed: loading ? null : _submit,
-                            child: loading
-                                ? const SizedBox(
-                                    width: 18, height: 18,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.4,
-                                      color: kNavy900,
-                                    ),
-                                  )
-                                : const Text('Go to Dashboard'),
-                          ),
-                        ),
-
-                        const SizedBox(height: 14),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () => setState(() => _remember = !_remember),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 18, height: 18,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: _remember ? kAmber500 : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        color: _remember
-                                            ? kAmber500
-                                            : Colors.white.withValues(alpha: 0.45),
-                                        width: 1.4,
-                                      ),
-                                    ),
-                                    child: _remember
-                                        ? const Icon(Icons.check, size: 12, color: kNavy900)
-                                        : null,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Remember Me',
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white.withValues(alpha: 0.85),
-                                      fontSize: 12.5, fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // Wired 2026-05-15: opens the request-reset
-                            // screen which posts to /api/auth/forgot-password.
-                            // Backend has been ready since launch; this UI
-                            // was a static label until now.
-                            InkWell(
-                              onTap: () => context.push('/forgot-password'),
-                              borderRadius: BorderRadius.circular(6),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: GoogleFonts.inter(
-                                    color: kAmber300,
-                                    fontSize: 12.5, fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                    const SizedBox(height: 18),
+                    _AddressFooter(),
+                  ],
+                ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Navy gradient + blurred decorative blobs.
+// =============================================================================
+
+class _MissionBackdrop extends StatelessWidget {
+  const _MissionBackdrop();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: Stack(
+        children: [
+          // Gradient base — slightly lighter at top so the brand mark pops.
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [kNavy800, kNavy900, Color(0xFF0A1428)],
+                stops: [0.0, 0.55, 1.0],
+              ),
+            ),
+          ),
+          // Amber glow top-right — the brand accent. Heavy blur so it reads
+          // as ambient light rather than a hard shape.
+          Positioned(
+            top: -120,
+            right: -90,
+            child: _Blob(
+              size: 320,
+              colors: [
+                kAmber500.withValues(alpha: 0.32),
+                kAmber500.withValues(alpha: 0.0),
+              ],
+            ),
+          ),
+          // Cool sky glow bottom-left — counterweight in a complementary tone.
+          Positioned(
+            bottom: -120,
+            left: -90,
+            child: _Blob(
+              size: 360,
+              colors: [
+                const Color(0xFF2A6BD8).withValues(alpha: 0.28),
+                const Color(0xFF2A6BD8).withValues(alpha: 0.0),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Blob extends StatelessWidget {
+  final double size;
+  final List<Color> colors;
+  const _Blob({required this.size, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: ImageFiltered(
+        imageFilter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+        child: Container(
+          width: size, height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(colors: colors, stops: const [0.0, 1.0]),
           ),
         ),
       ),
@@ -284,9 +196,331 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-// -----------------------------------------------------------------------------
+// =============================================================================
+// Brand lockup — logo tile + organisation name.
+// =============================================================================
 
-class _DarkField extends StatelessWidget {
+class _BrandLockup extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 54, height: 54,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Image.asset(
+              'assets/icon/icon_foreground.png',
+              fit: BoxFit.contain,
+              // Fallback if the asset is missing in dev — still renders
+              // something instead of throwing.
+              errorBuilder: (_, _, _) => const Icon(
+                Icons.volunteer_activism, color: Colors.white, size: 24,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 14),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'GERSL',
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.4,
+              ),
+            ),
+            Text(
+              'Global Ehsan Relief · Sri Lanka',
+              style: GoogleFonts.inter(
+                color: Colors.white.withValues(alpha: 0.70),
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+// =============================================================================
+// Mission headline — "Welcome back" + tagline that mirrors the web admin's
+// left mission panel.
+// =============================================================================
+
+class _MissionHeadline extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'WELCOME BACK',
+          style: GoogleFonts.inter(
+            color: kAmber300,
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 2.2,
+          ),
+        ),
+        const SizedBox(height: 10),
+        RichText(
+          text: TextSpan(
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              height: 1.15,
+              letterSpacing: -0.4,
+            ),
+            children: [
+              const TextSpan(text: 'Serving with '),
+              TextSpan(
+                text: 'compassion',
+                style: GoogleFonts.inter(
+                  color: kAmber500,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const TextSpan(text: ',\nmeasured in '),
+              TextSpan(
+                text: 'impact',
+                style: GoogleFonts.inter(
+                  color: kAmber500,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const TextSpan(text: '.'),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'A unified platform for orphan care, beneficiary support, '
+          'finance, and field operations — built for the staff who do the work.',
+          style: GoogleFonts.inter(
+            color: Colors.white.withValues(alpha: 0.72),
+            fontSize: 13,
+            height: 1.45,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// =============================================================================
+// Frosted-glass form card.
+// =============================================================================
+
+class _GlassFormCard extends StatelessWidget {
+  final TextEditingController username;
+  final TextEditingController password;
+  final bool showPassword;
+  final VoidCallback onTogglePassword;
+  final bool remember;
+  final VoidCallback onToggleRemember;
+  final String? error;
+  final bool loading;
+  final VoidCallback? onSubmit;
+  const _GlassFormCard({
+    required this.username,
+    required this.password,
+    required this.showPassword,
+    required this.onTogglePassword,
+    required this.remember,
+    required this.onToggleRemember,
+    required this.error,
+    required this.loading,
+    required this.onSubmit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(22),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.18),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Sign in',
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Use your staff credentials to continue.',
+                style: GoogleFonts.inter(
+                  color: Colors.white.withValues(alpha: 0.60),
+                  fontSize: 12.5,
+                ),
+              ),
+              const SizedBox(height: 18),
+              _GlassField(
+                controller: username,
+                hint: 'Username',
+                icon: Icons.person_outline,
+                autofillHints: const [AutofillHints.username],
+              ),
+              const SizedBox(height: 10),
+              _GlassField(
+                controller: password,
+                hint: 'Password',
+                icon: Icons.lock_outline,
+                obscure: !showPassword,
+                autofillHints: const [AutofillHints.password],
+                onSubmitted: (_) => loading ? null : onSubmit?.call(),
+                suffix: GestureDetector(
+                  onTap: onTogglePassword,
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Icon(
+                      showPassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: Colors.white.withValues(alpha: 0.55),
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+              if (error != null) ...[
+                const SizedBox(height: 12),
+                _InlineError(message: error!),
+              ],
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kAmber500,
+                    foregroundColor: kNavy900,
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  onPressed: loading ? null : onSubmit,
+                  child: loading
+                      ? const SizedBox(
+                          width: 18, height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.4, color: kNavy900,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Sign in',
+                              style: GoogleFonts.inter(
+                                fontSize: 15, fontWeight: FontWeight.w800,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_forward, size: 18),
+                          ],
+                        ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: onToggleRemember,
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 17, height: 17,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: remember ? kAmber500 : Colors.transparent,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: remember
+                                  ? kAmber500
+                                  : Colors.white.withValues(alpha: 0.55),
+                              width: 1.4,
+                            ),
+                          ),
+                          child: remember
+                              ? const Icon(Icons.check, size: 11, color: kNavy900)
+                              : null,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Remember me',
+                          style: GoogleFonts.inter(
+                            color: Colors.white.withValues(alpha: 0.80),
+                            fontSize: 12, fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => context.push('/forgot-password'),
+                    borderRadius: BorderRadius.circular(6),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 2),
+                      child: Text(
+                        'Forgot password?',
+                        style: GoogleFonts.inter(
+                          color: kAmber300,
+                          fontSize: 12, fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Translucent input on glass — no fill, white text + icon, thin border.
+// =============================================================================
+
+class _GlassField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
   final IconData icon;
@@ -294,7 +528,7 @@ class _DarkField extends StatelessWidget {
   final Widget? suffix;
   final List<String>? autofillHints;
   final ValueChanged<String>? onSubmitted;
-  const _DarkField({
+  const _GlassField({
     required this.controller,
     required this.hint,
     required this.icon,
@@ -309,9 +543,9 @@ class _DarkField extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.10)),
+        color: Colors.white.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
       ),
       child: Row(
         children: [
@@ -330,8 +564,8 @@ class _DarkField extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: GoogleFonts.inter(
-                  color: Colors.white.withValues(alpha: 0.45),
-                  fontSize: 14, fontWeight: FontWeight.w500,
+                  color: Colors.white.withValues(alpha: 0.42),
+                  fontSize: 13.5, fontWeight: FontWeight.w500,
                 ),
                 isCollapsed: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -350,92 +584,68 @@ class _DarkField extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
-// Login illustration — friendly procedural composition, no asset shipping.
-// A pastel "person + chart" silhouette using shapes.
-// -----------------------------------------------------------------------------
+// =============================================================================
+// Inline error pill — sits above the CTA inside the glass card.
+// =============================================================================
 
-class _LoginIllustration extends StatelessWidget {
-  const _LoginIllustration();
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          width: constraints.maxWidth,
-          child: AspectRatio(
-            aspectRatio: 1.2,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                  top: 0, right: 0,
-                  child: Container(
-                    width: 160, height: 110,
-                    decoration: BoxDecoration(
-                      color: kAmber500.withValues(alpha: 0.20),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 18, left: 18,
-                  child: Container(
-                    width: 120, height: 90,
-                    decoration: BoxDecoration(
-                      color: kKpiSkyBg,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          _BarStub(h: 30),
-                          const SizedBox(width: 6),
-                          _BarStub(h: 50),
-                          const SizedBox(width: 6),
-                          _BarStub(h: 22),
-                          const SizedBox(width: 6),
-                          _BarStub(h: 60),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                // Person silhouette
-                Container(
-                  width: 70, height: 70,
-                  decoration: const BoxDecoration(
-                    color: kNavy900, shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: const Icon(Icons.person_rounded,
-                      color: Colors.white, size: 38),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _BarStub extends StatelessWidget {
-  final double h;
-  const _BarStub({required this.h});
+class _InlineError extends StatelessWidget {
+  final String message;
+  const _InlineError({required this.message});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 14,
-      height: h,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: kNavy900.withValues(alpha: 0.65),
-        borderRadius: BorderRadius.circular(4),
+        color: kDanger600.withValues(alpha: 0.20),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: kDanger600.withValues(alpha: 0.45)),
       ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, size: 16, color: Colors.white),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: GoogleFonts.inter(
+                fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Footer — address + copyright. Tiny so it doesn't compete with the form.
+// =============================================================================
+
+class _AddressFooter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          '65 Abdul Majeed Road, Kinniya-04, Trincomalee',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white.withValues(alpha: 0.42),
+            fontSize: 10.5,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          '© ${DateTime.now().year} Global Ehsan Relief',
+          style: GoogleFonts.inter(
+            color: Colors.white.withValues(alpha: 0.42),
+            fontSize: 10.5,
+          ),
+        ),
+      ],
     );
   }
 }
