@@ -4,7 +4,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'env.dart';
 import 'theme.dart';
+
+// =============================================================================
+// resolveUploadUrl — turn an upload path/URL into something Image.network can
+// load. Upload endpoints return either a full http(s) URL (S3-backed) or a
+// server-relative path like /uploads/profiles/xyz.jpg. For the relative case
+// we prepend the server origin (apiBaseUrl with the trailing /api stripped).
+// =============================================================================
+String? resolveUploadUrl(String? raw) {
+  if (raw == null || raw.trim().isEmpty) return null;
+  final v = raw.trim();
+  if (v.startsWith('http://') || v.startsWith('https://')) return v;
+  final origin = Env.apiBaseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+  return v.startsWith('/') ? '$origin$v' : '$origin/$v';
+}
+
+// =============================================================================
+// Avatar — circular profile image with an initials fallback. Shows the photo
+// when [imageUrl] resolves and loads; otherwise renders [initials] on a tinted
+// disc. Used for the home hero, More profile card, app-bar chip, etc.
+// =============================================================================
+class Avatar extends StatelessWidget {
+  final String? imageUrl;
+  final String initials;
+  final double size;
+  final Color background;
+  final Color foreground;
+  final Color? borderColor;
+  const Avatar({
+    super.key,
+    required this.imageUrl,
+    required this.initials,
+    this.size = 44,
+    this.background = kNavy900,
+    this.foreground = kAmber300,
+    this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final url = resolveUploadUrl(imageUrl);
+    final fallback = Container(
+      width: size, height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: background,
+        shape: BoxShape.circle,
+        border: borderColor == null ? null : Border.all(color: borderColor!, width: 1.4),
+      ),
+      child: Text(
+        initials,
+        style: GoogleFonts.inter(
+          color: foreground,
+          fontSize: size * 0.36,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+    if (url == null) return fallback;
+    return ClipOval(
+      child: SizedBox(
+        width: size, height: size,
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          // While loading, show the initials disc rather than a blank gap.
+          loadingBuilder: (ctx, child, progress) =>
+              progress == null ? child : fallback,
+          errorBuilder: (_, _, _) => fallback,
+        ),
+      ),
+    );
+  }
+}
 
 // =============================================================================
 // Haptics — small wrapper so tap interactions feel native (iOS + Android).

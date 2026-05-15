@@ -205,6 +205,15 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(100),
     allowNull: true,
     comment: 'Job position/title'
+  },
+  // Profile photo URL (2026-05). Set by the staff member from the mobile
+  // app or by an admin from web User Management. Null → clients render
+  // initials. Backed by migration add_user_avatar_column.sql.
+  avatarUrl: {
+    type: DataTypes.STRING(1000),
+    allowNull: true,
+    field: 'avatar_url',
+    comment: 'Profile photo URL'
   }
 }, {
   tableName: 'users',

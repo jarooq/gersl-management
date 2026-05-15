@@ -103,6 +103,7 @@ class HomeShell extends ConsumerWidget {
                   padding: const EdgeInsets.only(right: 12, left: 4),
                   child: _AvatarChip(
                     initials: _initials(name),
+                    avatarUrl: user?['avatarUrl'] as String?,
                     onTap: () => _openAccountSheet(context, ref, name, role, tracking),
                   ),
                 ),
@@ -279,27 +280,21 @@ class _BottomBarItem extends StatelessWidget {
 
 class _AvatarChip extends StatelessWidget {
   final String initials;
+  final String? avatarUrl;
   final VoidCallback onTap;
-  const _AvatarChip({required this.initials, required this.onTap});
+  const _AvatarChip({required this.initials, required this.avatarUrl, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 34, height: 34,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: kNavy900,
-          borderRadius: BorderRadius.circular(11),
-        ),
-        child: Text(
-          initials,
-          style: GoogleFonts.inter(
-            color: kAmber300, fontSize: 12, fontWeight: FontWeight.w800,
-          ),
-        ),
+      borderRadius: BorderRadius.circular(17),
+      child: Avatar(
+        imageUrl: avatarUrl,
+        initials: initials,
+        size: 34,
+        background: kNavy900,
+        foreground: kAmber300,
       ),
     );
   }

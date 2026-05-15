@@ -71,6 +71,7 @@ class AttendanceScreen extends ConsumerWidget {
           _Hero(
             firstName: firstName,
             initials: initials,
+            avatarUrl: user?['avatarUrl'] as String?,
             onBell: () => context.go('/notifications'),
           ),
           const SizedBox(height: 20),
@@ -157,8 +158,9 @@ class AttendanceScreen extends ConsumerWidget {
 class _Hero extends StatelessWidget {
   final String firstName;
   final String initials;
+  final String? avatarUrl;
   final VoidCallback onBell;
-  const _Hero({required this.firstName, required this.initials, required this.onBell});
+  const _Hero({required this.firstName, required this.initials, required this.avatarUrl, required this.onBell});
 
   @override
   Widget build(BuildContext context) {
@@ -222,19 +224,12 @@ class _Hero extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            width: 38, height: 38,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: kAmber500,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              initials,
-              style: GoogleFonts.inter(
-                color: kNavy900, fontSize: 13, fontWeight: FontWeight.w800,
-              ),
-            ),
+          Avatar(
+            imageUrl: avatarUrl,
+            initials: initials,
+            size: 38,
+            background: kAmber500,
+            foreground: kNavy900,
           ),
         ],
       ),

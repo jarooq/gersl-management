@@ -11,12 +11,38 @@ const router = express.Router();
 // USER MANAGEMENT ROUTES
 // ============================================
 
+// @route   PATCH /api/users/me/avatar
+// @desc    Set the CURRENT user's profile photo (mobile self-service).
+//          Body: { avatarUrl }. The image itself is uploaded first via
+//          POST /api/upload/profile, which returns the URL.
+// @access  Private (any authenticated user — own account only)
+router.patch('/me/avatar', requireAuth, async (req, res) => {
+  try {
+    const { avatarUrl } = req.body || {};
+    if (avatarUrl != null && typeof avatarUrl !== 'string') {
+      return res.status(400).json({ success: false, message: 'avatarUrl must be a string or null' });
+    }
+    await User.update(
+      { avatarUrl: avatarUrl || null },
+      { where: { id: req.user.id } }
+    );
+    res.json({
+      success: true,
+      message: 'Profile photo updated',
+      data: { avatarUrl: avatarUrl || null },
+    });
+  } catch (error) {
+    console.error('Error updating avatar:', error);
+    res.status(500).json({ success: false, message: 'Failed to update profile photo' });
+  }
+});
+
 // @route   POST /api/users
 // @desc    Create new user
 // @access  Private (Admin only)
 router.post('/', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const { username, email, password, fullName, role, status, department, phone } = req.body;
+    const { username, email, password, fullName, role, status, department, phone, avatarUrl } = req.body;
 
     // Validation
     if (!username || !email || !password) {
@@ -57,7 +83,8 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
       role: role || 'Guest',
       status: status || 'Active',
       department: department || null,  // Set to null if not provided (ENUM field)
-      phone: phone || null
+      phone: phone || null,
+      avatarUrl: avatarUrl || null,
     });
 
     // Welcome email (no password — recipient uses forgot-password to set one).
@@ -185,6 +212,7 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
       status:     'status',
       department: 'department',
       phone:      'phone',
+      avatarUrl:  'avatar_url',  // admin can set/replace a staff photo
     };
 
     const sets = [];

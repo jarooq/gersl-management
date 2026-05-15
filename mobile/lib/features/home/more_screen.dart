@@ -9,6 +9,7 @@ import '../../services/background_location_service.dart';
 import '../../services/location_tracker.dart';
 import '../../services/token_store.dart';
 import '../auth/auth_controller.dart';
+import '../auth/avatar_actions.dart';
 
 // =============================================================================
 // MoreScreen — card-grid hub replacing the legacy navigation drawer.
@@ -143,6 +144,7 @@ class _IdentityCard extends StatelessWidget {
     final name = (user?['fullName'] ?? user?['name'] ?? '?') as String;
     final role = user?['role'] as String?;
     final initials = _initials(name);
+    final avatarUrl = user?['avatarUrl'] as String?;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 18, 14, 18),
@@ -158,21 +160,31 @@ class _IdentityCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 56, height: 56,
-            decoration: BoxDecoration(
-              color: kMission500.withValues(alpha: 0.18),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: kMission500.withValues(alpha: 0.30)),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              initials,
-              style: GoogleFonts.inter(
-                color: kMission300,
-                fontWeight: FontWeight.w800,
-                fontSize: 20, letterSpacing: -0.3,
-              ),
+          // Tap the avatar to change the profile photo (camera / gallery).
+          GestureDetector(
+            onTap: () => pickAndUploadAvatar(context, ref),
+            child: Stack(
+              children: [
+                Avatar(
+                  imageUrl: avatarUrl,
+                  initials: initials,
+                  size: 56,
+                  background: kMission500.withValues(alpha: 0.18),
+                  foreground: kMission300,
+                ),
+                Positioned(
+                  right: 0, bottom: 0,
+                  child: Container(
+                    width: 20, height: 20,
+                    decoration: BoxDecoration(
+                      color: kAmber500,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: kNavy900, width: 2),
+                    ),
+                    child: const Icon(Icons.camera_alt, size: 11, color: kNavy900),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 14),

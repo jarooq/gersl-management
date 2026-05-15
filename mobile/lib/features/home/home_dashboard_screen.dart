@@ -92,6 +92,7 @@ class HomeDashboardScreen extends ConsumerWidget {
           _Hero(
             firstName: firstName,
             initials: initials,
+            avatarUrl: user?['avatarUrl'] as String?,
             unread: notifCount,
             onBell: () => context.go('/notifications'),
           ),
@@ -151,11 +152,13 @@ class HomeDashboardScreen extends ConsumerWidget {
 class _Hero extends StatelessWidget {
   final String firstName;
   final String initials;
+  final String? avatarUrl;
   final int unread;
   final VoidCallback onBell;
   const _Hero({
     required this.firstName,
     required this.initials,
+    required this.avatarUrl,
     required this.unread,
     required this.onBell,
   });
@@ -181,20 +184,13 @@ class _Hero extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 48, height: 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.16),
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withValues(alpha: 0.30)),
-            ),
-            child: Text(
-              initials,
-              style: GoogleFonts.inter(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800,
-              ),
-            ),
+          Avatar(
+            imageUrl: avatarUrl,
+            initials: initials,
+            size: 48,
+            background: Colors.white.withValues(alpha: 0.16),
+            foreground: Colors.white,
+            borderColor: Colors.white.withValues(alpha: 0.30),
           ),
           const SizedBox(width: 14),
           Expanded(

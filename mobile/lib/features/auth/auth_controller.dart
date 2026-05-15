@@ -87,6 +87,26 @@ class AuthController extends AsyncNotifier<AuthState> {
     state = const AsyncData(AuthState(isAuthenticated: false));
   }
 
+  /// Merge a new profile-photo URL into the cached user, persist it, and
+  /// push the updated state so every avatar in the app refreshes. Called
+  /// after a successful avatar upload.
+  Future<void> updateAvatar(String? url) async {
+    final cur = state.valueOrNull;
+    if (cur == null || cur.user == null) return;
+    final updated = {...cur.user!, 'avatarUrl': url};
+    final tokens = ref.read(tokenStoreProvider);
+    final access = await tokens.readAccess();
+    final refresh = await tokens.readRefresh();
+    if (access != null) {
+      await tokens.save(
+        accessToken: access,
+        refreshToken: refresh,
+        userJson: jsonEncode(updated),
+      );
+    }
+    state = AsyncData(cur.copy(user: updated));
+  }
+
   /// Local-only logout — clears tokens and flips auth state without
   /// hitting the network. Called from the dio 401 interceptor when the
   /// stored token is no longer accepted by the backend (e.g. issued by

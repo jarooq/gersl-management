@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Eye, EyeOff, RefreshCw, Save, UserPlus, Edit2, AlertCircle } from 'lucide-react';
+import { X, Eye, EyeOff, RefreshCw, Save, UserPlus, Edit2, AlertCircle, Camera } from 'lucide-react';
 import { ROLE_PERMISSIONS } from '../../utils/permissions';
+
+const API_BASE = (import.meta.env?.VITE_API_BASE_URL || '/api').replace(/\/+$/, '');
 
 const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = false }) => {
   const isEditMode = !!user;
@@ -13,12 +15,14 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
     role: 'Guest',
     department: '',
     phone: '',
-    status: 'Active'
+    status: 'Active',
+    avatarUrl: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -30,7 +34,8 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
         role: user.role || 'Guest',
         department: user.department || '',
         phone: user.phone || '',
-        status: user.status || 'Active'
+        status: user.status || 'Active',
+        avatarUrl: user.avatarUrl || '',
       });
     } else {
       // Reset form for add mode
@@ -42,12 +47,52 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
         role: 'Guest',
         department: '',
         phone: '',
-        status: 'Active'
+        status: 'Active',
+        avatarUrl: '',
       });
     }
     setErrors({});
     setTouched({});
   }, [user, isOpen]);
+
+  // Resolve a stored upload path/URL to something an <img> can load.
+  const resolveAvatar = (raw) => {
+    if (!raw) return '';
+    if (/^https?:\/\//.test(raw)) return raw;
+    const origin = API_BASE.replace(/\/api\/?$/, '');
+    return raw.startsWith('/') ? `${origin}${raw}` : `${origin}/${raw}`;
+  };
+
+  // Upload a chosen image to /api/upload/profile and stash the URL.
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-picking the same file
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Please choose an image file.');
+      return;
+    }
+    setUploadingPhoto(true);
+    try {
+      const body = new FormData();
+      body.append('image', file);
+      const res = await fetch(`${API_BASE}/upload/profile`, {
+        method: 'POST',
+        body,
+        credentials: 'include',
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.message || 'Upload failed');
+      const data = json.data || json;
+      const url = data.url || data.path;
+      if (!url) throw new Error('Upload returned no URL');
+      setFormData(prev => ({ ...prev, avatarUrl: url }));
+    } catch (err) {
+      alert(err.message || 'Could not upload photo.');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
 
   const generatePassword = () => {
     const length = 12;
@@ -210,6 +255,39 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Profile photo */}
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              {formData.avatarUrl ? (
+                <img
+                  src={resolveAvatar(formData.avatarUrl)}
+                  alt="Profile"
+                  className="w-20 h-20 rounded-full object-cover border border-ink-200"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-navy-900 flex items-center justify-center text-white text-2xl font-bold">
+                  {(formData.fullName || '?').trim().charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="inline-flex items-center gap-2 px-3 py-2 border border-ink-300 rounded-lg text-sm font-medium text-ink-700 hover:bg-ink-50 cursor-pointer transition">
+                <Camera className="w-4 h-4" />
+                {uploadingPhoto ? 'Uploading…' : (formData.avatarUrl ? 'Change photo' : 'Upload photo')}
+                <input type="file" accept="image/*" className="hidden"
+                  onChange={handlePhotoUpload} disabled={uploadingPhoto} />
+              </label>
+              {formData.avatarUrl && (
+                <button type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, avatarUrl: '' }))}
+                  className="ml-2 text-sm text-red-600 hover:text-red-700">
+                  Remove
+                </button>
+              )}
+              <p className="text-xs text-ink-400 mt-1">Shown on the staff member's mobile app.</p>
+            </div>
+          </div>
+
           {/* Basic Information */}
           <div>
             <h3 className="text-lg font-semibold text-ink-900 mb-4 flex items-center gap-2">
