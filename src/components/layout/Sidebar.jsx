@@ -68,12 +68,12 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       label: 'Programmes', icon: Award, icc: ICON.pink, hasSubmenu: true,
       subItems: [
         { path: '/admin/orphans',      icon: Baby,      label: 'Orphan Care',   icc: ICON.pink, permission: PERMISSIONS.ORPHANS_VIEW },
-        // Permission gates added 2026-05 — previously these had no permission
-        // field so every authenticated user saw them in the sidebar even when
-        // the backend returned empty data. Now hidden for roles that don't
-        // hold the new WASH_VIEW / IGP_VIEW permissions.
-        { path: '/admin/wash',         icon: Droplets,  label: 'WASH',          icc: ICON.sky,     permission: PERMISSIONS.WASH_VIEW },
-        { path: '/admin/igp',          icon: Briefcase, label: 'IGP',           icc: ICON.emerald, permission: PERMISSIONS.IGP_VIEW },
+        // WASH + IGP are core programmes — always shown in the sidebar, no
+        // permission gate. (A gate was briefly added in the 2026-05 RBAC
+        // pass; removed because it hid the links for roles missing the new
+        // WASH_VIEW/IGP_VIEW perms. Backend route-level perms still apply.)
+        { path: '/admin/wash',         icon: Droplets,  label: 'WASH',          icc: ICON.sky },
+        { path: '/admin/igp',          icon: Briefcase, label: 'IGP',           icc: ICON.emerald },
         { path: '/admin/coordinators', icon: UserCheck, label: 'Coordinators',  icc: ICON.pink,    permission: PERMISSIONS.ORPHANS_VIEW },
       ]
     },
