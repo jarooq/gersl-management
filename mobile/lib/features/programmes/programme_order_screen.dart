@@ -100,7 +100,7 @@ class _ProgrammeOrderScreenState extends ConsumerState<ProgrammeOrderScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: kSurfaceLift,
+              color: kNavy900,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(

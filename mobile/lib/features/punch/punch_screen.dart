@@ -273,7 +273,7 @@ class _TodayCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
       decoration: BoxDecoration(
-        color: kSurfaceLift,
+        color: kNavy900,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

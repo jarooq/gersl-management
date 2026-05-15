@@ -79,27 +79,29 @@ class _SwipeToConfirmState extends State<SwipeToConfirm>
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Label — fades out as the thumb advances.
-              Opacity(
-                opacity: (1 - progress * 1.4).clamp(0.0, 1.0),
-                child: Text(
-                  _done ? 'Checked in ✓' : widget.label,
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.2,
+              // Label — centred in the track space to the RIGHT of the
+              // thumb so the resting thumb never sits on top of the text.
+              // Fades out as the thumb advances.
+              Positioned.fill(
+                left: thumb + 12,
+                right: 16,
+                child: Center(
+                  child: Opacity(
+                    opacity: _done ? 1.0 : (1 - progress * 1.6).clamp(0.0, 1.0),
+                    child: Text(
+                      _done ? 'Checked in ✓' : widget.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: _done ? FontWeight.w800 : FontWeight.w700,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              if (_done)
-                Text(
-                  'Checked in ✓',
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 14, fontWeight: FontWeight.w800,
-                  ),
-                ),
               // Draggable thumb.
               AnimatedPositioned(
                 duration: Duration(milliseconds: _dragX == 0 || _dragX == maxX ? 220 : 0),
