@@ -89,10 +89,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
                     _BrandLockup(),
-                    const SizedBox(height: 28),
-                    _MissionHeadline(),
                     const Spacer(),
                     _GlassFormCard(
                       username: _username,
@@ -107,7 +105,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       loading: loading,
                       onSubmit: loading ? null : _submit,
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 16),
                     _AddressFooter(),
                   ],
                 ),
@@ -256,72 +254,6 @@ class _BrandLockup extends StatelessWidget {
 }
 
 // =============================================================================
-// Mission headline — "Welcome back" + tagline that mirrors the web admin's
-// left mission panel.
-// =============================================================================
-
-class _MissionHeadline extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'WELCOME BACK',
-          style: GoogleFonts.inter(
-            color: kAmber300,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 2.2,
-          ),
-        ),
-        const SizedBox(height: 10),
-        RichText(
-          text: TextSpan(
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              height: 1.15,
-              letterSpacing: -0.4,
-            ),
-            children: [
-              const TextSpan(text: 'Serving with '),
-              TextSpan(
-                text: 'compassion',
-                style: GoogleFonts.inter(
-                  color: kAmber500,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const TextSpan(text: ',\nmeasured in '),
-              TextSpan(
-                text: 'impact',
-                style: GoogleFonts.inter(
-                  color: kAmber500,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const TextSpan(text: '.'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          'A unified platform for orphan care, beneficiary support, '
-          'finance, and field operations — built for the staff who do the work.',
-          style: GoogleFonts.inter(
-            color: Colors.white.withValues(alpha: 0.72),
-            fontSize: 13,
-            height: 1.45,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// =============================================================================
 // Frosted-glass form card.
 // =============================================================================
 
@@ -367,23 +299,15 @@ class _GlassFormCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Sign in',
+                'Welcome back',
                 style: GoogleFonts.inter(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 19,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: -0.2,
+                  letterSpacing: -0.3,
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                'Use your staff credentials to continue.',
-                style: GoogleFonts.inter(
-                  color: Colors.white.withValues(alpha: 0.60),
-                  fontSize: 12.5,
-                ),
-              ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 16),
               _GlassField(
                 controller: username,
                 hint: 'Username',
@@ -626,26 +550,14 @@ class _InlineError extends StatelessWidget {
 class _AddressFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '65 Abdul Majeed Road, Kinniya-04, Trincomalee',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white.withValues(alpha: 0.42),
-            fontSize: 10.5,
-          ),
+    return Center(
+      child: Text(
+        '© ${DateTime.now().year} Global Ehsan Relief',
+        style: GoogleFonts.inter(
+          color: Colors.white.withValues(alpha: 0.40),
+          fontSize: 10.5,
         ),
-        const SizedBox(height: 2),
-        Text(
-          '© ${DateTime.now().year} Global Ehsan Relief',
-          style: GoogleFonts.inter(
-            color: Colors.white.withValues(alpha: 0.42),
-            fontSize: 10.5,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
