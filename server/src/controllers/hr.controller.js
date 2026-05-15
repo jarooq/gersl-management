@@ -301,11 +301,20 @@ export const deleteStaff = asyncHandler(async (req, res) => {
     throw new NotFoundError('Staff not found');
   }
 
-  await staff.destroy();
+  // Audit-hardening 2026-05-15: cascade to the linked User so Settings →
+  // User Management no longer keeps a "ghost" account after the staff
+  // record is deleted. Previously the two tables drifted out of sync.
+  const linkedUserId = staff.userId;
+  await sequelize.transaction(async (t) => {
+    await staff.destroy({ transaction: t });
+    if (linkedUserId) {
+      await User.destroy({ where: { id: linkedUserId }, transaction: t });
+    }
+  });
 
   res.json({
     success: true,
-    message: 'Staff deleted successfully'
+    message: 'Staff and linked user account deleted successfully'
   });
 });
 

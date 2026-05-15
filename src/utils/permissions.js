@@ -1203,6 +1203,38 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.REPORTS_VIEW,
   ],
 
+  // Orphan-care specialisation of Project Assistant. Same base capabilities
+  // plus the unredacted-PII view since the role spends most of its day
+  // doing dossier work, family visits, and stipend follow-up.
+  'Project Assistant Orphans': [
+    PERMISSIONS.DASHBOARD_VIEW,
+
+    PERMISSIONS.ORPHANS_VIEW,
+    PERMISSIONS.ORPHANS_CREATE,
+    PERMISSIONS.ORPHANS_EDIT,
+    PERMISSIONS.ORPHANS_REGISTER_BENEFICIARY,
+    PERMISSIONS.ORPHANS_VIEW_PII,
+
+    PERMISSIONS.BENEFICIARIES_VIEW,
+    PERMISSIONS.BENEFICIARIES_CREATE,
+    PERMISSIONS.BENEFICIARIES_EDIT,
+
+    PERMISSIONS.PROJECTS_VIEW,
+    PERMISSIONS.PROJECTS_CREATE,
+    PERMISSIONS.PROJECTS_EDIT,
+
+    PERMISSIONS.MEAL_VIEW,
+    PERMISSIONS.MEAL_CREATE,
+
+    PERMISSIONS.CBO_VIEW,
+
+    PERMISSIONS.FINANCE_VIEW,
+
+    PERMISSIONS.OPERATIONS_MY_TASKS,
+
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
   'Finance Assistant': [
     // Finance Assistant
     PERMISSIONS.DASHBOARD_VIEW,

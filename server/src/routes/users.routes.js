@@ -262,8 +262,13 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
 });
 
 // @route   DELETE /api/users/:id
-// @desc    Delete user
+// @desc    Delete user (cascades to linked Staff record so HR list stays in sync)
 // @access  Private (Admin only)
+//
+// Audit-hardening 2026-05-15: previously this only destroyed the User row,
+// leaving the linked Staff row orphaned. HR → Staff Register kept showing
+// the deleted person. Now we delete the linked Staff first inside a
+// transaction so both screens reflect the deletion atomically.
 router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
@@ -283,11 +288,21 @@ router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
       });
     }
 
-    await user.destroy();
+    // Lazy import — Staff lives in models/index.js which (eagerly) pulls in
+    // every model in the project, including User. Importing at top of file
+    // creates a circular load. Lazy load keeps the existing module graph.
+    const { Staff } = await import('../models/index.js');
+
+    await sequelize.transaction(async (t) => {
+      // Cascade to Staff first; FK constraint requires user row to exist
+      // until the Staff row is gone.
+      await Staff.destroy({ where: { userId: user.id }, transaction: t });
+      await user.destroy({ transaction: t });
+    });
 
     res.json({
       success: true,
-      message: 'User deleted successfully'
+      message: 'User and linked staff record deleted successfully'
     });
   } catch (error) {
     console.error('Error deleting user:', error);

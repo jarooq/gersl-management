@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
 
+import { ROLE_PERMISSIONS } from '../../utils/permissions';
+
 const API_BASE = (import.meta.env?.VITE_API_BASE_URL || '/api').replace(/\/+$/, '');
 
 // =============================================================================
@@ -9,6 +11,12 @@ const API_BASE = (import.meta.env?.VITE_API_BASE_URL || '/api').replace(/\/+$/, 
 // Same fields, same validation, same API.HR.create() call. Routed at
 // /admin/staff-register so HR can hand a tablet to a new staff member to
 // fill out their own basics (name, email, department, position, login).
+//
+// Audit-hardening 2026-05-15: the role/position dropdown now comes from
+// the same ROLE_PERMISSIONS source as Settings → User Management. Before
+// this change, two separate hardcoded arrays drifted (this file listed
+// "positions", Settings listed "roles") and adding a role required
+// updating both. Single source of truth lives in utils/permissions.js.
 // =============================================================================
 
 const DEPARTMENTS = [
@@ -16,16 +24,7 @@ const DEPARTMENTS = [
   'Fundraising', 'HR', 'MEAL', 'IT'
 ];
 
-const POSITIONS = [
-  'Executive Director', 'Director Programmes', 'Programme Manager',
-  'Finance Manager', 'HR Manager', 'Fundraising Manager',
-  'Project Officer', 'Finance Officer', 'HR Officer',
-  'MEAL Officer', 'Media Production Officer', 'Media Officer',
-  'Field Officer', 'Accountant', 'Project Assistant',
-  'Finance Assistant', 'HR Assistant', 'Fundraising Assistant',
-  'Orphan Coordinator', 'Program Coordinator', 'Operations Officer',
-  'IT Officer', 'Administrative Officer', 'Driver', 'Office Assistant'
-];
+const POSITIONS = Object.keys(ROLE_PERMISSIONS);
 
 const EMPTY = {
   fullName: '',

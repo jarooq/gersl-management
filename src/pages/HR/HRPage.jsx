@@ -3,6 +3,10 @@ import { useHR } from '../../contexts/HRContext';
 import { useProjects } from '../../contexts/ProjectContext';
 import API, { ExpenseAPI, AssetAPI, VehicleRequestAPI, AccommodationRequestAPI } from '../../services/api';
 import StaffProfileModal from '../../components/hr/StaffProfileModal';
+// Audit-hardening 2026-05-15: role/position dropdown sourced from the
+// shared ROLE_PERMISSIONS map so HR ↔ Settings stay aligned. Previously
+// both screens kept their own hardcoded list and silently drifted.
+import { ROLE_PERMISSIONS } from '../../utils/permissions';
 import {
   Users, UserPlus, Clock, Calendar, TrendingUp, CheckCircle,
   XCircle, AlertCircle, ArrowRight, LogIn, LogOut, FileText,
@@ -252,16 +256,9 @@ const HRPage = () => {
   ];
 
   // Positions - hardcoded standard organizational positions
-  const positions = [
-    'Executive Director', 'Director Programmes', 'Programme Manager',
-    'Finance Manager', 'HR Manager', 'Fundraising Manager',
-    'Project Officer', 'Finance Officer', 'HR Officer',
-    'MEAL Officer', 'Media Production Officer', 'Media Officer',
-    'Field Officer', 'Accountant', 'Project Assistant',
-    'Finance Assistant', 'HR Assistant', 'Fundraising Assistant',
-    'Orphan Coordinator', 'Program Coordinator', 'Operations Officer',
-    'IT Officer', 'Administrative Officer', 'Driver', 'Office Assistant'
-  ];
+  // Single source of truth — adding a role in utils/permissions.js
+  // automatically appears here AND in Settings → User Management.
+  const positions = Object.keys(ROLE_PERMISSIONS);
 
 
 
