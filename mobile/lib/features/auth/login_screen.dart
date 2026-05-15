@@ -86,28 +86,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       48 -
                       viewInsets,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    _BrandLockup(),
-                    const Spacer(),
-                    _GlassFormCard(
-                      username: _username,
-                      password: _password,
-                      showPassword: _showPassword,
-                      onTogglePassword: () =>
-                          setState(() => _showPassword = !_showPassword),
-                      remember: _remember,
-                      onToggleRemember: () =>
-                          setState(() => _remember = !_remember),
-                      error: _error,
-                      loading: loading,
-                      onSubmit: loading ? null : _submit,
-                    ),
-                    const SizedBox(height: 16),
-                    _AddressFooter(),
-                  ],
+                // IntrinsicHeight lets the Spacers below actually expand —
+                // without it a Column inside a scroll view gets unbounded
+                // height and Spacer collapses to zero, pinning everything to
+                // the top (the previous build had this bug). The two Spacers
+                // (2 : 3 weighting) centre the brand+form+footer cluster a
+                // touch above the optical centre.
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(flex: 2),
+                      _BrandLockup(),
+                      const SizedBox(height: 22),
+                      _GlassFormCard(
+                        username: _username,
+                        password: _password,
+                        showPassword: _showPassword,
+                        onTogglePassword: () =>
+                            setState(() => _showPassword = !_showPassword),
+                        remember: _remember,
+                        onToggleRemember: () =>
+                            setState(() => _remember = !_remember),
+                        error: _error,
+                        loading: loading,
+                        onSubmit: loading ? null : _submit,
+                      ),
+                      const SizedBox(height: 16),
+                      _AddressFooter(),
+                      const Spacer(flex: 3),
+                    ],
+                  ),
                 ),
               ),
             ),
