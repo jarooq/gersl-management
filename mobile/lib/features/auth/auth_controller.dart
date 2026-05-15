@@ -29,7 +29,42 @@ class AuthController extends AsyncNotifier<AuthState> {
     final userJson = await tokens.readUserJson();
     final user = userJson == null ? null : jsonDecode(userJson) as Map<String, dynamic>;
     _tagSentryUser(user);
+    // Refresh the profile from the server in the background so changes made
+    // on another device (e.g. a profile photo uploaded from a different
+    // phone) appear without a re-login. The cached copy is returned now so
+    // app startup isn't blocked on the network.
+    // ignore: discarded_futures
+    Future.microtask(refreshUser);
     return AuthState(isAuthenticated: true, user: user);
+  }
+
+  /// Re-fetch the signed-in user from the server and replace the cached
+  /// copy. Lets cross-device profile changes (photo, name, role) propagate
+  /// without a re-login. Silent on failure — the cached user is kept, so an
+  /// offline launch never signs the user out.
+  Future<void> refreshUser() async {
+    try {
+      final res = await ref.read(dioProvider).get('/auth/me');
+      final body = res.data as Map<String, dynamic>;
+      final user = (body['user'] ?? body['data']?['user']) as Map<String, dynamic>?;
+      if (user == null) return;
+      final cur = state.valueOrNull;
+      if (cur == null || !cur.isAuthenticated) return;
+      final tokens = ref.read(tokenStoreProvider);
+      final access = await tokens.readAccess();
+      final refresh = await tokens.readRefresh();
+      if (access != null) {
+        await tokens.save(
+          accessToken: access,
+          refreshToken: refresh,
+          userJson: jsonEncode(user),
+        );
+      }
+      _tagSentryUser(user);
+      state = AsyncData(AuthState(isAuthenticated: true, user: user));
+    } catch (_) {
+      // Keep the cached user — transient / offline errors must not sign out.
+    }
   }
 
   void _tagSentryUser(Map<String, dynamic>? user) {
