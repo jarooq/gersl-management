@@ -34,9 +34,9 @@ import '../app/env.dart';
 const _notifChannelId = 'gersl_tracking';
 const _notifId = 888;
 
-const _prefAccessToken  = 'bg.accessToken';
-const _prefRefreshToken = 'bg.refreshToken';
-const _prefBaseUrl      = 'bg.baseUrl';
+const _prefAccessToken      = 'bg.accessToken';
+const _prefRefreshToken     = 'bg.refreshToken';
+const _prefBaseUrl          = 'bg.baseUrl';
 
 class BackgroundLocationService {
   static final _service = FlutterBackgroundService();
@@ -134,6 +134,11 @@ void _onStart(ServiceInstance service) async {
       final newRefresh = (body['refreshToken'] ?? body['data']?['refreshToken'])?.toString();
       if (newAccess == null || newAccess.isEmpty) {
         refreshDisabled = true;
+        // Surface the failure so we can diagnose silent tracking drop-offs.
+        // Audit flagged that refreshDisabled flips permanently on any
+        // error with no breadcrumb — adb logcat + iOS Console now see it.
+        // ignore: avoid_print
+        print('[bg-location] refresh disabled: server returned no accessToken');
         return false;
       }
       accessToken = newAccess;
@@ -142,8 +147,10 @@ void _onStart(ServiceInstance service) async {
       if (newRefresh != null) await prefs.setString(_prefRefreshToken, newRefresh);
       dio.options.headers['Authorization'] = 'Bearer $accessToken';
       return true;
-    } catch (_) {
+    } catch (e) {
       refreshDisabled = true;
+      // ignore: avoid_print
+      print('[bg-location] refresh disabled: ${e.runtimeType} ${e.toString().split('\n').first}');
       return false;
     }
   }
@@ -159,13 +166,20 @@ void _onStart(ServiceInstance service) async {
       await dio.post('/locations/batch', data: jsonEncode({'points': payload}));
     } catch (e) {
       // On 401 try a single refresh + retry. Other errors push points back
-      // onto the buffer for the next flush cycle.
+      // onto the buffer for the next flush cycle. Log so we can spot
+      // chronic flush failures in device logs.
       final isAuthError = e is DioException && e.response?.statusCode == 401;
       if (isAuthError && await tryRefresh()) {
         try {
           await dio.post('/locations/batch', data: jsonEncode({'points': payload}));
           return;
-        } catch (_) { /* fall through to re-buffer */ }
+        } catch (e2) {
+          // ignore: avoid_print
+          print('[bg-location] retry after refresh failed: ${e2.runtimeType}');
+        }
+      } else if (!isAuthError) {
+        // ignore: avoid_print
+        print('[bg-location] flush failed (re-buffering ${payload.length} pts): ${e.runtimeType}');
       }
       buffer.insertAll(0, payload);
     }

@@ -35,16 +35,28 @@ import '../features/orphans/my_orphans_screen.dart';
 import '../features/orphans/orphan_detail_screen.dart';
 import '../features/beneficiaries/beneficiaries_screen.dart';
 
+// Mobile route table.
+//
+// Audit-hardening (2026-05): converted ShellRoute → StatefulShellRoute so
+// each of the 5 bottom-nav tabs keeps its own Navigator stack and widget
+// tree alive across tab switches. Before this change, every tab switch
+// dropped the page state (scroll position, search input, autoDispose
+// providers) and re-fetched data on return — visible as a noticeable
+// blank flash when bouncing between tabs.
+//
+// IndexedStack-based shell: bodies of all 5 branches are kept mounted at
+// the same time; switching tabs just changes the visible index.
+// Heavier on memory than the old ShellRoute, but far better UX for a
+// field-staff app where users dip into multiple sections per session.
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
 
   return GoRouter(
     initialLocation: '/login',
     redirect: (context, state) {
-      // Audit-hardening 2026-05: during cold boot the auth controller is in
-      // AsyncLoading for ~250ms while it reads the stored token. Previously
-      // we treated loading as "not logged in" → user saw a flash of the
-      // login screen before snapping to /today. Defer routing while loading.
+      // Defer redirect while the auth controller is still booting (reading
+      // the stored token). Without this, cold boot flashes /login briefly
+      // before snapping to /today.
       if (auth.isLoading) return null;
       final loggedIn = auth.value?.isAuthenticated ?? false;
       final atLogin = state.matchedLocation == '/login';
@@ -54,33 +66,59 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-      ShellRoute(
-        builder: (context, state, child) => HomeShell(child: child),
-        routes: [
-          GoRoute(path: '/today',         builder: (context, state) => const HomeDashboardScreen()),
-          GoRoute(path: '/attendance',    builder: (context, state) => const AttendanceScreen()),
-          GoRoute(path: '/punch',         builder: (context, state) => const PunchScreen()),
-          GoRoute(path: '/tasks',         builder: (context, state) => const MyTasksScreen()),
-          GoRoute(path: '/visits',        builder: (context, state) => const VisitsScreen()),
-          GoRoute(path: '/more',          builder: (context, state) => const MoreScreen()),
-          GoRoute(path: '/notifications', builder: (context, state) => const NotificationsScreen()),
-          GoRoute(path: '/incidents',     builder: (context, state) => const IncidentReportScreen()),
-          GoRoute(path: '/vehicle-requests',       builder: (context, state) => const VehicleRequestsScreen()),
-          GoRoute(path: '/accommodation-requests', builder: (context, state) => const AccommodationRequestsScreen()),
-          GoRoute(path: '/advances',      builder: (context, state) => const AdvancesScreen()),
-          GoRoute(path: '/announcements', builder: (context, state) => const AnnouncementsScreen()),
-          GoRoute(path: '/movements',     builder: (context, state) => const MovementsScreen()),
-          GoRoute(path: '/fuel-claims',   builder: (context, state) => const FuelClaimsScreen()),
-          GoRoute(path: '/leaves',        builder: (context, state) => const LeavesScreen()),
-          GoRoute(path: '/expenses',      builder: (context, state) => const ExpensesScreen()),
-          GoRoute(path: '/payslips',      builder: (context, state) => const PayslipsScreen()),
-          GoRoute(path: '/approvals',     builder: (context, state) => const ApprovalsScreen()),
-          GoRoute(path: '/programmes',    builder: (context, state) => const MyProgrammesScreen()),
-          GoRoute(path: '/orphans',       builder: (context, state) => const MyOrphansScreen()),
-          GoRoute(path: '/beneficiaries', builder: (context, state) => const BeneficiariesScreen()),
+
+      // Five-branch indexed-stack shell. Each branch corresponds to one
+      // bottom-nav tab. Sub-routes (e.g. /tasks under More) live inside
+      // their tab's branch so the bottom-nav highlight stays correct and
+      // pressing the same tab twice pops back to the branch root.
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            HomeShell(navigationShell: navigationShell),
+        branches: [
+          // Branch 0: Home
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/today', builder: (context, state) => const HomeDashboardScreen()),
+            GoRoute(path: '/punch', builder: (context, state) => const PunchScreen()),
+          ]),
+          // Branch 1: Attendance
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/attendance', builder: (context, state) => const AttendanceScreen()),
+          ]),
+          // Branch 2: Leave
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/leaves', builder: (context, state) => const LeavesScreen()),
+          ]),
+          // Branch 3: Payroll
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/payslips', builder: (context, state) => const PayslipsScreen()),
+          ]),
+          // Branch 4: More (the heavy branch — everything reachable from
+          // the More-tab grid lives here so bottom-nav keeps highlighting
+          // More while the user drills in.)
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/more',                   builder: (context, state) => const MoreScreen()),
+            GoRoute(path: '/tasks',                  builder: (context, state) => const MyTasksScreen()),
+            GoRoute(path: '/visits',                 builder: (context, state) => const VisitsScreen()),
+            GoRoute(path: '/notifications',          builder: (context, state) => const NotificationsScreen()),
+            GoRoute(path: '/incidents',              builder: (context, state) => const IncidentReportScreen()),
+            GoRoute(path: '/vehicle-requests',       builder: (context, state) => const VehicleRequestsScreen()),
+            GoRoute(path: '/accommodation-requests', builder: (context, state) => const AccommodationRequestsScreen()),
+            GoRoute(path: '/advances',               builder: (context, state) => const AdvancesScreen()),
+            GoRoute(path: '/announcements',          builder: (context, state) => const AnnouncementsScreen()),
+            GoRoute(path: '/movements',              builder: (context, state) => const MovementsScreen()),
+            GoRoute(path: '/fuel-claims',            builder: (context, state) => const FuelClaimsScreen()),
+            GoRoute(path: '/expenses',               builder: (context, state) => const ExpensesScreen()),
+            GoRoute(path: '/approvals',              builder: (context, state) => const ApprovalsScreen()),
+            GoRoute(path: '/programmes',             builder: (context, state) => const MyProgrammesScreen()),
+            GoRoute(path: '/orphans',                builder: (context, state) => const MyOrphansScreen()),
+            GoRoute(path: '/beneficiaries',          builder: (context, state) => const BeneficiariesScreen()),
+          ]),
         ],
       ),
 
+      // Full-screen routes that intentionally sit OUTSIDE the shell so they
+      // hide the bottom nav. Detail screens, the programme map, and "new"
+      // form sheets all push on top of the active branch.
       GoRoute(
         path: '/orphans/:id',
         builder: (context, state) => OrphanDetailScreen(

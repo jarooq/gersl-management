@@ -23,21 +23,26 @@ class _Tab {
   final String label;
   final IconData icon;
   final IconData iconActive;
-  final String route;
-  const _Tab(this.label, this.icon, this.iconActive, this.route);
+  const _Tab(this.label, this.icon, this.iconActive);
 }
 
+// Order matches the StatefulShellRoute branches in router.dart. Branch
+// switching is index-based via navigationShell.goBranch(i), so we no longer
+// keep route paths here — that mapping lives entirely in the router.
 const _tabs = <_Tab>[
-  _Tab('Home',       Icons.home_outlined,           Icons.home_rounded,           '/today'),
-  _Tab('Attendance', Icons.fingerprint,             Icons.fingerprint,            '/attendance'),
-  _Tab('Leave',      Icons.event_busy_outlined,     Icons.event_busy,             '/leaves'),
-  _Tab('Payroll',    Icons.account_balance_wallet_outlined, Icons.account_balance_wallet, '/payslips'),
-  _Tab('More',       Icons.grid_view_outlined,      Icons.grid_view_rounded,      '/more'),
+  _Tab('Home',       Icons.home_outlined,                   Icons.home_rounded),
+  _Tab('Attendance', Icons.fingerprint,                     Icons.fingerprint),
+  _Tab('Leave',      Icons.event_busy_outlined,             Icons.event_busy),
+  _Tab('Payroll',    Icons.account_balance_wallet_outlined, Icons.account_balance_wallet),
+  _Tab('More',       Icons.grid_view_outlined,              Icons.grid_view_rounded),
 ];
 
 class HomeShell extends ConsumerWidget {
-  final Widget child;
-  const HomeShell({super.key, required this.child});
+  // navigationShell is supplied by StatefulShellRoute.indexedStack and owns
+  // the per-branch Navigator stacks. We render it as the body so the active
+  // branch's widget tree stays mounted while tabs are switched.
+  final StatefulNavigationShell navigationShell;
+  const HomeShell({super.key, required this.navigationShell});
 
   String _initials(String name) {
     final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
@@ -48,9 +53,7 @@ class HomeShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loc = GoRouterState.of(context).matchedLocation;
-    final idx = _tabs.indexWhere((t) => loc.startsWith(t.route));
-    final selected = idx == -1 ? 0 : idx;
+    final selected = navigationShell.currentIndex;
     final tracking = ref.watch(isTrackingProvider);
     final user = ref.watch(authControllerProvider).valueOrNull?.user;
     final name = (user?['fullName'] ?? user?['name'] ?? '?') as String;
@@ -60,10 +63,19 @@ class HomeShell extends ConsumerWidget {
     // For these, we hide the white AppBar and let the body fill from the top.
     final heroTab = selected == 0 || selected == 1;
 
+    // Deeper routes inside the More branch (e.g. /orphans, /tasks, /visits)
+    // already carry their own AppBar inside the child Scaffold. Showing the
+    // shell AppBar on top of those would stack two app bars. Suppress it
+    // when we're not at the tab's root location.
+    final loc = GoRouterState.of(context).matchedLocation;
+    final tabRoots = {'/today', '/punch', '/attendance', '/leaves', '/payslips', '/more'};
+    final atBranchRoot = tabRoots.contains(loc);
+    final showShellAppBar = !heroTab && atBranchRoot;
+
     return Scaffold(
       backgroundColor: kBgLight,
       extendBodyBehindAppBar: heroTab,
-      appBar: heroTab
+      appBar: !showShellAppBar
           ? null
           : AppBar(
               backgroundColor: kBgLight,
@@ -91,12 +103,14 @@ class HomeShell extends ConsumerWidget {
                 ),
               ],
             ),
-      body: child,
+      body: navigationShell,
       bottomNavigationBar: _BottomBar(
         selected: selected,
         onSelect: (i) {
           Haptics.select();
-          context.go(_tabs[i].route);
+          // Tapping the active tab again pops the branch back to its root
+          // (matches iOS/Android system bottom-nav convention).
+          navigationShell.goBranch(i, initialLocation: i == selected);
         },
       ),
     );
