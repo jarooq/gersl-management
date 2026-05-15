@@ -1,5 +1,6 @@
 import express from 'express';
 import { Op } from 'sequelize';
+import bcrypt from 'bcryptjs';
 import { requireAuth, requireAdmin } from '../middleware/auth.middleware.js';
 import User from '../models/User.js';
 import sequelize from '../config/database.js';
@@ -194,6 +195,25 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
       if (field === 'status' && !VALID_STATUS.has(value)) value = 'Active';
       sets.push(`${column} = :${field}`);
       replacements[field] = value;
+    }
+
+    // Password reset path. The User.js beforeUpdate hook hashes via bcrypt
+    // when the model save path is used, but this endpoint runs raw SQL to
+    // avoid the historical Sequelize-side 500s — so we hash here. Earlier
+    // bug: the whitelist above didn't include `password`, so admin password
+    // resets were silently dropped (UI returned success, user still
+    // couldn't log in with the new password). Also clear the lockout
+    // fields so an admin reset frees a previously locked account.
+    if (typeof req.body.password === 'string' && req.body.password.length > 0) {
+      const pw = req.body.password;
+      if (pw.length < 8) {
+        return res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
+      }
+      const salt = await bcrypt.genSalt(10);
+      replacements.password = await bcrypt.hash(pw, salt);
+      sets.push(`password = :password`);
+      sets.push(`failed_login_attempts = 0`);
+      sets.push(`account_locked_until = NULL`);
     }
 
     if (sets.length === 0) {
