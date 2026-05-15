@@ -13,13 +13,16 @@ const router = express.Router();
 
 const UPLOADS_ROOT = path.resolve(process.cwd(), 'uploads');
 
-// Subpaths exposed publicly (campaign hero images on the donor portal).
-const PUBLIC_SUBPATHS = ['campaigns'];
+// Subpaths served WITHOUT a logged-in user. These are reached by plain
+// <img> tags / Image.network in the web + mobile apps, which cannot attach
+// a JWT — so requiring auth here just makes the image fail to load.
+//   - campaigns : donor-portal hero images (genuinely public).
+//   - profiles  : staff avatars. The R2 object itself stays PRIVATE; it is
+//                 reached via a short-lived signed redirect, and filenames
+//                 carry a random suffix, so this is low-risk.
+const OPEN_SUBPATHS = ['campaigns', 'profiles'];
 
-const isPublicRel = (relPath) => {
-  const top = relPath.split(path.sep)[0];
-  return PUBLIC_SUBPATHS.includes(top);
-};
+const topSegment = (p, sep) => p.replace(/^\/+/, '').split(sep)[0];
 
 // Disk path resolver — defeats `..` traversal and absolute paths.
 const safeResolve = (reqPath) => {
@@ -50,24 +53,19 @@ const serveDiskFile = (req, res) => {
   });
 };
 
-// When S3 is configured: redirect to the CDN URL for public keys, sign and
-// redirect for protected ones. The `protect` middleware already ran for
-// non-public paths.
+// When S3 is configured: redirect to the public CDN URL when one is
+// available, otherwise sign the object and redirect. The signed URL is
+// self-authenticating, so the actual R2 object can stay private.
 const serveS3 = async (req, res) => {
-  // Strip leading slash; the rest of the URL is the S3 key as-stored.
   const key = decodeURIComponent(req.path.replace(/^\/+/, ''));
   if (!key) return res.status(400).json({ success: false, message: 'Invalid path' });
 
   try {
     if (isPublicKey(key)) {
       const url = publicUrlFor(key);
-      if (!url) {
-        return res.status(500).json({
-          success: false,
-          message: 'S3_PUBLIC_BASE_URL is not configured for public assets'
-        });
-      }
-      return res.redirect(302, url);
+      // Only when S3_PUBLIC_BASE_URL is set. Without it, fall through to a
+      // signed redirect so the asset still loads (just not CDN-cacheable).
+      if (url) return res.redirect(302, url);
     }
     const signed = await signGetUrl(key, 3600);
     return res.redirect(302, signed);
@@ -77,12 +75,12 @@ const serveS3 = async (req, res) => {
 };
 
 router.get('/*', (req, res, next) => {
-  // S3-backed: route by key; public keys are open, protected ones go through
-  // `protect` and then receive a 302 to a signed URL.
+  // S3-backed: keys under OPEN_SUBPATHS skip the auth gate; everything else
+  // requires a valid session before receiving a 302 to a signed URL.
   if (isStorageConfigured()) {
     const key = decodeURIComponent(req.path.replace(/^\/+/, ''));
     if (!key) return res.status(400).json({ success: false, message: 'Invalid path' });
-    if (isPublicKey(key)) return serveS3(req, res);
+    if (OPEN_SUBPATHS.includes(topSegment(key, '/'))) return serveS3(req, res);
     return protect(req, res, () => serveS3(req, res));
   }
 
@@ -90,7 +88,7 @@ router.get('/*', (req, res, next) => {
   const abs = safeResolve(req.path);
   if (!abs) return res.status(400).json({ success: false, message: 'Invalid path' });
   const rel = path.relative(UPLOADS_ROOT, abs);
-  if (isPublicRel(rel)) return serveDiskFile(req, res);
+  if (OPEN_SUBPATHS.includes(topSegment(rel, path.sep))) return serveDiskFile(req, res);
   return protect(req, res, () => serveDiskFile(req, res));
 });
 
