@@ -60,15 +60,20 @@ class _SwipeToConfirmState extends State<SwipeToConfirm> {
         Future<void> onEnd(DragEndDetails _) async {
           if (_busy) return;
           if (maxX > 0 && _dragX >= maxX * 0.82) {
-            // Snap to the end, fire, then always spring back so the slider
-            // is ready to use again next time Home is shown.
+            // Snap to the end and fire the action. We deliberately do NOT
+            // await onConfirmed: when it launches navigation (e.g. opening
+            // the punch screen) its future only resolves if the user pops
+            // back — leave via the bottom-nav tab instead and it never
+            // resolves, which used to leave the thumb stuck at the end.
+            // Instead we always spring back after a short feedback delay,
+            // so the slider is reusable no matter how the user navigates.
             setState(() { _dragX = maxX; _snapping = true; _busy = true; });
             Haptics.success();
             try {
-              await widget.onConfirmed();
-            } catch (_) {
-              // swallow — we reset regardless so the user can retry
-            }
+              // ignore: discarded_futures
+              widget.onConfirmed();
+            } catch (_) { /* fire-and-forget */ }
+            await Future<void>.delayed(const Duration(milliseconds: 550));
             if (mounted) {
               setState(() { _dragX = 0; _snapping = true; _busy = false; });
             }
