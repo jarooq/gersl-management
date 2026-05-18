@@ -84,11 +84,9 @@ export const errorHandler = (err, req, res, next) => {
   }
 
   // Default server error.
-  // In production we hide the message; opt-in to see it by sending the
-  // x-debug-errors: 1 header. Useful for diagnosing prod-only issues.
-  const showDetail =
-    process.env.NODE_ENV === 'development' ||
-    req.headers['x-debug-errors'] === '1';
+  // Detailed error info (message/stack/name/code) is exposed only outside
+  // production. In production clients always get a generic message.
+  const showDetail = process.env.NODE_ENV !== 'production';
   res.status(500).json({
     success: false,
     message: showDetail ? err.message : 'Internal server error',

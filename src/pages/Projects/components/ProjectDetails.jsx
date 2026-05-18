@@ -79,8 +79,6 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     loadProjectTasks();
   }, [loadProjectTasks]);
 
-  if (!project) return null;
-
   // Parse JSON strings if they're still strings (from database TEXT fields)
   const parseIfString = useCallback((value, defaultValue = []) => {
     if (!value) return defaultValue;
@@ -94,14 +92,14 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     return value;
   }, []);
 
-  // Memoized parsed data
-  const resultsFramework = useMemo(() => parseIfString(project.resultsFramework, []), [project.resultsFramework, parseIfString]);
-  const objectives = useMemo(() => parseIfString(project.objectives, []), [project.objectives, parseIfString]);
-  const keyActivities = useMemo(() => parseIfString(project.keyActivities, []), [project.keyActivities, parseIfString]);
+  // Memoized parsed data (null-safe — hooks must run unconditionally)
+  const resultsFramework = useMemo(() => parseIfString(project?.resultsFramework, []), [project?.resultsFramework, parseIfString]);
+  const objectives = useMemo(() => parseIfString(project?.objectives, []), [project?.objectives, parseIfString]);
+  const keyActivities = useMemo(() => parseIfString(project?.keyActivities, []), [project?.keyActivities, parseIfString]);
 
   // Memoized calculations
-  const budgetUsed = useMemo(() => ((project.spent / project.budget) * 100).toFixed(1), [project.spent, project.budget]);
-  const beneficiaryProgress = useMemo(() => ((project.beneficiaries / project.targetBeneficiaries) * 100).toFixed(1), [project.beneficiaries, project.targetBeneficiaries]);
+  const budgetUsed = useMemo(() => (((project?.spent || 0) / (project?.budget || 1)) * 100).toFixed(1), [project?.spent, project?.budget]);
+  const beneficiaryProgress = useMemo(() => (((project?.beneficiaries || 0) / (project?.targetBeneficiaries || 1)) * 100).toFixed(1), [project?.beneficiaries, project?.targetBeneficiaries]);
 
   const getTaskStatusIcon = (status) => {
     switch (status) {
@@ -257,6 +255,9 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
       setIsLoadingTask(false);
     }
   }, [loadProjectTasks, onDeleteTask]);
+
+  // Early return placed after all hook calls to keep hook order stable.
+  if (!project) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">

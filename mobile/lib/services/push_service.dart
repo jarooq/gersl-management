@@ -30,8 +30,15 @@ import 'token_store.dart';
 @pragma('vm:entry-point')
 Future<void> firebaseBackgroundHandler(RemoteMessage message) async {
   // Firebase needs to be initialized in this isolate too. Cheap when the
-  // app is already running; no-ops if so.
-  await Firebase.initializeApp();
+  // app is already running; no-ops if so. Wrapped in try/catch (like
+  // PushService.init) so a missing google-services.json / init failure
+  // doesn't crash the background isolate.
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('[push] background Firebase init failed: $e');
+    return;
+  }
   if (kDebugMode) {
     debugPrint('[push] background message: ${message.messageId}');
   }
@@ -176,15 +183,23 @@ class PushService {
   }
 
   // The DeviceRegistration table uses (user_id, device_id) unique pair, so
-  // we need a stable per-device id. FCM token itself rotates so we can't
-  // use it; we cache a process-lifetime id derived from platform + clock.
-  // A future improvement would persist this to TokenStore so reinstalls
-  // get a fresh row, but for now process-level caching is sufficient.
+  // we need a stable per-device id. The FCM token itself rotates so it can't
+  // be used. We generate an id once (platform + clock) and persist it to
+  // secure storage so it stays stable across app restarts — only a reinstall
+  // (which wipes secure storage) yields a fresh id.
   static Future<String> _deviceIdFor(String platform) async {
     if (_cachedDeviceId != null) return _cachedDeviceId!;
+    final store = TokenStore();
+    final existing = await store.readDeviceId();
+    if (existing != null && existing.isNotEmpty) {
+      _cachedDeviceId = existing;
+      return existing;
+    }
     final ts = DateTime.now().millisecondsSinceEpoch.toRadixString(36);
-    _cachedDeviceId = '$platform-$ts';
-    return _cachedDeviceId!;
+    final id = '$platform-$ts';
+    await store.saveDeviceId(id);
+    _cachedDeviceId = id;
+    return id;
   }
   static String? _cachedDeviceId;
 

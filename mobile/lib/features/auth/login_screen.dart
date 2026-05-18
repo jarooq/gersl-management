@@ -523,7 +523,7 @@ class _GlassField extends StatelessWidget {
               ),
             ),
           ),
-          if (suffix != null) suffix!,
+          ?suffix,
         ],
       ),
     );

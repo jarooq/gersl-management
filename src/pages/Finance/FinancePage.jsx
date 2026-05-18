@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CashAPI } from '../../services/api';
+import { CashAPI, ExchangeRateAPI, InvoiceAPI } from '../../services/api';
 import { useFinance } from '../../contexts/FinanceContext';
 import { useProjects } from '../../contexts/ProjectContext';
 import { usePartners } from '../../contexts/PartnersContext';
@@ -15,6 +15,14 @@ import {
   Upload, HandCoins, Package, TrendingDown as Depreciation
 } from 'lucide-react';
 import { getCurrencySymbol, formatCurrency, convertToLKR, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
+
+// Today's date as YYYY-MM-DD (local), and a blank invoice-receipt form.
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const blankPaymentForm = () => ({
+  originalAmount: '', amountLKR: '', exchangeRate: '',
+  paymentDate: todayISO(), paymentMethod: 'Bank Transfer',
+  referenceNumber: '', notes: '', rateSource: 'manual',
+});
 
 const FinancePage = () => {
   const {
@@ -34,6 +42,7 @@ const FinancePage = () => {
     addInvoice,
     updateInvoice,
     deleteInvoice,
+    recordInvoicePayment,
     addBill,
     updateBill,
     deleteBill,
@@ -94,6 +103,134 @@ const FinancePage = () => {
       }
     })();
   }, [showPayBill, cashAccounts.length]);
+
+  // ---- Receive Payment (invoice receipt) form state ----
+  // Captures the foreign amount received, the Sampath Bank O/D Buying rate at
+  // the receipt date and the LKR actually received. The rate is auto-fetched
+  // when the modal opens but stays editable for manual override.
+  const [paymentForm, setPaymentForm] = useState(blankPaymentForm());
+  const [paymentBusy, setPaymentBusy] = useState(false);
+  const [paymentError, setPaymentError] = useState(null);
+  const [rateInfo, setRateInfo] = useState(null); // { source, stale, rateDate }
+  const [rateLoading, setRateLoading] = useState(false);
+
+  // ---- Forex Gain/Loss report state ----
+  const [forexReport, setForexReport] = useState(null);
+  const [forexBusy, setForexBusy] = useState(false);
+  const [forexRange, setForexRange] = useState({ from: '', to: '' });
+
+  const loadForexReport = async () => {
+    setForexBusy(true);
+    try {
+      const params = {};
+      if (forexRange.from) params.from = forexRange.from;
+      if (forexRange.to) params.to = forexRange.to;
+      setForexReport(await InvoiceAPI.getForexReport(params));
+    } catch (e) {
+      setForexReport({ error: e?.message || 'Could not load the forex report' });
+    } finally {
+      setForexBusy(false);
+    }
+  };
+
+  // Load the forex report the first time the Invoices tab is opened.
+  useEffect(() => {
+    if (activeTab === 'invoices' && !forexReport && !forexBusy) loadForexReport();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  // Initialise the form + fetch the Sampath rate whenever the modal opens.
+  useEffect(() => {
+    if (!showReceivePayment || !selectedInvoice) return;
+    const inv = selectedInvoice;
+    const currency = (inv.currency || 'LKR').toUpperCase();
+    const balance = Number(
+      inv.balanceDue ?? inv.totalAmount ?? inv.originalAmount ?? inv.amount ?? 0
+    );
+    setPaymentError(null);
+    setRateInfo(null);
+    if (currency === 'LKR') {
+      setPaymentForm({
+        ...blankPaymentForm(),
+        originalAmount: balance ? String(balance) : '',
+        amountLKR: balance ? String(balance) : '',
+        exchangeRate: '1', rateSource: 'identity',
+      });
+      return;
+    }
+    // Foreign currency — pre-fill and fetch the live O/D Buying rate.
+    setPaymentForm({
+      ...blankPaymentForm(),
+      originalAmount: balance ? String(balance) : '',
+    });
+    setRateLoading(true);
+    ExchangeRateAPI.resolveRate(currency, todayISO())
+      .then((r) => {
+        if (r && r.rate != null) {
+          const amt = balance || 0;
+          setPaymentForm((f) => ({
+            ...f,
+            exchangeRate: String(r.rate),
+            amountLKR: amt ? String(Math.round(amt * r.rate * 100) / 100) : '',
+            rateSource: r.source === 'sampath-auto' ? 'sampath-auto' : 'manual',
+          }));
+          setRateInfo({ source: r.source, stale: r.stale, rateDate: r.rateDate });
+        } else {
+          setRateInfo({ source: 'none', stale: true, rateDate: null });
+        }
+      })
+      .catch(() => setRateInfo({ source: 'none', stale: true, rateDate: null }))
+      .finally(() => setRateLoading(false));
+  }, [showReceivePayment, selectedInvoice]);
+
+  // Keep exchangeRate = amountLKR / originalAmount as the staff edits either.
+  const onPaymentAmountChange = (field, value) => {
+    setPaymentForm((f) => {
+      const next = { ...f, [field]: value };
+      const amt = parseFloat(field === 'originalAmount' ? value : next.originalAmount) || 0;
+      const lkr = parseFloat(field === 'amountLKR' ? value : next.amountLKR) || 0;
+      if (field === 'exchangeRate') {
+        const rate = parseFloat(value) || 0;
+        if (amt > 0 && rate > 0) next.amountLKR = String(Math.round(amt * rate * 100) / 100);
+        next.rateSource = 'manual';
+      } else if (amt > 0 && lkr > 0) {
+        next.exchangeRate = (lkr / amt).toFixed(4);
+        if (field === 'amountLKR') next.rateSource = 'manual';
+      }
+      return next;
+    });
+  };
+
+  // Submit the receipt to the backend (persists rate + realised gain/loss).
+  const submitInvoicePayment = async () => {
+    if (!selectedInvoice) return;
+    const received = parseFloat(paymentForm.originalAmount);
+    if (!(received > 0)) {
+      setPaymentError('Enter the amount received.');
+      return;
+    }
+    setPaymentBusy(true);
+    setPaymentError(null);
+    try {
+      await recordInvoicePayment(selectedInvoice.id, {
+        originalAmount: received,
+        amountLkr: paymentForm.amountLKR !== '' ? parseFloat(paymentForm.amountLKR) : undefined,
+        exchangeRate: paymentForm.exchangeRate !== '' ? parseFloat(paymentForm.exchangeRate) : undefined,
+        rateSource: paymentForm.rateSource,
+        paymentDate: paymentForm.paymentDate,
+        paymentMethod: paymentForm.paymentMethod,
+        referenceNumber: paymentForm.referenceNumber || undefined,
+        notes: paymentForm.notes || undefined,
+      });
+      setShowReceivePayment(false);
+      setSelectedInvoice(null);
+    } catch (e) {
+      setPaymentError(e?.message || 'Could not record the payment.');
+    } finally {
+      setPaymentBusy(false);
+    }
+  };
+
   const [showAddBill, setShowAddBill] = useState(false);
   const [showEditBill, setShowEditBill] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
@@ -2001,6 +2138,119 @@ const FinancePage = () => {
                 </button>
               </div>
 
+              {/* Foreign Exchange Gain / Loss report */}
+              <div className="bg-white border border-ink-100 rounded-xl p-5">
+                <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-ink-900">Foreign Exchange Gain / Loss</h3>
+                    <p className="text-sm text-ink-600">
+                      Realised gain/loss on foreign-currency receipts, vs. the Sampath Bank O/D Buying rate the invoice was booked at.
+                    </p>
+                  </div>
+                  <div className="flex items-end gap-2">
+                    <div>
+                      <label className="block text-xs font-semibold text-ink-600 mb-1">From</label>
+                      <input
+                        type="date"
+                        value={forexRange.from}
+                        onChange={(e) => setForexRange((r) => ({ ...r, from: e.target.value }))}
+                        className="px-3 py-2 border border-ink-200 rounded-lg text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-ink-600 mb-1">To</label>
+                      <input
+                        type="date"
+                        value={forexRange.to}
+                        onChange={(e) => setForexRange((r) => ({ ...r, to: e.target.value }))}
+                        className="px-3 py-2 border border-ink-200 rounded-lg text-sm"
+                      />
+                    </div>
+                    <button
+                      onClick={loadForexReport}
+                      disabled={forexBusy}
+                      className="px-4 py-2 bg-navy-900 text-white rounded-lg text-sm font-semibold disabled:opacity-50"
+                    >
+                      {forexBusy ? 'Loading…' : 'Apply'}
+                    </button>
+                  </div>
+                </div>
+
+                {forexReport?.error && (
+                  <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                    {forexReport.error}
+                  </div>
+                )}
+
+                {forexReport && !forexReport.error && (() => {
+                  const fmt = (n) => `LKR ${Math.abs(Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                  const signed = (n) => { const v = Number(n) || 0; return `${v < 0 ? '(' : ''}${fmt(v)}${v < 0 ? ')' : ''}`; };
+                  const cls = (n) => { const v = Number(n) || 0; return v > 0 ? 'text-green-700' : v < 0 ? 'text-red-700' : 'text-ink-700'; };
+                  const gl = Number(forexReport.totalGainLoss) || 0;
+                  const rows = forexReport.invoiceReceipts?.byCurrency || [];
+                  const grantGL = Number(forexReport.grantReceipts?.gainLoss) || 0;
+                  const payGL = Number(forexReport.payments?.gainLoss) || 0;
+                  return (
+                    <>
+                      <div className={`rounded-lg p-4 mb-4 border ${
+                        gl > 0 ? 'bg-green-50 border-green-200'
+                        : gl < 0 ? 'bg-red-50 border-red-200'
+                        : 'bg-ink-50 border-ink-100'}`}>
+                        <p className="text-sm text-ink-600">
+                          Total realised exchange {gl < 0 ? 'loss' : 'gain'}
+                          {forexReport.from || forexReport.to
+                            ? ` (${forexReport.from || '…'} → ${forexReport.to || '…'})`
+                            : ' (all time)'}
+                        </p>
+                        <p className={`text-3xl font-bold ${cls(gl)}`}>{signed(gl)}</p>
+                      </div>
+
+                      {rows.length === 0 ? (
+                        <p className="text-sm text-ink-500">No foreign-currency invoice receipts in this period.</p>
+                      ) : (
+                        <table className="w-full text-sm">
+                          <thead className="bg-ink-50 border-b border-ink-100">
+                            <tr>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-ink-600">Currency</th>
+                              <th className="px-3 py-2 text-right text-xs font-semibold text-ink-600">Receipts</th>
+                              <th className="px-3 py-2 text-right text-xs font-semibold text-ink-600">LKR Received</th>
+                              <th className="px-3 py-2 text-right text-xs font-semibold text-ink-600">Gain / (Loss)</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-ink-100">
+                            {rows.map((r) => (
+                              <tr key={r.currency}>
+                                <td className="px-3 py-2 font-semibold text-ink-900">{r.currency}</td>
+                                <td className="px-3 py-2 text-right text-ink-600">{r.count}</td>
+                                <td className="px-3 py-2 text-right text-ink-900">{fmt(r.amountLkr)}</td>
+                                <td className={`px-3 py-2 text-right font-semibold ${cls(r.gainLoss)}`}>{signed(r.gainLoss)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+
+                      {(grantGL !== 0 || payGL !== 0) && (
+                        <div className="mt-3 pt-3 border-t border-ink-100 text-sm space-y-1">
+                          {grantGL !== 0 && (
+                            <div className="flex justify-between">
+                              <span className="text-ink-600">Grant receipts</span>
+                              <span className={`font-semibold ${cls(grantGL)}`}>{signed(grantGL)}</span>
+                            </div>
+                          )}
+                          {payGL !== 0 && (
+                            <div className="flex justify-between">
+                              <span className="text-ink-600">Payments to vendors / partners</span>
+                              <span className={`font-semibold ${cls(payGL)}`}>{signed(payGL)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
+
               <div className="bg-white border border-ink-100 rounded-xl overflow-hidden">
                 <table className="w-full">
                   <thead className="bg-ink-50 border-b border-ink-100">
@@ -2024,18 +2274,23 @@ const FinancePage = () => {
                         <td className="px-4 py-3 text-sm text-ink-600">{invoice.issued}</td>
                         <td className="px-4 py-3 text-sm text-ink-600">{invoice.due}</td>
                         <td className="px-4 py-3 text-sm">
-                          {invoice.currency === 'LKR' ? (
-                            <span className="font-bold text-ink-900">LKR {(invoice.amountLKR / 1000000).toFixed(1)}M</span>
-                          ) : (
-                            <div className="flex flex-col">
-                              <span className="font-bold text-ink-900">
-                                {getCurrencySymbol(invoice.currency)} {invoice.originalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                              </span>
-                              <span className="text-xs text-ink-500">
-                                LKR {invoice.amountLKR.toLocaleString('en-US')}
-                              </span>
-                            </div>
-                          )}
+                          {(() => {
+                            const cur = (invoice.currency || 'LKR').toUpperCase();
+                            const lkr = Number(invoice.amountLkr ?? invoice.amountLKR ?? invoice.totalAmount ?? invoice.amount ?? 0);
+                            const orig = Number(invoice.originalAmount ?? invoice.totalAmount ?? invoice.amount ?? 0);
+                            return cur === 'LKR' ? (
+                              <span className="font-bold text-ink-900">LKR {lkr.toLocaleString('en-US')}</span>
+                            ) : (
+                              <div className="flex flex-col">
+                                <span className="font-bold text-ink-900">
+                                  {getCurrencySymbol(cur)} {orig.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                                <span className="text-xs text-ink-500">
+                                  LKR {lkr.toLocaleString('en-US')}
+                                </span>
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -3015,21 +3270,33 @@ const FinancePage = () => {
       )}
 
       {/* Receive Payment Modal */}
-      {showReceivePayment && selectedInvoice && (
+      {showReceivePayment && selectedInvoice && (() => {
+        const inv = selectedInvoice;
+        const currency = (inv.currency || 'LKR').toUpperCase();
+        const isForeign = currency !== 'LKR';
+        const invoiceNo = inv.invoiceNumber || inv.invoiceNo || `#${inv.id}`;
+        const client = inv.customerName || inv.client || inv.partner?.name || '—';
+        const dueDate = inv.dueDate || inv.due || '—';
+        const invoiceTotal = Number(inv.totalAmount ?? inv.originalAmount ?? inv.amount ?? 0);
+        const balanceDue = Number(inv.balanceDue ?? invoiceTotal);
+        const bookedRate = Number(inv.exchangeRate || 1);
+        const received = parseFloat(paymentForm.originalAmount) || 0;
+        const receiptRate = parseFloat(paymentForm.exchangeRate) || 0;
+        const gainLoss = isForeign && received > 0 && receiptRate > 0
+          ? Math.round((receiptRate - bookedRate) * received * 100) / 100
+          : 0;
+        return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
+          <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Receive Payment</h2>
-                  <p className="text-sm text-green-100 mt-1">{selectedInvoice.invoiceNo} - {selectedInvoice.client}</p>
+                  <p className="text-sm text-green-100 mt-1">{invoiceNo} — {client}</p>
                 </div>
                 <button
-                  onClick={() => {
-                    setShowReceivePayment(false);
-                    setSelectedInvoice(null);
-                  }}
+                  onClick={() => { setShowReceivePayment(false); setSelectedInvoice(null); }}
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                 >
                   <X size={24} />
@@ -3045,22 +3312,30 @@ const FinancePage = () => {
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <span className="text-ink-600">Invoice No:</span>
-                    <span className="font-semibold text-ink-900 ml-2">{selectedInvoice.invoiceNo}</span>
+                    <span className="font-semibold text-ink-900 ml-2">{invoiceNo}</span>
                   </div>
                   <div>
                     <span className="text-ink-600">Due Date:</span>
-                    <span className="font-semibold text-ink-900 ml-2">{selectedInvoice.due}</span>
+                    <span className="font-semibold text-ink-900 ml-2">{dueDate}</span>
                   </div>
                   <div>
                     <span className="text-ink-600">Currency:</span>
-                    <span className="font-semibold text-ink-900 ml-2">{selectedInvoice.currency}</span>
+                    <span className="font-semibold text-ink-900 ml-2">{currency}</span>
                   </div>
                   <div>
-                    <span className="text-ink-600">Amount:</span>
+                    <span className="text-ink-600">Balance Due:</span>
                     <span className="font-semibold text-green-600 ml-2">
-                      {getCurrencySymbol(selectedInvoice.currency)} {selectedInvoice.originalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      {getCurrencySymbol(currency)} {balanceDue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
+                  {isForeign && (
+                    <div className="col-span-2">
+                      <span className="text-ink-600">Invoiced at rate:</span>
+                      <span className="font-semibold text-ink-900 ml-2">
+                        {bookedRate.toLocaleString('en-US', { minimumFractionDigits: 4 })} LKR/{currency}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -3068,97 +3343,138 @@ const FinancePage = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Amount Received ({selectedInvoice.currency}) *
+                    Amount Received ({currency}) *
                   </label>
                   <input
                     type="number"
-                    id="paymentAmount"
                     step="0.01"
-                    defaultValue={selectedInvoice.originalAmount}
+                    value={paymentForm.originalAmount}
+                    onChange={(e) => onPaymentAmountChange('originalAmount', e.target.value)}
                     className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    onChange={(e) => {
-                      const amount = parseFloat(e.target.value) || 0;
-                      const lkrAmount = parseFloat(document.getElementById('amountLKR').value) || 0;
-                      if (amount > 0 && lkrAmount > 0) {
-                        const calculatedRate = lkrAmount / amount;
-                        document.getElementById('exchangeRate').value = calculatedRate.toFixed(2);
-                      }
-                    }}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Total LKR Amount Received *
-                  </label>
-                  <input
-                    type="number"
-                    id="amountLKR"
-                    step="0.01"
-                    defaultValue={selectedInvoice.amountLKR}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
-                    onChange={(e) => {
-                      const lkrAmount = parseFloat(e.target.value) || 0;
-                      const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
-                      if (amount > 0 && lkrAmount > 0) {
-                        const calculatedRate = lkrAmount / amount;
-                        document.getElementById('exchangeRate').value = calculatedRate.toFixed(2);
-                      }
-                    }}
-                  />
-                </div>
+                {isForeign && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">
+                        Sampath Bank O/D Buying Rate *
+                      </label>
+                      <input
+                        type="number"
+                        step="0.0001"
+                        value={paymentForm.exchangeRate}
+                        onChange={(e) => onPaymentAmountChange('exchangeRate', e.target.value)}
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
+                      />
+                      <div className="flex items-center gap-2 mt-1">
+                        {rateLoading && <span className="text-xs text-ink-500">Fetching today's rate…</span>}
+                        {!rateLoading && rateInfo?.source === 'sampath-auto' && (
+                          <span className="text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded">
+                            Auto-filled from Sampath Bank{rateInfo.rateDate ? ` (${rateInfo.rateDate})` : ''}
+                          </span>
+                        )}
+                        {!rateLoading && rateInfo?.stale && rateInfo?.source !== 'none' && (
+                          <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
+                            Rate is from an earlier day — confirm before saving
+                          </span>
+                        )}
+                        {!rateLoading && rateInfo?.source === 'none' && (
+                          <span className="text-xs text-red-700 bg-red-50 px-2 py-0.5 rounded">
+                            No Sampath rate available — enter it manually
+                          </span>
+                        )}
+                        <span className="text-xs text-ink-500">1 {currency} = rate × LKR</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-ink-700 mb-2">
+                        Total LKR Received *
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={paymentForm.amountLKR}
+                        onChange={(e) => onPaymentAmountChange('amountLKR', e.target.value)}
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
+                      />
+                      <p className="text-xs text-ink-500 mt-1">
+                        Enter the actual LKR credited by the bank — the rate updates to match.
+                      </p>
+                    </div>
+
+                    {/* Realised exchange gain/loss preview */}
+                    <div className={`rounded-lg p-3 border text-sm ${
+                      gainLoss > 0 ? 'bg-green-50 border-green-200'
+                      : gainLoss < 0 ? 'bg-red-50 border-red-200'
+                      : 'bg-ink-50 border-ink-100'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-ink-700 font-semibold">Exchange Gain / (Loss)</span>
+                        <span className={`font-bold ${
+                          gainLoss > 0 ? 'text-green-700'
+                          : gainLoss < 0 ? 'text-red-700' : 'text-ink-700'}`}>
+                          {gainLoss < 0 ? '(' : ''}LKR {Math.abs(gainLoss).toLocaleString('en-US', { minimumFractionDigits: 2 })}{gainLoss < 0 ? ')' : ''}
+                        </span>
+                      </div>
+                      <p className="text-xs text-ink-500 mt-1">
+                        Receipt rate {receiptRate ? receiptRate.toFixed(4) : '—'} vs. invoiced rate {bookedRate.toFixed(4)}, on {received.toLocaleString('en-US')} {currency}.
+                      </p>
+                    </div>
+                  </>
+                )}
 
                 <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Exchange Rate (Auto-calculated)
-                  </label>
-                  <input
-                    type="text"
-                    id="exchangeRate"
-                    defaultValue={selectedInvoice.exchangeRate.toFixed(2)}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg bg-ink-50 text-ink-700 font-bold text-lg"
-                    readOnly
-                  />
-                  <p className="text-xs text-ink-500 mt-1">1 {selectedInvoice.currency} = Rate × LKR</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Payment Date *
-                  </label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Payment Date *</label>
                   <input
                     type="date"
-                    id="paymentDate"
-                    defaultValue={new Date().toISOString().split('T')[0]}
+                    value={paymentForm.paymentDate}
+                    onChange={(e) => setPaymentForm((f) => ({ ...f, paymentDate: e.target.value }))}
                     className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Bank Account
-                  </label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Payment Method</label>
                   <select
-                    id="bankAccount"
+                    value={paymentForm.paymentMethod}
+                    onChange={(e) => setPaymentForm((f) => ({ ...f, paymentMethod: e.target.value }))}
                     className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   >
-                    <option>Bank Account - Commercial Bank</option>
-                    <option>Bank Account - NDB</option>
-                    <option>Bank Account - BOC</option>
+                    <option>Bank Transfer</option>
+                    <option>Cheque</option>
+                    <option>Cash</option>
+                    <option>Online</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-ink-700 mb-2">
-                    Notes (Optional)
-                  </label>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Reference Number (Optional)</label>
+                  <input
+                    type="text"
+                    value={paymentForm.referenceNumber}
+                    onChange={(e) => setPaymentForm((f) => ({ ...f, referenceNumber: e.target.value }))}
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="Bank reference / cheque number"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-ink-700 mb-2">Notes (Optional)</label>
                   <textarea
-                    id="paymentNotes"
                     rows={3}
+                    value={paymentForm.notes}
+                    onChange={(e) => setPaymentForm((f) => ({ ...f, notes: e.target.value }))}
                     className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Add any notes about this payment..."
-                  ></textarea>
+                  />
                 </div>
+
+                {paymentError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+                    {paymentError}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -3166,51 +3482,26 @@ const FinancePage = () => {
             <div className="bg-ink-50 border-t border-ink-100 p-6 rounded-b-2xl">
               <div className="flex gap-3 justify-end">
                 <button
-                  onClick={() => {
-                    setShowReceivePayment(false);
-                    setSelectedInvoice(null);
-                  }}
-                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold"
+                  onClick={() => { setShowReceivePayment(false); setSelectedInvoice(null); }}
+                  disabled={paymentBusy}
+                  className="px-6 py-2 border border-ink-200 text-ink-700 rounded-lg hover:bg-ink-100 transition-colors font-semibold disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
-                    const amountLKR = parseFloat(document.getElementById('amountLKR').value);
-                    const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
-                    const paymentDate = document.getElementById('paymentDate').value;
-
-                    // Update invoice
-                    const updatedInvoices = invoices.map(inv =>
-                      inv.id === selectedInvoice.id
-                        ? {
-                            ...inv,
-                            status: 'Paid',
-                            originalAmount: paymentAmount,
-                            exchangeRate: exchangeRate,
-                            amountLKR: amountLKR,
-                            amount: amountLKR,
-                            paymentDate: paymentDate
-                          }
-                        : inv
-                    );
-                    setInvoices(updatedInvoices);
-
-                    setShowReceivePayment(false);
-                    setSelectedInvoice(null);
-                    alert('Payment received successfully!');
-                  }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  onClick={submitInvoicePayment}
+                  disabled={paymentBusy}
+                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
                 >
                   <CheckCircle size={18} />
-                  Confirm Payment
+                  {paymentBusy ? 'Saving…' : 'Confirm Payment'}
                 </button>
               </div>
             </div>
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {/* Add Invoice Modal */}
       {showAddInvoice && (
@@ -4941,22 +5232,28 @@ const FinancePage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <p className="text-sm text-ink-600 mb-1">Invoice Amount</p>
-                    {selectedInvoice.currency === 'LKR' ? (
-                      <p className="text-4xl font-bold text-green-600">
-                        LKR {(selectedInvoice.amountLKR / 1000000).toFixed(1)}M
-                      </p>
-                    ) : (
-                      <div className="space-y-2">
-                        <p className="text-3xl font-bold text-green-600">
-                          {getCurrencySymbol(selectedInvoice.currency)} {selectedInvoice.originalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    {(() => {
+                      const cur = (selectedInvoice.currency || 'LKR').toUpperCase();
+                      const lkr = Number(selectedInvoice.amountLkr ?? selectedInvoice.amountLKR ?? selectedInvoice.totalAmount ?? selectedInvoice.amount ?? 0);
+                      const orig = Number(selectedInvoice.originalAmount ?? selectedInvoice.totalAmount ?? selectedInvoice.amount ?? 0);
+                      const rate = Number(selectedInvoice.exchangeRate ?? 1);
+                      return cur === 'LKR' ? (
+                        <p className="text-4xl font-bold text-green-600">
+                          LKR {lkr.toLocaleString('en-US')}
                         </p>
-                        <div className="flex items-center gap-3 text-sm text-ink-600">
-                          <span className="font-semibold">@ {selectedInvoice.exchangeRate.toLocaleString('en-US', { minimumFractionDigits: 2 })} LKR/{selectedInvoice.currency}</span>
-                          <span className="text-ink-400">•</span>
-                          <span className="font-bold text-green-600">LKR {selectedInvoice.amountLKR.toLocaleString('en-US')}</span>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-3xl font-bold text-green-600">
+                            {getCurrencySymbol(cur)} {orig.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                          </p>
+                          <div className="flex items-center gap-3 text-sm text-ink-600">
+                            <span className="font-semibold">@ {rate.toLocaleString('en-US', { minimumFractionDigits: 4 })} LKR/{cur}</span>
+                            <span className="text-ink-400">•</span>
+                            <span className="font-bold text-green-600">LKR {lkr.toLocaleString('en-US')}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                   <DollarSign size={64} className="text-green-300" />
                 </div>
@@ -5046,6 +5343,7 @@ const FinancePage = () => {
                       Donor/Client Name *
                     </label>
                     <select
+                      id="editInvoiceClient"
                       defaultValue={selectedInvoice.client}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
@@ -5066,6 +5364,7 @@ const FinancePage = () => {
                       Project *
                     </label>
                     <select
+                      id="editInvoiceProject"
                       defaultValue={selectedInvoice.project}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
@@ -5105,6 +5404,7 @@ const FinancePage = () => {
                       Amount (LKR) *
                     </label>
                     <input
+                      id="editInvoiceAmount"
                       type="number"
                       defaultValue={selectedInvoice.amount}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -5115,6 +5415,7 @@ const FinancePage = () => {
                       Issue Date *
                     </label>
                     <input
+                      id="editInvoiceIssued"
                       type="date"
                       defaultValue={selectedInvoice.issued}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -5125,6 +5426,7 @@ const FinancePage = () => {
                       Due Date *
                     </label>
                     <input
+                      id="editInvoiceDue"
                       type="date"
                       defaultValue={selectedInvoice.due}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -5135,6 +5437,7 @@ const FinancePage = () => {
                       Status *
                     </label>
                     <select
+                      id="editInvoiceStatus"
                       defaultValue={selectedInvoice.status}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
@@ -5152,7 +5455,9 @@ const FinancePage = () => {
                   Notes (Optional)
                 </label>
                 <textarea
+                  id="editInvoiceNotes"
                   rows="3"
+                  defaultValue={selectedInvoice.notes || ''}
                   placeholder="Add any notes about this invoice"
                   className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 />
@@ -5172,10 +5477,24 @@ const FinancePage = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    alert('Invoice updated successfully!');
-                    setShowEditInvoice(false);
-                    setSelectedInvoice(null);
+                  onClick={async () => {
+                    try {
+                      const updates = {
+                        client: document.getElementById('editInvoiceClient')?.value,
+                        project: document.getElementById('editInvoiceProject')?.value,
+                        amount: parseFloat(document.getElementById('editInvoiceAmount')?.value) || 0,
+                        issued: document.getElementById('editInvoiceIssued')?.value,
+                        due: document.getElementById('editInvoiceDue')?.value,
+                        status: document.getElementById('editInvoiceStatus')?.value,
+                        notes: document.getElementById('editInvoiceNotes')?.value,
+                      };
+                      await updateInvoice(selectedInvoice.id, updates);
+                      alert('Invoice updated successfully!');
+                      setShowEditInvoice(false);
+                      setSelectedInvoice(null);
+                    } catch (error) {
+                      alert('Failed to update invoice: ' + (error.message || 'Unknown error'));
+                    }
                   }}
                   className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
@@ -5222,6 +5541,7 @@ const FinancePage = () => {
                       Vendor Name *
                     </label>
                     <input
+                      id="editBillVendor"
                       type="text"
                       defaultValue={selectedBill.vendor}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
@@ -5232,6 +5552,7 @@ const FinancePage = () => {
                       Category *
                     </label>
                     <select
+                      id="editBillCategory"
                       defaultValue={selectedBill.category}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
@@ -5267,6 +5588,7 @@ const FinancePage = () => {
                       Amount (LKR) *
                     </label>
                     <input
+                      id="editBillAmount"
                       type="number"
                       defaultValue={selectedBill.amount}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
@@ -5277,6 +5599,7 @@ const FinancePage = () => {
                       Date Received *
                     </label>
                     <input
+                      id="editBillReceived"
                       type="date"
                       defaultValue={selectedBill.received}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
@@ -5287,6 +5610,7 @@ const FinancePage = () => {
                       Due Date *
                     </label>
                     <input
+                      id="editBillDue"
                       type="date"
                       defaultValue={selectedBill.due}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
@@ -5297,6 +5621,7 @@ const FinancePage = () => {
                       Status *
                     </label>
                     <select
+                      id="editBillStatus"
                       defaultValue={selectedBill.status}
                       className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
@@ -5314,7 +5639,9 @@ const FinancePage = () => {
                   Description / Notes
                 </label>
                 <textarea
+                  id="editBillNotes"
                   rows="3"
+                  defaultValue={selectedBill.notes || ''}
                   placeholder="Add any notes about this bill"
                   className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
                 />
@@ -5334,10 +5661,24 @@ const FinancePage = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    alert('Bill updated successfully!');
-                    setShowEditBill(false);
-                    setSelectedBill(null);
+                  onClick={async () => {
+                    try {
+                      const updates = {
+                        vendor: document.getElementById('editBillVendor')?.value,
+                        category: document.getElementById('editBillCategory')?.value,
+                        amount: parseFloat(document.getElementById('editBillAmount')?.value) || 0,
+                        received: document.getElementById('editBillReceived')?.value,
+                        due: document.getElementById('editBillDue')?.value,
+                        status: document.getElementById('editBillStatus')?.value,
+                        notes: document.getElementById('editBillNotes')?.value,
+                      };
+                      await updateBill(selectedBill.id, updates);
+                      alert('Bill updated successfully!');
+                      setShowEditBill(false);
+                      setSelectedBill(null);
+                    } catch (error) {
+                      alert('Failed to update bill: ' + (error.message || 'Unknown error'));
+                    }
                   }}
                   className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >

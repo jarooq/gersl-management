@@ -647,7 +647,9 @@ export const convertProposalToProject = asyncHandler(async (req, res) => {
         type: 'PROJECT_INITIATION',
         entityType: 'project',
         entityId: project.id,
-        amount: project.budget,
+        // The local `project` object only carries id/name/code, so
+        // project.budget is undefined — use the proposal's requested budget.
+        amount: proposal.budgetRequested,
         approvalChain,
         currentLevel: 0,
         status: 'pending',

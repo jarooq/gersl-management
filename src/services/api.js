@@ -2095,10 +2095,73 @@ export const InvoiceAPI = {
     return data.data.invoice;
   },
 
+  // Record a receipt against an invoice. Captures the receipt-date exchange
+  // rate and realised forex gain/loss. Returns { invoice, receipt }.
+  recordPayment: async (id, paymentData) => {
+    const data = await request(`/invoices/${id}/payment`, {
+      method: 'POST',
+      body: JSON.stringify(paymentData),
+    });
+    return data.data;
+  },
+
+  getReceipts: async (id) => {
+    const data = await request(`/invoices/${id}/receipts`);
+    return data.data;
+  },
+
+  getForexReport: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/invoices/forex-report?${queryString}`);
+    return data.data;
+  },
+
   getStats: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     const data = await request(`/invoices/stats?${queryString}`);
     return data.data;
+  },
+};
+
+// ============================================
+// EXCHANGE RATE API — Sampath Bank O/D Buying rates
+// ============================================
+
+export const ExchangeRateAPI = {
+  // Latest cached snapshot for every currency.
+  getRates: async () => {
+    const data = await request('/exchange-rates');
+    return data.data;
+  },
+
+  // Resolve the O/D Buying rate for one currency on one date.
+  // Returns { currency, rate, rateDate, source, stale }.
+  resolveRate: async (currency, date) => {
+    const params = new URLSearchParams({ currency });
+    if (date) params.set('date', date);
+    const data = await request(`/exchange-rates/rate?${params.toString()}`);
+    return data.data;
+  },
+
+  getHistory: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/exchange-rates/history?${queryString}`);
+    return data.data;
+  },
+
+  // Trigger a live Sampath Bank fetch (Admin/Manager).
+  refresh: async () => {
+    const data = await request('/exchange-rates/refresh', { method: 'POST' });
+    return data.data;
+  },
+
+  // Manual rate entry / override (Admin/Manager).
+  saveManual: async (rate) => {
+    const data = await request('/exchange-rates', {
+      method: 'POST',
+      body: JSON.stringify(rate),
+    });
+    return data.data.rate;
   },
 };
 
@@ -3531,6 +3594,7 @@ const API = {
   CampaignPackage: CampaignPackageAPI,
   Donation: DonationAPI,
   Invoice: InvoiceAPI,
+  ExchangeRate: ExchangeRateAPI,
   Bill: BillAPI,
   PurchaseOrder: PurchaseOrderAPI,
   ChartOfAccounts: ChartOfAccountsAPI,
@@ -3550,6 +3614,26 @@ const API = {
   LeaveRequest: LeaveRequestAPI,
   TokenManager,
 };
+
+// ============================================
+// GENERIC HTTP HELPERS
+// Axios-style {get,post,put,delete} on the default API export so callers
+// that need an endpoint without a dedicated sub-API can still hit it.
+// The raw response body is exposed under `.data` to mirror axios.
+// ============================================
+const buildBody = (payload) =>
+  payload instanceof FormData ? payload : (payload != null ? JSON.stringify(payload) : undefined);
+
+API.get = async (endpoint) => ({ data: await request(endpoint) });
+API.post = async (endpoint, payload, options = {}) => ({
+  data: await request(endpoint, { ...options, method: 'POST', body: buildBody(payload) }),
+});
+API.put = async (endpoint, payload, options = {}) => ({
+  data: await request(endpoint, { ...options, method: 'PUT', body: buildBody(payload) }),
+});
+API.delete = async (endpoint, options = {}) => ({
+  data: await request(endpoint, { ...options, method: 'DELETE' }),
+});
 
 // ============================================
 // SAFEGUARDING POLICY API

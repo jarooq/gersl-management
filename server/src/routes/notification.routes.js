@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyToken } from '../middleware/auth.middleware.js';
+import { verifyToken, authorize } from '../middleware/auth.middleware.js';
 import {
   getUserNotifications,
   getUnreadNotifications,
@@ -23,8 +23,8 @@ router.put('/read-all', verifyToken, markAllAsRead);
 // Delete all read notifications (must be before /:id route)
 router.delete('/read', verifyToken, deleteAllRead);
 
-// Create bulk notifications
-router.post('/bulk', verifyToken, createBulkNotifications);
+// Create bulk notifications (Admin / Manager only)
+router.post('/bulk', verifyToken, authorize('Admin', 'Manager'), createBulkNotifications);
 
 // Get all notifications for current user
 router.get('/', verifyToken, getUserNotifications);
@@ -32,8 +32,8 @@ router.get('/', verifyToken, getUserNotifications);
 // Get single notification by ID
 router.get('/:id', verifyToken, getNotificationById);
 
-// Create notification
-router.post('/', verifyToken, createNotification);
+// Create notification (Admin / Manager only)
+router.post('/', verifyToken, authorize('Admin', 'Manager'), createNotification);
 
 // Mark notification as read
 router.put('/:id/read', verifyToken, markAsRead);

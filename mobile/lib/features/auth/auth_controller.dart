@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/background_location_service.dart';
 import '../../services/observability.dart';
 import '../../services/push_service.dart';
 
@@ -86,8 +87,12 @@ class AuthController extends AsyncNotifier<AuthState> {
         'password': password,
       });
       final body = res.data as Map<String, dynamic>;
-      final accessToken = body['accessToken'] as String?;
-      final refreshToken = body['refreshToken'] as String?;
+      // Accept both the flat and the nested `data` envelope shapes, matching
+      // refreshAccessToken in api_client.dart.
+      final accessToken =
+          (body['accessToken'] ?? body['data']?['accessToken']) as String?;
+      final refreshToken =
+          (body['refreshToken'] ?? body['data']?['refreshToken']) as String?;
       final user = (body['user'] ?? body['data']?['user']) as Map<String, dynamic>?;
       if (accessToken == null) {
         throw Exception('Login response missing accessToken');
@@ -117,6 +122,9 @@ class AuthController extends AsyncNotifier<AuthState> {
     // Drop the FCM token + stop listening for refreshes before clearing
     // local tokens. Best-effort.
     await PushService.unregisterFromServer();
+    // Stop background GPS tracking — the isolate must not keep uploading
+    // location after sign-out.
+    await BackgroundLocationService.stop();
     await tokens.clear();
     clearUserContext();
     state = const AsyncData(AuthState(isAuthenticated: false));
@@ -148,6 +156,9 @@ class AuthController extends AsyncNotifier<AuthState> {
   /// a different environment, or expired beyond refresh).
   Future<void> forceLogout() async {
     final tokens = ref.read(tokenStoreProvider);
+    // Stop background GPS tracking so the isolate can't keep uploading
+    // location with a token the backend has already rejected.
+    await BackgroundLocationService.stop();
     await tokens.clear();
     clearUserContext();
     state = const AsyncData(AuthState(isAuthenticated: false));

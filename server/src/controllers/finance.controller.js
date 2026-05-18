@@ -98,7 +98,9 @@ export const getExpenseById = asyncHandler(async (req, res) => {
 // CREATE EXPENSE
 // ============================================
 export const createExpense = asyncHandler(async (req, res) => {
-  const expenseData = req.body;
+  // New expenses always start as Pending — a client-supplied status must not
+  // let an expense skip the approval workflow.
+  const expenseData = { ...req.body, status: 'Pending' };
 
   // Verify project exists if projectId is provided
   if (expenseData.projectId) {

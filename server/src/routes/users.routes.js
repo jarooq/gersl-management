@@ -40,7 +40,7 @@ router.patch('/me/avatar', requireAuth, async (req, res) => {
 // @route   POST /api/users
 // @desc    Create new user
 // @access  Private (Admin only)
-router.post('/', requireAuth, requireAdmin, async (req, res) => {
+router.post('/', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const { username, email, password, fullName, role, status, department, phone, avatarUrl } = req.body;
 
@@ -119,12 +119,10 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
     if (error.errors) {
       console.error('Validation errors:', error.errors.map(e => e.message));
     }
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create user',
-      error: error.message,
-      details: error.errors ? error.errors.map(e => e.message) : undefined
-    });
+    // Let the central error handler turn Sequelize ValidationError /
+    // UniqueConstraintError into proper 400 / 409 responses instead of a
+    // blanket 500. Anything else also goes to the central handler.
+    return next(error);
   }
 });
 
@@ -146,8 +144,7 @@ router.get('/', requireAuth, requireAdmin, async (req, res) => {
     console.error('Error fetching users:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch users',
-      error: error.message
+      message: 'Failed to fetch users'
     });
   }
 });
@@ -176,8 +173,7 @@ router.get('/:id', requireAuth, requireAdmin, async (req, res) => {
     console.error('Error fetching user:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch user',
-      error: error.message
+      message: 'Failed to fetch user'
     });
   }
 });
@@ -281,10 +277,7 @@ router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
     });
     res.status(500).json({
       success: false,
-      message: 'Failed to update user',
-      error: error.message,
-      detail: error.original?.message || null,
-      type: error.name,
+      message: 'Failed to update user'
     });
   }
 });
@@ -336,8 +329,7 @@ router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
     console.error('Error deleting user:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to delete user',
-      error: error.message
+      message: 'Failed to delete user'
     });
   }
 });

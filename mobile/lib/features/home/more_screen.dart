@@ -111,11 +111,7 @@ class MoreScreen extends ConsumerWidget {
       ref.read(isTrackingProvider.notifier).state = false;
       return;
     }
-    final refresh = await TokenStore().readRefresh();
-    final ok = await BackgroundLocationService.start(
-      accessToken: access,
-      refreshToken: refresh,
-    );
+    final ok = await BackgroundLocationService.start();
     ref.read(isTrackingProvider.notifier).state = ok;
     if (!ok && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

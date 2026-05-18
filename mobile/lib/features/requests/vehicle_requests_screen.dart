@@ -198,6 +198,7 @@ class _NewVehicleRequestFormState extends ConsumerState<_NewVehicleRequestForm> 
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (picked == null) return;
+    if (!context.mounted) return;
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(initial),
@@ -205,7 +206,11 @@ class _NewVehicleRequestFormState extends ConsumerState<_NewVehicleRequestForm> 
     if (time == null) return;
     setState(() {
       final dt = DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
-      if (isStart) _start = dt; else _end = dt;
+      if (isStart) {
+        _start = dt;
+      } else {
+        _end = dt;
+      }
     });
   }
 

@@ -2,6 +2,8 @@ import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 import { LocationPoint } from '../models/index.js';
 
+const isHR = (user) => ['Admin', 'CEO', 'HR Manager', 'HR Officer'].includes(user?.role);
+
 // POST /api/locations/batch — mobile uploads batches of GPS points (lower overhead than per-point).
 export const ingestBatch = asyncHandler(async (req, res) => {
   const userId = req.user.id;
@@ -28,6 +30,7 @@ export const ingestBatch = asyncHandler(async (req, res) => {
 // GET /api/locations?userId=&from=&to=  — admin view of someone's track
 export const listForUser = asyncHandler(async (req, res) => {
   const userId = parseInt(req.query.userId, 10) || req.user.id;
+  if (userId !== req.user.id && !isHR(req.user)) return res.status(403).json({ success: false, message: 'forbidden' });
   const from   = req.query.from ? new Date(req.query.from) : new Date(Date.now() - 24 * 60 * 60 * 1000);
   const to     = req.query.to   ? new Date(req.query.to)   : new Date();
   const rows = await LocationPoint.findAll({

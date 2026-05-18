@@ -1,6 +1,6 @@
 import { Op, Sequelize } from 'sequelize';
 import { Report, User, Project } from '../models/index.js';
-import { asyncHandler, NotFoundError, BadRequestError } from '../middleware/error.middleware.js';
+import { asyncHandler, NotFoundError, BadRequestError, ForbiddenError } from '../middleware/error.middleware.js';
 
 // ============================================
 // GET ALL REPORTS
@@ -123,7 +123,7 @@ export const getReportById = asyncHandler(async (req, res) => {
                     (report.sharedWith && report.sharedWith.includes(userId));
 
   if (!hasAccess) {
-    throw new BadRequestError('You do not have permission to view this report');
+    throw new ForbiddenError('You do not have permission to view this report');
   }
 
   res.json({
@@ -223,7 +223,7 @@ export const updateReport = asyncHandler(async (req, res) => {
   const canEdit = isAdmin || report.createdBy === userId;
 
   if (!canEdit) {
-    throw new BadRequestError('You do not have permission to update this report');
+    throw new ForbiddenError('You do not have permission to update this report');
   }
 
   // Set lastEditedBy
@@ -295,7 +295,7 @@ export const deleteReport = asyncHandler(async (req, res) => {
   const canDelete = isAdmin || report.createdBy === userId;
 
   if (!canDelete) {
-    throw new BadRequestError('You do not have permission to delete this report');
+    throw new ForbiddenError('You do not have permission to delete this report');
   }
 
   await report.destroy();
@@ -325,7 +325,7 @@ export const updateReportSection = asyncHandler(async (req, res) => {
   const canEdit = isAdmin || report.createdBy === userId;
 
   if (!canEdit) {
-    throw new BadRequestError('You do not have permission to edit this report');
+    throw new ForbiddenError('You do not have permission to edit this report');
   }
 
   if (!sectionId || content === undefined) {
@@ -499,7 +499,7 @@ export const shareReport = asyncHandler(async (req, res) => {
   const canShare = isAdmin || report.createdBy === userId;
 
   if (!canShare) {
-    throw new BadRequestError('You do not have permission to share this report');
+    throw new ForbiddenError('You do not have permission to share this report');
   }
 
   const updateData = {};
@@ -560,7 +560,7 @@ export const exportReport = asyncHandler(async (req, res) => {
                     (report.sharedWith && report.sharedWith.includes(userId));
 
   if (!hasAccess) {
-    throw new BadRequestError('You do not have permission to export this report');
+    throw new ForbiddenError('You do not have permission to export this report');
   }
 
   // Update export metadata

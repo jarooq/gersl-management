@@ -40,6 +40,56 @@ const validatePassword = (password) => {
 };
 
 // ============================================
+// LOAD USER PERMISSIONS
+// ============================================
+// Loads the role's permissions from the database and attaches them to the
+// given plain user object. Admins fall back to a wildcard permission when
+// the roles table has no rows for them. Shared by login() and getMe().
+const loadUserPermissions = async (user, userWithPermissions) => {
+  try {
+    // Query to get role permissions from database
+    const rolePermissions = await user.sequelize.query(`
+      SELECT p.id, p.permission_key as "permissionKey", p.permission_name as "name", p.description
+      FROM roles r
+      JOIN role_permissions rp ON r.id = rp.role_id
+      JOIN permissions p ON rp.permission_id = p.id
+      WHERE r.name = :roleName
+      AND r.is_active = true
+    `, {
+      replacements: { roleName: userWithPermissions.role },
+      type: user.sequelize.QueryTypes.SELECT
+    });
+
+    userWithPermissions.permissions = rolePermissions || [];
+
+    // If Admin has no permissions in database, add wildcard permission
+    if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
+      userWithPermissions.permissions = [{
+        id: 0,
+        permissionKey: '*',
+        name: 'All Permissions',
+        description: 'Full system access'
+      }];
+    }
+  } catch (error) {
+    console.error('Error loading permissions from database:', error);
+    // Fallback: If Admin, give wildcard permission
+    if (userWithPermissions.role === 'Admin') {
+      userWithPermissions.permissions = [{
+        id: 0,
+        permissionKey: '*',
+        name: 'All Permissions',
+        description: 'Full system access'
+      }];
+    } else {
+      userWithPermissions.permissions = [];
+    }
+  }
+
+  return userWithPermissions;
+};
+
+// ============================================
 // GENERATE JWT TOKENS
 // ============================================
 const generateTokens = (userId) => {
@@ -95,7 +145,10 @@ const clearAuthCookies = (res) => {
 // REGISTER NEW USER
 // ============================================
 export const register = asyncHandler(async (req, res) => {
-  const { username, email, password, fullName, role = 'Guest' } = req.body;
+  const { username, email, password, fullName } = req.body;
+  // Public registration is always a Guest/Inactive account — any client-supplied
+  // role/status is ignored (mirrors publicRegisterStaff).
+  const role = 'Guest';
 
   // Validate password strength
   validatePassword(password);
@@ -123,7 +176,7 @@ export const register = asyncHandler(async (req, res) => {
     password,
     fullName,
     role,
-    status: 'Active'
+    status: 'Inactive'
   });
 
   // Generate tokens
@@ -221,47 +274,7 @@ export const login = asyncHandler(async (req, res) => {
   setAuthCookies(res, accessToken, refreshToken);
 
   // Load permissions from database based on user's role
-  const userWithPermissions = user.toJSON();
-
-  try {
-    // Query to get role permissions from database
-    const rolePermissions = await user.sequelize.query(`
-      SELECT p.id, p.permission_key as "permissionKey", p.permission_name as "name", p.description
-      FROM roles r
-      JOIN role_permissions rp ON r.id = rp.role_id
-      JOIN permissions p ON rp.permission_id = p.id
-      WHERE r.name = :roleName
-      AND r.is_active = true
-    `, {
-      replacements: { roleName: userWithPermissions.role },
-      type: user.sequelize.QueryTypes.SELECT
-    });
-
-    userWithPermissions.permissions = rolePermissions || [];
-
-    // If Admin has no permissions in database, add wildcard permission
-    if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
-      userWithPermissions.permissions = [{
-        id: 0,
-        permissionKey: '*',
-        name: 'All Permissions',
-        description: 'Full system access'
-      }];
-    }
-  } catch (error) {
-    console.error('login - Error loading permissions from database:', error);
-    // Fallback: If Admin, give wildcard permission
-    if (userWithPermissions.role === 'Admin') {
-      userWithPermissions.permissions = [{
-        id: 0,
-        permissionKey: '*',
-        name: 'All Permissions',
-        description: 'Full system access'
-      }];
-    } else {
-      userWithPermissions.permissions = [];
-    }
-  }
+  const userWithPermissions = await loadUserPermissions(user, user.toJSON());
 
   res.json({
     success: true,
@@ -354,47 +367,7 @@ export const getMe = asyncHandler(async (req, res) => {
   // Add permissions array for compatibility with frontend
   // Since users.role is a VARCHAR (not a foreign key to roles table),
   // we'll add a wildcard permission for Admin users
-  const userWithPermissions = user.toJSON();
-
-  try {
-    // Query to get role permissions from database
-    const rolePermissions = await user.sequelize.query(`
-      SELECT p.id, p.permission_key as "permissionKey", p.permission_name as "name", p.description
-      FROM roles r
-      JOIN role_permissions rp ON r.id = rp.role_id
-      JOIN permissions p ON rp.permission_id = p.id
-      WHERE r.name = :roleName
-      AND r.is_active = true
-    `, {
-      replacements: { roleName: userWithPermissions.role },
-      type: user.sequelize.QueryTypes.SELECT
-    });
-
-    userWithPermissions.permissions = rolePermissions || [];
-
-    // If Admin has no permissions in database, add wildcard permission
-    if (userWithPermissions.role === 'Admin' && (!rolePermissions || rolePermissions.length === 0)) {
-      userWithPermissions.permissions = [{
-        id: 0,
-        permissionKey: '*',
-        name: 'All Permissions',
-        description: 'Full system access'
-      }];
-    }
-  } catch (error) {
-    console.error('getMe - Error loading permissions from database:', error);
-    // Fallback: If Admin, give wildcard permission
-    if (userWithPermissions.role === 'Admin') {
-      userWithPermissions.permissions = [{
-        id: 0,
-        permissionKey: '*',
-        name: 'All Permissions',
-        description: 'Full system access'
-      }];
-    } else {
-      userWithPermissions.permissions = [];
-    }
-  }
+  const userWithPermissions = await loadUserPermissions(user, user.toJSON());
 
   // Add no-cache headers to prevent browser from caching this response
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');

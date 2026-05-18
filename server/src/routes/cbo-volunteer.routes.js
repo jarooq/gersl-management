@@ -9,7 +9,7 @@ import {
   searchVolunteers,
   getVolunteerStats
 } from '../controllers/cbo-volunteer.controller.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -25,9 +25,9 @@ router.get('/cbo/:cboPartnerId', getVolunteersByCBO);
 
 // CRUD routes
 router.get('/', getAllVolunteers);
-router.post('/', createVolunteer);
+router.post('/', requirePermission(PERMISSIONS.CBO_CREATE), createVolunteer);
 router.get('/:id', getVolunteerById);
-router.put('/:id', updateVolunteer);
-router.delete('/:id', deleteVolunteer);
+router.put('/:id', requirePermission(PERMISSIONS.CBO_EDIT), updateVolunteer);
+router.delete('/:id', requirePermission(PERMISSIONS.CBO_DELETE), deleteVolunteer);
 
 export default router;

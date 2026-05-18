@@ -33,6 +33,17 @@ const HRPage = () => {
     vehicleRequests,
     accommodationRequests,
     refreshHRData,
+    addOnboarding,
+    addAppraisal,
+    addGpsAttendance,
+    deleteGpsAttendance,
+    updateGpsAttendance,
+    applyLeave,
+    addAssetCheckout,
+    addVehicleRequest,
+    addAccommodationRequest,
+    checkIn,
+    checkOut,
   } = useHR();
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -473,7 +484,7 @@ const HRPage = () => {
       alert('✅ Staff member and user account created successfully!\n\nThe staff member can now log in with their credentials.');
 
       // Refresh HR data
-      window.location.reload(); // Simple reload to refresh data
+      await refreshHRData();
     } catch (error) {
       console.error('Error creating staff:', error);
       alert('❌ Error: ' + (error.message || 'Failed to create staff member'));

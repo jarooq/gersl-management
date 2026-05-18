@@ -13,9 +13,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app/env.dart';
 import '../../app/theme.dart';
 import '../../services/friendly_error.dart';
+import '../../services/pdf_links.dart';
 import '../../services/token_store.dart';
 import 'programme_repository.dart';
 
@@ -226,7 +226,9 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
       _toast('Not signed in — cannot open report');
       return;
     }
-    final url = '${Env.apiBaseUrl}/${widget.kind}/items/${widget.itemId}/report?token=$token';
+    // Token-URL construction is centralised in PdfLinks — see that file for
+    // the known `?token=` risk.
+    final url = PdfLinks.programmeItemReport(widget.kind, widget.itemId, token);
     final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     if (!mounted) return;
     if (!ok) _toast('Could not open PDF viewer');

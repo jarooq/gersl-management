@@ -184,9 +184,15 @@ class _NewAccommodationFormState extends ConsumerState<_NewAccommodationForm> {
       firstDate: DateTime.now().subtract(const Duration(days: 1)),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (picked != null) setState(() {
-      if (isCheckIn) _checkIn = picked; else _checkOut = picked;
+    if (picked != null) {
+      setState(() {
+      if (isCheckIn) {
+        _checkIn = picked;
+      } else {
+        _checkOut = picked;
+      }
     });
+    }
   }
 
   @override

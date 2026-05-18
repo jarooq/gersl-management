@@ -88,7 +88,7 @@ void setUserContext({int? id, String? email, String? role}) {
     scope.setUser(SentryUser(
       id: id?.toString(),
       email: email,
-      data: { if (role != null) 'role': role },
+      data: { 'role': ?role },
     ));
   });
 }

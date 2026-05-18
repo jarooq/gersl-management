@@ -131,6 +131,8 @@ import washRoutes from './routes/wash.routes.js';
 import igpRoutes from './routes/igp.routes.js';
 import mapRoutes from './routes/map.routes.js';
 import cronRoutes from './routes/cron.routes.js';
+import exchangeRateRoutes from './routes/exchangeRate.routes.js';
+import { fetchSampathRates } from './services/exchangeRate.service.js';
 
 // Load environment variables
 dotenv.config();
@@ -324,6 +326,7 @@ app.use('/api/budgets', budgetRoutes);
 app.use('/api/payroll', payrollRoutes);
 app.use('/api/grant-receivables', grantReceivableRoutes);
 app.use('/api/grant-receipts', grantReceiptRoutes);
+app.use('/api/exchange-rates', exchangeRateRoutes);
 app.use('/api/fixed-assets', fixedAssetRoutes);
 app.use('/api/assets',                assetRoutes);
 app.use('/api/vehicle-requests',      vehicleRequestRoutes);
@@ -478,6 +481,18 @@ const startServer = async () => {
           console.log('📧 Programme deadline reminders:', result);
         } catch (e) {
           console.error('❌ Deadline reminders failed:', e.message);
+        }
+      });
+
+      // Daily Sampath Bank exchange-rate snapshot — runs at 09:15 server-time,
+      // after the bank publishes the morning O/D Buying rates. On Vercel,
+      // trigger POST /api/cron/exchange-rates from a Vercel Cron schedule.
+      cron.schedule('15 9 * * *', async () => {
+        try {
+          const result = await fetchSampathRates();
+          console.log('💱 Daily exchange-rate snapshot:', result);
+        } catch (e) {
+          console.error('❌ Exchange-rate snapshot failed:', e.message);
         }
       });
     }

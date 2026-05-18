@@ -212,6 +212,22 @@ export const FinanceProvider = ({ children }) => {
     }
   };
 
+  // Record a receipt against an invoice. Persists the receipt-date exchange
+  // rate and realised forex gain/loss server-side, then refreshes the invoice
+  // in local state. Returns { invoice, receipt }.
+  const recordInvoicePayment = async (id, paymentData) => {
+    try {
+      const result = await API.Invoice.recordPayment(id, paymentData);
+      if (result?.invoice) {
+        setInvoices(invoices.map(inv => (inv.id === id ? result.invoice : inv)));
+      }
+      return result;
+    } catch (err) {
+      console.error('Error recording invoice payment:', err);
+      throw err;
+    }
+  };
+
   // Bill Management
   const addBill = async (billData) => {
     try {
@@ -687,6 +703,7 @@ export const FinanceProvider = ({ children }) => {
     addInvoice,
     updateInvoice,
     deleteInvoice,
+    recordInvoicePayment,
     // Bill Management
     addBill,
     updateBill,

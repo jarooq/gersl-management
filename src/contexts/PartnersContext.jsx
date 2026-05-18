@@ -103,7 +103,7 @@ export const PartnersProvider = ({ children }) => {
   // Contribution Operations
   const fetchContributions = async (partnerId) => {
     try {
-      const data = await API.PartnerAPI.getContributions(partnerId);
+      const data = await API.Partner.getContributions(partnerId);
       setContributions(data.contributions || []);
       return data.contributions || [];
     } catch (err) {
@@ -114,7 +114,7 @@ export const PartnersProvider = ({ children }) => {
 
   const addContribution = async (partnerId, contributionData) => {
     try {
-      const newContribution = await API.PartnerAPI.createContribution(partnerId, contributionData);
+      const newContribution = await API.Partner.createContribution(partnerId, contributionData);
       setContributions([...contributions, newContribution]);
 
       // Refresh partner data to get updated totals
@@ -129,7 +129,7 @@ export const PartnersProvider = ({ children }) => {
 
   const updateContribution = async (id, updatedData) => {
     try {
-      const updated = await API.PartnerAPI.updateContribution(id, updatedData);
+      const updated = await API.Partner.updateContribution(id, updatedData);
       setContributions(contributions.map(contribution =>
         contribution.id === id ? updated : contribution
       ));
@@ -146,7 +146,7 @@ export const PartnersProvider = ({ children }) => {
 
   const deleteContribution = async (id) => {
     try {
-      await API.PartnerAPI.deleteContribution(id);
+      await API.Partner.deleteContribution(id);
       setContributions(contributions.filter(contribution => contribution.id !== id));
 
       // Refresh partner data to get updated totals
@@ -160,7 +160,7 @@ export const PartnersProvider = ({ children }) => {
   // Communication Operations
   const fetchCommunications = async (partnerId) => {
     try {
-      const data = await API.PartnerAPI.getCommunications(partnerId);
+      const data = await API.Partner.getCommunications(partnerId);
       setCommunications(data.communications || []);
       return data.communications || [];
     } catch (err) {
@@ -171,7 +171,7 @@ export const PartnersProvider = ({ children }) => {
 
   const addCommunication = async (partnerId, communicationData) => {
     try {
-      const newCommunication = await API.PartnerAPI.createCommunication(partnerId, communicationData);
+      const newCommunication = await API.Partner.createCommunication(partnerId, communicationData);
       setCommunications([...communications, newCommunication]);
       return newCommunication;
     } catch (err) {
@@ -182,7 +182,7 @@ export const PartnersProvider = ({ children }) => {
 
   const updateCommunication = async (id, updatedData) => {
     try {
-      const updated = await API.PartnerAPI.updateCommunication(id, updatedData);
+      const updated = await API.Partner.updateCommunication(id, updatedData);
       setCommunications(communications.map(comm =>
         comm.id === id ? updated : comm
       ));
@@ -195,7 +195,7 @@ export const PartnersProvider = ({ children }) => {
 
   const deleteCommunication = async (id) => {
     try {
-      await API.PartnerAPI.deleteCommunication(id);
+      await API.Partner.deleteCommunication(id);
       setCommunications(communications.filter(comm => comm.id !== id));
     } catch (err) {
       console.error('Error deleting communication:', err);
