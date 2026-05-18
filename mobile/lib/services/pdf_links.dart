@@ -1,41 +1,48 @@
 // =============================================================================
 // Centralised builder for server-rendered PDF URLs.
 //
-// SECURITY NOTE — KNOWN RISK (audited 2026-05):
-// These URLs carry the raw access token as a `?token=` query parameter so the
-// device's *external* PDF viewer (Chrome / system reader) can fetch the file
-// without an Authorization header. The backend deliberately whitelists
-// `?token=` for these specific report endpoints.
+// The device's *external* PDF viewer (Chrome / system reader) fetches the file
+// without an Authorization header, so the token has to travel in the URL as a
+// `?token=` query parameter — which can land in browser history and server /
+// proxy access logs.
 //
-// Risks of the query-param token:
-//   * It can land in browser history, server access logs, and proxy logs.
-//   * It is visible in the OS "recent apps" / share sheet.
+// To keep that exposure minimal we do NOT put the long-lived session JWT in
+// the URL. Each call mints a fresh, short-lived (~2 minute) *download token*
+// from `GET /api/auth/download-token`; even if it leaks into a log it is
+// useless within minutes. verifyToken on the backend accepts it like any
+// other JWT.
 //
-// Preferred long-term fix (requires no backend change): download the PDF
-// in-app via an authenticated Dio GET (the api client already attaches the
-// auth header), write it to a temp file, and open the *local* file with
-// open_filex / url_launcher. That needs the `open_filex` + `path_provider`
-// packages and native config, so it is deferred — every call site funnels
-// through this one file so the migration is a single edit.
-//
-// Until then: keep token-URL construction HERE ONLY. Do not inline
-// `?token=` strings elsewhere.
+// Keep all `?token=` URL construction HERE — do not inline it elsewhere.
 // =============================================================================
+
+import 'package:dio/dio.dart';
 
 import '../app/env.dart';
 
 class PdfLinks {
   const PdfLinks._();
 
-  /// Payslip PDF — `/me/payslips/:id/pdf?token=…`.
-  static String payslip(int id, String accessToken) =>
-      '${Env.apiBaseUrl}/me/payslips/$id/pdf?token=$accessToken';
+  /// Fetch a short-lived download token. `dio` already attaches the session
+  /// auth header via its interceptor, so this call itself is authenticated.
+  static Future<String> _downloadToken(Dio dio) async {
+    final res = await dio.get('/auth/download-token');
+    final data = res.data is Map ? res.data['data'] : null;
+    final token = data is Map ? data['token'] : null;
+    if (token is! String || token.isEmpty) {
+      throw Exception('Could not obtain a download token');
+    }
+    return token;
+  }
 
-  /// Fuel-claim PDF — `/fuel-claims/:id/pdf?token=…`.
-  static String fuelClaim(int id, String accessToken) =>
-      '${Env.apiBaseUrl}/fuel-claims/$id/pdf?token=$accessToken';
+  /// Payslip PDF — `/me/payslips/:id/pdf?token=<short-lived>`.
+  static Future<String> payslip(Dio dio, int id) async =>
+      '${Env.apiBaseUrl}/me/payslips/$id/pdf?token=${await _downloadToken(dio)}';
 
-  /// Programme item report PDF — `/{wash|igp}/items/:id/report?token=…`.
-  static String programmeItemReport(String kind, int itemId, String accessToken) =>
-      '${Env.apiBaseUrl}/$kind/items/$itemId/report?token=$accessToken';
+  /// Fuel-claim PDF — `/fuel-claims/:id/pdf?token=<short-lived>`.
+  static Future<String> fuelClaim(Dio dio, int id) async =>
+      '${Env.apiBaseUrl}/fuel-claims/$id/pdf?token=${await _downloadToken(dio)}';
+
+  /// Programme item report PDF — `/{wash|igp}/items/:id/report?token=<short-lived>`.
+  static Future<String> programmeItemReport(Dio dio, String kind, int itemId) async =>
+      '${Env.apiBaseUrl}/$kind/items/$itemId/report?token=${await _downloadToken(dio)}';
 }

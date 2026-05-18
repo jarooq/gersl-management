@@ -92,10 +92,9 @@ class MovementRepository {
     return extractMap(res.data, const ['claim']) ?? <String, dynamic>{};
   }
 
-  /// Browser-launchable URL for the fuel-claim PDF. Token-URL construction is
-  /// centralised in [PdfLinks] — see that file for the known `?token=` risk.
-  String fuelClaimPdfUrl(int id, String accessToken) =>
-      PdfLinks.fuelClaim(id, accessToken);
+  /// Browser-launchable URL for the fuel-claim PDF. The URL carries a fresh
+  /// short-lived download token (see [PdfLinks]).
+  Future<String> fuelClaimPdfUrl(int id) => PdfLinks.fuelClaim(_dio, id);
 }
 
 final movementRepoProvider = Provider<MovementRepository>(

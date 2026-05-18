@@ -14,9 +14,9 @@ class PayslipRepository {
     return extractMapList(res.data, const ['payslips']);
   }
 
-  /// Browser-launchable URL for the payslip PDF. Token-URL construction is
-  /// centralised in [PdfLinks] — see that file for the known `?token=` risk.
-  String pdfUrl(int id, String accessToken) => PdfLinks.payslip(id, accessToken);
+  /// Browser-launchable URL for the payslip PDF. The URL carries a fresh
+  /// short-lived download token (see [PdfLinks]).
+  Future<String> pdfUrl(int id) => PdfLinks.payslip(_dio, id);
 }
 
 final payslipRepoProvider = Provider<PayslipRepository>(

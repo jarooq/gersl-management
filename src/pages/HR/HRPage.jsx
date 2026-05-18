@@ -537,7 +537,7 @@ const HRPage = () => {
   };
 
   // Handle GPS Check-in
-  const handleGpsCheckIn = () => {
+  const handleGpsCheckIn = async () => {
     // Simulate GPS check-in - in real app, this would get actual GPS coordinates
     if (staff.length === 0) {
       alert('No staff members available. Please add staff first.');
@@ -546,16 +546,19 @@ const HRPage = () => {
 
     const currentUser = staff[0]; // In real app, this would be the logged-in user
 
-    addGpsAttendance({
-      employeeId: currentUser.id,
-      location: 'Office Location',
-      latitude: 6.9271,
-      longitude: 79.8612,
-      distance: '0m',
-      verified: true
-    });
-
-    alert('GPS Check-in successful!');
+    try {
+      await addGpsAttendance({
+        employeeId: currentUser.id,
+        location: 'Office Location',
+        latitude: 6.9271,
+        longitude: 79.8612,
+        distance: '0m',
+        verified: true
+      });
+      alert('GPS Check-in successful!');
+    } catch (err) {
+      alert('GPS Check-in failed: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle Apply Leave

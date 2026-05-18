@@ -381,6 +381,23 @@ export const getMe = asyncHandler(async (req, res) => {
 });
 
 // ============================================
+// DOWNLOAD TOKEN
+// ============================================
+// External viewers (the mobile PDF launcher) open a URL in a browser/OS
+// handler that can't carry an Authorization header, so the token has to be in
+// the URL. Rather than leak the long-lived session JWT into server logs and
+// browser history, mint a short-lived (2-minute) token used only for that one
+// download. verifyToken accepts it like any other JWT.
+export const getDownloadToken = asyncHandler(async (req, res) => {
+  const token = jwt.sign(
+    { id: req.user.id, kind: 'download' },
+    process.env.JWT_SECRET,
+    { expiresIn: '120s' }
+  );
+  res.json({ success: true, data: { token, expiresIn: 120 } });
+});
+
+// ============================================
 // UPDATE PROFILE
 // ============================================
 export const updateProfile = asyncHandler(async (req, res) => {

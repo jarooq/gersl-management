@@ -5,6 +5,17 @@ import * as APIServices from '../services/api';
 
 const HRContext = createContext();
 
+// Normalise an Attendance row (with GPS coordinates) into the shape the
+// GPS-attendance UI expects (employeeName / time / verified / distance / coordinates).
+const toGpsRecord = (r) => ({
+  ...r,
+  employeeName: r.staff?.fullName || r.employeeName || 'Staff',
+  time: r.checkInTime || r.time,
+  verified: r.gpsVerified ?? r.verified ?? false,
+  distance: r.distanceFromOffice || r.distance,
+  coordinates: r.latitude != null ? `${r.latitude}, ${r.longitude}` : null,
+});
+
 export const useHR = () => {
   const context = useContext(HRContext);
   if (!context) {
@@ -50,7 +61,7 @@ export const HRProvider = ({ children }) => {
         punchesRes
       ] = await Promise.allSettled([
         APIServices.HRAPI.getAll({ limit: 100 }), // Get all staff (API max limit is 100)
-        API.Attendance.getAll(),
+        API.Attendance.getAll({ limit: 100 }),
         API.LeaveRequest.getAll(),
         APIServices.HROnboardingAPI.getAll(),
         APIServices.HRAppraisalAPI.getAll(),
@@ -73,7 +84,12 @@ export const HRProvider = ({ children }) => {
       // older mock returned { attendance }. Accept either.
       if (attendanceRes.status === 'fulfilled') {
         const v = attendanceRes.value;
-        setAttendance(v?.attendanceRecords || v?.attendance || []);
+        const records = v?.attendanceRecords || v?.attendance || [];
+        setAttendance(records);
+        // GPS attendance = attendance rows that carry GPS coordinates.
+        setGpsAttendance(
+          records.filter(r => r.latitude != null && r.latitude !== '').map(toGpsRecord)
+        );
       } else {
         console.error('Error loading attendance:', attendanceRes.reason);
       }
@@ -141,20 +157,45 @@ export const HRProvider = ({ children }) => {
     return record;
   }, []);
 
-  // GPS attendance has no dedicated backend endpoint — these mutations
-  // manage local context state only.
-  const addGpsAttendance = useCallback((formData) => {
-    const record = { id: `gps-${Date.now()}`, timestamp: new Date().toISOString(), ...formData };
+  // GPS attendance is persisted as an Attendance row carrying GPS coordinates.
+  const addGpsAttendance = useCallback(async (formData) => {
+    const created = await API.Attendance.create({
+      staffId: formData.employeeId,
+      attendanceDate: new Date().toISOString().slice(0, 10),
+      checkInTime: new Date().toTimeString().slice(0, 8),
+      status: 'Present',
+      location: formData.location,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      distanceFromOffice: formData.distance,
+      gpsVerified: formData.verified ?? false,
+    });
+    const member = staff.find(s => String(s.id) === String(formData.employeeId));
+    const record = toGpsRecord({
+      ...created,
+      staff: created.staff || (member ? { fullName: member.fullName || member.name } : undefined),
+    });
     setGpsAttendance(prev => [record, ...prev]);
     return record;
-  }, []);
+  }, [staff]);
 
-  const deleteGpsAttendance = useCallback((id) => {
+  const deleteGpsAttendance = useCallback(async (id) => {
+    await API.Attendance.delete(id);
     setGpsAttendance(prev => prev.filter(r => r.id !== id));
   }, []);
 
-  const updateGpsAttendance = useCallback((id, updates) => {
-    setGpsAttendance(prev => prev.map(r => (r.id === id ? { ...r, ...updates } : r)));
+  const updateGpsAttendance = useCallback(async (id, updates) => {
+    // The UI sends `verified`; the backend column is `gpsVerified`.
+    const payload = { ...updates };
+    if ('verified' in payload) {
+      payload.gpsVerified = payload.verified;
+      delete payload.verified;
+    }
+    const updated = await API.Attendance.update(id, payload);
+    setGpsAttendance(prev => prev.map(r => (
+      r.id === id ? toGpsRecord({ ...r, ...updated }) : r
+    )));
+    return updated;
   }, []);
 
   const applyLeave = useCallback(async (formData) => {

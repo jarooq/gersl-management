@@ -3276,6 +3276,12 @@ const Attendance = sequelize.define('Attendance', {
   workHours: { type: DataTypes.DECIMAL(4, 2), field: 'work_hours' },
   overtimeHours: { type: DataTypes.DECIMAL(4, 2), defaultValue: 0, field: 'overtime_hours' },
   location: { type: DataTypes.STRING(100) },
+  // GPS-based attendance — populated when a record is created via a GPS
+  // check-in. Backed by migration add_gps_columns_to_attendance.js.
+  latitude: { type: DataTypes.DECIMAL(10, 7) },
+  longitude: { type: DataTypes.DECIMAL(10, 7) },
+  distanceFromOffice: { type: DataTypes.STRING(50), field: 'distance_from_office' },
+  gpsVerified: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'gps_verified' },
   notes: { type: DataTypes.TEXT },
   approvedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'approved_by' }
 }, {
