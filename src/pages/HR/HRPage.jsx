@@ -27,11 +27,7 @@ const HRPage = () => {
     attendance,
     leaveRequests,
     onboardingRecords,
-    appraisalRecords,
     gpsAttendance,
-    assetCheckouts,
-    vehicleRequests,
-    accommodationRequests,
     refreshHRData,
     addOnboarding,
     addAppraisal,
@@ -65,7 +61,7 @@ const HRPage = () => {
       try {
         const rows = await ExpenseAPI.listAdmin({ status: 'Approved' });
         if (!cancelled) { setStaffExpenses(rows || []); setStaffExpensesLoaded(true); }
-      } catch (e) {
+      } catch {
         if (!cancelled) setStaffExpensesLoaded(true);
       }
     })();
@@ -457,7 +453,7 @@ const HRPage = () => {
 
     try {
       // Call backend to create staff and user account
-      const result = await API.HR.create({
+      await API.HR.create({
         ...staffForm,
         salary: parseFloat(staffForm.salary) || 0
       });
@@ -701,7 +697,7 @@ const HRPage = () => {
     }
 
     // Calculate attendance for each day
-    const dailyAttendance = last7Days.map((date, index) => {
+    const dailyAttendance = last7Days.map((date) => {
       const dateObj = new Date(date);
       const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dateObj.getDay()];
       const presentCount = attendance.filter(a => a.date === date && a.status === 'Present').length;
@@ -832,7 +828,7 @@ const HRPage = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {staff.map((member, index) => (
+                {staff.map((member) => (
                   <div
                     key={member.id}
                     className="card-modern group p-4"

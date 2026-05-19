@@ -32,7 +32,6 @@ const CoordinatorsPage = () => {
   const [filterStatus, setFilterStatus] = useState('all'); // all, active, inactive
   const [sortBy, setSortBy] = useState('name'); // name, orphans, visits, workload
   const [sortOrder, setSortOrder] = useState('asc'); // asc, desc
-  const [viewMode, setViewMode] = useState('grid'); // grid, list
   const [showQuickActions, setShowQuickActions] = useState(null); // coordinator id for dropdown
 
   useEffect(() => {
@@ -64,16 +63,6 @@ const CoordinatorsPage = () => {
     link.href = URL.createObjectURL(blob);
     link.download = `coordinators_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
-  };
-
-  // Toggle sort order
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
   };
 
   // Filter coordinators based on search and status

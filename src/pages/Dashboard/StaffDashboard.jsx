@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchTasks } from '../../services/taskService';
@@ -25,15 +25,7 @@ const StaffDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [hrLoading, setHRLoading] = useState(false);
 
-  // Load user's tasks, projects, and proposals
-  useEffect(() => {
-    loadTasks();
-    loadProjects();
-    loadProposals();
-    loadHRData();
-  }, []);
-
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetchTasks();
@@ -49,9 +41,9 @@ const StaffDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
-  const loadHRData = async () => {
+  const loadHRData = useCallback(async () => {
     setHRLoading(true);
     try {
       const data = await API.HRContract.getMyHRData();
@@ -61,9 +53,9 @@ const StaffDashboard = () => {
     } finally {
       setHRLoading(false);
     }
-  };
+  }, []);
 
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     try {
       const response = await API.Projects.getAll();
       if (response.success && response.projects) {
@@ -74,9 +66,9 @@ const StaffDashboard = () => {
       console.error('Error loading projects:', error);
       setProjects([]);
     }
-  };
+  }, []);
 
-  const loadProposals = async () => {
+  const loadProposals = useCallback(async () => {
     try {
       const response = await API.Proposals.getAll();
       if (response.success && response.proposals) {
@@ -87,7 +79,15 @@ const StaffDashboard = () => {
       console.error('Error loading proposals:', error);
       setProposals([]);
     }
-  };
+  }, []);
+
+  // Load user's tasks, projects, and proposals
+  useEffect(() => {
+    loadTasks();
+    loadProjects();
+    loadProposals();
+    loadHRData();
+  }, [loadTasks, loadProjects, loadProposals, loadHRData]);
 
   // Calculate statistics
   const stats = useMemo(() => {

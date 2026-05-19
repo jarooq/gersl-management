@@ -43,18 +43,9 @@ const CBOPage = () => {
     cboProposals,
     cboProjects,
     getStats,
-    addCBO,
-    addVolunteer,
-    addActivity,
     addCBOProposal,
-    addDueDiligence,
-    addCBOProject,
     addCFMFeedback,
     resolveCFMFeedback,
-    fundraisingApproveProposal,
-    fundraisingRejectProposal,
-    ceoApproveProposal,
-    ceoRejectProposal,
   } = useCBO();
 
   const [activeTab, setActiveTab] = useState('cbos');
@@ -739,6 +730,12 @@ const DueDiligenceTab = ({ assessments, searchTerm }) => {
 
 // CBO Proposals Tab Component
 const ProposalsTab = ({ proposals, searchTerm }) => {
+  const {
+    fundraisingApproveProposal,
+    fundraisingRejectProposal,
+    ceoApproveProposal,
+    ceoRejectProposal,
+  } = useCBO();
   const [selectedProposal, setSelectedProposal] = React.useState(null);
   const [showProposalDetail, setShowProposalDetail] = React.useState(false);
   const [showAddModal, setShowAddModal] = React.useState(false);

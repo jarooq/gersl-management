@@ -10,7 +10,7 @@ const ReportEditor = ({ report, onClose }) => {
   const [sections, setSections] = useState(report.sections);
   const [exportFormat, setExportFormat] = useState('html');
   const [isEditing, setIsEditing] = useState(false);
-  const { updateReport, updateSection, deleteReport } = useReports();
+  const { updateSection, deleteReport } = useReports();
 
   const handleSectionUpdate = (sectionId, newContent) => {
     const updated = sections.map(s =>

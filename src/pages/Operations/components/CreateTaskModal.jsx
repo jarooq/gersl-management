@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useProjects } from '../../../contexts/ProjectContext';
 import { createTask } from '../../../services/taskService';
 import * as API from '../../../services/api';
@@ -17,7 +17,7 @@ import {
   Gift
 } from 'lucide-react';
 
-const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = null, projectTeamMembers = null, availableStaff = null }) => {
+const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = null, projectTeamMembers = null }) => {
   const { projects } = useProjects();
   // No longer need staff from HRContext - we use project team members directly
 
@@ -94,40 +94,7 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
 
   const mediaTypes = ['Photos', 'Videos', 'Social Media Posts', 'Press Release', 'Testimonials'];
 
-  useEffect(() => {
-    if (isOpen) {
-      resetForm();
-      // Reset submission guard when modal opens
-      isSubmittingRef.current = false;
-    }
-  }, [isOpen]);
-
-  // Fetch project team members when project is selected
-  useEffect(() => {
-    const fetchProjectTeamMembers = async () => {
-      if (formData.projectId && !projectTeamMembers) {
-        // Only fetch if projectTeamMembers prop is not already provided
-        try {
-          const response = await API.ProjectAPI.getById(formData.projectId);
-          if (response && response.teamMembers) {
-            setDynamicProjectTeamMembers(response.teamMembers);
-          } else {
-            setDynamicProjectTeamMembers([]);
-          }
-        } catch (error) {
-          console.error('Error fetching project team members:', error);
-          setDynamicProjectTeamMembers([]);
-        }
-      } else if (!formData.projectId) {
-        // Clear dynamic team members if no project is selected
-        setDynamicProjectTeamMembers(null);
-      }
-    };
-
-    fetchProjectTeamMembers();
-  }, [formData.projectId, projectTeamMembers]);
-
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       projectId: defaultProjectId || '',
       title: '',
@@ -162,7 +129,40 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated, defaultProjectId = nu
     });
     setCurrentStep(1);
     setErrors({});
-  };
+  }, [defaultProjectId]);
+
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+      // Reset submission guard when modal opens
+      isSubmittingRef.current = false;
+    }
+  }, [isOpen, resetForm]);
+
+  // Fetch project team members when project is selected
+  useEffect(() => {
+    const fetchProjectTeamMembers = async () => {
+      if (formData.projectId && !projectTeamMembers) {
+        // Only fetch if projectTeamMembers prop is not already provided
+        try {
+          const response = await API.ProjectAPI.getById(formData.projectId);
+          if (response && response.teamMembers) {
+            setDynamicProjectTeamMembers(response.teamMembers);
+          } else {
+            setDynamicProjectTeamMembers([]);
+          }
+        } catch (error) {
+          console.error('Error fetching project team members:', error);
+          setDynamicProjectTeamMembers([]);
+        }
+      } else if (!formData.projectId) {
+        // Clear dynamic team members if no project is selected
+        setDynamicProjectTeamMembers(null);
+      }
+    };
+
+    fetchProjectTeamMembers();
+  }, [formData.projectId, projectTeamMembers]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

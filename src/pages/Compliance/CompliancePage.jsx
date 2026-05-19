@@ -9,9 +9,8 @@ import {
 
 const CompliancePage = () => {
   const { staff } = useHR();
-  const { policies: contextPolicies, incidents, backgroundChecks, trainingRecords, getStats } = useCompliance();
+  const { trainingRecords, getStats } = useCompliance();
   const [activeTab, setActiveTab] = useState('overview');
-  const [searchTerm, setSearchTerm] = useState('');
 
   // Get stats from ComplianceContext
   const contextStats = getStats();

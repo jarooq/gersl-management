@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Sparkles, ChevronRight, ChevronLeft, Check, Plus, Trash2 } from 'lucide-react';
 import { useMEAL } from '../../contexts/MEALContext';
 

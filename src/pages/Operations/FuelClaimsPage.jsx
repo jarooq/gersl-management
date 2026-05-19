@@ -54,7 +54,7 @@ export default function FuelClaimsPage() {
           try {
             const dr = await MovementAPI.duplicateCheck(c.id);
             dups[c.id] = dr?.data?.overlaps || [];
-          } catch (_) { dups[c.id] = []; }
+          } catch { dups[c.id] = []; }
         }));
         setDuplicates(dups);
       } else {
@@ -67,7 +67,7 @@ export default function FuelClaimsPage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [tab]);
+  useEffect(() => { load();   }, [tab]);
 
   const action = async (fn) => {
     setBusy(true);

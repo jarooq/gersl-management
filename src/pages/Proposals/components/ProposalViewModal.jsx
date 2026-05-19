@@ -305,13 +305,6 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
     ? (totalBudget / totalDirectBeneficiaries).toFixed(2)
     : 0;
 
-  const getBudgetCategoryTotal = (category) => {
-    if (!proposal.budgetBreakdown) return 0;
-    return proposal.budgetBreakdown
-      .filter(item => item.category === category)
-      .reduce((sum, item) => sum + (item.totalCost || 0), 0);
-  };
-
   // Workflow steps configuration
   const workflowSteps = [
     { key: 'Draft', label: 'Draft', icon: FileEdit, color: 'gray' },

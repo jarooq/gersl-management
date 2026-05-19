@@ -57,7 +57,7 @@ export default function ProcurementInboxPage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [activeTab]);
+  useEffect(() => { load();   }, [activeTab]);
 
   const handleAssigned = () => {
     setAssignTarget(null);

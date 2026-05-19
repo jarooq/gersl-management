@@ -219,7 +219,7 @@ const OrphanMapView = ({ orphans, onView }) => {
               </div>
 
               <div className="space-y-3 max-h-[520px] overflow-y-auto pr-2">
-                {selectedOrphans.map((orphan, index) => (
+                {selectedOrphans.map((orphan) => (
                   <div
                     key={orphan.id}
                     className="bg-white border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"

@@ -3,7 +3,7 @@
  * Manages multi-level approval processes based on organizational hierarchy
  */
 
-import { getRoleInfo, getApprovalChain, isSubordinate } from '../config/roleHierarchy';
+import { getRoleInfo } from '../config/roleHierarchy';
 
 // Approval status constants
 export const APPROVAL_STATUS = {
@@ -211,10 +211,9 @@ export const getCurrentPendingApprover = (workflow) => {
  * Check if a user can approve a specific workflow step
  * @param {Object} workflow - Approval workflow object
  * @param {string} userRole - User's role
- * @param {number} userId - User's ID
  * @returns {boolean}
  */
-export const canUserApprove = (workflow, userRole, userId) => {
+export const canUserApprove = (workflow, userRole) => {
   const currentApproverRole = getCurrentPendingApprover(workflow);
 
   if (!currentApproverRole) {

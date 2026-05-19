@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { usePartners } from '../../contexts/PartnersContext';
 import AddPartnerModal from './AddPartnerModal';
 import AddContributionModal from './AddContributionModal';
@@ -532,7 +532,7 @@ const PartnersPage = () => {
 
             {/* Partner Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredPartners.map((partner, index) => (
+              {filteredPartners.map((partner) => (
                 <div
                   key={partner.id}
                   className="card-modern group p-5"
@@ -590,7 +590,7 @@ const PartnersPage = () => {
                       } else if (Array.isArray(partner.focusAreas)) {
                         focusAreasArray = partner.focusAreas;
                       }
-                    } catch (e) {
+                    } catch {
                       focusAreasArray = [];
                     }
 
@@ -686,7 +686,7 @@ const PartnersPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {contributions.sort((a, b) => new Date(b.date) - new Date(a.date)).map((contribution, index) => (
+                  {contributions.sort((a, b) => new Date(b.date) - new Date(a.date)).map((contribution) => (
                     <tr
                       key={contribution.id}
                       className="border-b border-ink-100 hover:bg-ink-50 transition-colors"
@@ -762,7 +762,7 @@ const PartnersPage = () => {
               </button>
             </div>
             <div className="space-y-3">
-              {communications.sort((a, b) => new Date(b.date) - new Date(a.date)).map((comm, index) => (
+              {communications.sort((a, b) => new Date(b.date) - new Date(a.date)).map((comm) => (
                 <div
                   key={comm.id}
                   className="bg-white border border-ink-100 rounded-lg2 shadow-card p-4"

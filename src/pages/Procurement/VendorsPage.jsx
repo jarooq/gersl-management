@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProcurementAPI } from '../../services/api';
 import VendorFormModal from './components/VendorFormModal';
 
@@ -41,7 +41,7 @@ export default function VendorsPage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, []);
+  useEffect(() => { load();   }, []);
 
   const onSearch = (e) => { e.preventDefault(); load(); };
 

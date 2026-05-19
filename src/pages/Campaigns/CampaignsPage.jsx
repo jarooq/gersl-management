@@ -33,7 +33,6 @@ import {
 const CampaignsPage = () => {
   const {
     campaigns,
-    donations,
     addCampaign,
     updateCampaign,
     deleteCampaign,

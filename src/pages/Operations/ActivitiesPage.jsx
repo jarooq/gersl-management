@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useProjects } from '../../contexts/ProjectContext';
-import { useHR } from '../../contexts/HRContext';
 import {
   Target, Calendar, Users, MapPin, CheckCircle, Clock, AlertCircle,
   Plus, Eye, Edit2, Trash2, UserCheck, Camera, FileText, Package,
@@ -8,9 +6,6 @@ import {
 } from 'lucide-react';
 
 const ActivitiesPage = () => {
-  const { projects } = useProjects();
-  const { staff } = useHR();
-
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [showActivityDetail, setShowActivityDetail] = useState(false);
   const [showResourcePlanning, setShowResourcePlanning] = useState(false);
@@ -249,7 +244,7 @@ const ActivitiesPage = () => {
         </div>
 
         <div className="space-y-4">
-          {activities.map((activity, index) => (
+          {activities.map((activity) => (
             <div
               key={activity.id}
               className="bg-white border border-ink-100 rounded-lg2 shadow-card p-5"

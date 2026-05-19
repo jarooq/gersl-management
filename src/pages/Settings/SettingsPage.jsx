@@ -32,7 +32,7 @@ const SettingsPage = () => {
   const [editingRole, setEditingRole] = useState(null);
   const [roleToDelete, setRoleToDelete] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
+  const [, setSubmitError] = useState(null);
 
   const tabs = [
     { id: 'users', name: 'User Management', icon: Users },
@@ -405,9 +405,7 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
 const RolesTab = ({
   roles,
   permissions,
-  editingRole,
   setEditingRole,
-  updateRole,
   setShowAddRoleModal,
   setShowEditRoleModal,
   setShowDeleteRoleModal,
@@ -423,7 +421,7 @@ const RolesTab = ({
     if (roles && roles.length > 0 && !selectedRole) {
       setSelectedRole(roles[0]);
     }
-  }, [roles]);
+  }, [roles, selectedRole]);
 
   // Group permissions from database by module
   const permissionGroups = React.useMemo(() => {
@@ -431,11 +429,6 @@ const RolesTab = ({
     return permissions.grouped_permissions;
   }, [permissions]);
 
-  // Get all permissions as a flat array
-  const allPermissions = React.useMemo(() => {
-    if (!permissions || !permissions.permissions) return [];
-    return permissions.permissions;
-  }, [permissions]);
 
   const getCurrentPermissions = () => {
     if (!selectedRole) return [];
@@ -518,12 +511,6 @@ const RolesTab = ({
     }
   };
 
-  const formatPermissionName = (key) => {
-    return key
-      .split('_')
-      .map(word => word.charAt(0) + word.slice(1).toLowerCase())
-      .join(' ');
-  };
 
   const getPermissionColor = (permission) => {
     if (!permission) return 'text-ink-600';

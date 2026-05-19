@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useProjects } from '../../../contexts/ProjectContext';
 import { createTask, updateTask } from '../../../services/taskService';
 import * as API from '../../../services/api';
@@ -25,8 +25,7 @@ const TaskFormModal = ({
   onTaskCreated,
   onTaskUpdated,
   defaultProjectId = null,
-  projectTeamMembers = null,
-  availableStaff = null
+  projectTeamMembers = null
 }) => {
   const { projects } = useProjects();
   // No longer need staff from HRContext - we use project team members directly
@@ -113,6 +112,43 @@ const TaskFormModal = ({
   };
 
   // Initialize form with existing task data in edit mode
+  const resetForm = useCallback(() => {
+    setFormData({
+      projectId: defaultProjectId || '',
+      title: '',
+      description: '',
+      priority: 'Medium',
+      status: 'Not Started',
+      startDate: '',
+      dueDate: '',
+      assignedTo: '',
+      assignedUsers: [],
+      taskType: 'Other',
+      taskCategory: '',
+      requiresProcurement: false,
+      procurementItems: '',
+      estimatedBudget: '',
+      involvesBeneficiaries: false,
+      beneficiaryTrackingMode: 'None',
+      beneficiarySelectionMethod: '',
+      selectionCriteria: '',
+      targetBeneficiaries: '',
+      distributionType: 'None',
+      distributionItems: '',
+      cashAmount: '',
+      distributionDate: '',
+      distributionLocation: '',
+      trainingType: '',
+      trainingDuration: '',
+      certificateProvided: false,
+      mediaCoverageRequired: false,
+      mediaCoverageType: [],
+      mediaTeamAssigned: []
+    });
+    setCurrentStep(1);
+    setErrors({});
+  }, [defaultProjectId]);
+
   useEffect(() => {
     if (isOpen) {
       if (mode === 'edit' && task) {
@@ -185,7 +221,7 @@ const TaskFormModal = ({
       // Reset submission guard when modal opens
       isSubmittingRef.current = false;
     }
-  }, [isOpen, mode, task, defaultProjectId]);
+  }, [isOpen, mode, task, defaultProjectId, resetForm]);
 
   // Fetch project team members when project is selected
   useEffect(() => {
@@ -211,43 +247,6 @@ const TaskFormModal = ({
 
     fetchProjectTeamMembers();
   }, [formData.projectId, projectTeamMembers]);
-
-  const resetForm = () => {
-    setFormData({
-      projectId: defaultProjectId || '',
-      title: '',
-      description: '',
-      priority: 'Medium',
-      status: 'Not Started',
-      startDate: '',
-      dueDate: '',
-      assignedTo: '',
-      assignedUsers: [],
-      taskType: 'Other',
-      taskCategory: '',
-      requiresProcurement: false,
-      procurementItems: '',
-      estimatedBudget: '',
-      involvesBeneficiaries: false,
-      beneficiaryTrackingMode: 'None',
-      beneficiarySelectionMethod: '',
-      selectionCriteria: '',
-      targetBeneficiaries: '',
-      distributionType: 'None',
-      distributionItems: '',
-      cashAmount: '',
-      distributionDate: '',
-      distributionLocation: '',
-      trainingType: '',
-      trainingDuration: '',
-      certificateProvided: false,
-      mediaCoverageRequired: false,
-      mediaCoverageType: [],
-      mediaTeamAssigned: []
-    });
-    setCurrentStep(1);
-    setErrors({});
-  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

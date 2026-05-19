@@ -64,7 +64,7 @@ export const generateOrphanReportPDF = async (report, orphan) => {
         }
       };
 
-      img.onerror = (err) => {
+      img.onerror = () => {
         reject(new Error('Logo not found'));
       };
 

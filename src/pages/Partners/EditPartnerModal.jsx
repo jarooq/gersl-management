@@ -32,7 +32,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
         } else if (Array.isArray(partner.focusAreas)) {
           parsedFocusAreas = partner.focusAreas;
         }
-      } catch (e) {
+      } catch {
         parsedFocusAreas = [];
       }
 

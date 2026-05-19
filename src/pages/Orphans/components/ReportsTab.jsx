@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Plus, Calendar, Download, Eye, Trash2, Loader, TrendingUp, Image as ImageIcon, Mail, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import OrphanReportWizard from './OrphanReportWizard';
 import { OrphanReportAPI } from '../../../services/api';
@@ -10,13 +10,7 @@ const ReportsTab = ({ orphan }) => {
   const [showWizard, setShowWizard] = useState(false);
   const [previewReport, setPreviewReport] = useState(null);
 
-  useEffect(() => {
-    if (orphan?.id) {
-      fetchReports();
-    }
-  }, [orphan?.id]);
-
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async () => {
     try {
       setLoading(true);
       const data = await OrphanReportAPI.getByOrphan(orphan.id);
@@ -26,7 +20,13 @@ const ReportsTab = ({ orphan }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orphan?.id]);
+
+  useEffect(() => {
+    if (orphan?.id) {
+      fetchReports();
+    }
+  }, [orphan?.id, fetchReports]);
 
   const handleDeleteReport = async (reportId) => {
     if (!window.confirm('Are you sure you want to delete this report?')) {

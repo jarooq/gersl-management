@@ -22,7 +22,7 @@ const CampaignDetailPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [packages, setPackages] = useState([]);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const [loadingPackages, setLoadingPackages] = useState(true);
+  const [, setLoadingPackages] = useState(true);
 
   const campaign = campaigns.find(c => c.id === parseInt(id));
 

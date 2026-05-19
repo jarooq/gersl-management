@@ -20,7 +20,7 @@ export default function TransferCashModal({ fromAccount, onClose, onSaved }) {
           a.id !== fromAccount.id && a.currency === fromAccount.currency
         );
         setAccounts(list);
-      } catch (_) {}
+      } catch { /* ignore — fall back to empty list */ }
     })();
     return () => { cancelled = true; };
   }, [fromAccount.id, fromAccount.currency]);

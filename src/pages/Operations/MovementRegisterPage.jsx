@@ -51,7 +51,7 @@ export default function MovementRegisterPage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [tab]);
+  useEffect(() => { load();   }, [tab]);
 
   const action = async (fn) => {
     setBusy(true);

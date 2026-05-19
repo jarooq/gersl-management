@@ -38,7 +38,7 @@ const WashPage = () => {
   };
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, []);
-  useEffect(() => { const t = setTimeout(load, 300); return () => clearTimeout(t); /* eslint-disable-next-line */ }, [filter]);
+  useEffect(() => { const t = setTimeout(load, 300); return () => clearTimeout(t);   }, [filter]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-5">

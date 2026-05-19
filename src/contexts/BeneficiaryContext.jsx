@@ -263,9 +263,9 @@ export const BeneficiaryProvider = ({ children }) => {
   };
 
   // Bulk import beneficiaries
-  const bulkImportBeneficiaries = async (beneficiariesData, progressCallback) => {
+  const bulkImportBeneficiaries = async (beneficiariesData) => {
     try {
-      const result = await API.Beneficiary.bulkImport(beneficiariesData);
+      const result = await BeneficiaryAPI.bulkImport(beneficiariesData);
       await fetchBeneficiaries();  // Refresh list after import
       return result;
     } catch (error) {

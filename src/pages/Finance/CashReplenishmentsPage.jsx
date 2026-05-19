@@ -42,7 +42,7 @@ export default function CashReplenishmentsPage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [statusFilter]);
+  useEffect(() => { load();   }, [statusFilter]);
 
   const action = async (fn) => {
     setBusy(true);

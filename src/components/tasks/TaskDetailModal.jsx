@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, Calendar, User, CheckCircle, Clock, AlertCircle, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import AttachmentUpload from './AttachmentUpload';
@@ -13,7 +13,7 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
   const [attachmentCount, setAttachmentCount] = useState(0);
 
   // Fetch task details
-  const fetchTask = async () => {
+  const fetchTask = useCallback(async () => {
     try {
       setLoading(true);
       const response = await api.get(`/api/tasks/${taskId}`);
@@ -28,14 +28,14 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [taskId]);
 
   useEffect(() => {
     if (isOpen && taskId) {
       fetchTask();
       setActiveTab('details');
     }
-  }, [isOpen, taskId]);
+  }, [isOpen, taskId, fetchTask]);
 
   // Handle upload success
   const handleUploadSuccess = () => {
@@ -45,9 +45,9 @@ const TaskDetailModal = ({ taskId, isOpen, onClose, onUpdate }) => {
   };
 
   // Handle attachments change
-  const handleAttachmentsChange = (attachments) => {
+  const handleAttachmentsChange = useCallback((attachments) => {
     setAttachmentCount(attachments.length);
-  };
+  }, []);
 
   // Get priority badge color
   const getPriorityColor = (priority) => {

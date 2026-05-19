@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Search, Home, FileText, Users, Calendar, DollarSign, Settings, FolderOpen, Target, BarChart3 } from 'lucide-react';
 
@@ -45,6 +45,12 @@ const CommandPalette = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  // Handle command selection
+  const handleCommandSelect = useCallback((command) => {
+    navigate(command.path);
+    onClose();
+  }, [navigate, onClose]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -78,13 +84,7 @@ const CommandPalette = ({ isOpen, onClose }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, selectedIndex, filteredCommands]);
-
-  // Handle command selection
-  const handleCommandSelect = (command) => {
-    navigate(command.path);
-    onClose();
-  };
+  }, [isOpen, selectedIndex, filteredCommands, handleCommandSelect, onClose]);
 
   if (!isOpen) return null;
 

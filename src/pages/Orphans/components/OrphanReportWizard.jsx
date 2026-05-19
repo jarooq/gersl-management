@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, ChevronRight, ChevronLeft, Calendar, Users, Image, Sparkles, FileText, Check, Loader } from 'lucide-react';
 import { OrphanReportAPI, VisitLogAPI } from '../../../services/api';
 
@@ -23,14 +23,7 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
     includeProgressRatings: true
   });
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchVisitLogs();
-      setDefaultDates();
-    }
-  }, [isOpen]);
-
-  const setDefaultDates = () => {
+  const setDefaultDates = useCallback(() => {
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -40,16 +33,23 @@ const OrphanReportWizard = ({ isOpen, onClose, orphan, onSuccess }) => {
       reportPeriodStart: firstDayOfMonth.toISOString().split('T')[0],
       reportPeriodEnd: lastDayOfMonth.toISOString().split('T')[0]
     }));
-  };
+  }, []);
 
-  const fetchVisitLogs = async () => {
+  const fetchVisitLogs = useCallback(async () => {
     try {
       const data = await VisitLogAPI.getByOrphan(orphan.id);
       setVisitLogs(data.visitLogs || []);
     } catch (error) {
       console.error('Error fetching visit logs:', error);
     }
-  };
+  }, [orphan?.id]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchVisitLogs();
+      setDefaultDates();
+    }
+  }, [isOpen, fetchVisitLogs, setDefaultDates]);
 
   const handleSubmit = async () => {
     try {

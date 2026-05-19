@@ -82,7 +82,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
     if (typeof partnerObj.focusAreas === 'string') {
       try {
         partnerObj.focusAreas = JSON.parse(partnerObj.focusAreas);
-      } catch (e) {
+      } catch {
         partnerObj.focusAreas = partnerObj.focusAreas.split(',').map(s => s.trim());
       }
     }

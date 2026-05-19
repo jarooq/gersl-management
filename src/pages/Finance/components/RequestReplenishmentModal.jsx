@@ -24,7 +24,7 @@ export default function RequestReplenishmentModal({ pettyAccount, onClose, onSav
                     && ['CashBook', 'Locker'].includes(a.type)
                     && a.currency === pettyAccount.currency);
         setSources(list);
-      } catch (_) {}
+      } catch { /* ignore — fall back to empty list */ }
     })();
     return () => { cancelled = true; };
   }, [pettyAccount.id, pettyAccount.currency]);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Download,
   Trash2,
@@ -23,7 +23,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
   const [editCategory, setEditCategory] = useState('');
 
   // Fetch attachments
-  const fetchAttachments = async () => {
+  const fetchAttachments = useCallback(async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
@@ -49,13 +49,13 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [taskId, onAttachmentsChange]);
 
   useEffect(() => {
     if (taskId) {
       fetchAttachments();
     }
-  }, [taskId]);
+  }, [taskId, fetchAttachments]);
 
   // Download attachment
   const handleDownload = async (attachmentId, fileName) => {

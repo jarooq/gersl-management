@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { createProposalApprovalWorkflow } from '../utils/workflowOrchestrator';
 import * as proposalService from '../services/proposalService';
 
@@ -207,10 +207,9 @@ export const ProposalsProvider = ({ children }) => {
    * This triggers the creation of an approval workflow
    * @param {number} proposalId - ID of the proposal to submit
    * @param {Object} currentUser - Current user submitting the proposal
-   * @param {Function} createApprovalCallback - Callback to create approval workflow
    * @returns {Object} Result with workflow creation info
    */
-  const submitProposalForApproval = (proposalId, currentUser, createApprovalCallback) => {
+  const submitProposalForApproval = (proposalId, currentUser) => {
     const proposal = proposals.find(p => p.id === proposalId);
 
     if (!proposal) {

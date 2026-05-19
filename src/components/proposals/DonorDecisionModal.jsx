@@ -15,7 +15,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
     attachments: []
   });
 
-  const [uploading, setUploading] = useState(false);
+  const [uploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 

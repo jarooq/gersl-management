@@ -32,10 +32,6 @@ const pastDate = z.string().refine((date) => {
   return new Date(date) <= new Date();
 }, { message: "Date cannot be in the future" });
 
-const futureDate = z.string().refine((date) => {
-  return new Date(date) >= new Date();
-}, { message: "Date cannot be in the past" });
-
 // ============================================
 // ORPHAN VALIDATION SCHEMAS
 // ============================================

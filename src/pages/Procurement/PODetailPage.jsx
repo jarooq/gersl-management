@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ProcurementAPI } from '../../services/api';
 import RecordGRNModal from './components/RecordGRNModal';
@@ -32,7 +32,7 @@ export default function PODetailPage() {
   const [busy, setBusy] = useState(false);
   const [showGrnModal, setShowGrnModal] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -49,9 +49,9 @@ export default function PODetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   const action = async (fn, ...args) => {
     setBusy(true);

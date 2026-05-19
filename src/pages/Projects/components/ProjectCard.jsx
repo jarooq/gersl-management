@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, DollarSign, Users, TrendingUp, Eye, Edit, Trash2, Target, MessageSquare, Shield } from 'lucide-react';
 
-const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
+const ProjectCard = ({ project, onEdit, onDelete }) => {
   const navigate = useNavigate();
   const getStatusColor = (status) => {
     switch (status) {

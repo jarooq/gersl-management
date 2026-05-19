@@ -379,7 +379,7 @@ export const validateApiKey = async (apiKey) => {
     });
 
     return response.ok;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

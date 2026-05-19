@@ -552,7 +552,7 @@ export const FinanceProvider = ({ children }) => {
     };
 
     expenses.forEach(e => {
-      if (e.mealActivityType && breakdown.hasOwnProperty(e.mealActivityType)) {
+      if (e.mealActivityType && Object.prototype.hasOwnProperty.call(breakdown, e.mealActivityType)) {
         breakdown[e.mealActivityType] += e.amount;
       } else if (e.mealActivityType) {
         breakdown.other += e.amount;
@@ -560,7 +560,7 @@ export const FinanceProvider = ({ children }) => {
     });
 
     return Object.entries(breakdown)
-      .filter(([_, amount]) => amount > 0)
+      .filter(([, amount]) => amount > 0)
       .map(([type, amount]) => ({
         type: type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
         amount

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Briefcase, Upload, Plus, MapPin, X, ChevronRight, FileText, CheckCircle, FileDown, Mail } from 'lucide-react';
 import { IgpAPI } from '../../services/api';
@@ -27,7 +27,7 @@ const IgpOrderDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [showImport, setShowImport] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const [order, itemList] = await Promise.all([
@@ -37,9 +37,9 @@ const IgpOrderDetailPage = () => {
       setData(order);
       setItems(itemList || []);
     } finally { setLoading(false); }
-  };
+  }, [id]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   if (loading) return <div className="p-12 text-center text-ink-500">Loading…</div>;
   if (!data) return <div className="p-12 text-center text-red-700">Order not found</div>;

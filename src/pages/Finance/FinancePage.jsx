@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CashAPI, ExchangeRateAPI, InvoiceAPI } from '../../services/api';
 import { useFinance } from '../../contexts/FinanceContext';
-import { useProjects } from '../../contexts/ProjectContext';
 import { usePartners } from '../../contexts/PartnersContext';
 import { useProposals } from '../../contexts/ProposalsContext';
 import { useGrantReceivables } from '../../contexts/GrantReceivablesContext';
@@ -14,7 +13,7 @@ import {
   PieChart, LineChart, AlertCircle, RefreshCw, Eye, Send, Check, XCircle, LayoutDashboard,
   Upload, HandCoins, Package, TrendingDown as Depreciation
 } from 'lucide-react';
-import { getCurrencySymbol, formatCurrency, convertToLKR, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
+import { getCurrencySymbol, formatCurrency, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
 
 // Today's date as YYYY-MM-DD (local), and a blank invoice-receipt form.
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -26,47 +25,21 @@ const blankPaymentForm = () => ({
 
 const FinancePage = () => {
   const {
-    expenses,
-    payrollData,
-    budgets,
-    purchaseOrders,
     invoices,
     bills,
     chartOfAccounts,
     journalEntries,
     bankTransactions,
-    getStats,
-    getMEALStats,
-    getCostEfficiencyByProject,
-    getMEALExpensesBreakdown,
-    addInvoice,
     updateInvoice,
-    deleteInvoice,
     recordInvoicePayment,
-    addBill,
     updateBill,
-    deleteBill,
-    addAccount,
-    updateAccount,
-    deleteAccount,
-    addJournalEntry,
-    updateJournalEntry,
-    deleteJournalEntry,
-    addBankTransaction,
-    updateBankTransaction,
-    deleteBankTransaction
+    addAccount
   } = useFinance();
-  const { projects } = useProjects();
   const { partners } = usePartners();
   const { proposals, getBudgetByProposal } = useProposals();
-  const { grantReceivables, getTotals: getGrantTotals, addGrantReceivable, updateGrantReceivable, recordReceipt, deleteGrantReceivable, getOverdue } = useGrantReceivables();
-  const { fixedAssets, getTotals: getAssetTotals, addFixedAsset, updateFixedAsset, deleteFixedAsset, disposeFixedAsset, getDepreciationSchedule, getSummaryByType } = useFixedAssets();
+  const { grantReceivables, getTotals: getGrantTotals, addGrantReceivable, recordReceipt, deleteGrantReceivable, getOverdue } = useGrantReceivables();
+  const { fixedAssets, getTotals: getAssetTotals, addFixedAsset, deleteFixedAsset, getDepreciationSchedule, getSummaryByType } = useFixedAssets();
   const { performanceTargets } = useSettings();
-
-  const stats = getStats();
-  const mealStats = getMEALStats();
-  const costEfficiency = getCostEfficiencyByProject(projects);
-  const mealBreakdown = getMEALExpensesBreakdown();
 
   // Active Tab State
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -1427,10 +1400,6 @@ const FinancePage = () => {
                 <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
                   {(() => {
                     // Calculate real financial health metrics
-                    const totalAssets = chartOfAccounts
-                      .filter(acc => acc.type === 'Asset')
-                      .reduce((sum, acc) => sum + acc.balance, 0);
-
                     const currentAssets = chartOfAccounts
                       .filter(acc => acc.type === 'Asset' && acc.subtype === 'Current Assets')
                       .reduce((sum, acc) => sum + acc.balance, 0);

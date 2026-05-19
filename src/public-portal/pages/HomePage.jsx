@@ -27,7 +27,7 @@ const HomePage = () => {
       setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [heroImages.length]);
 
   // Get active campaigns for display
   const activeCampaigns = campaigns.filter(c => c.status === 'Active');

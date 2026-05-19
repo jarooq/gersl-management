@@ -15,7 +15,7 @@
 // renders, and lets the user toggle layers.
 // =============================================================================
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Droplets, Briefcase, Baby, Users, Loader, RefreshCw } from 'lucide-react';
@@ -60,7 +60,7 @@ const BeneficiaryMap = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (enabled.size === 0) {
       setPins([]);
       setLoading(false);
@@ -80,9 +80,9 @@ const BeneficiaryMap = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [enabled, projectId, donorId, washOrderId, igpOrderId, district, stage]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [enabled, projectId, donorId, washOrderId, igpOrderId, district, stage]);
+  useEffect(() => { load(); }, [load]);
 
   const visiblePins = pins;
   const counts = useMemo(() => {

@@ -180,7 +180,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
                       } else if (Array.isArray(partner.focusAreas)) {
                         focusAreasArray = partner.focusAreas;
                       }
-                    } catch (e) {
+                    } catch {
                       focusAreasArray = [];
                     }
 

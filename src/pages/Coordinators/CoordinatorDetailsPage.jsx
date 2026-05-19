@@ -46,7 +46,7 @@ const CoordinatorDetailsPage = () => {
   } = useCoordinator();
 
   // Orphan management integration
-  const { addVisit, deleteOrphan, setSelectedOrphan } = useOrphans();
+  const { addVisit } = useOrphans();
 
   const [selectedPeriod, setSelectedPeriod] = useState('monthly');
   const [selectedOrphanForProfile, setSelectedOrphanForProfile] = useState(null);

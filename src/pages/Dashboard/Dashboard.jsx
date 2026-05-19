@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Users, DollarSign, Baby, Briefcase, TrendingUp, TrendingDown,
@@ -16,7 +16,6 @@ import { useFinance } from '../../contexts/FinanceContext';
 import { useHR } from '../../contexts/HRContext';
 import { usePartners } from '../../contexts/PartnersContext';
 import { useProposals } from '../../contexts/ProposalsContext';
-import { useSettings } from '../../contexts/SettingsContext';
 import { useCampaign } from '../../contexts/CampaignContext';
 
 const Dashboard = () => {
@@ -30,13 +29,11 @@ const Dashboard = () => {
     getExpensesByCategory,
     invoices,
     bills,
-    payrollData,
     purchaseOrders
   } = useFinance();
   const { staff } = useHR();
   const { partners } = usePartners();
   const { proposals } = useProposals();
-  const { performanceTargets } = useSettings();
   const { campaigns } = useCampaign();
 
   // Financial statistics
@@ -156,18 +153,6 @@ const Dashboard = () => {
       .sort((a, b) => b.progress - a.progress)
       .slice(0, 6);
   }, [campaigns]);
-
-  // Project status distribution
-  const projectStatusData = useMemo(() => {
-    const statuses = ['In Progress', 'Planning', 'Completed', 'On Hold'];
-    return statuses.map(status => ({
-      name: status,
-      value: projects.filter(p => {
-        if (status === 'In Progress') return p.status === 'In Progress' || p.status === 'Active';
-        return p.status === status;
-      }).length
-    })).filter(item => item.value > 0);
-  }, [projects]);
 
   // Monthly expense trends
   const monthlyExpenseData = useMemo(() => {
