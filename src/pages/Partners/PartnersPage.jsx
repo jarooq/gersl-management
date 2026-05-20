@@ -540,8 +540,17 @@ const PartnersPage = () => {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3 flex-1">
-                      <div className="w-12 h-12 bg-red-50 border border-red-200 text-white rounded-xl flex items-center justify-center text-lg font-bold shadow-card group- transition-transform">
-                        {partner.name.charAt(0)}
+                      <div className="w-12 h-12 bg-red-50 border border-red-200 text-red-700 rounded-xl flex items-center justify-center text-lg font-bold shadow-card overflow-hidden">
+                        {partner.logo ? (
+                          <img
+                            src={partner.logo}
+                            alt={`${partner.name} logo`}
+                            className="w-full h-full object-contain"
+                            onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.textContent = partner.name.charAt(0); }}
+                          />
+                        ) : (
+                          partner.name.charAt(0)
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-bold text-base text-ink-900 leading-tight truncate">{partner.name}</h3>

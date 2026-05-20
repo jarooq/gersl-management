@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Building2, User, Mail, Phone, Globe, MapPin, Target, DollarSign, Calendar, Upload, Image } from 'lucide-react';
+import { COUNTRIES } from '../../utils/countries';
 
 const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
   const [formData, setFormData] = useState({
@@ -409,15 +410,18 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                   <label className="block text-sm font-medium text-ink-700 mb-2">
                     Country *
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
                     required
                     className="input-modern w-full"
-                    placeholder="e.g., United States"
-                  />
+                  >
+                    <option value="">Select a country…</option>
+                    {COUNTRIES.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
