@@ -207,15 +207,20 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
                   Financial Overview
                 </h3>
                 <div className="space-y-4">
-                  <div className="bg-white rounded-lg p-4 border border-green-200">
-                    <p className="text-xs font-semibold text-ink-500 mb-1">Total Contributions</p>
-                    <p className="text-2xl font-bold text-green-600">
-                      LKR {(partner.totalContributions / 1000000).toFixed(2)}M
-                    </p>
-                    <p className="text-xs text-ink-600 mt-1">
-                      {partner.totalContributions.toLocaleString('en-US')} LKR
-                    </p>
-                  </div>
+                  {(() => {
+                    const total = Number(partner.totalContributions) || 0;
+                    return (
+                      <div className="bg-white rounded-lg p-4 border border-green-200">
+                        <p className="text-xs font-semibold text-ink-500 mb-1">Total Contributions</p>
+                        <p className="text-2xl font-bold text-green-600">
+                          LKR {(total / 1000000).toFixed(2)}M
+                        </p>
+                        <p className="text-xs text-ink-600 mt-1">
+                          {total.toLocaleString('en-US')} LKR
+                        </p>
+                      </div>
+                    );
+                  })()}
                   {partner.lastContribution && (
                     <div className="bg-white rounded-lg p-4 border border-green-200">
                       <p className="text-xs font-semibold text-ink-500 mb-1">Last Contribution</p>
