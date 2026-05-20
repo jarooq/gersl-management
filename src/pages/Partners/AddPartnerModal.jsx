@@ -410,18 +410,22 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                   <label className="block text-sm font-medium text-ink-700 mb-2">
                     Country *
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    list="add-partner-countries"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
                     className="input-modern w-full"
-                  >
-                    <option value="">Select a country…</option>
+                    placeholder="Type to search…"
+                  />
+                  <datalist id="add-partner-countries">
                     {COUNTRIES.map(c => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c} />
                     ))}
-                  </select>
+                  </datalist>
                 </div>
 
                 <div>

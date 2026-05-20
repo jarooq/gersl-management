@@ -154,10 +154,21 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
     setLogoPreview('');
   };
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onUpdate(partner.id, formData);
-    onClose();
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await onUpdate(partner.id, formData);
+      onClose();
+    } catch (err) {
+      setError(err?.message || 'Failed to save changes. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen || !partner) return null;
@@ -423,18 +434,22 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                   <label className="block text-sm font-medium text-ink-700 mb-2">
                     Country *
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    list="edit-partner-countries"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
                     className="input-modern w-full"
-                  >
-                    <option value="">Select a country…</option>
+                    placeholder="Type to search…"
+                  />
+                  <datalist id="edit-partner-countries">
                     {COUNTRIES.map(c => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c} />
                     ))}
-                  </select>
+                  </datalist>
                 </div>
 
                 <div>
@@ -540,21 +555,30 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
             </div>
           </div>
 
+          {/* Error */}
+          {error && (
+            <div className="mt-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex gap-3 mt-6 pt-6 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 font-semibold transition-colors"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save size={18} />
-              Save Changes
+              {isSubmitting ? 'Saving…' : 'Save Changes'}
             </button>
           </div>
         </form>

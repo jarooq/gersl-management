@@ -27,7 +27,7 @@ const PartnerFinancialsPanel = ({ partnerId }) => {
     if (!partnerId) return;
     let alive = true;
     setLoading(true); setError(null);
-    API.Partners.getFinancials(partnerId)
+    API.Partner.getFinancials(partnerId)
       .then(d => { if (alive) { setData(d); setLoading(false); } })
       .catch(e => { if (alive) { setError(e.message || 'Failed to load financials'); setLoading(false); } });
     return () => { alive = false; };
