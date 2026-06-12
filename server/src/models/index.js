@@ -2312,9 +2312,13 @@ const DistributionEvent = sequelize.define('DistributionEvent', {
 });
 
 // DistributionScan — one row per QR scan at an event. `client_uuid` is the
-// mobile app's idempotency key so offline-queue retries never double-insert;
-// the (event_id, project_beneficiary_id) unique index stops the same
-// beneficiary being served twice at one event.
+// mobile app's idempotency key so offline-queue retries never double-insert.
+// The unique index on project_beneficiary_id enforces the project-level
+// "one aid per beneficiary, ever" rule: after the first scan the enrolment
+// also transitions to status='Distributed' (see distributionScan.controller)
+// so the second scan is rejected by status check; the unique index is the
+// race-safety net behind that. Backed by migration
+// enforce_one_scan_per_enrolment.js.
 const DistributionScan = sequelize.define('DistributionScan', {
   id: {
     type: DataTypes.INTEGER,
@@ -2361,7 +2365,7 @@ const DistributionScan = sequelize.define('DistributionScan', {
   tableName: 'distribution_scans',
   timestamps: true,
   underscored: true,
-  indexes: [{ unique: true, fields: ['event_id', 'project_beneficiary_id'] }]
+  indexes: [{ unique: true, fields: ['project_beneficiary_id'] }]
 });
 
 // ============================================

@@ -322,7 +322,12 @@ const AddBeneficiariesModal = ({ enrolledBeneficiaryIds, onClose, onConfirm }) =
     let cancelled = false;
     (async () => {
       try {
-        const response = await API.BeneficiaryAPI.getAll({ limit: 500 });
+        // Bumped to 5000 — an org with thousands of beneficiaries was
+        // silently being shown only the first 500 in the picker. A future
+        // upgrade should drive this off the search box (server-side query
+        // param) and paginate; until then, 5000 covers any realistic
+        // master-database size while keeping the client filter responsive.
+        const response = await API.BeneficiaryAPI.getAll({ limit: 5000 });
         if (!cancelled) setBeneficiaries(response.beneficiaries || []);
       } catch (error) {
         console.error('Error fetching beneficiaries:', error);

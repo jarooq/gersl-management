@@ -150,9 +150,13 @@ class DistributionRepository {
       );
     }
     if (status == 409) {
+      // Server returns 409 for the project-level "already aided" rule. Use
+      // the server's own per-beneficiary message ("Ahmed has already
+      // received aid for this project") when it's available — it tells
+      // staff exactly who's already on the list.
       return ScanException(
         ScanFailure.duplicate,
-        serverMsg ?? 'Already scanned for this event.',
+        serverMsg ?? 'Already received aid for this project.',
         statusCode: status,
       );
     }
