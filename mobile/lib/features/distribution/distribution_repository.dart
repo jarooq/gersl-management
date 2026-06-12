@@ -65,10 +65,14 @@ class DistributionRepository {
   DistributionRepository(this._dio, this._queue);
 
   /// Active distribution events for the event picker.
+  ///
+  /// The server's default page size is 25 — a region running several events
+  /// concurrently can silently drop the latest ones off the picker. Ask for
+  /// 100, which comfortably covers any realistic same-day active set.
   Future<List<Map<String, dynamic>>> listEvents() async {
     final res = await _dio.get(
       '/distribution-events',
-      queryParameters: {'status': 'Active'},
+      queryParameters: {'status': 'Active', 'limit': 100},
     );
     return extractMapList(res.data, const ['events', 'rows']);
   }
