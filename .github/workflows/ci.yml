@@ -65,3 +65,7 @@ jobs:
           JWT_SECRET: ci-only-not-secret
         run: |
           node -e "import('./src/models/index.js').then(() => { console.log('models load OK'); process.exit(0); }).catch(e => { console.error(e); process.exit(1); })"
+
+      - name: Vitest (money paths + auth)
+        working-directory: server
+        run: npm test
