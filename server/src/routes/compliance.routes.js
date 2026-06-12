@@ -10,8 +10,9 @@ router.get('/stats', complianceController.getComplianceStats);
 router.get('/expiring', complianceController.getExpiringDocuments);
 router.get('/review-due', complianceController.getReviewDueDocuments);
 router.get('/:id', complianceController.getComplianceDocumentById);
-router.post('/', authorize('Admin', 'Manager'), complianceController.createComplianceDocument);
-router.put('/:id', authorize('Admin', 'Manager'), complianceController.updateComplianceDocument);
+// 'Manager' was a ghost role — replaced with the real compliance-tier roles.
+router.post('/', authorize('Admin', 'CEO', 'HR Manager'), complianceController.createComplianceDocument);
+router.put('/:id', authorize('Admin', 'CEO', 'HR Manager'), complianceController.updateComplianceDocument);
 router.delete('/:id', authorize('Admin'), complianceController.deleteComplianceDocument);
 
 export default router;

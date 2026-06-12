@@ -2,7 +2,8 @@ import express from 'express';
 import contractController from '../controllers/contract.controller.js';
 import { protect, requireRole } from '../middleware/auth.middleware.js';
 
-const requireHRorAdmin = requireRole('Admin', 'HR Manager', 'HR Officer');
+// 'HR Officer' was a ghost role (not defined in ROLE_PERMISSIONS) — dropped.
+const requireHRorAdmin = requireRole('Admin', 'HR Manager');
 
 const router = express.Router();
 

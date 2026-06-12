@@ -13,7 +13,8 @@ import { requireAuth, authorize } from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 router.use(requireAuth);
-const requireHR = authorize('Admin', 'CEO', 'HR Manager', 'HR Officer');
+// 'HR Officer' was a ghost role (not defined in ROLE_PERMISSIONS) — dropped.
+const requireHR = authorize('Admin', 'CEO', 'HR Manager');
 
 router.get   ('/stats',     getBackgroundCheckStats);
 router.get   ('/expiring',  getExpiringChecks);

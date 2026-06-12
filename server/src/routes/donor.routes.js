@@ -13,7 +13,8 @@ import { validateId } from '../middleware/validate.middleware.js';
 const router = express.Router();
 
 router.use(requireAuth);
-const requireFundraising = authorize('Admin', 'CEO', 'Fundraising Manager', 'Fundraising Assistant');
+// 'Fundraising Assistant' was a ghost role (not in ROLE_PERMISSIONS) — dropped.
+const requireFundraising = authorize('Admin', 'CEO', 'Fundraising Manager');
 
 router.get   ('/stats',    getDonorStats);
 router.get   ('/',         getAllDonors);
