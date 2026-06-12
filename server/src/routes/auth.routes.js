@@ -6,6 +6,7 @@ import {
   logout,
   refreshToken,
   getMe,
+  getDownloadToken,
   updateProfile,
   changePassword,
   forgotPassword,
@@ -77,6 +78,11 @@ router.post('/logout', requireAuth, logout);
 // @desc    Get current user
 // @access  Private
 router.get('/me', requireAuth, getMe);
+
+// @route   GET /api/auth/download-token
+// @desc    Mint a short-lived token for external file/PDF URLs
+// @access  Private
+router.get('/download-token', requireAuth, getDownloadToken);
 
 // @route   PUT /api/auth/profile
 // @desc    Update user profile

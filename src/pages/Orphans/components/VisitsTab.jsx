@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Calendar, Star, Image, Mail, FileText, Eye, Loader, Plus, Trash2, Package, AlertCircle } from 'lucide-react';
 import { VisitLogAPI } from '../../../services/api';
 import VisitLogModal from './VisitLogModal';
@@ -9,13 +9,7 @@ const VisitsTab = ({ orphan }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  useEffect(() => {
-    if (orphan?.id) {
-      fetchVisitLogs();
-    }
-  }, [orphan?.id]);
-
-  const fetchVisitLogs = async () => {
+  const fetchVisitLogs = useCallback(async () => {
     try {
       setLoading(true);
       const data = await VisitLogAPI.getByOrphan(orphan.id);
@@ -25,7 +19,13 @@ const VisitsTab = ({ orphan }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orphan?.id]);
+
+  useEffect(() => {
+    if (orphan?.id) {
+      fetchVisitLogs();
+    }
+  }, [orphan?.id, fetchVisitLogs]);
 
   const handleDeleteVisit = async (visitId) => {
     if (!window.confirm('Are you sure you want to delete this visit log?')) {
@@ -121,7 +121,6 @@ const VisitsTab = ({ orphan }) => {
 };
 
 const VisitLogCard = ({ visit, onDelete, onImageClick }) => {
-  const [expanded, setExpanded] = useState(false);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

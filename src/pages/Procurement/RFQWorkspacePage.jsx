@@ -57,7 +57,7 @@ export default function RFQWorkspacePage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
+  useEffect(() => { load();   }, [id]);
 
   const invitedVendors = rfq?.invitations?.map(i => i.vendor).filter(Boolean) || [];
   const respondedVendorIds = useMemo(

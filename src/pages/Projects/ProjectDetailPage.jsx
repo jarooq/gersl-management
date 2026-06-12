@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Edit, Trash2, Users, DollarSign, Calendar, MapPin,
@@ -39,13 +39,22 @@ const ProjectDetailPage = () => {
   const [toast, setToast] = useState(null);
   const [availableStaff, setAvailableStaff] = useState([]);
 
-  // Fetch project details
-  useEffect(() => {
-    fetchProject();
-    fetchTasks();
+  const showToast = useCallback((message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  }, []);
+
+  const fetchAvailableStaff = useCallback(async (department) => {
+    try {
+      const response = await API.ProjectTeamAPI.getAvailableStaff(id, department);
+      console.log('👥 Available staff:', response);
+      setAvailableStaff(response.staff || []);
+    } catch (error) {
+      console.error('Error fetching available staff:', error);
+    }
   }, [id]);
 
-  const fetchProject = async () => {
+  const fetchProject = useCallback(async () => {
     try {
       setLoading(true);
       const response = await API.ProjectAPI.getById(id);
@@ -65,9 +74,9 @@ const ProjectDetailPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, fetchAvailableStaff, showToast]);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       const response = await API.TaskAPI.getAll({ projectId: id });
       console.log('📋 Tasks data:', response);
@@ -75,22 +84,13 @@ const ProjectDetailPage = () => {
     } catch (err) {
       console.error('Error fetching tasks:', err);
     }
-  };
+  }, [id]);
 
-  const fetchAvailableStaff = async (department) => {
-    try {
-      const response = await API.ProjectTeamAPI.getAvailableStaff(id, department);
-      console.log('👥 Available staff:', response);
-      setAvailableStaff(response.staff || []);
-    } catch (error) {
-      console.error('Error fetching available staff:', error);
-    }
-  };
-
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  // Fetch project details
+  useEffect(() => {
+    fetchProject();
+    fetchTasks();
+  }, [fetchProject, fetchTasks]);
 
   const handleRemoveTeamMember = async (teamMemberId, memberName) => {
     if (!window.confirm(`Remove ${memberName} from the project team?`)) return;
@@ -131,16 +131,6 @@ const ProjectDetailPage = () => {
       </div>
     );
   }
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Active': return 'bg-green-100 text-green-800';
-      case 'Completed': return 'bg-blue-100 text-blue-800';
-      case 'Planning': return 'bg-yellow-100 text-yellow-800';
-      case 'On Hold': return 'bg-ink-100 text-ink-800';
-      default: return 'bg-ink-100 text-ink-800';
-    }
-  };
 
   // Filter MEAL data for this project
   const projectIndicators = indicators.filter(ind => ind.projectId === parseInt(id));
@@ -1170,11 +1160,7 @@ const AddTeamMemberModal = ({ projectId, project, onClose, onSuccess }) => {
   const [responsibilities, setResponsibilities] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchAvailableStaff();
-  }, []);
-
-  const fetchAvailableStaff = async () => {
+  const fetchAvailableStaff = useCallback(async () => {
     try {
       setLoading(true);
       const response = await API.ProjectTeamAPI.getAvailableStaff(projectId, project.department);
@@ -1185,7 +1171,11 @@ const AddTeamMemberModal = ({ projectId, project, onClose, onSuccess }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId, project.department]);
+
+  useEffect(() => {
+    fetchAvailableStaff();
+  }, [fetchAvailableStaff]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

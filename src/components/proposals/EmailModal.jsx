@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Paperclip, Eye, Send, Loader, AlertCircle, CheckCircle, Copy } from 'lucide-react';
 import { generateProposalSubmissionEmail, validateEmailTemplate } from '../../utils/emailTemplates';
-import { generateProposalPDF } from '../../utils/proposalPdfGenerator';
 
 /**
  * Email Modal Component for sending proposals to donors

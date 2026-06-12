@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   X,
   Calendar,
@@ -43,13 +43,7 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (isOpen && task) {
-      loadTaskDetails();
-    }
-  }, [isOpen, task]);
-
-  const loadTaskDetails = async () => {
+  const loadTaskDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -69,7 +63,13 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
     } finally {
       setLoading(false);
     }
-  };
+  }, [task]);
+
+  useEffect(() => {
+    if (isOpen && task) {
+      loadTaskDetails();
+    }
+  }, [isOpen, task, loadTaskDetails]);
 
   if (!isOpen || !task) return null;
 

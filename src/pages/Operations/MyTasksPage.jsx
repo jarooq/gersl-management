@@ -20,7 +20,7 @@ import {
   BarChart3,
   Upload
 } from 'lucide-react';
-import { fetchTasks, fetchMyTasks } from '../../services/taskService';
+import { fetchMyTasks } from '../../services/taskService';
 import TaskDetailView from './components/TaskDetailView';
 import TaskProgressModal from './components/TaskProgressModal';
 import TaskCompletionModal from './components/TaskCompletionModal';
@@ -47,9 +47,6 @@ const MyTasksPage = () => {
   const [showMediaUpload, setShowMediaUpload] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
 
-  // Get current user ID from localStorage (assuming it's stored there)
-  const currentUserId = parseInt(localStorage.getItem('userId')) || null;
-
   // Handler for opening beneficiary selection modal
   const handleSelectBeneficiaries = useCallback((task) => {
     // Only allow beneficiary selection for tasks that involve beneficiaries
@@ -67,7 +64,7 @@ const MyTasksPage = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [tasks, filterStatus, filterPriority, filterProject, searchTerm, sortBy]);
+  }, [applyFilters]);
 
   const loadMyTasks = async () => {
     setLoading(true);

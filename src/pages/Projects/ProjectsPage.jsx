@@ -58,7 +58,7 @@ const ProjectsPage = () => {
     }
 
     return result;
-  }, [projects, searchQuery, filterProgrammeArea, filterStatus]);
+  }, [projects, searchQuery, filterProgrammeArea, filterStatus, searchProjects]);
 
   const handleViewProject = (project) => {
     setSelectedProject(project);

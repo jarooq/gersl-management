@@ -34,7 +34,7 @@ import {
 import './BeneficiariesPage.css';
 
 const BeneficiariesPage = () => {
-  const { currentUser: user, hasPermission } = useAuth();
+  const { hasPermission } = useAuth();
   const {
     beneficiaries,
     loading,
@@ -756,7 +756,7 @@ const BeneficiariesPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-ink-100">
-                    {beneficiaries.map((beneficiary, index) => (
+                    {beneficiaries.map((beneficiary) => (
                       <tr
                         key={beneficiary.id}
                         className="hover:bg-ink-50 transition-colors"
@@ -856,7 +856,7 @@ const BeneficiariesPage = () => {
             {/* Grid View */}
             {viewMode === 'grid' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                {beneficiaries.map((beneficiary, index) => (
+                {beneficiaries.map((beneficiary) => (
                   <div
                     key={beneficiary.id}
                     className="bg-white border border-ink-100 rounded-lg p-4 hover:shadow-md transition-shadow"

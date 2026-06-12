@@ -33,18 +33,6 @@ const CampaignsListPage = () => {
       : 0
   };
 
-  const getCategoryColor = (category) => {
-    const colors = {
-      'Education': 'bg-blue-100 text-blue-600',
-      'Health': 'bg-green-100 text-green-600',
-      'Emergency Relief': 'bg-red-100 text-red-600',
-      'Infrastructure': 'bg-orange-100 text-orange-600',
-      'Community Development': 'bg-purple-100 text-purple-600',
-      'Orphan Care': 'bg-pink-100 text-pink-600'
-    };
-    return colors[category] || 'bg-gray-100 text-gray-600';
-  };
-
   return (
     <div>
       {/* Hero Section */}

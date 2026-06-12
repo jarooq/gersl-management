@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/api_client.dart';
+import '../../services/api_response.dart';
 
 class PunchRepository {
   final Dio _dio;
@@ -9,7 +10,7 @@ class PunchRepository {
 
   Future<Map<String, dynamic>> today() async {
     final res = await _dio.get('/attendance/punches/today');
-    return (res.data['data'] as Map).cast<String, dynamic>();
+    return extractMap(res.data) ?? <String, dynamic>{};
   }
 
   Future<Map<String, dynamic>> record({
@@ -30,12 +31,12 @@ class PunchRepository {
       'deviceId': ?deviceId,
       if (notes != null && notes.isNotEmpty) 'notes': notes,
     });
-    return (res.data['data'] as Map).cast<String, dynamic>();
+    return extractMap(res.data) ?? <String, dynamic>{};
   }
 
   Future<List<dynamic>> myRecent() async {
     final res = await _dio.get('/attendance/punches/me');
-    return (res.data['data']['punches'] as List? ?? []);
+    return extractList(res.data, const ['punches']);
   }
 
   // Net weekly hours per the 45h + 1h auto-lunch policy. Returns the raw

@@ -13,10 +13,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app/env.dart';
 import '../../app/theme.dart';
+import '../../services/api_client.dart';
 import '../../services/friendly_error.dart';
-import '../../services/token_store.dart';
+import '../../services/pdf_links.dart';
 import 'programme_repository.dart';
 
 const _washStages = ['Ordered','Surveyed','Materials','Construction','Testing','HandedOver','Reported'];
@@ -220,16 +220,18 @@ class _ProgrammeItemScreenState extends ConsumerState<ProgrammeItemScreen> {
   // Opens the server-rendered PDF in an external browser. Uses the existing
   // `?token=` query whitelist on /api/{wash,igp}/items/:id/report.
   Future<void> _openPdf() async {
-    final token = await TokenStore().readAccess();
-    if (!mounted) return;
-    if (token == null) {
-      _toast('Not signed in — cannot open report');
-      return;
+    try {
+      // PdfLinks mints a fresh short-lived download token for the URL.
+      final url = await PdfLinks.programmeItemReport(
+        ref.read(dioProvider), widget.kind, widget.itemId,
+      );
+      final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      if (!mounted) return;
+      if (!ok) _toast('Could not open PDF viewer');
+    } catch (_) {
+      if (!mounted) return;
+      _toast('Could not open the report — please try again');
     }
-    final url = '${Env.apiBaseUrl}/${widget.kind}/items/${widget.itemId}/report?token=$token';
-    final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    if (!mounted) return;
-    if (!ok) _toast('Could not open PDF viewer');
   }
 
   // Funds-gate confirmation — proceed only after the user explicitly accepts

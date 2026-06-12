@@ -4,7 +4,7 @@ import {
   uploadMultipleFiles,
   deleteUploadedFile
 } from '../controllers/upload.controller.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { requireAuth, authorize } from '../middleware/auth.middleware.js';
 import { setUploadPath, uploadSingle, uploadMultiple } from '../middleware/upload.middleware.js';
 
 const router = express.Router();
@@ -166,8 +166,8 @@ router.post(
 
 // @route   DELETE /api/upload
 // @desc    Delete uploaded file
-// @access  Private
-router.delete('/', deleteUploadedFile);
+// @access  Private (Admin / Manager only — prevents arbitrary file deletion)
+router.delete('/', authorize('Admin', 'Manager'), deleteUploadedFile);
 
 // ============================================
 // UPLOAD ERROR HANDLER

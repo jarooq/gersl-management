@@ -77,8 +77,16 @@ export const updateJournalEntry = asyncHandler(async (req, res) => {
   }
 
   const updateData = req.body;
-  if (updateData.totalDebit && updateData.totalCredit) {
-    if (parseFloat(updateData.totalDebit) !== parseFloat(updateData.totalCredit)) {
+  // Validate balance even on partial updates: fall back to the entry's
+  // existing totals for whichever side isn't being changed.
+  if (updateData.totalDebit !== undefined || updateData.totalCredit !== undefined) {
+    const newDebit = parseFloat(
+      updateData.totalDebit !== undefined ? updateData.totalDebit : entry.totalDebit
+    );
+    const newCredit = parseFloat(
+      updateData.totalCredit !== undefined ? updateData.totalCredit : entry.totalCredit
+    );
+    if (newDebit !== newCredit) {
       throw new ValidationError('Total debit must equal total credit');
     }
   }

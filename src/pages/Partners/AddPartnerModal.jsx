@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Building2, User, Mail, Phone, Globe, MapPin, Target, DollarSign, Calendar, Upload, Image } from 'lucide-react';
+import { COUNTRIES } from '../../utils/countries';
 
 const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
   const [formData, setFormData] = useState({
@@ -411,13 +412,20 @@ const AddPartnerModal = ({ isOpen, onClose, onAdd }) => {
                   </label>
                   <input
                     type="text"
+                    list="add-partner-countries"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
                     className="input-modern w-full"
-                    placeholder="e.g., United States"
+                    placeholder="Type to search…"
                   />
+                  <datalist id="add-partner-countries">
+                    {COUNTRIES.map(c => (
+                      <option key={c} value={c} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div>

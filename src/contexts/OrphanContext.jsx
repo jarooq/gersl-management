@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { SRI_LANKA_DISTRICTS } from '../constants/sriLankaDistricts';
 import { OrphanAPI } from '../services/api';
-import { useAuth } from './AuthContext';
 import axios from 'axios';
 import { API_BASE_URL } from '../config/apiBase';
 
@@ -16,7 +15,6 @@ export const useOrphans = () => {
 };
 
 export const OrphanProvider = ({ children }) => {
-  const { isLoggedIn } = useAuth();
 
   const [orphans, setOrphans] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -91,7 +89,7 @@ export const OrphanProvider = ({ children }) => {
     }
   };
 
-  const bulkImportOrphans = async (orphansData, progressCallback) => {
+  const bulkImportOrphans = async (orphansData) => {
     try {
       // Call backend API with progress tracking
       const result = await OrphanAPI.bulkImport(orphansData);

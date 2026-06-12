@@ -41,7 +41,7 @@ class MyProgrammesScreen extends ConsumerWidget {
             child: ListView.separated(
               padding: const EdgeInsets.all(12),
               itemCount: items.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, i) => _ItemCard(item: items[i]),
             ),
           );
@@ -72,7 +72,7 @@ class _ItemCard extends StatelessWidget {
       elevation: 1,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () => context.push('/programmes/${kind}/${item['id']}'),
+        onTap: () => context.push('/programmes/$kind/${item['id']}'),
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Row(

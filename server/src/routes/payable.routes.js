@@ -8,7 +8,7 @@ import {
   markAsPaid,
   getPayableStats
 } from '../controllers/payable.controller.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
@@ -28,8 +28,8 @@ router.get('/', getAllPayables);
 
 // @route   POST /api/payables
 // @desc    Create new payable
-// @access  Private
-router.post('/', createPayable);
+// @access  Private (Finance)
+router.post('/', requirePermission(PERMISSIONS.FINANCE_CREATE), createPayable);
 
 // @route   GET /api/payables/:id
 // @desc    Get payable by ID
@@ -38,17 +38,17 @@ router.get('/:id', validateId(), getPayableById);
 
 // @route   PUT /api/payables/:id
 // @desc    Update payable
-// @access  Private
-router.put('/:id', validateId(), updatePayable);
+// @access  Private (Finance)
+router.put('/:id', validateId(), requirePermission(PERMISSIONS.FINANCE_EDIT), updatePayable);
 
 // @route   PUT /api/payables/:id/pay
 // @desc    Mark payable as paid
-// @access  Private
-router.put('/:id/pay', validateId(), markAsPaid);
+// @access  Private (Finance)
+router.put('/:id/pay', validateId(), requirePermission(PERMISSIONS.FINANCE_EDIT), markAsPaid);
 
 // @route   DELETE /api/payables/:id
 // @desc    Delete payable
-// @access  Private
-router.delete('/:id', validateId(), deletePayable);
+// @access  Private (Finance)
+router.delete('/:id', validateId(), requirePermission(PERMISSIONS.FINANCE_DELETE), deletePayable);
 
 export default router;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   X, Mail, Phone, Calendar, DollarSign, Briefcase, MapPin,
   User, Shield, Clock, FileText, Award, Activity, Edit, Trash2,
@@ -30,17 +30,8 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
   });
   const [loadingPerformance, setLoadingPerformance] = useState(false);
 
-  if (!staff) return null;
-
-  // Fetch documents and performance data when modal opens
-  useEffect(() => {
-    if (staff?.id) {
-      fetchDocuments();
-      fetchPerformanceData();
-    }
-  }, [staff?.id]);
-
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
+    if (!staff?.id) return;
     try {
       setLoadingDocuments(true);
       const response = await API.get(`/hr/documents/user/${staff.id}`);
@@ -52,9 +43,10 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
     } finally {
       setLoadingDocuments(false);
     }
-  };
+  }, [staff?.id]);
 
-  const fetchPerformanceData = async () => {
+  const fetchPerformanceData = useCallback(async () => {
+    if (!staff?.id) return;
     try {
       setLoadingPerformance(true);
 
@@ -98,7 +90,16 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
     } finally {
       setLoadingPerformance(false);
     }
-  };
+  }, [staff?.id]);
+
+  // Fetch documents and performance data when modal opens.
+  // Declared before any early return so the hook count stays stable.
+  useEffect(() => {
+    if (staff?.id) {
+      fetchDocuments();
+      fetchPerformanceData();
+    }
+  }, [staff?.id, fetchDocuments, fetchPerformanceData]);
 
   const handleUploadDocument = async () => {
     try {
@@ -116,11 +117,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
       if (uploadForm.description) formData.append('description', uploadForm.description);
       if (uploadForm.expiryDate) formData.append('expiryDate', uploadForm.expiryDate);
 
-      const response = await API.post(`/hr/documents/user/${staff.id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      // Content-Type is intentionally omitted — the request helper detects
+      // FormData and lets the browser set the multipart boundary itself.
+      const response = await API.post(`/hr/documents/user/${staff.id}`, formData);
 
       if (response.data.success) {
         alert('✅ Document uploaded successfully!');
@@ -188,6 +187,9 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
     { id: 'documents', label: 'Documents', icon: FileText },
     { id: 'performance', label: 'Performance', icon: Award }
   ];
+
+  // Early return placed after all hook calls to keep hook order stable.
+  if (!staff) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

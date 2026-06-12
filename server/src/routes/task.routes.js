@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyToken } from '../middleware/auth.middleware.js';
+import { verifyToken, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import {
   getAllTasks,
   getTaskById,
@@ -60,8 +60,8 @@ router.put('/:id/progress', verifyToken, updateTaskProgress);
 
 // Budget request endpoints
 router.post('/:id/budget-request', verifyToken, requestBudget);
-router.put('/:id/budget-approve', verifyToken, approveBudget);
-router.put('/:id/budget-reject', verifyToken, rejectBudget);
+router.put('/:id/budget-approve', verifyToken, requirePermission(PERMISSIONS.FINANCE_APPROVE), approveBudget);
+router.put('/:id/budget-reject', verifyToken, requirePermission(PERMISSIONS.FINANCE_APPROVE), rejectBudget);
 
 // Media team endpoints
 router.put('/:id/media-team', verifyToken, assignMediaTeam);

@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/friendly_error.dart';
-import '../../services/token_store.dart';
 import 'payslip_repository.dart';
 
 class PayslipsScreen extends ConsumerWidget {
@@ -43,12 +42,14 @@ class PayslipsScreen extends ConsumerWidget {
                   _PayslipCard(
                     row: row,
                     onOpenPdf: () async {
-                      final token = await TokenStore().readAccess();
-                      if (token == null) return;
-                      final url = ref.read(payslipRepoProvider).pdfUrl(row['id'] as int, token);
-                      final uri = Uri.parse(url);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      try {
+                        final url = await ref.read(payslipRepoProvider).pdfUrl(row['id'] as int);
+                        final uri = Uri.parse(url);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      } catch (_) {
+                        // PDF open failed — token fetch or launch error; ignore.
                       }
                     },
                   ),

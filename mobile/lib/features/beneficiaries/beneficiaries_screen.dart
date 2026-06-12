@@ -116,7 +116,7 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
                   )
                 : ListView.separated(
                     itemCount: _rows.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    separatorBuilder: (_, _) => const Divider(height: 1),
                     itemBuilder: (_, i) => _BenefRow(b: _rows[i]),
                   ),
           ),

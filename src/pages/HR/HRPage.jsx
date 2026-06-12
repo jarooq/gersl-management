@@ -27,12 +27,19 @@ const HRPage = () => {
     attendance,
     leaveRequests,
     onboardingRecords,
-    appraisalRecords,
     gpsAttendance,
-    assetCheckouts,
-    vehicleRequests,
-    accommodationRequests,
     refreshHRData,
+    addOnboarding,
+    addAppraisal,
+    addGpsAttendance,
+    deleteGpsAttendance,
+    updateGpsAttendance,
+    applyLeave,
+    addAssetCheckout,
+    addVehicleRequest,
+    addAccommodationRequest,
+    checkIn,
+    checkOut,
   } = useHR();
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -54,7 +61,7 @@ const HRPage = () => {
       try {
         const rows = await ExpenseAPI.listAdmin({ status: 'Approved' });
         if (!cancelled) { setStaffExpenses(rows || []); setStaffExpensesLoaded(true); }
-      } catch (e) {
+      } catch {
         if (!cancelled) setStaffExpensesLoaded(true);
       }
     })();
@@ -446,7 +453,7 @@ const HRPage = () => {
 
     try {
       // Call backend to create staff and user account
-      const result = await API.HR.create({
+      await API.HR.create({
         ...staffForm,
         salary: parseFloat(staffForm.salary) || 0
       });
@@ -473,7 +480,7 @@ const HRPage = () => {
       alert('✅ Staff member and user account created successfully!\n\nThe staff member can now log in with their credentials.');
 
       // Refresh HR data
-      window.location.reload(); // Simple reload to refresh data
+      await refreshHRData();
     } catch (error) {
       console.error('Error creating staff:', error);
       alert('❌ Error: ' + (error.message || 'Failed to create staff member'));
@@ -526,7 +533,7 @@ const HRPage = () => {
   };
 
   // Handle GPS Check-in
-  const handleGpsCheckIn = () => {
+  const handleGpsCheckIn = async () => {
     // Simulate GPS check-in - in real app, this would get actual GPS coordinates
     if (staff.length === 0) {
       alert('No staff members available. Please add staff first.');
@@ -535,16 +542,19 @@ const HRPage = () => {
 
     const currentUser = staff[0]; // In real app, this would be the logged-in user
 
-    addGpsAttendance({
-      employeeId: currentUser.id,
-      location: 'Office Location',
-      latitude: 6.9271,
-      longitude: 79.8612,
-      distance: '0m',
-      verified: true
-    });
-
-    alert('GPS Check-in successful!');
+    try {
+      await addGpsAttendance({
+        employeeId: currentUser.id,
+        location: 'Office Location',
+        latitude: 6.9271,
+        longitude: 79.8612,
+        distance: '0m',
+        verified: true
+      });
+      alert('GPS Check-in successful!');
+    } catch (err) {
+      alert('GPS Check-in failed: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle Apply Leave
@@ -687,7 +697,7 @@ const HRPage = () => {
     }
 
     // Calculate attendance for each day
-    const dailyAttendance = last7Days.map((date, index) => {
+    const dailyAttendance = last7Days.map((date) => {
       const dateObj = new Date(date);
       const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dateObj.getDay()];
       const presentCount = attendance.filter(a => a.date === date && a.status === 'Present').length;
@@ -818,7 +828,7 @@ const HRPage = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {staff.map((member, index) => (
+                {staff.map((member) => (
                   <div
                     key={member.id}
                     className="card-modern group p-4"

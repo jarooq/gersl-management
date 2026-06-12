@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import API from '../../services/api';
 import {
   FileText, Users, Clock, AlertCircle, CheckCircle, XCircle,
@@ -12,7 +12,7 @@ const ContractManagementPage = () => {
 
   // Data states
   const [agreements, setAgreements] = useState([]);
-  const [renewals, setRenewals] = useState([]);
+  const [renewals] = useState([]);
   const [terminations, setTerminations] = useState([]);
   const [resignations, setResignations] = useState([]);
   const [expiringContracts, setExpiringContracts] = useState([]);
@@ -23,7 +23,6 @@ const ContractManagementPage = () => {
   const [showRenewalModal, setShowRenewalModal] = useState(false);
   const [showTerminationModal, setShowTerminationModal] = useState(false);
   const [showResignationModal, setShowResignationModal] = useState(false);
-  const [showJobDescModal, setShowJobDescModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -100,13 +99,7 @@ const ContractManagementPage = () => {
 
   const [generatedJobDesc, setGeneratedJobDesc] = useState('');
 
-  // Load data on mount
-  useEffect(() => {
-    loadData();
-    loadStaff();
-  }, [activeTab]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       if (activeTab === 'agreements') {
@@ -128,24 +121,28 @@ const ContractManagementPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab]);
 
-  const loadStaff = async () => {
+  const loadStaff = useCallback(async () => {
     try {
       const response = await API.HR.getAll();
       setStaff(response.staff || []);
     } catch (error) {
       console.error('Error loading staff:', error);
     }
-  };
+  }, []);
+
+  // Load data on mount
+  useEffect(() => {
+    loadData();
+    loadStaff();
+  }, [loadData, loadStaff]);
 
   // Generate Employment Agreement with AI
   const handleGenerateAgreement = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const selectedStaff = staff.find(s => s.id === parseInt(agreementForm.staffId));
-
       // Prepare agreement data, excluding empty dates
       const agreementData = {
         ...agreementForm,
@@ -169,7 +166,7 @@ const ContractManagementPage = () => {
         delete agreementData.endDate;
       }
 
-      const result = await API.HRContract.createAgreement(agreementData);
+      await API.HRContract.createAgreement(agreementData);
 
       alert('Employment agreement generated successfully with AI!');
       setShowAgreementModal(false);
@@ -188,7 +185,7 @@ const ContractManagementPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await API.HRContract.createRenewal({
+      await API.HRContract.createRenewal({
         ...renewalForm,
         staffId: parseInt(renewalForm.staffId),
         newSalary: parseFloat(renewalForm.newSalary),
@@ -215,7 +212,7 @@ const ContractManagementPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await API.HRContract.createTermination({
+      await API.HRContract.createTermination({
         ...terminationForm,
         staffId: parseInt(terminationForm.staffId),
         noticePeriod: parseInt(terminationForm.noticePeriod),
@@ -241,7 +238,7 @@ const ContractManagementPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await API.HRContract.submitResignation({
+      await API.HRContract.submitResignation({
         ...resignationForm,
         staffId: parseInt(resignationForm.staffId),
         noticeRequirement: parseInt(resignationForm.noticeRequirement)

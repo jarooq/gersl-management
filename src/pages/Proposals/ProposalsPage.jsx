@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useProposals } from '../../contexts/ProposalsContext';
 import { usePartners } from '../../contexts/PartnersContext';
-import { useCBO } from '../../contexts/CBOContext';
-import { useHR } from '../../contexts/HRContext';
 import ProposalViewModal from './components/ProposalViewModal';
 import AIProposalAssistant from '../../components/proposals/AIProposalAssistant';
 import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
@@ -1472,8 +1470,6 @@ const ProposalsPage = () => {
   } = useProposals();
 
   const { partners } = usePartners();
-  const { cbos } = useCBO();
-  const { staff } = useHR();
 
   // Load proposals on mount
   React.useEffect(() => {
@@ -1916,7 +1912,7 @@ const ProposalsPage = () => {
 
             {/* Proposal Cards Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {filteredProposals.map((proposal, index) => (
+              {filteredProposals.map((proposal) => (
                 <div
                   key={proposal.id}
                   className="card-modern group p-5"
@@ -2076,7 +2072,7 @@ const ProposalsPage = () => {
                 { status: 'Under Review', color: 'blue', icon: Clock },
                 { status: 'Approved', color: 'green', icon: CheckCircle },
                 { status: 'Rejected', color: 'red', icon: XCircle }
-              ].map((column, colIndex) => {
+              ].map((column) => {
                 const columnProposals = proposals.filter(p => p.status === column.status);
                 return (
                   <div
@@ -2092,7 +2088,7 @@ const ProposalsPage = () => {
                       <p className="text-xs text-ink-600">{columnProposals.length} proposals</p>
                     </div>
                     <div className="space-y-2">
-                      {columnProposals.map((proposal, index) => (
+                      {columnProposals.map((proposal) => (
                         <div
                           key={proposal.id}
                           className="bg-white border border-ink-100 rounded-lg2 shadow-card p-3"

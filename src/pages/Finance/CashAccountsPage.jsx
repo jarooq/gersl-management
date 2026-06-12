@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { CashAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
@@ -54,7 +54,7 @@ export default function CashAccountsPage() {
     }
   };
 
-  const loadActivity = async () => {
+  const loadActivity = useCallback(async () => {
     setActivityLoading(true);
     try {
       const resp = await CashAPI.getActivitySummary({ from: activityFrom, to: activityTo });
@@ -65,10 +65,10 @@ export default function CashAccountsPage() {
     } finally {
       setActivityLoading(false);
     }
-  };
+  }, [activityFrom, activityTo]);
 
   useEffect(() => { load(); }, []);
-  useEffect(() => { loadActivity(); }, [activityFrom, activityTo]);
+  useEffect(() => { loadActivity(); }, [loadActivity]);
 
   const onDeactivate = async (acc) => {
     if (!window.confirm(`Deactivate ${acc.name}? Balance must be zero.`)) return;

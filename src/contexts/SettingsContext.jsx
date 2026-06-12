@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import API from '../services/api';
-import { useAuth } from './AuthContext';
 import {
   DEFAULT_SYSTEM_SETTINGS,
   DEFAULT_NOTIFICATION_SETTINGS,
@@ -22,7 +21,6 @@ export const useSettings = () => {
 };
 
 export const SettingsProvider = ({ children }) => {
-  const { isLoggedIn } = useAuth();
 
   // System Settings - Use defaults from constants
   const [systemSettings, setSystemSettings] = useState(DEFAULT_SYSTEM_SETTINGS);

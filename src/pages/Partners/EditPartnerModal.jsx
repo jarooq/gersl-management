@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Building2, Save, Image, Upload } from 'lucide-react';
+import { COUNTRIES } from '../../utils/countries';
 
 const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
         } else if (Array.isArray(partner.focusAreas)) {
           parsedFocusAreas = partner.focusAreas;
         }
-      } catch (e) {
+      } catch {
         parsedFocusAreas = [];
       }
 
@@ -153,10 +154,21 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
     setLogoPreview('');
   };
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onUpdate(partner.id, formData);
-    onClose();
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await onUpdate(partner.id, formData);
+      onClose();
+    } catch (err) {
+      setError(err?.message || 'Failed to save changes. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen || !partner) return null;
@@ -274,7 +286,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                     <input
                       type="url"
                       name="logo"
-                      value={formData.logo}
+                      value={formData.logo.startsWith('data:') ? '' : formData.logo}
                       onChange={handleChange}
                       className="input-modern w-full text-sm"
                       placeholder="https://example.com/logo.png"
@@ -424,13 +436,20 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                   </label>
                   <input
                     type="text"
+                    list="edit-partner-countries"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
                     className="input-modern w-full"
-                    placeholder="e.g., Sri Lanka, United States"
+                    placeholder="Type to search…"
                   />
+                  <datalist id="edit-partner-countries">
+                    {COUNTRIES.map(c => (
+                      <option key={c} value={c} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div>
@@ -536,21 +555,30 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
             </div>
           </div>
 
+          {/* Error */}
+          {error && (
+            <div className="mt-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex gap-3 mt-6 pt-6 border-t border-ink-100">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 font-semibold transition-colors"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-ink-100 text-ink-700 rounded-lg hover:bg-ink-200 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save size={18} />
-              Save Changes
+              {isSubmitting ? 'Saving…' : 'Save Changes'}
             </button>
           </div>
         </form>

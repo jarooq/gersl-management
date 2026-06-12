@@ -14,10 +14,10 @@ const SocialMediaPage = () => {
   const [showEngagement, setShowEngagement] = useState(false);
 
   // Scheduled posts
-  const [scheduledPosts, setScheduledPosts] = useState([]);
+  const [scheduledPosts] = useState([]);
 
   // Engagement data
-  const [engagementItems, setEngagementItems] = useState([]);
+  const [engagementItems] = useState([]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { ApprovalAPI } from '../../services/api';
 import {
@@ -28,14 +28,10 @@ const ApprovalsPage = () => {
   const [filterType, setFilterType] = useState('All');
   const [selectedApproval, setSelectedApproval] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [comment, setComment] = useState('');
+  const [, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchApprovals();
-  }, [activeTab]);
-
-  const fetchApprovals = async () => {
+  const fetchApprovals = useCallback(async () => {
     setLoading(true);
     try {
       const data = await ApprovalAPI.getAll({ status: activeTab });
@@ -45,7 +41,11 @@ const ApprovalsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab]);
+
+  useEffect(() => {
+    fetchApprovals();
+  }, [fetchApprovals]);
 
   const handleApprovalAction = async (approvalId, action, comment) => {
     setIsSubmitting(true);

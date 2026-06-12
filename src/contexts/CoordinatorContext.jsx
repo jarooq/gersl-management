@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config/apiBase';
 

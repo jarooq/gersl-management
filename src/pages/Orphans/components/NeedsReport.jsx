@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   ClipboardList, Filter, Download, Search, AlertCircle, CheckCircle,
   Clock, XCircle, Package, TrendingUp, DollarSign, X, Eye, Edit, Trash2
@@ -22,12 +22,7 @@ const NeedsReport = ({ onClose }) => {
     totalPages: 0
   });
 
-  useEffect(() => {
-    fetchNeeds();
-    fetchSummary();
-  }, [filters, pagination.page]);
-
-  const fetchNeeds = async () => {
+  const fetchNeeds = useCallback(async () => {
     try {
       setLoading(true);
       const params = {
@@ -45,22 +40,27 @@ const NeedsReport = ({ onClose }) => {
         total: response.pagination?.total || 0,
         totalPages: response.pagination?.totalPages || 0
       }));
-    } catch (error) {
+    } catch {
       // Silently handle - orphan needs feature is disabled
       setNeeds([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, pagination.page, pagination.limit]);
 
-  const fetchSummary = async () => {
+  const fetchSummary = useCallback(async () => {
     try {
       const data = await OrphanNeedAPI.getSummary();
       setSummary(data);
-    } catch (error) {
+    } catch {
       // Silently handle - orphan needs feature is disabled
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchNeeds();
+    fetchSummary();
+  }, [fetchNeeds, fetchSummary]);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));

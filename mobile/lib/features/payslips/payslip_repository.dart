@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/env.dart';
 import '../../services/api_client.dart';
 import '../../services/api_response.dart';
+import '../../services/pdf_links.dart';
 
 class PayslipRepository {
   final Dio _dio;
@@ -14,11 +14,9 @@ class PayslipRepository {
     return extractMapList(res.data, const ['payslips']);
   }
 
-  /// The browser-launchable URL for the PDF, including the access token as a
-  /// query param so the device's external PDF viewer can fetch it.
-  /// (We don't ship the token via Authorization header to launchUrl.)
-  String pdfUrl(int id, String accessToken) =>
-      '${Env.apiBaseUrl}/me/payslips/$id/pdf?token=$accessToken';
+  /// Browser-launchable URL for the payslip PDF. The URL carries a fresh
+  /// short-lived download token (see [PdfLinks]).
+  Future<String> pdfUrl(int id) => PdfLinks.payslip(_dio, id);
 }
 
 final payslipRepoProvider = Provider<PayslipRepository>(

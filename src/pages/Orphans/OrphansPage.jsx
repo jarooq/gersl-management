@@ -2,9 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Plus, Heart, Sparkles, BarChart3, PieChart, LineChart, TrendingUp,
   MapPin, Users, Calendar, Baby, Wallet, AlertCircle, CheckCircle, Clock, ClipboardList, Upload } from 'lucide-react';
 import { useOrphans } from '../../contexts/OrphanContext';
-import { useSettings } from '../../contexts/SettingsContext';
-import { useCBO } from '../../contexts/CBOContext';
-import { useProjects } from '../../contexts/ProjectContext';
 import OrphanCard from './components/OrphanCard';
 import OrphanListView from './components/OrphanListView';
 import OrphanMapView from './components/OrphanMapView';
@@ -23,8 +20,6 @@ const OrphansPage = () => {
     deleteOrphan,
     addVisit,
     searchOrphans,
-    getOrphansByDistrict,
-    getOrphansByStatus,
     getStats,
     getDistricts,
     fetchOrphans,
@@ -36,8 +31,6 @@ const OrphansPage = () => {
     fetchOrphans();
   }, []);
 
-  const { cbos } = useCBO();
-  const { projects } = useProjects();
 
   // Performance targets for orphan care metrics
   const performanceTargets = {
@@ -503,7 +496,7 @@ const OrphansPage = () => {
             ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
             : 'space-y-4'
         }>
-          {filteredOrphans.map((orphan, index) => (
+          {filteredOrphans.map((orphan) => (
             <div
               key={orphan.id}
               className=""

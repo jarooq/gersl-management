@@ -21,7 +21,7 @@ export default function NewMovementModal({ onClose, onSaved }) {
       try {
         const res = await MovementAPI.listVehicles({ mine: 'true', isActive: 'true' });
         if (!cancelled) setVehicles(res?.data?.vehicles || []);
-      } catch (_) {}
+      } catch { /* ignore — fall back to empty list */ }
     })();
     return () => { cancelled = true; };
   }, []);

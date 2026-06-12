@@ -2928,6 +2928,14 @@ const Donation = sequelize.define('Donation', {
   donorType: { type: DataTypes.STRING(50), field: 'donor_type' },
   amount: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
   currency: { type: DataTypes.STRING(10), defaultValue: 'LKR' },
+  // Multi-currency forex fields — a donation is received in one event, so the
+  // rate is captured at the donation date. Backed by migration
+  // add_forex_columns_to_finance.js.
+  originalAmount: { type: DataTypes.DECIMAL(15, 2), field: 'original_amount' },
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
   paymentMethod: { type: DataTypes.STRING(50), field: 'payment_method' },
   paymentStatus: { type: DataTypes.STRING(50), defaultValue: 'Pending', field: 'payment_status' },
   transactionId: { type: DataTypes.STRING(100), field: 'transaction_id' },
@@ -3268,6 +3276,12 @@ const Attendance = sequelize.define('Attendance', {
   workHours: { type: DataTypes.DECIMAL(4, 2), field: 'work_hours' },
   overtimeHours: { type: DataTypes.DECIMAL(4, 2), defaultValue: 0, field: 'overtime_hours' },
   location: { type: DataTypes.STRING(100) },
+  // GPS-based attendance — populated when a record is created via a GPS
+  // check-in. Backed by migration add_gps_columns_to_attendance.js.
+  latitude: { type: DataTypes.DECIMAL(10, 7) },
+  longitude: { type: DataTypes.DECIMAL(10, 7) },
+  distanceFromOffice: { type: DataTypes.STRING(50), field: 'distance_from_office' },
+  gpsVerified: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'gps_verified' },
   notes: { type: DataTypes.TEXT },
   approvedBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'approved_by' }
 }, {
@@ -3500,6 +3514,17 @@ const Invoice = sequelize.define('Invoice', {
   paidAmount: { type: DataTypes.DECIMAL(12, 2), defaultValue: 0, field: 'paid_amount' },
   balanceDue: { type: DataTypes.DECIMAL(12, 2), field: 'balance_due' },
   currency: { type: DataTypes.STRING(10), defaultValue: 'LKR' },
+  // Multi-currency forex fields (added 2026 — backed by migration
+  // add_forex_columns_to_finance.js). totalAmount/paidAmount/balanceDue stay
+  // in the invoice currency; the fields below capture the LKR booking.
+  // originalAmount mirrors totalAmount in the foreign currency, exchangeRate
+  // is the Sampath Bank O/D Buying rate on rateDate, amountLkr is the booked
+  // LKR value. For LKR invoices exchangeRate is 1 and amountLkr == totalAmount.
+  originalAmount: { type: DataTypes.DECIMAL(15, 2), field: 'original_amount' },
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' }, // sampath-auto | manual
   status: { type: DataTypes.STRING(50), defaultValue: 'Draft' },
   paymentTerms: { type: DataTypes.STRING(100), field: 'payment_terms' },
   notes: { type: DataTypes.TEXT },
@@ -4444,6 +4469,13 @@ const GrantReceivable = sequelize.define('GrantReceivable', {
   receivedAmount: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'received_amount' },
   balanceAmount: { type: DataTypes.DECIMAL(15, 2), field: 'balance_amount' },
   currency: { type: DataTypes.STRING(10), defaultValue: 'LKR' },
+  // Multi-currency forex fields — see Invoice model. Backed by migration
+  // add_forex_columns_to_finance.js.
+  originalAmount: { type: DataTypes.DECIMAL(15, 2), field: 'original_amount' },
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
   grantStartDate: { type: DataTypes.DATEONLY, field: 'grant_start_date' },
   grantEndDate: { type: DataTypes.DATEONLY, field: 'grant_end_date' },
   expectedReceiptDate: { type: DataTypes.DATEONLY, field: 'expected_receipt_date' },
@@ -4462,6 +4494,14 @@ const GrantReceipt = sequelize.define('GrantReceipt', {
   receiptDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'receipt_date' },
   amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
   currency: { type: DataTypes.STRING(10), defaultValue: 'LKR' },
+  // Multi-currency forex fields — rate captured at the receipt date.
+  // exchangeGainLoss is the realised difference vs. the grant's booked rate.
+  // Backed by migration add_forex_columns_to_finance.js.
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
+  exchangeGainLoss: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'exchange_gain_loss' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
   paymentMethod: { type: DataTypes.STRING(50), field: 'payment_method' },
   referenceNumber: { type: DataTypes.STRING(100), field: 'reference_number' },
   bankAccountId: { type: DataTypes.INTEGER, references: { model: 'bank_accounts', key: 'id' }, field: 'bank_account_id' },
@@ -4530,6 +4570,13 @@ const Payable = sequelize.define('Payable', {
   amountPaid: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_paid' },
   amountRemaining: { type: DataTypes.DECIMAL(15, 2), field: 'amount_remaining' },
   currency: { type: DataTypes.STRING(3), defaultValue: 'LKR' },
+  // Multi-currency forex fields — see Invoice model. Backed by migration
+  // add_forex_columns_to_finance.js.
+  originalAmount: { type: DataTypes.DECIMAL(15, 2), field: 'original_amount' },
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
   description: { type: DataTypes.TEXT },
   status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Partially Paid, Paid, Overdue
   paymentDate: { type: DataTypes.DATEONLY, field: 'payment_date' },
@@ -4545,6 +4592,14 @@ const Payment = sequelize.define('Payment', {
   payeeName: { type: DataTypes.STRING(200), field: 'payee_name' },
   amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
   currency: { type: DataTypes.STRING(3), defaultValue: 'LKR' },
+  // Multi-currency forex fields — rate captured at the payment/receipt date.
+  // exchangeGainLoss is the realised forex difference vs. the rate the related
+  // document was booked at. Backed by migration add_forex_columns_to_finance.js.
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
+  exchangeGainLoss: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'exchange_gain_loss' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
   paymentMethod: { type: DataTypes.STRING(50), allowNull: false, field: 'payment_method' }, // Cash, Check, Bank Transfer, etc.
   referenceNumber: { type: DataTypes.STRING(100), field: 'reference_number' },
   description: { type: DataTypes.TEXT },
@@ -4554,6 +4609,50 @@ const Payment = sequelize.define('Payment', {
   voidReason: { type: DataTypes.TEXT, field: 'void_reason' },
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, { tableName: 'payments', timestamps: true, underscored: true });
+
+// ExchangeRate Model — daily currency rate snapshots. The Sampath Bank API
+// only exposes the current day's rates, so each fetch upserts one row per
+// currency per day, building the historical record this app needs for
+// auditable invoice/receipt conversions. `source` distinguishes auto-fetched
+// rates from manual entries. Backed by migration add_forex_columns_to_finance.js.
+const ExchangeRate = sequelize.define('ExchangeRate', {
+  currency: { type: DataTypes.STRING(10), allowNull: false },
+  currencyName: { type: DataTypes.STRING(100), field: 'currency_name' },
+  rateDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'rate_date' },
+  odBuyingRate: { type: DataTypes.DECIMAL(14, 6), allowNull: false, field: 'od_buying_rate' },
+  ttBuyingRate: { type: DataTypes.DECIMAL(14, 6), field: 'tt_buying_rate' },
+  ttSellingRate: { type: DataTypes.DECIMAL(14, 6), field: 'tt_selling_rate' },
+  source: { type: DataTypes.STRING(20), defaultValue: 'sampath-auto' }, // sampath-auto | manual
+  rateWef: { type: DataTypes.STRING(100), field: 'rate_wef' }, // "with effect from" label from Sampath
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, {
+  tableName: 'exchange_rates',
+  timestamps: true,
+  underscored: true,
+  indexes: [{ unique: true, fields: ['currency', 'rate_date'] }]
+});
+
+// InvoiceReceipt Model — one row per payment received against an invoice.
+// Captures the foreign amount received, the Sampath O/D Buying rate on the
+// receipt date, the LKR actually received, and the realised exchange gain/loss
+// versus the rate the invoice was booked at. Backed by migration
+// add_forex_columns_to_finance.js.
+const InvoiceReceipt = sequelize.define('InvoiceReceipt', {
+  invoiceId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'invoices', key: 'id' }, field: 'invoice_id' },
+  receiptDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'receipt_date' },
+  originalAmount: { type: DataTypes.DECIMAL(15, 2), allowNull: false, field: 'original_amount' }, // received in invoice currency
+  currency: { type: DataTypes.STRING(10), defaultValue: 'LKR' },
+  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
+  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
+  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' }, // LKR actually received
+  exchangeGainLoss: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'exchange_gain_loss' },
+  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' }, // sampath-auto | manual
+  paymentMethod: { type: DataTypes.STRING(50), field: 'payment_method' },
+  bankAccountId: { type: DataTypes.INTEGER, references: { model: 'bank_accounts', key: 'id' }, field: 'bank_account_id' },
+  referenceNumber: { type: DataTypes.STRING(100), field: 'reference_number' },
+  notes: { type: DataTypes.TEXT },
+  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
+}, { tableName: 'invoice_receipts', timestamps: true, underscored: true });
 
 const FinancialReport = sequelize.define('FinancialReport', {
   reportName: { type: DataTypes.STRING(200), allowNull: false, field: 'report_name' },
@@ -5085,6 +5184,13 @@ Invoice.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 Invoice.belongsTo(Proposal, { as: 'proposal', foreignKey: 'proposalId' });
 Invoice.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
 Invoice.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+Invoice.hasMany(InvoiceReceipt, { as: 'receipts', foreignKey: 'invoiceId' });
+
+InvoiceReceipt.belongsTo(Invoice, { as: 'invoice', foreignKey: 'invoiceId' });
+InvoiceReceipt.belongsTo(BankAccount, { as: 'bankAccount', foreignKey: 'bankAccountId' });
+InvoiceReceipt.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+
+ExchangeRate.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 
 Bill.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
 Bill.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
@@ -5941,6 +6047,8 @@ export {
   Donor,
   Payable,
   Payment,
+  ExchangeRate,
+  InvoiceReceipt,
   FinancialReport,
   PurchaseRequisition,
   Vendor,
@@ -6082,6 +6190,7 @@ export default {
   Department,
   Position,
   Staff,
+  StaffDocument,
   EmploymentAgreement,
   ContractRenewal,
   Termination,
@@ -6141,6 +6250,8 @@ export default {
   Donor,
   Payable,
   Payment,
+  ExchangeRate,
+  InvoiceReceipt,
   FinancialReport,
   PurchaseRequisition,
   Vendor,

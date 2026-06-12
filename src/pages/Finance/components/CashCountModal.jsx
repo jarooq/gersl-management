@@ -36,7 +36,7 @@ export default function CashCountModal({ account, existingCount = null, onClose,
         if (cancelled) return;
         const list = res?.data?.users || res?.data || [];
         setUsers(Array.isArray(list) ? list.filter(u => u.status === 'Active') : []);
-      } catch (_) {}
+      } catch { /* ignore — fall back to empty list */ }
     })();
     return () => { cancelled = true; };
   }, [account.type]);

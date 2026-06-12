@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { formatDeadlineDisplay, calculateDeadlineStatus } from '../../utils/deadlineMonitor';
+import { calculateDeadlineStatus } from '../../utils/deadlineMonitor';
 
 /**
  * GanttChart Component
@@ -7,7 +7,6 @@ import { formatDeadlineDisplay, calculateDeadlineStatus } from '../../utils/dead
  */
 const GanttChart = ({ project, onTaskClick }) => {
   const [viewMode, setViewMode] = useState('month'); // 'week', 'month', 'quarter'
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   // Calculate date range for the chart
   const dateRange = useMemo(() => {
@@ -213,7 +212,7 @@ const GanttChart = ({ project, onTaskClick }) => {
 
           {/* Tasks */}
           <div className="relative">
-            {tasksWithDates.map((task, taskIndex) => {
+            {tasksWithDates.map((task) => {
               const barData = calculateTaskBar(task);
 
               if (!barData) return null;

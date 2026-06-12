@@ -33,15 +33,14 @@ const TasksPage = () => {
   const [showEditTask, setShowEditTask] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState(new Set());
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [, setLoading] = useState(false);
+  const [, setError] = useState(null);
 
   const [tasks, setTasks] = useState([]);
 
   // Bulk operations state
   const [selectedTaskIds, setSelectedTaskIds] = useState(new Set());
-  const [showBulkActions, setShowBulkActions] = useState(false);
-  const [bulkAction, setBulkAction] = useState(null); // 'status', 'assign', 'delete'
+  const [, setShowBulkActions] = useState(false);
   const [showBulkConfirmation, setShowBulkConfirmation] = useState(false);
 
   // Advanced filters state
@@ -66,12 +65,7 @@ const TasksPage = () => {
   const [showTaskAssignment, setShowTaskAssignment] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
 
-  // Fetch tasks from backend on component mount
-  useEffect(() => {
-    loadTasks();
-  }, []);
-
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -110,7 +104,12 @@ const TasksPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Fetch tasks from backend on component mount
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
 
   const handleTaskCreated = useCallback((newTask) => {
     // Ensure new task has required properties with defaults
@@ -132,7 +131,7 @@ const TasksPage = () => {
     setTasks(prev => [taskWithDefaults, ...prev]);
     // Reload to get full task data with associations
     loadTasks();
-  }, []);
+  }, [loadTasks]);
 
   // Memoized helper functions
   const getStatusIcon = useCallback((status) => {
@@ -739,7 +738,7 @@ const TasksPage = () => {
           />
 
           <div className="space-y-3">
-            {filteredTasks.map((task, index) => {
+            {filteredTasks.map((task) => {
               const isExpanded = expandedTasks.has(task.id);
               const completedSubtasks = task.subtasks.filter(st => st.completed).length;
               const totalSubtasks = task.subtasks.length;

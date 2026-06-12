@@ -18,8 +18,7 @@ import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import GanttChart from '../../../components/charts/GanttChart';
 import * as taskService from '../../../services/taskService';
 
-const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTask, onGenerateReport }) => {
-  const [editingTask, setEditingTask] = useState(null);
+const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCFMModal, setShowCFMModal] = useState(false);
   const [cfmFormData, setCfmFormData] = useState({
@@ -79,29 +78,24 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     loadProjectTasks();
   }, [loadProjectTasks]);
 
-  if (!project) return null;
-
   // Parse JSON strings if they're still strings (from database TEXT fields)
   const parseIfString = useCallback((value, defaultValue = []) => {
     if (!value) return defaultValue;
     if (typeof value === 'string') {
       try {
         return JSON.parse(value);
-      } catch (e) {
+      } catch {
         return defaultValue;
       }
     }
     return value;
   }, []);
 
-  // Memoized parsed data
-  const resultsFramework = useMemo(() => parseIfString(project.resultsFramework, []), [project.resultsFramework, parseIfString]);
-  const objectives = useMemo(() => parseIfString(project.objectives, []), [project.objectives, parseIfString]);
-  const keyActivities = useMemo(() => parseIfString(project.keyActivities, []), [project.keyActivities, parseIfString]);
+  // Memoized parsed data (null-safe — hooks must run unconditionally)
+  const resultsFramework = useMemo(() => parseIfString(project?.resultsFramework, []), [project?.resultsFramework, parseIfString]);
 
   // Memoized calculations
-  const budgetUsed = useMemo(() => ((project.spent / project.budget) * 100).toFixed(1), [project.spent, project.budget]);
-  const beneficiaryProgress = useMemo(() => ((project.beneficiaries / project.targetBeneficiaries) * 100).toFixed(1), [project.beneficiaries, project.targetBeneficiaries]);
+  const budgetUsed = useMemo(() => (((project?.spent || 0) / (project?.budget || 1)) * 100).toFixed(1), [project?.spent, project?.budget]);
 
   const getTaskStatusIcon = (status) => {
     switch (status) {
@@ -211,11 +205,6 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
     setShowTaskCompletion(true);
   }, []);
 
-  const handleAssignTask = useCallback((task) => {
-    setSelectedTask(task);
-    setShowTaskAssignment(true);
-  }, []);
-
   const handleEditTask = useCallback((task) => {
     setSelectedTask(task);
     setShowEditTask(true);
@@ -257,6 +246,9 @@ const ProjectDetails = ({ project, onClose, onUpdateTask, onAddTask, onDeleteTas
       setIsLoadingTask(false);
     }
   }, [loadProjectTasks, onDeleteTask]);
+
+  // Early return placed after all hook calls to keep hook order stable.
+  if (!project) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">

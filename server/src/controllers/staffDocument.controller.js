@@ -1,6 +1,15 @@
 import { StaffDocument, User } from '../models/index.js';
 import { STAFF_DOCUMENT_TYPES, DOCUMENT_STATUSES } from '../constants/documentTypes.js';
+import { hasPermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import path from 'path';
+
+// HR staff (or anyone with HR view permission) may read any staff member's
+// documents; everyone else may only read their own.
+const canViewStaffDocuments = (user, ownerId) => {
+  if (!user) return false;
+  if (String(user.id) === String(ownerId)) return true;
+  return hasPermission(user, PERMISSIONS.HR_VIEW);
+};
 
 /**
  * Get all documents for a specific staff member
@@ -8,6 +17,13 @@ import path from 'path';
 export const getStaffDocuments = async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (!canViewStaffDocuments(req.user, userId)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. You do not have permission to view these documents.'
+      });
+    }
 
     const documents = await StaffDocument.findAll({
       where: { userId },
@@ -71,6 +87,13 @@ export const getDocumentById = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: 'Document not found'
+      });
+    }
+
+    if (!canViewStaffDocuments(req.user, document.userId)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. You do not have permission to view this document.'
       });
     }
 

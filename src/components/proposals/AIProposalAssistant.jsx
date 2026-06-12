@@ -12,8 +12,7 @@ import API from '../../services/api';
  * - Get section-specific suggestions
  * - Template-aware generation
  */
-const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated, currentProposal = null }) => {
-  const [mode, setMode] = useState('generate'); // 'generate' | 'refine' | 'suggest'
+const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated }) => {
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);

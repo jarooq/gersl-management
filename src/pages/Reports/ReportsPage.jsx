@@ -14,7 +14,6 @@ import { usePartners } from '../../contexts/PartnersContext';
 import { useMEAL } from '../../contexts/MEALContext';
 import { useCompliance } from '../../contexts/ComplianceContext';
 import { useGrantReceivables } from '../../contexts/GrantReceivablesContext';
-import { useReports } from '../../contexts/ReportContext';
 import { useProposals } from '../../contexts/ProposalsContext';
 import { exportReport } from '../../utils/reportExport';
 import ReportGenerator from '../../components/reports/ReportGenerator';
@@ -36,7 +35,6 @@ const ReportsPage = () => {
   // Context data
   const finance = useFinance();
   const projects = useProjects();
-  const aiReports = useReports();
   const proposals = useProposals();
   const orphans = useOrphans();
   const hr = useHR();
@@ -1153,7 +1151,7 @@ const ReportsPage = () => {
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Report Type</label>
                   <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
                     <option value="">Select report type...</option>
-                    {Object.entries(reportTypes).map(([category, types]) =>
+                    {Object.values(reportTypes).map((types) =>
                       types.map(type => (
                         <option key={type.id} value={type.id}>{type.name}</option>
                       ))

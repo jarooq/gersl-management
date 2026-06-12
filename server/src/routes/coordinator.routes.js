@@ -1,6 +1,6 @@
 import express from 'express';
 import * as coordinatorController from '../controllers/coordinator.controller.js';
-import { protect } from '../middleware/auth.middleware.js';
+import { protect, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -20,9 +20,9 @@ router.get('/:id/stats', coordinatorController.getCoordinatorStats);
 router.get('/:id/orphans', coordinatorController.getAssignedOrphans);
 
 // Assign orphan to coordinator
-router.post('/:id/assign-orphan', coordinatorController.assignOrphanToCoordinator);
+router.post('/:id/assign-orphan', requirePermission(PERMISSIONS.ORPHANS_EDIT), coordinatorController.assignOrphanToCoordinator);
 
 // Unassign orphan from coordinator
-router.delete('/:id/orphans/:orphanId', coordinatorController.unassignOrphan);
+router.delete('/:id/orphans/:orphanId', requirePermission(PERMISSIONS.ORPHANS_EDIT), coordinatorController.unassignOrphan);
 
 export default router;

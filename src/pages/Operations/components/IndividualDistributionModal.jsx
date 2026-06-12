@@ -4,7 +4,7 @@
 // Component for tracking individual beneficiary receipts, attendance, and status
 // Used for "Individual Distribution" task types
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   X,
   User,
@@ -65,7 +65,6 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
 
   // Action state
   const [actionLoading, setActionLoading] = useState({});
-  const [selectedBeneficiaries, setSelectedBeneficiaries] = useState([]);
 
   // Modal states
   const [showReceiveModal, setShowReceiveModal] = useState(null);
@@ -94,13 +93,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
   // ============================================
   // LOAD BENEFICIARIES
   // ============================================
-  useEffect(() => {
-    if (isOpen && task?.id) {
-      loadBeneficiaries();
-    }
-  }, [isOpen, task?.id]);
-
-  const loadBeneficiaries = async () => {
+  const loadBeneficiaries = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -114,7 +107,13 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [task?.id]);
+
+  useEffect(() => {
+    if (isOpen && task?.id) {
+      loadBeneficiaries();
+    }
+  }, [isOpen, task?.id, loadBeneficiaries]);
 
   // ============================================
   // FILTERING & SEARCH

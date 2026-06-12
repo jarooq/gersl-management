@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useMEAL } from '../../contexts/MEALContext';
 import { useProjects } from '../../contexts/ProjectContext';
-import { useHR } from '../../contexts/HRContext';
 import AddEvaluationWizard from '../../components/meal/AddEvaluationWizard';
 import EditEvaluationWizard from '../../components/meal/EditEvaluationWizard';
 import AddLearningEventWizard from '../../components/meal/AddLearningEventWizard';
@@ -41,12 +40,10 @@ const MEALPage = () => {
     getStats,
     deleteIndicator,
     deleteEvaluation,
-    deleteLearningEvent,
     deleteComplaint
   } = useMEAL();
 
   const { projects } = useProjects();
-  const { staff } = useHR();
 
   const [activeTab, setActiveTab] = useState('indicators');
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,7 +53,6 @@ const MEALPage = () => {
   // Modal states for viewing details
   const [showIndicatorDetail, setShowIndicatorDetail] = useState(false);
   const [showEvaluationDetail, setShowEvaluationDetail] = useState(false);
-  const [showComplaintDetail, setShowComplaintDetail] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   // Modal states for creating/editing
@@ -115,13 +111,6 @@ const MEALPage = () => {
       case 'Under Investigation': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       default: return 'bg-ink-100 text-ink-700 border-ink-100';
     }
-  };
-
-  const getProgressIcon = (indicator) => {
-    const progress = (indicator.current / indicator.target) * 100;
-    if (progress >= 75) return <TrendingUp size={16} className="text-green-500" />;
-    if (progress >= 50) return <Minus size={16} className="text-yellow-500" />;
-    return <TrendingDown size={16} className="text-red-500" />;
   };
 
   const getPriorityColor = (priority) => {
@@ -293,7 +282,7 @@ const MEALPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredIndicators.map((indicator, index) => {
+                  {filteredIndicators.map((indicator) => {
                     const progress = ((indicator.current / indicator.target) * 100).toFixed(0);
                     return (
                       <tr
@@ -466,7 +455,7 @@ const MEALPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredEvaluations.map((evaluation, index) => (
+                  {filteredEvaluations.map((evaluation) => (
                     <tr
                       key={evaluation.id}
                       className="border-b border-ink-100 hover:bg-ink-50 transition-colors"
@@ -608,7 +597,7 @@ const MEALPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredLearningEvents.map((event, index) => (
+                  {filteredLearningEvents.map((event) => (
                     <tr key={event.id} className="border-b border-ink-100 hover:bg-ink-50">
                       <td className="p-3">
                         <p className="font-semibold text-sm text-ink-900">{event.title}</p>
@@ -754,7 +743,7 @@ const MEALPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredComplaints.map((complaint, index) => (
+                  {filteredComplaints.map((complaint) => (
                     <tr key={complaint.id} className="border-b border-ink-100 hover:bg-ink-50">
                       <td className="p-3">
                         <span className="text-xs font-mono text-ink-600 bg-ink-100 px-2 py-1 rounded">

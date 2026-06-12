@@ -34,7 +34,7 @@ export default function CashAccountFormModal({ account, onClose, onSaved }) {
         if (cancelled) return;
         const list = res?.data?.users || res?.data || [];
         setUsers(Array.isArray(list) ? list.filter(u => u.status === 'Active') : []);
-      } catch (_) {
+      } catch {
         // Stay silent — Form still works, the user just types IDs manually if needed.
       }
     })();

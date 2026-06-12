@@ -15,7 +15,7 @@ Future<void> _updateTaskStatus(WidgetRef ref, int taskId, String status, {int? p
   final dio = ref.read(dioProvider);
   await dio.put('/tasks/$taskId/status', data: {
     'status': status,
-    if (progress != null) 'progress': progress,
+    'progress': ?progress,
   });
 }
 

@@ -79,7 +79,7 @@ export default function CashBookPage() {
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
+  useEffect(() => { load();   }, [id]);
 
   // Server-supplied accurate opening + per-row running balance.
   const opening = report?.opening ?? 0;

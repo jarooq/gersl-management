@@ -37,7 +37,7 @@ const DonationsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [methodFilter, setMethodFilter] = useState('All');
   const [campaignFilter, setCampaignFilter] = useState('All');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [dateRange] = useState({ start: '', end: '' });
 
   const [donationForm, setDonationForm] = useState({
     campaignId: '',
@@ -57,11 +57,6 @@ const DonationsPage = () => {
       .slice(0, 5);
   }, [donors]);
 
-  const recentDonations = useMemo(() => {
-    return [...donations]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 10);
-  }, [donations]);
 
   // Filter donations
   const filteredDonations = useMemo(() => {
@@ -313,7 +308,6 @@ const DonationsPage = () => {
                     <tbody className="divide-y divide-ink-100">
                       {filteredDonations.map((donation) => {
                         const campaign = campaigns.find(c => c.id === donation.campaignId);
-                        const donor = donors.find(d => d.email === donation.email);
 
                         return (
                           <tr key={donation.id} className="hover:bg-ink-50 transition-colors duration-150">

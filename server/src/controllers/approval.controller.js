@@ -1,4 +1,4 @@
-import { Approval, User, Proposal, Project } from '../models/index.js';
+import { Approval, User } from '../models/index.js';
 import { Op } from 'sequelize';
 
 /**
@@ -195,6 +195,15 @@ export const approveApproval = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Invalid approval level'
+      });
+    }
+
+    // Enforce that the caller's role matches the role expected at this level.
+    // Without this, any authenticated user could advance the chain.
+    if (approvalChain[currentLevel].role !== req.user.role) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. Your role cannot approve this level.'
       });
     }
 

@@ -11,6 +11,7 @@
 import express from 'express';
 import { timingSafeEqual } from 'crypto';
 import { sendDeadlineReminders } from '../utils/programmeDeadlineReminders.js';
+import { fetchSampathRates } from '../services/exchangeRate.service.js';
 
 const router = express.Router();
 
@@ -41,6 +42,17 @@ router.post('/programme-deadline-reminders', requireCronSecret, async (req, res)
     res.json({ success: true, data: summary });
   } catch (e) {
     console.error('[cron] deadline reminders failed:', e.message);
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// Daily Sampath Bank exchange-rate snapshot (for Vercel Cron / serverless mode).
+router.post('/exchange-rates', requireCronSecret, async (req, res) => {
+  try {
+    const result = await fetchSampathRates();
+    res.status(result.ok ? 200 : 502).json({ success: result.ok, data: result });
+  } catch (e) {
+    console.error('[cron] exchange-rate snapshot failed:', e.message);
     res.status(500).json({ success: false, message: e.message });
   }
 });

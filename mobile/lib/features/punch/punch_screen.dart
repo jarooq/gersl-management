@@ -14,6 +14,7 @@ import '../../services/api_client.dart';
 import '../../services/background_location_service.dart';
 import '../../services/friendly_error.dart';
 import '../../services/location_tracker.dart';
+import '../../services/observability.dart';
 import '../../services/token_store.dart';
 import 'punch_repository.dart';
 
@@ -55,8 +56,13 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
     try {
       final faces = await detector.processImage(InputImage.fromFilePath(imagePath));
       return faces.isNotEmpty;
-    } catch (_) {
-      return true; // fail-open: don't block work because ML Kit choked
+    } catch (e, st) {
+      // fail-open: don't block work because ML Kit choked. Record the event
+      // so we can spot devices where the face gate is silently bypassed.
+      captureError(e, st, {'where': 'punch._hasFace', 'failOpen': true});
+      breadcrumb('punch: face check failed — allowing punch (fail-open)',
+          category: 'punch');
+      return true;
     } finally {
       await detector.close();
     }
@@ -166,11 +172,7 @@ class _PunchScreenState extends ConsumerState<PunchScreen> {
       if (!foregroundOk) return; // location permission denied
       final access = await TokenStore().readAccess();
       if (access == null) return;
-      final refresh = await TokenStore().readRefresh();
-      final ok = await BackgroundLocationService.start(
-        accessToken: access,
-        refreshToken: refresh,
-      );
+      final ok = await BackgroundLocationService.start();
       if (mounted) ref.read(isTrackingProvider.notifier).state = ok;
     } catch (_) { /* best-effort */ }
   }

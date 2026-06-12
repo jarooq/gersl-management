@@ -845,6 +845,13 @@ export const approveBudget = async (req, res) => {
       });
     }
 
+    if (task.budgetRequestStatus !== 'Pending') {
+      return res.status(400).json({
+        success: false,
+        message: `Budget request is not pending (current status: ${task.budgetRequestStatus || 'None'})`
+      });
+    }
+
     // Update task with budget approval
     await task.update({
       budgetAllocated: budgetAllocated || task.budgetRequestedAmount,
@@ -914,6 +921,13 @@ export const rejectBudget = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'No budget request found for this task'
+      });
+    }
+
+    if (task.budgetRequestStatus !== 'Pending') {
+      return res.status(400).json({
+        success: false,
+        message: `Budget request is not pending (current status: ${task.budgetRequestStatus || 'None'})`
       });
     }
 

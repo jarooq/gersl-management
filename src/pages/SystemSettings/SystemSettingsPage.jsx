@@ -6,7 +6,7 @@ import {
   Sparkles, Zap, Briefcase, Building2, Plus, Trash2, Edit2
 } from 'lucide-react';
 import { useSettings } from '../../contexts/SettingsContext';
-import { ROLES, HIERARCHY_LEVELS, getRoleName } from '../../config/roleHierarchy';
+import { ROLES, HIERARCHY_LEVELS } from '../../config/roleHierarchy';
 import { ROLE_PERMISSIONS } from '../../utils/permissions';
 import API, { AuthAPI } from '../../services/api';
 
@@ -753,7 +753,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
     setIsLoading(true);
 
     try {
-      const data = await API.Users.create(formData);
+      await API.Users.create(formData);
 
       setSuccess('User created successfully!');
       setFormData({
@@ -1417,7 +1417,7 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
 };
 
 // Integrations Tab
-const IntegrationsTab = ({ settings }) => {
+const IntegrationsTab = ({ settings, setSettings, onSave }) => {
   const [selectedIntegration, setSelectedIntegration] = useState(null);
   const [showConfigModal, setShowConfigModal] = useState(false);
 
@@ -1437,16 +1437,16 @@ const IntegrationsTab = ({ settings }) => {
     try {
       // Update the integration settings with the new configuration
       const updatedSettings = {
-        ...integrationSettings,
+        ...settings,
         [selectedIntegration.key]: {
-          ...integrationSettings[selectedIntegration.key],
+          ...settings[selectedIntegration.key],
           status: 'Connected',
           lastUpdated: new Date().toISOString()
         }
       };
 
       // Save to context
-      setIntegrationSettings(updatedSettings);
+      setSettings(updatedSettings);
 
       // Optionally save to backend
       try {
@@ -1459,8 +1459,7 @@ const IntegrationsTab = ({ settings }) => {
       }
 
       // Show success message
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      onSave();
 
       setShowConfigModal(false);
     } catch (error) {
@@ -2363,15 +2362,6 @@ const StatCard = ({ icon: Icon, label, value, total, color }) => (
 // DEPARTMENTS TAB
 // ============================================
 const DepartmentsTab = ({ departments, onAdd, onEdit, onDelete }) => {
-  const colorOptions = [
-    { value: 'from-blue-500 to-cyan-600', label: 'Blue', preview: 'bg-navy-900' },
-    { value: 'from-purple-500 to-pink-600', label: 'Purple', preview: 'bg-navy-900' },
-    { value: 'from-green-500 to-teal-600', label: 'Green', preview: 'bg-navy-900' },
-    { value: 'from-orange-500 to-red-600', label: 'Orange', preview: 'bg-navy-900' },
-    { value: 'from-indigo-500 to-purple-600', label: 'Indigo', preview: 'bg-navy-900' },
-    { value: 'from-yellow-400 to-orange-500', label: 'Yellow', preview: 'bg-navy-9000' },
-  ];
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">

@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app/theme.dart';
 import '../../app/widgets.dart';
 import '../../services/friendly_error.dart';
-import '../../services/token_store.dart';
 import 'movement_repository.dart';
 
 // =============================================================================
@@ -217,21 +216,20 @@ class _ClaimDetailSheetState extends ConsumerState<_ClaimDetailSheet> {
 
   Future<void> _openPdf() async {
     final id = widget.row['id'] as int;
-    final token = await TokenStore().readAccess();
-    if (token == null) {
+    try {
+      final url = await ref.read(movementRepoProvider).fuelClaimPdfUrl(id);
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open PDF viewer')),
+        );
+      }
+    } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sign in expired — please log in again')),
-      );
-      return;
-    }
-    final url = ref.read(movementRepoProvider).fuelClaimPdfUrl(id, token);
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open PDF viewer')),
+        const SnackBar(content: Text('Could not open the PDF — please try again')),
       );
     }
   }

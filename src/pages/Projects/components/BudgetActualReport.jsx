@@ -63,7 +63,7 @@ const BudgetActualReport = ({ projectId }) => {
 
   if (!data) return null;
 
-  const { totals, byCategory, byMonth, byStatus, project } = data;
+  const { totals, byCategory, byMonth, byStatus } = data;
   const tone = utilTone(totals.utilizationPct);
   const overBudget = totals.variance < 0;
 

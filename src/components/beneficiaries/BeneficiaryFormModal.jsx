@@ -34,7 +34,7 @@ const BENEFICIARY_TYPES = [
 
 const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
   const { currentUser: user } = useAuth();
-  const { addBeneficiary, updateBeneficiary, checkDuplicate, getDistricts, getDivisions, getGNDivisions } = useBeneficiaries();
+  const { addBeneficiary, updateBeneficiary, checkDuplicate } = useBeneficiaries();
 
   const [formData, setFormData] = useState({
     nic: '',
@@ -65,7 +65,6 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
     notes: ''
   });
 
-  const [districts, setDistricts] = useState([]);
   const [divisions, setDivisions] = useState([]);
   const [gnDivisions, setGNDivisions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -123,33 +122,6 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
       }
     }
   }, [isOpen, beneficiary]);
-
-  const loadDistricts = async () => {
-    try {
-      const districtList = await getDistricts();
-      setDistricts(districtList);
-    } catch (error) {
-      console.error('Error loading districts:', error);
-    }
-  };
-
-  const loadDivisions = async (district) => {
-    try {
-      const divisionList = await getDivisions(district);
-      setDivisions(divisionList);
-    } catch (error) {
-      console.error('Error loading divisions:', error);
-    }
-  };
-
-  const loadGNDivisions = async (dsDivision) => {
-    try {
-      const gnDivisionList = await getGNDivisions(dsDivision);
-      setGNDivisions(gnDivisionList);
-    } catch (error) {
-      console.error('Error loading GN divisions:', error);
-    }
-  };
 
   const handleNICBlur = async () => {
     if (!formData.nic || isEditMode) return;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useBeneficiaries } from '../../../contexts/BeneficiaryContext';
 import { addBeneficiariesToTaskBulk, getTaskBeneficiaries } from '../../../services/taskBeneficiaryService';
 import BeneficiaryFormModal from '../../../components/beneficiaries/BeneficiaryFormModal';
@@ -46,13 +46,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
     selectionNotes: ''
   });
 
-  useEffect(() => {
-    if (isOpen && task) {
-      loadExistingBeneficiaries();
-    }
-  }, [isOpen, task]);
-
-  const loadExistingBeneficiaries = async () => {
+  const loadExistingBeneficiaries = useCallback(async () => {
     if (!task?.id) return;
 
     try {
@@ -63,7 +57,13 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
     } catch (err) {
       console.error('Error loading existing beneficiaries:', err);
     }
-  };
+  }, [task?.id]);
+
+  useEffect(() => {
+    if (isOpen && task) {
+      loadExistingBeneficiaries();
+    }
+  }, [isOpen, task, loadExistingBeneficiaries]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

@@ -207,7 +207,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
 
       try {
         await onSubmit(dataToSubmit);
-      } catch (error) {
+      } catch {
         // Error will be shown by parent component
       }
     }

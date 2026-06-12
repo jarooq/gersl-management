@@ -1,14 +1,14 @@
 // Project Milestone Templates
 
 export const MILESTONE_TEMPLATES = {
-  standard: (duration) => [
+  standard: () => [
     { id: 1, name: 'Project inception and setup', status: 'Pending', date: '' },
     { id: 2, name: 'Baseline survey completed', status: 'Pending', date: '' },
     { id: 3, name: 'Mid-term review', status: 'Pending', date: '' },
     { id: 4, name: 'Final evaluation', status: 'Pending', date: '' }
   ],
 
-  education: (duration) => [
+  education: () => [
     { id: 1, name: 'Needs assessment completed', status: 'Pending', date: '' },
     { id: 2, name: 'Curriculum development', status: 'Pending', date: '' },
     { id: 3, name: 'Teacher training completed', status: 'Pending', date: '' },
@@ -17,7 +17,7 @@ export const MILESTONE_TEMPLATES = {
     { id: 6, name: 'Final evaluation and reporting', status: 'Pending', date: '' }
   ],
 
-  health: (duration) => [
+  health: () => [
     { id: 1, name: 'Community health assessment', status: 'Pending', date: '' },
     { id: 2, name: 'Medical supplies procurement', status: 'Pending', date: '' },
     { id: 3, name: 'Health worker training', status: 'Pending', date: '' },
@@ -26,7 +26,7 @@ export const MILESTONE_TEMPLATES = {
     { id: 6, name: 'Final report and handover', status: 'Pending', date: '' }
   ],
 
-  infrastructure: (duration) => [
+  infrastructure: () => [
     { id: 1, name: 'Site assessment and planning', status: 'Pending', date: '' },
     { id: 2, name: 'Design approval', status: 'Pending', date: '' },
     { id: 3, name: 'Foundation work completed', status: 'Pending', date: '' },
@@ -35,7 +35,7 @@ export const MILESTONE_TEMPLATES = {
     { id: 6, name: 'Handover and inauguration', status: 'Pending', date: '' }
   ],
 
-  livelihood: (duration) => [
+  livelihood: () => [
     { id: 1, name: 'Beneficiary selection', status: 'Pending', date: '' },
     { id: 2, name: 'Skills training phase 1', status: 'Pending', date: '' },
     { id: 3, name: 'Resource distribution', status: 'Pending', date: '' },
@@ -44,7 +44,7 @@ export const MILESTONE_TEMPLATES = {
     { id: 6, name: 'Sustainability assessment', status: 'Pending', date: '' }
   ],
 
-  emergency: (duration) => [
+  emergency: () => [
     { id: 1, name: 'Rapid needs assessment', status: 'Pending', date: '' },
     { id: 2, name: 'Emergency supplies distributed', status: 'Pending', date: '' },
     { id: 3, name: 'Temporary shelter established', status: 'Pending', date: '' },

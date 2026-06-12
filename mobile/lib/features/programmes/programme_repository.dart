@@ -179,8 +179,12 @@ final myProgrammeItemsProvider =
     repo.myIgpItems().catchError((_) => <Map<String, dynamic>>[]),
   ]);
   final combined = <Map<String, dynamic>>[];
-  for (final row in results[0]) combined.add({...row, '__kind': 'wash'});
-  for (final row in results[1]) combined.add({...row, '__kind': 'igp'});
+  for (final row in results[0]) {
+    combined.add({...row, '__kind': 'wash'});
+  }
+  for (final row in results[1]) {
+    combined.add({...row, '__kind': 'igp'});
+  }
   // Sort soonest-deadline-first.
   combined.sort((a, b) {
     final ad = (a['plannedCompletion'] ?? a['order']?['deadline'] ?? '9999-12-31').toString();

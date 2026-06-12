@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
           setCurrentUser(userData);
           setIsLoggedIn(true);
         }
-      } catch (error) {
+      } catch {
         // 401 / network error — treat as logged-out and clear any stale
         // tokens left over from older clients.
         if (isMounted) {

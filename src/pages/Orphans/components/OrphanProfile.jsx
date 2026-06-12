@@ -12,7 +12,7 @@ import AssignDonorModal from './AssignDonorModal';
 import VisitsTab from './VisitsTab';
 import ReportsTab from './ReportsTab';
 
-const OrphanProfile = ({ orphan, onClose, onAddVisit }) => {
+const OrphanProfile = ({ orphan, onClose }) => {
   const [activeTab, setActiveTab] = useState('personal');
   const [showCoordinatorModal, setShowCoordinatorModal] = useState(false);
   const [showDonorModal, setShowDonorModal] = useState(false);
@@ -1175,7 +1175,7 @@ const DocumentsTab = ({ orphan }) => {
 };
 
 // Support Log Tab
-const SupportLogTab = ({ orphan, onAssignPartner }) => {
+const SupportLogTab = ({ orphan }) => {
   // Get partner-wise support data
   const partnerSupports = orphan.assignedPartners || [];
 

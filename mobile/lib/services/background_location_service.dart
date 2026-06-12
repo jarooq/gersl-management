@@ -6,13 +6,14 @@
 // Architecture:
 //   UI isolate (Riverpod) ──IPC── flutter_background_service ──spawns── _onStart
 //   _onStart subscribes to Geolocator stream, batches points, POSTs every
-//   60s or 25 points, persists access token via SharedPreferences (pulled
-//   from secure-storage at start time and copied so the bg isolate can read).
+//   60s or 25 points. Auth tokens are read straight from flutter_secure_storage
+//   (TokenStore) — that plugin works in background isolates — so tokens are
+//   never copied into plaintext SharedPreferences.
 //
 // Caveats:
-//   * Refresh-on-401 isn't implemented in the bg isolate — if the access
-//     token expires mid-track, batches will fail until UI re-auths and the
-//     service is restarted.
+//   * The bg isolate refreshes its own access token on 401 (see tryRefresh).
+//     If the *refresh* token is rejected, uploads are disabled until the UI
+//     re-auths and the service is restarted.
 //   * iOS may suspend the isolate when the device is locked unless the
 //     significant-location-change API is added separately. For continuous
 //     tracking on iOS, plan a v2 using `flutter_background_geolocation` or
@@ -30,12 +31,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app/env.dart';
+import 'observability.dart';
+import 'token_store.dart';
 
 const _notifChannelId = 'gersl_tracking';
 const _notifId = 888;
 
-const _prefAccessToken      = 'bg.accessToken';
-const _prefRefreshToken     = 'bg.refreshToken';
+// Non-secret bg-isolate prefs. Auth tokens are NOT stored here — they are
+// read from flutter_secure_storage (TokenStore) inside the isolate.
 const _prefBaseUrl          = 'bg.baseUrl';
 const _prefTracking         = 'bg.tracking';
 
@@ -91,16 +94,12 @@ class BackgroundLocationService {
   }
 
   /// Starts the foreground service. Caller must have already obtained
-  /// location permission and stored the access token. Passes the refresh
-  /// token too so the background isolate can self-recover when access
-  /// expires mid-session (would otherwise silently drop GPS points).
-  static Future<bool> start({required String accessToken, String? refreshToken}) async {
+  /// location permission and signed in (tokens live in flutter_secure_storage
+  /// via TokenStore). The background isolate reads — and refreshes — those
+  /// tokens itself; nothing secret is copied into SharedPreferences.
+  static Future<bool> start() async {
     await _ensureConfigured();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_prefAccessToken, accessToken);
-    if (refreshToken != null && refreshToken.isNotEmpty) {
-      await prefs.setString(_prefRefreshToken, refreshToken);
-    }
     await prefs.setString(_prefBaseUrl, Env.apiBaseUrl);
     // Marks tracking as intended — _onStart bails out unless this is set, so
     // a spurious iOS onForeground callback never subscribes to GPS.
@@ -138,8 +137,12 @@ void _onStart(ServiceInstance service) async {
     return;
   }
 
-  var accessToken  = prefs.getString(_prefAccessToken) ?? '';
-  var refreshToken = prefs.getString(_prefRefreshToken) ?? '';
+  // Tokens come straight from flutter_secure_storage — the same store the UI
+  // isolate writes on login/refresh. The plugin works in background isolates,
+  // so nothing secret is ever copied into plaintext SharedPreferences.
+  final tokenStore = TokenStore();
+  var accessToken  = await tokenStore.readAccess() ?? '';
+  var refreshToken = await tokenStore.readRefresh() ?? '';
   final baseUrl = prefs.getString(_prefBaseUrl) ?? Env.apiBaseUrl;
 
   final dio = Dio(BaseOptions(
@@ -154,6 +157,10 @@ void _onStart(ServiceInstance service) async {
   // the access token expires. Try the refresh token; if that also fails,
   // surface a notification and stop the buffer flush loop so we don't
   // hammer /locations/batch with 401s forever.
+  // `refreshDisabled` is only set when the refresh token itself is genuinely
+  // rejected (a 401/invalid-token response, or the server returning no new
+  // access token). Transient failures — network timeouts, 5xx, no
+  // connectivity — leave it false so a later flush cycle can retry.
   var refreshDisabled = false;
   Future<bool> tryRefresh() async {
     if (refreshDisabled || refreshToken.isEmpty) return false;
@@ -167,24 +174,45 @@ void _onStart(ServiceInstance service) async {
       final newAccess  = (body['accessToken']  ?? body['data']?['accessToken'])?.toString();
       final newRefresh = (body['refreshToken'] ?? body['data']?['refreshToken'])?.toString();
       if (newAccess == null || newAccess.isEmpty) {
+        // Server accepted the call but issued no token — the refresh token is
+        // no longer usable. Disable permanently to avoid hammering /refresh.
         refreshDisabled = true;
-        // Surface the failure so we can diagnose silent tracking drop-offs.
-        // Audit flagged that refreshDisabled flips permanently on any
-        // error with no breadcrumb — adb logcat + iOS Console now see it.
-        // ignore: avoid_print
-        print('[bg-location] refresh disabled: server returned no accessToken');
+        breadcrumb(
+          'bg-location: refresh disabled — server returned no accessToken',
+          category: 'bg-location',
+        );
         return false;
       }
       accessToken = newAccess;
       if (newRefresh != null && newRefresh.isNotEmpty) refreshToken = newRefresh;
-      await prefs.setString(_prefAccessToken, accessToken);
-      if (newRefresh != null) await prefs.setString(_prefRefreshToken, newRefresh);
+      // Persist the rotated tokens back to secure storage so the UI isolate
+      // and any future bg restart pick them up.
+      await tokenStore.save(accessToken: accessToken, refreshToken: refreshToken);
       dio.options.headers['Authorization'] = 'Bearer $accessToken';
       return true;
-    } catch (e) {
-      refreshDisabled = true;
-      // ignore: avoid_print
-      print('[bg-location] refresh disabled: ${e.runtimeType} ${e.toString().split('\n').first}');
+    } on DioException catch (e) {
+      // A 401/403 means the refresh token is invalid — disable permanently.
+      // Anything else (timeout, connection error, 5xx) is transient: keep
+      // refreshDisabled false so the next flush cycle retries.
+      final status = e.response?.statusCode;
+      final invalidToken = status == 401 || status == 403;
+      if (invalidToken) {
+        refreshDisabled = true;
+        breadcrumb(
+          'bg-location: refresh disabled — refresh token rejected ($status)',
+          category: 'bg-location',
+        );
+      } else {
+        breadcrumb(
+          'bg-location: refresh failed (transient, will retry): '
+          '${e.type} ${status ?? ''}',
+          category: 'bg-location',
+        );
+      }
+      return false;
+    } catch (e, st) {
+      // Unexpected non-Dio error — treat as transient, don't disable.
+      captureError(e, st, {'where': 'bg-location.tryRefresh'});
       return false;
     }
   }
@@ -207,13 +235,15 @@ void _onStart(ServiceInstance service) async {
         try {
           await dio.post('/locations/batch', data: jsonEncode({'points': payload}));
           return;
-        } catch (e2) {
-          // ignore: avoid_print
-          print('[bg-location] retry after refresh failed: ${e2.runtimeType}');
+        } catch (e2, st2) {
+          captureError(e2, st2, {'where': 'bg-location.flush.retryAfterRefresh'});
         }
       } else if (!isAuthError) {
-        // ignore: avoid_print
-        print('[bg-location] flush failed (re-buffering ${payload.length} pts): ${e.runtimeType}');
+        breadcrumb(
+          'bg-location: flush failed, re-buffering ${payload.length} pts — '
+          '${e.runtimeType}',
+          category: 'bg-location',
+        );
       }
       buffer.insertAll(0, payload);
     }

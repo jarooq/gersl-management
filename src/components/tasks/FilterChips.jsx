@@ -62,7 +62,7 @@ const FilterChips = ({ filters, onRemoveFilter, onClearAll }) => {
 
   // Project chips
   if (filters.project && filters.project.length > 0) {
-    filters.project.forEach((projectId, index) => {
+    filters.project.forEach((projectId) => {
       chips.push({
         id: `project-${projectId}`,
         label: `Project: ${projectId}`,
@@ -74,7 +74,7 @@ const FilterChips = ({ filters, onRemoveFilter, onClearAll }) => {
 
   // Assignee chips
   if (filters.assignee && filters.assignee.length > 0) {
-    filters.assignee.forEach((assigneeId, index) => {
+    filters.assignee.forEach((assigneeId) => {
       chips.push({
         id: `assignee-${assigneeId}`,
         label: `Assignee: ${assigneeId}`,

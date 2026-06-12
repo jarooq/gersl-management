@@ -29,7 +29,7 @@ const handleResponse = async (response) => {
     let errorData;
     try {
       errorData = await response.json();
-    } catch (e) {
+    } catch {
       errorData = { message: response.statusText };
     }
 

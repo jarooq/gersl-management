@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MessageCircle, Send, Edit2, Trash2, MoreVertical, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
@@ -21,12 +21,7 @@ const TaskComments = ({ taskId }) => {
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-  // Fetch comments
-  useEffect(() => {
-    fetchComments();
-  }, [taskId]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
       const response = await api.get(`/api/tasks/${taskId}/comments`);
@@ -40,7 +35,12 @@ const TaskComments = ({ taskId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [taskId]);
+
+  // Fetch comments
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   // Create new comment
   const handleSubmitComment = async (e) => {
@@ -134,7 +134,7 @@ const TaskComments = ({ taskId }) => {
   const formatTimestamp = (timestamp) => {
     try {
       return format(new Date(timestamp), 'MMM d, yyyy h:mm a');
-    } catch (error) {
+    } catch {
       return timestamp;
     }
   };

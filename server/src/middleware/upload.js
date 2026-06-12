@@ -49,12 +49,13 @@ const fileFilter = (req, file, cb) => {
     'text/csv',
 
     // Images
+    // NOTE: image/svg+xml is intentionally NOT allowed — SVGs can embed
+    // <script> and lead to stored XSS when served back to users.
     'image/jpeg',
     'image/jpg',
     'image/png',
     'image/gif',
     'image/webp',
-    'image/svg+xml',
 
     // Videos
     'video/mp4',
