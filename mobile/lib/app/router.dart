@@ -36,6 +36,7 @@ import '../features/programmes/programme_map_screen.dart';
 import '../features/orphans/my_orphans_screen.dart';
 import '../features/orphans/orphan_detail_screen.dart';
 import '../features/beneficiaries/beneficiaries_screen.dart';
+import '../features/distribution/scan_screen.dart';
 
 // Mobile route table.
 //
@@ -128,6 +129,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/programmes',             builder: (context, state) => const MyProgrammesScreen()),
             GoRoute(path: '/orphans',                builder: (context, state) => const MyOrphansScreen()),
             GoRoute(path: '/beneficiaries',          builder: (context, state) => const BeneficiariesScreen()),
+            GoRoute(path: '/distribute',             builder: (context, state) => const ScanScreen()),
           ]),
         ],
       ),

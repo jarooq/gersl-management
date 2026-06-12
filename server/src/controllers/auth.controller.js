@@ -311,10 +311,12 @@ export const logout = asyncHandler(async (req, res) => {
 // REFRESH ACCESS TOKEN
 // ============================================
 export const refreshToken = asyncHandler(async (req, res) => {
-  // Get refresh token from httpOnly cookie
-  const refreshTokenFromCookie = req.cookies.refreshToken;
+  // Accept the refresh token from the httpOnly cookie (web) OR the JSON body
+  // (mobile — Dio has no cookie jar, so the Flutter app stores the token in
+  // secure storage and sends it back here).
+  const refreshTokenIn = req.cookies.refreshToken || req.body?.refreshToken;
 
-  if (!refreshTokenFromCookie) {
+  if (!refreshTokenIn) {
     throw new UnauthorizedError('Refresh token is required');
   }
 
@@ -322,7 +324,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
   let decoded;
   try {
     decoded = jwt.verify(
-      refreshTokenFromCookie,
+      refreshTokenIn,
       process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET
     );
   } catch (error) {
@@ -332,7 +334,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
   // Find user
   const user = await User.findByPk(decoded.id);
 
-  if (!user || user.refreshToken !== refreshTokenFromCookie) {
+  if (!user || user.refreshToken !== refreshTokenIn) {
     throw new UnauthorizedError('Invalid refresh token');
   }
 
@@ -347,12 +349,19 @@ export const refreshToken = asyncHandler(async (req, res) => {
   user.refreshToken = tokens.refreshToken;
   await user.save();
 
-  // Set new httpOnly cookies
+  // Set new httpOnly cookies (web)
   setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
 
+  // Also return the tokens in the body so non-cookie clients (mobile) can
+  // persist them. Web clients keep using the httpOnly cookies and can ignore
+  // these fields.
   res.json({
     success: true,
-    message: 'Token refreshed successfully'
+    message: 'Token refreshed successfully',
+    data: {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken
+    }
   });
 });
 

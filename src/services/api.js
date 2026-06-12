@@ -3562,6 +3562,89 @@ export const MovementAPI = {
     request(`/fuel-claims/${id}/cancel`, { method: 'PATCH' })
 };
 
+// ============================================
+// PROJECT BENEFICIARY API — QR-code distribution enrolments
+// ============================================
+
+export const ProjectBeneficiaryAPI = {
+  // List enrolled beneficiaries for a project.
+  list: async (projectId, params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/projects/${projectId}/beneficiaries${queryString ? `?${queryString}` : ''}`);
+    return data.data;
+  },
+
+  // Enrol existing beneficiaries onto a project.
+  enrol: async (projectId, beneficiaryIds) => {
+    const data = await request(`/projects/${projectId}/beneficiaries`, {
+      method: 'POST',
+      body: JSON.stringify({ beneficiaryIds }),
+    });
+    return data.data;
+  },
+
+  // Replace a lost QR — returns the enrolment row with a fresh qrToken.
+  regenerateToken: async (id) => {
+    const data = await request(`/project-beneficiaries/${id}/regenerate-token`, {
+      method: 'POST',
+    });
+    return data.data;
+  },
+
+  // Soft-remove an enrolment.
+  withdraw: async (id) => {
+    const data = await request(`/project-beneficiaries/${id}/withdraw`, {
+      method: 'PATCH',
+    });
+    return data.data;
+  },
+};
+
+// ============================================
+// DISTRIBUTION EVENT API — QR-scan distribution events
+// ============================================
+
+export const DistributionEventAPI = {
+  list: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const data = await request(`/distribution-events${queryString ? `?${queryString}` : ''}`);
+    return data.data;
+  },
+
+  getById: async (id) => {
+    const data = await request(`/distribution-events/${id}`);
+    return data.data;
+  },
+
+  create: async (body) => {
+    const data = await request('/distribution-events', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return data.data;
+  },
+
+  update: async (id, body) => {
+    const data = await request(`/distribution-events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+    return data.data;
+  },
+
+  close: async (id) => {
+    const data = await request(`/distribution-events/${id}/close`, {
+      method: 'PATCH',
+    });
+    return data.data;
+  },
+
+  getScans: async (id) => {
+    const data = await request(`/distribution-events/${id}/scans`);
+    return data.data;
+  },
+};
+
 const API = {
   Auth: AuthAPI,
   Users: UsersAPI,
@@ -3612,6 +3695,9 @@ const API = {
   Compliance: ComplianceAPI,
   Attendance: AttendanceAPI,
   LeaveRequest: LeaveRequestAPI,
+  // QR-code beneficiary distribution
+  ProjectBeneficiary: ProjectBeneficiaryAPI,
+  DistributionEvent: DistributionEventAPI,
   TokenManager,
 };
 

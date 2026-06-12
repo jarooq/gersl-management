@@ -2210,6 +2210,161 @@ const BeneficiarySupport = sequelize.define('BeneficiarySupport', {
 });
 
 // ============================================
+// QR DISTRIBUTION MODELS
+// ============================================
+// ProjectBeneficiary — direct project↔beneficiary enrolment (today the link
+// is only indirect via Project → Task → TaskBeneficiary). Each Active row
+// carries a unique, unguessable QR token that field staff scan at
+// distribution time. Regenerating a token marks the old row 'Replaced' and
+// creates a fresh Active row, preserving scan history. Backed by migration
+// create_qr_distribution_tables.js.
+const ProjectBeneficiary = sequelize.define('ProjectBeneficiary', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'project_id',
+    references: { model: 'projects', key: 'id' }
+  },
+  beneficiaryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'beneficiary_id',
+    references: { model: 'beneficiaries', key: 'id' }
+  },
+  qrToken: {
+    type: DataTypes.STRING(32),
+    allowNull: false,
+    unique: true,
+    field: 'qr_token'
+  },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Active' // Active | Replaced | Withdrawn
+  },
+  enrolledAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'enrolled_at'
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: { model: 'users', key: 'id' }
+  }
+}, {
+  tableName: 'project_beneficiaries',
+  timestamps: true,
+  underscored: true
+  // NOTE: a partial unique index on (project_id, beneficiary_id) WHERE
+  // status = 'Active' is created by the migration — Sequelize's `indexes`
+  // option can't express partial indexes portably, so it lives in SQL only.
+});
+
+// DistributionEvent — a scheduled hand-out occasion (e.g. "Ration pack
+// distribution — Batticaloa, June"). Scans are recorded against an event so
+// the same beneficiary can receive on multiple occasions but never twice on
+// the same one.
+const DistributionEvent = sequelize.define('DistributionEvent', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'project_id',
+    references: { model: 'projects', key: 'id' }
+  },
+  name: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  scheduledDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'scheduled_date'
+  },
+  location: {
+    type: DataTypes.STRING(200)
+  },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Planned' // Planned | Active | Closed
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: { model: 'users', key: 'id' }
+  }
+}, {
+  tableName: 'distribution_events',
+  timestamps: true,
+  underscored: true
+});
+
+// DistributionScan — one row per QR scan at an event. `client_uuid` is the
+// mobile app's idempotency key so offline-queue retries never double-insert;
+// the (event_id, project_beneficiary_id) unique index stops the same
+// beneficiary being served twice at one event.
+const DistributionScan = sequelize.define('DistributionScan', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  eventId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'event_id',
+    references: { model: 'distribution_events', key: 'id' }
+  },
+  projectBeneficiaryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'project_beneficiary_id',
+    references: { model: 'project_beneficiaries', key: 'id' }
+  },
+  scannedBy: {
+    type: DataTypes.INTEGER,
+    field: 'scanned_by',
+    references: { model: 'users', key: 'id' }
+  },
+  scannedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'scanned_at'
+  },
+  latitude: {
+    type: DataTypes.DECIMAL(10, 7)
+  },
+  longitude: {
+    type: DataTypes.DECIMAL(10, 7)
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  clientUuid: {
+    type: DataTypes.STRING(64),
+    unique: true,
+    field: 'client_uuid'
+  }
+}, {
+  tableName: 'distribution_scans',
+  timestamps: true,
+  underscored: true,
+  indexes: [{ unique: true, fields: ['event_id', 'project_beneficiary_id'] }]
+});
+
+// ============================================
 // ONBOARDING RECORD MODEL
 // ============================================
 const OnboardingRecord = sequelize.define('OnboardingRecord', {
@@ -5263,6 +5418,22 @@ BeneficiarySupport.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' }
 BeneficiarySupport.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 BeneficiarySupport.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
 
+// QR distribution associations
+ProjectBeneficiary.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+ProjectBeneficiary.belongsTo(Beneficiary, { as: 'beneficiary', foreignKey: 'beneficiaryId' });
+ProjectBeneficiary.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+Project.hasMany(ProjectBeneficiary, { as: 'enrolments', foreignKey: 'projectId' });
+Beneficiary.hasMany(ProjectBeneficiary, { as: 'enrolments', foreignKey: 'beneficiaryId' });
+
+DistributionEvent.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+DistributionEvent.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+Project.hasMany(DistributionEvent, { as: 'distributionEvents', foreignKey: 'projectId' });
+
+DistributionScan.belongsTo(DistributionEvent, { as: 'event', foreignKey: 'eventId' });
+DistributionScan.belongsTo(ProjectBeneficiary, { as: 'enrolment', foreignKey: 'projectBeneficiaryId' });
+DistributionScan.belongsTo(User, { as: 'scanner', foreignKey: 'scannedBy' });
+DistributionEvent.hasMany(DistributionScan, { as: 'scans', foreignKey: 'eventId' });
+
 // HR module associations
 Staff.hasMany(OnboardingRecord, { as: 'onboardingRecords', foreignKey: 'staffId' });
 Staff.hasMany(AppraisalRecord, { as: 'appraisalRecords', foreignKey: 'staffId' });
@@ -6003,6 +6174,9 @@ export {
   PartnerCommunication,
   Beneficiary,
   BeneficiarySupport,
+  ProjectBeneficiary,
+  DistributionEvent,
+  DistributionScan,
   OnboardingRecord,
   AppraisalRecord,
   Indicator,
@@ -6206,6 +6380,9 @@ export default {
   PartnerCommunication,
   Beneficiary,
   BeneficiarySupport,
+  ProjectBeneficiary,
+  DistributionEvent,
+  DistributionScan,
   OnboardingRecord,
   AppraisalRecord,
   Indicator,

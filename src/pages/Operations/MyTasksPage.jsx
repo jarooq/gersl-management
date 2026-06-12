@@ -62,10 +62,6 @@ const MyTasksPage = () => {
     loadMyTasks();
   }, []);
 
-  useEffect(() => {
-    applyFilters();
-  }, [applyFilters]);
-
   const loadMyTasks = async () => {
     setLoading(true);
     setError(null);

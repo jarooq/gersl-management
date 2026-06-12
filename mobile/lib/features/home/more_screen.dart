@@ -43,6 +43,7 @@ class MoreScreen extends ConsumerWidget {
       _Tile('My Orphans',    Icons.child_care_outlined,     '/orphans',       kMission600),
       _Tile('Beneficiaries', Icons.person_search_outlined, '/beneficiaries', kSuccess600),
       _Tile('Visits',        Icons.location_on_outlined,   '/visits',        kNavy900),
+      _Tile('Distribute',    Icons.qr_code_scanner_rounded, '/distribute',   kNavy700),
     ];
     final fieldWork = const [
       _Tile('Movements',         Icons.directions_car_outlined, '/movements',             kNavy900),

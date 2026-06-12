@@ -5448,14 +5448,17 @@ const FinancePage = () => {
                 <button
                   onClick={async () => {
                     try {
+                      // Map UI form keys to the server's Invoice model fields.
+                      // Sequelize silently drops unknown attributes, so the
+                      // previous shape (client/project/amount/issued/due) only
+                      // ever persisted status + notes.
                       const updates = {
-                        client: document.getElementById('editInvoiceClient')?.value,
-                        project: document.getElementById('editInvoiceProject')?.value,
-                        amount: parseFloat(document.getElementById('editInvoiceAmount')?.value) || 0,
-                        issued: document.getElementById('editInvoiceIssued')?.value,
-                        due: document.getElementById('editInvoiceDue')?.value,
-                        status: document.getElementById('editInvoiceStatus')?.value,
+                        customerName: document.getElementById('editInvoiceClient')?.value,
                         notes: document.getElementById('editInvoiceNotes')?.value,
+                        totalAmount: parseFloat(document.getElementById('editInvoiceAmount')?.value) || 0,
+                        invoiceDate: document.getElementById('editInvoiceIssued')?.value,
+                        dueDate: document.getElementById('editInvoiceDue')?.value,
+                        status: document.getElementById('editInvoiceStatus')?.value,
                       };
                       await updateInvoice(selectedInvoice.id, updates);
                       alert('Invoice updated successfully!');
@@ -5632,12 +5635,14 @@ const FinancePage = () => {
                 <button
                   onClick={async () => {
                     try {
+                      // Map UI form keys to the server's Bill model fields.
+                      // (Bill has no `category` column — drop it; if categorisation
+                      // is needed it should be stored elsewhere.)
                       const updates = {
-                        vendor: document.getElementById('editBillVendor')?.value,
-                        category: document.getElementById('editBillCategory')?.value,
-                        amount: parseFloat(document.getElementById('editBillAmount')?.value) || 0,
-                        received: document.getElementById('editBillReceived')?.value,
-                        due: document.getElementById('editBillDue')?.value,
+                        vendorName: document.getElementById('editBillVendor')?.value,
+                        totalAmount: parseFloat(document.getElementById('editBillAmount')?.value) || 0,
+                        billDate: document.getElementById('editBillReceived')?.value,
+                        dueDate: document.getElementById('editBillDue')?.value,
                         status: document.getElementById('editBillStatus')?.value,
                         notes: document.getElementById('editBillNotes')?.value,
                       };

@@ -31,6 +31,9 @@ import approvalRoutes from './routes/approval.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import taskBeneficiaryRoutes from './routes/taskBeneficiary.routes.js';
 import aggregateDistributionRoutes from './routes/aggregateDistribution.routes.js';
+import projectBeneficiaryRoutes from './routes/projectBeneficiary.routes.js';
+import distributionEventRoutes from './routes/distributionEvent.routes.js';
+import distributionScanRoutes from './routes/distributionScan.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import reportRoutes from './routes/report.routes.js';
 import visitLogRoutes from './routes/visitLog.routes.js';
@@ -375,6 +378,12 @@ app.use('/api/map', mapRoutes);
 // Scheduled job triggers (Vercel Cron / external scheduler). Auth via
 // x-cron-secret header against CRON_SECRET env var.
 app.use('/api/cron', cronRoutes);
+
+// QR-code beneficiary distribution module — static prefixes first, then the
+// /api-mounted enrolment router (which carries its own full paths).
+app.use('/api/distribution-events', distributionEventRoutes);
+app.use('/api/distribution-scans', distributionScanRoutes);
+app.use('/api', projectBeneficiaryRoutes);
 
 // Movement register + vehicles
 app.use('/api', movementRoutes);

@@ -223,14 +223,16 @@ export const HRProvider = ({ children }) => {
     return record;
   }, []);
 
-  // Check-in / check-out create or update a legacy Attendance record.
+  // Check-in / check-out create or update an Attendance record. Server fields:
+  // staffId / attendanceDate / checkInTime / checkOutTime (not the
+  // employeeId / date / checkIn / checkOut shape used in mocked UI).
   const checkIn = useCallback(async (employeeId) => {
     const today = new Date().toISOString().slice(0, 10);
-    const time = new Date().toTimeString().slice(0, 5);
+    const time = new Date().toTimeString().slice(0, 8);
     const record = await API.Attendance.create({
-      employeeId,
-      date: today,
-      checkIn: time,
+      staffId: employeeId,
+      attendanceDate: today,
+      checkInTime: time,
       status: 'Present',
     });
     setAttendance(prev => [...prev, record]);
@@ -239,11 +241,14 @@ export const HRProvider = ({ children }) => {
 
   const checkOut = useCallback(async (employeeId) => {
     const today = new Date().toISOString().slice(0, 10);
-    const time = new Date().toTimeString().slice(0, 5);
-    const existing = attendance.find(a => a.employeeId === employeeId && a.date === today);
+    const time = new Date().toTimeString().slice(0, 8);
+    const existing = attendance.find(
+      a => String(a.staffId ?? a.employeeId) === String(employeeId)
+        && String(a.attendanceDate ?? a.date) === today
+    );
     if (!existing) return null;
-    const record = await API.Attendance.update(existing.id, { checkOut: time });
-    setAttendance(prev => prev.map(a => (a.id === existing.id ? { ...a, ...record, checkOut: time } : a)));
+    const record = await API.Attendance.update(existing.id, { checkOutTime: time });
+    setAttendance(prev => prev.map(a => (a.id === existing.id ? { ...a, ...record, checkOutTime: time } : a)));
     return record;
   }, [attendance]);
 
