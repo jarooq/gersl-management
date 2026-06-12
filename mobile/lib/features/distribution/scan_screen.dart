@@ -41,7 +41,8 @@ class ScanScreen extends ConsumerStatefulWidget {
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _ScanScreenState extends ConsumerState<ScanScreen> {
+class _ScanScreenState extends ConsumerState<ScanScreen>
+    with WidgetsBindingObserver {
   static const _uuid = Uuid();
 
   // Events
@@ -67,6 +68,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _restoreCounter();
     _loadEvents();
     _refreshPending();
@@ -74,8 +76,30 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
     super.dispose();
+  }
+
+  // mobile_scanner 5.x: when the widget receives a user-supplied controller
+  // (we do), the widget does NOT manage lifecycle — we must stop on
+  // inactive/paused and start on resumed, or the camera preview freezes
+  // after backgrounding the app on this screen.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final c = _controller;
+    if (c == null) return;
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.detached:
+        c.stop();
+        break;
+      case AppLifecycleState.resumed:
+        c.start();
+        break;
+    }
   }
 
   String _todayKey() {
@@ -244,16 +268,31 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     }
   }
 
-  /// Best-effort GPS fix — mirrors the punch screen pattern, but with a hard
-  /// time cap so a slow fix never stalls the scan line. Returns null when
-  /// permission is denied or no fix arrives in time (scan proceeds without
-  /// coordinates).
+  /// Best-effort GPS fix for the scan.
+  ///
+  /// At a busy distribution event, blocking on a fresh high-accuracy fix per
+  /// beneficiary adds up to 5s of latency to every scan. The phone usually
+  /// already has a recent fix (the event coordinator opened maps, the punch
+  /// screen took a position, etc.), and "the staff member's phone was at
+  /// the distribution site" is the question this coordinate has to answer —
+  /// 50 m accuracy is fine.
+  ///
+  /// So: take the last-known fix immediately when it's recent enough,
+  /// otherwise spend up to 5 s on a fresh one. Returns null when permission
+  /// is denied or no fix is available.
   Future<Position?> _resolveLocation() async {
     try {
       final ok = await Permission.locationWhenInUse.request();
       if (!ok.isGranted) return null;
       final serviceOn = await Geolocator.isLocationServiceEnabled();
       if (!serviceOn) return null;
+
+      final last = await Geolocator.getLastKnownPosition();
+      if (last != null
+          && DateTime.now().difference(last.timestamp) < const Duration(minutes: 2)) {
+        return last;
+      }
+
       return await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
@@ -261,11 +300,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         ),
       );
     } on TimeoutException {
-      try {
-        return await Geolocator.getLastKnownPosition();
-      } catch (_) {
-        return null;
-      }
+      try { return await Geolocator.getLastKnownPosition(); } catch (_) { return null; }
     } catch (_) {
       return null;
     }
@@ -755,7 +790,9 @@ class _ManualEntrySheetState extends ConsumerState<_ManualEntrySheet> {
                 autofocus: true,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
-                  hintText: 'Search beneficiary by name, NIC, or phone',
+                  // Server-side search only matches fullName + beneficiaryId,
+                  // not NIC or phone. Don't promise more than we deliver.
+                  hintText: 'Search beneficiary by name or beneficiary ID',
                   isDense: true,
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)),

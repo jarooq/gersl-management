@@ -65,10 +65,14 @@ class DistributionRepository {
   DistributionRepository(this._dio, this._queue);
 
   /// Active distribution events for the event picker.
+  ///
+  /// The server's default page size is 25 — a region running several events
+  /// concurrently can silently drop the latest ones off the picker. Ask for
+  /// 100, which comfortably covers any realistic same-day active set.
   Future<List<Map<String, dynamic>>> listEvents() async {
     final res = await _dio.get(
       '/distribution-events',
-      queryParameters: {'status': 'Active'},
+      queryParameters: {'status': 'Active', 'limit': 100},
     );
     return extractMapList(res.data, const ['events', 'rows']);
   }
@@ -93,7 +97,26 @@ class DistributionRepository {
         if (notes != null && notes.isNotEmpty) 'notes': notes,
         'clientUuid': clientUuid,
       });
-      return extractMap(res.data, const ['scan']) ?? <String, dynamic>{};
+      // The server puts the beneficiary name at different paths depending on
+      // whether this is a fresh 201 (sibling of `scan`) or a 200 replay
+      // (nested at scan.enrolment.beneficiary.fullName). Promote it onto
+      // the returned scan map so the UI can show a "Recorded — Name" toast
+      // for both cases.
+      final scan = extractMap(res.data, const ['scan']) ?? <String, dynamic>{};
+      final outer = res.data is Map ? (res.data as Map) : const {};
+      final outerData = outer['data'] is Map ? outer['data'] as Map : const {};
+      final nestedBen = scan['enrolment'] is Map
+          ? ((scan['enrolment'] as Map)['beneficiary'] is Map
+              ? (scan['enrolment'] as Map)['beneficiary'] as Map
+              : null)
+          : null;
+      final beneficiaryName = outerData['beneficiaryName']
+          ?? outer['beneficiaryName']
+          ?? nestedBen?['fullName'];
+      if (beneficiaryName is String && beneficiaryName.isNotEmpty) {
+        scan['beneficiaryName'] = beneficiaryName;
+      }
+      return scan;
     } on DioException catch (e) {
       throw _classify(e);
     }
@@ -110,10 +133,19 @@ class DistributionRepository {
         serverMsg ?? 'No connection to the server.',
       );
     }
-    if (status == 401 || status == 403) {
+    if (status == 401) {
       return ScanException(
         ScanFailure.auth,
         serverMsg ?? 'Your session has expired. Please sign in again.',
+        statusCode: status,
+      );
+    }
+    if (status == 403) {
+      // 403 is permission, not expiry — telling the user to "sign in again"
+      // when they're already signed in is misleading.
+      return ScanException(
+        ScanFailure.auth,
+        serverMsg ?? 'You do not have permission to record distribution scans.',
         statusCode: status,
       );
     }
@@ -194,10 +226,12 @@ class DistributionRepository {
             return FlushResult(
                 synced: synced, failed: failed, stoppedOn: e.reason);
           case ScanFailure.invalid:
-            await _queue.markFailed(clientUuid, e.message);
+            // Permanent server-side rejection (closed event, bad token,
+            // wrong project, …). Dequeue the poison row and CONTINUE — if
+            // we return here, every later flush hits the same dead row
+            // first and the rest of the queue is wedged forever.
+            await _queue.markSynced(clientUuid);
             failed++;
-            return FlushResult(
-                synced: synced, failed: failed, stoppedOn: e.reason);
         }
       }
     }

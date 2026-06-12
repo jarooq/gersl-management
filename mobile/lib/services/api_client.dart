@@ -43,8 +43,19 @@ final dioProvider = Provider<Dio>((ref) {
           options: Options(headers: {'Content-Type': 'application/json'}),
         );
         final newAccess = r.data['accessToken'] ?? r.data['data']?['accessToken'];
+        // The server ROTATES the refresh token on every refresh — the old
+        // one is no longer valid against the DB. Persist the new one or
+        // every active user gets force-logged-out on the second refresh
+        // cycle (≈ every 48h with the 24h access-token TTL).
+        final newRefresh =
+            r.data['refreshToken'] ?? r.data['data']?['refreshToken'] ?? refresh;
         if (newAccess is String && newAccess.isNotEmpty) {
-          await tokens.save(accessToken: newAccess, refreshToken: refresh);
+          await tokens.save(
+            accessToken: newAccess,
+            refreshToken: newRefresh is String && newRefresh.isNotEmpty
+                ? newRefresh
+                : refresh,
+          );
           return newAccess;
         }
         return null;

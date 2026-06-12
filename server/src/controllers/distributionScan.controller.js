@@ -59,15 +59,41 @@ export const scan = asyncHandler(async (req, res) => {
   if (!event) throw new NotFoundError('Distribution event not found');
   if (event.status === 'Closed') throw new ValidationError('This distribution event is closed');
 
-  const enrolment = await ProjectBeneficiary.findOne({
-    where: { qrToken: String(token).trim().toUpperCase(), status: 'Active' },
-    include: [{
-      model: Beneficiary,
-      as: 'beneficiary',
-      attributes: ['id', 'fullName', 'beneficiaryId', 'gender', 'district']
-    }]
-  });
-  if (!enrolment) throw new NotFoundError('No active enrolment found for this QR token');
+  // Two ways to resolve an enrolment:
+  //   1. Normal scan: the token is a 12-char QR code on a ProjectBeneficiary
+  //      row (Active for this project).
+  //   2. Manual entry (lost card): the mobile app sends `beneficiary:<id>`,
+  //      meaning staff looked the person up by name in the beneficiary
+  //      search. Resolve the active enrolment for this event's project.
+  const rawToken = String(token || '').trim();
+  const manualMatch = rawToken.match(/^beneficiary:(\d+)$/i);
+
+  const includeBeneficiary = [{
+    model: Beneficiary,
+    as: 'beneficiary',
+    attributes: ['id', 'fullName', 'beneficiaryId', 'gender', 'district']
+  }];
+
+  const enrolment = manualMatch
+    ? await ProjectBeneficiary.findOne({
+        where: {
+          beneficiaryId: parseInt(manualMatch[1], 10),
+          projectId: event.projectId,
+          status: 'Active',
+        },
+        include: includeBeneficiary,
+      })
+    : await ProjectBeneficiary.findOne({
+        where: { qrToken: rawToken.toUpperCase(), status: 'Active' },
+        include: includeBeneficiary,
+      });
+  if (!enrolment) {
+    throw new NotFoundError(
+      manualMatch
+        ? 'No active enrolment found for this beneficiary in this event\'s project'
+        : 'No active enrolment found for this QR token'
+    );
+  }
   if (enrolment.projectId !== event.projectId) {
     throw new ValidationError('This QR code belongs to a different project than this event');
   }
