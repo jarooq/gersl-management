@@ -23,7 +23,9 @@ const sslConfig = sslEnabled
 const sequelize = useSQLite
   ? new Sequelize({
       dialect: 'sqlite',
-      storage: './database.sqlite',
+      // DB_SQLITE_STORAGE lets the test suite point each test process at its
+      // own temp file (or ':memory:') so parallel runs don't share state.
+      storage: process.env.DB_SQLITE_STORAGE || './database.sqlite',
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       define: {
         timestamps: true,
