@@ -50,6 +50,13 @@ class ScanQueue {
           )
         ''');
       },
+      // When the schema bumps in a future release, sqflite calls this
+      // callback. Without it, existing devices on the old version would
+      // silently fail to migrate and lose every pending scan. Add the
+      // ALTER/CREATE statements here as v1→v2→… steps when the time comes.
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // v1 is the current schema — no migrations needed yet.
+      },
     );
     _db = db;
     return db;
