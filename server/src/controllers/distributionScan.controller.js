@@ -74,33 +74,62 @@ export const scan = asyncHandler(async (req, res) => {
     attributes: ['id', 'fullName', 'beneficiaryId', 'gender', 'district']
   }];
 
+  // Look up the enrolment WITHOUT filtering by status, so we can give a
+  // precise error per state ('Distributed' / 'Replaced' / 'Withdrawn') rather
+  // than the generic "no active enrolment". Order by id DESC so a Replaced
+  // row never shadows a newer Active row for the same beneficiary.
   const enrolment = manualMatch
     ? await ProjectBeneficiary.findOne({
         where: {
           beneficiaryId: parseInt(manualMatch[1], 10),
           projectId: event.projectId,
-          status: 'Active',
         },
         include: includeBeneficiary,
+        order: [['id', 'DESC']],
       })
     : await ProjectBeneficiary.findOne({
-        where: { qrToken: rawToken.toUpperCase(), status: 'Active' },
+        where: { qrToken: rawToken.toUpperCase() },
         include: includeBeneficiary,
       });
   if (!enrolment) {
     throw new NotFoundError(
       manualMatch
-        ? 'No active enrolment found for this beneficiary in this event\'s project'
-        : 'No active enrolment found for this QR token'
+        ? 'No enrolment found for this beneficiary in this event\'s project'
+        : 'No enrolment found for this QR token'
     );
   }
   if (enrolment.projectId !== event.projectId) {
     throw new ValidationError('This QR code belongs to a different project than this event');
   }
 
+  const who = enrolment.beneficiary?.fullName || 'This beneficiary';
+
+  // Per-project "one aid, ever" rule. Enrolment transitions to 'Distributed'
+  // after the successful scan below; a second scan attempt finds that status
+  // and is rejected here with a precise message before we even touch the
+  // distribution_scans table.
+  if (enrolment.status === 'Distributed') {
+    return res.status(409).json({
+      success: false,
+      message: `${who} has already received aid for this project`,
+      data: { duplicate: true, alreadyAided: true, beneficiaryName: who }
+    });
+  }
+  if (enrolment.status === 'Replaced') {
+    throw new ValidationError('This QR code has been replaced — use the new card');
+  }
+  if (enrolment.status === 'Withdrawn') {
+    throw new ValidationError('This beneficiary has been withdrawn from the project');
+  }
+  if (enrolment.status !== 'Active') {
+    throw new ValidationError(`Enrolment status is ${enrolment.status}`);
+  }
+
   try {
-    const created = await sequelize.transaction(async (t) =>
-      DistributionScan.create({
+    // Insert the scan AND consume the enrolment in one transaction so a
+    // concurrent second scan can't slip past the status check above.
+    const created = await sequelize.transaction(async (t) => {
+      const scan = await DistributionScan.create({
         eventId: event.id,
         projectBeneficiaryId: enrolment.id,
         scannedBy: req.user?.id || null,
@@ -109,12 +138,14 @@ export const scan = asyncHandler(async (req, res) => {
         longitude: longitude != null && longitude !== '' ? longitude : null,
         notes: notes || null,
         clientUuid: clientUuid || null
-      }, { transaction: t })
-    );
+      }, { transaction: t });
+      await enrolment.update({ status: 'Distributed' }, { transaction: t });
+      return scan;
+    });
 
     return res.status(201).json({
       success: true,
-      message: `Scan recorded for ${enrolment.beneficiary?.fullName || 'beneficiary'}`,
+      message: `Scan recorded for ${who}`,
       data: {
         scan: created,
         enrolment,
@@ -134,16 +165,18 @@ export const scan = asyncHandler(async (req, res) => {
           });
         }
       }
-      // (event_id, project_beneficiary_id) duplicate — already served.
+      // Race on (project_beneficiary_id) — two concurrent scans for the same
+      // enrolment both passed the status check before either committed. The
+      // first one won; report 409 with whichever scan landed.
       const existing = await DistributionScan.findOne({
-        where: { eventId: event.id, projectBeneficiaryId: enrolment.id },
+        where: { projectBeneficiaryId: enrolment.id },
         include: scanIncludes
       });
       if (existing) {
         return res.status(409).json({
           success: false,
-          message: `${enrolment.beneficiary?.fullName || 'This beneficiary'} has already been scanned for this event`,
-          data: { scan: existing, duplicate: true }
+          message: `${who} has already received aid for this project`,
+          data: { scan: existing, duplicate: true, alreadyAided: true, beneficiaryName: who }
         });
       }
     }
