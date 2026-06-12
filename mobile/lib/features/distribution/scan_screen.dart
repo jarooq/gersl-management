@@ -41,7 +41,8 @@ class ScanScreen extends ConsumerStatefulWidget {
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _ScanScreenState extends ConsumerState<ScanScreen> {
+class _ScanScreenState extends ConsumerState<ScanScreen>
+    with WidgetsBindingObserver {
   static const _uuid = Uuid();
 
   // Events
@@ -67,6 +68,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _restoreCounter();
     _loadEvents();
     _refreshPending();
@@ -74,8 +76,30 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
     super.dispose();
+  }
+
+  // mobile_scanner 5.x: when the widget receives a user-supplied controller
+  // (we do), the widget does NOT manage lifecycle — we must stop on
+  // inactive/paused and start on resumed, or the camera preview freezes
+  // after backgrounding the app on this screen.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final c = _controller;
+    if (c == null) return;
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.detached:
+        c.stop();
+        break;
+      case AppLifecycleState.resumed:
+        c.start();
+        break;
+    }
   }
 
   String _todayKey() {

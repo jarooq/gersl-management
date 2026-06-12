@@ -52,10 +52,14 @@ class _GerslAppState extends ConsumerState<GerslApp>
   /// leave rows queued for the next resume or a manual "Sync now".
   Future<void> _flushScanQueue() async {
     if (_flushing) return;
-    final auth = ref.read(authControllerProvider).valueOrNull;
-    if (auth == null || !auth.isAuthenticated) return;
     _flushing = true;
     try {
+      // On a true cold-boot the post-frame callback fires while
+      // authControllerProvider is still AsyncLoading (secure storage read).
+      // Wait for the bootstrap to settle so yesterday's queued scans don't
+      // sit untouched until the next background/foreground bounce.
+      final auth = await ref.read(authControllerProvider.future);
+      if (!auth.isAuthenticated) return;
       final pending = await ref.read(scanQueueProvider).count();
       if (pending > 0) {
         await ref.read(distributionRepoProvider).flushQueue();
