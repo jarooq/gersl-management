@@ -4373,4 +4373,38 @@ export const ProposalConversionAPI = {
     request(`/proposals/${proposalId}/convert-to-order`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
 };
 
+// ============================================
+// NAMESPACE ALIASES — eliminate the recurring wrong-namespace bug class
+// ============================================
+// The default `API` object exposes each sub-API under a short base name
+// (`API.Partner`, `API.Project`, …), while the named exports use the verbose
+// `XAPI` suffix (`PartnerAPI`, `ProjectAPI`, …). Developers reaching for the
+// verbose name on the default object — or accidentally pluralising it — got
+// `undefined` and a runtime TypeError. The audit caught this four times:
+//   - PartnersContext used `API.PartnerAPI` (verbose form on the default map)
+//   - PartnerFinancialsPanel used `API.Partners` (plural)
+//   - StaffDashboard used `API.Projects` and `API.Proposals` (plurals)
+//
+// Fix: auto-register `XAPI` and `Xs` aliases for every sub-API on the default
+// object. Any of `API.Partner`, `API.PartnerAPI`, `API.Partners` now resolve
+// to the same object. Safe to re-run; existing keys are never overwritten.
+const _apiNamespaceKeys = Object.keys(API).filter((k) => {
+  if (k === 'TokenManager') return false;
+  if (typeof API[k] !== 'object' || API[k] === null) return false;
+  // The generic HTTP helpers (get/post/put/delete) live on API too — skip
+  // them; they aren't sub-API namespaces.
+  return typeof API[k] !== 'function';
+});
+for (const key of _apiNamespaceKeys) {
+  const verbose = `${key}API`;
+  if (!(verbose in API)) API[verbose] = API[key];
+  // Crude pluralisation — fine for our nouns. Don't double-pluralise things
+  // that already end in 's' (`Users`, `Coordinators`, etc.) or already carry
+  // the `API` suffix (we just added those above).
+  if (!key.endsWith('s') && !key.endsWith('API')) {
+    const plural = `${key}s`;
+    if (!(plural in API)) API[plural] = API[key];
+  }
+}
+
 export default API;
