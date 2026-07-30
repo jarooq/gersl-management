@@ -5845,25 +5845,6 @@ const Announcement = sequelize.define('Announcement', {
   ]
 });
 
-// Idempotency ledger for the GERHR Firestore→Postgres migration. One row
-// per Firestore document migrated; the migration script consults this to
-// skip re-imports.
-const GerhrMigration = sequelize.define('GerhrMigration', {
-  collection:  { type: DataTypes.STRING(80), allowNull: false },
-  firestoreId: { type: DataTypes.STRING(120), allowNull: false, field: 'firestore_id' },
-  targetTable: { type: DataTypes.STRING(80), field: 'target_table' },
-  targetId:    { type: DataTypes.INTEGER, field: 'target_id' },
-  migratedAt:  { type: DataTypes.DATE, defaultValue: DataTypes.NOW, field: 'migrated_at' },
-  notes:       { type: DataTypes.TEXT }
-}, {
-  tableName: '_gerhr_migrations',
-  timestamps: false,
-  underscored: true,
-  indexes: [
-    { unique: true, fields: ['collection', 'firestore_id'] }
-  ]
-});
-
 // Output of the daily clusterer — derived from raw location_points. Each
 // row is either a STOP (staff dwelled in one place) or a TRIP (staff was
 // moving between stops). Used by the fuel-claim flow + admin movement view.
@@ -6278,7 +6259,6 @@ export {
   Announcement,
   LeaveBalance,
   MovementSegment,
-  GerhrMigration,
   // WASH & IGP modules
   WashOrder,
   WashItem,
@@ -6484,7 +6464,6 @@ export default {
   Announcement,
   LeaveBalance,
   MovementSegment,
-  GerhrMigration,
   // WASH & IGP modules
   WashOrder,
   WashItem,
