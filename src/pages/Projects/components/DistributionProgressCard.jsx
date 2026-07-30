@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Users, CalendarDays, ScanLine, CheckCircle2, TrendingUp, AlertCircle,
+  Users, CalendarDays, ScanLine, CheckCircle2, TrendingUp, AlertCircle, MapPin,
 } from 'lucide-react';
 import * as API from '../../../services/api';
 import UnreachedBeneficiariesModal from './UnreachedBeneficiariesModal';
@@ -168,6 +168,45 @@ const DistributionProgressCard = ({ projectId, projectName, refreshKey = 0 }) =>
           projectName={projectName}
           onClose={() => setShowUnreached(false)}
         />
+      )}
+
+      {/* By-district breakdown — only shown when we have district data.
+          Rendered as a compact horizontal list of chips, each showing
+          district name + served/active with a mini coverage bar. */}
+      {Array.isArray(stats.byDistrict) && stats.byDistrict.length > 0 && (
+        <div className="mt-4 pt-3 border-t border-hs-slate-100">
+          <div className="flex items-center gap-1.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-hs-slate-500">
+            <MapPin size={12} className="text-hs-slate-400" />
+            <span>By district</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {stats.byDistrict.map((d) => {
+              const districtBar =
+                d.coveragePct >= 90 ? 'bg-hs-teal-500' :
+                d.coveragePct >= 50 ? 'bg-orange-500'  :
+                d.coveragePct > 0   ? 'bg-orange-400'  :
+                                      'bg-hs-slate-300';
+              return (
+                <div key={d.district} className="p-2 rounded-md bg-hs-slate-50 border border-hs-slate-100">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[12px] font-semibold text-hs-navy-800 truncate">
+                      {d.district}
+                    </span>
+                    <span className="text-[10px] text-hs-slate-500 shrink-0">
+                      {d.served}/{d.active}
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-white rounded-full overflow-hidden">
+                    <div
+                      className={`h-full ${districtBar} transition-all`}
+                      style={{ width: `${Math.min(d.coveragePct, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       )}
 
       {/* Event lifecycle strip */}

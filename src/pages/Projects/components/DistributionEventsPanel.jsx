@@ -34,6 +34,9 @@ const DistributionEventsPanel = ({ projectId, projectName, showToast }) => {
   // Bumped whenever the events list changes so the progress card refetches
   // without having to lift its state.
   const [statsRefreshKey, setStatsRefreshKey] = useState(0);
+  // Per-event scan counts sourced from the stats endpoint's byEvent
+  // aggregate. Keyed by event id → scanCount.
+  const [scanCounts, setScanCounts] = useState({});
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -51,6 +54,21 @@ const DistributionEventsPanel = ({ projectId, projectName, showToast }) => {
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
+
+  // Cheap side-fetch — the stats endpoint already computes per-event scan
+  // counts, so we reuse it here instead of adding another endpoint.
+  useEffect(() => {
+    let cancelled = false;
+    API.ProjectBeneficiaryAPI.stats(projectId)
+      .then((data) => {
+        if (cancelled) return;
+        const map = {};
+        for (const e of data?.byEvent || []) map[e.id] = e.scanCount;
+        setScanCounts(map);
+      })
+      .catch(() => { /* silent — the table just shows dashes */ });
+    return () => { cancelled = true; };
+  }, [projectId, statsRefreshKey]);
 
   const openEvent = async (event) => {
     setSelectedEvent(event);
@@ -202,18 +220,36 @@ const DistributionEventsPanel = ({ projectId, projectName, showToast }) => {
                   <th className="text-left py-3 px-4 text-sm font-bold text-ink-700">Event</th>
                   <th className="text-left py-3 px-4 text-sm font-bold text-ink-700">Date</th>
                   <th className="text-left py-3 px-4 text-sm font-bold text-ink-700">Location</th>
+                  <th className="text-right py-3 px-4 text-sm font-bold text-ink-700">Scans</th>
                   <th className="text-center py-3 px-4 text-sm font-bold text-ink-700">Status</th>
                   <th className="text-right py-3 px-4 text-sm font-bold text-ink-700">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {events.map((event) => (
+                {events.map((event) => {
+                  const count = scanCounts[event.id];
+                  return (
                   <tr key={event.id} className="border-b border-ink-100 hover:bg-orange-50 transition-colors">
                     <td className="py-3 px-4 text-sm font-semibold text-ink-900">{event.name}</td>
                     <td className="py-3 px-4 text-sm text-ink-600">
                       {event.scheduledDate ? new Date(event.scheduledDate).toLocaleDateString() : '—'}
                     </td>
                     <td className="py-3 px-4 text-sm text-ink-600">{event.location || '—'}</td>
+                    <td className="py-3 px-4 text-right">
+                      {count == null ? (
+                        <span className="text-ink-400 text-xs">—</span>
+                      ) : count === 0 ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-ink-500">
+                          <ScanLine size={12} />
+                          0
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-50 text-orange-700 text-xs font-semibold">
+                          <ScanLine size={12} />
+                          {count.toLocaleString()}
+                        </span>
+                      )}
+                    </td>
                     <td className="py-3 px-4 text-center">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${eventStatusClass(event.status)}`}>
                         {event.status || 'Scheduled'}
@@ -223,7 +259,7 @@ const DistributionEventsPanel = ({ projectId, projectName, showToast }) => {
                       <div className="flex justify-end">
                         <button
                           onClick={() => openEvent(event)}
-                          className="flex items-center gap-1 px-3 py-1 bg-purple-50 text-orange-600 rounded-lg hover:bg-orange-100 transition text-xs font-semibold"
+                          className="flex items-center gap-1 px-3 py-1 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition text-xs font-semibold"
                         >
                           <ScanLine size={14} />
                           View Scans
@@ -231,7 +267,8 @@ const DistributionEventsPanel = ({ projectId, projectName, showToast }) => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

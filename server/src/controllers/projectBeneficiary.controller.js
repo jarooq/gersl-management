@@ -222,23 +222,108 @@ export const stats = asyncHandler(async (req, res) => {
 
   let totalScans = 0;
   let beneficiariesServed = 0;
+  let scannedEnrolmentIds = [];
   if (eventIds.length > 0) {
     totalScans = await DistributionScan.count({ where: { eventId: eventIds } });
-    // "Beneficiaries served" = distinct enrolments that have at least one
-    // scan across any of the project's events. `enforce_one_scan_per_enrolment`
-    // migration means this equals raw scan count when no dupes exist, but
-    // computing distinct is cheap and safe against future policy changes.
-    beneficiariesServed = await DistributionScan.count({
+    // Fetch DISTINCT scanned enrolment ids — used to compute served count
+    // AND the per-district breakdown below.
+    const scannedRows = await DistributionScan.findAll({
       where: { eventId: eventIds },
-      distinct: true,
-      col: 'projectBeneficiaryId',
+      attributes: [
+        [sequelize.fn('DISTINCT', sequelize.col('projectBeneficiaryId')), 'projectBeneficiaryId'],
+      ],
+      raw: true,
     });
+    scannedEnrolmentIds = scannedRows.map((r) => r.projectBeneficiaryId).filter(Boolean);
+    beneficiariesServed = scannedEnrolmentIds.length;
   }
 
   // Coverage — served / active enrolment. Guarded against div/0.
   const coveragePct = enrolments.active > 0
     ? Math.round((beneficiariesServed / enrolments.active) * 1000) / 10
     : 0;
+
+  // Per-event scan counts + per-district coverage — the two breakdowns
+  // that let a manager see which event is drawing crowds and which
+  // districts are lagging.
+  let byEvent = [];
+  if (eventIds.length > 0) {
+    // Single query: LEFT JOIN scans onto events, group by event.id.
+    // Sequelize `attributes: [[fn(...), alias]]` + `include` mode is the
+    // shortest way; separate queries would be clearer but N+1 for lots
+    // of events.
+    const eventRowsRaw = await DistributionEvent.findAll({
+      where: { projectId },
+      attributes: [
+        'id', 'name', 'scheduledDate', 'location', 'status',
+        [sequelize.fn('COUNT', sequelize.col('scans.id')), 'scanCount'],
+      ],
+      include: [{
+        model: DistributionScan,
+        as: 'scans',
+        attributes: [],
+        required: false,
+      }],
+      group: ['DistributionEvent.id'],
+      order: [['scheduledDate', 'DESC'], ['id', 'DESC']],
+      raw: true,
+      subQuery: false,
+    });
+    byEvent = eventRowsRaw.map((r) => ({
+      id: r.id,
+      name: r.name,
+      scheduledDate: r.scheduledDate,
+      location: r.location,
+      status: r.status,
+      scanCount: parseInt(r.scanCount, 10) || 0,
+    }));
+  }
+
+  // Per-district: group active enrolments by beneficiary.district and
+  // count how many of those enrolments have been scanned.
+  const districtRowsRaw = await ProjectBeneficiary.findAll({
+    where: { projectId, status: 'Active' },
+    attributes: [
+      [sequelize.col('beneficiary.district'), 'district'],
+      [sequelize.fn('COUNT', sequelize.col('ProjectBeneficiary.id')), 'active'],
+    ],
+    include: [{
+      model: Beneficiary,
+      as: 'beneficiary',
+      attributes: [],
+    }],
+    group: ['beneficiary.district'],
+    raw: true,
+  });
+  const districtActive = new Map();
+  for (const r of districtRowsRaw) {
+    const key = r.district || 'Unknown';
+    districtActive.set(key, parseInt(r.active, 10) || 0);
+  }
+  // Scanned per district — need to count distinct scanned enrolments per
+  // beneficiary.district.
+  const scannedByDistrict = new Map();
+  if (eventIds.length > 0 && scannedEnrolmentIds.length > 0) {
+    // Fetch just the scanned enrolments with their beneficiary district
+    // (we already have the ids; enrich in one query).
+    const scannedRows = await ProjectBeneficiary.findAll({
+      where: { id: scannedEnrolmentIds },
+      attributes: [[sequelize.col('beneficiary.district'), 'district']],
+      include: [{ model: Beneficiary, as: 'beneficiary', attributes: [] }],
+      raw: true,
+    });
+    for (const r of scannedRows) {
+      const key = r.district || 'Unknown';
+      scannedByDistrict.set(key, (scannedByDistrict.get(key) || 0) + 1);
+    }
+  }
+  const byDistrict = [...districtActive.entries()]
+    .map(([district, active]) => {
+      const served = scannedByDistrict.get(district) || 0;
+      const pct = active > 0 ? Math.round((served / active) * 1000) / 10 : 0;
+      return { district, active, served, remaining: Math.max(active - served, 0), coveragePct: pct };
+    })
+    .sort((a, b) => b.active - a.active);
 
   res.json({
     success: true,
@@ -252,6 +337,8 @@ export const stats = asyncHandler(async (req, res) => {
         remaining: Math.max(enrolments.active - beneficiariesServed, 0),
         coveragePct,
       },
+      byEvent,
+      byDistrict,
     },
   });
 });
