@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { CashAPI, ExchangeRateAPI, InvoiceAPI } from '../../services/api';
 import { useFinance } from '../../contexts/FinanceContext';
 import { usePartners } from '../../contexts/PartnersContext';
@@ -14,7 +15,6 @@ import {
   Upload, HandCoins, Package, TrendingDown as Depreciation
 } from 'lucide-react';
 import { getCurrencySymbol, formatCurrency, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
-import ConsoleShell from '../../components/console/ConsoleShell';
 
 // Today's date as YYYY-MM-DD (local), and a blank invoice-receipt form.
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -42,8 +42,15 @@ const FinancePage = () => {
   const { fixedAssets, getTotals: getAssetTotals, addFixedAsset, deleteFixedAsset, getDepreciationSchedule, getSummaryByType } = useFixedAssets();
   const { performanceTargets } = useSettings();
 
-  // Active Tab State
-  const [activeTab, setActiveTab] = useState('dashboard');
+  // Active section is driven by the URL (?section=xxx) so the sidebar
+  // console can navigate to it and it's shareable/bookmarkable.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'dashboard';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
 
   // Modal States
   const [showAddInvoice, setShowAddInvoice] = useState(false);
@@ -829,27 +836,27 @@ const FinancePage = () => {
     .filter(bill => bill.status !== 'Paid')
     .reduce((sum, bill) => sum + (parseFloat(bill.amount) || 0), 0);
 
-  const financeSections = [
-    { id: 'dashboard',    label: 'Dashboard',         icon: LayoutDashboard, group: 'Overview' },
-    { id: 'accounts',     label: 'Chart of Accounts', icon: Building2,       group: 'Ledger' },
-    { id: 'journal',      label: 'Journal Entries',   icon: Edit,            group: 'Ledger' },
-    { id: 'grants',       label: 'Grant Receivables', icon: HandCoins,       group: 'Receivables' },
-    { id: 'invoices',     label: 'Invoices',          icon: FileText,        group: 'Receivables' },
-    { id: 'bills',        label: 'Bills & Payments',  icon: Receipt,         group: 'Payables' },
-    { id: 'bank',         label: 'Bank Accounts',     icon: Wallet,          group: 'Banking' },
-    { id: 'fixed-assets', label: 'Fixed Assets',      icon: Package,         group: 'Assets' },
-    { id: 'reports',      label: 'Financial Reports', icon: BarChart3,       group: 'Reporting' },
-  ];
+  const sectionTitles = {
+    dashboard: 'Dashboard',
+    accounts: 'Chart of Accounts',
+    journal: 'Journal Entries',
+    grants: 'Grant Receivables',
+    invoices: 'Invoices',
+    bills: 'Bills & Payments',
+    bank: 'Bank Accounts',
+    'fixed-assets': 'Fixed Assets',
+    reports: 'Financial Reports',
+  };
 
   return (
     <>
-    <ConsoleShell
-      title="Finance"
-      subtitle="Accounting & financial control"
-      sections={financeSections}
-      activeId={activeTab}
-      onSelect={setActiveTab}
-    >
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
+      {/* Page header */}
+      <div>
+        <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">Finance</p>
+        <h1 className="text-h2 text-hs-navy-800">{sectionTitles[activeTab] || 'Finance'}</h1>
+      </div>
+
       <div className="space-y-4">
       {activeTab === 'dashboard' && (
       <>
@@ -2699,7 +2706,7 @@ const FinancePage = () => {
         </div>
       </div>
       </div>
-    </ConsoleShell>
+    </div>
 
       {/* Payment Processing Modal */}
       {showPayBill && selectedBill && (
