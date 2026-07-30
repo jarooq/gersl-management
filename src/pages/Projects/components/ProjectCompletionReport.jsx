@@ -150,7 +150,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.completionDate}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
               </div>
@@ -180,7 +180,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     required
                     min="0"
                     step="1000"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                   <p className="text-xs text-ink-600 mt-2">
                     Budget utilization: <span className="font-bold">{budgetUtilization}%</span>
@@ -196,7 +196,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.budgetVarianceExplanation}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="Explain any significant variance between planned and actual budget"
                   />
                 </div>
@@ -226,7 +226,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                   <p className="text-xs text-ink-600 mt-2">
                     Achievement: <span className="font-bold">{beneficiaryAchievement}%</span>
@@ -242,7 +242,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.beneficiaryFeedback}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="Share feedback and testimonials from beneficiaries"
                   />
                 </div>
@@ -266,7 +266,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="List all project objectives and indicate achievement level for each"
                 />
               </div>
@@ -290,7 +290,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="Describe the overall impact of the project on beneficiaries and communities"
                   />
                 </div>
@@ -304,7 +304,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.successStories}
                     onChange={handleChange}
                     rows="4"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="Share 2-3 success stories or case studies from the project"
                   />
                 </div>
@@ -329,7 +329,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="Describe major challenges encountered during implementation"
                   />
                 </div>
@@ -344,7 +344,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="What were the key lessons learned from this project?"
                   />
                 </div>
@@ -369,7 +369,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="How will the project results be sustained after completion?"
                   />
                 </div>
@@ -384,7 +384,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     onChange={handleChange}
                     required
                     rows="4"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="Recommendations for future similar projects"
                   />
                 </div>
@@ -398,7 +398,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                     value={formData.futureActions}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                     placeholder="List any follow-up actions or monitoring required post-completion"
                   />
                 </div>
@@ -421,7 +421,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.partnerContribution}
                   onChange={handleChange}
                   rows="4"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Describe contributions from partners, donors, and stakeholders"
                 />
               </div>
@@ -443,7 +443,7 @@ const ProjectCompletionReport = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.photosDocumentation}
                   onChange={handleChange}
                   rows="3"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="List attached photos, reports, and supporting documents"
                 />
                 <p className="text-xs text-ink-500 mt-2">

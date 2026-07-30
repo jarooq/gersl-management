@@ -344,7 +344,7 @@ const SystemSettingsPage = () => {
                   required
                   value={departmentForm.name}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="e.g., Finance, HR, Operations"
                 />
               </div>
@@ -357,7 +357,7 @@ const SystemSettingsPage = () => {
                   type="text"
                   value={departmentForm.code}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, code: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="e.g., FIN, HR, OPS"
                 />
               </div>
@@ -369,7 +369,7 @@ const SystemSettingsPage = () => {
                 <textarea
                   value={departmentForm.description}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   rows="3"
                   placeholder="Brief description of the department..."
                 />
@@ -382,7 +382,7 @@ const SystemSettingsPage = () => {
                 <select
                   value={departmentForm.color}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, color: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="from-blue-500 to-cyan-600">Blue</option>
                   <option value="from-purple-500 to-pink-600">Purple</option>
@@ -401,7 +401,7 @@ const SystemSettingsPage = () => {
                   type="number"
                   value={departmentForm.sortOrder}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, sortOrder: parseInt(e.target.value) || 0 })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="0"
                 />
               </div>
@@ -412,7 +412,7 @@ const SystemSettingsPage = () => {
                   id="isActive"
                   checked={departmentForm.isActive}
                   onChange={(e) => setDepartmentForm({ ...departmentForm, isActive: e.target.checked })}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-orange-500"
                 />
                 <label htmlFor="isActive" className="text-sm text-ink-700">
                   Active
@@ -462,7 +462,7 @@ const SystemSettingsPage = () => {
                   required
                   value={positionForm.title}
                   onChange={(e) => setPositionForm({ ...positionForm, title: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="e.g., Program Manager, Finance Officer"
                 />
               </div>
@@ -475,7 +475,7 @@ const SystemSettingsPage = () => {
                   type="text"
                   value={positionForm.code}
                   onChange={(e) => setPositionForm({ ...positionForm, code: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="e.g., PM, FO"
                 />
               </div>
@@ -487,7 +487,7 @@ const SystemSettingsPage = () => {
                 <select
                   value={positionForm.level}
                   onChange={(e) => setPositionForm({ ...positionForm, level: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">Select Level</option>
                   <option value="Executive">Executive</option>
@@ -504,7 +504,7 @@ const SystemSettingsPage = () => {
                 <textarea
                   value={positionForm.description}
                   onChange={(e) => setPositionForm({ ...positionForm, description: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   rows="3"
                   placeholder="Brief description of the position..."
                 />
@@ -518,7 +518,7 @@ const SystemSettingsPage = () => {
                   type="number"
                   value={positionForm.sortOrder}
                   onChange={(e) => setPositionForm({ ...positionForm, sortOrder: parseInt(e.target.value) || 0 })}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="0"
                 />
               </div>
@@ -529,7 +529,7 @@ const SystemSettingsPage = () => {
                   id="positionIsActive"
                   checked={positionForm.isActive}
                   onChange={(e) => setPositionForm({ ...positionForm, isActive: e.target.checked })}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-orange-500"
                 />
                 <label htmlFor="positionIsActive" className="text-sm text-ink-700">
                   Active
@@ -579,7 +579,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
             type="text"
             value={settings.organizationName}
             onChange={(e) => handleChange('organizationName', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           />
         </div>
 
@@ -589,7 +589,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
             type="email"
             value={settings.organizationEmail}
             onChange={(e) => handleChange('organizationEmail', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           />
         </div>
 
@@ -599,7 +599,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
             type="tel"
             value={settings.organizationPhone}
             onChange={(e) => handleChange('organizationPhone', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           />
         </div>
 
@@ -608,7 +608,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.timezone}
             onChange={(e) => handleChange('timezone', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="Asia/Colombo">Asia/Colombo (UTC+5:30)</option>
             <option value="Asia/Kolkata">Asia/Kolkata (UTC+5:30)</option>
@@ -621,7 +621,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.dateFormat}
             onChange={(e) => handleChange('dateFormat', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="YYYY-MM-DD">YYYY-MM-DD</option>
             <option value="DD/MM/YYYY">DD/MM/YYYY</option>
@@ -634,7 +634,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.currency}
             onChange={(e) => handleChange('currency', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="LKR">LKR (Sri Lankan Rupee)</option>
             <option value="USD">USD (US Dollar)</option>
@@ -648,7 +648,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.fiscalYearStart}
             onChange={(e) => handleChange('fiscalYearStart', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="January">January</option>
             <option value="April">April</option>
@@ -662,7 +662,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.language}
             onChange={(e) => handleChange('language', e.target.value)}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="English">English</option>
             <option value="Sinhala">Sinhala</option>
@@ -676,7 +676,7 @@ const GeneralTab = ({ settings, setSettings, onSave }) => {
             value={settings.organizationAddress}
             onChange={(e) => handleChange('organizationAddress', e.target.value)}
             rows="3"
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
           />
         </div>
       </div>
@@ -858,7 +858,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                     type="text"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   />
@@ -872,7 +872,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   />
@@ -886,7 +886,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   />
@@ -900,7 +900,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     minLength={6}
                     disabled={isLoading}
@@ -914,7 +914,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -936,7 +936,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     disabled={isLoading}
                   />
                 </div>
@@ -948,7 +948,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                   <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     disabled={isLoading}
                   >
                     <option value="">Select Department</option>
@@ -968,7 +968,7 @@ const UsersTab = ({ users, toggleUserStatus }) => {
                   <select
                     value={formData.position}
                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     disabled={isLoading}
                   >
                     <option value="">Select Position</option>
@@ -1359,7 +1359,7 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
             <select
               value={settings.backupFrequency}
               onChange={(e) => setSettings({ ...settings, backupFrequency: e.target.value })}
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             >
               <option value="Hourly">Hourly</option>
               <option value="Daily">Daily</option>
@@ -1374,7 +1374,7 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
               type="number"
               value={settings.retentionDays}
               onChange={(e) => setSettings({ ...settings, retentionDays: parseInt(e.target.value) })}
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
           </div>
 
@@ -1383,7 +1383,7 @@ const BackupTab = ({ settings, setSettings, triggerBackup, onSave }) => {
             <select
               value={settings.backupLocation}
               onChange={(e) => setSettings({ ...settings, backupLocation: e.target.value })}
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             >
               <option value="Cloud Storage">Cloud Storage</option>
               <option value="Local Storage">Local Storage</option>
@@ -1525,7 +1525,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="text"
                       placeholder="smtp.gmail.com"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1533,7 +1533,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="number"
                       placeholder="587"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1541,7 +1541,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="text"
                       placeholder="your-email@gmail.com"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1549,7 +1549,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="password"
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1559,7 +1559,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                 <>
                   <div>
                     <label className="block text-sm font-semibold text-ink-700 mb-2">Provider</label>
-                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none">
                       <option>Twilio</option>
                       <option>Nexmo</option>
                       <option>AWS SNS</option>
@@ -1570,7 +1570,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="text"
                       placeholder="Enter your API key"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1578,7 +1578,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="password"
                       placeholder="Enter your API secret"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1588,7 +1588,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                 <>
                   <div>
                     <label className="block text-sm font-semibold text-ink-700 mb-2">Provider</label>
-                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none">
                       <option>AWS S3</option>
                       <option>Google Cloud Storage</option>
                       <option>Azure Blob Storage</option>
@@ -1599,7 +1599,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="text"
                       placeholder="my-bucket"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1607,7 +1607,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="text"
                       placeholder="Enter access key"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1615,7 +1615,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="password"
                       placeholder="Enter secret key"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1625,7 +1625,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                 <>
                   <div>
                     <label className="block text-sm font-semibold text-ink-700 mb-2">Provider</label>
-                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none">
                       <option>Stripe</option>
                       <option>PayPal</option>
                       <option>Square</option>
@@ -1636,7 +1636,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="text"
                       placeholder="pk_test_..."
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1644,7 +1644,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="password"
                       placeholder="sk_test_..."
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
@@ -1652,7 +1652,7 @@ const IntegrationsTab = ({ settings, setSettings, onSave }) => {
                     <input
                       type="password"
                       placeholder="whsec_..."
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </>
@@ -1694,7 +1694,7 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.theme}
             onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="Light">Light</option>
             <option value="Dark">Dark</option>
@@ -1707,7 +1707,7 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.primaryColor}
             onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
@@ -1721,7 +1721,7 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.sidebarStyle}
             onChange={(e) => setSettings({ ...settings, sidebarStyle: e.target.value })}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="Expanded">Expanded</option>
             <option value="Collapsed">Collapsed</option>
@@ -1734,7 +1734,7 @@ const AppearanceTab = ({ settings, setSettings, onSave }) => {
           <select
             value={settings.fontSize}
             onChange={(e) => setSettings({ ...settings, fontSize: e.target.value })}
-            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="Small">Small</option>
             <option value="Medium">Medium</option>
@@ -1815,7 +1815,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                   ...settings,
                   minPasswordLength: parseInt(e.target.value)
                 })}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
             </div>
 
@@ -1828,7 +1828,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                   ...settings,
                   passwordExpiry: parseInt(e.target.value)
                 })}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
             </div>
           </div>
@@ -1847,7 +1847,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                     ...settings,
                     [option.key]: e.target.checked
                   })}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-orange-500"
                 />
                 <label className="text-sm text-ink-700">{option.label}</label>
               </div>
@@ -1864,7 +1864,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                 type="number"
                 value={settings.sessionTimeout}
                 onChange={(e) => setSettings({ ...settings, sessionTimeout: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
             </div>
 
@@ -1874,7 +1874,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                 type="number"
                 value={settings.loginAttempts}
                 onChange={(e) => setSettings({ ...settings, loginAttempts: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
             </div>
 
@@ -1884,7 +1884,7 @@ const SecurityTab = ({ settings, setSettings, onSave }) => {
                 type="number"
                 value={settings.lockoutDuration}
                 onChange={(e) => setSettings({ ...settings, lockoutDuration: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
             </div>
           </div>
@@ -2098,7 +2098,7 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.openaiApiKey}
               onChange={(e) => handleChange('openaiApiKey', e.target.value)}
               placeholder="sk-..."
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
             <p className="text-xs text-ink-500 mt-1">
               Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-navy-700 hover:underline">platform.openai.com</a>
@@ -2110,7 +2110,7 @@ const AIConfigTab = ({ onSave }) => {
             <select
               value={aiSettings.openaiModel}
               onChange={(e) => handleChange('openaiModel', e.target.value)}
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             >
               <option value="gpt-4">GPT-4 (Most capable, slower)</option>
               <option value="gpt-4-turbo-preview">GPT-4 Turbo (Faster, cheaper)</option>
@@ -2134,7 +2134,7 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.claudeApiKey}
               onChange={(e) => handleChange('claudeApiKey', e.target.value)}
               placeholder="sk-ant-..."
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
             <p className="text-xs text-ink-500 mt-1">
               Get your API key from <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer" className="text-navy-700 hover:underline">console.anthropic.com</a>
@@ -2146,7 +2146,7 @@ const AIConfigTab = ({ onSave }) => {
             <select
               value={aiSettings.claudeModel}
               onChange={(e) => handleChange('claudeModel', e.target.value)}
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             >
               <option value="claude-3-opus-20240229">Claude 3 Opus (Most capable)</option>
               <option value="claude-3-sonnet-20240229">Claude 3 Sonnet (Balanced)</option>
@@ -2170,7 +2170,7 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.customEndpoint}
               onChange={(e) => handleChange('customEndpoint', e.target.value)}
               placeholder="https://api.example.com/v1/chat/completions"
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
           </div>
 
@@ -2183,7 +2183,7 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.customApiKey}
               onChange={(e) => handleChange('customApiKey', e.target.value)}
               placeholder="Your custom API key"
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
           </div>
 
@@ -2194,7 +2194,7 @@ const AIConfigTab = ({ onSave }) => {
               value={aiSettings.customModel}
               onChange={(e) => handleChange('customModel', e.target.value)}
               placeholder="model-name"
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
           </div>
         </div>
@@ -2232,7 +2232,7 @@ const AIConfigTab = ({ onSave }) => {
                 onChange={(e) => handleChange('maxTokens', parseInt(e.target.value))}
                 min="100"
                 max="8000"
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
               <p className="text-xs text-ink-500 mt-1">
                 Maximum length of generated content
@@ -2307,7 +2307,7 @@ const AIConfigTab = ({ onSave }) => {
             <select
               value={aiSettings.fallbackProvider}
               onChange={(e) => handleChange('fallbackProvider', e.target.value)}
-              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             >
               <option value="template">Template-based Generation</option>
               <option value="openai">OpenAI (if not primary)</option>

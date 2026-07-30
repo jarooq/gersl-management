@@ -203,7 +203,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                 type="date"
                 value={filters.dateFrom}
                 onChange={(e) => updateFilter('dateFrom', e.target.value)}
-                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
             <div>
@@ -214,7 +214,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                 type="date"
                 value={filters.dateTo}
                 onChange={(e) => updateFilter('dateTo', e.target.value)}
-                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
           </div>
@@ -232,7 +232,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                       type="checkbox"
                       checked={filters.project.includes(project.id)}
                       onChange={() => toggleArrayFilter('project', project.id)}
-                      className="w-4 h-4 text-indigo-600 border-ink-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-indigo-600 border-ink-300 rounded focus:ring-orange-500"
                     />
                     <span className="text-sm text-ink-700">{project.name}</span>
                   </label>
@@ -254,7 +254,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                       type="checkbox"
                       checked={filters.assignee.includes(user.id)}
                       onChange={() => toggleArrayFilter('assignee', user.id)}
-                      className="w-4 h-4 text-indigo-600 border-ink-300 rounded focus:ring-indigo-500"
+                      className="w-4 h-4 text-indigo-600 border-ink-300 rounded focus:ring-orange-500"
                     />
                     <span className="text-sm text-ink-700">{user.name}</span>
                   </label>
@@ -273,7 +273,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
               value={filters.searchTerm}
               onChange={(e) => updateFilter('searchTerm', e.target.value)}
               placeholder="Enter search term..."
-              className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
 
@@ -326,7 +326,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
                     value={presetName}
                     onChange={(e) => setPresetName(e.target.value)}
                     placeholder="Enter preset name..."
-                    className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     autoFocus
                   />
                   <div className="flex gap-2">

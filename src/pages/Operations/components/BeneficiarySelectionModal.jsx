@@ -274,7 +274,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name, NIC, or phone number..."
-                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
             <button
@@ -311,7 +311,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                   name="gender"
                   value={filters.gender}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">All</option>
                   <option value="Male">Male</option>
@@ -326,7 +326,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                   name="beneficiaryType"
                   value={filters.beneficiaryType}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">All Types</option>
                   {getUniqueValues('beneficiary_type').map(type => (
@@ -341,7 +341,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                   name="district"
                   value={filters.district}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">All Districts</option>
                   {getUniqueValues('district').map(district => (
@@ -356,7 +356,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                   name="ageRange"
                   value={filters.ageRange}
                   onChange={handleFilterChange}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">All Ages</option>
                   <option value="0-18">0-18 years</option>
@@ -376,7 +376,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                 name="selectionStatus"
                 value={selectionOptions.selectionStatus}
                 onChange={handleSelectionOptionChange}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               >
                 <option value="Nominated">Nominated</option>
                 <option value="Screened">Screened</option>
@@ -393,7 +393,7 @@ const BeneficiarySelectionModal = ({ isOpen, onClose, task, onBeneficiariesAdded
                 value={selectionOptions.selectionNotes}
                 onChange={handleSelectionOptionChange}
                 placeholder="e.g., Vulnerability assessment completed"
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
           </div>

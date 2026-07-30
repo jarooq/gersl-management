@@ -195,7 +195,7 @@ const ReportEditor = ({ report, onClose }) => {
             <select
               value={exportFormat}
               onChange={(e) => setExportFormat(e.target.value)}
-              className="border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="html">HTML</option>
               <option value="markdown">Markdown</option>
@@ -251,7 +251,7 @@ const ReportEditor = ({ report, onClose }) => {
               <textarea
                 value={section.content}
                 onChange={(e) => handleSectionUpdate(section.id, e.target.value)}
-                className="w-full border border-ink-300 rounded p-3 min-h-[150px] focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                className="w-full border border-ink-300 rounded p-3 min-h-[150px] focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono text-sm"
                 placeholder="Section content..."
               />
             ) : (

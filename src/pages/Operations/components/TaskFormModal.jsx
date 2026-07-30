@@ -520,7 +520,7 @@ const TaskFormModal = ({
                     name="projectId"
                     value={formData.projectId}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                       errors.projectId ? 'border-red-300' : 'border-ink-200'
                     }`}
                   >
@@ -546,7 +546,7 @@ const TaskFormModal = ({
                     value={formData.title}
                     onChange={handleInputChange}
                     placeholder="Enter task title"
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                       errors.title ? 'border-red-300' : 'border-ink-200'
                     }`}
                   />
@@ -565,7 +565,7 @@ const TaskFormModal = ({
                     onChange={handleInputChange}
                     placeholder="Enter detailed task description"
                     rows="3"
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                       errors.description ? 'border-red-300' : 'border-ink-200'
                     }`}
                   />
@@ -580,7 +580,7 @@ const TaskFormModal = ({
                     name="priority"
                     value={formData.priority}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -595,7 +595,7 @@ const TaskFormModal = ({
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   >
                     <option value="Not Started">Not Started</option>
                     <option value="In Progress">In Progress</option>
@@ -611,7 +611,7 @@ const TaskFormModal = ({
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                 </div>
 
@@ -624,7 +624,7 @@ const TaskFormModal = ({
                     name="dueDate"
                     value={formData.dueDate}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                       errors.dueDate ? 'border-red-300' : 'border-ink-200'
                     }`}
                   />
@@ -672,7 +672,7 @@ const TaskFormModal = ({
                                   type="checkbox"
                                   checked={formData.assignedUsers.includes(userId)}
                                   onChange={() => handleAssignedUserToggle(userId)}
-                                  className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-ink-200"
+                                  className="w-4 h-4 text-indigo-600 rounded focus:ring-orange-500 border-ink-200"
                                 />
                                 <span className="ml-3 text-sm font-medium text-ink-900">
                                   {userName}
@@ -762,7 +762,7 @@ const TaskFormModal = ({
                       onChange={handleInputChange}
                       placeholder="List items to procure (e.g., 500 food packs, Medical supplies)"
                       rows="2"
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                         errors.procurementItems ? 'border-red-300' : 'border-ink-200'
                       }`}
                     />
@@ -780,7 +780,7 @@ const TaskFormModal = ({
                       onChange={handleInputChange}
                       placeholder="0.00"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
                 </div>
@@ -800,7 +800,7 @@ const TaskFormModal = ({
                       name="beneficiaryTrackingMode"
                       value={formData.beneficiaryTrackingMode}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="None">None</option>
                       <option value="Aggregate">Aggregate (Count only - Ifthar meals)</option>
@@ -818,7 +818,7 @@ const TaskFormModal = ({
                       value={formData.targetBeneficiaries}
                       onChange={handleInputChange}
                       placeholder="Number of beneficiaries"
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                         errors.targetBeneficiaries ? 'border-red-300' : 'border-ink-200'
                       }`}
                     />
@@ -835,7 +835,7 @@ const TaskFormModal = ({
                           name="beneficiarySelectionMethod"
                           value={formData.beneficiarySelectionMethod}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         >
                           <option value="">Select method</option>
                           <option value="Manual Selection">Manual Selection</option>
@@ -855,7 +855,7 @@ const TaskFormModal = ({
                           onChange={handleInputChange}
                           placeholder="Describe criteria for selecting beneficiaries"
                           rows="2"
-                          className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         />
                       </div>
                     </>
@@ -877,7 +877,7 @@ const TaskFormModal = ({
                       name="distributionType"
                       value={formData.distributionType}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="None">None</option>
                       <option value="In-Kind">In-Kind (Food, supplies)</option>
@@ -898,7 +898,7 @@ const TaskFormModal = ({
                         onChange={handleInputChange}
                         placeholder="List items (e.g., 5kg rice, 1L oil, 1kg dhal)"
                         rows="2"
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                           errors.distributionItems ? 'border-red-300' : 'border-ink-200'
                         }`}
                       />
@@ -918,7 +918,7 @@ const TaskFormModal = ({
                         onChange={handleInputChange}
                         placeholder="0.00"
                         step="0.01"
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
                   )}
@@ -930,7 +930,7 @@ const TaskFormModal = ({
                       name="distributionDate"
                       value={formData.distributionDate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
 
@@ -942,7 +942,7 @@ const TaskFormModal = ({
                       value={formData.distributionLocation}
                       onChange={handleInputChange}
                       placeholder="Enter location"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
                 </div>
@@ -966,7 +966,7 @@ const TaskFormModal = ({
                       value={formData.trainingType}
                       onChange={handleInputChange}
                       placeholder="e.g., Livelihood Skills, Child Protection"
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                         errors.trainingType ? 'border-red-300' : 'border-ink-200'
                       }`}
                     />
@@ -983,7 +983,7 @@ const TaskFormModal = ({
                       value={formData.trainingDuration}
                       onChange={handleInputChange}
                       placeholder="0"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
 

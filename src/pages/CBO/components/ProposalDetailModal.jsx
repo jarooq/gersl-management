@@ -910,7 +910,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                             max="100"
                             value={approvalData.score}
                             onChange={(e) => setApprovalData({...approvalData, score: e.target.value})}
-                            className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                           />
                         </div>
                         <div>
@@ -919,7 +919,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                             type="number"
                             value={approvalData.approvedBudget}
                             onChange={(e) => setApprovalData({...approvalData, approvedBudget: e.target.value})}
-                            className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                            className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                           />
                         </div>
                       </div>
@@ -930,7 +930,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                           value={approvalData.comments}
                           onChange={(e) => setApprovalData({...approvalData, comments: e.target.value})}
                           rows="3"
-                          className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                          className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                           placeholder="Add your review comments..."
                         />
                       </div>

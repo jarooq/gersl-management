@@ -175,7 +175,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
           <select
             value={fileCategory}
             onChange={(e) => setFileCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-ink-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-ink-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
             <option value="">Auto-detect</option>
             <option value="document">Document</option>
@@ -197,7 +197,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
             placeholder="Add a description for this file..."
-            className="w-full px-3 py-2 border border-ink-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-ink-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
 

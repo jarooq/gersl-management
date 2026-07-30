@@ -74,7 +74,7 @@ export default function AssignToOfficerModal({ requisition, onClose, onAssigned 
               value={officerId}
               onChange={(e) => setOfficerId(e.target.value)}
               disabled={loading}
-              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
               required
             >
               <option value="">{loading ? 'Loading…' : 'Select officer'}</option>
@@ -91,7 +91,7 @@ export default function AssignToOfficerModal({ requisition, onClose, onAssigned 
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
             >
               {METHODS.map(m => (
                 <option key={m.value} value={m.value}>{m.label}</option>

@@ -594,7 +594,7 @@ const ReportsPage = () => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-semibold"
+                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-semibold"
                 >
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -664,13 +664,13 @@ const ReportsPage = () => {
                     placeholder="Search reports..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -995,7 +995,7 @@ const ReportsPage = () => {
                     Report Category <span className="text-red-500">*</span>
                   </label>
                   <select
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     value={selectedCategory}
                     onChange={(e) => {
                       setSelectedCategory(e.target.value);
@@ -1015,7 +1015,7 @@ const ReportsPage = () => {
                       Report Type <span className="text-red-500">*</span>
                     </label>
                     <select
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                       value={selectedReportType}
                       onChange={(e) => setSelectedReportType(e.target.value)}
                     >
@@ -1041,7 +1041,7 @@ const ReportsPage = () => {
                       type="date"
                       value={dateRange.start}
                       onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                   <div>
@@ -1052,7 +1052,7 @@ const ReportsPage = () => {
                       type="date"
                       value={dateRange.end}
                       onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 </div>
@@ -1135,13 +1135,13 @@ const ReportsPage = () => {
                   <input
                     type="text"
                     placeholder="Monthly Financial Summary"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Report Type</label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option value="">Select report type...</option>
                     {Object.values(reportTypes).map((types) =>
                       types.map(type => (
@@ -1153,7 +1153,7 @@ const ReportsPage = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Frequency</label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option>Daily</option>
                     <option>Weekly</option>
                     <option>Monthly</option>
@@ -1167,7 +1167,7 @@ const ReportsPage = () => {
                   <textarea
                     placeholder="email@example.com, email2@example.com"
                     rows="3"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                   <p className="text-xs text-ink-500 mt-1">Separate multiple emails with commas</p>
                 </div>

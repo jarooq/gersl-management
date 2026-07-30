@@ -148,7 +148,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder="Enter project name"
               />
             </div>
@@ -165,7 +165,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.programmeArea}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 >
                   <option value="">Select Programme Area</option>
                   {programmeAreas.map(area => (
@@ -185,7 +185,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   disabled={loadingDepartments}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none disabled:bg-ink-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none disabled:bg-ink-100 disabled:cursor-not-allowed"
                 >
                   <option value="">
                     {loadingDepartments ? 'Loading departments...' : 'Select Department'}
@@ -209,7 +209,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.status}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 >
                   <option value="Planning">Planning</option>
                   <option value="Implementation">Implementation</option>
@@ -231,7 +231,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   min="0"
                   max="100"
                   required
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="0-100"
                 />
               </div>
@@ -252,7 +252,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   required
                   min="0"
                   step="1000"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="e.g., 100000"
                 />
               </div>
@@ -270,7 +270,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   min="0"
                   max={formData.budget}
                   step="1000"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="e.g., 50000"
                 />
                 {formData.budget && formData.spent && (
@@ -295,7 +295,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   min="0"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="e.g., 500"
                 />
               </div>
@@ -312,7 +312,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   min="0"
                   max={formData.targetBeneficiaries}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="e.g., 250"
                 />
               </div>
@@ -331,7 +331,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 onChange={handleChange}
                 min="0"
                 max="100"
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder="0-100"
               />
               <div className="mt-3 w-full bg-ink-200 rounded-full h-2.5">
@@ -354,7 +354,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 value={formData.donor}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder="Enter donor name"
               />
             </div>
@@ -372,7 +372,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   value={formData.startDate}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               </div>
 
@@ -388,7 +388,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                   onChange={handleChange}
                   required
                   min={formData.startDate}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               </div>
             </div>
@@ -405,7 +405,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 value={formData.location}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder="Enter location/district"
               />
             </div>
@@ -422,7 +422,7 @@ const EditProjectForm = ({ isOpen, onClose, project, onSubmit }) => {
                 onChange={handleChange}
                 required
                 rows="4"
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                 placeholder="Describe the project objectives and activities"
               />
             </div>

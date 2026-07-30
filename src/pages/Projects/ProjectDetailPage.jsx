@@ -1248,7 +1248,7 @@ const AddTeamMemberModal = ({ projectId, project, onClose, onSuccess }) => {
                   value={selectedUser}
                   onChange={(e) => setSelectedUser(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">Choose a staff member...</option>
                   {availableStaff.map(staff => (
@@ -1268,7 +1268,7 @@ const AddTeamMemberModal = ({ projectId, project, onClose, onSuccess }) => {
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   placeholder="e.g., Field Officer, M&E Officer"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -1281,7 +1281,7 @@ const AddTeamMemberModal = ({ projectId, project, onClose, onSuccess }) => {
                   onChange={(e) => setResponsibilities(e.target.value)}
                   rows={3}
                   placeholder="Describe their responsibilities on this project..."
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 

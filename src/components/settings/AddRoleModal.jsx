@@ -151,7 +151,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Content Manager"
-                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 disabled={loading}
                 required
               />
@@ -166,7 +166,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Brief description of the role"
-                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 disabled={loading}
               />
             </div>
@@ -199,7 +199,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                           type="checkbox"
                           checked={allSelected}
                           onChange={() => handleModuleToggle(moduleName)}
-                          className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                          className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-orange-500"
                           disabled={loading}
                         />
                         <span className="font-semibold text-ink-900">{moduleName}</span>
@@ -223,7 +223,7 @@ const AddRoleModal = ({ isOpen, onClose, onSuccess }) => {
                             type="checkbox"
                             checked={formData.permissions.includes(permission.id)}
                             onChange={() => handlePermissionToggle(permission.id)}
-                            className="mt-1 w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                            className="mt-1 w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-orange-500"
                             disabled={loading}
                           />
                           <div className="flex-1 min-w-0">

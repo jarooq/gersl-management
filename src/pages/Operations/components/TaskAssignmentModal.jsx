@@ -271,7 +271,7 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                       placeholder="Search staff by name, position, department, or email..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
 
@@ -330,7 +330,7 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={formData.dueDate}
                     onChange={handleChange}
                     required
-                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -343,7 +343,7 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                   name="priority"
                   value={formData.priority}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -371,7 +371,7 @@ const TaskAssignmentModal = ({ isOpen, onClose, task, onUpdate }) => {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Add any specific instructions or notes for the assigned staff member..."
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
                 />
               </div>
             </div>

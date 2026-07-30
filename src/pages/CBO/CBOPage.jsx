@@ -147,7 +147,7 @@ const CBOPage = () => {
                   placeholder={`Search ${activeTab === 'cbos' ? 'CBOs' : activeTab === 'volunteers' ? 'volunteers' : 'activities'}...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -155,7 +155,7 @@ const CBOPage = () => {
               <select
                 value={filterDistrict}
                 onChange={(e) => setFilterDistrict(e.target.value)}
-                className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 {districts.map(district => (
                   <option key={district} value={district}>{district}</option>
@@ -1249,7 +1249,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="text"
                     value={formData.proposalCode}
                     onChange={(e) => setFormData({ ...formData, proposalCode: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="PROP-2024-001"
                     required
                     disabled={isLoading}
@@ -1264,7 +1264,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="text"
                     value={formData.leadWriter}
                     onChange={(e) => setFormData({ ...formData, leadWriter: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="John Doe"
                     required
                     disabled={isLoading}
@@ -1279,7 +1279,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="Enter proposal title"
                     required
                     disabled={isLoading}
@@ -1294,7 +1294,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="text"
                     value={formData.donor}
                     onChange={(e) => setFormData({ ...formData, donor: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="UNICEF, World Bank, etc."
                     required
                     disabled={isLoading}
@@ -1308,7 +1308,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                   <select
                     value={formData.programmeArea}
                     onChange={(e) => setFormData({ ...formData, programmeArea: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -1332,7 +1332,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="number"
                     value={formData.budgetRequested}
                     onChange={(e) => setFormData({ ...formData, budgetRequested: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="5000000"
                     required
                     disabled={isLoading}
@@ -1349,7 +1349,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="number"
                     value={formData.targetBeneficiaries}
                     onChange={(e) => setFormData({ ...formData, targetBeneficiaries: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="500"
                     required
                     disabled={isLoading}
@@ -1365,7 +1365,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                     type="number"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="12"
                     required
                     disabled={isLoading}
@@ -1380,7 +1380,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -1397,7 +1397,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     required
                     disabled={isLoading}
                   >
@@ -2296,7 +2296,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   required
                   value={formData.cboId}
                   onChange={handleCBOChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">Select CBO...</option>
                   {cboPartners.map(cbo => (
@@ -2324,7 +2324,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 required
                 value={formData.proposalTitle}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter proposal title..."
               />
             </div>
@@ -2336,7 +2336,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   name="programmeArea"
                   value={formData.programmeArea}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="Education">Education</option>
                   <option value="Health">Health</option>
@@ -2355,7 +2355,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   name="projectTier"
                   value={formData.projectTier}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="Tier 1">Tier 1 (Comprehensive)</option>
                   <option value="Tier 2">Tier 2 (Moderate)</option>
@@ -2369,7 +2369,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   name="sectorTheme"
                   value={formData.sectorTheme}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -2383,7 +2383,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   required
                   value={formData.requestedBudget}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="2500000"
                 />
               </div>
@@ -2394,7 +2394,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   name="duration"
                   value={formData.duration}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="6 months">6 months</option>
                   <option value="9 months">9 months</option>
@@ -2413,7 +2413,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   required
                   value={formData.targetBeneficiaries}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="150"
                 />
               </div>
@@ -2427,7 +2427,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -2438,7 +2438,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -2488,7 +2488,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                             <select
                               value={item.category}
                               onChange={(e) => updateBudgetItem(item.id, 'category', e.target.value)}
-                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                             >
                               <option value="Personnel">Personnel</option>
                               <option value="Equipment">Equipment</option>
@@ -2507,7 +2507,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={item.description}
                               onChange={(e) => updateBudgetItem(item.id, 'description', e.target.value)}
                               placeholder="Item description..."
-                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                             />
                           </td>
                           <td className="px-3 py-2">
@@ -2516,7 +2516,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={item.quantity}
                               onChange={(e) => updateBudgetItem(item.id, 'quantity', e.target.value)}
                               min="1"
-                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                             />
                           </td>
                           <td className="px-3 py-2">
@@ -2525,7 +2525,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={item.unitCost}
                               onChange={(e) => updateBudgetItem(item.id, 'unitCost', e.target.value)}
                               min="0"
-                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                             />
                           </td>
                           <td className="px-3 py-2">
@@ -2601,7 +2601,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 rows="3"
                 value={formData.summary}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Brief project summary..."
               />
             </div>
@@ -2613,7 +2613,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 name="overallGoal"
                 value={formData.overallGoal}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Main project goal..."
               />
             </div>
@@ -2625,7 +2625,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 rows="3"
                 value={formData.problemStatement}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Describe the problem this project addresses..."
               />
             </div>
@@ -2637,7 +2637,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 rows="3"
                 value={formData.proposedSolution}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Describe your proposed solution approach..."
               />
             </div>
@@ -2649,7 +2649,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 rows="2"
                 value={formData.keyBeneficiariesDescription}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Detailed description of target beneficiaries..."
               />
             </div>
@@ -2666,7 +2666,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 rows="2"
                 value={formData.needsAssessmentData}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Evidence from needs assessment..."
               />
             </div>
@@ -2678,7 +2678,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 rows="2"
                 value={formData.strategicAlignment}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Alignment with GER strategies, SDGs, etc..."
               />
             </div>
@@ -2694,7 +2694,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   type="text"
                   value={formData.objectives[index]}
                   onChange={(e) => handleObjectiveChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder={`Enter objective ${index + 1}...`}
                 />
               </div>
@@ -2711,7 +2711,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   type="text"
                   value={formData.keyActivities[index]}
                   onChange={(e) => handleActivityChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder={`Enter activity ${index + 1}...`}
                 />
               </div>
@@ -2755,7 +2755,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                             <select
                               value={indicator.level}
                               onChange={(e) => updateIndicator(indicator.id, 'level', e.target.value)}
-                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                             >
                               <option value="Activity">Activity</option>
                               <option value="Output">Output</option>
@@ -2769,7 +2769,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                                 const selected = programmeIndicators.find(ind => ind.indicator === e.target.value);
                                 if (selected) selectStandardIndicator(indicator.id, selected);
                               }}
-                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                             >
                               <option value="">Select from bank...</option>
                               {programmeIndicators
@@ -2797,7 +2797,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                             value={indicator.indicator}
                             onChange={(e) => updateIndicator(indicator.id, 'indicator', e.target.value)}
                             placeholder="e.g., # children receiving school kits/support"
-                            className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                           />
                         </div>
 
@@ -2809,7 +2809,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={indicator.baseline}
                               onChange={(e) => updateIndicator(indicator.id, 'baseline', e.target.value)}
                               placeholder="0"
-                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                             />
                           </div>
                           <div>
@@ -2819,7 +2819,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={indicator.target}
                               onChange={(e) => updateIndicator(indicator.id, 'target', e.target.value)}
                               placeholder="100"
-                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                             />
                           </div>
                           <div>
@@ -2829,7 +2829,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                               value={indicator.meansOfVerification}
                               onChange={(e) => updateIndicator(indicator.id, 'meansOfVerification', e.target.value)}
                               placeholder="Distribution list"
-                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                             />
                           </div>
                         </div>
@@ -2856,7 +2856,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   value={formData.beneficiaryBreakdown.directMale}
                   onChange={(e) => handleBeneficiaryChange('directMale', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -2866,7 +2866,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   value={formData.beneficiaryBreakdown.directFemale}
                   onChange={(e) => handleBeneficiaryChange('directFemale', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -2876,7 +2876,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   value={formData.beneficiaryBreakdown.directChildren}
                   onChange={(e) => handleBeneficiaryChange('directChildren', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -2886,7 +2886,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   value={formData.beneficiaryBreakdown.directPWD}
                   onChange={(e) => handleBeneficiaryChange('directPWD', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
@@ -2896,7 +2896,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                   value={formData.beneficiaryBreakdown.indirectTotal}
                   onChange={(e) => handleBeneficiaryChange('indirectTotal', e.target.value)}
                   placeholder="0"
-                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                  className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                 />
               </div>
             </div>
@@ -2943,7 +2943,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={input}
                       onChange={(e) => handleToCArrayChange('inputs', index, e.target.value)}
                       placeholder="e.g., Staff, budget, materials"
-                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                     />
                     {formData.theoryOfChange.inputs.length > 1 && (
                       <button
@@ -2977,7 +2977,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={activity}
                       onChange={(e) => handleToCArrayChange('activities', index, e.target.value)}
                       placeholder="e.g., Distribute school kits"
-                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                     />
                     {formData.theoryOfChange.activities.length > 1 && (
                       <button
@@ -3011,7 +3011,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={output}
                       onChange={(e) => handleToCArrayChange('outputs', index, e.target.value)}
                       placeholder="e.g., 150 children equipped"
-                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                     />
                     {formData.theoryOfChange.outputs.length > 1 && (
                       <button
@@ -3045,7 +3045,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                       value={outcome}
                       onChange={(e) => handleToCArrayChange('outcomes', index, e.target.value)}
                       placeholder="e.g., Improved school attendance"
-                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                     />
                     {formData.theoryOfChange.outcomes.length > 1 && (
                       <button
@@ -3069,7 +3069,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                 onChange={(e) => handleToCImpactChange(e.target.value)}
                 rows="2"
                 placeholder="e.g., Reduced educational inequality and improved life outcomes for orphaned children"
-                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
@@ -3184,7 +3184,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     type="checkbox"
                     checked={formData.safeguarding.dataProtection}
                     onChange={() => {}}
-                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="text-sm font-semibold text-ink-800">Data Protection</p>
@@ -3206,7 +3206,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     type="checkbox"
                     checked={formData.safeguarding.informedConsent}
                     onChange={() => {}}
-                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="text-sm font-semibold text-ink-800">Informed Consent</p>
@@ -3228,7 +3228,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     type="checkbox"
                     checked={formData.safeguarding.childSafeguarding}
                     onChange={() => {}}
-                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="text-sm font-semibold text-ink-800">Child Safeguarding</p>
@@ -3250,7 +3250,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     type="checkbox"
                     checked={formData.safeguarding.incidentReporting}
                     onChange={() => {}}
-                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="text-sm font-semibold text-ink-800">Incident Reporting</p>
@@ -3272,7 +3272,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     type="checkbox"
                     checked={formData.safeguarding.backgroundChecks}
                     onChange={() => {}}
-                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="text-sm font-semibold text-ink-800">Background Checks</p>
@@ -3294,7 +3294,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
                     type="checkbox"
                     checked={formData.safeguarding.codeOfConduct}
                     onChange={() => {}}
-                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="text-sm font-semibold text-ink-800">Code of Conduct</p>

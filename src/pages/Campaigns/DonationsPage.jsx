@@ -228,7 +228,7 @@ const DonationsPage = () => {
                   placeholder="Search by donor name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -236,7 +236,7 @@ const DonationsPage = () => {
             <select
               value={methodFilter}
               onChange={(e) => setMethodFilter(e.target.value)}
-              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="All">All Methods</option>
               <option value="Credit Card">Credit Card</option>
@@ -248,7 +248,7 @@ const DonationsPage = () => {
             <select
               value={campaignFilter}
               onChange={(e) => setCampaignFilter(e.target.value)}
-              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="All">All Campaigns</option>
               {campaigns.map(campaign => (
@@ -419,7 +419,7 @@ const DonationsPage = () => {
                   <select
                     value={donationForm.campaignId}
                     onChange={(e) => setDonationForm({ ...donationForm, campaignId: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
                   >
                     <option value="">Select Campaign</option>
@@ -437,7 +437,7 @@ const DonationsPage = () => {
                     type="number"
                     value={donationForm.amount}
                     onChange={(e) => setDonationForm({ ...donationForm, amount: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="0.00"
                     min="0"
                     step="0.01"
@@ -453,7 +453,7 @@ const DonationsPage = () => {
                     type="text"
                     value={donationForm.donorName}
                     onChange={(e) => setDonationForm({ ...donationForm, donorName: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="John Doe"
                     required
                   />
@@ -467,7 +467,7 @@ const DonationsPage = () => {
                     type="email"
                     value={donationForm.email}
                     onChange={(e) => setDonationForm({ ...donationForm, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="john@example.com"
                     required
                   />
@@ -479,7 +479,7 @@ const DonationsPage = () => {
                     type="tel"
                     value={donationForm.phone}
                     onChange={(e) => setDonationForm({ ...donationForm, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="+1 234 567 8900"
                   />
                 </div>
@@ -489,7 +489,7 @@ const DonationsPage = () => {
                   <select
                     value={donationForm.paymentMethod}
                     onChange={(e) => setDonationForm({ ...donationForm, paymentMethod: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="Credit Card">Credit Card</option>
                     <option value="Bank Transfer">Bank Transfer</option>
@@ -504,7 +504,7 @@ const DonationsPage = () => {
                 <textarea
                   value={donationForm.notes}
                   onChange={(e) => setDonationForm({ ...donationForm, notes: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="3"
                   placeholder="Additional notes or comments..."
                 />
@@ -516,7 +516,7 @@ const DonationsPage = () => {
                   id="anonymous"
                   checked={donationForm.isAnonymous}
                   onChange={(e) => setDonationForm({ ...donationForm, isAnonymous: e.target.checked })}
-                  className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                  className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-orange-500"
                 />
                 <label htmlFor="anonymous" className="text-sm font-medium text-ink-700">
                   Anonymous Donation

@@ -74,7 +74,7 @@ const ReportGenerator = ({ project, proposal, onReportGenerated }) => {
         <select
           value={selectedType}
           onChange={(e) => setSelectedType(e.target.value)}
-          className="w-full border border-ink-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-ink-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
           disabled={generating}
         >
           {Object.entries(REPORT_TEMPLATES).map(([key, template]) => (
@@ -126,7 +126,7 @@ const ReportGenerator = ({ project, proposal, onReportGenerated }) => {
             value={additionalData.reportingPeriod}
             onChange={(e) => setAdditionalData({ ...additionalData, reportingPeriod: e.target.value })}
             placeholder="e.g., January - March 2025"
-            className="w-full border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             disabled={generating}
           />
         </div>
@@ -140,7 +140,7 @@ const ReportGenerator = ({ project, proposal, onReportGenerated }) => {
             value={additionalData.preparedBy}
             onChange={(e) => setAdditionalData({ ...additionalData, preparedBy: e.target.value })}
             placeholder="e.g., Project Manager"
-            className="w-full border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             disabled={generating}
           />
         </div>
@@ -154,7 +154,7 @@ const ReportGenerator = ({ project, proposal, onReportGenerated }) => {
             onChange={(e) => setAdditionalData({ ...additionalData, donorRequirements: e.target.value })}
             placeholder="Any specific requirements or notes..."
             rows={3}
-            className="w-full border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-ink-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             disabled={generating}
           />
         </div>

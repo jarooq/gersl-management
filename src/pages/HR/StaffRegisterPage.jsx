@@ -234,7 +234,7 @@ const StaffRegisterPage = () => {
                   type="text"
                   value={staffForm.username}
                   onChange={(e) => update('username', e.target.value)}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="john.doe"
                   autoComplete="username"
                 />
@@ -249,7 +249,7 @@ const StaffRegisterPage = () => {
                   type="password"
                   value={staffForm.password}
                   onChange={(e) => update('password', e.target.value)}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="••••••••"
                   autoComplete="new-password"
                 />

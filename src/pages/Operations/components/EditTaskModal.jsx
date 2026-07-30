@@ -152,7 +152,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="Enter task title"
               required
             />
@@ -166,7 +166,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               rows={4}
               placeholder="Enter task description"
             />
@@ -181,7 +181,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               <select
                 value={formData.priority}
                 onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -197,7 +197,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="Not Started">Not Started</option>
                 <option value="In Progress">In Progress</option>
@@ -218,7 +218,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
@@ -230,7 +230,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
                 type="date"
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -275,7 +275,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
                             type="checkbox"
                             checked={formData.assignedUsers.includes(userId)}
                             onChange={() => handleAssignedUserToggle(userId)}
-                            className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-ink-200"
+                            className="w-4 h-4 text-indigo-600 rounded focus:ring-orange-500 border-ink-200"
                           />
                           <span className="ml-3 text-sm font-medium text-ink-900">
                             {userName}

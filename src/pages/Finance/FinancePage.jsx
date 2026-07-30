@@ -2768,7 +2768,7 @@ const FinancePage = () => {
                   <select
                     value={payBillAccountId}
                     onChange={(e) => setPayBillAccountId(e.target.value)}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">— Select an account —</option>
                     {cashAccounts.map(a => (
@@ -2796,7 +2796,7 @@ const FinancePage = () => {
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -2805,7 +2805,7 @@ const FinancePage = () => {
                   <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Payment Method *
                   </label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                     <option value="">Select payment method</option>
                     <option value="Bank Transfer">Bank Transfer</option>
                     <option value="Cheque">Cheque</option>
@@ -2819,7 +2819,7 @@ const FinancePage = () => {
                   <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Bank Account *
                   </label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                     <option value="">Select bank account</option>
                     <option value="Commercial Bank">Commercial Bank - Account ending 1234</option>
                     <option value="NDB">NDB - Account ending 5678</option>
@@ -2866,7 +2866,7 @@ const FinancePage = () => {
                   <input
                     type="text"
                     placeholder="Enter payment reference or transaction ID"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg font-mono focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg font-mono focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -2879,7 +2879,7 @@ const FinancePage = () => {
                     rows="3"
                     placeholder="Add any notes or remarks about this payment..."
                     defaultValue={`Payment for ${selectedBill.description}`}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -2888,7 +2888,7 @@ const FinancePage = () => {
                   <label className="block text-sm font-semibold text-ink-700 mb-2">
                     Approved By (Finance Officer) *
                   </label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                     <option value="">Select Finance Officer</option>
                     <option value="John Smith">John Smith (Finance Officer)</option>
                     <option value="Sarah Ahmed">Sarah Ahmed (Finance Officer)</option>
@@ -3314,7 +3314,7 @@ const FinancePage = () => {
                     step="0.01"
                     value={paymentForm.originalAmount}
                     onChange={(e) => onPaymentAmountChange('originalAmount', e.target.value)}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                 </div>
 
@@ -3329,7 +3329,7 @@ const FinancePage = () => {
                         step="0.0001"
                         value={paymentForm.exchangeRate}
                         onChange={(e) => onPaymentAmountChange('exchangeRate', e.target.value)}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-bold text-lg"
                       />
                       <div className="flex items-center gap-2 mt-1">
                         {rateLoading && <span className="text-xs text-ink-500">Fetching today's rate…</span>}
@@ -3361,7 +3361,7 @@ const FinancePage = () => {
                         step="0.01"
                         value={paymentForm.amountLKR}
                         onChange={(e) => onPaymentAmountChange('amountLKR', e.target.value)}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold text-lg"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-bold text-lg"
                       />
                       <p className="text-xs text-ink-500 mt-1">
                         Enter the actual LKR credited by the bank — the rate updates to match.
@@ -3394,7 +3394,7 @@ const FinancePage = () => {
                     type="date"
                     value={paymentForm.paymentDate}
                     onChange={(e) => setPaymentForm((f) => ({ ...f, paymentDate: e.target.value }))}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                 </div>
 
@@ -3403,7 +3403,7 @@ const FinancePage = () => {
                   <select
                     value={paymentForm.paymentMethod}
                     onChange={(e) => setPaymentForm((f) => ({ ...f, paymentMethod: e.target.value }))}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   >
                     <option>Bank Transfer</option>
                     <option>Cheque</option>
@@ -3418,7 +3418,7 @@ const FinancePage = () => {
                     type="text"
                     value={paymentForm.referenceNumber}
                     onChange={(e) => setPaymentForm((f) => ({ ...f, referenceNumber: e.target.value }))}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Bank reference / cheque number"
                   />
                 </div>
@@ -3429,7 +3429,7 @@ const FinancePage = () => {
                     rows={3}
                     value={paymentForm.notes}
                     onChange={(e) => setPaymentForm((f) => ({ ...f, notes: e.target.value }))}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Add any notes about this payment..."
                   />
                 </div>
@@ -3490,7 +3490,7 @@ const FinancePage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Donor/Client Name *</label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option value="">Select donor/client</option>
                     {partners
                       .filter(p => p.status === 'Active')
@@ -3509,7 +3509,7 @@ const FinancePage = () => {
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -3517,14 +3517,14 @@ const FinancePage = () => {
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Due Date *</label>
                   <input
                     type="date"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
                 <div className="col-span-2">
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Project *</label>
                   <select
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     onChange={(e) => handleProposalSelection(e.target.value)}
                     value={selectedProposalForInvoice || ''}
                   >
@@ -3550,7 +3550,7 @@ const FinancePage = () => {
                   <textarea
                     rows="3"
                     placeholder="Enter invoice description..."
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -3813,7 +3813,7 @@ const FinancePage = () => {
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -3832,7 +3832,7 @@ const FinancePage = () => {
                   <textarea
                     rows="2"
                     placeholder="Enter journal entry description..."
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -3973,7 +3973,7 @@ const FinancePage = () => {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-ink-700 mb-2">Bank Account *</label>
-                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500">
+                  <select className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500">
                     <option>Commercial Bank - Account 1234</option>
                     <option>NDB - Account 5678</option>
                   </select>
@@ -3984,7 +3984,7 @@ const FinancePage = () => {
                   <input
                     type="date"
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -3993,7 +3993,7 @@ const FinancePage = () => {
                   <input
                     type="number"
                     placeholder="0.00"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -5309,7 +5309,7 @@ const FinancePage = () => {
                     <select
                       id="editInvoiceClient"
                       defaultValue={selectedInvoice.client}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="">Select donor/client</option>
                       {partners
@@ -5330,7 +5330,7 @@ const FinancePage = () => {
                     <select
                       id="editInvoiceProject"
                       defaultValue={selectedInvoice.project}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="">Select project</option>
                       {proposals
@@ -5371,7 +5371,7 @@ const FinancePage = () => {
                       id="editInvoiceAmount"
                       type="number"
                       defaultValue={selectedInvoice.amount}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
                   <div>
@@ -5382,7 +5382,7 @@ const FinancePage = () => {
                       id="editInvoiceIssued"
                       type="date"
                       defaultValue={selectedInvoice.issued}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
                   <div>
@@ -5393,7 +5393,7 @@ const FinancePage = () => {
                       id="editInvoiceDue"
                       type="date"
                       defaultValue={selectedInvoice.due}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -5403,7 +5403,7 @@ const FinancePage = () => {
                     <select
                       id="editInvoiceStatus"
                       defaultValue={selectedInvoice.status}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     >
                       <option value="Pending">Pending</option>
                       <option value="Paid">Paid</option>
@@ -5423,7 +5423,7 @@ const FinancePage = () => {
                   rows="3"
                   defaultValue={selectedInvoice.notes || ''}
                   placeholder="Add any notes about this invoice"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
                 />
               </div>
             </div>
@@ -6597,7 +6597,7 @@ const FinancePage = () => {
                   min="0.01"
                   max={selectedGrant.pledgeAmount - selectedGrant.receivedAmount}
                   step="0.01"
-                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="0.00"
                 />
                 <p className="text-xs text-ink-500 mt-1">
@@ -6612,7 +6612,7 @@ const FinancePage = () => {
                   name="receiptDate"
                   required
                   defaultValue={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               </div>
 
@@ -6621,7 +6621,7 @@ const FinancePage = () => {
                 <textarea
                   name="notes"
                   rows="3"
-                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Transaction reference, payment method, etc..."
                 ></textarea>
               </div>
@@ -6694,7 +6694,7 @@ const FinancePage = () => {
                     name="assetCode"
                     required
                     placeholder="e.g., VEH-001, COMP-001"
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
 
@@ -6703,7 +6703,7 @@ const FinancePage = () => {
                   <select
                     name="assetType"
                     required
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select type...</option>
                     <option value="Vehicles">Vehicles</option>
@@ -6724,7 +6724,7 @@ const FinancePage = () => {
                   name="assetName"
                   required
                   placeholder="e.g., Toyota Hiace Van, Dell Laptop"
-                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               </div>
 
@@ -6736,7 +6736,7 @@ const FinancePage = () => {
                     name="acquisitionDate"
                     required
                     defaultValue={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
 
@@ -6749,7 +6749,7 @@ const FinancePage = () => {
                     min="0"
                     step="0.01"
                     placeholder="0.00"
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
               </div>
@@ -6782,7 +6782,7 @@ const FinancePage = () => {
                         lifeInput.value = '';
                       }
                     }}
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select method...</option>
                     <option value="Reducing Balance">Reducing Balance (GERSL Standard 20%)</option>
@@ -6800,7 +6800,7 @@ const FinancePage = () => {
                     step="0.01"
                     placeholder="20.00"
                     defaultValue="20"
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                   <p className="text-xs text-ink-500 mt-1">For Reducing Balance method</p>
                 </div>
@@ -6814,7 +6814,7 @@ const FinancePage = () => {
                   min="1"
                   placeholder="5"
                   disabled
-                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none disabled:bg-ink-100"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none disabled:bg-ink-100"
                 />
                 <p className="text-xs text-ink-500 mt-1">For Straight Line method</p>
               </div>
@@ -6827,7 +6827,7 @@ const FinancePage = () => {
                     name="location"
                     required
                     placeholder="e.g., Head Office, Regional Office"
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
 
@@ -6836,7 +6836,7 @@ const FinancePage = () => {
                   <select
                     name="condition"
                     required
-                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   >
                     <option value="">Select condition...</option>
                     <option value="Excellent">Excellent</option>
@@ -6852,7 +6852,7 @@ const FinancePage = () => {
                 <textarea
                   name="notes"
                   rows="3"
-                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border-2 border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Additional information about the asset..."
                 ></textarea>
               </div>
@@ -7126,7 +7126,7 @@ const FinancePage = () => {
                       type="text"
                       value={bankAccountForm.bankName}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, bankName: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                       placeholder="e.g., Commercial Bank"
                     />
                   </div>
@@ -7139,7 +7139,7 @@ const FinancePage = () => {
                     <select
                       value={bankAccountForm.accountType}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, accountType: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                     >
                       <option value="Checking">Checking Account</option>
                       <option value="Savings">Savings Account</option>
@@ -7157,7 +7157,7 @@ const FinancePage = () => {
                       type="text"
                       value={bankAccountForm.accountNumber}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, accountNumber: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                       placeholder="e.g., 1234567890"
                     />
                   </div>
@@ -7171,7 +7171,7 @@ const FinancePage = () => {
                       type="text"
                       value={bankAccountForm.accountHolderName}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, accountHolderName: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                       placeholder="e.g., GERSL Organization"
                     />
                   </div>
@@ -7185,7 +7185,7 @@ const FinancePage = () => {
                       type="text"
                       value={bankAccountForm.branchCode}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, branchCode: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                       placeholder="e.g., 001"
                     />
                   </div>
@@ -7199,7 +7199,7 @@ const FinancePage = () => {
                       type="text"
                       value={bankAccountForm.swiftCode}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, swiftCode: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                       placeholder="e.g., CCEYLKLX"
                     />
                   </div>
@@ -7213,7 +7213,7 @@ const FinancePage = () => {
                       type="number"
                       value={bankAccountForm.openingBalance}
                       onChange={(e) => setBankAccountForm({ ...bankAccountForm, openingBalance: e.target.value })}
-                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition outline-none"
+                      className="w-full px-4 py-2.5 border-2 border-ink-100 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition outline-none"
                       placeholder="0.00"
                       step="0.01"
                     />

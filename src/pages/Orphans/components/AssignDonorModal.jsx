@@ -176,7 +176,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
               <select
                 value={selectedPartner}
                 onChange={(e) => setSelectedPartner(e.target.value)}
-                className="w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white"
+                className="w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none appearance-none bg-white"
               >
                 <option value="">-- Choose a Partner --</option>
                 {partners.map((partner) => (
@@ -222,7 +222,7 @@ const AssignDonorModal = ({ isOpen, onClose, orphan, onAssign }) => {
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
                 disabled={!selectedPartner}
-                className={`w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none ${
+                className={`w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none appearance-none ${
                   !selectedPartner ? 'bg-ink-100 cursor-not-allowed' : 'bg-white'
                 }`}
               >

@@ -646,7 +646,7 @@ const BeneficiariesPage = () => {
                 <select
                   value={selectedDistrict}
                   onChange={(e) => handleDistrictChange(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">All Districts</option>
                   {districts.map((district) => (
@@ -663,7 +663,7 @@ const BeneficiariesPage = () => {
                   value={filters.division}
                   onChange={(e) => handleFilterChange('division', e.target.value)}
                   disabled={!selectedDistrict}
-                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-ink-100 disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-ink-100 disabled:cursor-not-allowed"
                 >
                   <option value="">All Divisions</option>
                   {divisions.map((division) => (
@@ -679,7 +679,7 @@ const BeneficiariesPage = () => {
                 <select
                   value={filters.isVulnerable}
                   onChange={(e) => handleFilterChange('isVulnerable', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">All</option>
                   <option value="true">Vulnerable Only</option>
@@ -692,7 +692,7 @@ const BeneficiariesPage = () => {
                 <select
                   value={filters.isActive}
                   onChange={(e) => handleFilterChange('isActive', e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-ink-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="true">Active</option>
                   <option value="false">Inactive</option>

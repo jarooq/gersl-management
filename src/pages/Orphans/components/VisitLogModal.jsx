@@ -172,7 +172,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 onChange={handleChange}
                 required
                 max={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
 
@@ -187,7 +187,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 value={formData.visitNotes}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="General notes about the visit..."
               />
             </div>
@@ -203,7 +203,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                 value={formData.observations}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Key observations, changes noticed, concerns..."
               />
             </div>
@@ -253,7 +253,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
                     value={formData.rating.notes}
                     onChange={(e) => handleRatingChange('notes', e.target.value)}
                     rows={2}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Additional notes about progress..."
                   />
                 </div>
@@ -469,7 +469,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               value={newNeed.needType}
               onChange={(e) => setNewNeed({ ...newNeed, needType: e.target.value })}
               placeholder="e.g., School uniform, Medicine, Books"
-              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
 
@@ -480,7 +480,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
             <select
               value={newNeed.needCategory}
               onChange={(e) => setNewNeed({ ...newNeed, needCategory: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             >
               <option value="">Select Category</option>
               {needCategories.map(cat => (
@@ -498,7 +498,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               value={newNeed.quantity}
               onChange={(e) => setNewNeed({ ...newNeed, quantity: e.target.value })}
               placeholder="e.g., 2, 1 set, 3 bottles"
-              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
 
@@ -511,7 +511,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               value={newNeed.estimatedCost}
               onChange={(e) => setNewNeed({ ...newNeed, estimatedCost: e.target.value })}
               placeholder="e.g., 5000"
-              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
 
@@ -522,7 +522,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
             <select
               value={newNeed.urgency}
               onChange={(e) => setNewNeed({ ...newNeed, urgency: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             >
               {urgencyLevels.map(level => (
                 <option key={level} value={level}>{level}</option>
@@ -539,7 +539,7 @@ const NeedsAssessmentSection = ({ needsAssessment, onChange }) => {
               onChange={(e) => setNewNeed({ ...newNeed, description: e.target.value })}
               rows={2}
               placeholder="Additional details about this need..."
-              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
         </div>

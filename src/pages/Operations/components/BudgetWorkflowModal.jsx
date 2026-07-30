@@ -609,7 +609,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                         ...prev,
                         budgetRequestedAmount: e.target.value
                       }))}
-                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -626,7 +626,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                       ...prev,
                       budgetRequestNotes: e.target.value
                     }))}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -754,7 +754,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                       ...prev,
                       budgetAllocated: e.target.value
                     }))}
-                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
                 <p className="text-xs text-ink-500 mt-1">
@@ -774,7 +774,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                     ...prev,
                     budgetApprovalId: e.target.value
                   }))}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -790,7 +790,7 @@ const BudgetWorkflowModal = ({ isOpen, onClose, task, onUpdate, userRole = 'staf
                     ...prev,
                     budgetApprovalNotes: e.target.value
                   }))}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>

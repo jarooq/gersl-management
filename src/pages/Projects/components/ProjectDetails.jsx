@@ -825,7 +825,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                       value={cfmFormData.feedbackType}
                       onChange={(e) => setCfmFormData({...cfmFormData, feedbackType: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="Complaint">Complaint</option>
                       <option value="Suggestion">Suggestion</option>
@@ -840,7 +840,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                       value={cfmFormData.channel}
                       onChange={(e) => setCfmFormData({...cfmFormData, channel: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="Hotline">Hotline</option>
                       <option value="Email">Email</option>
@@ -858,7 +858,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                     value={cfmFormData.severity}
                     onChange={(e) => setCfmFormData({...cfmFormData, severity: e.target.value})}
                     required
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -873,7 +873,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                     onChange={(e) => setCfmFormData({...cfmFormData, description: e.target.value})}
                     required
                     rows="4"
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     placeholder="Describe the feedback in detail..."
                   />
                 </div>
@@ -886,7 +886,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                       value={cfmFormData.reportedBy}
                       onChange={(e) => setCfmFormData({...cfmFormData, reportedBy: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                       placeholder="Name of person reporting"
                     />
                   </div>
@@ -898,7 +898,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                       value={cfmFormData.contactInfo}
                       onChange={(e) => setCfmFormData({...cfmFormData, contactInfo: e.target.value})}
                       required
-                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                       placeholder="Phone/Email"
                     />
                   </div>

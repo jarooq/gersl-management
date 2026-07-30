@@ -278,7 +278,7 @@ Timeline: 8-12 weeks`;
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="e.g., WASH Project Midterm Evaluation"
                   />
                 </div>
@@ -291,7 +291,7 @@ Timeline: 8-12 weeks`;
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   >
                     <option value="Baseline">Baseline</option>
                     <option value="Midterm">Midterm</option>
@@ -308,7 +308,7 @@ Timeline: 8-12 weeks`;
                     value={formData.projectId}
                     onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   >
                     <option value="">Select Project</option>
                     {projects.map(project => (
@@ -328,7 +328,7 @@ Timeline: 8-12 weeks`;
                     value={formData.evaluator}
                     onChange={(e) => setFormData({ ...formData, evaluator: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="Lead evaluator or firm"
                   />
                 </div>
@@ -341,7 +341,7 @@ Timeline: 8-12 weeks`;
                     type="number"
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="0"
                   />
                 </div>
@@ -355,7 +355,7 @@ Timeline: 8-12 weeks`;
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   />
                 </div>
 
@@ -367,7 +367,7 @@ Timeline: 8-12 weeks`;
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   />
                 </div>
 
@@ -379,7 +379,7 @@ Timeline: 8-12 weeks`;
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   >
                     <option value="Planned">Planned</option>
                     <option value="In Progress">In Progress</option>
@@ -424,7 +424,7 @@ Timeline: 8-12 weeks`;
                   value={formData.methodology}
                   onChange={(e) => setFormData({ ...formData, methodology: e.target.value })}
                   rows={10}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all font-mono text-sm"
                   placeholder="Describe your data collection methods, sampling approach, tools, and analysis techniques..."
                 />
               </div>
@@ -463,7 +463,7 @@ Timeline: 8-12 weeks`;
                     value={newObjective}
                     onChange={(e) => setNewObjective(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addObjective())}
-                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="Type an objective and press Enter..."
                   />
                   <button
@@ -513,7 +513,7 @@ Timeline: 8-12 weeks`;
                   value={formData.findings}
                   onChange={(e) => setFormData({ ...formData, findings: e.target.value })}
                   rows={6}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   placeholder="Document main findings and results from the evaluation..."
                 />
               </div>
@@ -526,7 +526,7 @@ Timeline: 8-12 weeks`;
                   value={formData.recommendations}
                   onChange={(e) => setFormData({ ...formData, recommendations: e.target.value })}
                   rows={6}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   placeholder="List key recommendations based on evaluation findings..."
                 />
               </div>
@@ -539,7 +539,7 @@ Timeline: 8-12 weeks`;
                   <select
                     value={formData.reportStatus}
                     onChange={(e) => setFormData({ ...formData, reportStatus: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   >
                     <option value="Pending">Pending</option>
                     <option value="Draft">Draft</option>
@@ -556,7 +556,7 @@ Timeline: 8-12 weeks`;
                     type="url"
                     value={formData.reportUrl}
                     onChange={(e) => setFormData({ ...formData, reportUrl: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="https://..."
                   />
                 </div>

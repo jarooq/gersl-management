@@ -528,7 +528,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                 <select
                   value={uploadForm.documentType}
                   onChange={(e) => setUploadForm({ ...uploadForm, documentType: e.target.value })}
-                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">Select document type...</option>
                   {DOCUMENT_TYPE_OPTIONS.map((opt) => (
@@ -549,7 +549,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   value={uploadForm.documentName}
                   onChange={(e) => setUploadForm({ ...uploadForm, documentName: e.target.value })}
                   placeholder="Leave blank to use filename"
-                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -587,7 +587,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                     type="date"
                     value={uploadForm.expiryDate}
                     onChange={(e) => setUploadForm({ ...uploadForm, expiryDate: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
               )}
@@ -602,7 +602,7 @@ const StaffProfileModal = ({ staff, onClose, onEdit, onDelete }) => {
                   onChange={(e) => setUploadForm({ ...uploadForm, description: e.target.value })}
                   rows="3"
                   placeholder="Add any notes about this document..."
-                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
                 ></textarea>
               </div>
             </div>

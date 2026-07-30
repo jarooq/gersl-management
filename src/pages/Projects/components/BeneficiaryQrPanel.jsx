@@ -384,7 +384,7 @@ const AddBeneficiariesModal = ({ enrolledBeneficiaryIds, onClose, onConfirm }) =
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name or beneficiary ID…"
-              className="w-full pl-9 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-9 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -412,7 +412,7 @@ const AddBeneficiariesModal = ({ enrolledBeneficiaryIds, onClose, onConfirm }) =
                     type="checkbox"
                     checked={selectedIds.includes(b.id)}
                     onChange={() => toggle(b.id)}
-                    className="h-4 w-4 rounded border-ink-300 text-blue-600 focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-ink-300 text-blue-600 focus:ring-orange-500"
                   />
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-ink-900 truncate">{b.fullName}</p>

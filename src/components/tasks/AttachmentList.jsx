@@ -243,7 +243,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                       <select
                         value={editCategory}
                         onChange={(e) => setEditCategory(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border border-ink-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-2 py-1 text-sm border border-ink-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="document">Document</option>
                         <option value="image">Image</option>
@@ -261,7 +261,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                         value={editDescription}
                         onChange={(e) => setEditDescription(e.target.value)}
                         rows={2}
-                        className="w-full px-2 py-1 text-sm border border-ink-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-2 py-1 text-sm border border-ink-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
                     <div className="flex gap-2">

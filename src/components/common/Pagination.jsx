@@ -107,7 +107,7 @@ const Pagination = ({
               id="itemsPerPage"
               value={itemsPerPage}
               onChange={handleItemsPerPageChange}
-              className="px-3 py-1 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+              className="px-3 py-1 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
             >
               {itemsPerPageOptions.map(option => (
                 <option key={option} value={option}>

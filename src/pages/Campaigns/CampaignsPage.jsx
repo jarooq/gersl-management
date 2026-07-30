@@ -593,14 +593,14 @@ const CampaignsPage = () => {
                 placeholder="Search campaigns..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
             >
               {campaignStatuses.map(status => (
                 <option key={status} value={status}>{status}</option>
@@ -610,7 +610,7 @@ const CampaignsPage = () => {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+              className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
             >
               <option value="All">All Types</option>
               {campaignTypes.map(type => (
@@ -810,7 +810,7 @@ const CampaignsPage = () => {
                     value={campaignForm.title}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     placeholder="e.g., Education Support 2025"
                   />
                 </div>
@@ -823,7 +823,7 @@ const CampaignsPage = () => {
                     onChange={handleInputChange}
                     required
                     rows="3"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     placeholder="Describe the campaign goals and impact"
                   />
                 </div>
@@ -835,7 +835,7 @@ const CampaignsPage = () => {
                     value={campaignForm.type}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   >
                     {campaignTypes.map(type => (
                       <option key={type} value={type}>{type}</option>
@@ -853,7 +853,7 @@ const CampaignsPage = () => {
                     required
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     placeholder="50000"
                   />
                 </div>
@@ -865,7 +865,7 @@ const CampaignsPage = () => {
                     value={campaignForm.status}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="Draft">Draft</option>
                     <option value="Active">Active</option>
@@ -883,7 +883,7 @@ const CampaignsPage = () => {
                     value={campaignForm.startDate}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -895,7 +895,7 @@ const CampaignsPage = () => {
                     value={campaignForm.endDate}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -969,7 +969,7 @@ const CampaignsPage = () => {
                         name="category"
                         value={campaignForm.category}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                         placeholder="e.g., Disaster Relief"
                       />
                     </div>
@@ -983,7 +983,7 @@ const CampaignsPage = () => {
                         onChange={handleInputChange}
                         min="0"
                         step="0.01"
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                         placeholder="20"
                       />
                       <p className="text-xs text-ink-500 mt-1">E.g., Back to School: Total $20,000, Each donor $20</p>
@@ -995,7 +995,7 @@ const CampaignsPage = () => {
                         name="visibility"
                         value={campaignForm.visibility}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="Public">Public</option>
                         <option value="Private">Private</option>
@@ -1235,7 +1235,7 @@ const CampaignsPage = () => {
                         type="text"
                         value={packageForm.name}
                         onChange={(e) => setPackageForm({ ...packageForm, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                         placeholder="e.g., Food Pack, Ifthar Meal, Eid Gift"
                         required
                       />
@@ -1248,7 +1248,7 @@ const CampaignsPage = () => {
                       <textarea
                         value={packageForm.description}
                         onChange={(e) => setPackageForm({ ...packageForm, description: e.target.value })}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                         rows="3"
                         placeholder="Package description..."
                       />
@@ -1263,7 +1263,7 @@ const CampaignsPage = () => {
                         step="0.01"
                         value={packageForm.amount}
                         onChange={(e) => setPackageForm({ ...packageForm, amount: e.target.value })}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                         placeholder="0.00"
                         required
                       />
@@ -1317,7 +1317,7 @@ const CampaignsPage = () => {
                         id="packageActive"
                         checked={packageForm.isActive}
                         onChange={(e) => setPackageForm({ ...packageForm, isActive: e.target.checked })}
-                        className="w-4 h-4 text-purple-600 focus:ring-purple-500 rounded"
+                        className="w-4 h-4 text-purple-600 focus:ring-orange-500 rounded"
                       />
                       <label htmlFor="packageActive" className="text-sm font-medium text-ink-700">
                         Active

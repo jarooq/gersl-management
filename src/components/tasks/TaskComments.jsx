@@ -238,7 +238,7 @@ const TaskComments = ({ taskId }) => {
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
-                    className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
                     rows={3}
                     placeholder="Edit your comment..."
                   />
@@ -276,7 +276,7 @@ const TaskComments = ({ taskId }) => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment... (Use @ to mention someone)"
-            className="w-full px-4 py-3 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-4 py-3 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
             rows={3}
           />
           <div className="absolute bottom-3 right-3 text-xs text-ink-400">

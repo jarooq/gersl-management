@@ -373,7 +373,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   name="projectCode"
                   value={formData.projectCode}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="e.g., PROJ-2025-001 (optional, will be auto-generated if empty)"
                 />
               </div>
@@ -390,7 +390,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="Enter project name"
                 />
               </div>
@@ -408,7 +408,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.donor}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="Enter donor name"
                   />
                 </div>
@@ -423,7 +423,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.programmeArea}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   >
                     {programmeAreas.map(area => (
                       <option key={area} value={area}>{area}</option>
@@ -444,7 +444,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   onChange={handleChange}
                   required
                   disabled={loadingDepartments}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none disabled:bg-ink-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none disabled:bg-ink-100 disabled:cursor-not-allowed"
                 >
                   <option value="">
                     {loadingDepartments ? 'Loading departments...' : '-- Select Department --'}
@@ -470,7 +470,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.location}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   >
                     {districts.map(district => (
                       <option key={district} value={district}>{district}</option>
@@ -488,7 +488,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.projectTier}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   >
                     {projectTiers.map(tier => (
                       <option key={tier} value={tier}>{tier}</option>
@@ -510,7 +510,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.startDate}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
 
@@ -526,7 +526,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     onChange={handleChange}
                     required
                     min={formData.startDate}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   />
                 </div>
               </div>
@@ -546,7 +546,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     required
                     min="0"
                     step="1000"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="e.g., 1000000"
                   />
                 </div>
@@ -563,7 +563,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     onChange={handleChange}
                     required
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="e.g., 500"
                   />
                 </div>
@@ -581,7 +581,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   onChange={handleChange}
                   required
                   rows="3"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Describe the problem this project addresses"
                 />
               </div>
@@ -598,7 +598,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   onChange={handleChange}
                   required
                   rows="3"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Describe the proposed solution"
                 />
               </div>
@@ -615,7 +615,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   onChange={handleChange}
                   required
                   rows="2"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="What is the overall goal of this project?"
                 />
               </div>
@@ -631,7 +631,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   value={formData.strategicAlignment}
                   onChange={handleChange}
                   rows="2"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="How does this align with organizational strategy?"
                 />
               </div>
@@ -648,7 +648,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   onChange={handleChange}
                   required
                   rows="4"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Provide a comprehensive project summary"
                 />
               </div>
@@ -678,7 +678,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       onChange={handleChange}
                       required={index === 0}
                       rows="2"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                       placeholder={`Enter objective ${index + 1}`}
                     />
                   </div>
@@ -699,7 +699,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       onChange={handleChange}
                       required={index === 0}
                       rows="2"
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                       placeholder={`Enter key activity ${index + 1}`}
                     />
                   </div>
@@ -728,7 +728,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.beneficiaryBreakdown.directMale}
                     onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -743,7 +743,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.beneficiaryBreakdown.directFemale}
                     onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -758,7 +758,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.beneficiaryBreakdown.directChildren}
                     onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -773,7 +773,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.beneficiaryBreakdown.directPWD}
                     onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -788,7 +788,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.beneficiaryBreakdown.indirectTotal}
                     onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="0"
                   />
                 </div>
@@ -815,7 +815,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       name={`theoryOfChange.inputs.${index}`}
                       value={input}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                       placeholder={`Input ${index + 1}`}
                     />
                   </div>
@@ -832,7 +832,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       name={`theoryOfChange.activities.${index}`}
                       value={activity}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                       placeholder={`Activity ${index + 1}`}
                     />
                   </div>
@@ -849,7 +849,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       name={`theoryOfChange.outputs.${index}`}
                       value={output}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                       placeholder={`Output ${index + 1}`}
                     />
                   </div>
@@ -866,7 +866,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       name={`theoryOfChange.outcomes.${index}`}
                       value={outcome}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                       placeholder={`Outcome ${index + 1}`}
                     />
                   </div>
@@ -881,7 +881,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                   value={formData.theoryOfChange.impact}
                   onChange={handleChange}
                   rows="3"
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
                   placeholder="Describe the long-term impact"
                 />
               </div>
@@ -896,7 +896,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       name={`theoryOfChange.assumptions.${index}`}
                       value={assumption}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                       placeholder={`Assumption ${index + 1}`}
                     />
                   </div>
@@ -913,7 +913,7 @@ const AddProjectForm = ({ isOpen, onClose, onSubmit }) => {
                       name={`theoryOfChange.risks.${index}`}
                       value={risk}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                       placeholder={`Risk ${index + 1}`}
                     />
                   </div>

@@ -282,7 +282,7 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
             placeholder="Search users by name, username, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
 
@@ -291,7 +291,7 @@ const UsersTab = ({ users, searchQuery, setSearchQuery, filterRole, setFilterRol
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            className="px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           >
             <option value="All">All Roles</option>
             {Object.keys(roles).map(role => (
@@ -749,7 +749,7 @@ const RolesTab = ({
                                 type="checkbox"
                                 checked={hasPermission}
                                 onChange={() => togglePermission(permission)}
-                                className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                                className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-orange-500"
                               />
                             ) : (
                               hasPermission && <CheckCircle size={16} className="text-green-600" />

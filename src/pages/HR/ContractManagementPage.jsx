@@ -1299,7 +1299,7 @@ const ContractManagementPage = () => {
                             }
                             setJobDescForm({ ...jobDescForm, basedOnEmployee: isChecked });
                           }}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-ink-200 rounded"
+                          className="h-4 w-4 text-indigo-600 focus:ring-orange-500 border-ink-200 rounded"
                         />
                         <span className="ml-2 text-sm font-medium text-indigo-900">
                           Base on existing employee position
@@ -1312,7 +1312,7 @@ const ContractManagementPage = () => {
                           <select
                             value={jobDescForm.staffId}
                             onChange={(e) => handleEmployeeSelectForJobDesc(e.target.value)}
-                            className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                           >
                             <option value="">Select an employee</option>
                             {staff.map(s => (
@@ -1335,7 +1335,7 @@ const ContractManagementPage = () => {
                         required
                         value={jobDescForm.position}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, position: e.target.value })}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="e.g., Senior Project Manager"
                         disabled={jobDescForm.basedOnEmployee && !jobDescForm.staffId}
                       />
@@ -1351,7 +1351,7 @@ const ContractManagementPage = () => {
                         required
                         value={jobDescForm.department}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, department: e.target.value })}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="e.g., Programs & Operations"
                         disabled={jobDescForm.basedOnEmployee && !jobDescForm.staffId}
                       />
@@ -1365,7 +1365,7 @@ const ContractManagementPage = () => {
                       <select
                         value={jobDescForm.level}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, level: e.target.value })}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="Entry-Level">Entry-Level</option>
                         <option value="Mid-Level">Mid-Level</option>
@@ -1380,7 +1380,7 @@ const ContractManagementPage = () => {
                         value={jobDescForm.responsibilities}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, responsibilities: e.target.value })}
                         rows={3}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Enter key responsibilities, one per line"
                       />
                     </div>
@@ -1391,7 +1391,7 @@ const ContractManagementPage = () => {
                         value={jobDescForm.qualifications}
                         onChange={(e) => setJobDescForm({ ...jobDescForm, qualifications: e.target.value })}
                         rows={3}
-                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Enter required qualifications, one per line"
                       />
                     </div>
@@ -1467,7 +1467,7 @@ const ContractManagementPage = () => {
                     required
                     value={agreementForm.staffId}
                     onChange={(e) => setAgreementForm({ ...agreementForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -1481,7 +1481,7 @@ const ContractManagementPage = () => {
                   <select
                     value={agreementForm.agreementType}
                     onChange={(e) => setAgreementForm({ ...agreementForm, agreementType: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="Initial">Initial</option>
                     <option value="Renewal">Renewal</option>
@@ -1494,7 +1494,7 @@ const ContractManagementPage = () => {
                   <select
                     value={agreementForm.contractType}
                     onChange={(e) => setAgreementForm({ ...agreementForm, contractType: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="Permanent">Permanent</option>
                     <option value="Contract">Contract</option>
@@ -1509,7 +1509,7 @@ const ContractManagementPage = () => {
                       type="number"
                       value={agreementForm.contractDuration}
                       onChange={(e) => setAgreementForm({ ...agreementForm, contractDuration: e.target.value })}
-                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 )}
@@ -1521,7 +1521,7 @@ const ContractManagementPage = () => {
                     required
                     value={agreementForm.startDate}
                     onChange={(e) => setAgreementForm({ ...agreementForm, startDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1532,7 +1532,7 @@ const ContractManagementPage = () => {
                     required
                     value={agreementForm.salary}
                     onChange={(e) => setAgreementForm({ ...agreementForm, salary: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1542,7 +1542,7 @@ const ContractManagementPage = () => {
                     type="number"
                     value={agreementForm.probationPeriod}
                     onChange={(e) => setAgreementForm({ ...agreementForm, probationPeriod: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1552,7 +1552,7 @@ const ContractManagementPage = () => {
                     type="number"
                     value={agreementForm.workingHours}
                     onChange={(e) => setAgreementForm({ ...agreementForm, workingHours: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -1581,7 +1581,7 @@ const ContractManagementPage = () => {
                   value={agreementForm.notes}
                   onChange={(e) => setAgreementForm({ ...agreementForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Any additional notes or special conditions"
                 />
               </div>
@@ -1800,7 +1800,7 @@ const ContractManagementPage = () => {
                     required
                     value={renewalForm.staffId}
                     onChange={(e) => setRenewalForm({ ...renewalForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -1816,7 +1816,7 @@ const ContractManagementPage = () => {
                     required
                     value={renewalForm.renewalStartDate}
                     onChange={(e) => setRenewalForm({ ...renewalForm, renewalStartDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1826,7 +1826,7 @@ const ContractManagementPage = () => {
                     type="date"
                     value={renewalForm.renewalEndDate}
                     onChange={(e) => setRenewalForm({ ...renewalForm, renewalEndDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1836,7 +1836,7 @@ const ContractManagementPage = () => {
                     type="number"
                     value={renewalForm.newContractDuration}
                     onChange={(e) => setRenewalForm({ ...renewalForm, newContractDuration: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1847,7 +1847,7 @@ const ContractManagementPage = () => {
                     required
                     value={renewalForm.newSalary}
                     onChange={(e) => setRenewalForm({ ...renewalForm, newSalary: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -1858,7 +1858,7 @@ const ContractManagementPage = () => {
                     step="0.01"
                     value={renewalForm.salaryIncrease}
                     onChange={(e) => setRenewalForm({ ...renewalForm, salaryIncrease: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -1869,7 +1869,7 @@ const ContractManagementPage = () => {
                   value={renewalForm.performanceHighlights}
                   onChange={(e) => setRenewalForm({ ...renewalForm, performanceHighlights: e.target.value })}
                   rows={4}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Key achievements and performance highlights"
                 />
               </div>
@@ -1880,7 +1880,7 @@ const ContractManagementPage = () => {
                   value={renewalForm.notes}
                   onChange={(e) => setRenewalForm({ ...renewalForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Any additional notes"
                 />
               </div>
@@ -2136,7 +2136,7 @@ const ContractManagementPage = () => {
                     required
                     value={resignationForm.staffId}
                     onChange={(e) => setResignationForm({ ...resignationForm, staffId: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">Select Staff</option>
                     {staff.map(s => (
@@ -2152,7 +2152,7 @@ const ContractManagementPage = () => {
                     required
                     value={resignationForm.resignationDate}
                     onChange={(e) => setResignationForm({ ...resignationForm, resignationDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -2163,7 +2163,7 @@ const ContractManagementPage = () => {
                     required
                     value={resignationForm.noticeRequirement}
                     onChange={(e) => setResignationForm({ ...resignationForm, noticeRequirement: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -2174,7 +2174,7 @@ const ContractManagementPage = () => {
                     required
                     value={resignationForm.proposedLastDay}
                     onChange={(e) => setResignationForm({ ...resignationForm, proposedLastDay: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -2183,7 +2183,7 @@ const ContractManagementPage = () => {
                   <select
                     value={resignationForm.reasonCategory}
                     onChange={(e) => setResignationForm({ ...resignationForm, reasonCategory: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">Select Category</option>
                     <option value="Better Opportunity">Better Opportunity</option>
@@ -2201,7 +2201,7 @@ const ContractManagementPage = () => {
                     type="text"
                     value={resignationForm.newEmployer}
                     onChange={(e) => setResignationForm({ ...resignationForm, newEmployer: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="Company name"
                   />
                 </div>
@@ -2212,7 +2212,7 @@ const ContractManagementPage = () => {
                     type="text"
                     value={resignationForm.newPosition}
                     onChange={(e) => setResignationForm({ ...resignationForm, newPosition: e.target.value })}
-                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="Job title"
                   />
                 </div>
@@ -2225,7 +2225,7 @@ const ContractManagementPage = () => {
                   value={resignationForm.reason}
                   onChange={(e) => setResignationForm({ ...resignationForm, reason: e.target.value })}
                   rows={4}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Provide detailed reason for resignation"
                 />
               </div>
@@ -2236,7 +2236,7 @@ const ContractManagementPage = () => {
                   value={resignationForm.handoverPlan}
                   onChange={(e) => setResignationForm({ ...resignationForm, handoverPlan: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Describe the handover plan for current responsibilities"
                 />
               </div>
@@ -2247,7 +2247,7 @@ const ContractManagementPage = () => {
                   value={resignationForm.notes}
                   onChange={(e) => setResignationForm({ ...resignationForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Any additional notes"
                 />
               </div>

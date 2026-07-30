@@ -1422,7 +1422,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
             <textarea
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              className="w-full p-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 min-h-[120px]"
+              className="w-full p-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-h-[120px]"
               placeholder="Enter your comments here..."
             />
             <div className="flex justify-end gap-3 mt-4">

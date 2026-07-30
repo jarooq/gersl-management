@@ -307,7 +307,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   onChange={handleChange}
                   onBlur={() => handleBlur('username')}
                   disabled={isEditMode} // Can't change username
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition ${
                     errors.username && touched.username ? 'border-red-500' : 'border-ink-300'
                   } ${isEditMode ? 'bg-ink-100 cursor-not-allowed' : ''}`}
                   placeholder="john.doe"
@@ -331,7 +331,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   value={formData.fullName}
                   onChange={handleChange}
                   onBlur={() => handleBlur('fullName')}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition ${
                     errors.fullName && touched.fullName ? 'border-red-500' : 'border-ink-300'
                   }`}
                   placeholder="John Doe"
@@ -355,7 +355,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   value={formData.email}
                   onChange={handleChange}
                   onBlur={() => handleBlur('email')}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition ${
                     errors.email && touched.email ? 'border-red-500' : 'border-ink-300'
                   }`}
                   placeholder="john.doe@gersl.org"
@@ -379,7 +379,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   value={formData.phone}
                   onChange={handleChange}
                   onBlur={() => handleBlur('phone')}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition ${
                     errors.phone && touched.phone ? 'border-red-500' : 'border-ink-300'
                   }`}
                   placeholder="+94 77 123 4567"
@@ -415,7 +415,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                       value={formData.password}
                       onChange={handleChange}
                       onBlur={() => handleBlur('password')}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition pr-10 ${
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition pr-10 ${
                         errors.password && touched.password ? 'border-red-500' : 'border-ink-300'
                       }`}
                       placeholder={isEditMode ? "Enter new password" : "Password will be generated"}
@@ -459,7 +459,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                 >
                   {Object.keys(ROLE_PERMISSIONS || {}).map(role => (
                     <option key={role} value={role}>{role}</option>
@@ -479,7 +479,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                 >
                   <option value="">Select Department</option>
                   {departments.map(dept => (
@@ -497,7 +497,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user = null, isLoading = fal
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>

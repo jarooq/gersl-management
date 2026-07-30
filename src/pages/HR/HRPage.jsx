@@ -1867,7 +1867,7 @@ const HRPage = () => {
                         type="text"
                         value={staffForm.username}
                         onChange={(e) => setStaffForm({ ...staffForm, username: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="john.doe"
                       />
                       <p className="text-xs text-ink-500 mt-1">This will be used for logging in</p>
@@ -1881,7 +1881,7 @@ const HRPage = () => {
                         type="password"
                         value={staffForm.password}
                         onChange={(e) => setStaffForm({ ...staffForm, password: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="••••••••"
                       />
                       <p className="text-xs text-ink-500 mt-1">Minimum 8 characters</p>
@@ -1894,7 +1894,7 @@ const HRPage = () => {
                       <select
                         value={staffForm.userRole}
                         onChange={(e) => setStaffForm({ ...staffForm, userRole: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="">Select Role</option>
                         {roles.map(role => (
@@ -1913,7 +1913,7 @@ const HRPage = () => {
                       <select
                         value={staffForm.userStatus}
                         onChange={(e) => setStaffForm({ ...staffForm, userStatus: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
@@ -1982,7 +1982,7 @@ const HRPage = () => {
                         type="text"
                         value={editStaffForm.fullName}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, fullName: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -1994,7 +1994,7 @@ const HRPage = () => {
                         type="email"
                         value={editStaffForm.email}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, email: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2006,7 +2006,7 @@ const HRPage = () => {
                         type="tel"
                         value={editStaffForm.phone}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, phone: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2018,7 +2018,7 @@ const HRPage = () => {
                         type="text"
                         value={editStaffForm.employeeId}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, employeeId: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2030,7 +2030,7 @@ const HRPage = () => {
                         type="date"
                         value={editStaffForm.dateOfBirth}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, dateOfBirth: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2041,7 +2041,7 @@ const HRPage = () => {
                       <select
                         value={editStaffForm.gender}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, gender: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="">Select Gender</option>
                         <option value="Male">Male</option>
@@ -2057,7 +2057,7 @@ const HRPage = () => {
                       <textarea
                         value={editStaffForm.address}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, address: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         rows="2"
                       />
                     </div>
@@ -2069,7 +2069,7 @@ const HRPage = () => {
                       <textarea
                         value={editStaffForm.bio}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, bio: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         rows="3"
                         placeholder="Brief professional biography..."
                       />
@@ -2088,7 +2088,7 @@ const HRPage = () => {
                       <select
                         value={editStaffForm.department}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, department: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="">Select Department</option>
                         <option value="Governance">Governance</option>
@@ -2110,7 +2110,7 @@ const HRPage = () => {
                         type="text"
                         value={editStaffForm.position}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, position: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2122,7 +2122,7 @@ const HRPage = () => {
                         type="date"
                         value={editStaffForm.joiningDate}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, joiningDate: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2133,7 +2133,7 @@ const HRPage = () => {
                       <select
                         value={editStaffForm.contractType}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, contractType: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="">Select Contract Type</option>
                         <option value="Permanent">Permanent</option>
@@ -2151,7 +2151,7 @@ const HRPage = () => {
                         type="text"
                         value={editStaffForm.workHours}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, workHours: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="9:00 AM - 5:00 PM"
                       />
                     </div>
@@ -2164,7 +2164,7 @@ const HRPage = () => {
                         type="number"
                         value={editStaffForm.salary}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, salary: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2176,7 +2176,7 @@ const HRPage = () => {
                         type="number"
                         value={editStaffForm.leaveBalance}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, leaveBalance: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -2187,7 +2187,7 @@ const HRPage = () => {
                       <select
                         value={editStaffForm.status}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, status: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
@@ -2203,7 +2203,7 @@ const HRPage = () => {
                         type="text"
                         value={editStaffForm.emergencyContact}
                         onChange={(e) => setEditStaffForm({ ...editStaffForm, emergencyContact: e.target.value })}
-                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="Name: Contact Number"
                       />
                     </div>
@@ -2327,7 +2327,7 @@ const HRPage = () => {
                 <select
                   value={onboardingForm.employeeId}
                   onChange={(e) => setOnboardingForm({ ...onboardingForm, employeeId: parseInt(e.target.value) })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">Select an employee</option>
                   {staff.map(s => (
@@ -2344,7 +2344,7 @@ const HRPage = () => {
                   type="date"
                   value={onboardingForm.startDate}
                   onChange={(e) => setOnboardingForm({ ...onboardingForm, startDate: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
 
@@ -2356,7 +2356,7 @@ const HRPage = () => {
                   type="text"
                   value={onboardingForm.mentor}
                   onChange={(e) => setOnboardingForm({ ...onboardingForm, mentor: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="John Doe"
                 />
               </div>
@@ -2412,7 +2412,7 @@ const HRPage = () => {
                 <select
                   value={appraisalForm.employeeId}
                   onChange={(e) => setAppraisalForm({ ...appraisalForm, employeeId: parseInt(e.target.value) })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="">Select an employee</option>
                   {staff.map(s => (
@@ -2430,7 +2430,7 @@ const HRPage = () => {
                     type="text"
                     value={appraisalForm.period}
                     onChange={(e) => setAppraisalForm({ ...appraisalForm, period: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Q4 2025"
                   />
                 </div>
@@ -2443,7 +2443,7 @@ const HRPage = () => {
                     type="date"
                     value={appraisalForm.dueDate}
                     onChange={(e) => setAppraisalForm({ ...appraisalForm, dueDate: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -2456,7 +2456,7 @@ const HRPage = () => {
                   type="text"
                   value={appraisalForm.reviewer}
                   onChange={(e) => setAppraisalForm({ ...appraisalForm, reviewer: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="John Doe"
                 />
               </div>
@@ -2472,7 +2472,7 @@ const HRPage = () => {
                   step="0.1"
                   value={appraisalForm.rating}
                   onChange={(e) => setAppraisalForm({ ...appraisalForm, rating: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="4.5"
                 />
               </div>
@@ -2510,7 +2510,7 @@ const HRPage = () => {
                   <select
                     value={leaveForm.employeeId}
                     onChange={(e) => setLeaveForm({ ...leaveForm, employeeId: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">Select Employee</option>
                     {staff.map(emp => (
@@ -2524,7 +2524,7 @@ const HRPage = () => {
                   <select
                     value={leaveForm.leaveType}
                     onChange={(e) => setLeaveForm({ ...leaveForm, leaveType: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">Select Type</option>
                     <option value="Annual">Annual Leave</option>
@@ -2541,7 +2541,7 @@ const HRPage = () => {
                       type="date"
                       value={leaveForm.startDate}
                       onChange={(e) => setLeaveForm({ ...leaveForm, startDate: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
 
@@ -2551,7 +2551,7 @@ const HRPage = () => {
                       type="date"
                       value={leaveForm.endDate}
                       onChange={(e) => setLeaveForm({ ...leaveForm, endDate: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -2562,7 +2562,7 @@ const HRPage = () => {
                     type="number"
                     value={leaveForm.days}
                     onChange={(e) => setLeaveForm({ ...leaveForm, days: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g., 5"
                   />
                 </div>
@@ -2572,7 +2572,7 @@ const HRPage = () => {
                   <textarea
                     value={leaveForm.reason}
                     onChange={(e) => setLeaveForm({ ...leaveForm, reason: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     rows="3"
                     placeholder="Enter reason for leave..."
                   />
@@ -2727,7 +2727,7 @@ const HRPage = () => {
                   <select
                     value={vehicleRequestForm.requestedBy}
                     onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, requestedBy: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">Select Employee</option>
                     {staff.map(emp => (
@@ -2743,7 +2743,7 @@ const HRPage = () => {
                       type="text"
                       value={vehicleRequestForm.project}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, project: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="e.g., Health Program"
                     />
                   </div>
@@ -2754,7 +2754,7 @@ const HRPage = () => {
                       type="text"
                       value={vehicleRequestForm.activity}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, activity: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="e.g., Field Visit"
                     />
                   </div>
@@ -2765,7 +2765,7 @@ const HRPage = () => {
                   <select
                     value={vehicleRequestForm.vehicleType}
                     onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, vehicleType: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="">Select Type</option>
                     <option value="Sedan">Sedan</option>
@@ -2782,7 +2782,7 @@ const HRPage = () => {
                       type="date"
                       value={vehicleRequestForm.date}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, date: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
 
@@ -2792,7 +2792,7 @@ const HRPage = () => {
                       type="time"
                       value={vehicleRequestForm.startTime}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, startTime: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
 
@@ -2802,7 +2802,7 @@ const HRPage = () => {
                       type="time"
                       value={vehicleRequestForm.endTime}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, endTime: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -2814,7 +2814,7 @@ const HRPage = () => {
                       type="number"
                       value={vehicleRequestForm.passengers}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, passengers: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="e.g., 4"
                     />
                   </div>
@@ -2825,7 +2825,7 @@ const HRPage = () => {
                       type="text"
                       value={vehicleRequestForm.destination}
                       onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, destination: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="e.g., Nairobi CBD"
                     />
                   </div>
@@ -2836,7 +2836,7 @@ const HRPage = () => {
                   <textarea
                     value={vehicleRequestForm.purpose}
                     onChange={(e) => setVehicleRequestForm({ ...vehicleRequestForm, purpose: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     rows="3"
                     placeholder="Enter purpose of travel..."
                   />

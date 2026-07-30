@@ -24,7 +24,7 @@ const OrphanFilters = ({
               placeholder="Search orphans..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
             />
           </div>
         </div>
@@ -34,7 +34,7 @@ const OrphanFilters = ({
           <select
             value={filterDistrict}
             onChange={(e) => setFilterDistrict(e.target.value)}
-            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="All">All Districts</option>
             {districts.map(district => (
@@ -48,7 +48,7 @@ const OrphanFilters = ({
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
           >
             <option value="All">All Status</option>
             <option value="Active">Active</option>

@@ -442,7 +442,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   required
                   value={formData.proposalCode}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="PROP-2024-001"
                 />
               </div>
@@ -457,7 +457,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   multiple
                   value={formData.district}
                   onChange={handleDistrictChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent h-32"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent h-32"
                   required
                 >
                   {SRI_LANKAN_DISTRICTS.map((district) => (
@@ -487,7 +487,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   required
                   value={formData.donor}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">Select a donor/partner...</option>
                   {partners && partners.length > 0 ? (
@@ -519,7 +519,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="cboName"
                   value={formData.cboName}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="CBO Name (Optional)"
                 />
               </div>
@@ -533,7 +533,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                 required
                 value={formData.title}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter proposal title..."
               />
             </div>
@@ -545,7 +545,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="programmeArea"
                   value={formData.programmeArea}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   {PROGRAMME_AREAS.map((area) => (
                     <option key={area} value={area}>{area}</option>
@@ -559,7 +559,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="projectTier"
                   value={formData.projectTier}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="Tier 1">Tier 1 (Comprehensive)</option>
                   <option value="Tier 2">Tier 2 (Moderate)</option>
@@ -573,7 +573,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="sectorTheme"
                   value={formData.sectorTheme}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -590,7 +590,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                 onChange={handleInputChange}
                 required
                 disabled={loadingDepartments}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-ink-100 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-ink-100 disabled:cursor-not-allowed"
               >
                 <option value="">
                   {loadingDepartments ? 'Loading departments...' : '-- Select Department --'}
@@ -613,7 +613,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   required
                   value={formData.requestedBudget}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="2500000"
                 />
               </div>
@@ -624,7 +624,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="duration"
                   value={formData.duration}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="6 months">6 months</option>
                   <option value="9 months">9 months</option>
@@ -643,7 +643,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   required
                   value={formData.targetBeneficiaries}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="150"
                 />
               </div>
@@ -657,7 +657,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -668,7 +668,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -696,7 +696,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                     name="budgetCurrency"
                     value={formData.budgetCurrency}
                     onChange={handleInputChange}
-                    className="px-3 py-1.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                    className="px-3 py-1.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
                   >
                     {CURRENCIES.map((currency) => (
                       <option key={currency.code} value={currency.code}>
@@ -734,7 +734,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                               <select
                                 value={item.category}
                                 onChange={(e) => updateBudgetItem(item.id, 'category', e.target.value)}
-                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                               >
                                 <option value="Personnel">Personnel</option>
                                 <option value="Equipment">Equipment</option>
@@ -753,7 +753,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                 value={item.description}
                                 onChange={(e) => updateBudgetItem(item.id, 'description', e.target.value)}
                                 placeholder="Item description..."
-                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                               />
                             </td>
                             <td className="px-3 py-2">
@@ -762,7 +762,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                 value={item.quantity}
                                 onChange={(e) => updateBudgetItem(item.id, 'quantity', e.target.value)}
                                 min="1"
-                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                               />
                             </td>
                             <td className="px-3 py-2">
@@ -771,7 +771,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                 value={item.unitCost}
                                 onChange={(e) => updateBudgetItem(item.id, 'unitCost', e.target.value)}
                                 min="0"
-                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                               />
                             </td>
                             <td className="px-3 py-2">
@@ -827,7 +827,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                 rows="3"
                 value={formData.summary}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Brief project summary..."
               />
             </div>
@@ -839,7 +839,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                 name="overallGoal"
                 value={formData.overallGoal}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Main project goal..."
               />
             </div>
@@ -851,7 +851,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                 rows="3"
                 value={formData.problemStatement}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Describe the problem this project addresses..."
               />
             </div>
@@ -863,7 +863,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                 rows="3"
                 value={formData.proposedSolution}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Describe your proposed solution approach..."
               />
             </div>
@@ -879,7 +879,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   type="text"
                   value={formData.objectives[index]}
                   onChange={(e) => handleObjectiveChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder={`Enter objective ${index + 1}...`}
                 />
               </div>
@@ -896,7 +896,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   type="text"
                   value={formData.keyActivities[index]}
                   onChange={(e) => handleActivityChange(index, e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder={`Enter activity ${index + 1}...`}
                 />
               </div>
@@ -939,7 +939,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                               <select
                                 value={indicator.level}
                                 onChange={(e) => updateIndicator(indicator.id, 'level', e.target.value)}
-                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                               >
                                 <option value="Activity">Activity</option>
                                 <option value="Output">Output</option>
@@ -953,7 +953,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                   const selected = programmeIndicators.find(ind => ind.indicator === e.target.value);
                                   if (selected) selectStandardIndicator(indicator.id, selected);
                                 }}
-                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                               >
                                 <option value="">Select from bank...</option>
                                 {programmeIndicators
@@ -981,7 +981,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                               value={indicator.indicator}
                               onChange={(e) => updateIndicator(indicator.id, 'indicator', e.target.value)}
                               placeholder="e.g., # children receiving school kits/support"
-                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                             />
                           </div>
 
@@ -993,7 +993,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                 value={indicator.baseline}
                                 onChange={(e) => updateIndicator(indicator.id, 'baseline', e.target.value)}
                                 placeholder="0"
-                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                               />
                             </div>
                             <div>
@@ -1003,7 +1003,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                 value={indicator.target}
                                 onChange={(e) => updateIndicator(indicator.id, 'target', e.target.value)}
                                 placeholder="100"
-                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                               />
                             </div>
                             <div>
@@ -1013,7 +1013,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                                 value={indicator.meansOfVerification}
                                 onChange={(e) => updateIndicator(indicator.id, 'meansOfVerification', e.target.value)}
                                 placeholder="Distribution list"
-                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                               />
                             </div>
                           </div>
@@ -1041,7 +1041,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                     value={formData.beneficiaryBreakdown.directMale}
                     onChange={(e) => handleBeneficiaryChange('directMale', e.target.value)}
                     placeholder="0"
-                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
                 <div>
@@ -1051,7 +1051,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                     value={formData.beneficiaryBreakdown.directFemale}
                     onChange={(e) => handleBeneficiaryChange('directFemale', e.target.value)}
                     placeholder="0"
-                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
                 <div>
@@ -1061,7 +1061,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                     value={formData.beneficiaryBreakdown.directChildren}
                     onChange={(e) => handleBeneficiaryChange('directChildren', e.target.value)}
                     placeholder="0"
-                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
                 <div>
@@ -1071,7 +1071,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                     value={formData.beneficiaryBreakdown.directPWD}
                     onChange={(e) => handleBeneficiaryChange('directPWD', e.target.value)}
                     placeholder="0"
-                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
                 <div>
@@ -1081,7 +1081,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                     value={formData.beneficiaryBreakdown.indirectTotal}
                     onChange={(e) => handleBeneficiaryChange('indirectTotal', e.target.value)}
                     placeholder="0"
-                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-green-500"
+                    className="w-full px-2 py-1.5 border border-ink-200 rounded text-sm focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -1130,7 +1130,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                         value={input}
                         onChange={(e) => handleToCArrayChange('inputs', index, e.target.value)}
                         placeholder="e.g., Staff, budget"
-                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                       />
                       {formData.theoryOfChange.inputs.length > 1 && (
                         <button
@@ -1164,7 +1164,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                         value={activity}
                         onChange={(e) => handleToCArrayChange('activities', index, e.target.value)}
                         placeholder="e.g., Distribute kits"
-                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                       />
                       {formData.theoryOfChange.activities.length > 1 && (
                         <button
@@ -1198,7 +1198,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                         value={output}
                         onChange={(e) => handleToCArrayChange('outputs', index, e.target.value)}
                         placeholder="e.g., 150 children equipped"
-                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                       />
                       {formData.theoryOfChange.outputs.length > 1 && (
                         <button
@@ -1232,7 +1232,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                         value={outcome}
                         onChange={(e) => handleToCArrayChange('outcomes', index, e.target.value)}
                         placeholder="e.g., Improved attendance"
-                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                        className="flex-1 px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                       />
                       {formData.theoryOfChange.outcomes.length > 1 && (
                         <button
@@ -1256,7 +1256,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                   onChange={(e) => handleToCImpactChange(e.target.value)}
                   rows="2"
                   placeholder="e.g., Reduced inequality and improved outcomes"
-                  className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-2 py-1 text-sm border border-ink-200 rounded focus:ring-2 focus:ring-orange-500"
                 />
               </div>
             </div>
@@ -1284,7 +1284,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       type="checkbox"
                       checked={formData.safeguarding.dataProtection}
                       onChange={() => {}}
-                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                     />
                     <div>
                       <p className="text-sm font-semibold text-ink-800">Data Protection</p>
@@ -1306,7 +1306,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       type="checkbox"
                       checked={formData.safeguarding.informedConsent}
                       onChange={() => {}}
-                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                     />
                     <div>
                       <p className="text-sm font-semibold text-ink-800">Informed Consent</p>
@@ -1328,7 +1328,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       type="checkbox"
                       checked={formData.safeguarding.childSafeguarding}
                       onChange={() => {}}
-                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                     />
                     <div>
                       <p className="text-sm font-semibold text-ink-800">Child Safeguarding</p>
@@ -1350,7 +1350,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       type="checkbox"
                       checked={formData.safeguarding.incidentReporting}
                       onChange={() => {}}
-                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                     />
                     <div>
                       <p className="text-sm font-semibold text-ink-800">Incident Reporting</p>
@@ -1372,7 +1372,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       type="checkbox"
                       checked={formData.safeguarding.backgroundChecks}
                       onChange={() => {}}
-                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                     />
                     <div>
                       <p className="text-sm font-semibold text-ink-800">Background Checks</p>
@@ -1394,7 +1394,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
                       type="checkbox"
                       checked={formData.safeguarding.codeOfConduct}
                       onChange={() => {}}
-                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                      className="mt-0.5 w-4 h-4 text-green-600 rounded focus:ring-orange-500"
                     />
                     <div>
                       <p className="text-sm font-semibold text-ink-800">Code of Conduct</p>

@@ -394,7 +394,7 @@ const AddLearningEventWizard = ({ projects, evaluations, onClose }) => {
                     type="checkbox"
                     checked={formData.followUpRequired}
                     onChange={(e) => setFormData({ ...formData, followUpRequired: e.target.checked })}
-                    className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500"
+                    className="w-5 h-5 text-indigo-600 rounded focus:ring-orange-500"
                   />
                   <div>
                     <p className="font-semibold text-ink-900">Follow-up Required</p>

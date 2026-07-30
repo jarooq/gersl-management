@@ -430,7 +430,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                 placeholder="Search name, NIC, phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
               />
             </div>
 
@@ -438,7 +438,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
             <select
               value={filters.selectionStatus}
               onChange={(e) => setFilters(prev => ({ ...prev, selectionStatus: e.target.value }))}
-              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
             >
               <option value="">All Statuses</option>
               <option value="Nominated">Nominated</option>
@@ -452,7 +452,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
             <select
               value={filters.received}
               onChange={(e) => setFilters(prev => ({ ...prev, received: e.target.value }))}
-              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
             >
               <option value="">All Receipt Status</option>
               <option value="yes">Received</option>
@@ -463,7 +463,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
             <select
               value={filters.attended}
               onChange={(e) => setFilters(prev => ({ ...prev, attended: e.target.value }))}
-              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="border border-ink-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
             >
               <option value="">All Attendance</option>
               <option value="yes">Attended</option>
@@ -704,7 +704,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   type="date"
                   value={receiveFormData.receivedDate}
                   onChange={(e) => setReceiveFormData(prev => ({ ...prev, receivedDate: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -717,7 +717,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="https://..."
                   value={receiveFormData.signatureUrl}
                   onChange={(e) => setReceiveFormData(prev => ({ ...prev, signatureUrl: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -730,7 +730,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="Any additional notes..."
                   value={receiveFormData.receivedNotes}
                   onChange={(e) => setReceiveFormData(prev => ({ ...prev, receivedNotes: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -800,7 +800,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   type="date"
                   value={attendanceFormData.attendanceDate}
                   onChange={(e) => setAttendanceFormData(prev => ({ ...prev, attendanceDate: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -813,7 +813,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="Any additional notes..."
                   value={attendanceFormData.attendanceNotes}
                   onChange={(e) => setAttendanceFormData(prev => ({ ...prev, attendanceNotes: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -856,7 +856,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <select
                   value={statusFormData.selectionStatus}
                   onChange={(e) => setStatusFormData(prev => ({ ...prev, selectionStatus: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">Select status...</option>
                   <option value="Nominated">Nominated</option>
@@ -876,7 +876,7 @@ const IndividualDistributionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   placeholder="Reason for status change..."
                   value={statusFormData.selectionNotes}
                   onChange={(e) => setStatusFormData(prev => ({ ...prev, selectionNotes: e.target.value }))}
-                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-ink-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>

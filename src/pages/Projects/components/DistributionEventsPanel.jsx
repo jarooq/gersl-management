@@ -288,7 +288,7 @@ const CreateEventModal = ({ onClose, onSubmit }) => {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="e.g., Dry Rations Round 3"
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
 
@@ -299,7 +299,7 @@ const CreateEventModal = ({ onClose, onSubmit }) => {
               value={scheduledDate}
               onChange={(e) => setScheduledDate(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
 
@@ -310,7 +310,7 @@ const CreateEventModal = ({ onClose, onSubmit }) => {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g., Akkaraipattu Community Hall"
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
 
@@ -321,7 +321,7 @@ const CreateEventModal = ({ onClose, onSubmit }) => {
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
               placeholder="Any instructions for the distribution team…"
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
 

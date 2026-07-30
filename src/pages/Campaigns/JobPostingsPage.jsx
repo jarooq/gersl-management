@@ -267,7 +267,7 @@ const JobPostingsPage = () => {
                   placeholder="Search by title, department, or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -275,7 +275,7 @@ const JobPostingsPage = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="All">All Status</option>
               <option value="Open">Open</option>
@@ -285,7 +285,7 @@ const JobPostingsPage = () => {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="All">All Types</option>
               <option value="Full-time">Full-time</option>
@@ -428,7 +428,7 @@ const JobPostingsPage = () => {
                     type="text"
                     value={jobForm.title}
                     onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. Program Manager"
                     required
                   />
@@ -442,7 +442,7 @@ const JobPostingsPage = () => {
                     type="text"
                     value={jobForm.department}
                     onChange={(e) => setJobForm({ ...jobForm, department: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. Operations"
                     required
                   />
@@ -456,7 +456,7 @@ const JobPostingsPage = () => {
                     type="text"
                     value={jobForm.location}
                     onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. Nairobi, Kenya"
                     required
                   />
@@ -467,7 +467,7 @@ const JobPostingsPage = () => {
                   <select
                     value={jobForm.type}
                     onChange={(e) => setJobForm({ ...jobForm, type: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   >
                     <option value="Full-time">Full-time</option>
                     <option value="Part-time">Part-time</option>
@@ -482,7 +482,7 @@ const JobPostingsPage = () => {
                     type="text"
                     value={jobForm.salary}
                     onChange={(e) => setJobForm({ ...jobForm, salary: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. $50,000 - $70,000"
                   />
                 </div>
@@ -493,7 +493,7 @@ const JobPostingsPage = () => {
                     type="text"
                     value={jobForm.experience}
                     onChange={(e) => setJobForm({ ...jobForm, experience: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="e.g. 3-5 years"
                   />
                 </div>
@@ -504,7 +504,7 @@ const JobPostingsPage = () => {
                     type="date"
                     value={jobForm.deadline}
                     onChange={(e) => setJobForm({ ...jobForm, deadline: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
 
@@ -514,7 +514,7 @@ const JobPostingsPage = () => {
                     type="email"
                     value={jobForm.contactEmail}
                     onChange={(e) => setJobForm({ ...jobForm, contactEmail: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="hr@organization.org"
                   />
                 </div>
@@ -525,7 +525,7 @@ const JobPostingsPage = () => {
                     type="tel"
                     value={jobForm.contactPhone}
                     onChange={(e) => setJobForm({ ...jobForm, contactPhone: e.target.value })}
-                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="+254 123 456 789"
                   />
                 </div>
@@ -536,7 +536,7 @@ const JobPostingsPage = () => {
                 <textarea
                   value={jobForm.description}
                   onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="4"
                   placeholder="Provide a detailed description of the role..."
                 />
@@ -547,7 +547,7 @@ const JobPostingsPage = () => {
                 <textarea
                   value={jobForm.requirements}
                   onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="4"
                   placeholder="List the key requirements and qualifications..."
                 />
@@ -558,7 +558,7 @@ const JobPostingsPage = () => {
                 <textarea
                   value={jobForm.responsibilities}
                   onChange={(e) => setJobForm({ ...jobForm, responsibilities: e.target.value })}
-                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-ink-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows="4"
                   placeholder="Describe the main responsibilities..."
                 />

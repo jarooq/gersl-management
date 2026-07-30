@@ -217,7 +217,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   onChange={handleChange}
                   max={new Date().toISOString().split('T')[0]}
                   required
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
             </div>
@@ -236,7 +236,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   rows={4}
                   required
                   placeholder="Summarize what was accomplished, key outcomes, and any important details..."
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
                 />
               </div>
               <p className="text-xs text-ink-500 mt-1">
@@ -257,7 +257,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   onChange={handleChange}
                   rows={3}
                   placeholder="List the key deliverables produced (reports, documents, completed activities, etc.)..."
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
                 />
               </div>
               <p className="text-xs text-ink-500 mt-1">
@@ -278,7 +278,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                   onChange={handleChange}
                   rows={3}
                   placeholder="Share any insights, challenges faced, or recommendations for future similar tasks..."
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
                 />
               </div>
               <p className="text-xs text-ink-500 mt-1">
@@ -301,7 +301,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                       placeholder="Enter URL to photo, document, or report..."
                       value={newEvidenceUrl}
                       onChange={(e) => setNewEvidenceUrl(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
                   <button
@@ -362,7 +362,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                    className="w-4 h-4 text-purple-600 rounded focus:ring-orange-500"
                     checked={!!formData.completionDate}
                     readOnly
                   />
@@ -371,7 +371,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                    className="w-4 h-4 text-purple-600 rounded focus:ring-orange-500"
                     checked={!!formData.completionNotes}
                     readOnly
                   />
@@ -380,7 +380,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                    className="w-4 h-4 text-purple-600 rounded focus:ring-orange-500"
                     checked={formData.deliverables.length > 0 || formData.completionEvidence.length > 0}
                     readOnly
                   />

@@ -373,7 +373,7 @@ const CoordinatorDetailsPage = () => {
                 <select
                   value={selectedPeriod}
                   onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 >
                   <option value="weekly">Last 7 Days</option>
                   <option value="monthly">Last 30 Days</option>

@@ -213,7 +213,7 @@ const SocialMediaSettings = () => {
                       facebook: { ...prev.facebook, pageId: e.target.value }
                     }))}
                     placeholder="Enter your Facebook Page ID"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                   <p className="text-xs text-ink-500 mt-1">
                     Find this in your Facebook Page Settings &gt; About
@@ -232,7 +232,7 @@ const SocialMediaSettings = () => {
                       facebook: { ...prev.facebook, accessToken: e.target.value }
                     }))}
                     placeholder="Enter your Page Access Token"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                   <p className="text-xs text-ink-500 mt-1">
                     Generate this from the Facebook Graph API Explorer
@@ -251,7 +251,7 @@ const SocialMediaSettings = () => {
                       facebook: { ...prev.facebook, pageName: e.target.value }
                     }))}
                     placeholder="Your Facebook Page Name"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -281,7 +281,7 @@ const SocialMediaSettings = () => {
                       instagram: { ...prev.instagram, businessAccountId: e.target.value }
                     }))}
                     placeholder="Enter your Instagram Business Account ID"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -297,7 +297,7 @@ const SocialMediaSettings = () => {
                       instagram: { ...prev.instagram, accessToken: e.target.value }
                     }))}
                     placeholder="Enter your Instagram Access Token"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
 
@@ -313,7 +313,7 @@ const SocialMediaSettings = () => {
                       instagram: { ...prev.instagram, username: e.target.value }
                     }))}
                     placeholder="@yourusername"
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-pink-500"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>

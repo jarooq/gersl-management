@@ -284,7 +284,7 @@ const TaskProgressModal = ({ isOpen, onClose, task, onUpdate }) => {
                   onChange={handleChange}
                   rows={5}
                   placeholder="Describe the progress made, any challenges faced, or next steps..."
-                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
+                  className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
                 />
               </div>
               <p className="text-xs text-ink-500 mt-1">

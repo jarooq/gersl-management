@@ -170,7 +170,7 @@ const EditRoleModal = ({ isOpen, onClose, role, onSuccess, onDelete }) => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Content Manager"
-                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-ink-100 disabled:text-ink-600"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-ink-100 disabled:text-ink-600"
                 disabled={loading || role.is_system_role}
                 required
               />
@@ -188,7 +188,7 @@ const EditRoleModal = ({ isOpen, onClose, role, onSuccess, onDelete }) => {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Brief description of the role"
-                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 disabled={loading}
               />
             </div>
@@ -232,7 +232,7 @@ const EditRoleModal = ({ isOpen, onClose, role, onSuccess, onDelete }) => {
                           type="checkbox"
                           checked={allSelected}
                           onChange={() => handleModuleToggle(moduleName)}
-                          className="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
+                          className="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-orange-500"
                           disabled={loading}
                         />
                         <span className="font-semibold text-ink-900">{moduleName}</span>
@@ -256,7 +256,7 @@ const EditRoleModal = ({ isOpen, onClose, role, onSuccess, onDelete }) => {
                             type="checkbox"
                             checked={formData.permissions.includes(permission.id)}
                             onChange={() => handlePermissionToggle(permission.id)}
-                            className="mt-1 w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-orange-500"
                             disabled={loading}
                           />
                           <div className="flex-1 min-w-0">

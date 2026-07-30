@@ -134,7 +134,7 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
                   rows={3}
                   value={scopeOfWork}
                   onChange={(e) => setScopeOfWork(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
                 />
               </label>
 
@@ -145,7 +145,7 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
                     type="datetime-local"
                     value={closingDate}
                     onChange={(e) => setClosingDate(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
                     required
                   />
                 </label>
@@ -155,7 +155,7 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
                     type="text"
                     value={paymentTerms}
                     onChange={(e) => setPaymentTerms(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
                   />
                 </label>
               </div>
@@ -166,7 +166,7 @@ export default function RFQBuilderModal({ requisition, onClose, onCreated }) {
                   type="text"
                   value={termsOfDelivery}
                   onChange={(e) => setTermsOfDelivery(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-ink-200 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
                 />
               </label>
 

@@ -255,7 +255,7 @@ const AppraisalPage = () => {
               placeholder="Search by name, dept, position..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64"
+              className="pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent w-64"
             />
           </div>
 
@@ -263,7 +263,7 @@ const AppraisalPage = () => {
           <select
             value={filterPeriod}
             onChange={(e) => setFilterPeriod(e.target.value)}
-            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           >
             <option value="all">All Periods</option>
             {uniquePeriods.map(period => (
@@ -275,7 +275,7 @@ const AppraisalPage = () => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
@@ -447,7 +447,7 @@ const AppraisalPage = () => {
                   <select
                     value={appraisalForm.employeeId}
                     onChange={(e) => setAppraisalForm({ ...appraisalForm, employeeId: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     disabled={editingRecord !== null}
                   >
                     <option value="">Select Employee</option>
@@ -464,7 +464,7 @@ const AppraisalPage = () => {
                       type="text"
                       value={appraisalForm.period}
                       onChange={(e) => setAppraisalForm({ ...appraisalForm, period: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="e.g., Q1 2025, Jan-Mar 2025"
                     />
                   </div>
@@ -477,7 +477,7 @@ const AppraisalPage = () => {
                       type="number"
                       value={appraisalForm.overallScore}
                       onChange={(e) => setAppraisalForm({ ...appraisalForm, overallScore: e.target.value })}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       placeholder="e.g., 4.5"
                       step="0.1"
                       min="0"
@@ -518,7 +518,7 @@ const AppraisalPage = () => {
                   <textarea
                     value={appraisalForm.strengths}
                     onChange={(e) => setAppraisalForm({ ...appraisalForm, strengths: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     rows="3"
                     placeholder="List employee strengths..."
                   />
@@ -529,7 +529,7 @@ const AppraisalPage = () => {
                   <textarea
                     value={appraisalForm.improvements}
                     onChange={(e) => setAppraisalForm({ ...appraisalForm, improvements: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     rows="3"
                     placeholder="List areas for improvement..."
                   />
@@ -540,7 +540,7 @@ const AppraisalPage = () => {
                   <textarea
                     value={appraisalForm.goals}
                     onChange={(e) => setAppraisalForm({ ...appraisalForm, goals: e.target.value })}
-                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     rows="3"
                     placeholder="Set goals for next period..."
                   />

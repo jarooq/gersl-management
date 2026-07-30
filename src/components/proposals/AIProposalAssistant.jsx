@@ -181,7 +181,7 @@ const AIProposalAssistant = ({ isOpen, onClose, onProposalGenerated }) => {
               onChange={(e) => setUserInput(e.target.value)}
               disabled={loading}
               placeholder="Example: I want to create an education project for orphan children in Colombo. We'll provide school supplies, tutoring, and scholarships. Target 500 children aged 5-15..."
-              className="w-full px-4 py-3 border border-ink-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none disabled:bg-ink-50 disabled:opacity-70"
+              className="w-full px-4 py-3 border border-ink-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none disabled:bg-ink-50 disabled:opacity-70"
               rows={6}
             />
             <p className="text-xs text-ink-500 mt-2">

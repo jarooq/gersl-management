@@ -494,7 +494,7 @@ const ApprovalDetailModal = ({ approval, canApprove, onClose, onApprove, onRejec
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Add your comments or feedback (required for rejection)..."
                 rows="4"
-                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
           )}

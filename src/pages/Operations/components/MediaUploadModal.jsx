@@ -302,7 +302,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
                   onChange={(e) => setNewPhotoLink(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addLink('photo')}
                   placeholder="https://drive.google.com/..."
-                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
                 <button
                   onClick={() => addLink('photo')}
@@ -350,7 +350,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
                   onChange={(e) => setNewVideoLink(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addLink('video')}
                   placeholder="https://drive.google.com/..."
-                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
                 <button
                   onClick={() => addLink('video')}
@@ -398,7 +398,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
                   onChange={(e) => setNewTestimonialLink(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && addLink('testimonial')}
                   placeholder="https://drive.google.com/..."
-                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
                 <button
                   onClick={() => addLink('testimonial')}
@@ -421,7 +421,7 @@ const MediaUploadModal = ({ isOpen, onClose, task, onSuccess }) => {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes about the media coverage..."
               rows={4}
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
         </div>

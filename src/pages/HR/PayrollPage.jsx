@@ -471,14 +471,14 @@ const PayrollPage = () => {
               placeholder="Search by code or staff name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
           <div>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               <option value="">All Status</option>
               <option value="Pending">Pending</option>
@@ -605,7 +605,7 @@ const PayrollPage = () => {
                       value={formData.staffId}
                       onChange={handleStaffChange}
                       required
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="">Select Staff</option>
                       {staff.map(s => (
@@ -626,7 +626,7 @@ const PayrollPage = () => {
                       value={formData.payPeriodStart}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -640,7 +640,7 @@ const PayrollPage = () => {
                       value={formData.payPeriodEnd}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -653,7 +653,7 @@ const PayrollPage = () => {
                       name="payDate"
                       value={formData.payDate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -669,7 +669,7 @@ const PayrollPage = () => {
                       required
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -684,7 +684,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -699,7 +699,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -714,7 +714,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -729,7 +729,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -744,7 +744,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -759,7 +759,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -774,7 +774,7 @@ const PayrollPage = () => {
                       onChange={handleInputChange}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
 
@@ -786,7 +786,7 @@ const PayrollPage = () => {
                       name="paymentMethod"
                       value={formData.paymentMethod}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="Bank Transfer">Bank Transfer</option>
                       <option value="Cash">Cash</option>
@@ -803,7 +803,7 @@ const PayrollPage = () => {
                       value={formData.notes}
                       onChange={handleInputChange}
                       rows="3"
-                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 </div>

@@ -1255,7 +1255,7 @@ const SupportLogTab = ({ orphan }) => {
             <select
               value={selectedPartnerIndex}
               onChange={(e) => setSelectedPartnerIndex(parseInt(e.target.value))}
-              className="w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none appearance-none bg-white text-ink-900 font-semibold"
+              className="w-full px-4 py-3 pr-10 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none appearance-none bg-white text-ink-900 font-semibold"
             >
               {partnerSupports.map((assignment, index) => (
                 <option key={index} value={index}>

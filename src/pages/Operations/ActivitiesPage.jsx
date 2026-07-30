@@ -841,7 +841,7 @@ const ActivitiesPage = () => {
                         name="name"
                         value={newActivity.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="Enter activity name"
                       />
                     </div>
@@ -852,7 +852,7 @@ const ActivitiesPage = () => {
                         name="description"
                         value={newActivity.description}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         rows="3"
                         placeholder="Enter activity description"
                       ></textarea>
@@ -864,7 +864,7 @@ const ActivitiesPage = () => {
                         name="project"
                         value={newActivity.project}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="">Select project</option>
                         <option value="Child Protection Initiative">Child Protection Initiative</option>
@@ -881,7 +881,7 @@ const ActivitiesPage = () => {
                         name="status"
                         value={newActivity.status}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       >
                         <option value="Planning">Planning</option>
                         <option value="Scheduled">Scheduled</option>
@@ -897,7 +897,7 @@ const ActivitiesPage = () => {
                         name="startDate"
                         value={newActivity.startDate}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -908,7 +908,7 @@ const ActivitiesPage = () => {
                         name="endDate"
                         value={newActivity.endDate}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       />
                     </div>
 
@@ -919,7 +919,7 @@ const ActivitiesPage = () => {
                         name="location"
                         value={newActivity.location}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="Enter location"
                       />
                     </div>
@@ -931,7 +931,7 @@ const ActivitiesPage = () => {
                         name="participants"
                         value={newActivity.participants}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="0"
                         min="0"
                       />
@@ -944,7 +944,7 @@ const ActivitiesPage = () => {
                         name="budget"
                         value={newActivity.budget}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="0"
                         min="0"
                       />
@@ -957,7 +957,7 @@ const ActivitiesPage = () => {
                         name="completion"
                         value={newActivity.completion}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         placeholder="0"
                         min="0"
                         max="100"

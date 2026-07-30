@@ -227,7 +227,7 @@ ${emailData.body}`;
                   type="text"
                   value={emailData.senderName}
                   onChange={(e) => handleInputChange('senderName', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="John Doe"
                 />
               </div>
@@ -239,7 +239,7 @@ ${emailData.body}`;
                   type="text"
                   value={emailData.senderTitle}
                   onChange={(e) => handleInputChange('senderTitle', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="Fundraising Manager"
                 />
               </div>
@@ -251,7 +251,7 @@ ${emailData.body}`;
                   type="email"
                   value={emailData.senderEmail}
                   onChange={(e) => handleInputChange('senderEmail', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="contact@gersl.org"
                 />
               </div>
@@ -263,7 +263,7 @@ ${emailData.body}`;
                   type="tel"
                   value={emailData.senderPhone}
                   onChange={(e) => handleInputChange('senderPhone', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="+94 XX XXX XXXX"
                 />
               </div>
@@ -288,7 +288,7 @@ ${emailData.body}`;
                   type="text"
                   value={emailData.donorContactName}
                   onChange={(e) => handleInputChange('donorContactName', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="Dear Sir/Madam or Specific name"
                 />
               </div>
@@ -300,7 +300,7 @@ ${emailData.body}`;
                   type="email"
                   value={emailData.to}
                   onChange={(e) => handleInputChange('to', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="donor@organization.org"
                   required
                 />
@@ -313,7 +313,7 @@ ${emailData.body}`;
                   type="email"
                   value={emailData.cc}
                   onChange={(e) => handleInputChange('cc', e.target.value)}
-                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="cc@organization.org"
                 />
               </div>
@@ -329,7 +329,7 @@ ${emailData.body}`;
               type="text"
               value={emailData.subject}
               onChange={(e) => handleInputChange('subject', e.target.value)}
-              className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-medium"
+              className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-medium"
               required
             />
           </div>
@@ -342,7 +342,7 @@ ${emailData.body}`;
             <textarea
               value={emailData.body}
               onChange={(e) => handleInputChange('body', e.target.value)}
-              className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-3 py-2 border border-ink-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm"
               rows={previewMode ? 25 : 15}
               required
             />
@@ -363,7 +363,7 @@ ${emailData.body}`;
                   type="checkbox"
                   checked={emailData.attachFullProposal}
                   onChange={(e) => handleInputChange('attachFullProposal', e.target.checked)}
-                  className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                  className="w-4 h-4 text-purple-600 rounded focus:ring-orange-500"
                 />
                 <span className="text-sm text-ink-700">
                   Attach Full Proposal PDF ({proposal.proposalCode}_Full.pdf)
@@ -374,7 +374,7 @@ ${emailData.body}`;
                   type="checkbox"
                   checked={emailData.attachSummary}
                   onChange={(e) => handleInputChange('attachSummary', e.target.checked)}
-                  className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                  className="w-4 h-4 text-purple-600 rounded focus:ring-orange-500"
                 />
                 <span className="text-sm text-ink-700">
                   Attach Executive Summary PDF ({proposal.proposalCode}_Summary.pdf)

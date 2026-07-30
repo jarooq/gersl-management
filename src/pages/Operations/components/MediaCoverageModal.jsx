@@ -642,7 +642,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                           type="checkbox"
                           checked={assignFormData.mediaTeamAssigned.includes(member.id)}
                           onChange={() => toggleTeamMember(member.id)}
-                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-ink-200 rounded"
+                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-orange-500 border-ink-200 rounded"
                         />
                         <User className="h-5 w-5 text-ink-400 mr-2" />
                         <div>
@@ -676,7 +676,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                           type="checkbox"
                           checked={assignFormData.mediaCoverageType.includes(type.value)}
                           onChange={() => toggleCoverageType(type.value)}
-                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-ink-200 rounded"
+                          className="mr-3 h-4 w-4 text-purple-600 focus:ring-orange-500 border-ink-200 rounded"
                         />
                         <Icon className="h-5 w-5 text-purple-600 mr-2" />
                         <span className="font-medium text-ink-900">{type.label}</span>
@@ -732,7 +732,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <select
                   value={statusFormData.mediaCoverageStatus}
                   onChange={(e) => setStatusFormData(prev => ({ ...prev, mediaCoverageStatus: e.target.value }))}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   {statusOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -754,7 +754,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newPhotoUrl}
                     onChange={(e) => setNewPhotoUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addPhotoUrl()}
-                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                   <button
                     onClick={addPhotoUrl}
@@ -792,7 +792,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newVideoUrl}
                     onChange={(e) => setNewVideoUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addVideoUrl()}
-                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                   <button
                     onClick={addVideoUrl}
@@ -830,7 +830,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newSocialMediaUrl}
                     onChange={(e) => setNewSocialMediaUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addSocialMediaUrl()}
-                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                   <button
                     onClick={addSocialMediaUrl}
@@ -868,7 +868,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                     value={newLiveStreamUrl}
                     onChange={(e) => setNewLiveStreamUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addLiveStreamUrl()}
-                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                   <button
                     onClick={addLiveStreamUrl}
@@ -910,7 +910,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                       notes: e.target.value
                     }
                   }))}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 

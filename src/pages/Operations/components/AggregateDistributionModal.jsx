@@ -348,7 +348,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   name="distributionDate"
                   value={formData.distributionDate}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
 
@@ -363,7 +363,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleInputChange}
                   placeholder="e.g., 500"
                   min="1"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
             </div>
@@ -383,7 +383,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
 
@@ -396,7 +396,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
 
@@ -409,7 +409,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
 
@@ -422,7 +422,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                   onChange={handleDemographicChange}
                   placeholder="0"
                   min="0"
-                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
             </div>
@@ -448,7 +448,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                     value={item.item}
                     onChange={(e) => handleItemChange(index, 'item', e.target.value)}
                     placeholder="Item name (e.g., Ifthar meal package)"
-                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="flex-1 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                   <input
                     type="number"
@@ -456,7 +456,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
                     onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                     placeholder="Qty"
                     min="1"
-                    className="w-32 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-32 px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
                   {formData.itemsDistributed.length > 1 && (
                     <button
@@ -599,7 +599,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
               onChange={handleInputChange}
               placeholder="Any additional notes about the distribution..."
               rows="3"
-              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
         </div>

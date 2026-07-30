@@ -233,7 +233,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
               value={formData.donorResponseDate}
               onChange={(e) => handleInputChange('donorResponseDate', e.target.value)}
               max={new Date().toISOString().split('T')[0]} // Can't be in future
-              className={`w-full px-4 py-2 border ${errors.donorResponseDate ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.donorResponseDate ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
               required
             />
             {errors.donorResponseDate && (
@@ -252,7 +252,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
             <select
               value={formData.communicationChannel}
               onChange={(e) => handleInputChange('communicationChannel', e.target.value)}
-              className={`w-full px-4 py-2 border ${errors.communicationChannel ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.communicationChannel ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
               required
             >
               <option value="">Select channel...</option>
@@ -278,7 +278,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
               value={formData.donorContactPerson}
               onChange={(e) => handleInputChange('donorContactPerson', e.target.value)}
               placeholder="e.g., John Smith, Programme Manager"
-              className={`w-full px-4 py-2 border ${errors.donorContactPerson ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.donorContactPerson ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
               required
             />
             {errors.donorContactPerson && (
@@ -302,7 +302,7 @@ const DonorDecisionModal = ({ proposal, decision, onClose, onSubmit }) => {
                 ? "E.g., Donor approved via WhatsApp on [date]. They expressed strong interest in the education component and confirmed funding will be available in Q2. Next steps: Sign MOU and begin project initiation."
                 : "E.g., Donor rejected via email on [date]. Reason stated: 'Project does not align with our current funding priorities for health sector.' Feedback: Consider reframing proposal to emphasize health outcomes and resubmit next funding cycle."
               }
-              className={`w-full px-4 py-2 border ${errors.comments ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+              className={`w-full px-4 py-2 border ${errors.comments ? 'border-red-500' : 'border-ink-300'} rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
               rows={5}
               required
             />
