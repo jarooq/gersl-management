@@ -1,4 +1,4 @@
-import { sequelize, ProjectBeneficiary, Beneficiary, Project } from '../models/index.js';
+import { sequelize, ProjectBeneficiary, Beneficiary, Project, DistributionEvent, DistributionScan } from '../models/index.js';
 import { asyncHandler, ValidationError, NotFoundError } from '../middleware/error.middleware.js';
 import { unique } from '../services/qrToken.service.js';
 
@@ -155,4 +155,103 @@ export const withdraw = asyncHandler(async (req, res) => {
 
   await row.update({ status: 'Withdrawn' });
   res.json({ success: true, message: 'Enrolment withdrawn', data: { enrolment: row } });
+});
+
+// ============================================
+// GET /api/projects/:projectId/distribution-stats
+// Aggregate progress numbers for the project's distribution flow —
+// enrolment status counts, event lifecycle counts, and scan totals
+// (both raw scans and distinct beneficiaries served).
+//
+// Powers the DistributionProgressCard on the Project detail page.
+// One query per aggregate for clarity; each is cheap because they're
+// indexed count queries — no rows selected.
+// ============================================
+export const stats = asyncHandler(async (req, res) => {
+  const projectId = parseInt(req.params.projectId, 10);
+  if (!Number.isInteger(projectId) || projectId <= 0) {
+    throw new ValidationError('Invalid project id');
+  }
+  const project = await Project.findByPk(projectId, { attributes: ['id'] });
+  if (!project) throw new NotFoundError('Project not found');
+
+  // Enrolment breakdown by status.
+  const enrolmentRows = await ProjectBeneficiary.findAll({
+    where: { projectId },
+    attributes: [
+      'status',
+      [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+    ],
+    group: ['status'],
+    raw: true,
+  });
+  const enrolments = { total: 0, active: 0, withdrawn: 0, replaced: 0 };
+  for (const r of enrolmentRows) {
+    const count = parseInt(r.count, 10);
+    enrolments.total += count;
+    if (r.status === 'Active')    enrolments.active += count;
+    if (r.status === 'Withdrawn') enrolments.withdrawn += count;
+    if (r.status === 'Replaced')  enrolments.replaced += count;
+  }
+
+  // Event breakdown by status.
+  const eventRows = await DistributionEvent.findAll({
+    where: { projectId },
+    attributes: [
+      'status',
+      [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+    ],
+    group: ['status'],
+    raw: true,
+  });
+  const events = { total: 0, planned: 0, active: 0, closed: 0 };
+  for (const r of eventRows) {
+    const count = parseInt(r.count, 10);
+    events.total += count;
+    if (r.status === 'Planned') events.planned += count;
+    if (r.status === 'Active')  events.active  += count;
+    if (r.status === 'Closed')  events.closed  += count;
+  }
+
+  // Scans — need event ids first, then two counts on scans.
+  const eventIds = (await DistributionEvent.findAll({
+    where: { projectId },
+    attributes: ['id'],
+    raw: true,
+  })).map((e) => e.id);
+
+  let totalScans = 0;
+  let beneficiariesServed = 0;
+  if (eventIds.length > 0) {
+    totalScans = await DistributionScan.count({ where: { eventId: eventIds } });
+    // "Beneficiaries served" = distinct enrolments that have at least one
+    // scan across any of the project's events. `enforce_one_scan_per_enrolment`
+    // migration means this equals raw scan count when no dupes exist, but
+    // computing distinct is cheap and safe against future policy changes.
+    beneficiariesServed = await DistributionScan.count({
+      where: { eventId: eventIds },
+      distinct: true,
+      col: 'projectBeneficiaryId',
+    });
+  }
+
+  // Coverage — served / active enrolment. Guarded against div/0.
+  const coveragePct = enrolments.active > 0
+    ? Math.round((beneficiariesServed / enrolments.active) * 1000) / 10
+    : 0;
+
+  res.json({
+    success: true,
+    data: {
+      projectId,
+      enrolments,
+      events,
+      scans: {
+        totalScans,
+        beneficiariesServed,
+        remaining: Math.max(enrolments.active - beneficiariesServed, 0),
+        coveragePct,
+      },
+    },
+  });
 });

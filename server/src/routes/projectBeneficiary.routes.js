@@ -1,7 +1,7 @@
 import express from 'express';
 import { protect, authorize } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
-import { enroll, list, regenerateToken, withdraw } from '../controllers/projectBeneficiary.controller.js';
+import { enroll, list, regenerateToken, withdraw, stats } from '../controllers/projectBeneficiary.controller.js';
 
 // Mounted at /api — covers both /api/projects/:projectId/beneficiaries and
 // /api/project-beneficiaries/:id/* (mirrors the taskBeneficiary pattern).
@@ -19,6 +19,7 @@ const canManageEnrolments = authorize(
 
 router.post('/projects/:projectId/beneficiaries', protect, validateId('projectId'), canManageEnrolments, enroll);
 router.get('/projects/:projectId/beneficiaries', protect, validateId('projectId'), list);
+router.get('/projects/:projectId/distribution-stats', protect, validateId('projectId'), stats);
 
 router.post('/project-beneficiaries/:id/regenerate-token', protect, validateId(), canManageEnrolments, regenerateToken);
 router.patch('/project-beneficiaries/:id/withdraw', protect, validateId(), canManageEnrolments, withdraw);

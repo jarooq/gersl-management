@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import * as API from '../../../services/api';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
+import DistributionProgressCard from './DistributionProgressCard';
 
 // The backend may return a bare array or a wrapped object.
 const toEventArray = (response) => {
@@ -20,7 +21,7 @@ const eventStatusClass = (status) => {
   const s = (status || '').toLowerCase();
   if (s === 'open' || s === 'active' || s === 'scheduled') return 'bg-green-100 text-green-700';
   if (s === 'closed' || s === 'completed') return 'bg-ink-100 text-ink-700';
-  return 'bg-blue-100 text-blue-700';
+  return 'bg-hs-slate-100 text-hs-slate-700';
 };
 
 const DistributionEventsPanel = ({ projectId, showToast }) => {
@@ -30,6 +31,9 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [scans, setScans] = useState([]);
   const [scansLoading, setScansLoading] = useState(false);
+  // Bumped whenever the events list changes so the progress card refetches
+  // without having to lift its state.
+  const [statsRefreshKey, setStatsRefreshKey] = useState(0);
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -76,7 +80,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
             Back to events
           </button>
           <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
-            <ScanLine className="text-purple-600" size={22} />
+            <ScanLine className="text-orange-600" size={22} />
             {selectedEvent.name}
           </h3>
           <div className="flex items-center gap-4 text-sm text-ink-600 mt-1 flex-wrap">
@@ -128,7 +132,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
                       scan.scanner?.fullName || scan.scannedBy?.fullName ||
                       scan.user?.fullName || '—';
                     return (
-                      <tr key={scan.id} className="border-b border-ink-100 hover:bg-purple-50 transition-colors">
+                      <tr key={scan.id} className="border-b border-ink-100 hover:bg-orange-50 transition-colors">
                         <td className="py-3 px-4 text-sm text-ink-600">
                           {ts ? new Date(ts).toLocaleString() : '—'}
                         </td>
@@ -152,11 +156,13 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
 
   // ============ Events list view ============
   return (
+    <>
+    <DistributionProgressCard projectId={projectId} refreshKey={statsRefreshKey} />
     <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
       <div className="p-6 border-b border-ink-100 flex justify-between items-center flex-wrap gap-3">
         <div>
           <h3 className="text-lg font-bold text-ink-900 flex items-center gap-2">
-            <CalendarDays className="text-purple-600" size={22} />
+            <CalendarDays className="text-orange-600" size={22} />
             Distribution Events
           </h3>
           <p className="text-sm text-ink-600 mt-1">
@@ -202,7 +208,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
               </thead>
               <tbody>
                 {events.map((event) => (
-                  <tr key={event.id} className="border-b border-ink-100 hover:bg-purple-50 transition-colors">
+                  <tr key={event.id} className="border-b border-ink-100 hover:bg-orange-50 transition-colors">
                     <td className="py-3 px-4 text-sm font-semibold text-ink-900">{event.name}</td>
                     <td className="py-3 px-4 text-sm text-ink-600">
                       {event.scheduledDate ? new Date(event.scheduledDate).toLocaleDateString() : '—'}
@@ -217,7 +223,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
                       <div className="flex justify-end">
                         <button
                           onClick={() => openEvent(event)}
-                          className="flex items-center gap-1 px-3 py-1 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition text-xs font-semibold"
+                          className="flex items-center gap-1 px-3 py-1 bg-purple-50 text-orange-600 rounded-lg hover:bg-orange-100 transition text-xs font-semibold"
                         >
                           <ScanLine size={14} />
                           View Scans
@@ -241,6 +247,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
               setShowCreateModal(false);
               showToast('Distribution event created');
               await fetchEvents();
+              setStatsRefreshKey((k) => k + 1);
             } catch (error) {
               console.error('Error creating distribution event:', error);
               showToast('Failed to create event', 'error');
@@ -249,6 +256,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
         />
       )}
     </div>
+    </>
   );
 };
 
@@ -336,7 +344,7 @@ const CreateEventModal = ({ onClose, onSubmit }) => {
             <button
               type="submit"
               disabled={submitting || !name || !scheduledDate}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Creating…' : 'Create Event'}
             </button>

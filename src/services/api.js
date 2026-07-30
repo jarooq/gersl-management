@@ -3525,6 +3525,13 @@ export const ProjectBeneficiaryAPI = {
     });
     return data.data;
   },
+
+  // Distribution progress rollup: enrolments + events + scan totals.
+  // Powers the DistributionProgressCard.
+  stats: async (projectId) => {
+    const data = await request(`/projects/${projectId}/distribution-stats`);
+    return data.data;
+  },
 };
 
 // ============================================
