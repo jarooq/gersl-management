@@ -2,6 +2,7 @@ import React from 'react';
 import { LogOut, Menu, Search } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import NotificationBell from '../notifications/NotificationBell';
+import QuickCreate from '../navigation/QuickCreate';
 
 // === GERSL Navbar v3 — HubSpot console top bar ===
 // White bar, hs-navy body text, orange accents, ⌘K search hint at center.
@@ -37,6 +38,7 @@ const Navbar = ({ toggleSidebar, onCommandOpen }) => {
         )}
 
         <div className="flex items-center gap-2">
+          <QuickCreate />
           <NotificationBell />
 
           <div className="hidden md:flex items-center gap-2.5 pl-3 ml-1 border-l border-hs-slate-200">
