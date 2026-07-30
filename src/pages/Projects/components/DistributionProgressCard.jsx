@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Users, CalendarDays, ScanLine, CheckCircle2, TrendingUp, AlertCircle, MapPin,
+  Users, CalendarDays, ScanLine, CheckCircle2, TrendingUp, AlertCircle, MapPin, FileBarChart,
 } from 'lucide-react';
 import * as API from '../../../services/api';
 import UnreachedBeneficiariesModal from './UnreachedBeneficiariesModal';
+import DistributionReport from './DistributionReport';
 
 // DistributionProgressCard
 // -------------------------------------------------------------
@@ -52,6 +53,7 @@ const DistributionProgressCard = ({ projectId, projectName, refreshKey = 0 }) =>
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showUnreached, setShowUnreached] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
     if (!projectId) return;
@@ -103,7 +105,7 @@ const DistributionProgressCard = ({ projectId, projectName, refreshKey = 0 }) =>
 
   return (
     <div className="bg-white rounded-lg2 shadow-hs-card border border-hs-slate-200 p-5 mb-4">
-      <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+      <div className="flex items-start justify-between flex-wrap gap-2 mb-4">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-orange-600">
             Distribution
@@ -112,13 +114,23 @@ const DistributionProgressCard = ({ projectId, projectName, refreshKey = 0 }) =>
             Beneficiaries reached
           </h3>
         </div>
-        <div className="text-right">
-          <p className="text-3xl font-display font-semibold text-hs-navy-800 leading-none">
-            {coverage.toFixed(1)}<span className="text-lg text-hs-slate-500">%</span>
-          </p>
-          <p className="text-[11px] text-hs-slate-500 mt-0.5">
-            {scans.beneficiariesServed.toLocaleString()} of {active.toLocaleString()} active
-          </p>
+        <div className="flex items-start gap-3">
+          <button
+            onClick={() => setShowReport(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-hs-navy-700 hover:text-orange-600 hover:bg-orange-50 border border-hs-slate-200 rounded-md transition"
+            title="Generate a printable impact report"
+          >
+            <FileBarChart size={13} />
+            <span>Report</span>
+          </button>
+          <div className="text-right">
+            <p className="text-3xl font-display font-semibold text-hs-navy-800 leading-none">
+              {coverage.toFixed(1)}<span className="text-lg text-hs-slate-500">%</span>
+            </p>
+            <p className="text-[11px] text-hs-slate-500 mt-0.5">
+              {scans.beneficiariesServed.toLocaleString()} of {active.toLocaleString()} active
+            </p>
+          </div>
         </div>
       </div>
 
@@ -167,6 +179,13 @@ const DistributionProgressCard = ({ projectId, projectName, refreshKey = 0 }) =>
           projectId={projectId}
           projectName={projectName}
           onClose={() => setShowUnreached(false)}
+        />
+      )}
+
+      {showReport && (
+        <DistributionReport
+          projectId={projectId}
+          onClose={() => setShowReport(false)}
         />
       )}
 
