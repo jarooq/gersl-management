@@ -7,7 +7,7 @@ const BeneficiaryMapPage = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
-      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+      <div className="bg-navy-900 rounded-lg2 px-5 py-3 text-white shadow-card">
         <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Geo · All programmes</p>
         <h1 className="text-h2 font-bold leading-tight inline-flex items-center gap-2">
           <MapPin size={24} /> Beneficiary Map

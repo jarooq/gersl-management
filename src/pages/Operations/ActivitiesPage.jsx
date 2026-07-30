@@ -165,7 +165,7 @@ const ActivitiesPage = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
-      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
+      <div className="bg-navy-900 rounded-lg2 px-5 py-3 text-white shadow-card">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="min-w-0">
                   <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Operations · Activities</p>

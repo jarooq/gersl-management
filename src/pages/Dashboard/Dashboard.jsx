@@ -351,7 +351,7 @@ const Dashboard = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Hero — navy mission band with quick actions */}
-      <div className="bg-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-4 text-white shadow-card relative overflow-hidden">
         <div className="absolute -top-24 -right-16 w-72 h-72 bg-mission-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-16 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -1091,7 +1091,7 @@ const Dashboard = () => {
       </div>
 
       {/* Impact Summary Banner — navy with mission accent */}
-      <div className="bg-navy-900 rounded-lg2 p-7 text-white shadow-card relative overflow-hidden">
+      <div className="bg-navy-900 rounded-lg2 px-6 py-4 text-white shadow-card relative overflow-hidden">
         <div className="absolute -top-12 -right-12 w-64 h-64 bg-mission-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">

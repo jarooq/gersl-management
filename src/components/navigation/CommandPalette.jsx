@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Baby, Briefcase, DollarSign, Users, FileText, HeartHandshake,
   Shield, BarChart, Settings, Users2, Share2, FileBarChart, FolderKanban,
@@ -7,6 +7,21 @@ import {
   Megaphone, Store, UserCheck, Wallet, Activity, ShoppingCart, Droplets,
   Search, CornerDownLeft, ArrowUp, ArrowDown,
 } from 'lucide-react';
+
+const RECENT_KEY = 'gersl.commandPalette.recent';
+const RECENT_MAX = 5;
+
+const loadRecent = () => {
+  try {
+    const raw = localStorage.getItem(RECENT_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+};
+
+const saveRecent = (paths) => {
+  try { localStorage.setItem(RECENT_KEY, JSON.stringify(paths.slice(0, RECENT_MAX))); }
+  catch { /* localStorage unavailable — no-op */ }
+};
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
 
@@ -59,17 +74,42 @@ const COMMANDS = [
 
 const CommandPalette = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { hasPermission, currentUser } = useAuth();
   const inputRef = useRef(null);
   const [query, setQuery] = useState('');
   const [cursor, setCursor] = useState(0);
+  const [recentPaths, setRecentPaths] = useState(loadRecent);
+
+  // Track visited routes across the app — writes to localStorage so recent
+  // items survive a full refresh. Not scoped per-user; if that ever matters,
+  // key the localStorage entry off currentUser.id.
+  useEffect(() => {
+    setRecentPaths((prev) => {
+      const next = [location.pathname + location.search, ...prev.filter((p) => p !== location.pathname + location.search)];
+      saveRecent(next);
+      return next.slice(0, RECENT_MAX);
+    });
+  }, [location.pathname, location.search]);
 
   const hasWildcard = currentUser && Array.isArray(currentUser.permissions) &&
     currentUser.permissions.some(p => p.permissionKey === '*');
 
   const items = useMemo(() => {
     const allowed = COMMANDS.filter(c => hasWildcard || !c.permission || hasPermission(c.permission));
-    if (!query.trim()) return allowed;
+
+    // Empty query: recent items at top, then everything else — recent get a
+    // synthetic "Recent" group to render under.
+    if (!query.trim()) {
+      const recentSet = new Set(recentPaths);
+      const recentItems = recentPaths
+        .map((p) => allowed.find((c) => c.path === p))
+        .filter(Boolean)
+        .map((c) => ({ ...c, group: 'Recent' }));
+      const rest = allowed.filter((c) => !recentSet.has(c.path));
+      return [...recentItems, ...rest];
+    }
+
     const q = query.toLowerCase();
     return allowed
       .map(c => {
@@ -84,7 +124,7 @@ const CommandPalette = ({ isOpen, onClose }) => {
       .filter(x => x.score > 0)
       .sort((a, b) => b.score - a.score)
       .map(x => x.c);
-  }, [query, hasWildcard, hasPermission]);
+  }, [query, hasWildcard, hasPermission, recentPaths]);
 
   useEffect(() => {
     if (isOpen) {
