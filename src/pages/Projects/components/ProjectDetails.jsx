@@ -706,7 +706,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                           <div className="flex gap-2 pt-3 border-t border-ink-100">
                             <button
                               onClick={() => handleViewTask(task)}
-                              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm font-semibold"
+                              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-orange-100 transition text-sm font-semibold"
                             >
                               <Eye size={16} />
                               View
@@ -737,7 +737,7 @@ const ProjectDetails = ({ project, onClose, onDeleteTask, onGenerateReport }) =>
                                 {task.involvesBeneficiaries && task.taskType === 'Beneficiary Selection' && (
                                   <button
                                     onClick={() => handleSelectBeneficiaries(task)}
-                                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition text-sm font-semibold"
+                                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-orange-100 transition text-sm font-semibold"
                                   >
                                     <Users size={16} />
                                     Select

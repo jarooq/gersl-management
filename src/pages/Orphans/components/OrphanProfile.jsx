@@ -1142,7 +1142,7 @@ const DocumentsTab = ({ orphan }) => {
                 className="bg-white border-2 border-ink-100 rounded-lg p-4 hover:border-blue-500 hover:shadow-card transition-all cursor-pointer group"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
+                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-orange-100 transition-colors">
                     <DocIcon size={24} className="text-blue-600" />
                   </div>
                   <div className="flex-1 min-w-0">

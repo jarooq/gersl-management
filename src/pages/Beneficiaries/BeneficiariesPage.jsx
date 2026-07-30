@@ -821,7 +821,7 @@ const BeneficiariesPage = () => {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleViewDetails(beneficiary)}
-                              className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                              className="p-1.5 rounded-lg hover:bg-orange-50 text-blue-600 transition-colors"
                               title="View Details"
                             >
                               <Eye size={16} />
@@ -903,7 +903,7 @@ const BeneficiariesPage = () => {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleViewDetails(beneficiary)}
-                          className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-orange-50 text-blue-600 transition-colors"
                           title="View"
                         >
                           <Eye size={16} />

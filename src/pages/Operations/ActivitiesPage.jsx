@@ -333,14 +333,14 @@ const ActivitiesPage = () => {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 <button
                   onClick={() => openActivityDetail(activity)}
-                  className="flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-all text-xs font-semibold"
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-orange-100 transition-all text-xs font-semibold"
                 >
                   <Eye size={14} />
                   Details
                 </button>
                 <button
                   onClick={() => openResourcePlanning(activity)}
-                  className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-all text-xs font-semibold"
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-orange-100 transition-all text-xs font-semibold"
                 >
                   <Package size={14} />
                   Resources

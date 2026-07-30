@@ -776,7 +776,7 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+                          className="flex items-center gap-2 text-sm text-orange-600 hover:text-orange-700"
                         >
                           <ExternalLink className="w-3 h-3" />
                           Photo {index + 1}
@@ -795,7 +795,7 @@ const TaskDetailView = ({ isOpen, onClose, task, onEdit, onAssign, onUpdateProgr
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+                          className="flex items-center gap-2 text-sm text-orange-600 hover:text-orange-700"
                         >
                           <ExternalLink className="w-3 h-3" />
                           Video {index + 1}

@@ -311,7 +311,7 @@ const AppraisalPage = () => {
                   });
                   setShowModal(true);
                 }}
-                className="text-purple-600 hover:text-purple-700 font-semibold"
+                className="text-orange-600 hover:text-orange-700 font-semibold"
               >
                 Create your first appraisal
               </button>

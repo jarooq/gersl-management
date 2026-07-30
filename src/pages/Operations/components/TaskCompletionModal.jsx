@@ -330,7 +330,7 @@ const TaskCompletionModal = ({ isOpen, onClose, task, onUpdate }) => {
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-purple-600 hover:text-purple-800 truncate"
+                            className="text-sm text-orange-600 hover:text-orange-700 truncate"
                           >
                             {url}
                           </a>

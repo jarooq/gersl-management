@@ -155,7 +155,7 @@ export default function WeeklyHoursPage() {
               const isUnder = r.totalHours < UNDER_THRESHOLD;
               const isOver  = r.totalHours > OVER_THRESHOLD;
               return (
-                <tr key={r.userId} className="hover:bg-blue-50/50">
+                <tr key={r.userId} className="hover:bg-orange-50/50">
                   <td className="px-3 py-2">
                     <div className="font-semibold text-ink-900">{r.fullName}</div>
                     <div className="text-xs text-ink-500">{r.role}</div>

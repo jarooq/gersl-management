@@ -120,7 +120,7 @@ const NotificationBell = () => {
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
-                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  className="text-sm text-orange-600 hover:text-orange-700 flex items-center gap-1"
                 >
                   <CheckCheck size={16} />
                   Mark all read
@@ -209,7 +209,7 @@ const NotificationBell = () => {
                   navigate('/admin/notifications');
                   setIsOpen(false);
                 }}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
               >
                 View all notifications
               </button>

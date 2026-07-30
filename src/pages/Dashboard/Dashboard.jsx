@@ -640,7 +640,7 @@ const Dashboard = () => {
               </h3>
               <p className="text-sm text-ink-500 mt-1">Top performing active campaigns</p>
             </div>
-            <Link to="/campaigns" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+            <Link to="/campaigns" className="text-sm font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1">
               View all <ChevronRight size={16} />
             </Link>
           </div>
@@ -878,7 +878,7 @@ const Dashboard = () => {
               <p className="text-sm text-ink-600">Donor relationships and contribution metrics</p>
             </div>
           </div>
-          <Link to="/orphans" className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+          <Link to="/orphans" className="text-sm font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1">
             View donors <ChevronRight size={16} />
           </Link>
         </div>
@@ -1012,7 +1012,7 @@ const Dashboard = () => {
               <Activity className="text-blue-600" size={22} />
               Recent Activity
             </h3>
-            <button className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+            <button className="text-sm font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1">
               View all <ChevronRight size={16} />
             </button>
           </div>

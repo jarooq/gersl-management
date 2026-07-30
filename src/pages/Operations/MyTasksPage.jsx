@@ -636,7 +636,7 @@ const MyTasksPage = () => {
                                   setActiveTask(task);
                                   setShowTaskDetail(true);
                                 }}
-                                className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium flex items-center gap-2"
+                                className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-orange-100 transition-colors text-sm font-medium flex items-center gap-2"
                               >
                                 <Eye className="w-4 h-4" />
                                 View
@@ -757,7 +757,7 @@ const MyTasksPage = () => {
                         setActiveTask(task);
                         setShowTaskDetail(true);
                       }}
-                      className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium flex items-center gap-2"
+                      className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-orange-100 transition-colors text-sm font-medium flex items-center gap-2"
                     >
                       <Eye className="w-4 h-4" />
                       View

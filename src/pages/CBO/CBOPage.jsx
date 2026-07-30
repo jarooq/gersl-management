@@ -586,7 +586,7 @@ const ActivitiesTab = ({ activities, searchTerm }) => {
               <Clock size={16} className="text-green-600" />
               <span className="font-semibold">{activity.hoursLogged} hours logged</span>
             </div>
-            <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1">
+            <button className="text-orange-600 hover:text-orange-700 font-semibold text-sm flex items-center gap-1">
               View Details
               <TrendingUp size={14} />
             </button>

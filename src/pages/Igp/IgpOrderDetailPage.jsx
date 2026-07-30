@@ -151,7 +151,7 @@ const IgpOrderDetailPage = () => {
                 {items.map(it => (
                   <tr
                     key={it.id}
-                    className="hover:bg-blue-50 cursor-pointer"
+                    className="hover:bg-orange-50 cursor-pointer"
                     onClick={() => navigate(`/admin/igp/items/${it.id}`)}
                   >
                     <td className="px-4 py-2 font-mono text-xs">{it.itemCode}</td>

@@ -2027,7 +2027,7 @@ const AIConfigTab = ({ onSave }) => {
           <button
             onClick={handleTest}
             disabled={testing}
-            className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-orange-50 transition font-semibold disabled:opacity-50"
           >
             {testing ? <Activity size={18} className="animate-spin" /> : <Zap size={18} />}
             {testing ? 'Testing...' : 'Test Connection'}

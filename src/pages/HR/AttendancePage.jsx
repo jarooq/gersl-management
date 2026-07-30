@@ -404,7 +404,7 @@ const AttendancePage = () => {
               <p className="text-ink-500 mb-4">No attendance records found</p>
               <button
                 onClick={() => setShowCheckInModal(true)}
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-orange-600 hover:text-orange-700 font-semibold"
               >
                 Record first check-in
               </button>

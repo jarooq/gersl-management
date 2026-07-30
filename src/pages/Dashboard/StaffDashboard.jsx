@@ -359,7 +359,7 @@ const StaffDashboard = () => {
             <h2 className="text-lg font-bold text-ink-900">Upcoming Deadlines</h2>
             <button
               onClick={() => navigate('/admin/operations/my-tasks')}
-              className="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
+              className="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
             >
               View all
               <ArrowRight size={14} />
@@ -764,7 +764,7 @@ const StaffDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <button
                     onClick={() => navigate('/admin/hr/contract-management')}
-                    className="flex items-center gap-3 p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors text-left"
+                    className="flex items-center gap-3 p-4 bg-indigo-50 hover:bg-orange-100 rounded-lg transition-colors text-left"
                   >
                     <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
                       <FileText className="text-indigo-600" size={20} />

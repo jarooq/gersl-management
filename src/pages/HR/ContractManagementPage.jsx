@@ -981,7 +981,7 @@ const ContractManagementPage = () => {
                               {/* Download PDF */}
                               <button
                                 onClick={() => handleDownloadAgreement(agreement)}
-                                className="text-blue-600 hover:text-blue-900"
+                                className="text-orange-600 hover:text-orange-700"
                                 title="Download PDF"
                               >
                                 <Download className="h-5 w-5" />

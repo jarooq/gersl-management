@@ -270,7 +270,7 @@ ${emailData.body}`;
             </div>
             <button
               onClick={handleRegenerateTemplate}
-              className="mt-3 text-sm text-purple-600 hover:text-purple-700 font-medium"
+              className="mt-3 text-sm text-orange-600 hover:text-orange-700 font-medium"
             >
               🔄 Regenerate email template with updated information
             </button>

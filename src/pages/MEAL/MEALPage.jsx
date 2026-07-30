@@ -343,7 +343,7 @@ const MEALPage = () => {
                             </button>
                             <button
                               onClick={() => setUpdatingIndicator(indicator)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 text-blue-600 hover:bg-orange-50 rounded-lg transition-colors"
                               title="Update Progress"
                             >
                               <TrendingUp size={16} />
@@ -510,7 +510,7 @@ const MEALPage = () => {
                               setEditingEvaluation(evaluation);
                               setShowEditEvaluation(true);
                             }}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-blue-600 hover:bg-orange-50 rounded-lg transition-colors"
                             title="Edit"
                           >
                             <Edit size={16} />
@@ -639,7 +639,7 @@ const MEALPage = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => {/* View details modal */}}
-                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all"
+                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-orange-100 transition-all"
                             title="View Details"
                           >
                             <Eye size={16} />
@@ -787,7 +787,7 @@ const MEALPage = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => {/* View details modal */}}
-                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all"
+                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-orange-100 transition-all"
                             title="View Details"
                           >
                             <Eye size={16} />

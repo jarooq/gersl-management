@@ -401,7 +401,7 @@ const ExecutiveDashboard = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <button
             onClick={() => navigate('/admin/projects')}
-            className="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-left"
+            className="p-4 bg-blue-50 hover:bg-orange-100 rounded-lg transition-colors text-left"
           >
             <FolderOpen className="text-blue-600 mb-2" size={24} />
             <div className="font-medium text-ink-900">View Projects</div>

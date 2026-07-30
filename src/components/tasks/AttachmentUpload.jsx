@@ -150,7 +150,7 @@ const AttachmentUpload = ({ taskId, onUploadSuccess }) => {
               <Upload size={32} className="mx-auto text-ink-400" />
               <p className="text-ink-600">
                 Drag and drop a file here, or{' '}
-                <label className="text-blue-600 hover:text-blue-700 cursor-pointer">
+                <label className="text-orange-600 hover:text-orange-700 cursor-pointer">
                   browse
                   <input
                     type="file"

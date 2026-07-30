@@ -381,7 +381,7 @@ const VendorCallsPage = () => {
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleEdit(call)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                          className="p-2 text-blue-600 hover:bg-orange-50 rounded-lg transition-colors duration-200"
                           title="Edit"
                         >
                           <Edit size={16} />

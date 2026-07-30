@@ -223,7 +223,7 @@ const BeneficiaryQrPanel = ({ projectId, projectName, showToast }) => {
             <p className="text-ink-600 mb-4">No beneficiaries enrolled yet</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-orange-600 hover:text-orange-700 font-medium"
             >
               Enrol your first beneficiaries
             </button>
@@ -244,7 +244,7 @@ const BeneficiaryQrPanel = ({ projectId, projectName, showToast }) => {
                 {enrolments.map((enrolment) => {
                   const withdrawn = (enrolment.status || '').toLowerCase() === 'withdrawn';
                   return (
-                    <tr key={enrolment.id} className="border-b border-ink-100 hover:bg-blue-50 transition-colors">
+                    <tr key={enrolment.id} className="border-b border-ink-100 hover:bg-orange-50 transition-colors">
                       <td className="py-3 px-4 text-sm font-semibold text-ink-900">
                         {enrolment.beneficiary?.fullName || '—'}
                       </td>
@@ -264,7 +264,7 @@ const BeneficiaryQrPanel = ({ projectId, projectName, showToast }) => {
                           <button
                             onClick={() => handleRegenerate(enrolment)}
                             disabled={busyId === enrolment.id || withdrawn}
-                            className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-orange-100 transition text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Issue a new QR token (old one stops working)"
                           >
                             <RefreshCw size={14} />
@@ -406,7 +406,7 @@ const AddBeneficiariesModal = ({ enrolledBeneficiaryIds, onClose, onConfirm }) =
               {candidates.map(b => (
                 <label
                   key={b.id}
-                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 cursor-pointer transition-colors"
+                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-orange-50 cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"

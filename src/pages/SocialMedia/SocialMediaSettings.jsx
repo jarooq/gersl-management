@@ -189,7 +189,7 @@ const SocialMediaSettings = () => {
                     href={activePlatform.docsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-orange-600 hover:text-orange-700"
                   >
                     View {activePlatform.name} Documentation
                     <ExternalLink size={14} />

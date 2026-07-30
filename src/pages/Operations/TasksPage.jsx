@@ -713,7 +713,7 @@ const TasksPage = () => {
             {tasks.length > 0 && (
               <button
                 onClick={selectedTaskIds.size === tasks.length ? deselectAllTasks : selectAllTasks}
-                className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
+                className="text-xs text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
               >
                 {selectedTaskIds.size === tasks.length ? (
                   <>
@@ -882,7 +882,7 @@ const TasksPage = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => openTaskDetail(task)}
-                        className="flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-all text-xs font-semibold"
+                        className="flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-orange-100 transition-all text-xs font-semibold"
                       >
                         <Eye size={14} />
                         View

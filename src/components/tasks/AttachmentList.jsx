@@ -310,7 +310,7 @@ const AttachmentList = ({ taskId, onAttachmentsChange }) => {
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <button
                     onClick={() => handleDownload(attachment.id, attachment.originalName)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    className="p-2 text-blue-600 hover:bg-orange-50 rounded transition-colors"
                     title="Download"
                   >
                     <Download size={16} />

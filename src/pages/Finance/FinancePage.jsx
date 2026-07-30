@@ -1569,7 +1569,7 @@ const FinancePage = () => {
                                 setSelectedAccount(account);
                                 setShowAccountDetail(true);
                               }}
-                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
                             >
                               <Eye size={16} className="text-blue-600" />
                             </button>
@@ -1774,7 +1774,7 @@ const FinancePage = () => {
                                     setSelectedAsset(asset);
                                     setShowAssetDetail(true);
                                   }}
-                                  className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                  className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
                                   title="View Details"
                                 >
                                   <Eye size={16} className="text-blue-600" />
@@ -2008,7 +2008,7 @@ const FinancePage = () => {
                                     setSelectedGrant(grant);
                                     setShowGrantDetail(true);
                                   }}
-                                  className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                  className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
                                   title="View Details"
                                 >
                                   <Eye size={16} className="text-blue-600" />
@@ -2270,7 +2270,7 @@ const FinancePage = () => {
                                 setSelectedInvoice(invoice);
                                 setShowInvoiceDetail(true);
                               }}
-                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
                               title="View"
                             >
                               <Eye size={16} className="text-blue-600" />
@@ -2399,7 +2399,7 @@ const FinancePage = () => {
                                 setSelectedBill(bill);
                                 setShowBillDetail(true);
                               }}
-                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
                               title="View"
                             >
                               <Eye size={16} className="text-blue-600" />
@@ -3905,7 +3905,7 @@ const FinancePage = () => {
                     </div>
                   </div>
 
-                  <button className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-semibold">
+                  <button className="mt-3 text-sm text-orange-600 hover:text-orange-700 font-semibold">
                     + Add Another Line
                   </button>
                 </div>

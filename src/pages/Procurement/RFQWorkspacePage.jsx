@@ -195,7 +195,7 @@ export default function RFQWorkspacePage() {
                   {!q.isLocked && !approvedBA && (
                     <button
                       onClick={() => { setEditingQuotation(q); setShowQuotationModal(true); }}
-                      className="text-sm text-blue-600 hover:text-blue-800"
+                      className="text-sm text-orange-600 hover:text-orange-700"
                     >
                       Edit
                     </button>

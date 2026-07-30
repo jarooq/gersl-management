@@ -125,7 +125,7 @@ const IgpPage = () => {
                 {orders.map(o => (
                   <tr
                     key={o.id}
-                    className="hover:bg-blue-50 cursor-pointer"
+                    className="hover:bg-orange-50 cursor-pointer"
                     onClick={() => navigate(`/admin/igp/orders/${o.id}`)}
                   >
                     <td className="px-4 py-2">

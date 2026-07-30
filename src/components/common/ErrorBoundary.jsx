@@ -73,7 +73,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
             If this problem persists, please contact the system administrator or{' '}
             <a
               href="mailto:support@gersl.org"
-              className="text-blue-600 hover:text-blue-800 underline"
+              className="text-orange-600 hover:text-orange-700 underline"
             >
               report this issue
             </a>

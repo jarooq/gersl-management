@@ -484,7 +484,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                                   href={url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="block text-sm text-blue-600 hover:text-blue-800 truncate"
+                                  className="block text-sm text-orange-600 hover:text-orange-700 truncate"
                                 >
                                   {url}
                                 </a>
@@ -504,7 +504,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                                   href={url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="block text-sm text-blue-600 hover:text-blue-800 truncate"
+                                  className="block text-sm text-orange-600 hover:text-orange-700 truncate"
                                 >
                                   {url}
                                 </a>
@@ -524,7 +524,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                                   href={url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="block text-sm text-blue-600 hover:text-blue-800 truncate"
+                                  className="block text-sm text-orange-600 hover:text-orange-700 truncate"
                                 >
                                   {url}
                                 </a>
@@ -544,7 +544,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                                   href={url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="block text-sm text-blue-600 hover:text-blue-800 truncate"
+                                  className="block text-sm text-orange-600 hover:text-orange-700 truncate"
                                 >
                                   {url}
                                 </a>
@@ -766,7 +766,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.photos?.map((url, index) => (
                     <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-orange-600 hover:text-orange-700 truncate flex-1">
                         {url}
                       </a>
                       <button
@@ -804,7 +804,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.videos?.map((url, index) => (
                     <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-orange-600 hover:text-orange-700 truncate flex-1">
                         {url}
                       </a>
                       <button
@@ -842,7 +842,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.socialMediaPosts?.map((url, index) => (
                     <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-orange-600 hover:text-orange-700 truncate flex-1">
                         {url}
                       </a>
                       <button
@@ -880,7 +880,7 @@ const MediaCoverageModal = ({ isOpen, onClose, task, onUpdate }) => {
                 <div className="space-y-1">
                   {statusFormData.distributionEvidence?.liveStreamUrls?.map((url, index) => (
                     <div key={index} className="flex items-center justify-between bg-ink-50 p-2 rounded border border-ink-100">
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:text-blue-800 truncate flex-1">
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm text-orange-600 hover:text-orange-700 truncate flex-1">
                         {url}
                       </a>
                       <button

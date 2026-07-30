@@ -70,7 +70,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
         <div className="p-6 border-b border-ink-100">
           <button
             onClick={() => setSelectedEvent(null)}
-            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium mb-3"
+            className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 font-medium mb-3"
           >
             <ArrowLeft size={16} />
             Back to events
@@ -183,7 +183,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
             <p className="text-ink-600 mb-4">No distribution events yet</p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-orange-600 hover:text-orange-700 font-medium"
             >
               Create your first event
             </button>

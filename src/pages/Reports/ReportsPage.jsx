@@ -413,7 +413,7 @@ const ReportsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <button
                   onClick={() => setShowGenerateModal(true)}
-                  className="p-6 border-2 border-dashed border-ink-300 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all group"
+                  className="p-6 border-2 border-dashed border-ink-300 rounded-xl hover:border-indigo-400 hover:bg-orange-50 transition-all group"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 transition-all">
@@ -533,7 +533,7 @@ const ReportsPage = () => {
                   <h2 className="text-lg font-bold text-ink-900">Recent Reports</h2>
                   <button
                     onClick={() => setActiveTab('reports')}
-                    className="text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+                    className="text-sm font-semibold text-orange-600 hover:text-orange-700"
                   >
                     View All →
                   </button>
@@ -634,7 +634,7 @@ const ReportsPage = () => {
                                 setSelectedReportType(reportType.id);
                                 setShowGenerateModal(true);
                               }}
-                              className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                              className="p-2 text-indigo-600 hover:bg-orange-50 rounded-lg transition-all"
                             >
                               <Zap size={20} />
                             </button>

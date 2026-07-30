@@ -248,7 +248,7 @@ const NeedsReport = ({ onClose }) => {
             {(filters.needCategory || filters.urgency || filters.status || filters.searchQuery) && (
               <button
                 onClick={clearFilters}
-                className="ml-auto text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="ml-auto text-sm text-orange-600 hover:text-orange-700 font-medium"
               >
                 Clear All
               </button>

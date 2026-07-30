@@ -541,7 +541,7 @@ const PayrollPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => openViewModal(payroll)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-orange-600 hover:text-orange-700"
                         title="View"
                       >
                         <Eye size={18} />

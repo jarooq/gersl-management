@@ -125,7 +125,7 @@ const ProjectDetailPage = () => {
           </h2>
           <button
             onClick={() => navigate('/admin/projects')}
-            className="text-blue-600 hover:text-blue-700 font-medium"
+            className="text-orange-600 hover:text-orange-700 font-medium"
           >
             ← Back to Projects
           </button>
@@ -375,7 +375,7 @@ const ProjectDetailPage = () => {
                   <p className="text-ink-600 mb-4">No team members assigned yet</p>
                   <button
                     onClick={() => setShowAddTeamMember(true)}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-orange-600 hover:text-orange-700 font-medium"
                   >
                     Add your first team member
                   </button>
@@ -692,7 +692,7 @@ const ProjectDetailPage = () => {
                             setSelectedTask(task);
                             setShowTaskDetail(true);
                           }}
-                          className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs font-semibold"
+                          className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-orange-100 transition text-xs font-semibold"
                         >
                           <Eye size={14} />
                           View

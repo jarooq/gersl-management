@@ -579,7 +579,7 @@ const DonationsPage = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleView(donation)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-blue-600 hover:bg-orange-50 rounded-lg transition-colors"
                             title="View Details"
                           >
                             <Eye className="w-4 h-4" />

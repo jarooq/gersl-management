@@ -725,7 +725,7 @@ const CampaignsPage = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleView(campaign)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-blue-600 hover:bg-orange-50 rounded-lg transition-colors"
                             title="View Details"
                           >
                             <Eye className="w-4 h-4" />
@@ -751,7 +751,7 @@ const CampaignsPage = () => {
                           {campaign.status === 'Active' && campaign.raisedAmount >= campaign.targetAmount && (
                             <button
                               onClick={() => handleComplete(campaign.id)}
-                              className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                              className="p-2 text-indigo-600 hover:bg-orange-50 rounded-lg transition-colors"
                               title="Mark Complete"
                             >
                               <CheckCircle className="w-4 h-4" />

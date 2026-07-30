@@ -967,7 +967,7 @@ const HRPage = () => {
                               {todayAttendance?.checkIn && !todayAttendance?.checkOut && (
                                 <button
                                   onClick={() => checkOut(member.id)}
-                                  className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all text-xs font-semibold border border-blue-200 flex items-center gap-1"
+                                  className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-orange-100 transition-all text-xs font-semibold border border-blue-200 flex items-center gap-1"
                                 >
                                   <LogOut size={12} />
                                   Check Out

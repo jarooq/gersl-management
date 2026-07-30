@@ -225,7 +225,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
               </div>
               <button
                 onClick={clearFilters}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
               >
                 Clear All
               </button>
@@ -346,7 +346,7 @@ const BeneficiaryListGenerator = ({ beneficiaries, onClose }) => {
               </div>
               <button
                 onClick={() => setShowPreview(!showPreview)}
-                className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-colors"
+                className="px-4 py-2 text-blue-600 hover:bg-orange-50 rounded-lg font-medium transition-colors"
               >
                 {showPreview ? 'Hide Preview' : 'Show Preview'}
               </button>

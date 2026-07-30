@@ -314,7 +314,7 @@ const AdvancedFilters = ({ onApplyFilters, onClose, projects = [], users = [] })
               {!showSavePreset ? (
                 <button
                   onClick={() => setShowSavePreset(true)}
-                  className="w-full px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors font-medium flex items-center justify-center gap-2"
+                  className="w-full px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-orange-100 transition-colors font-medium flex items-center justify-center gap-2"
                 >
                   <Save size={18} />
                   Save Current Filters as Preset

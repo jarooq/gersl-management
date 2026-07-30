@@ -932,7 +932,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
               </p>
 
               <div className="space-y-3">
-                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-50 transition">
+                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-orange-50 transition">
                   <input
                     type="checkbox"
                     checked={formData.monthlyStipend}
@@ -966,7 +966,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
                   </div>
                 )}
 
-                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-50 transition">
+                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-orange-50 transition">
                   <input
                     type="checkbox"
                     checked={formData.foodPack}
@@ -984,7 +984,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
                   <span className="font-medium text-ink-900">Monthly Food Pack</span>
                 </label>
 
-                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-50 transition">
+                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-orange-50 transition">
                   <input
                     type="checkbox"
                     checked={formData.ramadanPack}
@@ -1002,7 +1002,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
                   <span className="font-medium text-ink-900">Ramadan Food Pack (Seasonal)</span>
                 </label>
 
-                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-50 transition">
+                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-orange-50 transition">
                   <input
                     type="checkbox"
                     checked={formData.qurbanMeat}
@@ -1020,7 +1020,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
                   <span className="font-medium text-ink-900">Qurban Meat (Seasonal)</span>
                 </label>
 
-                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-50 transition">
+                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-orange-50 transition">
                   <input
                     type="checkbox"
                     checked={formData.schoolSupplies}
@@ -1038,7 +1038,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
                   <span className="font-medium text-ink-900">School Supplies / School Bag</span>
                 </label>
 
-                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-50 transition">
+                <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-200 cursor-pointer hover:bg-orange-50 transition">
                   <input
                     type="checkbox"
                     checked={formData.bicycle}
