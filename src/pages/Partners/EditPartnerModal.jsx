@@ -482,7 +482,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
                       onClick={() => toggleFocusArea(area)}
                       className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                         formData.focusAreas.includes(area)
-                          ? 'bg-navy-900 text-white shadow-md'
+                          ? 'bg-orange-500 text-white shadow-md'
                           : 'bg-ink-100 text-ink-700 hover:bg-ink-200 border border-ink-200'
                       }`}
                     >
@@ -575,7 +575,7 @@ const EditPartnerModal = ({ isOpen, onClose, onUpdate, partner }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save size={18} />
               {isSubmitting ? 'Saving…' : 'Save Changes'}

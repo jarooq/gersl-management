@@ -117,7 +117,7 @@ const OrphanCard = ({ orphan, onView, onEdit, onDelete }) => {
           <div className="flex gap-2">
             <button
               onClick={() => onView(orphan)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
             >
               <Eye size={16} />
               View

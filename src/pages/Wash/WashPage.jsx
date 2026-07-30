@@ -104,7 +104,7 @@ const WashPage = () => {
           <div className="p-12 text-center">
             <Droplets size={36} className="mx-auto text-ink-300 mb-3" />
             <p className="text-ink-600 mb-3">No WASH orders yet.</p>
-            <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-semibold rounded-md px-3 py-1.5 hover:bg-navy-800 transition">
+            <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 bg-orange-500 text-white text-sm font-semibold rounded-md px-3 py-1.5 hover:bg-navy-800 transition">
               <Plus size={14} /> Create your first order
             </button>
           </div>
@@ -254,7 +254,7 @@ const CreateOrderModal = ({ onClose, onCreated }) => {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg2 shadow-pop w-full max-w-2xl">
-        <div className="bg-navy-900 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
+        <div className="bg-orange-500 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
           <h2 className="font-bold inline-flex items-center gap-2"><Droplets size={18} /> New WASH order</h2>
           <button onClick={onClose} className="hover:bg-white/20 rounded p-1"><X size={16} /></button>
         </div>
@@ -314,7 +314,7 @@ const CreateOrderModal = ({ onClose, onCreated }) => {
         </div>
         <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
           <button onClick={onClose} className="px-3 py-1.5 text-sm border border-ink-200 rounded hover:bg-ink-50">Cancel</button>
-          <button onClick={submit} disabled={saving} className="bg-navy-900 text-white text-sm font-semibold rounded px-3 py-1.5 disabled:opacity-50 hover:bg-navy-800">
+          <button onClick={submit} disabled={saving} className="bg-orange-500 text-white text-sm font-semibold rounded px-3 py-1.5 disabled:opacity-50 hover:bg-navy-800">
             {saving ? 'Saving…' : 'Create order'}
           </button>
         </div>

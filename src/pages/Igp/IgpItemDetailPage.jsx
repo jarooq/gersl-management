@@ -287,7 +287,7 @@ const StageTransitionModal = ({ itemId, currentStage, nextStage, onClose, onAdva
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg2 shadow-pop w-full max-w-lg">
-        <div className="bg-navy-900 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
+        <div className="bg-orange-500 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
           <h2 className="font-bold inline-flex items-center gap-2"><ChevronRight size={18} /> {currentStage} → {nextStage}</h2>
           <button onClick={onClose} className="hover:bg-white/20 rounded p-1"><X size={16} /></button>
         </div>

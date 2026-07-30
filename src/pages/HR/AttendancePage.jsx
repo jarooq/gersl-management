@@ -639,7 +639,7 @@ const AttendancePage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCheckOut}
-                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
+                  className="flex-1 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Check Out
                 </button>

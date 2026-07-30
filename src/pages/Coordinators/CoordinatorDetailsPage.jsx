@@ -499,7 +499,7 @@ const CoordinatorDetailsPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
+            <div className="bg-orange-500 text-white p-6 rounded-t-2xl">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -687,7 +687,7 @@ const CoordinatorDetailsPage = () => {
               <div className="flex justify-end pt-4 border-t border-ink-100">
                 <button
                   onClick={() => setShowWorkloadModal(false)}
-                  className="px-6 py-2.5 bg-navy-900 text-white rounded-lg transition-all font-semibold shadow-card hover:shadow-lift active:scale-95"
+                  className="px-6 py-2.5 bg-orange-500 text-white rounded-lg transition-all font-semibold shadow-card hover:shadow-lift active:scale-95"
                 >
                   Close Analysis
                 </button>

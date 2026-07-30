@@ -296,7 +296,7 @@ const JobPostingsPage = () => {
 
             <button
               onClick={exportToCSV}
-              className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-card"
+              className="bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-card"
             >
               <Download size={20} />
               Export CSV
@@ -322,7 +322,7 @@ const JobPostingsPage = () => {
               <p className="text-ink-500 mb-6">Create your first job posting to start recruiting</p>
               <button
                 onClick={() => setShowModal(true)}
-                className="bg-navy-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 inline-flex items-center gap-2"
+                className="bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 inline-flex items-center gap-2"
               >
                 <Plus size={20} />
                 Post First Job
@@ -574,7 +574,7 @@ const JobPostingsPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl font-semibold transition-all duration-200 shadow-card hover:shadow-lift"
+                  className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold transition-all duration-200 shadow-card hover:shadow-lift"
                 >
                   {editingJob ? 'Update Job' : 'Post Job'}
                 </button>

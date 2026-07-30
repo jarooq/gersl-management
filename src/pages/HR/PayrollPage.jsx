@@ -1026,7 +1026,7 @@ const PayrollPage = () => {
               <button
                 disabled={disburseBusy || !disburseAccountId}
                 onClick={confirmDisburse}
-                className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-md bg-navy-900 text-white hover:bg-navy-800 disabled:opacity-50"
+                className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-md bg-orange-500 text-white hover:bg-navy-800 disabled:opacity-50"
               >
                 <Wallet size={14} />
                 {disburseBusy ? 'Posting…' : `Disburse ${disbursable.length} record(s)`}

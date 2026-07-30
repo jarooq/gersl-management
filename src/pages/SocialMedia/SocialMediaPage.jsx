@@ -644,7 +644,7 @@ const SocialMediaPage = () => {
                     setShowSchedulePost(false);
                     alert('Post scheduled successfully!');
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Send size={18} />
                   Schedule Post

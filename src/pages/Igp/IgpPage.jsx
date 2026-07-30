@@ -103,7 +103,7 @@ const IgpPage = () => {
           <div className="p-12 text-center">
             <Briefcase size={36} className="mx-auto text-ink-300 mb-3" />
             <p className="text-ink-600 mb-3">No IGP orders yet.</p>
-            <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-semibold rounded-md px-3 py-1.5 hover:bg-navy-800 transition">
+            <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 bg-orange-500 text-white text-sm font-semibold rounded-md px-3 py-1.5 hover:bg-navy-800 transition">
               <Plus size={14} /> Create your first order
             </button>
           </div>
@@ -319,7 +319,7 @@ const CreateIgpOrderModal = ({ onClose, onCreated }) => {
         </div>
         <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2 sticky bottom-0 bg-white">
           <button onClick={onClose} className="px-3 py-1.5 text-sm border border-ink-200 rounded hover:bg-ink-50">Cancel</button>
-          <button onClick={submit} disabled={saving} className="bg-navy-900 text-white text-sm font-semibold rounded px-3 py-1.5 disabled:opacity-50 hover:bg-navy-800">
+          <button onClick={submit} disabled={saving} className="bg-orange-500 text-white text-sm font-semibold rounded px-3 py-1.5 disabled:opacity-50 hover:bg-navy-800">
             {saving ? 'Saving…' : 'Create order'}
           </button>
         </div>

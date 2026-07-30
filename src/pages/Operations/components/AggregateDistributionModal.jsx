@@ -289,7 +289,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg2 shadow-pop max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-navy-900 text-white p-6">
+        <div className="bg-orange-500 text-white p-6">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-bold mb-1">
@@ -616,7 +616,7 @@ const AggregateDistributionModal = ({ isOpen, onClose, task, onDistributionSaved
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {loading ? (
               <>

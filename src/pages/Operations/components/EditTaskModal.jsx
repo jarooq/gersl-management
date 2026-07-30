@@ -342,7 +342,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onTaskUpdated, projectTeamMember
               className={`flex-1 px-6 py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
                 loading
                   ? 'bg-ink-300 text-ink-500 cursor-not-allowed'
-                  : 'bg-navy-900 text-white '
+                  : 'bg-orange-500 text-white '
               }`}
             >
               <Save size={18} />

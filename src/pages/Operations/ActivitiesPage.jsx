@@ -987,7 +987,7 @@ const ActivitiesPage = () => {
               </button>
               <button
                 onClick={handleCreateActivity}
-                className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
+                className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold"
               >
                 Create Activity
               </button>

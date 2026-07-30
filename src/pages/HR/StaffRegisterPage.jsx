@@ -277,7 +277,7 @@ const StaffRegisterPage = () => {
           <button
             onClick={handleSubmit}
             disabled={busy}
-            className="px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-md hover:bg-navy-800 disabled:opacity-50 inline-flex items-center gap-2"
+            className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-md hover:bg-navy-800 disabled:opacity-50 inline-flex items-center gap-2"
           >
             <UserPlus size={18} />
             {busy ? 'Registering…' : 'Register Staff Member'}

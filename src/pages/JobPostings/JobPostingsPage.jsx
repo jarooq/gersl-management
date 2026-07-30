@@ -408,7 +408,7 @@ const JobPostingsPage = () => {
             </button>
             <button
               onClick={handleNewJob}
-              className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md"
+              className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-md"
             >
               <Plus className="w-5 h-5" />
               New Job Posting
@@ -780,7 +780,7 @@ const JobPostingsPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Saving...' : editingJob ? 'Update Job Posting' : 'Create Job Posting'}
                 </button>

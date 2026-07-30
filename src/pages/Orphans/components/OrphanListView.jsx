@@ -101,7 +101,7 @@ const OrphanListView = ({ orphan, onView, onEdit, onDelete }) => {
         <div className="flex md:flex-col gap-2 md:w-auto justify-end">
           <button
             onClick={() => onView(orphan)}
-            className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card"
+            className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card"
             title="View Details"
           >
             <Eye size={16} />

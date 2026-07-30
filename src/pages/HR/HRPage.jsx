@@ -1934,7 +1934,7 @@ const HRPage = () => {
               </button>
               <button
                 onClick={handleAddStaff}
-                className="px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-md"
+                className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-md"
               >
                 <UserPlus className="inline mr-2" size={18} />
                 Add Staff Member
@@ -2299,7 +2299,7 @@ const HRPage = () => {
       {showOnboardingModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
-            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
+            <div className="bg-orange-500 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -2370,7 +2370,7 @@ const HRPage = () => {
                 </button>
                 <button
                   onClick={handleAddOnboarding}
-                  className="flex-1 px-4 py-3 bg-navy-900 text-white font-semibold rounded-lg transition shadow-md"
+                  className="flex-1 px-4 py-3 bg-orange-500 text-white font-semibold rounded-lg transition shadow-md"
                 >
                   Create Onboarding
                 </button>
@@ -2384,7 +2384,7 @@ const HRPage = () => {
       {showAppraisalModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full">
-            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
+            <div className="bg-orange-500 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -2486,7 +2486,7 @@ const HRPage = () => {
                 </button>
                 <button
                   onClick={handleAddAppraisal}
-                  className="flex-1 px-4 py-3 bg-navy-900 text-white font-semibold rounded-lg transition shadow-md"
+                  className="flex-1 px-4 py-3 bg-orange-500 text-white font-semibold rounded-lg transition shadow-md"
                 >
                   Create Appraisal
                 </button>
@@ -2582,7 +2582,7 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleApplyLeave}
-                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
+                  className="flex-1 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Submit Application
                 </button>
@@ -2697,7 +2697,7 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCheckoutAsset}
-                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
+                  className="flex-1 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Checkout Asset
                 </button>
@@ -2846,7 +2846,7 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleRequestVehicle}
-                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
+                  className="flex-1 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Submit Request
                 </button>
@@ -2996,7 +2996,7 @@ const HRPage = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleRequestAccommodation}
-                  className="flex-1 bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
+                  className="flex-1 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-card active:scale-95"
                 >
                   Submit Request
                 </button>

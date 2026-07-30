@@ -360,7 +360,7 @@ const SocialMediaSettings = () => {
                 <button
                   onClick={() => handleConnect(activeTab)}
                   disabled={testingConnection}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
                 >
                   <Link size={18} />
                   {testingConnection ? 'Testing Connection...' : 'Test & Connect'}

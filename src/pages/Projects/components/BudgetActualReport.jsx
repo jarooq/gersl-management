@@ -102,7 +102,7 @@ const BudgetActualReport = ({ projectId }) => {
           </div>
           <button
             onClick={load}
-            className="inline-flex items-center gap-1.5 bg-navy-900 text-white text-sm font-semibold rounded-md px-3 py-1.5 hover:bg-navy-800 transition"
+            className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-sm font-semibold rounded-md px-3 py-1.5 hover:bg-navy-800 transition"
           >
             <RefreshCw size={14} /> Apply
           </button>

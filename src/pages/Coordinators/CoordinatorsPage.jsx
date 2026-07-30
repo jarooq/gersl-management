@@ -540,7 +540,7 @@ const CoordinatorsPage = () => {
                 <div className="pt-4 border-t border-ink-100">
                   <button
                     onClick={() => navigate(`/admin/coordinators/${coordinator.id}`)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 text-white rounded-lg transition-all text-sm font-semibold shadow-md hover:shadow-card active:scale-95"
                   >
                     <TrendingUp size={16} />
                     View Details

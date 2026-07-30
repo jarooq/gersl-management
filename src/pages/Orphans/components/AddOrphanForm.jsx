@@ -1345,7 +1345,7 @@ const AddOrphanForm = ({ isOpen, onClose, orphanToEdit = null }) => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="btn-primary bg-navy-900 text-white flex items-center gap-2"
+            className="btn-primary bg-orange-500 text-white flex items-center gap-2"
           >
             <Save size={18} />
             {isEditMode ? 'Update Orphan' : 'Save Orphan'}

@@ -388,7 +388,7 @@ const MEALPage = () => {
               <h3 className="text-lg font-bold text-ink-900">Project Evaluations</h3>
               <button
                 onClick={() => setShowAddEvaluation(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all font-semibold shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all font-semibold shadow-md"
               >
                 <Plus size={18} />
                 Add Evaluation
@@ -567,7 +567,7 @@ const MEALPage = () => {
               </select>
               <button
                 onClick={() => setShowAddLearningEvent(true)}
-                className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all font-semibold flex items-center gap-2 shadow-md hover:shadow-card"
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg transition-all font-semibold flex items-center gap-2 shadow-md hover:shadow-card"
               >
                 <Plus size={18} />
                 Add Event
@@ -676,7 +676,7 @@ const MEALPage = () => {
               <h3 className="text-lg font-bold text-ink-900">Beneficiary Complaints & Feedback</h3>
               <button
                 onClick={() => setShowAddComplaint(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all font-semibold shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all font-semibold shadow-md"
               >
                 <Plus size={18} />
                 Record Complaint
@@ -1319,7 +1319,7 @@ const AddComplaintModal = ({ projects, onClose }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-xl transition-all font-semibold shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-xl transition-all font-semibold shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Submitting...' : 'Submit Complaint'}
             </button>

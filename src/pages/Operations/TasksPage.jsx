@@ -1218,7 +1218,7 @@ const TasksPage = () => {
 
                     <button
                       onClick={() => createTaskFromTemplate(template)}
-                      className="mt-4 w-full py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center justify-center gap-2"
+                      className="mt-4 w-full py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center justify-center gap-2"
                     >
                       <Plus size={18} />
                       Create Task from Template

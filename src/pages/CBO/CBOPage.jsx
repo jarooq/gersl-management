@@ -163,7 +163,7 @@ const CBOPage = () => {
               </select>
               <button
                 onClick={handleAddClick}
-                className="px-4 py-2 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center gap-2 shadow-md"
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg transition font-semibold flex items-center gap-2 shadow-md"
               >
                 <Plus size={18} />
                 Add {
@@ -1173,7 +1173,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 setSelectedProposal(proposal);
                 setShowProposalDetail(true);
               }}
-              className="w-full px-4 py-2 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
+              className="w-full px-4 py-2 bg-orange-500 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
             >
               <FileText size={16} />
               View Full Details & MEAL Data
@@ -1421,7 +1421,7 @@ const ProposalsTab = ({ proposals, searchTerm }) => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-card"
+                  className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-card"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Creating...' : 'Create Proposal'}
@@ -1610,7 +1610,7 @@ const ProjectsTab = ({ projects, searchTerm, addCFMFeedback, resolveCFMFeedback 
             <div className="mt-4 pt-4 border-t border-ink-100">
               <button
                 onClick={() => handleOpenCFM(project)}
-                className="w-full px-4 py-2 bg-navy-900 text-white rounded-lg transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
+                className="w-full px-4 py-2 bg-orange-500 text-white rounded-lg transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
               >
                 <MessageSquare size={16} />
                 Community Feedback & Complaints ({project.cfmLog?.length || 0})
@@ -1937,7 +1937,7 @@ const CFMModal = ({ project, onClose, addCFMFeedback, resolveCFMFeedback }) => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg transition font-semibold shadow-md flex items-center justify-center gap-2"
                 >
                   <Send size={18} />
                   Submit Feedback
@@ -3367,7 +3367,7 @@ const AddProposalModal = ({ onClose, onSubmit, cboPartners }) => {
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md"
+              className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg transition font-semibold shadow-md"
             >
               Submit Proposal
             </button>

@@ -1521,7 +1521,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddAccount(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Account
@@ -1631,7 +1631,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddAsset(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Fixed Asset
@@ -1858,7 +1858,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddGrant(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Grant Receivable
@@ -2093,7 +2093,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddInvoice(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   New Invoice
@@ -2131,7 +2131,7 @@ const FinancePage = () => {
                     <button
                       onClick={loadForexReport}
                       disabled={forexBusy}
-                      className="px-4 py-2 bg-navy-900 text-white rounded-lg text-sm font-semibold disabled:opacity-50"
+                      className="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-semibold disabled:opacity-50"
                     >
                       {forexBusy ? 'Loading…' : 'Apply'}
                     </button>
@@ -2314,7 +2314,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddBill(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Bill
@@ -2446,7 +2446,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddJournalEntry(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Plus size={18} />
                   New Entry
@@ -2526,14 +2526,14 @@ const FinancePage = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setShowAddBankAccount(true)}
-                    className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                   >
                     <Plus size={18} />
                     Add Bank Account
                   </button>
                   <button
                     onClick={() => setShowBankReconciliation(true)}
-                    className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                   >
                     <RefreshCw size={18} />
                     Reconcile Banks
@@ -2618,7 +2618,7 @@ const FinancePage = () => {
                 </div>
                 <button
                   onClick={() => setShowReportBuilder(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Download size={18} />
                   Custom Report
@@ -2642,7 +2642,7 @@ const FinancePage = () => {
                     <p className="text-sm text-ink-600 mb-4">{report.desc}</p>
                     <button
                       onClick={() => handleGenerateReport(report.name)}
-                      className="w-full px-4 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center justify-center gap-2"
+                      className="w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center justify-center gap-2"
                     >
                       <Eye size={16} />
                       Generate
@@ -2977,7 +2977,7 @@ const FinancePage = () => {
                       setPayBillBusy(false);
                     }
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
                 >
                   <CheckCircle size={18} />
                   {payBillBusy ? 'Posting…' : 'Generate Voucher & Process Payment'}
@@ -3219,12 +3219,12 @@ const FinancePage = () => {
                       setShowBillDetail(false);
                       setShowPayBill(true);
                     }}
-                    className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
+                    className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold"
                   >
                     Process Payment
                   </button>
                 )}
-                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Download PDF
                 </button>
               </div>
@@ -3253,7 +3253,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg2 shadow-pop max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="bg-navy-900 text-white p-6 rounded-t-2xl">
+            <div className="bg-orange-500 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Receive Payment</h2>
@@ -3455,7 +3455,7 @@ const FinancePage = () => {
                 <button
                   onClick={submitInvoicePayment}
                   disabled={paymentBusy}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2 disabled:opacity-50"
                 >
                   <CheckCircle size={18} />
                   {paymentBusy ? 'Saving…' : 'Confirm Payment'}
@@ -3646,7 +3646,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Create Invoice
                 </button>
               </div>
@@ -3778,7 +3778,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Record Expense
                 </button>
               </div>
@@ -3941,7 +3941,7 @@ const FinancePage = () => {
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Post Entry
                 </button>
               </div>
@@ -4077,7 +4077,7 @@ const FinancePage = () => {
                   <button className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-all font-semibold">
                     Mark Selected as Cleared
                   </button>
-                  <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                  <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                     Complete Reconciliation
                   </button>
                 </div>
@@ -4255,7 +4255,7 @@ const FinancePage = () => {
                     setShowAccountDetail(false);
                     setShowEditAccount(true);
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Edit size={18} />
                   Edit Account
@@ -4421,7 +4421,7 @@ const FinancePage = () => {
               >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+              <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                 Create Account
               </button>
             </div>
@@ -4610,7 +4610,7 @@ const FinancePage = () => {
                   <Trash2 size={18} />
                   Deactivate Account
                 </button>
-                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+                <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                   Save Changes
                 </button>
               </div>
@@ -4866,7 +4866,7 @@ const FinancePage = () => {
               >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold">
+              <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold">
                 Create Bill
               </button>
             </div>
@@ -5089,7 +5089,7 @@ const FinancePage = () => {
                 <button className="px-6 py-2 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition-all font-semibold">
                   Save as Template
                 </button>
-                <button className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2">
+                <button className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2">
                   <Download size={18} />
                   Generate Report
                 </button>
@@ -5242,7 +5242,7 @@ const FinancePage = () => {
                       setShowInvoiceDetail(false);
                       setShowReceivePayment(true);
                     }}
-                    className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                    className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                   >
                     <DollarSign size={18} />
                     Receive Payment
@@ -5253,7 +5253,7 @@ const FinancePage = () => {
                     setShowInvoiceDetail(false);
                     setShowEditInvoice(true);
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Edit size={18} />
                   Edit Invoice
@@ -5262,7 +5262,7 @@ const FinancePage = () => {
                   onClick={() => {
                     alert(`Sending invoice ${selectedInvoice.invoiceNo} to ${selectedInvoice.client}...`);
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <Send size={18} />
                   Send Invoice
@@ -5463,7 +5463,7 @@ const FinancePage = () => {
                       alert('Failed to update invoice: ' + (error.message || 'Unknown error'));
                     }
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <CheckCircle size={18} />
                   Save Changes
@@ -5649,7 +5649,7 @@ const FinancePage = () => {
                       alert('Failed to update bill: ' + (error.message || 'Unknown error'));
                     }
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold flex items-center gap-2"
                 >
                   <CheckCircle size={18} />
                   Save Changes
@@ -5665,7 +5665,7 @@ const FinancePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg2 shadow-pop max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col report-modal-content">
             {/* Modal Header */}
-            <div className="bg-navy-900 text-white p-6 flex items-center justify-between">
+            <div className="bg-orange-500 text-white p-6 flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">{selectedReportType}</h2>
                 <p className="text-orange-100 text-sm mt-1">Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
@@ -6136,21 +6136,21 @@ const FinancePage = () => {
               <div className="flex gap-2">
                 <button
                   onClick={handlePrintPDF}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <Download size={18} />
                   Print PDF
                 </button>
                 <button
                   onClick={handleSaveAsPDF}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <FileText size={18} />
                   Save as PDF
                 </button>
                 <button
                   onClick={handleExportExcel}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <FileText size={18} />
                   Export Excel
@@ -6375,7 +6375,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold"
                 >
                   Add Grant Receivable
                 </button>
@@ -6521,7 +6521,7 @@ const FinancePage = () => {
                       setShowGrantDetail(false);
                       setShowRecordReceipt(true);
                     }}
-                    className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
+                    className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                   >
                     <DollarSign size={18} />
                     Record Receipt
@@ -6636,7 +6636,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold"
                 >
                   Record Receipt
                 </button>
@@ -6867,7 +6867,7 @@ const FinancePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold"
                 >
                   Add Asset
                 </button>
@@ -6990,7 +6990,7 @@ const FinancePage = () => {
                     setShowAssetDetail(false);
                     setShowDepreciationSchedule(true);
                   }}
-                  className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
+                  className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
                 >
                   <LineChart size={18} />
                   View Depreciation Schedule
@@ -7232,7 +7232,7 @@ const FinancePage = () => {
               </button>
               <button
                 onClick={handleAddBankAccount}
-                className="px-6 py-2.5 bg-navy-900 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
+                className="px-6 py-2.5 bg-orange-500 text-white rounded-lg hover:shadow-card transition font-semibold flex items-center gap-2"
               >
                 <Plus size={18} />
                 Add Bank Account

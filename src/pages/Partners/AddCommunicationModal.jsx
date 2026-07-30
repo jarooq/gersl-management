@@ -268,7 +268,7 @@ const AddCommunicationModal = ({ isOpen, onClose, onAdd, partners }) => {
             <button
               type="submit"
               disabled={partners.length === 0}
-              className="flex-1 px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Log Communication
             </button>

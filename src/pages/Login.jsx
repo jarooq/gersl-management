@@ -35,7 +35,7 @@ const Login = () => {
   return (
     <div className="min-h-screen grid lg:grid-cols-5 bg-ink-50 text-ink-900">
       {/* === Left mission panel — navy, decorative === */}
-      <div className="hidden lg:flex lg:col-span-2 bg-navy-900 text-white p-12 flex-col justify-between relative overflow-hidden">
+      <div className="hidden lg:flex lg:col-span-2 bg-orange-500 text-white p-12 flex-col justify-between relative overflow-hidden">
         {/* Subtle decorative ornament */}
         <div className="absolute -top-32 -left-24 w-96 h-96 rounded-full bg-mission-500/10 blur-3xl" />
         <div className="absolute -bottom-32 -right-16 w-80 h-80 rounded-full bg-primary-500/10 blur-3xl" />

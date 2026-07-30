@@ -1450,7 +1450,7 @@ const AddProposalModal = ({ onClose, onSubmit, error, success, isLoading, partne
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
               {isLoading ? 'Submitting...' : 'Submit Proposal'}
@@ -1890,14 +1890,14 @@ const ProposalsPage = () => {
                 </select>
                 <button
                   onClick={() => setShowAIAssistant(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-card hover:shadow-lift font-semibold whitespace-nowrap group"
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-card hover:shadow-lift font-semibold whitespace-nowrap group"
                 >
                   <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
                   AI Assistant
                 </button>
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-card hover:shadow-lift font-semibold whitespace-nowrap"
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-card hover:shadow-lift font-semibold whitespace-nowrap"
                 >
                   <Plus size={18} />
                   Add Proposal
@@ -2021,7 +2021,7 @@ const ProposalsPage = () => {
                           setSelectedProposal(proposal);
                           setShowViewModal(true);
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-navy-900 text-white rounded-lg transition-all text-xs font-semibold shadow-md hover:shadow-card active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-orange-500 text-white rounded-lg transition-all text-xs font-semibold shadow-md hover:shadow-card active:scale-95"
                       >
                         <Eye size={14} />
                         View

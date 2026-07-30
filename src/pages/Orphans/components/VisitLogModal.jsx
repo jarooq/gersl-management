@@ -304,7 +304,7 @@ const VisitLogModal = ({ isOpen, onClose, orphan, onSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md disabled:opacity-50"
+              className="px-6 py-2 bg-orange-500 text-white rounded-lg transition font-semibold shadow-md disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Visit Log'}
             </button>

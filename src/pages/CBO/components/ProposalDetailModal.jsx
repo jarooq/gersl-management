@@ -866,7 +866,7 @@ const ProposalDetailModal = ({ proposal, onClose, onApprove, onReject }) => {
                 {!showApprovalForm ? (
                   <button
                     onClick={() => setShowApprovalForm(true)}
-                    className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
+                    className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg transition font-semibold flex items-center justify-center gap-2"
                   >
                     <FileText size={18} />
                     Review & Decide

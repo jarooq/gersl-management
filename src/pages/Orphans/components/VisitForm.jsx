@@ -1339,7 +1339,7 @@ const VisitForm = ({ orphan, onClose, onSubmit }) => {
             </button>
             <button
               type="submit"
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-navy-900 text-white rounded-lg transition font-semibold shadow-md"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-lg transition font-semibold shadow-md"
             >
               <Save size={20} />
               Save Visit Log

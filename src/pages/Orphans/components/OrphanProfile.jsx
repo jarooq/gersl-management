@@ -707,7 +707,7 @@ const OrphanProfile = ({ orphan, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg2 shadow-pop w-full max-w-6xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="bg-navy-900 text-white p-6 flex-shrink-0">
+        <div className="bg-orange-500 text-white p-6 flex-shrink-0">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-4">
               {profilePhotoUrl ? (
@@ -1289,7 +1289,7 @@ const SupportLogTab = ({ orphan }) => {
       {/* Selected Partner Display */}
       <div className="bg-white border-2 border-ink-100 rounded-lg2 overflow-hidden">
         {/* Partner Header */}
-        <div className="bg-navy-900 text-white p-6">
+        <div className="bg-orange-500 text-white p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-white text-green-600 rounded-xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-card">
@@ -1385,7 +1385,7 @@ const SupportLogTab = ({ orphan }) => {
                         <span>{entry.date}</span>
                       </div>
                     </div>
-                    <div className="bg-navy-900 text-white px-4 py-3 rounded-lg text-right min-w-[140px]">
+                    <div className="bg-orange-500 text-white px-4 py-3 rounded-lg text-right min-w-[140px]">
                       <p className="text-xs font-semibold opacity-90 mb-1">Amount</p>
                       <p className="text-xl font-bold">LKR {entry.amount.toLocaleString()}</p>
                     </div>

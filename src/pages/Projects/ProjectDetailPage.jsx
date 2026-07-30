@@ -183,7 +183,7 @@ const ProjectDetailPage = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 px-4 rounded-lg transition-all font-semibold text-sm ${
                 activeTab === tab.id
-                  ? 'bg-navy-900 text-white shadow-md'
+                  ? 'bg-orange-500 text-white shadow-md'
                   : 'text-ink-600 hover:bg-ink-100'
               }`}
             >
@@ -361,7 +361,7 @@ const ProjectDetailPage = () => {
               </div>
               <button
                 onClick={() => setShowAddTeamMember(true)}
-                className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
+                className="px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
               >
                 <Plus size={18} />
                 <span className="font-semibold">Add Member</span>
@@ -577,7 +577,7 @@ const ProjectDetailPage = () => {
                 </div>
                 <button
                   onClick={() => setShowAddTask(true)}
-                  className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Add Task

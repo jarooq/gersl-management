@@ -629,7 +629,7 @@ const CampaignsPage = () => {
             </button>
             <button
               onClick={handleNewCampaign}
-              className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md"
+              className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-md"
             >
               <Plus className="w-5 h-5" />
               New Campaign
@@ -1016,7 +1016,7 @@ const CampaignsPage = () => {
                 <button
                   type="submit"
                   disabled={isUploading}
-                  className="flex-1 px-6 py-3 bg-navy-900 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold transition-all shadow-card disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isUploading ? 'Uploading...' : editingCampaign ? 'Update Campaign' : 'Create Campaign'}
                 </button>

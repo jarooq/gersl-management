@@ -154,7 +154,7 @@ const ApprovalsPage = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-2 rounded-md font-semibold text-sm transition ${
                   activeTab === tab
-                    ? 'bg-navy-900 text-white shadow-card'
+                    ? 'bg-orange-500 text-white shadow-card'
                     : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
                 }`}
               >

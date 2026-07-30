@@ -628,7 +628,7 @@ const PartnersPage = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleViewPartner(partner)}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-navy-900 text-white rounded-lg transition-all text-xs font-semibold shadow-md hover:shadow-card active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-orange-500 text-white rounded-lg transition-all text-xs font-semibold shadow-md hover:shadow-card active:scale-95"
                       >
                         <Eye size={14} />
                         View
@@ -668,7 +668,7 @@ const PartnersPage = () => {
               <h3 className="text-lg font-bold text-ink-900">All Contributions</h3>
               <button
                 onClick={() => setShowAddContributionModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
               >
                 <Plus size={18} />
                 Add Contribution
@@ -758,7 +758,7 @@ const PartnersPage = () => {
               <h3 className="text-lg font-bold text-ink-900">Communication Log</h3>
               <button
                 onClick={() => setShowAddCommunicationModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
               >
                 <Plus size={18} />
                 Log Communication

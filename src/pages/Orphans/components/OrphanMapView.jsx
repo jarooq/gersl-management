@@ -205,7 +205,7 @@ const OrphanMapView = ({ orphans, onView }) => {
         <div className="lg:col-span-1">
           {selectedDistrict ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between bg-navy-900 text-white p-4 rounded-lg">
+              <div className="flex items-center justify-between bg-orange-500 text-white p-4 rounded-lg">
                 <div>
                   <h3 className="text-lg font-bold">{selectedDistrict}</h3>
                   <p className="text-sm text-pink-100">{selectedOrphans.length} orphan{selectedOrphans.length !== 1 ? 's' : ''}</p>
@@ -248,7 +248,7 @@ const OrphanMapView = ({ orphans, onView }) => {
 
                     <button
                       onClick={() => onView(orphan)}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-navy-900 text-white rounded-lg transition-all text-sm font-semibold shadow-md"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-orange-500 text-white rounded-lg transition-all text-sm font-semibold shadow-md"
                     >
                       <Eye size={14} />
                       View Details

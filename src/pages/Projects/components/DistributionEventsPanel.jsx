@@ -165,7 +165,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-navy-900 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
+          className="px-4 py-2 bg-orange-500 text-white rounded-lg transition-all shadow-md flex items-center gap-2"
         >
           <Plus size={18} />
           <span className="font-semibold">New Event</span>

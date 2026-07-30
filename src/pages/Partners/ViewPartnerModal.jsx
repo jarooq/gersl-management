@@ -260,7 +260,7 @@ const ViewPartnerModal = ({ isOpen, onClose, partner }) => {
         <div className="sticky bottom-0 bg-ink-50 p-6 rounded-b-xl border-t border-ink-100">
           <button
             onClick={onClose}
-            className="w-full px-4 py-3 bg-navy-900 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
+            className="w-full px-4 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-card hover:shadow-lift transition-all"
           >
             Close
           </button>

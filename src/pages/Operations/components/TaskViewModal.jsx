@@ -376,7 +376,7 @@ const TaskViewModal = ({ task, isOpen, onClose, onEdit }) => {
                 onClose();
                 onEdit();
               }}
-              className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
+              className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold"
             >
               Edit Task
             </button>

@@ -1109,7 +1109,7 @@ const TaskFormModal = ({
           {currentStep < 3 ? (
             <button
               onClick={handleNext}
-              className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold"
+              className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold"
             >
               Next
             </button>
@@ -1117,7 +1117,7 @@ const TaskFormModal = ({
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="px-6 py-2 bg-navy-900 text-white rounded-lg hover:shadow-card transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:shadow-card transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {loading ? (
                 <>

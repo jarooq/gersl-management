@@ -106,7 +106,7 @@ const WashOrderDetailPage = () => {
           <h2 className="font-bold text-ink-900">Items ({items.length})</h2>
           <button
             onClick={() => setShowImport(true)}
-            className="inline-flex items-center gap-1 bg-navy-900 text-white text-sm font-semibold rounded px-3 py-1.5 hover:bg-navy-800 transition"
+            className="inline-flex items-center gap-1 bg-orange-500 text-white text-sm font-semibold rounded px-3 py-1.5 hover:bg-navy-800 transition"
           >
             <Upload size={14} /> Bulk add beneficiaries
           </button>
@@ -378,7 +378,7 @@ const BulkImportModal = ({ orderId, orderUnitType, onClose, onImported }) => {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg2 shadow-pop w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="bg-navy-900 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
+        <div className="bg-orange-500 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
           <h2 className="font-bold inline-flex items-center gap-2"><Upload size={18} /> Bulk add beneficiaries</h2>
           <button onClick={onClose} className="hover:bg-white/20 rounded p-1"><X size={16} /></button>
         </div>
@@ -403,7 +403,7 @@ const BulkImportModal = ({ orderId, orderUnitType, onClose, onImported }) => {
         </div>
         <div className="px-5 py-3 border-t border-ink-100 flex justify-end gap-2">
           <button onClick={onClose} className="px-3 py-1.5 text-sm border border-ink-200 rounded hover:bg-ink-50">Cancel</button>
-          <button onClick={submit} disabled={saving || parsed.length === 0} className="bg-navy-900 text-white text-sm font-semibold rounded px-3 py-1.5 disabled:opacity-50 hover:bg-navy-800 inline-flex items-center gap-1">
+          <button onClick={submit} disabled={saving || parsed.length === 0} className="bg-orange-500 text-white text-sm font-semibold rounded px-3 py-1.5 disabled:opacity-50 hover:bg-navy-800 inline-flex items-center gap-1">
             {saving ? 'Importing…' : <><ChevronRight size={14} /> Import {parsed.length} row{parsed.length === 1 ? '' : 's'}</>}
           </button>
         </div>

@@ -65,7 +65,7 @@ const VisitsTab = ({ orphan }) => {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-white rounded-lg transition text-sm font-semibold shadow-md"
+          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg transition text-sm font-semibold shadow-md"
         >
           <Plus size={18} />
           Add Visit Log
@@ -90,7 +90,7 @@ const VisitsTab = ({ orphan }) => {
           <p className="text-ink-600 text-sm mb-6">Start tracking visits to monitor {orphan?.fullName}'s progress</p>
           <button
             onClick={() => setShowModal(true)}
-            className="px-6 py-3 bg-navy-900 text-white rounded-lg transition text-sm font-semibold shadow-md"
+            className="px-6 py-3 bg-orange-500 text-white rounded-lg transition text-sm font-semibold shadow-md"
           >
             <Plus size={18} className="inline mr-2" />
             Add First Visit Log

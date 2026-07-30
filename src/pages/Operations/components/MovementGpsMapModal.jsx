@@ -40,7 +40,7 @@ const MovementGpsMapModal = ({ movement, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg2 shadow-pop w-full max-w-5xl max-h-[92vh] flex flex-col">
-        <div className="bg-navy-900 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
+        <div className="bg-orange-500 text-white px-5 py-3 rounded-t-lg2 flex items-center justify-between">
           <div>
             <p className="text-[10px] uppercase tracking-wider text-mission-300 font-semibold">Movement #{movement.id}</p>
             <h2 className="font-bold text-base inline-flex items-center gap-2">

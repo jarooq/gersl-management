@@ -217,7 +217,7 @@ const BulkReceiptsModal = ({ accountId, accountName, currency = 'LKR', onClose, 
           <button
             onClick={submit}
             disabled={busy || rows.length === 0 || errors.length > 0}
-            className="px-5 py-2 text-sm font-semibold rounded-md bg-navy-900 text-white hover:bg-navy-800 disabled:opacity-50"
+            className="px-5 py-2 text-sm font-semibold rounded-md bg-orange-500 text-white hover:bg-navy-800 disabled:opacity-50"
             title={errors.length > 0 ? 'Fix the errors above before submitting' : ''}
           >
             {busy ? 'Posting…' : `Post ${rows.length} receipt${rows.length !== 1 ? 's' : ''}`}

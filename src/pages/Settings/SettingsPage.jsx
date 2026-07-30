@@ -565,7 +565,7 @@ const RolesTab = ({
                       }}
                       className={`w-full text-left px-4 py-3 rounded-lg transition-all cursor-pointer ${
                         selectedRole?.id === role.id
-                          ? 'bg-navy-900 text-white shadow-card'
+                          ? 'bg-orange-500 text-white shadow-card'
                           : 'hover:bg-ink-50 text-ink-700'
                       }`}
                     >

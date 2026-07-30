@@ -356,7 +356,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 {/* Icon Circle */}
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300
-                  ${isCompleted ? 'bg-navy-900 text-white shadow-card' :
+                  ${isCompleted ? 'bg-orange-500 text-white shadow-card' :
                     isCurrent ? 'bg-mission-500 text-navy-900 shadow-lift' :
                     isRejected || isDonorRejected ? 'bg-danger-500 text-white' :
                     'bg-ink-200 text-ink-400'}
@@ -1262,7 +1262,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
                 <button
                   onClick={handleConvertToProject}
                   disabled={converting || workflowLoading}
-                  className="flex items-center gap-2 px-6 py-2 bg-navy-900 text-white rounded-lg transition font-semibold shadow-card hover:shadow-lift disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-2 bg-orange-500 text-white rounded-lg transition font-semibold shadow-card hover:shadow-lift disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {converting ? (
                     <>
@@ -1314,7 +1314,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
       {showConvertOrderModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-pop max-w-md w-full">
-            <div className="bg-navy-900 text-white px-5 py-3 rounded-t-xl flex items-center justify-between">
+            <div className="bg-orange-500 text-white px-5 py-3 rounded-t-xl flex items-center justify-between">
               <h3 className="font-bold inline-flex items-center gap-2">
                 <ArrowRight size={18} /> Convert to programme order
               </h3>
@@ -1383,7 +1383,7 @@ ${decisionData.attachments.length > 0 ? `\nAttachments: ${decisionData.attachmen
               <button
                 onClick={handleConvertToOrder}
                 disabled={convertingOrder || !orderDeadline}
-                className="bg-navy-900 text-white text-sm font-semibold rounded px-4 py-1.5 disabled:opacity-50 hover:bg-navy-800 inline-flex items-center gap-1.5"
+                className="bg-orange-500 text-white text-sm font-semibold rounded px-4 py-1.5 disabled:opacity-50 hover:bg-navy-800 inline-flex items-center gap-1.5"
               >
                 {convertingOrder ? (
                   <><Loader size={14} className="animate-spin" /> Creating order…</>
