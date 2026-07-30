@@ -1496,56 +1496,10 @@ export const VisitLogAPI = {
 // ORPHAN REPORT API
 // ============================================
 
-export const OrphanReportAPI = {
-  getAll: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/orphan-reports?${queryString}`);
-    return data.data;
-  },
-
-  getByOrphan: async (orphanId, params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/orphan-reports/orphan/${orphanId}?${queryString}`);
-    return data.data;
-  },
-
-  getById: async (id) => {
-    const data = await request(`/orphan-reports/${id}`);
-    return data.data;
-  },
-
-  create: async (reportData) => {
-    const data = await request('/orphan-reports', {
-      method: 'POST',
-      body: JSON.stringify(reportData),
-    });
-    return data.data;
-  },
-
-  update: async (id, reportData) => {
-    const data = await request(`/orphan-reports/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(reportData),
-    });
-    return data.data;
-  },
-
-  delete: async (id) => {
-    await request(`/orphan-reports/${id}`, { method: 'DELETE' });
-  },
-
-  generateReport: async (id) => {
-    const data = await request(`/orphan-reports/${id}/generate`, {
-      method: 'POST',
-    });
-    return data.data;
-  },
-
-  downloadPDF: async (id) => {
-    const data = await request(`/orphan-reports/${id}/pdf`);
-    return data.data;
-  },
-};
+// OrphanReportAPI + its UI (ReportsTab, OrphanReportWizard) were removed:
+// the `/orphan-reports/*` backend route was never mounted and the
+// GeneratedOrphanReport model was dropped in Phase B. Every call from the
+// Reports tab on an orphan detail page 404'd silently.
 
 // ============================================
 // ORPHAN NEED API — backend route currently disabled (no server-side controller).
@@ -3627,7 +3581,6 @@ const API = {
   Orphan: OrphanAPI,
   OrphanNeed: OrphanNeedAPI,
   VisitLog: VisitLogAPI,
-  OrphanReport: OrphanReportAPI,
   Project: ProjectAPI,
   Finance: FinanceAPI,
   HR: HRAPI,
