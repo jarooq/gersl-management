@@ -489,14 +489,6 @@ export const FinanceAPI = {
     return data.data.expense;
   },
 
-  markAsPaid: async (id, paymentMethod) => {
-    const data = await request(`/finance/${id}/paid`, {
-      method: 'PUT',
-      body: JSON.stringify({ paymentMethod }),
-    });
-    return data.data.expense;
-  },
-
   getPending: async () => {
     const data = await request('/finance/pending');
     return data.data.expenses;
@@ -1504,56 +1496,10 @@ export const VisitLogAPI = {
 // ORPHAN REPORT API
 // ============================================
 
-export const OrphanReportAPI = {
-  getAll: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/orphan-reports?${queryString}`);
-    return data.data;
-  },
-
-  getByOrphan: async (orphanId, params = {}) => {
-    const queryString = new URLSearchParams(params).toString();
-    const data = await request(`/orphan-reports/orphan/${orphanId}?${queryString}`);
-    return data.data;
-  },
-
-  getById: async (id) => {
-    const data = await request(`/orphan-reports/${id}`);
-    return data.data;
-  },
-
-  create: async (reportData) => {
-    const data = await request('/orphan-reports', {
-      method: 'POST',
-      body: JSON.stringify(reportData),
-    });
-    return data.data;
-  },
-
-  update: async (id, reportData) => {
-    const data = await request(`/orphan-reports/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(reportData),
-    });
-    return data.data;
-  },
-
-  delete: async (id) => {
-    await request(`/orphan-reports/${id}`, { method: 'DELETE' });
-  },
-
-  generateReport: async (id) => {
-    const data = await request(`/orphan-reports/${id}/generate`, {
-      method: 'POST',
-    });
-    return data.data;
-  },
-
-  downloadPDF: async (id) => {
-    const data = await request(`/orphan-reports/${id}/pdf`);
-    return data.data;
-  },
-};
+// OrphanReportAPI + its UI (ReportsTab, OrphanReportWizard) were removed:
+// the `/orphan-reports/*` backend route was never mounted and the
+// GeneratedOrphanReport model was dropped in Phase B. Every call from the
+// Reports tab on an orphan detail page 404'd silently.
 
 // ============================================
 // ORPHAN NEED API — backend route currently disabled (no server-side controller).
@@ -2087,14 +2033,6 @@ export const InvoiceAPI = {
     await request(`/invoices/${id}`, { method: 'DELETE' });
   },
 
-  markAsPaid: async (id, paymentData) => {
-    const data = await request(`/invoices/${id}/paid`, {
-      method: 'PUT',
-      body: JSON.stringify(paymentData),
-    });
-    return data.data.invoice;
-  },
-
   // Record a receipt against an invoice. Captures the receipt-date exchange
   // rate and realised forex gain/loss. Returns { invoice, receipt }.
   recordPayment: async (id, paymentData) => {
@@ -2199,14 +2137,6 @@ export const BillAPI = {
 
   delete: async (id) => {
     await request(`/bills/${id}`, { method: 'DELETE' });
-  },
-
-  markAsPaid: async (id, paymentData) => {
-    const data = await request(`/bills/${id}/paid`, {
-      method: 'PUT',
-      body: JSON.stringify(paymentData),
-    });
-    return data.data.bill;
   },
 
   getStats: async (params = {}) => {
@@ -2555,13 +2485,6 @@ export const FixedAssetAPI = {
     await request(`/fixed-assets/${id}`, { method: 'DELETE' });
   },
 
-  depreciate: async (id, depreciationData) => {
-    const data = await request(`/fixed-assets/${id}/depreciate`, {
-      method: 'POST',
-      body: JSON.stringify(depreciationData),
-    });
-    return data.data.asset;
-  },
 
   dispose: async (id, disposalData) => {
     const data = await request(`/fixed-assets/${id}/dispose`, {
@@ -2898,10 +2821,14 @@ export const LeaveRequestAPI = {
     await request(`/attendance/leave/requests/${id}`, { method: 'DELETE' });
   },
 
-  approve: async (id, approvalStatus, remarks = '') => {
-    const data = await request(`/attendance/leave/requests/${id}/approve`, {
+  // Backend handler is PUT /attendance/leave/requests/:id which takes
+  // { status, rejectionReason }. The old `/approve` suffix + `approvalStatus`
+  // shape didn't exist server-side → clicking Approve/Reject on the HR page
+  // just 404'd silently in the browser console.
+  approve: async (id, status, rejectionReason = '') => {
+    const data = await request(`/attendance/leave/requests/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ approvalStatus, remarks }),
+      body: JSON.stringify({ status, rejectionReason }),
     });
     return data.data.leaveRequest;
   },
@@ -3654,7 +3581,6 @@ const API = {
   Orphan: OrphanAPI,
   OrphanNeed: OrphanNeedAPI,
   VisitLog: VisitLogAPI,
-  OrphanReport: OrphanReportAPI,
   Project: ProjectAPI,
   Finance: FinanceAPI,
   HR: HRAPI,

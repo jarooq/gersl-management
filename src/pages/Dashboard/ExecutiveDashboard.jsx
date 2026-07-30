@@ -269,7 +269,7 @@ const ExecutiveDashboard = () => {
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-ink-600">Total Budget</span>
                   <span className="text-lg font-bold text-ink-900">
-                    ${portfolioMetrics.totalBudget.toLocaleString()}
+                    LKR {portfolioMetrics.totalBudget.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -277,7 +277,7 @@ const ExecutiveDashboard = () => {
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-ink-600">Budget Spent</span>
                   <span className="text-lg font-bold text-orange-600">
-                    ${portfolioMetrics.budgetSpent.toLocaleString()}
+                    LKR {portfolioMetrics.budgetSpent.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -285,7 +285,7 @@ const ExecutiveDashboard = () => {
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-ink-600">Remaining</span>
                   <span className="text-lg font-bold text-green-600">
-                    ${portfolioMetrics.budgetRemaining.toLocaleString()}
+                    LKR {portfolioMetrics.budgetRemaining.toLocaleString()}
                   </span>
                 </div>
               </div>

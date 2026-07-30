@@ -504,8 +504,10 @@ const startServer = async () => {
       });
     }
 
-    // Start server
-    app.listen(PORT, () => {
+    // Start server. Bind to 0.0.0.0 explicitly so container-hosted deploys
+    // (Railway, Fly, Docker in general) can be reached from outside the
+    // container. Node's default binds to localhost only.
+    app.listen(PORT, '0.0.0.0', () => {
       console.log('');
       console.log('🚀 ====================================');
       console.log(`   Global Ehsan Relief - Sri Lanka API`);

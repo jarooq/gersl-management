@@ -43,7 +43,9 @@ const Dashboard = () => {
   // Calculate statistics
   const activeOrphans = orphans.filter(o => o.status === 'Active').length;
   const activeProjects = projects.filter(p => p.status === 'Active' || p.status === 'In Progress').length;
-  const totalBudget = budgets.reduce((sum, b) => sum + (b.totalBudget || 0), 0);
+  // parseFloat because Sequelize returns DECIMAL columns as strings;
+  // `sum + "1000000"` silently concatenates instead of adding.
+  const totalBudget = budgets.reduce((sum, b) => sum + (parseFloat(b.totalBudget) || 0), 0);
   const activeStaff = staff.filter(s => s.status === 'Active').length;
   const activeCampaigns = campaigns.filter(c => c.status === 'Active').length;
   const totalBeneficiaries = orphans.length + projects.reduce((sum, p) => sum + (p.beneficiaries || 0), 0);
@@ -84,7 +86,7 @@ const Dashboard = () => {
   const monthlyExpenses = expenses.filter(e => {
     const expDate = new Date(e.date || e.createdAt);
     return expDate >= startOfMonth;
-  }).reduce((sum, e) => sum + (e.amount || 0), 0);
+  }).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
 
   // Donor metrics (from orphans with assigned donors)
   const orphansWithDonors = orphans.filter(o => o.donorName || o.donor);
@@ -115,7 +117,7 @@ const Dashboard = () => {
       return {
         month,
         projects: monthProjects.length,
-        budget: monthProjects.reduce((sum, p) => sum + (p.budget || 0), 0) / 1000000 // Convert to millions
+        budget: monthProjects.reduce((sum, p) => sum + (parseFloat(p.budget) || 0), 0) / 1000000 // Convert to millions
       };
     });
   }, [projects]);
@@ -167,13 +169,13 @@ const Dashboard = () => {
 
       return {
         month,
-        expenses: monthExpenses.reduce((sum, e) => sum + (e.amount || 0), 0) / 1000, // Convert to thousands
+        expenses: monthExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0) / 1000, // Convert to thousands
         budget: budgets
           .filter(b => {
             const budgetDate = new Date(b.startDate || b.createdAt);
             return budgetDate.getFullYear() === currentYear && budgetDate.getMonth() === index;
           })
-          .reduce((sum, b) => sum + (b.allocated || b.totalBudget || 0), 0) / 1000
+          .reduce((sum, b) => sum + (parseFloat(b.allocatedAmount || b.totalBudget) || 0), 0) / 1000
       };
     });
   }, [expenses, budgets]);

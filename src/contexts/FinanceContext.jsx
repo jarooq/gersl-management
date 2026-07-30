@@ -377,12 +377,18 @@ export const FinanceProvider = ({ children }) => {
     const totalPayroll = payrollData.reduce((sum, p) => sum + p.netSalary, 0);
     const processedPayroll = payrollData.filter(p => p.status === 'Processed').reduce((sum, p) => sum + p.netSalary, 0);
 
-    const totalBudget = budgets.reduce((sum, b) => sum + b.allocated, 0);
-    const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
-    const totalRemaining = budgets.reduce((sum, b) => sum + b.remaining, 0);
+    // Budget rows use allocatedAmount/spentAmount/remainingAmount, NOT
+    // allocated/spent/remaining. The old shorter names never existed on
+    // the model, so `sum + undefined` was returning NaN and the finance
+    // dashboard's totalBudget / totalSpent / budgetUtilization all
+    // silently rendered "NaN". Sequelize also returns DECIMAL columns as
+    // strings, so parseFloat is required to avoid string concatenation.
+    const totalBudget = budgets.reduce((sum, b) => sum + (parseFloat(b.allocatedAmount || b.totalBudget) || 0), 0);
+    const totalSpent = budgets.reduce((sum, b) => sum + (parseFloat(b.spentAmount) || 0), 0);
+    const totalRemaining = budgets.reduce((sum, b) => sum + (parseFloat(b.remainingAmount) || 0), 0);
 
     const pendingPOs = purchaseOrders.filter(po => po.status !== 'Approved').length;
-    const totalPOValue = purchaseOrders.reduce((sum, po) => sum + po.amount, 0);
+    const totalPOValue = purchaseOrders.reduce((sum, po) => sum + (parseFloat(po.amount) || 0), 0);
 
     return {
       totalExpenses,
