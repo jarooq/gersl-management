@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Users, Shield, Settings as SettingsIcon, Save, UserPlus, Edit2, Trash2,
   Check, X, Search, Filter, AlertCircle, CheckCircle, Plus, Eye
@@ -21,7 +22,13 @@ const SettingsPage = () => {
     fetchPermissions();
   }, []);
 
-  const [activeTab, setActiveTab] = useState('users');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'users';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState('All');
   const [showAddUserForm, setShowAddUserForm] = useState(false);
@@ -158,32 +165,15 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-card overflow-hidden">
-        <div className="border-b border-ink-100">
-          <div className="flex">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-3 px-8 py-4 font-semibold transition-all duration-200
-                    ${activeTab === tab.id
-                      ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-600'
-                      : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
-                    }
-                  `}
-                >
-                  <Icon className="w-5 h-5" />
-                  {tab.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {/* Section header (tabs live in the console sidebar now) */}
+      <div>
+        <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">Settings</p>
+        <h2 className="text-h2 text-ink-900">
+          {tabs.find(t => t.id === activeTab)?.name || 'Settings'}
+        </h2>
+      </div>
 
+      <div className="bg-white rounded-xl shadow-card overflow-hidden">
         <div className="p-6 max-w-7xl mx-auto space-y-4">
           {activeTab === 'users' && (
             <UsersTab

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   FileText, Download, Calendar, Filter, TrendingUp, BarChart3, PieChart,
   FileBarChart, Clock, CheckCircle, Users, DollarSign, Target, Activity,
@@ -20,7 +21,13 @@ import ReportGenerator from '../../components/reports/ReportGenerator';
 import ReportsList from '../../components/reports/ReportsList';
 
 const ReportsPage = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'overview';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedReportType, setSelectedReportType] = useState('');
@@ -386,33 +393,18 @@ const ReportsPage = () => {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-sm border border-ink-100">
-        <div className="border-b border-ink-100 px-6">
-          <div className="flex gap-8 overflow-x-auto">
-            {[
-              { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'catalog', label: 'Report Catalog', icon: FileBarChart },
-              { id: 'reports', label: 'Generated Reports', icon: FileText },
-              { id: 'ai-reports', label: 'AI Reports', icon: Zap },
-              { id: 'scheduled', label: 'Scheduled', icon: Calendar }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-4 border-b-2 transition-all whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-ink-600 hover:text-ink-900'
-                }`}
-              >
-                <tab.icon size={18} />
-                <span className="font-semibold">{tab.label}</span>
-              </button>
-            ))}
+      {/* Section header (tabs live in the console sidebar now) */}
+      {(() => {
+        const titles = { overview: 'Overview', catalog: 'Report Catalog', reports: 'Generated Reports', 'ai-reports': 'AI Reports', scheduled: 'Scheduled' };
+        return (
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">Reports</p>
+            <h2 className="text-h2 text-ink-900">{titles[activeTab] || 'Reports'}</h2>
           </div>
-        </div>
+        );
+      })()}
 
+      <div className="bg-white rounded-xl shadow-sm border border-ink-100">
         <div className="p-6">
           {/* Overview Tab */}
           {activeTab === 'overview' && (

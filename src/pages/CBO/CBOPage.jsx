@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useCBO } from '../../contexts/CBOContext';
 import { API_BASE_URL } from '../../config/apiBase';
 import { getIndicatorsForProgramme, STANDARD_INDICATORS } from '../../utils/mealIndicators';
@@ -48,7 +49,13 @@ const CBOPage = () => {
     resolveCFMFeedback,
   } = useCBO();
 
-  const [activeTab, setActiveTab] = useState('cbos');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'cbos';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDistrict, setFilterDistrict] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -120,30 +127,15 @@ const CBOPage = () => {
         />
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-ink-100 mb-6">
-        <div className="border-b border-ink-100">
-          <div className="flex overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-4 font-semibold transition-all relative whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-ink-600 hover:text-ink-800 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={20} />
-                <span>{tab.name}</span>
-                <span className="ml-1 px-2 py-0.5 bg-ink-100 text-ink-600 text-xs rounded-full font-bold">
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
+      {/* Section header (tabs live in the console sidebar now) */}
+      <div>
+        <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">CBO Partners</p>
+        <h2 className="text-h2 text-ink-900">
+          {tabs.find(t => t.id === activeTab)?.name || 'CBO'}
+        </h2>
+      </div>
 
+      <div className="bg-white rounded-xl shadow-sm border border-ink-100 mb-6">
         {/* Search and Filters */}
         <div className="p-4 bg-ink-50 border-b border-ink-100">
           <div className="flex gap-3 flex-wrap">

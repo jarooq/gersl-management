@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMEAL } from '../../contexts/MEALContext';
 import { useProjects } from '../../contexts/ProjectContext';
 import AddEvaluationWizard from '../../components/meal/AddEvaluationWizard';
@@ -45,7 +46,13 @@ const MEALPage = () => {
 
   const { projects } = useProjects();
 
-  const [activeTab, setActiveTab] = useState('indicators');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'indicators';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [filterProject, setFilterProject] = useState('All');
@@ -199,32 +206,18 @@ const MEALPage = () => {
         ))}
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-card border border-ink-100">
-        <div className="border-b border-ink-100">
-          <div className="flex gap-1 p-2">
-            {[
-              { id: 'indicators', label: 'Indicators', icon: Target },
-              { id: 'evaluations', label: 'Evaluations', icon: FileCheck },
-              { id: 'learning', label: 'Learning', icon: Lightbulb },
-              { id: 'complaints', label: 'Accountability', icon: MessageSquareWarning }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-navy-900 text-white shadow-md'
-                    : 'text-ink-600 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={18} />
-                {tab.label}
-              </button>
-            ))}
+      {/* Section header (tabs live in the console sidebar now) */}
+      {(() => {
+        const titles = { indicators: 'Indicators', evaluations: 'Evaluations', learning: 'Learning', complaints: 'Accountability' };
+        return (
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">MEAL</p>
+            <h2 className="text-h2 text-ink-900">{titles[activeTab] || 'MEAL'}</h2>
           </div>
-        </div>
+        );
+      })()}
 
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
         {/* Indicators Tab */}
         {activeTab === 'indicators' && (
           <div className="p-6">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Settings, Users, Shield, Bell, Database, Palette,
   Key, Globe, Mail, Cloud, CreditCard, Download,
@@ -34,7 +35,13 @@ const SystemSettingsPage = () => {
     getStats
   } = useSettings();
 
-  const [activeTab, setActiveTab] = useState('general');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'general';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
   const [showSuccess, setShowSuccess] = useState(false);
   const stats = getStats();
 
@@ -283,32 +290,15 @@ const SystemSettingsPage = () => {
         />
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-md">
-        <div className="border-b border-ink-100">
-          <div className="flex overflow-x-auto">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-2 px-6 py-4 font-semibold transition whitespace-nowrap
-                    ${activeTab === tab.id
-                      ? 'border-b-2 border-blue-600 text-blue-600'
-                      : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  {tab.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {/* Section header (tabs live in the console sidebar now) */}
+      <div>
+        <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">System Settings</p>
+        <h2 className="text-h2 text-ink-900">
+          {tabs.find(t => t.id === activeTab)?.name || 'System Settings'}
+        </h2>
+      </div>
 
+      <div className="bg-white rounded-lg shadow-md">
         <div className="p-6">
           {activeTab === 'general' && <GeneralTab settings={systemSettings} setSettings={setSystemSettings} onSave={handleSave} />}
           {activeTab === 'users' && <UsersTab users={users} addUser={addUser} updateUser={updateUser} deleteUser={deleteUser} toggleUserStatus={toggleUserStatus} />}

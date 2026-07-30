@@ -6,6 +6,9 @@ import {
   Target, ClipboardCheck, CheckCircle, Clock, Award, MapPin, UserPlus,
   Megaphone, Store, X, UserCheck, Wallet, Activity, ShoppingCart, Droplets,
   Building2, Edit, HandCoins, Package, Receipt, BarChart3, ArrowLeft, ChevronRight,
+  Sparkles, Bell, Database, Globe, Palette, Key, Users2 as UsersGroupIcon,
+  Activity as ActivityIcon, FileBarChart as FileBarChartIcon, Target as TargetIcon,
+  MessageSquare, Lightbulb, Zap, FileCheck,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
@@ -136,6 +139,75 @@ const CONSOLES = [
     ],
   },
   {
+    key: 'cbo',
+    title: 'CBO Partners',
+    subtitle: 'Community organisations',
+    icon: Users2,
+    matches: (p) => p.startsWith('/admin/cbo'),
+    entry: '/admin/cbo',
+    sections: [
+      { path: '/admin/cbo?section=cbos',         label: 'CBO Partners',   icon: Building2,      permission: PERMISSIONS.CBO_VIEW, group: 'Directory' },
+      { path: '/admin/cbo?section=volunteers',   label: 'Volunteers',     icon: Users,          permission: PERMISSIONS.CBO_VIEW, group: 'Directory' },
+      { path: '/admin/cbo?section=activities',   label: 'Activities',     icon: Activity,       permission: PERMISSIONS.CBO_VIEW, group: 'Work' },
+      { path: '/admin/cbo?section=duediligence', label: 'Due Diligence',  icon: ClipboardCheck, permission: PERMISSIONS.CBO_VIEW, group: 'Governance' },
+      { path: '/admin/cbo?section=proposals',    label: 'CBO Proposals',  icon: FileText,       permission: PERMISSIONS.CBO_VIEW, group: 'Governance' },
+      { path: '/admin/cbo?section=projects',     label: 'CBO Projects',   icon: Briefcase,      permission: PERMISSIONS.CBO_VIEW, group: 'Governance' },
+    ],
+  },
+  {
+    key: 'meal',
+    title: 'MEAL',
+    subtitle: 'Monitoring & learning',
+    icon: BarChart,
+    matches: (p) => p.startsWith('/admin/meal'),
+    entry: '/admin/meal',
+    sections: [
+      { path: '/admin/meal?section=indicators',  label: 'Indicators',     icon: TargetIcon,     permission: PERMISSIONS.MEAL_VIEW },
+      { path: '/admin/meal?section=evaluations', label: 'Evaluations',    icon: FileCheck,      permission: PERMISSIONS.MEAL_VIEW },
+      { path: '/admin/meal?section=learning',    label: 'Learning',       icon: Lightbulb,      permission: PERMISSIONS.MEAL_VIEW },
+      { path: '/admin/meal?section=complaints',  label: 'Accountability', icon: MessageSquare,  permission: PERMISSIONS.MEAL_VIEW },
+    ],
+  },
+  {
+    key: 'reports',
+    title: 'Reports',
+    subtitle: 'Analytics & exports',
+    icon: FileBarChart,
+    matches: (p) => p.startsWith('/admin/reports'),
+    entry: '/admin/reports',
+    sections: [
+      { path: '/admin/reports?section=overview',   label: 'Overview',           icon: BarChart3,    permission: PERMISSIONS.REPORTS_VIEW },
+      { path: '/admin/reports?section=catalog',    label: 'Report Catalog',     icon: FileBarChart, permission: PERMISSIONS.REPORTS_VIEW },
+      { path: '/admin/reports?section=reports',    label: 'Generated Reports',  icon: FileText,     permission: PERMISSIONS.REPORTS_VIEW },
+      { path: '/admin/reports?section=ai-reports', label: 'AI Reports',         icon: Zap,          permission: PERMISSIONS.REPORTS_VIEW },
+      { path: '/admin/reports?section=scheduled',  label: 'Scheduled',          icon: Clock,        permission: PERMISSIONS.REPORTS_VIEW },
+    ],
+  },
+  {
+    key: 'settings',
+    title: 'Settings',
+    subtitle: 'Users, roles, system',
+    icon: Settings,
+    matches: (p) => p.startsWith('/admin/settings') || p.startsWith('/admin/system-settings'),
+    entry: '/admin/settings',
+    sections: [
+      // /admin/settings (SettingsPage)
+      { path: '/admin/settings?section=users',        label: 'User Management',        icon: Users,          permission: PERMISSIONS.SETTINGS_VIEW,   group: 'Access' },
+      { path: '/admin/settings?section=roles',        label: 'Roles & Permissions',    icon: Shield,         permission: PERMISSIONS.SETTINGS_VIEW,   group: 'Access' },
+      { path: '/admin/settings?section=system',       label: 'System Settings',        icon: Settings,       permission: PERMISSIONS.SETTINGS_VIEW,   group: 'Access' },
+      // /admin/system-settings (SystemSettingsPage)
+      { path: '/admin/system-settings?section=general',       label: 'General',           icon: Settings,   permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Organization' },
+      { path: '/admin/system-settings?section=departments',   label: 'Departments',       icon: Building2,  permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Organization' },
+      { path: '/admin/system-settings?section=positions',     label: 'Positions',         icon: Briefcase,  permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Organization' },
+      { path: '/admin/system-settings?section=ai',            label: 'AI Configuration',  icon: Sparkles,   permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Integrations' },
+      { path: '/admin/system-settings?section=notifications', label: 'Notifications',     icon: Bell,       permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Integrations' },
+      { path: '/admin/system-settings?section=integrations',  label: 'Integrations',      icon: Globe,      permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Integrations' },
+      { path: '/admin/system-settings?section=backup',        label: 'Backup & Recovery', icon: Database,   permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Platform' },
+      { path: '/admin/system-settings?section=appearance',    label: 'Appearance',        icon: Palette,    permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Platform' },
+      { path: '/admin/system-settings?section=security',      label: 'Security',          icon: Key,        permission: PERMISSIONS.SETTINGS_MANAGE, group: 'Platform' },
+    ],
+  },
+  {
     key: 'hr',
     title: 'Human Resources',
     subtitle: 'Staff & payroll',
@@ -184,12 +256,12 @@ const ADMIN_ITEMS = [
   { type: 'console', consoleKey: 'engagement' },
   { type: 'console', consoleKey: 'procurement' },
   { type: 'console', consoleKey: 'hr' },
-  { type: 'link',    path: '/admin/cbo',           icon: Users2,       label: 'CBO Partners',   permission: PERMISSIONS.CBO_VIEW },
-  { type: 'link',    path: '/admin/meal',          icon: BarChart,     label: 'MEAL',           permission: PERMISSIONS.MEAL_VIEW },
+  { type: 'console', consoleKey: 'cbo' },
+  { type: 'console', consoleKey: 'meal' },
   { type: 'link',    path: '/admin/social-media',  icon: Share2,       label: 'Social Media',   permission: PERMISSIONS.SOCIAL_MEDIA_VIEW },
   { type: 'link',    path: '/admin/announcements', icon: Megaphone,    label: 'Announcements' },
-  { type: 'link',    path: '/admin/reports',       icon: FileBarChart, label: 'Reports',        permission: PERMISSIONS.REPORTS_VIEW },
-  { type: 'link',    path: '/admin/settings',      icon: Settings,     label: 'Settings',       permission: PERMISSIONS.SETTINGS_VIEW },
+  { type: 'console', consoleKey: 'reports' },
+  { type: 'console', consoleKey: 'settings' },
 ];
 
 // ------------------------------------------------------------------
