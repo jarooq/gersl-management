@@ -489,14 +489,6 @@ export const FinanceAPI = {
     return data.data.expense;
   },
 
-  markAsPaid: async (id, paymentMethod) => {
-    const data = await request(`/finance/${id}/paid`, {
-      method: 'PUT',
-      body: JSON.stringify({ paymentMethod }),
-    });
-    return data.data.expense;
-  },
-
   getPending: async () => {
     const data = await request('/finance/pending');
     return data.data.expenses;
@@ -2087,14 +2079,6 @@ export const InvoiceAPI = {
     await request(`/invoices/${id}`, { method: 'DELETE' });
   },
 
-  markAsPaid: async (id, paymentData) => {
-    const data = await request(`/invoices/${id}/paid`, {
-      method: 'PUT',
-      body: JSON.stringify(paymentData),
-    });
-    return data.data.invoice;
-  },
-
   // Record a receipt against an invoice. Captures the receipt-date exchange
   // rate and realised forex gain/loss. Returns { invoice, receipt }.
   recordPayment: async (id, paymentData) => {
@@ -2199,14 +2183,6 @@ export const BillAPI = {
 
   delete: async (id) => {
     await request(`/bills/${id}`, { method: 'DELETE' });
-  },
-
-  markAsPaid: async (id, paymentData) => {
-    const data = await request(`/bills/${id}/paid`, {
-      method: 'PUT',
-      body: JSON.stringify(paymentData),
-    });
-    return data.data.bill;
   },
 
   getStats: async (params = {}) => {
@@ -2555,13 +2531,6 @@ export const FixedAssetAPI = {
     await request(`/fixed-assets/${id}`, { method: 'DELETE' });
   },
 
-  depreciate: async (id, depreciationData) => {
-    const data = await request(`/fixed-assets/${id}/depreciate`, {
-      method: 'POST',
-      body: JSON.stringify(depreciationData),
-    });
-    return data.data.asset;
-  },
 
   dispose: async (id, disposalData) => {
     const data = await request(`/fixed-assets/${id}/dispose`, {
@@ -2898,10 +2867,14 @@ export const LeaveRequestAPI = {
     await request(`/attendance/leave/requests/${id}`, { method: 'DELETE' });
   },
 
-  approve: async (id, approvalStatus, remarks = '') => {
-    const data = await request(`/attendance/leave/requests/${id}/approve`, {
+  // Backend handler is PUT /attendance/leave/requests/:id which takes
+  // { status, rejectionReason }. The old `/approve` suffix + `approvalStatus`
+  // shape didn't exist server-side → clicking Approve/Reject on the HR page
+  // just 404'd silently in the browser console.
+  approve: async (id, status, rejectionReason = '') => {
+    const data = await request(`/attendance/leave/requests/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ approvalStatus, remarks }),
+      body: JSON.stringify({ status, rejectionReason }),
     });
     return data.data.leaveRequest;
   },
