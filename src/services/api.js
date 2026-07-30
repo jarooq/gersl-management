@@ -456,6 +456,14 @@ export const FinanceAPI = {
     return data.data;
   },
 
+  // Forex insights rollup — realised YTD + per-currency exposure + last
+  // 12 months trend. Powers the ForexInsightsCard on the Finance dashboard.
+  forexSummary: async (year) => {
+    const qs = year ? `?year=${year}` : '';
+    const data = await request(`/finance/forex-summary${qs}`);
+    return data.data;
+  },
+
   getById: async (id) => {
     const data = await request(`/finance/${id}`);
     return data.data.expense;

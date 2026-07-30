@@ -15,6 +15,7 @@ import {
   Upload, HandCoins, Package, TrendingDown as Depreciation
 } from 'lucide-react';
 import { getCurrencySymbol, formatCurrency, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
+import ForexInsightsCard from './components/ForexInsightsCard';
 
 // Today's date as YYYY-MM-DD (local), and a blank invoice-receipt form.
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -1012,6 +1013,8 @@ const FinancePage = () => {
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
+              <ForexInsightsCard />
+
               {/* A/R and A/P Summary */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-6 bg-ink-50 border border-green-200 rounded-xl">

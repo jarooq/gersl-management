@@ -10,6 +10,7 @@ import {
   getExpenseStats,
   getPendingApprovals
 } from '../controllers/finance.controller.js';
+import { forexSummary } from '../controllers/forexSummary.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
 
@@ -27,6 +28,16 @@ router.get(
   requireAuth,
   requirePermission(PERMISSIONS.FINANCE_VIEW),
   getExpenseStats
+);
+
+// @route   GET /api/finance/forex-summary?year=<yyyy>
+// @desc    Realized YTD forex gain/loss + per-currency open exposure.
+// @access  Private (View permission)
+router.get(
+  '/forex-summary',
+  requireAuth,
+  requirePermission(PERMISSIONS.FINANCE_VIEW),
+  forexSummary
 );
 
 // @route   GET /api/finance/pending
