@@ -10,29 +10,34 @@ export default {
         // === GERSL Design System v2 (NGO Pro) ===
         // Brand: navy "trust" primary + existing blue secondary + amber mission accent.
         // The old `primary` (Tailwind blue) is preserved as `brand` for back-compat.
-        ink: {
-          50:  '#f5f7fa',
-          100: '#e7ecf2',
-          200: '#cfd8e3',
-          300: '#a8b8cc',
-          400: '#7891b0',
-          500: '#506f93',
-          600: '#3a5879',
-          700: '#2c4561',
-          800: '#1f3450',  // page text on white
-          900: '#0f1e36',  // headlines
+        // ink + navy + mission were the pre-HubSpot palette. Every page in
+        // the app was written against these class names, so instead of
+        // sweeping ~1,500 references we repoint the values at the HubSpot
+        // equivalents. `bg-navy-900`, `text-ink-600`, `text-mission-300`
+        // still work — they just render in HubSpot tones now.
+        ink: { // neutrals — was custom slate, now points at hs-slate
+          50:  '#f5f8fa',
+          100: '#eaf0f6',
+          200: '#dfe3eb',
+          300: '#cbd6e2',
+          400: '#a3b8cf',
+          500: '#7c98b6',
+          600: '#516f90',
+          700: '#425b76',
+          800: '#33475b',  // page text on white
+          900: '#213343',  // headlines
         },
-        navy: {
-          50:  '#eef2f9',
-          100: '#d6deef',
-          200: '#aebde0',
-          300: '#7c93cb',
-          400: '#506fb4',
-          500: '#2e519d',
-          600: '#1f3e85',
-          700: '#1a346c',
-          800: '#162b58',
-          900: '#0d1d3d',  // primary brand
+        navy: { // primary brand — was custom deep navy, now points at hs-navy
+          50:  '#eaf0f6',
+          100: '#dfe3eb',
+          200: '#cbd6e2',
+          300: '#a3b8cf',
+          400: '#7c98b6',
+          500: '#516f90',
+          600: '#425b76',
+          700: '#33475b',
+          800: '#213343',
+          900: '#0d1926',  // primary brand
         },
         brand: { // existing blue, kept for legacy gradients/buttons
           50: '#eff6ff',  100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
@@ -44,17 +49,18 @@ export default {
           400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
           800: '#1e40af', 900: '#1e3a8a',
         },
-        mission: { // amber/gold — for impact metrics, beneficiaries served
-          50:  '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+        mission: { // was amber/gold — now points at HubSpot orange so
+                   // legacy `text-mission-300` etc. render as the new accent.
+          50:  '#fff5f1',
+          100: '#ffe4d9',
+          200: '#ffc3ac',
+          300: '#ff9c78',
+          400: '#ff8562',
+          500: '#ff7a59',
+          600: '#f55a35',
+          700: '#e14b28',
+          800: '#b3391e',
+          900: '#7a2712',
         },
 
         // ============================================
