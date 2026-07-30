@@ -143,14 +143,27 @@ const CONSOLES = [
     matches: (p) => p.startsWith('/admin/hr') || p === '/staff-register',
     entry: '/admin/hr',
     sections: [
-      { path: '/admin/hr',                  label: 'HR Overview',     icon: Users,          permission: PERMISSIONS.HR_VIEW,                group: 'People' },
-      { path: '/admin/hr/attendance',       label: 'Attendance',      icon: Clock,          permission: PERMISSIONS.HR_VIEW_ATTENDANCE,     group: 'People' },
-      { path: '/staff-register',            label: 'Register Staff',  icon: UserPlus,       permission: PERMISSIONS.HR_VIEW,                group: 'People' },
-      { path: '/admin/hr/onboarding',       label: 'Onboarding',      icon: UserPlus,       permission: PERMISSIONS.HR_MANAGE_ONBOARDING,   group: 'People' },
-      { path: '/admin/hr/weekly-hours',     label: 'Weekly Hours',    icon: Clock,          permission: PERMISSIONS.HR_VIEW,                group: 'Time' },
-      { path: '/admin/hr/payroll',          label: 'Payroll',         icon: Wallet,         permission: PERMISSIONS.FINANCE_VIEW_PAYROLL,   group: 'Money' },
-      { path: '/admin/hr/salary-advances',  label: 'Salary Advances', icon: DollarSign,     permission: PERMISSIONS.HR_VIEW,                group: 'Money' },
-      { path: '/admin/hr/staff-expenses',   label: 'Staff Expenses',  icon: ClipboardCheck, permission: PERMISSIONS.HR_VIEW,                group: 'Money' },
+      // Sections inside HRPage (single route, driven by ?section=)
+      { path: '/admin/hr?section=overview',         label: 'Staff Directory',   icon: Users,          permission: PERMISSIONS.HR_VIEW,              group: 'People' },
+      { path: '/admin/hr?section=leave',            label: 'Leave Management',  icon: Award,          permission: PERMISSIONS.HR_VIEW,              group: 'People' },
+      { path: '/admin/hr?section=appraisals',       label: 'Appraisals',        icon: Award,          permission: PERMISSIONS.HR_VIEW,              group: 'People' },
+      { path: '/admin/hr?section=contracts',        label: 'Contracts',         icon: FileText,       permission: PERMISSIONS.HR_VIEW,              group: 'People' },
+
+      { path: '/admin/hr?section=assetRegister',    label: 'Asset Register',    icon: Package,        permission: PERMISSIONS.HR_VIEW,              group: 'Assets & Requests' },
+      { path: '/admin/hr?section=vehicleRequests',  label: 'Vehicle Requests',  icon: FolderKanban,   permission: PERMISSIONS.HR_VIEW,              group: 'Assets & Requests' },
+      { path: '/admin/hr?section=accommodation',    label: 'Accommodation',     icon: Building2,      permission: PERMISSIONS.HR_VIEW,              group: 'Assets & Requests' },
+      { path: '/admin/hr?section=expenses',         label: 'Expenses',          icon: Receipt,        permission: PERMISSIONS.HR_VIEW,              group: 'Assets & Requests' },
+
+      // Separate top-level HR routes
+      { path: '/admin/hr/attendance',       label: 'Attendance',      icon: Clock,          permission: PERMISSIONS.HR_VIEW_ATTENDANCE,   group: 'Time' },
+      { path: '/admin/hr/weekly-hours',     label: 'Weekly Hours',    icon: Clock,          permission: PERMISSIONS.HR_VIEW,              group: 'Time' },
+
+      { path: '/staff-register',            label: 'Register Staff',  icon: UserPlus,       permission: PERMISSIONS.HR_VIEW,              group: 'Onboarding' },
+      { path: '/admin/hr/onboarding',       label: 'Onboarding',      icon: UserPlus,       permission: PERMISSIONS.HR_MANAGE_ONBOARDING, group: 'Onboarding' },
+
+      { path: '/admin/hr/payroll',          label: 'Payroll',         icon: Wallet,         permission: PERMISSIONS.FINANCE_VIEW_PAYROLL, group: 'Money' },
+      { path: '/admin/hr/salary-advances',  label: 'Salary Advances', icon: DollarSign,     permission: PERMISSIONS.HR_VIEW,              group: 'Money' },
+      { path: '/admin/hr/staff-expenses',   label: 'Staff Expenses',  icon: ClipboardCheck, permission: PERMISSIONS.HR_VIEW,              group: 'Money' },
     ],
   },
 ];

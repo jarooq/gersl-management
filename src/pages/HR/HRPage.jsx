@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useHR } from '../../contexts/HRContext';
 import { useProjects } from '../../contexts/ProjectContext';
 import API, { ExpenseAPI, AssetAPI, VehicleRequestAPI, AccommodationRequestAPI, LeaveRequestAPI } from '../../services/api';
@@ -41,12 +42,16 @@ const HRPage = () => {
     checkIn,
     checkOut,
   } = useHR();
-  const [activeTab, setActiveTab] = useState('overview');
-
-  // Handle tab change with local state (not routing)
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
+  // Active section is driven by the URL (?section=xxx) so the sidebar
+  // console can navigate to it and it's shareable/bookmarkable.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'overview';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
   };
+  const handleTabChange = setActiveTab;
 
   // Modal states
   // Project Expenses tab — pulls all mobile-submitted expense claims with
@@ -745,38 +750,26 @@ const HRPage = () => {
         })}
       </div>
 
-      {/* Tabs — kept directly under the primary stats so users see
-           navigation before scrolling through analytics. */}
-      <div className="bg-white rounded-xl shadow-card border border-ink-100">
-        <div className="border-b border-ink-100">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-0">
-            {[
-              { id: 'overview', label: 'Staff Directory', icon: Users },
-              { id: 'leave', label: 'Leave Management', icon: Calendar },
-              { id: 'assetRegister', label: 'Asset Register', icon: Package },
-              { id: 'vehicleRequests', label: 'Vehicle Requests', icon: Car },
-              { id: 'accommodation', label: 'Accommodation', icon: Home },
-              { id: 'expenses', label: 'Expenses', icon: Receipt },
-              { id: 'appraisals', label: 'Appraisals', icon: Award },
-              { id: 'contracts', label: 'Contracts', icon: FileText }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`flex items-center justify-center gap-2 px-4 py-4 font-semibold text-sm transition-colors border-r border-b border-ink-100 ${
-                  activeTab === tab.id
-                    ? 'text-orange-600 bg-orange-50 border-b-2 border-b-orange-600'
-                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={18} />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
+      {/* Section title — drives visible context now that the tabs strip
+           lives in the console sidebar. */}
+      {(() => {
+        const titles = {
+          overview: 'Staff Directory',
+          leave: 'Leave Management',
+          assetRegister: 'Asset Register',
+          vehicleRequests: 'Vehicle Requests',
+          accommodation: 'Accommodation',
+          expenses: 'Expenses',
+          appraisals: 'Appraisals',
+          contracts: 'Contracts',
+        };
+        return (
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">HR</p>
+            <h2 className="text-h2 text-ink-900">{titles[activeTab] || 'HR'}</h2>
           </div>
-        </div>
-      </div>
-
+        );
+      })()}
 
       {/* Tab Content */}
       <div className="bg-white rounded-xl shadow-card border border-ink-100 p-6">
