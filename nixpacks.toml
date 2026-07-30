@@ -1,0 +1,25 @@
+# Railway build/start recipe for the gersl-management monorepo.
+#
+# Layout:
+#   /              — React frontend (Vite) that builds to /dist
+#   /server        — Express backend that also serves /dist at runtime
+#
+# Sequence:
+#   install  → install both root and server dependencies
+#   build    → build the frontend into /dist (server.js reads this at boot)
+#   start    → boot the Express server (which mounts the API and serves /dist)
+
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = [
+  "npm ci --include=dev",
+  "cd server && npm ci --include=dev",
+]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "cd server && npm start"
