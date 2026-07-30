@@ -92,6 +92,101 @@ export const getBeneficiaryById = asyncHandler(async (req, res) => {
 });
 
 // Create new beneficiary
+// ============================================
+// GET /api/beneficiaries/similar
+//   ?fullName=&district=&nic=&dateOfBirth=&contactNumber=
+// Returns matches ranked by how strong the signal is. Called from the
+// "Add Beneficiary" form before submit so the user gets a warning
+// like "3 similar beneficiaries already exist — proceed anyway?".
+//
+// NOTE: separate from the legacy /check-duplicate route (NIC-only,
+// different response shape) which the form's NIC-blur handler still
+// consumes. Both endpoints coexist so we don't break existing UI.
+//
+// Scoring:
+//   NIC match           +5 (strongest — national ID is unique)
+//   contactNumber match +3
+//   fullName + district +2
+//   fullName only       +1
+//
+// Only rows with score >= 1 are returned; capped at 10 to keep the
+// warning list scannable.
+// ============================================
+export const findSimilar = asyncHandler(async (req, res) => {
+  const fullName      = String(req.query.fullName      || '').trim();
+  const district      = String(req.query.district      || '').trim();
+  const nic           = String(req.query.nic           || '').trim();
+  const contactNumber = String(req.query.contactNumber || '').trim();
+  const dateOfBirth   = String(req.query.dateOfBirth   || '').trim();
+
+  // Nothing to compare against.
+  if (!fullName && !nic && !contactNumber) {
+    return res.json({ matches: [] });
+  }
+
+  // Build the OR clauses. iLike gives case-insensitive substring match.
+  const ors = [];
+  if (fullName)      ors.push({ fullName:      { [Op.iLike]: `%${fullName}%` } });
+  if (nic)           ors.push({ nic });
+  if (contactNumber) ors.push({ contactNumber });
+
+  const candidates = await Beneficiary.findAll({
+    where: { [Op.or]: ors },
+    attributes: [
+      'id', 'fullName', 'beneficiaryId', 'nic', 'contactNumber',
+      'dateOfBirth', 'district', 'gender', 'status',
+    ],
+    limit: 30,
+  });
+
+  const scored = candidates.map((c) => {
+    let score = 0;
+    const reasons = [];
+    if (nic && c.nic && c.nic === nic) {
+      score += 5;
+      reasons.push('same NIC');
+    }
+    if (contactNumber && c.contactNumber && c.contactNumber === contactNumber) {
+      score += 3;
+      reasons.push('same phone');
+    }
+    if (fullName && c.fullName) {
+      const a = c.fullName.toLowerCase();
+      const b = fullName.toLowerCase();
+      if (a === b) {
+        score += district && c.district && c.district.toLowerCase() === district.toLowerCase() ? 2 : 1;
+        reasons.push(district && c.district && c.district.toLowerCase() === district.toLowerCase()
+          ? 'same name + district'
+          : 'same name');
+      } else if (a.includes(b) || b.includes(a)) {
+        score += district && c.district && c.district.toLowerCase() === district.toLowerCase() ? 1 : 0.5;
+        reasons.push('similar name');
+      }
+    }
+    if (dateOfBirth && c.dateOfBirth && String(c.dateOfBirth).slice(0, 10) === dateOfBirth.slice(0, 10)) {
+      score += 1;
+      reasons.push('same DOB');
+    }
+    return {
+      id: c.id,
+      fullName: c.fullName,
+      beneficiaryId: c.beneficiaryId,
+      nic: c.nic,
+      contactNumber: c.contactNumber,
+      district: c.district,
+      gender: c.gender,
+      status: c.status,
+      score,
+      reasons,
+    };
+  })
+  .filter((x) => x.score >= 1)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 10);
+
+  res.json({ matches: scored });
+});
+
 export const createBeneficiary = asyncHandler(async (req, res) => {
   const {
     fullName,

@@ -1651,9 +1651,23 @@ export const BeneficiaryAPI = {
     return data.data;
   },
 
+  // Legacy NIC-only duplicate check consumed by the Add Beneficiary
+  // form's NIC-blur handler. Returns { exists, beneficiary, recentSupport }.
   checkDuplicate: async (nic) => {
     const data = await request(`/beneficiaries/check-duplicate?nic=${nic}`);
     return data.data;
+  },
+
+  // Multi-field similar-beneficiary check for the Add form's pre-submit
+  // guard. Returns { matches: [{ id, fullName, beneficiaryId, nic,
+  // contactNumber, district, gender, status, score, reasons: [] }, ...] }.
+  // Pass any subset of { fullName, district, nic, dateOfBirth,
+  // contactNumber } — the backend scores + ranks results.
+  findSimilar: async (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v))
+    ).toString();
+    return await request(`/beneficiaries/similar${qs ? `?${qs}` : ''}`);
   },
 
   create: async (beneficiaryData) => {

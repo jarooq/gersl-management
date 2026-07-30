@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useBeneficiaries } from '../../contexts/BeneficiaryContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { BeneficiaryAPI } from '../../services/api';
+import SimilarBeneficiariesWarning from './SimilarBeneficiariesWarning';
 import { getDSDivisionsByDistrict, getGNDivisionsByDSDivision, getAllDistricts } from '../../data/sriLankanDivisions';
 import {
   X,
@@ -72,6 +74,11 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
   const [nicCheckStatus, setNicCheckStatus] = useState(null); // null, 'checking', 'available', 'duplicate'
   const [duplicateData, setDuplicateData] = useState(null);
   const [showDuplicateWarning, setShowDuplicateWarning] = useState(false);
+  // Broader "similar" check — populated by the pre-submit guard using
+  // fullName + district + phone + DOB. Distinct from the NIC-only blur
+  // warning above.
+  const [similarMatches, setSimilarMatches] = useState(null);
+  const [pendingSubmitData, setPendingSubmitData] = useState(null);
 
   const isEditMode = !!beneficiary;
   const allDistricts = getAllDistricts();
@@ -232,6 +239,26 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Actual save. Split out from handleSubmit so the pre-submit "similar
+  // beneficiaries" modal can call it after the user confirms.
+  const doSave = async (submitData) => {
+    setLoading(true);
+    try {
+      if (isEditMode) {
+        await updateBeneficiary(beneficiary.id, submitData);
+      } else {
+        await addBeneficiary(submitData);
+      }
+      onClose();
+      resetForm();
+    } catch (error) {
+      console.error('Error saving beneficiary:', error);
+      setErrors({ submit: error.message || 'Failed to save beneficiary' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -243,31 +270,39 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
       return;
     }
 
-    setLoading(true);
-    try {
-      const submitData = {
-        ...formData,
-        registered_by: user.id,
-        household_size: formData.household_size ? parseInt(formData.household_size) : null,
-        monthly_income: formData.monthly_income ? parseFloat(formData.monthly_income) : null,
-        latitude: formData.latitude ? parseFloat(formData.latitude) : null,
-        longitude: formData.longitude ? parseFloat(formData.longitude) : null,
-      };
+    const submitData = {
+      ...formData,
+      registered_by: user.id,
+      household_size: formData.household_size ? parseInt(formData.household_size) : null,
+      monthly_income: formData.monthly_income ? parseFloat(formData.monthly_income) : null,
+      latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+      longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+    };
 
-      if (isEditMode) {
-        await updateBeneficiary(beneficiary.id, submitData);
-      } else {
-        await addBeneficiary(submitData);
+    // Pre-submit similar-beneficiary guard — only on Create, not Edit.
+    // If the API returns matches, defer save and let the user decide via
+    // the SimilarBeneficiariesWarning modal.
+    if (!isEditMode) {
+      try {
+        const resp = await BeneficiaryAPI.findSimilar({
+          fullName:      formData.full_name,
+          district:      formData.district,
+          nic:           formData.nic,
+          dateOfBirth:   formData.date_of_birth,
+          contactNumber: formData.primary_phone,
+        });
+        if (resp?.matches?.length > 0) {
+          setSimilarMatches(resp.matches);
+          setPendingSubmitData(submitData);
+          return; // user acts via the modal
+        }
+      } catch (err) {
+        // Non-blocking — a failed similarity check shouldn't stop the save.
+        console.warn('Similar-beneficiary check failed, proceeding:', err);
       }
-
-      onClose();
-      resetForm();
-    } catch (error) {
-      console.error('Error saving beneficiary:', error);
-      setErrors({ submit: error.message || 'Failed to save beneficiary' });
-    } finally {
-      setLoading(false);
     }
+
+    await doSave(submitData);
   };
 
   const resetForm = () => {
@@ -803,6 +838,22 @@ const BeneficiaryFormModal = ({ isOpen, onClose, beneficiary = null }) => {
           </div>
         </form>
       </div>
+
+      {similarMatches && pendingSubmitData && (
+        <SimilarBeneficiariesWarning
+          matches={similarMatches}
+          onCancel={() => {
+            setSimilarMatches(null);
+            setPendingSubmitData(null);
+          }}
+          onProceed={async () => {
+            const data = pendingSubmitData;
+            setSimilarMatches(null);
+            setPendingSubmitData(null);
+            await doSave(data);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -13,7 +13,8 @@ import {
   getBeneficiaryStats,
   getDistricts,
   getDivisions,
-  getGNDivisions
+  getGNDivisions,
+  findSimilar
 } from '../controllers/beneficiaries.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 const reqView   = requirePermission(PERMISSIONS.BENEFICIARIES_VIEW);
@@ -38,6 +39,7 @@ router.get('/stats', reqView, getBeneficiaryStats);
 router.get('/districts', reqView, getDistricts);
 router.get('/divisions', reqView, getDivisions);
 router.get('/gn-divisions', reqView, getGNDivisions);
+router.get('/similar', reqView, findSimilar);
 
 router.get('/', reqView, validatePagination, getAllBeneficiaries);
 router.post('/', reqCreate, sanitizeBody, createBeneficiary);
