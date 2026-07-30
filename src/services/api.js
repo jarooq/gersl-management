@@ -4385,4 +4385,15 @@ export const ProposalConversionAPI = {
     request(`/proposals/${proposalId}/convert-to-order`, { method: 'POST', body: JSON.stringify(body) }).then(r => r.data),
 };
 
+// ============================================
+// GLOBAL SEARCH (Cmd+K)
+// ============================================
+// Backed by /api/search — returns records across beneficiaries, partners,
+// projects, orphans, staff. Not a full-text index; iLike with a hard
+// per-entity cap. Debounced by the caller (CommandPalette) so we don't
+// hammer the server as the user types.
+export const SearchAPI = {
+  global: (q) => request(`/search?q=${encodeURIComponent(q)}`),
+};
+
 export default API;

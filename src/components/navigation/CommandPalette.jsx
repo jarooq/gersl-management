@@ -24,6 +24,24 @@ const saveRecent = (paths) => {
 };
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
+import { SearchAPI } from '../../services/api';
+
+// Icon per record type — keeps the palette rows legible at a glance.
+const ENTITY_ICONS = {
+  beneficiary: Users,
+  partner: HeartHandshake,
+  project: FolderKanban,
+  orphan: Baby,
+  staff: UserCheck,
+};
+
+const ENTITY_GROUP = {
+  beneficiary: 'Beneficiaries',
+  partner: 'Partners',
+  project: 'Projects',
+  orphan: 'Orphans',
+  staff: 'Staff',
+};
 
 // Every jump-target in the app. Kept flat here (not tied to sidebar groups)
 // so the palette can search across everything with one array.
@@ -80,6 +98,30 @@ const CommandPalette = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [cursor, setCursor] = useState(0);
   const [recentPaths, setRecentPaths] = useState(loadRecent);
+  const [entityResults, setEntityResults] = useState([]);
+  const [entityLoading, setEntityLoading] = useState(false);
+
+  // Debounced backend search — only fires when the query is 2+ chars.
+  // Cancelled if the query changes mid-flight to avoid stale rows.
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) {
+      setEntityResults([]);
+      return;
+    }
+    let cancelled = false;
+    setEntityLoading(true);
+    const t = setTimeout(() => {
+      SearchAPI.global(q)
+        .then((data) => {
+          if (cancelled) return;
+          setEntityResults(Array.isArray(data?.results) ? data.results : []);
+        })
+        .catch(() => { if (!cancelled) setEntityResults([]); })
+        .finally(() => { if (!cancelled) setEntityLoading(false); });
+    }, 200);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [query]);
 
   // Track visited routes across the app — writes to localStorage so recent
   // items survive a full refresh. Not scoped per-user; if that ever matters,
@@ -111,7 +153,7 @@ const CommandPalette = ({ isOpen, onClose }) => {
     }
 
     const q = query.toLowerCase();
-    return allowed
+    const pageMatches = allowed
       .map(c => {
         const label = c.label.toLowerCase();
         const group = (c.group || '').toLowerCase();
@@ -124,7 +166,21 @@ const CommandPalette = ({ isOpen, onClose }) => {
       .filter(x => x.score > 0)
       .sort((a, b) => b.score - a.score)
       .map(x => x.c);
-  }, [query, hasWildcard, hasPermission, recentPaths]);
+
+    // Entity results from the /api/search backend — dedupe by path so a
+    // record that maps to the same list page as a page-nav match doesn't
+    // show twice.
+    const entityItems = entityResults.map((r) => ({
+      path: `${r.path}#entity-${r.type}-${r.id}`,
+      label: r.title,
+      group: ENTITY_GROUP[r.type] || 'Records',
+      icon: ENTITY_ICONS[r.type] || Search,
+      _entityPath: r.path,
+      _subtitle: r.subtitle,
+    }));
+
+    return [...pageMatches, ...entityItems];
+  }, [query, hasWildcard, hasPermission, recentPaths, entityResults]);
 
   useEffect(() => {
     if (isOpen) {
@@ -138,7 +194,9 @@ const CommandPalette = ({ isOpen, onClose }) => {
 
   const commit = (item) => {
     if (!item) return;
-    navigate(item.path);
+    // Entity items store the real destination on _entityPath — the outer
+    // `path` is only a unique key for the row (see items useMemo).
+    navigate(item._entityPath || item.path);
     onClose();
   };
 
@@ -186,7 +244,7 @@ const CommandPalette = ({ isOpen, onClose }) => {
         </div>
 
         <div className="max-h-96 overflow-y-auto py-1">
-          {items.length === 0 && (
+          {items.length === 0 && !entityLoading && (
             <p className="px-4 py-6 text-center text-sm text-hs-slate-500">
               No matches for "{query}"
             </p>
@@ -205,20 +263,32 @@ const CommandPalette = ({ isOpen, onClose }) => {
                     key={c.path}
                     onClick={() => commit(c)}
                     onMouseEnter={() => setCursor(flatIndex)}
-                    className={`w-full flex items-center gap-2.5 px-4 py-2 text-sm text-left transition ${
+                    className={`w-full flex items-start gap-2.5 px-4 py-2 text-sm text-left transition ${
                       active
                         ? 'bg-orange-50 text-orange-700'
                         : 'text-hs-navy-700 hover:bg-hs-slate-50'
                     }`}
                   >
-                    <Icon size={15} className={active ? 'text-orange-600' : 'text-hs-slate-500'} />
-                    <span className="flex-1 truncate">{c.label}</span>
-                    {active && <CornerDownLeft size={13} className="text-orange-500" />}
+                    <Icon size={15} className={`mt-0.5 shrink-0 ${active ? 'text-orange-600' : 'text-hs-slate-500'}`} />
+                    <span className="flex-1 min-w-0">
+                      <span className="block truncate">{c.label}</span>
+                      {c._subtitle && (
+                        <span className={`block truncate text-[11px] ${active ? 'text-orange-600' : 'text-hs-slate-500'}`}>
+                          {c._subtitle}
+                        </span>
+                      )}
+                    </span>
+                    {active && <CornerDownLeft size={13} className="mt-1 text-orange-500 shrink-0" />}
                   </button>
                 );
               })}
             </div>
           ))}
+          {entityLoading && query.trim().length >= 2 && (
+            <p className="px-4 py-2 text-center text-[11px] text-hs-slate-400 italic">
+              Searching records…
+            </p>
+          )}
         </div>
 
         <div className="px-4 py-2 border-t border-hs-slate-200 flex items-center justify-between text-[11px] text-hs-slate-500 bg-hs-slate-50">
