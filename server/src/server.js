@@ -85,7 +85,6 @@ import complaintRoutes from './routes/complaint.routes.js';
 // New missing Finance routes
 import budgetCategoryRoutes from './routes/budgetCategory.routes.js';
 import donorRoutes from './routes/donor.routes.js';
-import payableRoutes from './routes/payable.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import financialReportRoutes from './routes/financialReport.routes.js';
 
@@ -349,7 +348,6 @@ app.use('/api/attendance', attendanceRoutes);
 // New Finance module routes
 app.use('/api/budget-categories', budgetCategoryRoutes);
 app.use('/api/donors', donorRoutes);
-app.use('/api/payables', payableRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/financial-reports', financialReportRoutes);
 

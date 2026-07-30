@@ -2665,83 +2665,6 @@ const OrphanProgressRating = sequelize.define('OrphanProgressRating', {
 });
 
 // ============================================
-// GENERATED ORPHAN REPORT MODEL
-// ============================================
-const GeneratedOrphanReport = sequelize.define('GeneratedOrphanReport', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  orphanId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'orphans',
-      key: 'id'
-    }
-  },
-  reportType: {
-    type: DataTypes.STRING(20),
-    allowNull: false
-  },
-  reportPeriodStart: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
-  reportPeriodEnd: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
-  generatedBy: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
-  },
-  partnerId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'partners',
-      key: 'id'
-    }
-  },
-  selectedPhotos: {
-    type: DataTypes.JSON,
-    defaultValue: []
-  },
-  selectedDrawings: {
-    type: DataTypes.JSON,
-    defaultValue: []
-  },
-  selectedLetters: {
-    type: DataTypes.JSON,
-    defaultValue: []
-  },
-  aiGeneratedSummary: {
-    type: DataTypes.TEXT
-  },
-  aiGeneratedAnalysis: {
-    type: DataTypes.TEXT
-  },
-  aiGeneratedRecommendations: {
-    type: DataTypes.TEXT
-  },
-  pdfUrl: {
-    type: DataTypes.TEXT
-  },
-  status: {
-    type: DataTypes.STRING(20),
-    defaultValue: 'draft'
-  }
-}, {
-  tableName: 'generated_orphan_reports',
-  timestamps: true,
-  underscored: true
-});
-
-// ============================================
 // INDICATOR MODEL (MEAL)
 // ============================================
 const Indicator = sequelize.define('Indicator', {
@@ -2926,7 +2849,6 @@ Orphan.belongsTo(User, { as: 'coordinator', foreignKey: 'coordinatorId' });
 Orphan.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 Orphan.hasMany(OrphanVisitLog, { as: 'visitLogs', foreignKey: 'orphanId' });
 Orphan.hasMany(OrphanProgressRating, { as: 'progressRatings', foreignKey: 'orphanId' });
-Orphan.hasMany(GeneratedOrphanReport, { as: 'reports', foreignKey: 'orphanId' });
 // Orphan.hasMany(OrphanNeed, { as: 'needs', foreignKey: 'orphanId' });
 
 // Project associations
@@ -3023,11 +2945,6 @@ OrphanVisitLog.hasOne(OrphanProgressRating, { as: 'rating', foreignKey: 'visitLo
 // OrphanProgressRating associations
 OrphanProgressRating.belongsTo(OrphanVisitLog, { as: 'visitLog', foreignKey: 'visitLogId' });
 OrphanProgressRating.belongsTo(Orphan, { as: 'orphan', foreignKey: 'orphanId' });
-
-// GeneratedOrphanReport associations
-GeneratedOrphanReport.belongsTo(Orphan, { as: 'orphan', foreignKey: 'orphanId' });
-GeneratedOrphanReport.belongsTo(User, { as: 'generator', foreignKey: 'generatedBy' });
-GeneratedOrphanReport.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
 
 // ============================================
 // CAMPAIGN MODEL
@@ -4720,30 +4637,6 @@ const Donor = sequelize.define('Donor', {
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, { tableName: 'donors', timestamps: true, underscored: true });
 
-const Payable = sequelize.define('Payable', {
-  vendorId: { type: DataTypes.INTEGER, references: { model: 'partners', key: 'id' }, field: 'vendor_id' },
-  invoiceNumber: { type: DataTypes.STRING(100), field: 'invoice_number' },
-  invoiceDate: { type: DataTypes.DATEONLY, field: 'invoice_date' },
-  dueDate: { type: DataTypes.DATEONLY, field: 'due_date' },
-  amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
-  amountPaid: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_paid' },
-  amountRemaining: { type: DataTypes.DECIMAL(15, 2), field: 'amount_remaining' },
-  currency: { type: DataTypes.STRING(3), defaultValue: 'LKR' },
-  // Multi-currency forex fields — see Invoice model. Backed by migration
-  // add_forex_columns_to_finance.js.
-  originalAmount: { type: DataTypes.DECIMAL(15, 2), field: 'original_amount' },
-  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
-  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
-  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
-  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
-  description: { type: DataTypes.TEXT },
-  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Partially Paid, Paid, Overdue
-  paymentDate: { type: DataTypes.DATEONLY, field: 'payment_date' },
-  paymentMethod: { type: DataTypes.STRING(50), field: 'payment_method' },
-  paymentReference: { type: DataTypes.STRING(100), field: 'payment_reference' },
-  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
-}, { tableName: 'payables', timestamps: true, underscored: true });
-
 const Payment = sequelize.define('Payment', {
   paymentNumber: { type: DataTypes.STRING(100), unique: true, field: 'payment_number' },
   paymentDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'payment_date' },
@@ -6172,7 +6065,6 @@ export {
   Proposal,
   OrphanVisitLog,
   OrphanProgressRating,
-  GeneratedOrphanReport,
   Campaign,
   CampaignPackage,
   Donation,
@@ -6204,7 +6096,6 @@ export {
   FixedAsset,
   BudgetCategory,
   Donor,
-  Payable,
   Payment,
   ExchangeRate,
   InvoiceReceipt,
@@ -6377,7 +6268,6 @@ export default {
   Proposal,
   OrphanVisitLog,
   OrphanProgressRating,
-  GeneratedOrphanReport,
   Campaign,
   CampaignPackage,
   Donation,
@@ -6409,7 +6299,6 @@ export default {
   FixedAsset,
   BudgetCategory,
   Donor,
-  Payable,
   Payment,
   ExchangeRate,
   InvoiceReceipt,
