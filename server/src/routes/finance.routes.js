@@ -11,6 +11,7 @@ import {
   getPendingApprovals
 } from '../controllers/finance.controller.js';
 import { forexSummary } from '../controllers/forexSummary.controller.js';
+import { grantUtilization } from '../controllers/grantUtilization.controller.js';
 import { requireAuth, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId, validatePagination, sanitizeBody } from '../middleware/validate.middleware.js';
 
@@ -38,6 +39,17 @@ router.get(
   requireAuth,
   requirePermission(PERMISSIONS.FINANCE_VIEW),
   forexSummary
+);
+
+// @route   GET /api/finance/grants/utilization[?status=<status>]
+// @desc    Per-grant utilisation rollup: received, utilised, %,
+//          monthly burn, days remaining.
+// @access  Private (View permission)
+router.get(
+  '/grants/utilization',
+  requireAuth,
+  requirePermission(PERMISSIONS.FINANCE_VIEW),
+  grantUtilization
 );
 
 // @route   GET /api/finance/pending

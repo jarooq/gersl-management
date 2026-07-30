@@ -464,6 +464,16 @@ export const FinanceAPI = {
     return data.data;
   },
 
+  // Per-grant utilisation rollup: received, utilised, %, monthly burn,
+  // days remaining. Powers the GrantUtilizationCard on the Grants tab.
+  grantUtilization: async (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v))
+    ).toString();
+    const data = await request(`/finance/grants/utilization${qs ? `?${qs}` : ''}`);
+    return data.data;
+  },
+
   getById: async (id) => {
     const data = await request(`/finance/${id}`);
     return data.data.expense;

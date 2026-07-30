@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { getCurrencySymbol, formatCurrency, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
 import ForexInsightsCard from './components/ForexInsightsCard';
+import GrantUtilizationCard from './components/GrantUtilizationCard';
 
 // Today's date as YYYY-MM-DD (local), and a blank invoice-receipt form.
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -1854,6 +1855,7 @@ const FinancePage = () => {
           {/* Grant Receivables Tab */}
           {activeTab === 'grants' && (
             <div className="space-y-6">
+              <GrantUtilizationCard />
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-h1 text-ink-900">Grant Receivables</h2>
