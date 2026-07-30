@@ -21,8 +21,10 @@ export const verifyToken = async (req, res, next) => {
     // produce downloadable artefacts (payslip PDF, fuel claim PDF) where the
     // mobile app launches an external viewer that can't carry headers.
     // Tokens leak in server access logs — keep this surface narrow.
-    if (!token && req.method === 'GET' && req.query?.token &&
-        /\/(pdf|payslips\/\d+\/pdf|fuel-claims\/\d+\/pdf|cash\/transactions\/\d+\/voucher|cash\/accounts\/\d+\/cash-book|wash\/items\/\d+\/report|wash\/orders\/\d+\/donor-report|igp\/items\/\d+\/report|igp\/orders\/\d+\/donor-report)/.test(req.originalUrl)) {
+    // Test the request PATH, not the original URL, so a token in the query
+    // string can't smuggle a "/pdf" substring into the allow-list match.
+    const isDownloadUrl = req.method === 'GET' && /\/(pdf|payslips\/\d+\/pdf|fuel-claims\/\d+\/pdf|cash\/transactions\/\d+\/voucher|cash\/accounts\/\d+\/cash-book|wash\/items\/\d+\/report|wash\/orders\/\d+\/donor-report|igp\/items\/\d+\/report|igp\/orders\/\d+\/donor-report)/.test(req.path);
+    if (!token && req.query?.token && isDownloadUrl) {
       token = String(req.query.token);
     }
 
@@ -35,6 +37,16 @@ export const verifyToken = async (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Scope short-lived download tokens to download URLs only — a leaked
+    // download token must not work as a full session token even within its
+    // 2-minute window.
+    if (decoded.kind === 'download' && !isDownloadUrl) {
+      return res.status(401).json({
+        success: false,
+        message: 'This token can only be used on download URLs.'
+      });
+    }
 
     // Get user from database
     const user = await User.findByPk(decoded.id, {

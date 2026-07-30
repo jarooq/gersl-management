@@ -15,6 +15,8 @@ import TaskFormModal from '../Operations/components/TaskFormModal';
 import TaskViewModal from '../Operations/components/TaskViewModal';
 import BudgetActualReport from './components/BudgetActualReport';
 import BeneficiaryMap from '../../components/map/BeneficiaryMap';
+import BeneficiaryQrPanel from './components/BeneficiaryQrPanel';
+import DistributionEventsPanel from './components/DistributionEventsPanel';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
@@ -146,6 +148,7 @@ const ProjectDetailPage = () => {
     { id: 'financial', label: 'Financial' },
     { id: 'map', label: 'Map' },
     { id: 'tasks', label: 'Tasks', count: tasks.length },
+    { id: 'beneficiaries', label: 'Beneficiaries & QR' },
     { id: 'meal', label: 'MEAL', count: projectIndicators.length + projectEvaluations.length + projectComplaints.length },
   ];
 
@@ -730,6 +733,22 @@ const ProjectDetailPage = () => {
                 <GanttChart tasks={tasks} />
               )}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'beneficiaries' && (
+          <div className="space-y-6">
+            {/* QR-code beneficiary distribution: enrolment list + printable
+                A4 QR sheet, then the distribution-event CRUD below it. */}
+            <BeneficiaryQrPanel
+              projectId={Number(id)}
+              projectName={project.name}
+              showToast={showToast}
+            />
+            <DistributionEventsPanel
+              projectId={Number(id)}
+              showToast={showToast}
+            />
           </div>
         )}
 

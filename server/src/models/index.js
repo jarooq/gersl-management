@@ -2210,6 +2210,165 @@ const BeneficiarySupport = sequelize.define('BeneficiarySupport', {
 });
 
 // ============================================
+// QR DISTRIBUTION MODELS
+// ============================================
+// ProjectBeneficiary — direct project↔beneficiary enrolment (today the link
+// is only indirect via Project → Task → TaskBeneficiary). Each Active row
+// carries a unique, unguessable QR token that field staff scan at
+// distribution time. Regenerating a token marks the old row 'Replaced' and
+// creates a fresh Active row, preserving scan history. Backed by migration
+// create_qr_distribution_tables.js.
+const ProjectBeneficiary = sequelize.define('ProjectBeneficiary', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'project_id',
+    references: { model: 'projects', key: 'id' }
+  },
+  beneficiaryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'beneficiary_id',
+    references: { model: 'beneficiaries', key: 'id' }
+  },
+  qrToken: {
+    type: DataTypes.STRING(32),
+    allowNull: false,
+    unique: true,
+    field: 'qr_token'
+  },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Active' // Active | Replaced | Withdrawn
+  },
+  enrolledAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'enrolled_at'
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: { model: 'users', key: 'id' }
+  }
+}, {
+  tableName: 'project_beneficiaries',
+  timestamps: true,
+  underscored: true
+  // NOTE: a partial unique index on (project_id, beneficiary_id) WHERE
+  // status = 'Active' is created by the migration — Sequelize's `indexes`
+  // option can't express partial indexes portably, so it lives in SQL only.
+});
+
+// DistributionEvent — a scheduled hand-out occasion (e.g. "Ration pack
+// distribution — Batticaloa, June"). Scans are recorded against an event so
+// the same beneficiary can receive on multiple occasions but never twice on
+// the same one.
+const DistributionEvent = sequelize.define('DistributionEvent', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'project_id',
+    references: { model: 'projects', key: 'id' }
+  },
+  name: {
+    type: DataTypes.STRING(200),
+    allowNull: false
+  },
+  scheduledDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    field: 'scheduled_date'
+  },
+  location: {
+    type: DataTypes.STRING(200)
+  },
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'Planned' // Planned | Active | Closed
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  createdBy: {
+    type: DataTypes.INTEGER,
+    field: 'created_by',
+    references: { model: 'users', key: 'id' }
+  }
+}, {
+  tableName: 'distribution_events',
+  timestamps: true,
+  underscored: true
+});
+
+// DistributionScan — one row per QR scan at an event. `client_uuid` is the
+// mobile app's idempotency key so offline-queue retries never double-insert.
+// The unique index on project_beneficiary_id enforces the project-level
+// "one aid per beneficiary, ever" rule: after the first scan the enrolment
+// also transitions to status='Distributed' (see distributionScan.controller)
+// so the second scan is rejected by status check; the unique index is the
+// race-safety net behind that. Backed by migration
+// enforce_one_scan_per_enrolment.js.
+const DistributionScan = sequelize.define('DistributionScan', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  eventId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'event_id',
+    references: { model: 'distribution_events', key: 'id' }
+  },
+  projectBeneficiaryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'project_beneficiary_id',
+    references: { model: 'project_beneficiaries', key: 'id' }
+  },
+  scannedBy: {
+    type: DataTypes.INTEGER,
+    field: 'scanned_by',
+    references: { model: 'users', key: 'id' }
+  },
+  scannedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    field: 'scanned_at'
+  },
+  latitude: {
+    type: DataTypes.DECIMAL(10, 7)
+  },
+  longitude: {
+    type: DataTypes.DECIMAL(10, 7)
+  },
+  notes: {
+    type: DataTypes.TEXT
+  },
+  clientUuid: {
+    type: DataTypes.STRING(64),
+    unique: true,
+    field: 'client_uuid'
+  }
+}, {
+  tableName: 'distribution_scans',
+  timestamps: true,
+  underscored: true,
+  indexes: [{ unique: true, fields: ['project_beneficiary_id'] }]
+});
+
+// ============================================
 // ONBOARDING RECORD MODEL
 // ============================================
 const OnboardingRecord = sequelize.define('OnboardingRecord', {
@@ -2506,83 +2665,6 @@ const OrphanProgressRating = sequelize.define('OrphanProgressRating', {
 });
 
 // ============================================
-// GENERATED ORPHAN REPORT MODEL
-// ============================================
-const GeneratedOrphanReport = sequelize.define('GeneratedOrphanReport', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  orphanId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'orphans',
-      key: 'id'
-    }
-  },
-  reportType: {
-    type: DataTypes.STRING(20),
-    allowNull: false
-  },
-  reportPeriodStart: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
-  reportPeriodEnd: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
-  generatedBy: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
-  },
-  partnerId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'partners',
-      key: 'id'
-    }
-  },
-  selectedPhotos: {
-    type: DataTypes.JSON,
-    defaultValue: []
-  },
-  selectedDrawings: {
-    type: DataTypes.JSON,
-    defaultValue: []
-  },
-  selectedLetters: {
-    type: DataTypes.JSON,
-    defaultValue: []
-  },
-  aiGeneratedSummary: {
-    type: DataTypes.TEXT
-  },
-  aiGeneratedAnalysis: {
-    type: DataTypes.TEXT
-  },
-  aiGeneratedRecommendations: {
-    type: DataTypes.TEXT
-  },
-  pdfUrl: {
-    type: DataTypes.TEXT
-  },
-  status: {
-    type: DataTypes.STRING(20),
-    defaultValue: 'draft'
-  }
-}, {
-  tableName: 'generated_orphan_reports',
-  timestamps: true,
-  underscored: true
-});
-
-// ============================================
 // INDICATOR MODEL (MEAL)
 // ============================================
 const Indicator = sequelize.define('Indicator', {
@@ -2767,7 +2849,6 @@ Orphan.belongsTo(User, { as: 'coordinator', foreignKey: 'coordinatorId' });
 Orphan.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy' });
 Orphan.hasMany(OrphanVisitLog, { as: 'visitLogs', foreignKey: 'orphanId' });
 Orphan.hasMany(OrphanProgressRating, { as: 'progressRatings', foreignKey: 'orphanId' });
-Orphan.hasMany(GeneratedOrphanReport, { as: 'reports', foreignKey: 'orphanId' });
 // Orphan.hasMany(OrphanNeed, { as: 'needs', foreignKey: 'orphanId' });
 
 // Project associations
@@ -2864,11 +2945,6 @@ OrphanVisitLog.hasOne(OrphanProgressRating, { as: 'rating', foreignKey: 'visitLo
 // OrphanProgressRating associations
 OrphanProgressRating.belongsTo(OrphanVisitLog, { as: 'visitLog', foreignKey: 'visitLogId' });
 OrphanProgressRating.belongsTo(Orphan, { as: 'orphan', foreignKey: 'orphanId' });
-
-// GeneratedOrphanReport associations
-GeneratedOrphanReport.belongsTo(Orphan, { as: 'orphan', foreignKey: 'orphanId' });
-GeneratedOrphanReport.belongsTo(User, { as: 'generator', foreignKey: 'generatedBy' });
-GeneratedOrphanReport.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' });
 
 // ============================================
 // CAMPAIGN MODEL
@@ -4561,30 +4637,6 @@ const Donor = sequelize.define('Donor', {
   createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
 }, { tableName: 'donors', timestamps: true, underscored: true });
 
-const Payable = sequelize.define('Payable', {
-  vendorId: { type: DataTypes.INTEGER, references: { model: 'partners', key: 'id' }, field: 'vendor_id' },
-  invoiceNumber: { type: DataTypes.STRING(100), field: 'invoice_number' },
-  invoiceDate: { type: DataTypes.DATEONLY, field: 'invoice_date' },
-  dueDate: { type: DataTypes.DATEONLY, field: 'due_date' },
-  amount: { type: DataTypes.DECIMAL(15, 2), allowNull: false },
-  amountPaid: { type: DataTypes.DECIMAL(15, 2), defaultValue: 0, field: 'amount_paid' },
-  amountRemaining: { type: DataTypes.DECIMAL(15, 2), field: 'amount_remaining' },
-  currency: { type: DataTypes.STRING(3), defaultValue: 'LKR' },
-  // Multi-currency forex fields — see Invoice model. Backed by migration
-  // add_forex_columns_to_finance.js.
-  originalAmount: { type: DataTypes.DECIMAL(15, 2), field: 'original_amount' },
-  exchangeRate: { type: DataTypes.DECIMAL(14, 6), defaultValue: 1, field: 'exchange_rate' },
-  rateDate: { type: DataTypes.DATEONLY, field: 'rate_date' },
-  amountLkr: { type: DataTypes.DECIMAL(15, 2), field: 'amount_lkr' },
-  rateSource: { type: DataTypes.STRING(20), field: 'rate_source' },
-  description: { type: DataTypes.TEXT },
-  status: { type: DataTypes.STRING(20), defaultValue: 'Pending' }, // Pending, Partially Paid, Paid, Overdue
-  paymentDate: { type: DataTypes.DATEONLY, field: 'payment_date' },
-  paymentMethod: { type: DataTypes.STRING(50), field: 'payment_method' },
-  paymentReference: { type: DataTypes.STRING(100), field: 'payment_reference' },
-  createdBy: { type: DataTypes.INTEGER, references: { model: 'users', key: 'id' }, field: 'created_by' }
-}, { tableName: 'payables', timestamps: true, underscored: true });
-
 const Payment = sequelize.define('Payment', {
   paymentNumber: { type: DataTypes.STRING(100), unique: true, field: 'payment_number' },
   paymentDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'payment_date' },
@@ -5263,6 +5315,22 @@ BeneficiarySupport.belongsTo(Partner, { as: 'partner', foreignKey: 'partnerId' }
 BeneficiarySupport.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
 BeneficiarySupport.belongsTo(User, { as: 'verifier', foreignKey: 'verifiedBy' });
 
+// QR distribution associations
+ProjectBeneficiary.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+ProjectBeneficiary.belongsTo(Beneficiary, { as: 'beneficiary', foreignKey: 'beneficiaryId' });
+ProjectBeneficiary.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+Project.hasMany(ProjectBeneficiary, { as: 'enrolments', foreignKey: 'projectId' });
+Beneficiary.hasMany(ProjectBeneficiary, { as: 'enrolments', foreignKey: 'beneficiaryId' });
+
+DistributionEvent.belongsTo(Project, { as: 'project', foreignKey: 'projectId' });
+DistributionEvent.belongsTo(User, { as: 'creator', foreignKey: 'createdBy' });
+Project.hasMany(DistributionEvent, { as: 'distributionEvents', foreignKey: 'projectId' });
+
+DistributionScan.belongsTo(DistributionEvent, { as: 'event', foreignKey: 'eventId' });
+DistributionScan.belongsTo(ProjectBeneficiary, { as: 'enrolment', foreignKey: 'projectBeneficiaryId' });
+DistributionScan.belongsTo(User, { as: 'scanner', foreignKey: 'scannedBy' });
+DistributionEvent.hasMany(DistributionScan, { as: 'scans', foreignKey: 'eventId' });
+
 // HR module associations
 Staff.hasMany(OnboardingRecord, { as: 'onboardingRecords', foreignKey: 'staffId' });
 Staff.hasMany(AppraisalRecord, { as: 'appraisalRecords', foreignKey: 'staffId' });
@@ -5670,25 +5738,6 @@ const Announcement = sequelize.define('Announcement', {
   ]
 });
 
-// Idempotency ledger for the GERHR Firestore→Postgres migration. One row
-// per Firestore document migrated; the migration script consults this to
-// skip re-imports.
-const GerhrMigration = sequelize.define('GerhrMigration', {
-  collection:  { type: DataTypes.STRING(80), allowNull: false },
-  firestoreId: { type: DataTypes.STRING(120), allowNull: false, field: 'firestore_id' },
-  targetTable: { type: DataTypes.STRING(80), field: 'target_table' },
-  targetId:    { type: DataTypes.INTEGER, field: 'target_id' },
-  migratedAt:  { type: DataTypes.DATE, defaultValue: DataTypes.NOW, field: 'migrated_at' },
-  notes:       { type: DataTypes.TEXT }
-}, {
-  tableName: '_gerhr_migrations',
-  timestamps: false,
-  underscored: true,
-  indexes: [
-    { unique: true, fields: ['collection', 'firestore_id'] }
-  ]
-});
-
 // Output of the daily clusterer — derived from raw location_points. Each
 // row is either a STOP (staff dwelled in one place) or a TRIP (staff was
 // moving between stops). Used by the fuel-claim flow + admin movement view.
@@ -6003,6 +6052,9 @@ export {
   PartnerCommunication,
   Beneficiary,
   BeneficiarySupport,
+  ProjectBeneficiary,
+  DistributionEvent,
+  DistributionScan,
   OnboardingRecord,
   AppraisalRecord,
   Indicator,
@@ -6013,7 +6065,6 @@ export {
   Proposal,
   OrphanVisitLog,
   OrphanProgressRating,
-  GeneratedOrphanReport,
   Campaign,
   CampaignPackage,
   Donation,
@@ -6045,7 +6096,6 @@ export {
   FixedAsset,
   BudgetCategory,
   Donor,
-  Payable,
   Payment,
   ExchangeRate,
   InvoiceReceipt,
@@ -6100,7 +6150,6 @@ export {
   Announcement,
   LeaveBalance,
   MovementSegment,
-  GerhrMigration,
   // WASH & IGP modules
   WashOrder,
   WashItem,
@@ -6206,6 +6255,9 @@ export default {
   PartnerCommunication,
   Beneficiary,
   BeneficiarySupport,
+  ProjectBeneficiary,
+  DistributionEvent,
+  DistributionScan,
   OnboardingRecord,
   AppraisalRecord,
   Indicator,
@@ -6216,7 +6268,6 @@ export default {
   Proposal,
   OrphanVisitLog,
   OrphanProgressRating,
-  GeneratedOrphanReport,
   Campaign,
   CampaignPackage,
   Donation,
@@ -6248,7 +6299,6 @@ export default {
   FixedAsset,
   BudgetCategory,
   Donor,
-  Payable,
   Payment,
   ExchangeRate,
   InvoiceReceipt,
@@ -6303,7 +6353,6 @@ export default {
   Announcement,
   LeaveBalance,
   MovementSegment,
-  GerhrMigration,
   // WASH & IGP modules
   WashOrder,
   WashItem,

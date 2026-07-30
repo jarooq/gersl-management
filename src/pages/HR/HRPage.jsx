@@ -488,48 +488,38 @@ const HRPage = () => {
   };
 
   // Handle Add Onboarding
-  const handleAddOnboarding = () => {
+  const handleAddOnboarding = async () => {
     if (!onboardingForm.employeeId || !onboardingForm.startDate) {
       alert('Please select an employee and start date');
       return;
     }
-
-    addOnboarding(onboardingForm);
-
-    // Reset form
-    setOnboardingForm({
-      employeeId: '',
-      startDate: '',
-      mentor: ''
-    });
-
-    setShowOnboardingModal(false);
-    alert('Onboarding record created successfully!');
+    try {
+      await addOnboarding(onboardingForm);
+      setOnboardingForm({ employeeId: '', startDate: '', mentor: '' });
+      setShowOnboardingModal(false);
+      alert('Onboarding record created successfully!');
+    } catch (err) {
+      alert('Failed to create onboarding record: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle Add Appraisal
-  const handleAddAppraisal = () => {
+  const handleAddAppraisal = async () => {
     if (!appraisalForm.employeeId || !appraisalForm.period) {
       alert('Please select an employee and review period');
       return;
     }
-
-    addAppraisal({
-      ...appraisalForm,
-      rating: appraisalForm.rating ? parseFloat(appraisalForm.rating) : null
-    });
-
-    // Reset form
-    setAppraisalForm({
-      employeeId: '',
-      period: '',
-      dueDate: '',
-      reviewer: '',
-      rating: ''
-    });
-
-    setShowAppraisalModal(false);
-    alert('Appraisal record created successfully!');
+    try {
+      await addAppraisal({
+        ...appraisalForm,
+        rating: appraisalForm.rating ? parseFloat(appraisalForm.rating) : null
+      });
+      setAppraisalForm({ employeeId: '', period: '', dueDate: '', reviewer: '', rating: '' });
+      setShowAppraisalModal(false);
+      alert('Appraisal record created successfully!');
+    } catch (err) {
+      alert('Failed to create appraisal record: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle GPS Check-in
@@ -558,117 +548,93 @@ const HRPage = () => {
   };
 
   // Handle Apply Leave
-  const handleApplyLeave = () => {
+  const handleApplyLeave = async () => {
     if (!leaveForm.employeeId || !leaveForm.startDate || !leaveForm.endDate || !leaveForm.leaveType) {
       alert('Please fill in all required fields');
       return;
     }
-
-    applyLeave({
-      ...leaveForm,
-      days: parseInt(leaveForm.days) || 0
-    });
-
-    // Reset form and close modal
-    setLeaveForm({
-      employeeId: '',
-      leaveType: '',
-      startDate: '',
-      endDate: '',
-      days: '',
-      reason: ''
-    });
-
-    setShowLeaveModal(false);
-    alert('Leave application submitted successfully!');
+    try {
+      await applyLeave({
+        ...leaveForm,
+        days: parseInt(leaveForm.days) || 0
+      });
+      setLeaveForm({ employeeId: '', leaveType: '', startDate: '', endDate: '', days: '', reason: '' });
+      setShowLeaveModal(false);
+      alert('Leave application submitted successfully!');
+    } catch (err) {
+      alert('Failed to submit leave application: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle Checkout Asset
-  const handleCheckoutAsset = () => {
+  const handleCheckoutAsset = async () => {
     if (!assetCheckoutForm.assetName || !assetCheckoutForm.checkedOutTo || !assetCheckoutForm.checkedOutDate) {
       alert('Please fill in all required fields');
       return;
     }
-
-    addAssetCheckout({
-      ...assetCheckoutForm,
-      passengers: parseInt(assetCheckoutForm.passengers) || 0
-    });
-
-    // Reset form and close modal
-    setAssetCheckoutForm({
-      assetName: '',
-      assetCode: '',
-      category: '',
-      checkedOutTo: '',
-      checkedOutDate: '',
-      expectedReturn: '',
-      purpose: ''
-    });
-
-    setShowAssetCheckoutModal(false);
-    alert('Asset checked out successfully!');
+    try {
+      // The server requires `assetTag` (NOT NULL on Asset model). Use the
+      // user-entered asset code as the tag; fall back to the name if empty.
+      await addAssetCheckout({
+        ...assetCheckoutForm,
+        assetTag: assetCheckoutForm.assetCode || assetCheckoutForm.assetName,
+        passengers: parseInt(assetCheckoutForm.passengers) || 0,
+      });
+      setAssetCheckoutForm({
+        assetName: '', assetCode: '', category: '', checkedOutTo: '',
+        checkedOutDate: '', expectedReturn: '', purpose: ''
+      });
+      setShowAssetCheckoutModal(false);
+      alert('Asset checked out successfully!');
+    } catch (err) {
+      alert('Failed to check out asset: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle Request Vehicle
-  const handleRequestVehicle = () => {
+  const handleRequestVehicle = async () => {
     if (!vehicleRequestForm.requestedBy || !vehicleRequestForm.date || !vehicleRequestForm.destination || !vehicleRequestForm.vehicleType) {
       alert('Please fill in all required fields');
       return;
     }
-
-    addVehicleRequest({
-      ...vehicleRequestForm,
-      passengers: parseInt(vehicleRequestForm.passengers) || 0
-    });
-
-    // Reset form and close modal
-    setVehicleRequestForm({
-      requestedBy: '',
-      project: '',
-      activity: '',
-      vehicleType: '',
-      date: '',
-      startTime: '',
-      endTime: '',
-      passengers: '',
-      destination: '',
-      purpose: ''
-    });
-
-    setShowVehicleRequestModal(false);
-    alert('Vehicle request submitted successfully!');
+    try {
+      await addVehicleRequest({
+        ...vehicleRequestForm,
+        passengers: parseInt(vehicleRequestForm.passengers) || 0
+      });
+      setVehicleRequestForm({
+        requestedBy: '', project: '', activity: '', vehicleType: '', date: '',
+        startTime: '', endTime: '', passengers: '', destination: '', purpose: ''
+      });
+      setShowVehicleRequestModal(false);
+      alert('Vehicle request submitted successfully!');
+    } catch (err) {
+      alert('Failed to submit vehicle request: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Handle Request Accommodation
-  const handleRequestAccommodation = () => {
+  const handleRequestAccommodation = async () => {
     if (!accommodationRequestForm.requestedBy || !accommodationRequestForm.location || !accommodationRequestForm.checkIn || !accommodationRequestForm.checkOut) {
       alert('Please fill in all required fields');
       return;
     }
-
-    addAccommodationRequest({
-      ...accommodationRequestForm,
-      rooms: parseInt(accommodationRequestForm.rooms) || 0,
-      guests: parseInt(accommodationRequestForm.guests) || 0
-    });
-
-    // Reset form and close modal
-    setAccommodationRequestForm({
-      requestedBy: '',
-      project: '',
-      activity: '',
-      location: '',
-      checkIn: '',
-      checkOut: '',
-      rooms: '',
-      guests: '',
-      accommodationType: '',
-      specialRequirements: ''
-    });
-
-    setShowAccommodationRequestModal(false);
-    alert('Accommodation request submitted successfully!');
+    try {
+      await addAccommodationRequest({
+        ...accommodationRequestForm,
+        rooms: parseInt(accommodationRequestForm.rooms) || 0,
+        guests: parseInt(accommodationRequestForm.guests) || 0
+      });
+      setAccommodationRequestForm({
+        requestedBy: '', project: '', activity: '', location: '',
+        checkIn: '', checkOut: '', rooms: '', guests: '',
+        accommodationType: '', specialRequirements: ''
+      });
+      setShowAccommodationRequestModal(false);
+      alert('Accommodation request submitted successfully!');
+    } catch (err) {
+      alert('Failed to submit accommodation request: ' + (err?.message || 'unknown error'));
+    }
   };
 
   // Calculate weekly attendance trend dynamically

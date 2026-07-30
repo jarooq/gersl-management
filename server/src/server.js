@@ -31,6 +31,9 @@ import approvalRoutes from './routes/approval.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import taskBeneficiaryRoutes from './routes/taskBeneficiary.routes.js';
 import aggregateDistributionRoutes from './routes/aggregateDistribution.routes.js';
+import projectBeneficiaryRoutes from './routes/projectBeneficiary.routes.js';
+import distributionEventRoutes from './routes/distributionEvent.routes.js';
+import distributionScanRoutes from './routes/distributionScan.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import reportRoutes from './routes/report.routes.js';
 import visitLogRoutes from './routes/visitLog.routes.js';
@@ -82,7 +85,6 @@ import complaintRoutes from './routes/complaint.routes.js';
 // New missing Finance routes
 import budgetCategoryRoutes from './routes/budgetCategory.routes.js';
 import donorRoutes from './routes/donor.routes.js';
-import payableRoutes from './routes/payable.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import financialReportRoutes from './routes/financialReport.routes.js';
 
@@ -346,7 +348,6 @@ app.use('/api/attendance', attendanceRoutes);
 // New Finance module routes
 app.use('/api/budget-categories', budgetCategoryRoutes);
 app.use('/api/donors', donorRoutes);
-app.use('/api/payables', payableRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/financial-reports', financialReportRoutes);
 
@@ -375,6 +376,12 @@ app.use('/api/map', mapRoutes);
 // Scheduled job triggers (Vercel Cron / external scheduler). Auth via
 // x-cron-secret header against CRON_SECRET env var.
 app.use('/api/cron', cronRoutes);
+
+// QR-code beneficiary distribution module — static prefixes first, then the
+// /api-mounted enrolment router (which carries its own full paths).
+app.use('/api/distribution-events', distributionEventRoutes);
+app.use('/api/distribution-scans', distributionScanRoutes);
+app.use('/api', projectBeneficiaryRoutes);
 
 // Movement register + vehicles
 app.use('/api', movementRoutes);
@@ -497,8 +504,10 @@ const startServer = async () => {
       });
     }
 
-    // Start server
-    app.listen(PORT, () => {
+    // Start server. Bind to 0.0.0.0 explicitly so container-hosted deploys
+    // (Railway, Fly, Docker in general) can be reached from outside the
+    // container. Node's default binds to localhost only.
+    app.listen(PORT, '0.0.0.0', () => {
       console.log('');
       console.log('🚀 ====================================');
       console.log(`   Global Ehsan Relief - Sri Lanka API`);

@@ -1,6 +1,6 @@
 import express from 'express';
 import * as invoiceController from '../controllers/invoice.controller.js';
-import { protect, authorize } from '../middleware/auth.middleware.js';
+import { protect, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -11,9 +11,13 @@ router.get('/stats', invoiceController.getInvoiceStats);
 router.get('/forex-report', invoiceController.getForexReport);
 router.get('/:id', invoiceController.getInvoiceById);
 router.get('/:id/receipts', invoiceController.getInvoiceReceipts);
-router.post('/', invoiceController.createInvoice);
-router.put('/:id', invoiceController.updateInvoice);
-router.post('/:id/payment', invoiceController.recordPayment);
-router.delete('/:id', authorize('Admin', 'Manager'), invoiceController.deleteInvoice);
+
+// Money-write endpoints — must be permission-gated. Without these any
+// authenticated role (Guest, Field Officer, etc.) could create invoices,
+// edit totals, and record receipts.
+router.post('/', requirePermission(PERMISSIONS.FINANCE_CREATE), invoiceController.createInvoice);
+router.put('/:id', requirePermission(PERMISSIONS.FINANCE_EDIT), invoiceController.updateInvoice);
+router.post('/:id/payment', requirePermission(PERMISSIONS.FINANCE_EDIT), invoiceController.recordPayment);
+router.delete('/:id', requirePermission(PERMISSIONS.FINANCE_DELETE), invoiceController.deleteInvoice);
 
 export default router;

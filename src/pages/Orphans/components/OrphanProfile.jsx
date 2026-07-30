@@ -10,7 +10,6 @@ import { API_ORIGIN } from '../../../config/apiBase';
 import AssignCoordinatorModal from './AssignCoordinatorModal';
 import AssignDonorModal from './AssignDonorModal';
 import VisitsTab from './VisitsTab';
-import ReportsTab from './ReportsTab';
 
 const OrphanProfile = ({ orphan, onClose }) => {
   const [activeTab, setActiveTab] = useState('personal');
@@ -71,7 +70,6 @@ const OrphanProfile = ({ orphan, onClose }) => {
     { id: 'health', label: 'Health', icon: Stethoscope },
     { id: 'documents', label: 'Documents', icon: FolderOpen },
     { id: 'visits', label: 'Visit Log', icon: Calendar },
-    { id: 'reports', label: 'Reports', icon: FileText },
     { id: 'support', label: 'Support Log', icon: Package }
   ];
 
@@ -779,7 +777,6 @@ const OrphanProfile = ({ orphan, onClose }) => {
           {activeTab === 'health' && <HealthTab orphan={orphan} />}
           {activeTab === 'documents' && <DocumentsTab orphan={orphan} />}
           {activeTab === 'visits' && <VisitsTab orphan={orphan} />}
-          {activeTab === 'reports' && <ReportsTab orphan={orphan} />}
           {activeTab === 'support' && <SupportLogTab orphan={orphan} onAssignPartner={handleAssignDonor} />}
         </div>
 

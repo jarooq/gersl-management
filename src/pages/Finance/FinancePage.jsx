@@ -14,6 +14,7 @@ import {
   Upload, HandCoins, Package, TrendingDown as Depreciation
 } from 'lucide-react';
 import { getCurrencySymbol, formatCurrency, SUPPORTED_CURRENCIES } from '../../utils/currencyUtils';
+import ConsoleShell from '../../components/console/ConsoleShell';
 
 // Today's date as YYYY-MM-DD (local), and a blank invoice-receipt form.
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -818,27 +819,40 @@ const FinancePage = () => {
     .filter(acc => acc.name.includes('Cash') || acc.name.includes('Bank'))
     .reduce((sum, acc) => sum + acc.balance, 0);
 
+  // parseFloat because Sequelize returns DECIMAL as strings — `sum +
+  // "1000"` silently concatenates instead of adding.
   const accountsReceivable = invoices
     .filter(inv => inv.status !== 'Paid')
-    .reduce((sum, inv) => sum + inv.amount, 0);
+    .reduce((sum, inv) => sum + (parseFloat(inv.amount) || 0), 0);
 
   const accountsPayable = bills
     .filter(bill => bill.status !== 'Paid')
-    .reduce((sum, bill) => sum + bill.amount, 0);
+    .reduce((sum, bill) => sum + (parseFloat(bill.amount) || 0), 0);
+
+  const financeSections = [
+    { id: 'dashboard',    label: 'Dashboard',         icon: LayoutDashboard, group: 'Overview' },
+    { id: 'accounts',     label: 'Chart of Accounts', icon: Building2,       group: 'Ledger' },
+    { id: 'journal',      label: 'Journal Entries',   icon: Edit,            group: 'Ledger' },
+    { id: 'grants',       label: 'Grant Receivables', icon: HandCoins,       group: 'Receivables' },
+    { id: 'invoices',     label: 'Invoices',          icon: FileText,        group: 'Receivables' },
+    { id: 'bills',        label: 'Bills & Payments',  icon: Receipt,         group: 'Payables' },
+    { id: 'bank',         label: 'Bank Accounts',     icon: Wallet,          group: 'Banking' },
+    { id: 'fixed-assets', label: 'Fixed Assets',      icon: Package,         group: 'Assets' },
+    { id: 'reports',      label: 'Financial Reports', icon: BarChart3,       group: 'Reporting' },
+  ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
-      {/* Header */}
-      <div className="bg-navy-900 rounded-lg2 px-6 py-5 text-white shadow-card">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div className="min-w-0">
-                  <p className="text-[11px] uppercase tracking-wider text-mission-300 font-semibold">Finance · Accounting</p>
-                  <h1 className="text-h2 font-bold leading-tight">Financial Management</h1>
-                  <p className="text-ink-200 text-sm mt-0.5">Complete accounting and financial control across the organisation.</p>
-                </div>
-              </div>
-            </div>
-
+    <>
+    <ConsoleShell
+      title="Finance"
+      subtitle="Accounting & financial control"
+      sections={financeSections}
+      activeId={activeTab}
+      onSelect={setActiveTab}
+    >
+      <div className="space-y-4">
+      {activeTab === 'dashboard' && (
+      <>
       {/* QuickBooks Dashboard Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-ink-100 rounded-lg2 p-5 shadow-card hover:shadow-lift transition group cursor-pointer">
@@ -983,38 +997,10 @@ const FinancePage = () => {
           </div>
         </button>
       </div>
+      </>
+      )}
 
-      {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-card border border-ink-100">
-        <div className="border-b border-ink-100">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
-            {[
-              { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-              { id: 'accounts', label: 'Chart of Accounts', icon: Building2 },
-              { id: 'grants', label: 'Grant Receivables', icon: HandCoins },
-              { id: 'fixed-assets', label: 'Fixed Assets', icon: Package },
-              { id: 'invoices', label: 'Invoices', icon: FileText },
-              { id: 'bills', label: 'Bills & Payments', icon: Receipt },
-              { id: 'journal', label: 'Journal Entries', icon: Edit },
-              { id: 'bank', label: 'Bank Accounts', icon: Wallet },
-              { id: 'reports', label: 'Financial Reports', icon: BarChart3 },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center justify-center gap-2 px-3 py-3 rounded-lg font-semibold text-xs md:text-sm transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-navy-900 text-white shadow-card scale-105'
-                    : 'text-ink-600 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={16} className="flex-shrink-0" />
-                <span className="truncate">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
+      <div className="bg-white rounded-xl shadow-hs-card border border-hs-slate-200">
         <div className="p-6">
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
@@ -1040,7 +1026,7 @@ const FinancePage = () => {
                         const daysOld = Math.floor((today - issuedDate) / (1000 * 60 * 60 * 24));
                         return daysOld <= 30;
                       });
-                      const currentAmount = current.reduce((sum, inv) => sum + (inv.amountLKR || inv.amount || 0), 0);
+                      const currentAmount = current.reduce((sum, inv) => sum + (parseFloat(inv.amountLkr || inv.amountLKR || inv.amount) || 0), 0);
 
                       // Calculate overdue (30+ days)
                       const overdue = unpaidInvoices.filter(i => {
@@ -1049,7 +1035,7 @@ const FinancePage = () => {
                         const daysOld = Math.floor((today - issuedDate) / (1000 * 60 * 60 * 24));
                         return daysOld > 30;
                       });
-                      const overdueAmount = overdue.reduce((sum, inv) => sum + (inv.amountLKR || inv.amount || 0), 0);
+                      const overdueAmount = overdue.reduce((sum, inv) => sum + (parseFloat(inv.amountLkr || inv.amountLKR || inv.amount) || 0), 0);
 
                       return (
                         <>
@@ -1090,7 +1076,7 @@ const FinancePage = () => {
                         const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
                         return daysUntilDue >= 0 && daysUntilDue <= 7;
                       });
-                      const dueIn7DaysAmount = dueIn7Days.reduce((sum, bill) => sum + (bill.amount || 0), 0);
+                      const dueIn7DaysAmount = dueIn7Days.reduce((sum, bill) => sum + (parseFloat(bill.amount) || 0), 0);
 
                       // Calculate due within 30 days
                       const dueIn30Days = unpaidBills.filter(b => {
@@ -1099,7 +1085,7 @@ const FinancePage = () => {
                         const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
                         return daysUntilDue >= 0 && daysUntilDue <= 30;
                       });
-                      const dueIn30DaysAmount = dueIn30Days.reduce((sum, bill) => sum + (bill.amount || 0), 0);
+                      const dueIn30DaysAmount = dueIn30Days.reduce((sum, bill) => sum + (parseFloat(bill.amount) || 0), 0);
 
                       return (
                         <>
@@ -1294,14 +1280,14 @@ const FinancePage = () => {
                           if (inv.status !== 'Paid' || !inv.paymentDate) return false;
                           const paymentDate = new Date(inv.paymentDate);
                           return paymentDate.getMonth() === month && paymentDate.getFullYear() === year;
-                        }).reduce((sum, inv) => sum + (inv.amountLKR || inv.amount || 0), 0);
+                        }).reduce((sum, inv) => sum + (parseFloat(inv.amountLkr || inv.amountLKR || inv.amount) || 0), 0);
 
                         // Calculate outflow from paid bills in this month
                         const outflow = bills.filter(bill => {
                           if (bill.status !== 'Paid' || !bill.paidDate) return false;
                           const paidDate = new Date(bill.paidDate);
                           return paidDate.getMonth() === month && paidDate.getFullYear() === year;
-                        }).reduce((sum, bill) => sum + (bill.amount || 0), 0);
+                        }).reduce((sum, bill) => sum + (parseFloat(bill.amount) || 0), 0);
 
                         monthsData.push({ inflow, outflow });
                       }
@@ -1340,14 +1326,14 @@ const FinancePage = () => {
                           if (inv.status !== 'Paid' || !inv.paymentDate) return false;
                           const paymentDate = new Date(inv.paymentDate);
                           return paymentDate.getMonth() === month && paymentDate.getFullYear() === year;
-                        }).reduce((sum, inv) => sum + (inv.amountLKR || inv.amount || 0), 0);
+                        }).reduce((sum, inv) => sum + (parseFloat(inv.amountLkr || inv.amountLKR || inv.amount) || 0), 0);
 
                         // Calculate outflow from paid bills in this month
                         const outflow = bills.filter(bill => {
                           if (bill.status !== 'Paid' || !bill.paidDate) return false;
                           const paidDate = new Date(bill.paidDate);
                           return paidDate.getMonth() === month && paidDate.getFullYear() === year;
-                        }).reduce((sum, bill) => sum + (bill.amount || 0), 0);
+                        }).reduce((sum, bill) => sum + (parseFloat(bill.amount) || 0), 0);
 
                         monthsData.push({ month: monthName, inflow: inflow / 1000000, outflow: outflow / 1000000 });
                       }
@@ -2364,7 +2350,7 @@ const FinancePage = () => {
                   </div>
                   <p className="text-sm opacity-90 mb-1">Pending Amount</p>
                   <p className="text-3xl font-bold">
-                    {(bills.filter(b => b.status === 'Pending').reduce((sum, b) => sum + b.amount, 0) / 1000).toFixed(0)}K
+                    {(bills.filter(b => b.status === 'Pending').reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0) / 1000).toFixed(0)}K
                   </p>
                 </div>
               </div>
@@ -2712,6 +2698,8 @@ const FinancePage = () => {
           )}
         </div>
       </div>
+      </div>
+    </ConsoleShell>
 
       {/* Payment Processing Modal */}
       {showPayBill && selectedBill && (
@@ -5448,14 +5436,17 @@ const FinancePage = () => {
                 <button
                   onClick={async () => {
                     try {
+                      // Map UI form keys to the server's Invoice model fields.
+                      // Sequelize silently drops unknown attributes, so the
+                      // previous shape (client/project/amount/issued/due) only
+                      // ever persisted status + notes.
                       const updates = {
-                        client: document.getElementById('editInvoiceClient')?.value,
-                        project: document.getElementById('editInvoiceProject')?.value,
-                        amount: parseFloat(document.getElementById('editInvoiceAmount')?.value) || 0,
-                        issued: document.getElementById('editInvoiceIssued')?.value,
-                        due: document.getElementById('editInvoiceDue')?.value,
-                        status: document.getElementById('editInvoiceStatus')?.value,
+                        customerName: document.getElementById('editInvoiceClient')?.value,
                         notes: document.getElementById('editInvoiceNotes')?.value,
+                        totalAmount: parseFloat(document.getElementById('editInvoiceAmount')?.value) || 0,
+                        invoiceDate: document.getElementById('editInvoiceIssued')?.value,
+                        dueDate: document.getElementById('editInvoiceDue')?.value,
+                        status: document.getElementById('editInvoiceStatus')?.value,
                       };
                       await updateInvoice(selectedInvoice.id, updates);
                       alert('Invoice updated successfully!');
@@ -5632,12 +5623,14 @@ const FinancePage = () => {
                 <button
                   onClick={async () => {
                     try {
+                      // Map UI form keys to the server's Bill model fields.
+                      // (Bill has no `category` column — drop it; if categorisation
+                      // is needed it should be stored elsewhere.)
                       const updates = {
-                        vendor: document.getElementById('editBillVendor')?.value,
-                        category: document.getElementById('editBillCategory')?.value,
-                        amount: parseFloat(document.getElementById('editBillAmount')?.value) || 0,
-                        received: document.getElementById('editBillReceived')?.value,
-                        due: document.getElementById('editBillDue')?.value,
+                        vendorName: document.getElementById('editBillVendor')?.value,
+                        totalAmount: parseFloat(document.getElementById('editBillAmount')?.value) || 0,
+                        billDate: document.getElementById('editBillReceived')?.value,
+                        dueDate: document.getElementById('editBillDue')?.value,
                         status: document.getElementById('editBillStatus')?.value,
                         notes: document.getElementById('editBillNotes')?.value,
                       };
@@ -7241,7 +7234,7 @@ const FinancePage = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

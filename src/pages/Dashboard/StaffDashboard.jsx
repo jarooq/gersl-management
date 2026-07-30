@@ -57,11 +57,12 @@ const StaffDashboard = () => {
 
   const loadProjects = useCallback(async () => {
     try {
-      const response = await API.Projects.getAll();
-      if (response.success && response.projects) {
-        console.log('📊 Loaded projects for staff dashboard:', response.projects.length);
-        setProjects(response.projects);
-      }
+      // API key is `Project` (singular); ProjectAPI.getAll returns the
+      // unwrapped { projects, pagination } object directly.
+      const response = await API.Project.getAll();
+      const list = response?.projects || [];
+      console.log('📊 Loaded projects for staff dashboard:', list.length);
+      setProjects(list);
     } catch (error) {
       console.error('Error loading projects:', error);
       setProjects([]);
@@ -70,11 +71,10 @@ const StaffDashboard = () => {
 
   const loadProposals = useCallback(async () => {
     try {
-      const response = await API.Proposals.getAll();
-      if (response.success && response.proposals) {
-        console.log('📊 Loaded proposals for staff dashboard:', response.proposals.length);
-        setProposals(response.proposals);
-      }
+      const response = await API.Proposal.getAll();
+      const list = response?.proposals || [];
+      console.log('📊 Loaded proposals for staff dashboard:', list.length);
+      setProposals(list);
     } catch (error) {
       console.error('Error loading proposals:', error);
       setProposals([]);

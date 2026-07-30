@@ -47,9 +47,16 @@ class PayslipsScreen extends ConsumerWidget {
                         final uri = Uri.parse(url);
                         if (await canLaunchUrl(uri)) {
                           await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        } else if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Could not open PDF viewer')),
+                          );
                         }
                       } catch (_) {
-                        // PDF open failed — token fetch or launch error; ignore.
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Could not open the PDF — please try again')),
+                        );
                       }
                     },
                   ),
