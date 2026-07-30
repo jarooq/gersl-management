@@ -255,3 +255,64 @@ export const stats = asyncHandler(async (req, res) => {
     },
   });
 });
+
+// ============================================
+// GET /api/projects/:projectId/unreached-beneficiaries?page=&limit=
+// The list version of the "remaining" number on the progress card:
+// active enrolments that don't yet have a scan against any of this
+// project's distribution events. Managers use it to call/visit
+// families who haven't shown up.
+// ============================================
+export const unreached = asyncHandler(async (req, res) => {
+  const projectId = parseInt(req.params.projectId, 10);
+  if (!Number.isInteger(projectId) || projectId <= 0) {
+    throw new ValidationError('Invalid project id');
+  }
+  const project = await Project.findByPk(projectId, { attributes: ['id'] });
+  if (!project) throw new NotFoundError('Project not found');
+
+  const page  = Math.max(parseInt(req.query.page,  10) || 1,  1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 200);
+
+  // Collect this project's event ids so we can look up scanned enrolments.
+  const eventIds = (await DistributionEvent.findAll({
+    where: { projectId },
+    attributes: ['id'],
+    raw: true,
+  })).map((e) => e.id);
+
+  // enrolments that have been scanned at least once for this project.
+  let scannedEnrolmentIds = [];
+  if (eventIds.length > 0) {
+    const rows = await DistributionScan.findAll({
+      where: { eventId: eventIds },
+      attributes: [
+        [sequelize.fn('DISTINCT', sequelize.col('projectBeneficiaryId')), 'projectBeneficiaryId'],
+      ],
+      raw: true,
+    });
+    scannedEnrolmentIds = rows.map((r) => r.projectBeneficiaryId).filter(Boolean);
+  }
+
+  const { Op } = await import('sequelize');
+  const where = { projectId, status: 'Active' };
+  if (scannedEnrolmentIds.length > 0) {
+    where.id = { [Op.notIn]: scannedEnrolmentIds };
+  }
+
+  const { rows, count } = await ProjectBeneficiary.findAndCountAll({
+    where,
+    include: [beneficiaryInclude],
+    order: [['enrolledAt', 'ASC'], ['id', 'ASC']],
+    limit,
+    offset: (page - 1) * limit,
+  });
+
+  res.json({
+    success: true,
+    data: {
+      enrolments: rows,
+      pagination: { page, limit, total: count, totalPages: Math.ceil(count / limit) },
+    },
+  });
+});

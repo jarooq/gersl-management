@@ -3532,6 +3532,14 @@ export const ProjectBeneficiaryAPI = {
     const data = await request(`/projects/${projectId}/distribution-stats`);
     return data.data;
   },
+
+  // Active enrolments with no scan yet — the "remaining" number as a list.
+  // Managers use this to call/visit families who haven't collected aid.
+  unreached: async (projectId, params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const data = await request(`/projects/${projectId}/unreached-beneficiaries${qs ? `?${qs}` : ''}`);
+    return data.data;
+  },
 };
 
 // ============================================

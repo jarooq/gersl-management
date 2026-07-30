@@ -747,6 +747,7 @@ const ProjectDetailPage = () => {
             />
             <DistributionEventsPanel
               projectId={Number(id)}
+              projectName={project?.name}
               showToast={showToast}
             />
           </div>

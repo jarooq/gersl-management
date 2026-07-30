@@ -3,6 +3,7 @@ import {
   Users, CalendarDays, ScanLine, CheckCircle2, TrendingUp, AlertCircle,
 } from 'lucide-react';
 import * as API from '../../../services/api';
+import UnreachedBeneficiariesModal from './UnreachedBeneficiariesModal';
 
 // DistributionProgressCard
 // -------------------------------------------------------------
@@ -20,28 +21,37 @@ import * as API from '../../../services/api';
 // Fetches /api/projects/:projectId/distribution-stats. Auto-refreshes on
 // projectId change; can be forced to refetch by bumping `refreshKey`.
 
-const StatCell = ({ icon: Icon, label, value, tone = 'slate', tooltip }) => {
+const StatCell = ({ icon: Icon, label, value, tone = 'slate', tooltip, onClick }) => {
   const toneClasses = {
     slate:  'bg-hs-slate-50 text-hs-navy-700',
     orange: 'bg-orange-50 text-orange-700',
     green:  'bg-hs-teal-50 text-hs-teal-700',
     red:    'bg-hs-red-50 text-hs-red-700',
   }[tone];
+  const clickableClass = onClick
+    ? 'hover:brightness-95 cursor-pointer transition text-left w-full'
+    : '';
+  const Wrapper = onClick ? 'button' : 'div';
   return (
-    <div className={`flex items-center gap-2.5 p-3 rounded-md ${toneClasses}`} title={tooltip}>
+    <Wrapper
+      onClick={onClick}
+      className={`flex items-center gap-2.5 p-3 rounded-md ${toneClasses} ${clickableClass}`}
+      title={tooltip}
+    >
       <Icon size={18} className="shrink-0 opacity-80" />
       <div className="min-w-0">
         <p className="text-[10px] font-semibold uppercase tracking-wider opacity-70">{label}</p>
         <p className="text-lg font-display font-semibold leading-tight">{value}</p>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 
-const DistributionProgressCard = ({ projectId, refreshKey = 0 }) => {
+const DistributionProgressCard = ({ projectId, projectName, refreshKey = 0 }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showUnreached, setShowUnreached] = useState(false);
 
   useEffect(() => {
     if (!projectId) return;
@@ -131,7 +141,10 @@ const DistributionProgressCard = ({ projectId, refreshKey = 0 }) => {
           label="Remaining"
           value={scans.remaining.toLocaleString()}
           tone={scans.remaining === 0 ? 'green' : 'orange'}
-          tooltip="Active enrolments that haven't been scanned yet."
+          tooltip={scans.remaining === 0
+            ? 'Everyone reached.'
+            : 'Active enrolments that haven\'t been scanned yet. Click to see who.'}
+          onClick={scans.remaining > 0 ? () => setShowUnreached(true) : undefined}
         />
         <StatCell
           icon={ScanLine}
@@ -148,6 +161,14 @@ const DistributionProgressCard = ({ projectId, refreshKey = 0 }) => {
           tooltip={`Active QR enrolments. Total incl. withdrawn/replaced: ${enrolments.total.toLocaleString()}.`}
         />
       </div>
+
+      {showUnreached && (
+        <UnreachedBeneficiariesModal
+          projectId={projectId}
+          projectName={projectName}
+          onClose={() => setShowUnreached(false)}
+        />
+      )}
 
       {/* Event lifecycle strip */}
       <div className="mt-4 pt-3 border-t border-hs-slate-100 flex items-center justify-between text-[11px] text-hs-slate-500 flex-wrap gap-2">

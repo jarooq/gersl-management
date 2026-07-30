@@ -24,7 +24,7 @@ const eventStatusClass = (status) => {
   return 'bg-hs-slate-100 text-hs-slate-700';
 };
 
-const DistributionEventsPanel = ({ projectId, showToast }) => {
+const DistributionEventsPanel = ({ projectId, projectName, showToast }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -157,7 +157,7 @@ const DistributionEventsPanel = ({ projectId, showToast }) => {
   // ============ Events list view ============
   return (
     <>
-    <DistributionProgressCard projectId={projectId} refreshKey={statsRefreshKey} />
+    <DistributionProgressCard projectId={projectId} projectName={projectName} refreshKey={statsRefreshKey} />
     <div className="bg-white rounded-lg2 shadow-card border border-ink-100">
       <div className="p-6 border-b border-ink-100 flex justify-between items-center flex-wrap gap-3">
         <div>
