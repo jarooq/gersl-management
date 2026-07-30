@@ -56,6 +56,62 @@ export default {
           800: '#92400e',
           900: '#78350f',
         },
+
+        // ============================================
+        // HubSpot Console redesign — Aug 2026
+        // ============================================
+        // HubSpot's actual palette lifted from their design system so the
+        // app reads as a console tool rather than a generic dashboard.
+        // Use `orange` for primary CTAs, `hs-navy` for headers/sidebar,
+        // `hs-slate` scale for neutrals.
+        orange: { // HubSpot signature orange — primary CTA + brand accent
+          50:  '#fff5f1',
+          100: '#ffe4d9',
+          200: '#ffc3ac',
+          300: '#ff9c78',
+          400: '#ff8562',
+          500: '#ff7a59',  // primary
+          600: '#f55a35',
+          700: '#e14b28',
+          800: '#b3391e',
+          900: '#7a2712',
+        },
+        'hs-navy': { // HubSpot dark navy — headers, sidebar, headline text
+          50:  '#eaf0f6',
+          100: '#dfe3eb',
+          200: '#cbd6e2',
+          300: '#a3b8cf',
+          400: '#7c98b6',
+          500: '#516f90',
+          600: '#425b76',
+          700: '#33475b',  // body text + sidebar
+          800: '#213343',
+          900: '#0d1926',
+        },
+        'hs-slate': { // Neutrals — cards, borders, backgrounds
+          50:  '#f5f8fa',  // page background
+          100: '#eaf0f6',
+          200: '#dfe3eb',
+          300: '#cbd6e2',  // card border
+          400: '#a3b8cf',
+          500: '#7c98b6',
+          600: '#516f90',
+          700: '#425b76',
+          800: '#33475b',
+          900: '#213343',
+        },
+        'hs-teal': { // HubSpot success/positive
+          50:  '#e5f5f3',
+          500: '#00bda5',
+          600: '#00a693',
+          700: '#008878',
+        },
+        'hs-red': { // HubSpot destructive/error
+          50:  '#fdeeef',
+          500: '#f2545b',
+          600: '#e13e46',
+          700: '#c62d34',
+        },
         success: { 50: '#ecfdf5', 600: '#059669', 700: '#047857' },
         danger:  { 50: '#fef2f2', 600: '#dc2626', 700: '#b91c1c' },
         warn:    { 50: '#fffbeb', 600: '#d97706', 700: '#b45309' },
@@ -83,6 +139,10 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        // HubSpot pairs Lexend Deca with Inter for headings — softer glyph
+        // shapes than Inter alone. Falls back cleanly if Lexend Deca isn't
+        // loaded.
+        display: ['"Lexend Deca"', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
@@ -91,6 +151,10 @@ export default {
         'card':  '0 1px 2px 0 rgb(15 30 61 / 0.04), 0 1px 3px 0 rgb(15 30 61 / 0.06)',
         'lift':  '0 4px 6px -1px rgb(15 30 61 / 0.06), 0 2px 4px -2px rgb(15 30 61 / 0.04)',
         'pop':   '0 10px 15px -3px rgb(15 30 61 / 0.08), 0 4px 6px -4px rgb(15 30 61 / 0.04)',
+        // HubSpot console redesign — flatter and quieter than the older shadows.
+        'hs-card':   '0 1px 2px rgb(0 0 0 / 0.04)',
+        'hs-lift':   '0 2px 4px rgb(0 0 0 / 0.06), 0 4px 8px rgb(0 0 0 / 0.04)',
+        'hs-drawer': '-4px 0 12px rgb(0 0 0 / 0.08)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
