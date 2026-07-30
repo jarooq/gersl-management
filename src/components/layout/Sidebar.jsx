@@ -8,7 +8,7 @@ import {
   Building2, Edit, HandCoins, Package, Receipt, BarChart3, ArrowLeft, ChevronRight,
   Sparkles, Bell, Database, Globe, Palette, Key, Users2 as UsersGroupIcon,
   Activity as ActivityIcon, FileBarChart as FileBarChartIcon, Target as TargetIcon,
-  MessageSquare, Lightbulb, Zap, FileCheck,
+  MessageSquare, Lightbulb, Zap, FileCheck, AlertCircle as AlertCircleIcon,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PERMISSIONS } from '../../utils/permissions';
@@ -60,8 +60,12 @@ const CONSOLES = [
     matches: (p) => p.startsWith('/admin/partners') || p.startsWith('/admin/proposals'),
     entry: '/admin/partners',
     sections: [
-      { path: '/admin/partners',  label: 'Partners',  icon: HeartHandshake, permission: PERMISSIONS.PARTNERS_VIEW },
-      { path: '/admin/proposals', label: 'Proposals', icon: FileText,       permission: PERMISSIONS.PROPOSALS_VIEW },
+      { path: '/admin/partners?section=overview',       label: 'Partner Directory', icon: Building2,     permission: PERMISSIONS.PARTNERS_VIEW,  group: 'Partners' },
+      { path: '/admin/partners?section=contributions',  label: 'Contributions',     icon: DollarSign,    permission: PERMISSIONS.PARTNERS_VIEW,  group: 'Partners' },
+      { path: '/admin/partners?section=communications', label: 'Communications',    icon: MessageSquare, permission: PERMISSIONS.PARTNERS_VIEW,  group: 'Partners' },
+
+      { path: '/admin/proposals?section=overview',      label: 'All Proposals',     icon: FileText,      permission: PERMISSIONS.PROPOSALS_VIEW, group: 'Proposals' },
+      { path: '/admin/proposals?section=pipeline',      label: 'Pipeline',          icon: BarChart3,     permission: PERMISSIONS.PROPOSALS_VIEW, group: 'Proposals' },
     ],
   },
   {
@@ -84,8 +88,11 @@ const CONSOLES = [
       { path: '/admin/operations/movements',      label: 'Movement Register',   icon: MapPin,         group: 'Field' },
       { path: '/admin/operations/fuel-claims',    label: 'Fuel Claims',         icon: DollarSign,     group: 'Field' },
       { path: '/admin/operations/fuel-rates',     label: 'Fuel Rates',          icon: Settings,       group: 'Field' },
-      { path: '/admin/approvals',                 label: 'Approvals',           icon: CheckCircle,    permission: PERMISSIONS.APPROVALS_VIEW,              group: 'Governance' },
-      { path: '/admin/compliance',                label: 'Compliance',          icon: Shield,         permission: PERMISSIONS.COMPLIANCE_VIEW,             group: 'Governance' },
+      { path: '/admin/approvals',                            label: 'Approvals',              icon: CheckCircle, permission: PERMISSIONS.APPROVALS_VIEW,  group: 'Governance' },
+      { path: '/admin/compliance?section=overview',          label: 'Compliance Overview',    icon: Shield,      permission: PERMISSIONS.COMPLIANCE_VIEW, group: 'Governance' },
+      { path: '/admin/compliance?section=policies',          label: 'Policies',               icon: FileText,    permission: PERMISSIONS.COMPLIANCE_VIEW, group: 'Governance' },
+      { path: '/admin/compliance?section=training',          label: 'Training',               icon: Award,       permission: PERMISSIONS.COMPLIANCE_VIEW, group: 'Governance' },
+      { path: '/admin/compliance?section=incidents',         label: 'Incidents',              icon: AlertCircleIcon, permission: PERMISSIONS.COMPLIANCE_VIEW, group: 'Governance' },
     ],
   },
   {

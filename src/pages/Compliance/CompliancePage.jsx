@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useHR } from '../../contexts/HRContext';
 import { useCompliance } from '../../contexts/ComplianceContext';
 import {
@@ -10,7 +11,13 @@ import {
 const CompliancePage = () => {
   const { staff } = useHR();
   const { trainingRecords, getStats } = useCompliance();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'overview';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
 
   // Get stats from ComplianceContext
   const contextStats = getStats();
@@ -190,31 +197,18 @@ const CompliancePage = () => {
         />
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-ink-100">
-        <div className="border-b border-ink-100">
-          <div className="flex gap-1 p-1.5">
-            {[
-              { id: 'overview', label: 'Overview', icon: ClipboardCheck },
-              { id: 'policies', label: 'Policies', icon: FileText },
-              { id: 'training', label: 'Training', icon: BookOpen },
-              { id: 'incidents', label: 'Incidents', icon: AlertTriangle }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-emerald-500 text-white shadow-sm'
-                    : 'text-ink-600 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={18} />
-                {tab.label}
-              </button>
-            ))}
+      {/* Section header (tabs live in the console sidebar now) */}
+      {(() => {
+        const titles = { overview: 'Overview', policies: 'Policies', training: 'Training', incidents: 'Incidents' };
+        return (
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">Compliance</p>
+            <h2 className="text-h2 text-ink-900">{titles[activeTab] || 'Compliance'}</h2>
           </div>
-        </div>
+        );
+      })()}
+
+      <div className="bg-white rounded-lg shadow-sm border border-ink-100">
 
         {/* Policies Tab */}
         {activeTab === 'policies' && (

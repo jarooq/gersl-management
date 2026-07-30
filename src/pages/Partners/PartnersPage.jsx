@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { usePartners } from '../../contexts/PartnersContext';
 import AddPartnerModal from './AddPartnerModal';
 import AddContributionModal from './AddContributionModal';
@@ -55,7 +56,13 @@ const PartnersPage = () => {
     deleteCommunication
   } = usePartners();
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('section') || 'overview';
+  const setActiveTab = (id) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('section', id);
+    setSearchParams(next, { replace: false });
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [filterCategory, setFilterCategory] = useState('All');
@@ -466,31 +473,18 @@ const PartnersPage = () => {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-card border border-ink-100">
-        <div className="border-b border-ink-100">
-          <div className="flex gap-1 p-2">
-            {[
-              { id: 'overview', label: 'Partner Directory', icon: Building2 },
-              { id: 'contributions', label: 'Contributions', icon: DollarSign },
-              { id: 'communications', label: 'Communications', icon: MessageSquare }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-navy-900 text-white shadow-md'
-                    : 'text-ink-600 hover:bg-ink-50'
-                }`}
-              >
-                <tab.icon size={18} />
-                {tab.label}
-              </button>
-            ))}
+      {/* Section header (tabs live in the console sidebar now) */}
+      {(() => {
+        const titles = { overview: 'Partner Directory', contributions: 'Contributions', communications: 'Communications' };
+        return (
+          <div>
+            <p className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">Partners</p>
+            <h2 className="text-h2 text-ink-900">{titles[activeTab] || 'Partners'}</h2>
           </div>
-        </div>
+        );
+      })()}
 
+      <div className="bg-white rounded-xl shadow-card border border-ink-100">
         {/* Partner Directory Tab */}
         {activeTab === 'overview' && (
           <div className="p-6">
