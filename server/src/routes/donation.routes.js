@@ -9,6 +9,7 @@ router.get('/stats', protect, donationController.getDonationStats);
 router.get('/:id', protect, donationController.getDonationById);
 router.post('/', donationController.createDonation); // Public for online donations
 router.put('/:id', protect, donationController.updateDonation);
-router.delete('/:id', protect, authorize('Admin', 'Manager'), donationController.deleteDonation);
+// 'Manager' was a ghost role — replaced with the real fundraising approver set.
+router.delete('/:id', protect, authorize('Admin', 'CEO', 'Fundraising Manager'), donationController.deleteDonation);
 
 export default router;

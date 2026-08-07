@@ -26,7 +26,8 @@ const liveLimiter = rateLimit({
 });
 
 router.post('/batch', ingestLimiter, ingestBatch);
-router.get ('/live',  liveLimiter, authorize('Admin', 'CEO', 'HR Manager', 'HR Officer', 'Programme Manager'), liveSnapshot);
+// 'HR Officer' was a ghost role (not defined in ROLE_PERMISSIONS) — dropped.
+router.get ('/live',  liveLimiter, authorize('Admin', 'CEO', 'HR Manager', 'Programme Manager'), liveSnapshot);
 router.get ('/',      listForUser);
 
 export default router;

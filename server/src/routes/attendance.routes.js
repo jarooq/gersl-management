@@ -19,7 +19,7 @@ import {
   weeklyHours,
   weeklyHoursAll
 } from '../controllers/attendancePunch.controller.js';
-import { protect, authorize } from '../middleware/auth.middleware.js';
+import { protect, authorize, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 import { validateId } from '../middleware/validate.middleware.js';
 
 const router = express.Router();
@@ -30,15 +30,15 @@ router.use(protect);
 // Leave requests
 router.get('/leave/requests', attendanceController.getAllLeaveRequests);
 router.post('/leave/requests', attendanceController.createLeaveRequest);
-router.put('/leave/requests/:id', authorize('Admin', 'Manager'), attendanceController.updateLeaveRequestStatus);
+router.put('/leave/requests/:id', requirePermission(PERMISSIONS.HR_APPROVE_LEAVE), attendanceController.updateLeaveRequestStatus);
 router.delete('/leave/requests/:id', attendanceController.deleteLeaveRequest);
 
 // Attendance corrections
 router.get   ('/corrections',                 listCorrections);
 router.post  ('/corrections',                 requestCorrection);
 router.get   ('/corrections/:id',             validateId(), getCorrection);
-router.patch ('/corrections/:id/approve',     validateId(), authorize('Admin', 'CEO', 'HR Manager', 'HR Officer'), approveCorrection);
-router.patch ('/corrections/:id/reject',      validateId(), authorize('Admin', 'CEO', 'HR Manager', 'HR Officer'), rejectCorrection);
+router.patch ('/corrections/:id/approve',     validateId(), authorize('Admin', 'CEO', 'HR Manager'), approveCorrection);
+router.patch ('/corrections/:id/reject',      validateId(), authorize('Admin', 'CEO', 'HR Manager'), rejectCorrection);
 router.patch ('/corrections/:id/cancel',      validateId(), cancelCorrection);
 
 // Register reports
@@ -67,6 +67,6 @@ router.post('/', attendanceController.createAttendance);
 // Param routes — must be LAST
 router.get('/:id', attendanceController.getAttendanceById);
 router.put('/:id', attendanceController.updateAttendance);
-router.delete('/:id', authorize('Admin', 'Manager'), attendanceController.deleteAttendance);
+router.delete('/:id', requirePermission(PERMISSIONS.HR_EDIT), attendanceController.deleteAttendance);
 
 export default router;

@@ -1,6 +1,6 @@
 import express from 'express';
 import * as billController from '../controllers/bill.controller.js';
-import { protect, authorize } from '../middleware/auth.middleware.js';
+import { protect, requirePermission, PERMISSIONS } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 router.use(protect);
@@ -10,6 +10,6 @@ router.get('/stats', billController.getBillStats);
 router.get('/:id', billController.getBillById);
 router.post('/', billController.createBill);
 router.put('/:id', billController.updateBill);
-router.delete('/:id', authorize('Admin', 'Manager'), billController.deleteBill);
+router.delete('/:id', requirePermission(PERMISSIONS.FINANCE_DELETE), billController.deleteBill);
 
 export default router;

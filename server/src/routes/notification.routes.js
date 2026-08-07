@@ -23,8 +23,8 @@ router.put('/read-all', verifyToken, markAllAsRead);
 // Delete all read notifications (must be before /:id route)
 router.delete('/read', verifyToken, deleteAllRead);
 
-// Create bulk notifications (Admin / Manager only)
-router.post('/bulk', verifyToken, authorize('Admin', 'Manager'), createBulkNotifications);
+// Create bulk notifications — senior-tier only. 'Manager' was a ghost role.
+router.post('/bulk', verifyToken, authorize('Admin', 'CEO', 'HR Manager', 'Programme Manager'), createBulkNotifications);
 
 // Get all notifications for current user
 router.get('/', verifyToken, getUserNotifications);
@@ -32,8 +32,8 @@ router.get('/', verifyToken, getUserNotifications);
 // Get single notification by ID
 router.get('/:id', verifyToken, getNotificationById);
 
-// Create notification (Admin / Manager only)
-router.post('/', verifyToken, authorize('Admin', 'Manager'), createNotification);
+// Create notification — senior-tier only. 'Manager' was a ghost role.
+router.post('/', verifyToken, authorize('Admin', 'CEO', 'HR Manager', 'Programme Manager'), createNotification);
 
 // Mark notification as read
 router.put('/:id/read', verifyToken, markAsRead);

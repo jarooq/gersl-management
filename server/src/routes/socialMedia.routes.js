@@ -12,6 +12,7 @@ router.post('/', socialController.createSocialMediaPost);
 router.put('/:id', socialController.updateSocialMediaPost);
 router.put('/:id/publish', socialController.publishPost);
 router.post('/:id/engagement', socialController.recordEngagement);
-router.delete('/:id', authorize('Admin', 'Manager'), socialController.deleteSocialMediaPost);
+// 'Manager' was a ghost role — Fundraising Manager is the real owner here.
+router.delete('/:id', authorize('Admin', 'CEO', 'Fundraising Manager'), socialController.deleteSocialMediaPost);
 
 export default router;
