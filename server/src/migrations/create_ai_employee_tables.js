@@ -60,7 +60,7 @@ async function run() {
         id                 ${pk},
         trigger            VARCHAR(20)  NOT NULL DEFAULT 'cron',
         job                VARCHAR(50)  NOT NULL DEFAULT 'watch',
-        status             VARCHAR(20)  NOT NULL DEFAULT 'running',
+        status             VARCHAR(30)  NOT NULL DEFAULT 'running',
         started_at         ${ts}        NOT NULL DEFAULT ${now},
         finished_at        ${ts},
         duration_ms        INTEGER,
@@ -77,6 +77,13 @@ async function run() {
     `);
 
     await sequelize.query(`CREATE INDEX IF NOT EXISTS ai_employee_runs_time_idx ON ai_employee_runs (started_at);`);
+
+    // Widen an already-created runs table: the original VARCHAR(20) is one
+    // character short of 'completed_with_errors', which fails the run-finish
+    // UPDATE with a 22001 string_data_right_truncation.
+    if (isPostgres) {
+      await sequelize.query(`ALTER TABLE ai_employee_runs ALTER COLUMN status TYPE VARCHAR(30);`);
+    }
 
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS ai_employee_settings (

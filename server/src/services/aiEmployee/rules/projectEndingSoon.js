@@ -31,7 +31,7 @@ export default {
          FROM projects p
         WHERE p.end_date IS NOT NULL
           AND p.end_date <= :furthest
-          AND (p.status IS NULL OR p.status NOT IN (:closedProjectStatuses))`,
+          AND (p.status IS NULL OR CAST(p.status AS TEXT) NOT IN (:closedProjectStatuses))`,
       { furthest, ...commonReplacements }
     );
 

@@ -147,7 +147,19 @@ export const DEFAULT_CONFIG = {
   }
 };
 
-/** Statuses that mean a task/project is no longer worth chasing. */
+/**
+ * Statuses that mean a task/project is no longer worth chasing.
+ *
+ * `projects.status` is a Postgres ENUM (Planning | Implementation | Closing |
+ * Completed) while `tasks.status` is a plain varchar, and the frontend uses a
+ * wider vocabulary than either. Every comparison therefore runs through
+ * CAST(status AS TEXT), so a value that does not exist in a given deployment
+ * simply never matches instead of failing the query. That makes the extra
+ * entries below harmless and forward-compatible.
+ *
+ * Note 'Closing' is deliberately absent — a project being closed out is still
+ * live work that needs chasing.
+ */
 export const CLOSED_TASK_STATUSES = ['Completed', 'Cancelled'];
 export const CLOSED_PROJECT_STATUSES = ['Completed', 'Cancelled', 'Closed'];
 

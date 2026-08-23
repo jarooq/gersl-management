@@ -43,8 +43,8 @@ export default {
     LEFT JOIN projects p ON p.id = t.project_id
         WHERE t.depends_on IS NOT NULL
           AND array_length(t.depends_on, 1) > 0
-          AND (t.status IS NULL OR t.status NOT IN (:closedTaskStatuses))
-          AND (d.status IS NULL OR d.status NOT IN (:closedTaskStatuses))
+          AND (t.status IS NULL OR CAST(t.status AS TEXT) NOT IN (:closedTaskStatuses))
+          AND (d.status IS NULL OR CAST(d.status AS TEXT) NOT IN (:closedTaskStatuses))
           AND d.due_date IS NOT NULL
           AND d.due_date < :todayDate`,
       { todayDate: toDateOnly(today), ...commonReplacements }

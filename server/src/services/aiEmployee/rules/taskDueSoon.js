@@ -36,7 +36,7 @@ export default {
         WHERE t.due_date IS NOT NULL
           AND t.due_date >= :todayDate
           AND t.due_date <= :furthest
-          AND (t.status IS NULL OR t.status NOT IN (:closedTaskStatuses))`,
+          AND (t.status IS NULL OR CAST(t.status AS TEXT) NOT IN (:closedTaskStatuses))`,
       { todayDate: toDateOnly(today), furthest, ...commonReplacements }
     );
 

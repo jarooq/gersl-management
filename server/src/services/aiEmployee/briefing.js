@@ -31,7 +31,7 @@ const getTaskLoad = async () => {
        JOIN (${owners}) o ON o.task_id = t.id
       WHERE t.due_date IS NOT NULL
         AND t.due_date <= :today
-        AND (t.status IS NULL OR t.status NOT IN (:closedTaskStatuses))`,
+        AND (t.status IS NULL OR CAST(t.status AS TEXT) NOT IN (:closedTaskStatuses))`,
     { today, ...commonReplacements }
   );
 
@@ -75,7 +75,7 @@ const getManagedProjects = async () => {
       WHERE p.manager_id IS NOT NULL
         AND p.end_date IS NOT NULL
         AND p.end_date <= :soon
-        AND (p.status IS NULL OR p.status NOT IN (:closedProjectStatuses))`,
+        AND (p.status IS NULL OR CAST(p.status AS TEXT) NOT IN (:closedProjectStatuses))`,
     { soon, ...commonReplacements }
   );
 

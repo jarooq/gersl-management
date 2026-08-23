@@ -31,7 +31,7 @@ export default {
     LEFT JOIN projects p ON p.id = t.project_id
         WHERE t.requires_approval = true
           AND (t.approval_status IS NULL OR t.approval_status = 'pending')
-          AND (t.status IS NULL OR t.status NOT IN (:closedTaskStatuses))
+          AND (t.status IS NULL OR CAST(t.status AS TEXT) NOT IN (:closedTaskStatuses))
           AND t.updated_at IS NOT NULL
           AND t.updated_at <= :cutoff`,
       { cutoff, ...commonReplacements }

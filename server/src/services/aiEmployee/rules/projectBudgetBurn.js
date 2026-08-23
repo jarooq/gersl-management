@@ -35,7 +35,7 @@ export default {
         WHERE p.budget IS NOT NULL
           AND p.start_date IS NOT NULL
           AND p.end_date IS NOT NULL
-          AND (p.status IS NULL OR p.status NOT IN (:closedProjectStatuses))`,
+          AND (p.status IS NULL OR CAST(p.status AS TEXT) NOT IN (:closedProjectStatuses))`,
       commonReplacements
     );
 
