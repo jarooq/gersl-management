@@ -14,14 +14,14 @@ import { isJobRunning } from '../services/aiEmployee/scheduler.js';
 import { RULES } from '../services/aiEmployee/rules/index.js';
 
 const ALERT_FIELDS = `
-  id, rule_key AS "ruleKey", severity, category,
-  entity_type AS "entityType", entity_id AS "entityId", project_id AS "projectId",
-  owner_user_id AS "ownerUserId", title, message,
-  action_url AS "actionUrl", action_label AS "actionLabel",
-  status, escalation_level AS "escalationLevel", notify_count AS "notifyCount",
-  first_detected_at AS "firstDetectedAt", last_seen_at AS "lastSeenAt",
-  last_notified_at AS "lastNotifiedAt", snoozed_until AS "snoozedUntil",
-  resolved_at AS "resolvedAt", resolution, metadata
+  a.id, a.rule_key AS "ruleKey", a.severity, a.category,
+  a.entity_type AS "entityType", a.entity_id AS "entityId", a.project_id AS "projectId",
+  a.owner_user_id AS "ownerUserId", a.title, a.message,
+  a.action_url AS "actionUrl", a.action_label AS "actionLabel",
+  a.status, a.escalation_level AS "escalationLevel", a.notify_count AS "notifyCount",
+  a.first_detected_at AS "firstDetectedAt", a.last_seen_at AS "lastSeenAt",
+  a.last_notified_at AS "lastNotifiedAt", a.snoozed_until AS "snoozedUntil",
+  a.resolved_at AS "resolvedAt", a.resolution, a.metadata
 `;
 
 const hydrate = (row) => ({ ...row, metadata: fromJsonColumn(row.metadata, {}) });
@@ -95,39 +95,44 @@ export const listAlerts = async (req, res) => {
     const replacements = { limit, offset };
 
     if (status && status !== 'all') {
-      clauses.push('status = :status');
+      clauses.push('a.status = :status');
       replacements.status = status;
     }
     if (severity) {
-      clauses.push('severity = :severity');
+      clauses.push('a.severity = :severity');
       replacements.severity = severity;
     }
     if (ruleKey) {
-      clauses.push('rule_key = :ruleKey');
+      clauses.push('a.rule_key = :ruleKey');
       replacements.ruleKey = ruleKey;
     }
     if (projectId) {
-      clauses.push('project_id = :projectId');
+      clauses.push('a.project_id = :projectId');
       replacements.projectId = parseInt(projectId, 10);
     }
     if (mine === 'true') {
-      clauses.push('owner_user_id = :userId');
+      clauses.push('a.owner_user_id = :userId');
       replacements.userId = req.user.id;
     }
 
     const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
 
+    // Alias the table so ALERT_FIELDS' bare column names still resolve, and
+    // pull the owner's name across — "user #4" is not a useful thing to show.
     const rows = await select(
-      `SELECT ${ALERT_FIELDS} FROM ai_alerts ${where}
+      `SELECT ${ALERT_FIELDS}, u.full_name AS "ownerName", u.role AS "ownerRole"
+         FROM ai_alerts a
+    LEFT JOIN users u ON u.id = a.owner_user_id
+        ${where}
         ORDER BY
-          CASE severity WHEN 'critical' THEN 0 WHEN 'high' THEN 1 WHEN 'warning' THEN 2 ELSE 3 END,
-          first_detected_at ASC
+          CASE a.severity WHEN 'critical' THEN 0 WHEN 'high' THEN 1 WHEN 'warning' THEN 2 ELSE 3 END,
+          a.first_detected_at ASC
         LIMIT :limit OFFSET :offset`,
       replacements
     );
 
     const [countRow] = await select(
-      `SELECT COUNT(*) AS count FROM ai_alerts ${where}`,
+      `SELECT COUNT(*) AS count FROM ai_alerts a ${where}`,
       replacements
     );
 
@@ -173,7 +178,7 @@ export const getAlertSummary = async (req, res) => {
 };
 
 const loadAlert = async (id) => {
-  const [row] = await select(`SELECT ${ALERT_FIELDS} FROM ai_alerts WHERE id = :id`, { id });
+  const [row] = await select(`SELECT ${ALERT_FIELDS} FROM ai_alerts a WHERE a.id = :id`, { id });
   return row ? hydrate(row) : null;
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
+  Bot,
   LayoutDashboard, Baby, Briefcase, DollarSign, Users, FileText, HeartHandshake,
   Shield, BarChart, Settings, Users2, Share2, FileBarChart, FolderKanban,
   Target, ClipboardCheck, CheckCircle, Clock, Award, MapPin, UserPlus,
@@ -77,6 +78,7 @@ const CONSOLES = [
       p.startsWith('/admin/operations') ||
       p.startsWith('/admin/projects') ||
       p.startsWith('/admin/approvals') ||
+      p.startsWith('/admin/ai-employee') ||
       p.startsWith('/admin/compliance'),
     entry: '/admin/projects',
     sections: [
@@ -84,6 +86,7 @@ const CONSOLES = [
       { path: '/admin/operations/activities',     label: 'Activities',          icon: Target,         permission: PERMISSIONS.OPERATIONS_VIEW_ACTIVITIES,  group: 'Delivery' },
       { path: '/admin/operations/tasks',          label: 'All Tasks',           icon: ClipboardCheck, permission: PERMISSIONS.OPERATIONS_VIEW_TASKS,       group: 'Work' },
       { path: '/admin/operations/my-tasks',       label: 'My Tasks',            icon: UserCheck,      group: 'Work' },
+      { path: '/admin/ai-employee',               label: 'AI Employee',         icon: Bot,            group: 'Work' },
       { path: '/admin/operations/field-visits',   label: 'Field Visits',        icon: MapPin,         group: 'Field' },
       { path: '/admin/operations/movements',      label: 'Movement Register',   icon: MapPin,         group: 'Field' },
       { path: '/admin/operations/fuel-claims',    label: 'Fuel Claims',         icon: DollarSign,     group: 'Field' },

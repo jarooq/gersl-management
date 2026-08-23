@@ -4444,3 +4444,89 @@ export const SearchAPI = {
 };
 
 export default API;
+
+// ============================================
+// AI EMPLOYEE API — Watcher (alerts) + Planner (setup plans)
+// ============================================
+
+export const AIEmployeeAPI = {
+  // ── Watcher ──
+  getStatus: async () => request('/ai-employee/status'),
+
+  getAlerts: async (params = {}) => {
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== '' && v !== null)
+    ).toString();
+    return request(`/ai-employee/alerts${query ? `?${query}` : ''}`);
+  },
+
+  getAlertSummary: async () => request('/ai-employee/alerts/summary'),
+
+  snoozeAlert: async (id, days = 3) =>
+    request(`/ai-employee/alerts/${id}/snooze`, {
+      method: 'POST',
+      body: JSON.stringify({ days }),
+    }),
+
+  resolveAlert: async (id) =>
+    request(`/ai-employee/alerts/${id}/resolve`, { method: 'POST' }),
+
+  muteAlert: async (id) =>
+    request(`/ai-employee/alerts/${id}/mute`, { method: 'POST' }),
+
+  sendMyBriefing: async () =>
+    request('/ai-employee/briefing', {
+      method: 'POST',
+      body: JSON.stringify({ me: true }),
+    }),
+
+  // Admin-only: force a sweep now.
+  runSweep: async (ruleKeys = null) =>
+    request('/ai-employee/run', {
+      method: 'POST',
+      body: JSON.stringify(ruleKeys ? { ruleKeys } : {}),
+    }),
+
+  getRuns: async (limit = 20) => request(`/ai-employee/runs?limit=${limit}`),
+
+  getSettings: async () => request('/ai-employee/settings'),
+
+  updateSettings: async (config) =>
+    request('/ai-employee/settings', {
+      method: 'PUT',
+      body: JSON.stringify({ config }),
+    }),
+
+  // ── Planner ──
+  getPlannerStatus: async () => request('/ai-employee/planner/status'),
+
+  getPlans: async (params = {}) => {
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== '' && v !== null)
+    ).toString();
+    return request(`/ai-employee/plans${query ? `?${query}` : ''}`);
+  },
+
+  getPlan: async (id) => request(`/ai-employee/plans/${id}`),
+
+  createPlan: async ({ projectId, brief = null, provider = null }) =>
+    request('/ai-employee/plans', {
+      method: 'POST',
+      body: JSON.stringify({ projectId, brief, provider }),
+    }),
+
+  updatePlanItem: async (planId, itemId, body) =>
+    request(`/ai-employee/plans/${planId}/items/${itemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+
+  approvePlan: async (id) =>
+    request(`/ai-employee/plans/${id}/approve`, { method: 'POST' }),
+
+  rejectPlan: async (id, reason = '') =>
+    request(`/ai-employee/plans/${id}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    }),
+};

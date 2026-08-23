@@ -59,6 +59,8 @@ const ActivitiesPage = lazy(() => import('../pages/Operations/ActivitiesPage'));
 const TasksPage = lazy(() => import('../pages/Operations/TasksPage'));
 const MyTasksPage = lazy(() => import('../pages/Operations/MyTasksPage'));
 const ApprovalsPage = lazy(() => import('../pages/Approvals/ApprovalsPage'));
+const AIEmployeePage = lazy(() => import('../pages/AIEmployee/AIEmployeePage'));
+const PlanReviewPage = lazy(() => import('../pages/AIEmployee/PlanReviewPage'));
 const CompliancePage = lazy(() => import('../pages/Compliance/CompliancePage'));
 const CampaignsPage = lazy(() => import('../pages/Campaigns/CampaignsPage'));
 const DonationsPage = lazy(() => import('../pages/Donations/DonationsPage'));
@@ -760,6 +762,25 @@ const AppRouter = ({ showCommandPalette, setShowCommandPalette }) => {
                   <ApprovalsPage />
                 </Suspense>
               </PermissionRoute>
+            }
+          />
+          {/* AI Employee — every signed-in user sees their own alerts, so this
+              is not permission-gated. Generating and approving plans is gated
+              server-side by role. */}
+          <Route
+            path="ai-employee"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AIEmployeePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="ai-employee/plans/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PlanReviewPage />
+              </Suspense>
             }
           />
           <Route
