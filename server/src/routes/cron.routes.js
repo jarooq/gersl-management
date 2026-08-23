@@ -12,6 +12,8 @@ import express from 'express';
 import { timingSafeEqual } from 'crypto';
 import { sendDeadlineReminders } from '../utils/programmeDeadlineReminders.js';
 import { fetchSampathRates } from '../services/exchangeRate.service.js';
+import { runWatch } from '../services/aiEmployee/engine.js';
+import { runBriefing } from '../services/aiEmployee/briefing.js';
 
 const router = express.Router();
 
@@ -53,6 +55,30 @@ router.post('/exchange-rates', requireCronSecret, async (req, res) => {
     res.status(result.ok ? 200 : 502).json({ success: result.ok, data: result });
   } catch (e) {
     console.error('[cron] exchange-rate snapshot failed:', e.message);
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// AI Employee sweep — detects overdue work, budget overruns, stalled approvals
+// and expiring documents, then reminds and escalates. Runs in-process on
+// Railway; this endpoint is for serverless deploys or an external scheduler.
+router.post('/ai-employee-watch', requireCronSecret, async (req, res) => {
+  try {
+    const result = await runWatch({ trigger: 'cron' });
+    res.json({ success: true, data: result });
+  } catch (e) {
+    console.error('[cron] AI Employee sweep failed:', e.message);
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// AI Employee daily briefing — one digest per member of staff.
+router.post('/ai-employee-briefing', requireCronSecret, async (req, res) => {
+  try {
+    const result = await runBriefing({ trigger: 'cron' });
+    res.json({ success: true, data: result });
+  } catch (e) {
+    console.error('[cron] AI Employee briefing failed:', e.message);
     res.status(500).json({ success: false, message: e.message });
   }
 });

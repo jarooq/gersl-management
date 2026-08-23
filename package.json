@@ -7,9 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ai:migrate": "node server/src/migrations/create_ai_employee_tables.js && node server/src/migrations/create_ai_planner_tables.js",
+    "ai:status": "node server/src/scripts/aiEmployee.js status",
+    "ai:watch": "node server/src/scripts/aiEmployee.js watch",
+    "ai:dry-run": "node server/src/scripts/aiEmployee.js watch --dry-run",
+    "ai:briefing": "node server/src/scripts/aiEmployee.js briefing",
+    "ai:plan": "node server/src/scripts/aiEmployee.js plan"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
     "@aws-sdk/client-s3": "^3.1041.0",
     "@aws-sdk/s3-request-presigner": "^3.1041.0",
     "@radix-ui/react-checkbox": "^1.3.3",

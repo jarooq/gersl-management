@@ -13,6 +13,9 @@ import fs from 'node:fs';
 // Import database
 import sequelize, { testConnection, syncDatabase } from './config/database.js';
 
+// AI Employee (Phase 1 — the Watcher)
+import { startAiEmployee, stopAiEmployee } from './services/aiEmployee/scheduler.js';
+
 // Import routes
 import authRoutes from './routes/auth.routes.js';
 import usersRoutes from './routes/users.routes.js';
@@ -41,6 +44,7 @@ import visitLogRoutes from './routes/visitLog.routes.js';
 import beneficiaryRoutes from './routes/beneficiaries.routes.js';
 import beneficiarySupportRoutes from './routes/beneficiarySupport.routes.js';
 import aiRoutes from './routes/ai.routes.js';
+import aiEmployeeRoutes from './routes/aiEmployee.routes.js';
 import coordinatorRoutes from './routes/coordinator.routes.js';
 
 // New feature routes
@@ -311,6 +315,7 @@ app.use('/api/visit-logs', visitLogRoutes);
 app.use('/api/beneficiaries', beneficiaryRoutes);
 app.use('/api/beneficiary-support', beneficiarySupportRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/ai-employee', aiEmployeeRoutes);
 app.use('/api/coordinators', coordinatorRoutes);
 
 // New feature routes
@@ -522,6 +527,10 @@ const startServer = async () => {
       console.log('');
     });
 
+    // Put the AI Employee on duty. It reports its own failures and never
+    // prevents the API from serving requests.
+    startAiEmployee();
+
   } catch (error) {
     console.error('❌ Server startup error:', error);
     process.exit(1);
@@ -543,6 +552,7 @@ process.on('uncaughtException', (err) => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received. Closing server gracefully...');
+  stopAiEmployee();
   await sequelize.close();
   process.exit(0);
 });

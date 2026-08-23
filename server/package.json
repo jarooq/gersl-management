@@ -11,7 +11,13 @@
     "test:watch": "vitest",
     "migrate": "node src/database/migrate.js",
     "seed": "node src/database/seed.js",
-    "migrate:fresh": "node src/database/migrate.js fresh && node src/database/seed.js"
+    "migrate:fresh": "node src/database/migrate.js fresh && node src/database/seed.js",
+    "ai:migrate": "node src/migrations/create_ai_employee_tables.js && node src/migrations/create_ai_planner_tables.js",
+    "ai:status": "node src/scripts/aiEmployee.js status",
+    "ai:watch": "node src/scripts/aiEmployee.js watch",
+    "ai:dry-run": "node src/scripts/aiEmployee.js watch --dry-run",
+    "ai:briefing": "node src/scripts/aiEmployee.js briefing",
+    "ai:plan": "node src/scripts/aiEmployee.js plan"
   },
   "keywords": [
     "gersl",
@@ -22,6 +28,7 @@
   "author": "Global Ehsan Relief - Sri Lanka Development Team",
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
     "@aws-sdk/client-s3": "^3.658.1",
     "@aws-sdk/s3-request-presigner": "^3.658.1",
     "bcryptjs": "^2.4.3",

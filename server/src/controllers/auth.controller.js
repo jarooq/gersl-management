@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import { User } from '../models/index.js';
 import { asyncHandler, AppError, BadRequestError, UnauthorizedError, ConflictError } from '../middleware/error.middleware.js';
 import { sendNewUserEmail } from '../utils/emailService.js';
+import { isAiEmployee } from '../services/aiEmployee/identity.js';
 
 // ============================================
 // PASSWORD VALIDATION
@@ -238,6 +239,12 @@ export const login = asyncHandler(async (req, res) => {
   // Check if account is active
   if (user.status !== 'Active') {
     throw new UnauthorizedError('Account is not active. Please contact administrator.');
+  }
+
+  // The AI Employee holds a real user row so it can be assigned work and
+  // audited, but it is a service identity — nobody signs in as it.
+  if (await isAiEmployee(user.id)) {
+    throw new UnauthorizedError('Invalid credentials');
   }
 
   // Verify password
